@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistrator.Functions", "EventRegistrator.Functions\EventRegistrator.Functions.csproj", "{5C6DC892-8313-43C6-B258-639F64C95FC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistrator.Functions", "EventRegistrator.Functions\EventRegistrator.Functions.csproj", "{5C6DC892-8313-43C6-B258-639F64C95FC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistratorWeb", "EventRegistratorWeb\EventRegistratorWeb.csproj", "{2DE9478B-D776-4E4C-84D7-041D9C025364}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistratorWeb", "EventRegistratorWeb\EventRegistratorWeb.csproj", "{2DE9478B-D776-4E4C-84D7-041D9C025364}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
