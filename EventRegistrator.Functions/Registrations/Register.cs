@@ -8,7 +8,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 
-namespace EventRegistrator.Functions
+namespace EventRegistrator.Functions.Registrations
 {
     public static class Register
     {
@@ -20,7 +20,9 @@ namespace EventRegistrator.Functions
             //log.Info($"id: {id}");
             //log.Info($"content: {await req.Content.ReadAsStringAsync()}");
 
-            var registration = await req.Content.ReadAsAsync<Dictionary<string, string>>();
+            var registration = await req.Content.ReadAsAsync<Registration>();
+
+            log.Info($"registration: id: {registration.Id}, Mail {registration.Email}, Responses{string.Join("|", registration.Responses.Select(q => $"{q.QuestionId}: {string.Join(",", q.Response)}"))}");
 
             //log.Info(string.Join(Environment.NewLine, registration.Select(itm => $"{itm.Key} = {itm.Value}")));
 

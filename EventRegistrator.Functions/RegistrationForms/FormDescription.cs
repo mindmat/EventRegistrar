@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EventRegistrator.Functions.RegistrationForm
+namespace EventRegistrator.Functions.RegistrationForms
 {
     public class FormDescription
     {

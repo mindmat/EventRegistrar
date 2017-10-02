@@ -6,7 +6,7 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 
-namespace EventRegistrator.Functions.RegistrationForm
+namespace EventRegistrator.Functions.RegistrationForms
 {
     public static class SaveRegistrationForm
     {

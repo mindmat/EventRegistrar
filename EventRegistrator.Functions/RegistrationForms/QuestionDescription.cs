@@ -1,4 +1,4 @@
-﻿namespace EventRegistrator.Functions.RegistrationForm
+﻿namespace EventRegistrator.Functions.RegistrationForms
 {
     public class QuestionDescription
     {
