@@ -1,0 +1,1 @@
+﻿add-migration -outputdir Infrastructure\DataAccess\Migrations -startupproject eventregistrator.functions -name Initial

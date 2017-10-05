@@ -1,4 +1,4 @@
-﻿namespace EventRegistrator.Functions.Registrations
+﻿namespace EventRegistrator.Functions.GoogleForms
 {
     public class ResponseData
     {

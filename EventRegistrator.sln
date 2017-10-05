@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistrator.Functions"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistratorWeb", "EventRegistratorWeb\EventRegistratorWeb.csproj", "{2DE9478B-D776-4E4C-84D7-041D9C025364}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistrator.AzureFunctions", "EventRegistrator.AzureFunctions\EventRegistrator.AzureFunctions.csproj", "{3D8CB27B-C3B1-4160-8586-1691BC37EB3D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{2DE9478B-D776-4E4C-84D7-041D9C025364}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DE9478B-D776-4E4C-84D7-041D9C025364}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DE9478B-D776-4E4C-84D7-041D9C025364}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D8CB27B-C3B1-4160-8586-1691BC37EB3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D8CB27B-C3B1-4160-8586-1691BC37EB3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D8CB27B-C3B1-4160-8586-1691BC37EB3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D8CB27B-C3B1-4160-8586-1691BC37EB3D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,4 @@
 using EventRegistrator.Functions.GoogleForms;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using System.Linq;
 using System.Net;
@@ -11,8 +9,9 @@ namespace EventRegistrator.Functions.Registrations
 {
     public static class Register
     {
-        [FunctionName("Register")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registration/{id}")]HttpRequestMessage req, string id, TraceWriter log)
+        //[FunctionName("Register")]
+        //[HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registration/{id}")]
+        public static async Task<HttpResponseMessage> Run(HttpRequestMessage req, string id, TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
 

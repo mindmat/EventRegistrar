@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EventRegistrator.Functions.Registrations
+namespace EventRegistrator.Functions.GoogleForms
 {
     public class Registration
     {

@@ -13,8 +13,7 @@
         //Grid = 6,
         //Image = 7,
         //List = 8,
-        MultipleChoice = 9,
-
+        //MultipleChoice = 9,
         //PageBreak = 10,
         //ParagraphText = 11,
         //Scale = 12,
