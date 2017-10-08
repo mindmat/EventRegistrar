@@ -24,6 +24,11 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
                 .WithMany(frm => frm.Questions)
                 .HasForeignKey(qst => qst.RegistrationFormId);
 
+            modelBuilder.Entity<RegistrationForm>()
+                .HasRequired(frm => frm.Event)
+                .WithMany()
+                .HasForeignKey(frm => frm.EventId);
+
             base.OnModelCreating(modelBuilder);
         }
     }

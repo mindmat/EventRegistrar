@@ -38,6 +38,7 @@ CREATE TABLE [dbo].[RegistrationForm](
 	[EventId] [uniqueidentifier] NULL,
 	[ExternalIdentifier] [varchar](50) NULL,
 	[Title] [varchar](50) NULL,
+    [State] [int] NOT NULL,
 	[RowVersion] [timestamp] NULL,
  CONSTRAINT [PK_RegistrationForm] PRIMARY KEY CLUSTERED 
 (
@@ -46,15 +47,19 @@ CREATE TABLE [dbo].[RegistrationForm](
 )
 GO
 
-CREATE TABLE [dbo].[RegistrationForm](
+CREATE TABLE [dbo].[Question](
 	[Id] [uniqueidentifier] NOT NULL,
-	[EventId] [uniqueidentifier] NULL,
-	[ExternalIdentifier] [varchar](50) NULL,
-	[Title] [varchar](50) NULL,
-	[RowVersion] [timestamp] NULL,
- CONSTRAINT [PK_RegistrationForm] PRIMARY KEY CLUSTERED 
+	[RegistrationFormId] [uniqueidentifier] NOT NULL,
+	[ExternalId] [int] NULL,
+	[Index] [int] NULL,
+	[Title] [varchar](max) NULL,
+	[Type] [int] NULL,
+	[RowVersion] [timestamp] NOT NULL,
+ CONSTRAINT [PK_Question] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
+
+

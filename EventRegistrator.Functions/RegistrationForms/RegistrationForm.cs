@@ -1,4 +1,5 @@
-﻿using EventRegistrator.Functions.Infrastructure.DataAccess;
+﻿using EventRegistrator.Functions.Events;
+using EventRegistrator.Functions.Infrastructure.DataAccess;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -15,5 +16,7 @@ namespace EventRegistrator.Functions.RegistrationForms
         public ICollection<Question> Questions { get; set; }
 
         public Guid? EventId { get; set; }
+        public Event Event { get; set; }
+        public State State { get; set; }
     }
 }

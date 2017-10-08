@@ -1,10 +1,11 @@
+using EventRegistrator.Functions.Events;
 using EventRegistrator.Functions.GoogleForms;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using System;
-using System.Configuration;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -24,39 +25,72 @@ namespace EventRegistrator.Functions.RegistrationForms
             //log.Info($"id: {id}");
             //log.Info($"content: {await req.Content.ReadAsStringAsync()}");
 
-            var form = await req.Content.ReadAsAsync<FormDescription>();
-            form.Identifier = id;
+            var googleForm = await req.Content.ReadAsAsync<FormDescription>();
+            //googleForm.Identifier = id;
             //log.Info($"form: id {form.Identifier}, Title {form.Title}, Questions {string.Join("|", form.Questions.Select(q => $"{q.Id}({q.Index}): {q.Title} ({q.Type})"))}");
 
-            var entity = Convert(form);
-
-            var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-            log.Info(connectionString);
             using (var context = new EventRegistratorDbContext())
             {
-                context.RegistrationForms.Add(entity);
+                var form = await context.RegistrationForms.FirstOrDefaultAsync(frm => frm.ExternalIdentifier == id);
+                if (form != null)
+                {
+                    // update existing form
+                    if (form.State != State.Setup)
+                    {
+                        return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                        {
+                            Content = new StringContent("Registration form can only be changed in state 'setup'")
+                        };
+                    }
+
+                    form.Title = googleForm.Title;
+                }
+                else
+                {
+                    // new form
+                    form = new RegistrationForm
+                    {
+                        Id = Guid.NewGuid(),
+                        ExternalIdentifier = id,
+                        Title = googleForm.Title,
+                        State = State.Setup
+                    };
+                    context.RegistrationForms.Add(form);
+                }
+
+                // update questions
+                var existingQuestions = await context.Questions.Where(qst => qst.RegistrationFormId == form.Id).ToListAsync();
+                foreach (var receivedQuestion in googleForm.Questions)
+                {
+                    var existingQuestion = existingQuestions.FirstOrDefault(qst => qst.ExternalId == receivedQuestion.Id);
+                    if (existingQuestion == null)
+                    {
+                        // new question
+                        context.Questions.Add(new Question
+                        {
+                            Id = Guid.NewGuid(),
+                            RegistrationFormId = form.Id,
+                            ExternalId = receivedQuestion.Id,
+                            Index = receivedQuestion.Index,
+                            Title = receivedQuestion.Title,
+                            Type = (QuestionType)receivedQuestion.Type
+                        });
+                    }
+                    else
+                    {
+                        // update existing question
+                        existingQuestion.Index = receivedQuestion.Index;
+                        existingQuestion.Title = receivedQuestion.Title;
+                        existingQuestion.Type = (QuestionType)receivedQuestion.Type;
+                        existingQuestions.Remove(existingQuestion);
+                    }
+                }
+                context.Questions.RemoveRange(existingQuestions);
+
                 await context.SaveChangesAsync();
             }
 
             return new HttpResponseMessage(HttpStatusCode.OK);
-        }
-
-        private static RegistrationForm Convert(FormDescription input)
-        {
-            return new RegistrationForm
-            {
-                Id = Guid.NewGuid(),
-                ExternalIdentifier = input.Identifier,
-                Title = input.Title,
-                Questions = input.Questions.Select(qst => new Question
-                {
-                    Id = Guid.NewGuid(),
-                    ExternalId = qst.Id,
-                    Index = qst.Index,
-                    Title = qst.Title,
-                    Type = (QuestionType)qst.Type
-                }).ToList()
-            };
         }
     }
 }
