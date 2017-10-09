@@ -1,10 +1,8 @@
 ﻿using EventRegistrator.Functions.Infrastructure.DataAccess;
 using System;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EventRegistrator.Functions.RegistrationForms
 {
-    [Table(nameof(Question))]
     public class Question : Entity
     {
         public Guid RegistrationFormId { get; set; }

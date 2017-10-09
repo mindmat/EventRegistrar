@@ -1,5 +1,6 @@
 ﻿using EventRegistrator.Functions.Events;
 using EventRegistrator.Functions.RegistrationForms;
+using EventRegistrator.Functions.Registrations;
 using System.Data.Entity;
 
 namespace EventRegistrator.Functions.Infrastructure.DataAccess
@@ -16,6 +17,10 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
         public DbSet<RegistrationForm> RegistrationForms { get; set; }
 
         public DbSet<Question> Questions { get; set; }
+
+        public DbSet<Registration> Registrations { get; set; }
+
+        public DbSet<Response> Responses { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

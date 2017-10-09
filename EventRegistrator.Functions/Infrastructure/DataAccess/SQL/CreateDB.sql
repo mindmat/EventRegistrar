@@ -33,7 +33,7 @@ CREATE TABLE [dbo].[Events](
 )
 GO
 
-CREATE TABLE [dbo].[RegistrationForm](
+CREATE TABLE [dbo].[RegistrationForms](
 	[Id] [uniqueidentifier] NOT NULL,
 	[EventId] [uniqueidentifier] NULL,
 	[ExternalIdentifier] [varchar](50) NULL,
@@ -63,3 +63,15 @@ CREATE TABLE [dbo].[Question](
 GO
 
 
+CREATE TABLE [dbo].[Registrations](
+	[Id] [uniqueidentifier] NOT NULL,
+	[EventId] [uniqueidentifier] NOT NULL,
+	[ExternalIdentifier] [varchar](100) NULL,
+	[RespondentEmail] [varchar](200) NULL,
+	[RowVersion] [timestamp] NOT NULL,
+ CONSTRAINT [PK_Registration] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
