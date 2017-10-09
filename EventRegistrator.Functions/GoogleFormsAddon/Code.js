@@ -54,7 +54,7 @@ function postAnswerToBackend(response) {
         var stringAnswer = '';
         var stringArrayAnswer = [];
         var type = itemResponse.getItem().getType();
-        if (type == FormApp.ItemType.CHECKBOX || type == FormApp.ItemType.MULTIPLE_CHOICE) {
+        if (type == FormApp.ItemType.CHECKBOX || type == FormApp.ItemType.GRID) {
             stringArrayAnswer = itemResponse.getResponse()
         }
         else {
@@ -62,7 +62,7 @@ function postAnswerToBackend(response) {
         }
         var responseItem =
             {
-                questionId: itemResponse.getItem().getId(),
+                questionExternalId: itemResponse.getItem().getId(),
                 response: stringAnswer,
                 responses: stringArrayAnswer
             };
@@ -71,7 +71,6 @@ function postAnswerToBackend(response) {
 
     var responseData =
         {
-            id: response.getId(),
             email: response.getRespondentEmail(),
             responses: responsesData
         };

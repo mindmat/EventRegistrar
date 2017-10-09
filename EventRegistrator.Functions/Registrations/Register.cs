@@ -5,6 +5,7 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using System;
 using System.Data.Entity;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -29,7 +30,10 @@ namespace EventRegistrator.Functions.Registrations
 
             using (var context = new EventRegistratorDbContext())
             {
-                var form = await context.RegistrationForms.FirstOrDefaultAsync(frm => frm.ExternalIdentifier == formId);
+                var form = await context.RegistrationForms
+                                        .Where(frm => frm.ExternalIdentifier == formId)
+                                        .Include(frm => frm.Questions)
+                                        .FirstOrDefaultAsync();
                 if (form == null)
                 {
                     return new HttpResponseMessage(HttpStatusCode.NotFound)
@@ -64,6 +68,16 @@ namespace EventRegistrator.Functions.Registrations
                         EventId = form.EventId.Value,
                         RespondentEmail = googleRegistration.Email
                     };
+                    foreach (var response in googleRegistration.Responses)
+                    {
+                        var question = form.Questions?.FirstOrDefault(qst => qst.ExternalId == response.QuestionExternalId);
+                        context.Responses.Add(new Response
+                        {
+                            Id = Guid.NewGuid(),
+                            ResponseString = response.Response,
+                            QuestionId = question?.Id
+                        });
+                    }
                     context.Registrations.Add(registration);
                 }
                 else
