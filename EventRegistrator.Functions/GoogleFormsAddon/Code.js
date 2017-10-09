@@ -28,7 +28,7 @@
  * A global constant String holding the title of the add-on. This is
  * used to identify the add-on in the notification emails.
  */
-var ADDON_TITLE = 'Event Registrator Addon';
+var ADDON_TITLE = 'Event Registrator';
 
 /**
  * A global constant 'notice' text to include with each email
@@ -42,51 +42,54 @@ owner's daily email quota has been exceeded. Collaborators using this add-on on 
 the same form will be able to adjust the notification settings, but will not be \
 able to disable the notification triggers set by other collaborators.";
 
-function onSubmit(e) {
-    var responsesData = [];
-    var itemResponses = e.response.getItemResponses();
-    for (var i = 0; i < itemResponses.length; i++) {
-        var itemResponse = itemResponses[i];
-        var stringAnswer = '';
-        var stringArrayAnswer = [];
-        var type = itemResponse.getItem().getType();
-        if (type == FormApp.ItemType.CHECKBOX || type == FormApp.ItemType.GRID) {
-            stringArrayAnswer = itemResponse.getResponse()
-        }
-        else {
-            stringAnswer = itemResponse.getResponse();
-        }
-        var response =
-            {
-                questionId: itemResponse.getItem().getId(),
-                response: stringAnswer,
-                responses: stringArrayAnswer
-            };
-        responsesData.push(response);
+function onSubmit(e)
+{
+  postAnswerToBackend(e.response);
+}
+
+function postAnswerToBackend(response)
+{
+  var responsesData = [];
+  var itemResponses = response.getItemResponses();
+  for (var i = 0; i < itemResponses.length; i++)
+  {
+    var itemResponse = itemResponses[i];
+    var stringAnswer = '';
+    var stringArrayAnswer = [];
+    var type = itemResponse.getItem().getType();
+    if(type == FormApp.ItemType.CHECKBOX || type == FormApp.ItemType.GRID)
+    {
+      stringArrayAnswer = itemResponse.getResponse()
     }
-
-    var responseData =
+    else
+    {
+      stringAnswer = itemResponse.getResponse();
+    }
+    var responseItem =
         {
-            id: e.response.getId(),
-            email: e.response.getRespondentEmail(),
-            responses: responsesData
+          questionId: itemResponse.getItem().getId(),
+          response: stringAnswer,
+          responses: stringArrayAnswer
         };
-    /*
-        MailApp.sendEmail("mathias.minder@gmail.com",
-                          "Registrierung",
-                          "A new application has been submitted.\n\n" +
-                          JSON.stringify(responseData),
-                          {name:"From Name"});
-    */
+    responsesData.push(responseItem);
+  }
 
-    var options = {
-        'method': 'post',
-        'contentType': 'application/json',
-        'payload': JSON.stringify(responseData)
-    };
+  var responseData =
+      {
+        id: response.getId(),
+        email: response.getRespondentEmail(),
+        responses: responsesData
+      };
 
-    var url = 'https://eventregistrator.azurewebsites.net/api/registration/' + e.response.getId();
-    UrlFetchApp.fetch(url, options);
+  var options = {
+    'method' : 'post',
+    'contentType' : 'application/json',
+    'payload' : JSON.stringify(responseData)
+  };
+
+  var form = FormApp.getActiveForm();
+  var url = 'https://eventregistrator.azurewebsites.net/api/registrationform/' + form.getId() +  '/registration/' + response.getId();
+  UrlFetchApp.fetch(url, options);
 }
 
 /**
@@ -99,7 +102,7 @@ function onSubmit(e) {
  *     AuthMode.NONE).
  */
 function onInstall(e) {
-    onOpen(e);
+  onOpen(e);
 }
 
 /**
@@ -110,40 +113,61 @@ function onInstall(e) {
  *     running in, inspect e.authMode.
  */
 function onOpen(e) {
-    FormApp.getUi()
-        .createAddonMenu()
-        .addItem('Update Questions in Event Registrator', 'updateEventRegistrator')
-        .addToUi();
+  FormApp.getUi()
+      .createAddonMenu()
+      .addItem('Update Questions in Event Registrator', 'updateEventRegistrator')
+      .addItem('Resync answers', 'resyncAnswers')
+      .addToUi();
 }
 
-function updateEventRegistrator() {
-    var form = FormApp.getActiveForm();
+function updateEventRegistrator()
+{
+  var form = FormApp.getActiveForm();
 
-    var questions = [];
-    var formItems = form.getItems();
-    for (var i = 0; i < formItems.length; i++) {
-        var formItem = formItems[i];
-        var question =
-            {
-                id: formItem.getId(),
-                type: formItem.getType().toString(),
-                title: formItem.getTitle(),
-                index: formItem.getIndex()
-            }
-        questions.push(question);
+  var questions= [];
+  var formItems = form.getItems();
+  for (var i = 0; i < formItems.length; i++)
+  {
+    var formItem = formItems[i];
+    var question =
+    {
+      id: formItem.getId(),
+      type: formItem.getType().toString(),
+      title:  formItem.getTitle(),
+      index: formItem.getIndex()
     }
+    questions.push(question);
+  }
 
-    var registrationFrom =
-        {
-            title: form.getTitle(),
-            'questions': questions
-        }
+  var registrationFrom =
+  {
+    title: form.getTitle(),
+    'questions': questions
+  }
 
-    var options = {
-        'method': 'post',
-        'contentType': 'application/json',
-        'payload': JSON.stringify(registrationFrom)
-    };
-    var url = 'https://eventregistrator.azurewebsites.net/api/registrationform/' + form.getId();
-    UrlFetchApp.fetch(url, options);
+  var options = {
+    'method' : 'post',
+    'contentType' : 'application/json',
+    'payload' : JSON.stringify(registrationFrom)
+  };
+  var url = 'https://eventregistrator.azurewebsites.net/api/registrationform/' + form.getId();
+  UrlFetchApp.fetch(url, options);
 }
+
+function resyncAnswers()
+{
+  var form = FormApp.getActiveForm();
+  var responses = form.getResponses();
+  for (var i = 0; i < responses.length; i++)
+  {
+    postAnswerToBackend(responses[i]);
+  }
+}
+
+/*
+    MailApp.sendEmail("mathias.minder@gmail.com",
+                      "Registrierung",
+                      "A new application has been submitted.\n\n" +
+                      JSON.stringify(responseData),
+                      {name:"From Name"});
+*/
