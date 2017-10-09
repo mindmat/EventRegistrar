@@ -42,54 +42,49 @@ owner's daily email quota has been exceeded. Collaborators using this add-on on 
 the same form will be able to adjust the notification settings, but will not be \
 able to disable the notification triggers set by other collaborators.";
 
-function onSubmit(e)
-{
-  postAnswerToBackend(e.response);
+function onSubmit(e) {
+    postAnswerToBackend(e.response);
 }
 
-function postAnswerToBackend(response)
-{
-  var responsesData = [];
-  var itemResponses = response.getItemResponses();
-  for (var i = 0; i < itemResponses.length; i++)
-  {
-    var itemResponse = itemResponses[i];
-    var stringAnswer = '';
-    var stringArrayAnswer = [];
-    var type = itemResponse.getItem().getType();
-    if(type == FormApp.ItemType.CHECKBOX || type == FormApp.ItemType.GRID)
-    {
-      stringArrayAnswer = itemResponse.getResponse()
+function postAnswerToBackend(response) {
+    var responsesData = [];
+    var itemResponses = response.getItemResponses();
+    for (var i = 0; i < itemResponses.length; i++) {
+        var itemResponse = itemResponses[i];
+        var stringAnswer = '';
+        var stringArrayAnswer = [];
+        var type = itemResponse.getItem().getType();
+        if (type == FormApp.ItemType.CHECKBOX || type == FormApp.ItemType.MULTIPLE_CHOICE) {
+            stringArrayAnswer = itemResponse.getResponse()
+        }
+        else {
+            stringAnswer = itemResponse.getResponse();
+        }
+        var responseItem =
+            {
+                questionId: itemResponse.getItem().getId(),
+                response: stringAnswer,
+                responses: stringArrayAnswer
+            };
+        responsesData.push(responseItem);
     }
-    else
-    {
-      stringAnswer = itemResponse.getResponse();
-    }
-    var responseItem =
+
+    var responseData =
         {
-          questionId: itemResponse.getItem().getId(),
-          response: stringAnswer,
-          responses: stringArrayAnswer
+            id: response.getId(),
+            email: response.getRespondentEmail(),
+            responses: responsesData
         };
-    responsesData.push(responseItem);
-  }
 
-  var responseData =
-      {
-        id: response.getId(),
-        email: response.getRespondentEmail(),
-        responses: responsesData
-      };
+    var options = {
+        'method': 'post',
+        'contentType': 'application/json',
+        'payload': JSON.stringify(responseData)
+    };
 
-  var options = {
-    'method' : 'post',
-    'contentType' : 'application/json',
-    'payload' : JSON.stringify(responseData)
-  };
-
-  var form = FormApp.getActiveForm();
-  var url = 'https://eventregistrator.azurewebsites.net/api/registrationform/' + form.getId() +  '/registration/' + response.getId();
-  UrlFetchApp.fetch(url, options);
+    var form = FormApp.getActiveForm();
+    var url = 'https://eventregistrator.azurewebsites.net/api/registrationform/' + form.getId() + '/registration/' + response.getId();
+    UrlFetchApp.fetch(url, options);
 }
 
 /**
@@ -102,7 +97,7 @@ function postAnswerToBackend(response)
  *     AuthMode.NONE).
  */
 function onInstall(e) {
-  onOpen(e);
+    onOpen(e);
 }
 
 /**
@@ -113,55 +108,67 @@ function onInstall(e) {
  *     running in, inspect e.authMode.
  */
 function onOpen(e) {
-  FormApp.getUi()
-      .createAddonMenu()
-      .addItem('Update Questions in Event Registrator', 'updateEventRegistrator')
-      .addItem('Resync answers', 'resyncAnswers')
-      .addToUi();
+    FormApp.getUi()
+        .createAddonMenu()
+        .addItem('Update Questions in Event Registrator', 'updateFormDefinitionInEventRegistrator')
+        .addItem('Resync answers', 'resyncAnswers')
+        .addToUi();
 }
 
-function updateEventRegistrator()
-{
-  var form = FormApp.getActiveForm();
+function updateFormDefinitionInEventRegistrator() {
+    var form = FormApp.getActiveForm();
 
-  var questions= [];
-  var formItems = form.getItems();
-  for (var i = 0; i < formItems.length; i++)
-  {
-    var formItem = formItems[i];
-    var question =
-    {
-      id: formItem.getId(),
-      type: formItem.getType().toString(),
-      title:  formItem.getTitle(),
-      index: formItem.getIndex()
+    var questions = [];
+    var formItems = form.getItems();
+    for (var i = 0; i < formItems.length; i++) {
+        var formItem = formItems[i];
+        var question =
+            {
+                id: formItem.getId(),
+                type: formItem.getType().toString(),
+                title: formItem.getTitle(),
+                index: formItem.getIndex()
+            }
+        if (formItem.getType() == FormApp.ItemType.MULTIPLE_CHOICE) {
+            var multipleChoiceItem = formItem.asMultipleChoiceItem();
+            var choices = multipleChoiceItem.getChoices();
+            question.choices = [];
+            for (var j = 0; j < choices.length; j++) {
+                question.choices.push(choices[j].getValue());
+            }
+        }
+        else if (formItem.getType() == FormApp.ItemType.CHECKBOX) {
+            var checkboxGridItem = formItem.asCheckboxItem();
+            var choices = checkboxGridItem.getChoices();
+            question.choices = [];
+            for (var j = 0; j < choices.length; j++) {
+                question.choices.push(choices[j].getValue());
+            }
+        }
+        questions.push(question);
     }
-    questions.push(question);
-  }
 
-  var registrationFrom =
-  {
-    title: form.getTitle(),
-    'questions': questions
-  }
+    var registrationFrom =
+        {
+            title: form.getTitle(),
+            'questions': questions
+        }
 
-  var options = {
-    'method' : 'post',
-    'contentType' : 'application/json',
-    'payload' : JSON.stringify(registrationFrom)
-  };
-  var url = 'https://eventregistrator.azurewebsites.net/api/registrationform/' + form.getId();
-  UrlFetchApp.fetch(url, options);
+    var options = {
+        'method': 'post',
+        'contentType': 'application/json',
+        'payload': JSON.stringify(registrationFrom)
+    };
+    var url = 'https://eventregistrator.azurewebsites.net/api/registrationform/' + form.getId();
+    UrlFetchApp.fetch(url, options);
 }
 
-function resyncAnswers()
-{
-  var form = FormApp.getActiveForm();
-  var responses = form.getResponses();
-  for (var i = 0; i < responses.length; i++)
-  {
-    postAnswerToBackend(responses[i]);
-  }
+function resyncAnswers() {
+    var form = FormApp.getActiveForm();
+    var responses = form.getResponses();
+    for (var i = 0; i < responses.length; i++) {
+        postAnswerToBackend(responses[i]);
+    }
 }
 
 /*

@@ -63,6 +63,20 @@ CREATE TABLE [dbo].[Question](
 GO
 
 
+CREATE TABLE [dbo].[QuestionOptions](
+	[Id] [uniqueidentifier] NOT NULL,
+	[QuestionId] [uniqueidentifier] NOT NULL,
+	[Answer] [varchar](max) NOT NULL,
+	[RowVersion] [timestamp] NOT NULL,
+ CONSTRAINT [PK_QuestionOptions] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+
+
+
 CREATE TABLE [dbo].[Registrations](
 	[Id] [uniqueidentifier] NOT NULL,
 	[EventId] [uniqueidentifier] NOT NULL,

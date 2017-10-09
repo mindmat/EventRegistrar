@@ -66,7 +66,7 @@ namespace EventRegistrator.Functions.RegistrationForms
                     if (existingQuestion == null)
                     {
                         // new question
-                        context.Questions.Add(new Question
+                        var question = new Question
                         {
                             Id = Guid.NewGuid(),
                             RegistrationFormId = form.Id,
@@ -74,7 +74,20 @@ namespace EventRegistrator.Functions.RegistrationForms
                             Index = receivedQuestion.Index,
                             Title = receivedQuestion.Title,
                             Type = (QuestionType)receivedQuestion.Type
-                        });
+                        };
+                        context.Questions.Add(question);
+                        if (receivedQuestion.Choices?.Any() == true)
+                        {
+                            foreach (var choice in receivedQuestion.Choices)
+                            {
+                                context.QuestionOptions.Add(new QuestionOption
+                                {
+                                    Id = Guid.NewGuid(),
+                                    QuestionId = question.Id,
+                                    Answer = choice
+                                });
+                            }
+                        }
                     }
                     else
                     {
@@ -83,6 +96,25 @@ namespace EventRegistrator.Functions.RegistrationForms
                         existingQuestion.Title = receivedQuestion.Title;
                         existingQuestion.Type = (QuestionType)receivedQuestion.Type;
                         existingQuestions.Remove(existingQuestion);
+
+                        // update options
+                        if (receivedQuestion.Choices?.Any() == true)
+                        {
+                            var existingOptions = await context.QuestionOptions.Where(opt => opt.QuestionId == existingQuestion.Id).ToListAsync();
+                            foreach (var receivedChoice in receivedQuestion.Choices)
+                            {
+                                var existingOption = existingOptions.FirstOrDefault(exo => exo.Answer == receivedChoice);
+                                if (existingOption == null)
+                                {
+                                    context.QuestionOptions.Add(new QuestionOption
+                                    {
+                                        Id = Guid.NewGuid(),
+                                        QuestionId = existingQuestion.Id,
+                                        Answer = receivedChoice
+                                    });
+                                }
+                            }
+                        }
                     }
                 }
                 context.Questions.RemoveRange(existingQuestions);
