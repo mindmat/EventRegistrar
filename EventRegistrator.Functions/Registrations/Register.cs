@@ -1,14 +1,14 @@
-using EventRegistrator.Functions.Events;
-using EventRegistrator.Functions.Infrastructure.DataAccess;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
 using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using EventRegistrator.Functions.Events;
+using EventRegistrator.Functions.Infrastructure.DataAccess;
+using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Host;
 
 namespace EventRegistrator.Functions.Registrations
 {
@@ -65,7 +65,8 @@ namespace EventRegistrator.Functions.Registrations
                     {
                         Id = Guid.NewGuid(),
                         ExternalIdentifier = id,
-                        EventId = form.EventId.Value,
+                        RegistrationFormId = form.Id,
+                        ReceivedAt = DateTime.UtcNow,
                         RespondentEmail = googleRegistration.Email
                     };
                     foreach (var response in googleRegistration.Responses)
