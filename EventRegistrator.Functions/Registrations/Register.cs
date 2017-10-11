@@ -3,6 +3,7 @@ using EventRegistrator.Functions.Infrastructure.DataAccess;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Data.Entity;
 using System.Linq;
@@ -14,8 +15,14 @@ namespace EventRegistrator.Functions.Registrations
 {
     public static class Register
     {
+        private const string ConnectionString = "Endpoint=sb://eventregistrator.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=DOPXPS/i/CJy7O7UxqdhGDAxacjZJhZMwfj+k311qCI=";
+
         [FunctionName("Register")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registrationform/{formId}/registration/{id}")]HttpRequestMessage req, string formId, string id, TraceWriter log)
+        public static async Task<HttpResponseMessage> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registrationform/{formId}/registration/{id}")]HttpRequestMessage req,
+            string formId,
+            string id,
+            TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
 
@@ -28,6 +35,7 @@ namespace EventRegistrator.Functions.Registrations
 
             //log.Info(string.Join(Environment.NewLine, registration.Select(itm => $"{itm.Key} = {itm.Value}")));
 
+            RegistrationReceived registeredEvent;
             using (var context = new EventRegistratorDbContext())
             {
                 var form = await context.RegistrationForms
@@ -89,7 +97,16 @@ namespace EventRegistrator.Functions.Registrations
                 }
 
                 await context.SaveChangesAsync();
+                registeredEvent = new RegistrationReceived
+                {
+                    RegistrationId = registration.Id,
+                    Registration = registration
+                };
             }
+
+            var client = QueueClient.CreateFromConnectionString(ConnectionString, "ReceivedRegistrations");
+            var message = new BrokeredMessage(registeredEvent);
+            await client.SendAsync(message);
 
             // Fetching the name from the path parameter in the request URL
             return req.CreateResponse(HttpStatusCode.OK);

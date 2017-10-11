@@ -89,3 +89,17 @@ CREATE TABLE [dbo].[Registrations](
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
+
+
+CREATE TABLE [dbo].[LimitedResources](
+	[Id] [uniqueidentifier] NOT NULL,
+	[EventId] [uniqueidentifier] NOT NULL,
+	[Name] [nvarchar](200) NOT NULL,
+	[MaximumSeats] [int] NULL,
+	[RowVersion] [timestamp] NOT NULL,
+ CONSTRAINT [PK_LimitedResource] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
