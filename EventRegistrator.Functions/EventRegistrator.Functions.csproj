@@ -20,4 +20,8 @@
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Mailing\" />
+    <Folder Include="Seats\" />
+  </ItemGroup>
 </Project>
