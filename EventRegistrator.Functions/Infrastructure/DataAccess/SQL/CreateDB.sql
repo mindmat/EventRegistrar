@@ -25,7 +25,7 @@ GO
 CREATE TABLE [dbo].[Events](
     [Id] [uniqueidentifier] NOT NULL,
     [Name] [nvarchar](max) NULL,
-    [RowVersion] [timestamp] NOT NULL,
+    [RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_dbo.Events] PRIMARY KEY CLUSTERED 
 (
     [Id] ASC
@@ -39,7 +39,7 @@ CREATE TABLE [dbo].[RegistrationForms](
     [ExternalIdentifier] [varchar](50) NULL,
     [Title] [varchar](50) NULL,
     [State] [int] NOT NULL,
-    [RowVersion] [timestamp] NULL,
+    [RowVersion] rowversion NULL,
  CONSTRAINT [PK_RegistrationForm] PRIMARY KEY CLUSTERED 
 (
     [Id] ASC
@@ -54,7 +54,7 @@ CREATE TABLE [dbo].[Question](
     [Index] [int] NULL,
     [Title] [varchar](max) NULL,
     [Type] [int] NULL,
-    [RowVersion] [timestamp] NOT NULL,
+    [RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_Question] PRIMARY KEY CLUSTERED 
 (
     [Id] ASC
@@ -67,7 +67,7 @@ CREATE TABLE [dbo].[QuestionOptions](
     [Id] [uniqueidentifier] NOT NULL,
     [QuestionId] [uniqueidentifier] NOT NULL,
     [Answer] [varchar](max) NOT NULL,
-    [RowVersion] [timestamp] NOT NULL,
+    [RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_QuestionOptions] PRIMARY KEY CLUSTERED 
 (
     [Id] ASC

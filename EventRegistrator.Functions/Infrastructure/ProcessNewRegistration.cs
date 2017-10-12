@@ -8,10 +8,10 @@ namespace EventRegistrator.Functions.Infrastructure
     public static class ProcessNewRegistration
     {
         [FunctionName("ProcessNewRegistration")]
-        public static void Run([ServiceBusTrigger("ReceivedRegistrations", AccessRights.Manage, Connection = "ProcessNewRegistration")]RegistrationReceived @event, TraceWriter log)
+        public static void Run([ServiceBusTrigger("ReceivedRegistrations", AccessRights.Listen, Connection = "ServiceBusEndpoint")]RegistrationReceived @event, TraceWriter log)
         {
             log.Info($"C# ServiceBus queue trigger function processed message: {@event}");
-            log.Info("$id {@event.RegistrationId}");
+            log.Info($"id {@event.RegistrationId}");
         }
     }
 }
