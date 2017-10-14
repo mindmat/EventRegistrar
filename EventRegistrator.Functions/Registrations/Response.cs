@@ -7,5 +7,7 @@ namespace EventRegistrator.Functions.Registrations
     {
         public Guid? QuestionId { get; set; }
         public string ResponseString { get; set; }
+        public Guid RegistrationId { get; set; }
+        public Guid? QuestionOptionId { get; set; }
     }
 }

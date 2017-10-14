@@ -81,7 +81,8 @@ CREATE TABLE [dbo].[Registrations](
     [RegistrationFormId] [uniqueidentifier] NOT NULL,
     [ExternalIdentifier] [varchar](100) NULL,
     [RespondentEmail] [varchar](200) NULL,
-    ReceivedAt datetime(7) NOT NULL,
+    ReceivedAt datetime2(7) NOT NULL,
+    ExternalTimestamp datetime2(7) NULL,
     [RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_Registration] PRIMARY KEY CLUSTERED 
 (
@@ -91,21 +92,34 @@ CREATE TABLE [dbo].[Registrations](
 
 GO
 
+CREATE TABLE [dbo].[Responses](
+	Id uniqueidentifier NOT NULL,
+	RegistrationId uniqueidentifier NULL,
+	QuestionId uniqueidentifier NULL,
+	ResponseString [varchar](max) NULL,
+	QuestionOptionId uniqueidentifier NULL,
+	RowVersion rowversion NOT NULL,
+ CONSTRAINT [PK_Responses] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
 
 
 CREATE TABLE [dbo].[Registrables](
-    [Id] [uniqueidentifier] NOT NULL,
-    [EventId] [uniqueidentifier] NOT NULL,
-    [Name] [nvarchar](200) NOT NULL,
-    [MaximumSingleSeats] [int] NULL,
-    MaximumDoubleSeats [int] NULL,
-    [RowVersion] [timestamp] NOT NULL,
+	Id uniqueidentifier NOT NULL,
+	EventId uniqueidentifier NOT NULL,
+	QuestionOptionId uniqueidentifier NULL,
+	[Name] [nvarchar](200) NOT NULL,
+	MaximumSingleSeats int NULL,
+	MaximumDoubleSeats int NULL,
+	RowVersion rowversion NOT NULL,
  CONSTRAINT [PK_LimitedResource] PRIMARY KEY CLUSTERED 
 (
-    [Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
 )
-
 GO
 
 

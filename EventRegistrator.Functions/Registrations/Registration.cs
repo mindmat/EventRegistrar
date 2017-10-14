@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using EventRegistrator.Functions.GoogleForms;
+﻿using EventRegistrator.Functions.GoogleForms;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
+using System;
+using System.Collections.Generic;
 
 namespace EventRegistrator.Functions.Registrations
 {
@@ -12,5 +12,6 @@ namespace EventRegistrator.Functions.Registrations
         public string RespondentEmail { get; set; }
         public IEnumerable<ResponseData> Responses { get; set; }
         public DateTime ReceivedAt { get; set; }
+        public DateTime ExternalTimestamp { get; set; }
     }
 }

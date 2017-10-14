@@ -34,6 +34,11 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
                 .WithMany()
                 .HasForeignKey(frm => frm.EventId);
 
+            modelBuilder.Entity<QuestionOption>()
+                .HasRequired(qop => qop.Question)
+                .WithMany(qst => qst.QuestionOptions)
+                .HasForeignKey(qop => qop.QuestionId);
+
             base.OnModelCreating(modelBuilder);
         }
     }

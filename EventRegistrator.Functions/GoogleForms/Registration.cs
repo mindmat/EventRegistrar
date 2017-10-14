@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace EventRegistrator.Functions.GoogleForms
 {
@@ -6,5 +7,6 @@ namespace EventRegistrator.Functions.GoogleForms
     {
         public string Email { get; set; }
         public IEnumerable<ResponseData> Responses { get; set; }
+        public DateTime Timestamp { get; set; }
     }
 }

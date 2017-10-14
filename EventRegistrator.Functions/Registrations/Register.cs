@@ -1,20 +1,20 @@
 using EventRegistrator.Functions.Events;
+using EventRegistrator.Functions.GoogleForms;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
+using EventRegistrator.Functions.Infrastructure.DomainEvents;
+using EventRegistrator.Functions.RegistrationForms;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ServiceBus.Messaging;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using EventRegistrator.Functions.Events;
-using EventRegistrator.Functions.Infrastructure.DataAccess;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
+using QuestionType = EventRegistrator.Functions.RegistrationForms.QuestionType;
 
 namespace EventRegistrator.Functions.Registrations
 {
@@ -30,21 +30,16 @@ namespace EventRegistrator.Functions.Registrations
             TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
-
-            //log.Info($"id: {id}");
-            //log.Info($"content: {await req.Content.ReadAsStringAsync()}");
-
             var googleRegistration = await req.Content.ReadAsAsync<GoogleForms.Registration>();
 
-            //log.Info($"registration: id: {registration.Id}, Mail {registration.Email}, Responses{string.Join("|", registration.Responses.Select(q => $"{q.QuestionId}: {string.Join(",", q.Response)}"))}");
-
-            //log.Info(string.Join(Environment.NewLine, registration.Select(itm => $"{itm.Key} = {itm.Value}")));
+            log.Info(await req.Content.ReadAsStringAsync());
 
             RegistrationReceived registeredEvent;
             using (var context = new EventRegistratorDbContext())
             {
                 var form = await context.RegistrationForms
                                         .Where(frm => frm.ExternalIdentifier == formId)
+                                        .Include(frm => frm.Questions.Select(qst => qst.QuestionOptions))
                                         .Include(frm => frm.Questions)
                                         .FirstOrDefaultAsync();
                 if (form == null)
@@ -54,6 +49,7 @@ namespace EventRegistrator.Functions.Registrations
                         Content = new StringContent($"No form found with id '{formId}'")
                     };
                 }
+                log.Info($"Questions: {form.Questions.Count}, Options: {form.Questions.Sum(qst => qst.QuestionOptions.Count)}");
 
                 // check form state
                 if (form.State == State.RegistrationClosed)
@@ -80,18 +76,38 @@ namespace EventRegistrator.Functions.Registrations
                         ExternalIdentifier = id,
                         RegistrationFormId = form.Id,
                         ReceivedAt = DateTime.UtcNow,
+                        ExternalTimestamp = googleRegistration.Timestamp,
                         RespondentEmail = googleRegistration.Email
                     };
                     foreach (var response in googleRegistration.Responses)
                     {
-                        var question = form.Questions?.FirstOrDefault(qst => qst.ExternalId == response.QuestionExternalId);
-                        context.Responses.Add(new Response
+                        var responseLookup = LookupResponse(response, form.Questions, log);
+                        if (responseLookup.questionOptionId.Any())
                         {
-                            Id = Guid.NewGuid(),
-                            ResponseString = response.Response,
-                            QuestionId = question?.Id
-                        });
+                            foreach (var questionOptionId in responseLookup.questionOptionId)
+                            {
+                                context.Responses.Add(new Response
+                                {
+                                    Id = Guid.NewGuid(),
+                                    RegistrationId = registration.Id,
+                                    ResponseString = string.IsNullOrEmpty(response.Response) ? string.Join(", ", response.Responses) : response.Response,
+                                    QuestionId = responseLookup.questionId,
+                                    QuestionOptionId = questionOptionId
+                                });
+                            }
+                        }
+                        else
+                        {
+                            context.Responses.Add(new Response
+                            {
+                                Id = Guid.NewGuid(),
+                                RegistrationId = registration.Id,
+                                ResponseString = string.IsNullOrEmpty(response.Response) ? string.Join(", ", response.Responses) : response.Response,
+                                QuestionId = responseLookup.questionId,
+                            });
+                        }
                     }
+
                     context.Registrations.Add(registration);
                 }
                 else
@@ -101,13 +117,14 @@ namespace EventRegistrator.Functions.Registrations
                         Content = new StringContent($"Registration with id '{id}' already exists")
                     };
                 }
-
-                await context.SaveChangesAsync();
                 registeredEvent = new RegistrationReceived
                 {
                     RegistrationId = registration.Id,
                     Registration = registration
                 };
+                context.DomainEvents.Save(registeredEvent, form.Id);
+
+                await context.SaveChangesAsync();
             }
 
             var client = QueueClient.CreateFromConnectionString(ConnectionString, "ReceivedRegistrations");
@@ -116,6 +133,20 @@ namespace EventRegistrator.Functions.Registrations
 
             // Fetching the name from the path parameter in the request URL
             return req.CreateResponse(HttpStatusCode.OK);
+        }
+
+        private static (Guid? questionId, IEnumerable<Guid> questionOptionId) LookupResponse(ResponseData response, IEnumerable<Question> questions, TraceWriter log)
+        {
+            var question = questions?.FirstOrDefault(qst => qst.ExternalId == response.QuestionExternalId);
+            if (question?.Type == QuestionType.Checkbox && response.Responses.Any())
+            {
+                log.Info(string.Join(", ", response.Responses));
+                var optionIds = question.QuestionOptions?.Where(qop => response.Responses.Any(rsp => rsp == qop.Answer)).Select(qop => qop.Id).ToList();
+                log.Info(optionIds?.Count.ToString());
+                return (question.Id, optionIds);
+            }
+            var optionId = question?.QuestionOptions?.Where(qop => qop.Answer == response.Response).FirstOrDefault()?.Id;
+            return (question?.Id, optionId.HasValue ? new[] { optionId.Value } : new Guid[] { });
         }
     }
 }
