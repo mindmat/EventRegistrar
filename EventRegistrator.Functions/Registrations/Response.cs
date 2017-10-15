@@ -9,5 +9,6 @@ namespace EventRegistrator.Functions.Registrations
         public string ResponseString { get; set; }
         public Guid RegistrationId { get; set; }
         public Guid? QuestionOptionId { get; set; }
+        //public QuestionOptionToRegistrableMapping RegistrableMappings { get; set; }
     }
 }

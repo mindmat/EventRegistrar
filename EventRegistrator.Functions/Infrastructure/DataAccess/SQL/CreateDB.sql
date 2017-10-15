@@ -98,7 +98,7 @@ CREATE TABLE [dbo].[Responses](
 	QuestionId uniqueidentifier NULL,
 	ResponseString [varchar](max) NULL,
 	QuestionOptionId uniqueidentifier NULL,
-	RowVersion rowversion NOT NULL,
+	[RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_Responses] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -114,7 +114,7 @@ CREATE TABLE [dbo].[Registrables](
 	[Name] [nvarchar](200) NOT NULL,
 	MaximumSingleSeats int NULL,
 	MaximumDoubleSeats int NULL,
-	RowVersion rowversion NOT NULL,
+	[RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_LimitedResource] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -124,17 +124,18 @@ GO
 
 
 CREATE TABLE [dbo].[Seats](
-    [Id] [uniqueidentifier] NOT NULL,
-    [RegistrableId] [uniqueidentifier] NOT NULL,
-    [RegistrationId] [uniqueidentifier] NOT NULL,
-    [RegistrationId_Partner] [uniqueidentifier] NOT NULL,
-    [RowVersion] [timestamp] NOT NULL,
+	[Id] [uniqueidentifier] NOT NULL,
+	[RegistrableId] [uniqueidentifier] NOT NULL,
+	[RegistrationId] [uniqueidentifier] NOT NULL,
+	[RegistrationId_Partner] [uniqueidentifier] NULL,
+	[RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_Seats] PRIMARY KEY CLUSTERED 
 (
-    [Id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
+
 
 
 CREATE TABLE [dbo].[LimitedResources](
@@ -144,6 +145,20 @@ CREATE TABLE [dbo].[LimitedResources](
 	[MaximumSeats] [int] NULL,
 	[RowVersion] [timestamp] NOT NULL,
  CONSTRAINT [PK_LimitedResource] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+
+CREATE TABLE [dbo].[DomainEvents](
+	[Id] [uniqueidentifier] NOT NULL,
+	[AggregateId] [uniqueidentifier] NULL,
+	[Timestamp] [datetime2](7) NOT NULL,
+	[Sequence] [bigint] IDENTITY(1,1) NOT NULL,
+	[Type] [nvarchar](max) NOT NULL,
+	[Data] [nvarchar](max) NOT NULL,
+ CONSTRAINT [PK_DomainEvents] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)

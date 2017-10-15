@@ -32,9 +32,15 @@ namespace EventRegistrator.Functions.Registrations
             log.Info("C# HTTP trigger function processed a request.");
             var googleRegistration = await req.Content.ReadAsAsync<GoogleForms.Registration>();
 
-            log.Info(await req.Content.ReadAsStringAsync());
+            var saveEventTask = DomainEventPersistor.Log(new RegistrationReceived
+            {
+                FormExternalIdentifier = formId,
+                RegistrationExternalIdentifier = id,
+                Registration = await req.Content.ReadAsStringAsync()
+            });
 
-            RegistrationReceived registeredEvent;
+            RegistrationRegistered registrationRegistered;
+
             using (var context = new EventRegistratorDbContext())
             {
                 var form = await context.RegistrationForms
@@ -117,19 +123,21 @@ namespace EventRegistrator.Functions.Registrations
                         Content = new StringContent($"Registration with id '{id}' already exists")
                     };
                 }
-                registeredEvent = new RegistrationReceived
+
+                await context.SaveChangesAsync();
+
+                registrationRegistered = new RegistrationRegistered
                 {
                     RegistrationId = registration.Id,
                     Registration = registration
                 };
-                context.DomainEvents.Save(registeredEvent, form.Id);
-
-                await context.SaveChangesAsync();
+                context.DomainEvents.Save(registrationRegistered, form.Id);
             }
 
             var client = QueueClient.CreateFromConnectionString(ConnectionString, "ReceivedRegistrations");
-            var message = new BrokeredMessage(registeredEvent);
+            var message = new BrokeredMessage(registrationRegistered);
             await client.SendAsync(message);
+            await saveEventTask;
 
             // Fetching the name from the path parameter in the request URL
             return req.CreateResponse(HttpStatusCode.OK);

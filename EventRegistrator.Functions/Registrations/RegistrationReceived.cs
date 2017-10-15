@@ -1,10 +1,9 @@
-﻿using System;
-
-namespace EventRegistrator.Functions.Registrations
+﻿namespace EventRegistrator.Functions.Registrations
 {
     public class RegistrationReceived
     {
-        public Guid RegistrationId { get; set; }
-        public Registration Registration { get; set; }
+        public string FormExternalIdentifier { get; set; }
+        public string RegistrationExternalIdentifier { get; set; }
+        public string Registration { get; set; }
     }
 }

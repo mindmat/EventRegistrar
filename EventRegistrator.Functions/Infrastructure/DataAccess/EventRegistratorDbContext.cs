@@ -1,7 +1,9 @@
 ﻿using EventRegistrator.Functions.Events;
 using EventRegistrator.Functions.Infrastructure.DomainEvents;
+using EventRegistrator.Functions.Registrables;
 using EventRegistrator.Functions.RegistrationForms;
 using EventRegistrator.Functions.Registrations;
+using EventRegistrator.Functions.Seats;
 using System.Data.Entity;
 
 namespace EventRegistrator.Functions.Infrastructure.DataAccess
@@ -19,8 +21,11 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
         public DbSet<QuestionOption> QuestionOptions { get; set; }
         public DbSet<Registration> Registrations { get; set; }
         public DbSet<Response> Responses { get; set; }
+        public DbSet<Seat> Seats { get; set; }
 
         public DbSet<DomainEvent> DomainEvents { get; set; }
+        public DbSet<Registrable> Registrables { get; set; }
+        public DbSet<QuestionOptionToRegistrableMapping> QuestionOptionToRegistrableMappings { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -38,6 +43,16 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
                 .HasRequired(qop => qop.Question)
                 .WithMany(qst => qst.QuestionOptions)
                 .HasForeignKey(qop => qop.QuestionId);
+
+            modelBuilder.Entity<QuestionOptionToRegistrableMapping>()
+                .HasRequired(qop => qop.Registrable)
+                .WithMany(qst => qst.QuestionOptionMappings)
+                .HasForeignKey(qop => qop.RegistrableId);
+
+            modelBuilder.Entity<Seat>()
+                .HasRequired(seat => seat.Registrable)
+                .WithMany(rbl => rbl.Seats)
+                .HasForeignKey(seat => seat.RegistrableId);
 
             base.OnModelCreating(modelBuilder);
         }

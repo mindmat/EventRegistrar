@@ -6,7 +6,7 @@ namespace EventRegistrator.Functions.Infrastructure.DomainEvents
     public class DomainEvent
     {
         public Guid Id { get; set; }
-        public Guid AggregateId { get; set; }
+        public Guid? AggregateId { get; set; }
         public DateTime Timestamp { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
