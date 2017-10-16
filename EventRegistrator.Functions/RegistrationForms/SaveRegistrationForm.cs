@@ -113,7 +113,12 @@ namespace EventRegistrator.Functions.RegistrationForms
                                         Answer = receivedChoice
                                     });
                                 }
+                                else
+                                {
+                                    existingOptions.Remove(existingOption);
+                                }
                             }
+                            context.QuestionOptions.RemoveRange(existingOptions);
                         }
                     }
                 }

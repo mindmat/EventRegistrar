@@ -26,7 +26,7 @@ namespace EventRegistrator.Functions.Registrables
             log.Info($"C# ServiceBus queue trigger function processed message: {@event}");
             log.Info($"id {@event.RegistrationId}");
 
-            var seats = new List<Seat>();
+            var ownSeats = new List<Seat>();
             using (var context = new EventRegistratorDbContext())
             {
                 var responses = await context.Responses.Where(rsp => rsp.RegistrationId == @event.RegistrationId).ToListAsync();
@@ -52,27 +52,103 @@ namespace EventRegistrator.Functions.Registrables
                                          responses.Any(rsp => rsp.QuestionOptionId == registrable.QuestionOptionId_Follower.Value);
                         var role = isLeader ? Role.Leader : (isFollower ? Role.Follower : (Role?)null);
                         var seat = await ReserveSeat(context, @event.EventId, registrable.Registrable, response, @event.Registration.RespondentEmail, partnerEmail, role, log);
-                        seats.Add(seat);
+                        ownSeats.Add(seat);
                     }
                 }
 
                 await context.SaveChangesAsync();
 
-                var partnerSeat = seats.FirstOrDefault(st => st != null && !string.IsNullOrEmpty(st.PartnerEmail) && !st.IsWaitingList && st.RegistrationId.HasValue && st.RegistrationId_Follower.HasValue);
-                if (partnerSeat != null)
-                {
-                    var recipients = await context.Registrations.Where(reg => new[] { partnerSeat.RegistrationId, partnerSeat.RegistrationId_Follower }.Contains(reg.Id))
-                                                                .Select(reg => new MailAddress { Mail = reg.RespondentEmail, Name = reg.RespondentFirstName })
-                                                                .ToListAsync();
-                    log.Info($"SendMail, recipients: {string.Join(",", recipients.Select(rcp => rcp.Mail))}");
-
-                    await ServiceBusClient.SendEvent(new SendMailCommand
-                    {
-                        Recipients = recipients,
-                    }, SendMail.SendMailCommandsQueueName);
-                }
+                await SendStatusMail(registrables, ownSeats);
             }
         }
+
+        private static async Task SendStatusMail(List<QuestionOptionToRegistrableMapping> registrables, List<Seat> seats)
+        {
+            // Assumption: Only one Registrable has a limit
+            SendMailCommand sendMailCommand = null;
+            foreach (var seat in seats)
+            {
+                var registrable = registrables.FirstOrDefault(rbl => rbl.Id == seat.RegistrableId)?.Registrable;
+                if (registrable == null)
+                {
+                    throw new Exception($"No registrable found with Id {seat.RegistrableId}");
+                }
+                if (registrable.MaximumSingleSeats.HasValue)
+                {
+                    if (seat.IsWaitingList)
+                    {
+                        sendMailCommand = new SendMailCommand
+                        {
+                            Type = MailType.SingleRegistrationOnWaitingList,
+                            RegistrationId = seat.RegistrationId
+                        };
+                    }
+                    else
+                    {
+                        sendMailCommand = new SendMailCommand
+                        {
+                            Type = MailType.SingleRegistrationAccepted,
+                            RegistrationId = seat.RegistrationId
+                        };
+                    }
+                    break;
+                }
+                if (registrable.MaximumDoubleSeats.HasValue)
+                {
+                    if (seat.IsWaitingList)
+                    {
+                        sendMailCommand = new SendMailCommand
+                        {
+                            Type = MailType.DoubleRegistrationOnWaitingList,
+                            RegistrationId = seat.RegistrationId
+                        };
+                    }
+                    else
+                    {
+                        if (seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
+                        {
+                            sendMailCommand = new SendMailCommand
+                            {
+                                Type = MailType.DoubleRegistrationMatchedAndAccepted,
+                                RegistrationId = seat.RegistrationId
+                            };
+                        }
+                        else
+                        {
+                            sendMailCommand = new SendMailCommand
+                            {
+                                Type = MailType.DoubleRegistrationFirstPartnerAccepted,
+                                RegistrationId = seat.RegistrationId
+                            };
+                        }
+                    }
+                    break;
+                }
+            }
+            if (sendMailCommand != null)
+            {
+                await ServiceBusClient.SendEvent(sendMailCommand, SendMail.SendMailCommandsQueueName);
+            }
+        }
+
+        /*
+        private var partnerSeat = seats.FirstOrDefault(st => st != null && !string.IsNullOrEmpty(st.PartnerEmail) && !st.IsWaitingList && st.RegistrationId.HasValue && st.RegistrationId_Follower.HasValue);
+            if (partnerSeat != null)
+            {
+                private var recipients = await context.Registrations.Where(reg => new[] { partnerSeat.RegistrationId, partnerSeat.RegistrationId_Follower }.Contains(reg.Id))
+                    .Select(reg => new MailAddress { Mail = reg.RespondentEmail, Name = reg.RespondentFirstName })
+                    .ToListAsync();
+
+        log.Info($"SendMail, recipients: {string.Join(",", recipients.Select(rcp => rcp.Mail))}");
+
+                await ServiceBusClient.SendEvent(new SendMailCommand
+
+                {
+                    Recipients = recipients,
+                }, SendMail.SendMailCommandsQueueName);
+            }
+        }
+        */
 
         private static async Task<Seat> ReserveSeat(EventRegistratorDbContext context,
                                                     Guid? eventId,
@@ -91,6 +167,7 @@ namespace EventRegistrator.Functions.Registrables
                 {
                     seat = new Seat
                     {
+                        FirstPartnerJoined = DateTime.UtcNow,
                         RegistrationId = response.RegistrationId,
                         RegistrableId = registrable.Id
                     };
