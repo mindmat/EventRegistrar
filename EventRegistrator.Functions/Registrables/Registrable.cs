@@ -11,7 +11,7 @@ namespace EventRegistrator.Functions.Registrables
         public string Name { get; set; }
         public int? MaximumSingleSeats { get; set; }
         public int? MaximumDoubleSeats { get; set; }
-
+        public int? MaximumAllowedImbalance { get; set; }
         public ICollection<QuestionOptionToRegistrableMapping> QuestionOptionMappings { get; set; }
         public ICollection<Seat> Seats { get; set; }
     }

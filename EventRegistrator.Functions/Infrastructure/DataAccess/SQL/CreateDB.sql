@@ -114,6 +114,7 @@ CREATE TABLE [dbo].[Registrables](
 	[Name] [nvarchar](200) NOT NULL,
 	MaximumSingleSeats int NULL,
 	MaximumDoubleSeats int NULL,
+	MaximumAllowedImbalance int NULL,
 	[RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_LimitedResource] PRIMARY KEY CLUSTERED 
 (
@@ -126,9 +127,11 @@ GO
 CREATE TABLE [dbo].[Seats](
 	[Id] [uniqueidentifier] NOT NULL,
 	[RegistrableId] [uniqueidentifier] NOT NULL,
-	[RegistrationId] [uniqueidentifier] NOT NULL,
-	[RegistrationId_Partner] [uniqueidentifier] NULL,
-	[RowVersion] rowversion NOT NULL,
+	[RegistrationId] [uniqueidentifier] NULL,
+	[RegistrationId_Follower] [uniqueidentifier] NULL,
+	PartnerEmail NVARCHAR(200) NULL,
+	[FirstPartnerJoined] [datetime2](7) NULL,
+	[RowVersion] [timestamp] NOT NULL,
  CONSTRAINT [PK_Seats] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
@@ -138,18 +141,24 @@ GO
 
 
 
-CREATE TABLE [dbo].[LimitedResources](
+CREATE TABLE [dbo].[QuestionOptionToRegistrableMappings](
 	[Id] [uniqueidentifier] NOT NULL,
-	[EventId] [uniqueidentifier] NOT NULL,
-	[Name] [nvarchar](200) NOT NULL,
-	[MaximumSeats] [int] NULL,
+	[QuestionOptionId] [uniqueidentifier] NOT NULL,
+	QuestionId_PartnerEmail [uniqueidentifier] NULL,
+	[QuestionOptionId_Leader] [uniqueidentifier] NULL,
+	[QuestionOptionId_Follower] [uniqueidentifier] NULL,
+	[RegistrableId] [uniqueidentifier] NOT NULL,
 	[RowVersion] [timestamp] NOT NULL,
- CONSTRAINT [PK_LimitedResource] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_QuestionOptionToRegistrableMapping] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
+
+
+
+
 
 CREATE TABLE [dbo].[DomainEvents](
 	[Id] [uniqueidentifier] NOT NULL,

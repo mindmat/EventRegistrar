@@ -29,20 +29,25 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Question>()
-                .HasRequired(qst => qst.RegistrationForm)
-                .WithMany(frm => frm.Questions)
-                .HasForeignKey(qst => qst.RegistrationFormId);
+            //modelBuilder.Entity<Question>()
+            //    .HasRequired(qst => qst.RegistrationForm)
+            //    .WithMany(frm => frm.Questions)
+            //    .HasForeignKey(qst => qst.RegistrationFormId);
 
             modelBuilder.Entity<RegistrationForm>()
                 .HasRequired(frm => frm.Event)
                 .WithMany()
                 .HasForeignKey(frm => frm.EventId);
 
-            modelBuilder.Entity<QuestionOption>()
-                .HasRequired(qop => qop.Question)
-                .WithMany(qst => qst.QuestionOptions)
-                .HasForeignKey(qop => qop.QuestionId);
+            modelBuilder.Entity<Registration>()
+                .HasRequired(frm => frm.RegistrationForm)
+                .WithMany()
+                .HasForeignKey(frm => frm.RegistrationFormId);
+
+            //modelBuilder.Entity<QuestionOption>()
+            //    .HasRequired(qop => qop.Question)
+            //    .WithMany(qst => qst.QuestionOptions)
+            //    .HasForeignKey(qop => qop.QuestionId);
 
             modelBuilder.Entity<QuestionOptionToRegistrableMapping>()
                 .HasRequired(qop => qop.Registrable)

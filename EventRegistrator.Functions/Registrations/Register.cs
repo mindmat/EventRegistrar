@@ -128,6 +128,7 @@ namespace EventRegistrator.Functions.Registrations
 
                 registrationRegistered = new RegistrationRegistered
                 {
+                    EventId = form.EventId,
                     RegistrationId = registration.Id,
                     Registration = registration
                 };
