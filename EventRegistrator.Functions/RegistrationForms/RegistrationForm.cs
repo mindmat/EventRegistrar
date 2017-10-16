@@ -12,7 +12,7 @@ namespace EventRegistrator.Functions.RegistrationForms
         public string Title { get; set; }
 
         public ICollection<Question> Questions { get; set; }
-
+        public Guid? QuestionId_FirstName { get; set; }
         public Guid? EventId { get; set; }
         public Event Event { get; set; }
         public State State { get; set; }

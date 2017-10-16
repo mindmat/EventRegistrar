@@ -1,4 +1,6 @@
+using EventRegistrator.Functions.Infrastructure.Bus;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
+using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Registrations;
 using EventRegistrator.Functions.Seats;
 using Microsoft.Azure.WebJobs;
@@ -14,14 +16,17 @@ namespace EventRegistrator.Functions.Registrables
 {
     public static class ProcessNewRegistration
     {
+        public const string ReceivedRegistrationsQueueName = "ReceivedRegistrations";
+
         [FunctionName("ProcessNewRegistration")]
         public static async Task Run(
-            [ServiceBusTrigger("ReceivedRegistrations", AccessRights.Listen, Connection = "ServiceBusEndpoint")]
+            [ServiceBusTrigger(ReceivedRegistrationsQueueName, AccessRights.Listen, Connection = "ServiceBusEndpoint")]
             RegistrationRegistered @event, TraceWriter log)
         {
             log.Info($"C# ServiceBus queue trigger function processed message: {@event}");
             log.Info($"id {@event.RegistrationId}");
 
+            var seats = new List<Seat>();
             using (var context = new EventRegistratorDbContext())
             {
                 var responses = await context.Responses.Where(rsp => rsp.RegistrationId == @event.RegistrationId).ToListAsync();
@@ -46,11 +51,26 @@ namespace EventRegistrator.Functions.Registrables
                         var isFollower = registrable.QuestionOptionId_Follower.HasValue &&
                                          responses.Any(rsp => rsp.QuestionOptionId == registrable.QuestionOptionId_Follower.Value);
                         var role = isLeader ? Role.Leader : (isFollower ? Role.Follower : (Role?)null);
-                        await ReserveSeat(context, @event.EventId, registrable.Registrable, response, @event.Registration.RespondentEmail, partnerEmail, role, log);
+                        var seat = await ReserveSeat(context, @event.EventId, registrable.Registrable, response, @event.Registration.RespondentEmail, partnerEmail, role, log);
+                        seats.Add(seat);
                     }
                 }
 
                 await context.SaveChangesAsync();
+
+                var partnerSeat = seats.FirstOrDefault(st => st != null && !string.IsNullOrEmpty(st.PartnerEmail) && !st.IsWaitingList && st.RegistrationId.HasValue && st.RegistrationId_Follower.HasValue);
+                if (partnerSeat != null)
+                {
+                    var recipients = await context.Registrations.Where(reg => new[] { partnerSeat.RegistrationId, partnerSeat.RegistrationId_Follower }.Contains(reg.Id))
+                                                                .Select(reg => new MailAddress { Mail = reg.RespondentEmail, Name = reg.RespondentFirstName })
+                                                                .ToListAsync();
+                    log.Info($"SendMail, recipients: {string.Join(",", recipients.Select(rcp => rcp.Mail))}");
+
+                    await ServiceBusClient.SendEvent(new SendMailCommand
+                    {
+                        Recipients = recipients,
+                    }, SendMail.SendMailCommandsQueueName);
+                }
             }
         }
 
@@ -140,12 +160,19 @@ namespace EventRegistrator.Functions.Registrables
                     };
                 }
             }
-
-            if (seat != null)
+            else
             {
-                seat.Id = Guid.NewGuid();
-                context.Seats.Add(seat);
+                // no limit
+                seat = new Seat
+                {
+                    RegistrationId = response.RegistrationId,
+                    RegistrableId = registrable.Id,
+                    FirstPartnerJoined = DateTime.UtcNow
+                };
             }
+
+            seat.Id = Guid.NewGuid();
+            context.Seats.Add(seat);
 
             return seat;
         }
@@ -194,9 +221,9 @@ namespace EventRegistrator.Functions.Registrables
 
         private static Seat FindMatchingSingleSeat(Registrable registrable, Role ownRole)
         {
-            return registrable.Seats.FirstOrDefault(st => string.IsNullOrEmpty(st.PartnerEmail) &&
-                                                          ownRole == Role.Leader && !st.RegistrationId.HasValue ||
-                                                          ownRole == Role.Follower && !st.RegistrationId_Follower.HasValue);
+            return registrable.Seats?.FirstOrDefault(st => string.IsNullOrEmpty(st.PartnerEmail) &&
+                                                           ownRole == Role.Leader && !st.RegistrationId.HasValue ||
+                                                           ownRole == Role.Follower && !st.RegistrationId_Follower.HasValue);
         }
 
         private static async Task<Seat> FindPartnerSeat(Guid? eventId, string ownEmail, string partnerEmail, Role ownRole, ICollection<Seat> existingSeats, IQueryable<Registration> registrations, TraceWriter log)

@@ -6,6 +6,7 @@
     <PackageReference Include="EntityFramework" Version="6.2.0-beta1" />
     <PackageReference Include="Microsoft.Azure.WebJobs.ServiceBus" Version="2.1.0-beta4" />
     <PackageReference Include="Microsoft.NET.Sdk.Functions" Version="1.0.6" />
+    <PackageReference Include="Sendgrid" Version="9.9.0" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -21,7 +22,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Mailing\" />
     <Folder Include="Seats\" />
   </ItemGroup>
 </Project>

@@ -1,12 +1,13 @@
 using EventRegistrator.Functions.Events;
 using EventRegistrator.Functions.GoogleForms;
+using EventRegistrator.Functions.Infrastructure.Bus;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
 using EventRegistrator.Functions.Infrastructure.DomainEvents;
+using EventRegistrator.Functions.Registrables;
 using EventRegistrator.Functions.RegistrationForms;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
-using Microsoft.ServiceBus.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -20,8 +21,6 @@ namespace EventRegistrator.Functions.Registrations
 {
     public static class Register
     {
-        private const string ConnectionString = "Endpoint=sb://eventregistrator.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=DOPXPS/i/CJy7O7UxqdhGDAxacjZJhZMwfj+k311qCI=";
-
         [FunctionName("Register")]
         public static async Task<HttpResponseMessage> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registrationform/{formId}/registration/{id}")]HttpRequestMessage req,
@@ -112,8 +111,12 @@ namespace EventRegistrator.Functions.Registrations
                                 QuestionId = responseLookup.questionId,
                             });
                         }
+                        if (form.QuestionId_FirstName.HasValue &&
+                            responseLookup.questionId == form.QuestionId_FirstName)
+                        {
+                            registration.RespondentFirstName = response.Response;
+                        }
                     }
-
                     context.Registrations.Add(registration);
                 }
                 else
@@ -135,9 +138,7 @@ namespace EventRegistrator.Functions.Registrations
                 context.DomainEvents.Save(registrationRegistered, form.Id);
             }
 
-            var client = QueueClient.CreateFromConnectionString(ConnectionString, "ReceivedRegistrations");
-            var message = new BrokeredMessage(registrationRegistered);
-            await client.SendAsync(message);
+            await ServiceBusClient.SendEvent(registrationRegistered, ProcessNewRegistration.ReceivedRegistrationsQueueName);
             await saveEventTask;
 
             // Fetching the name from the path parameter in the request URL

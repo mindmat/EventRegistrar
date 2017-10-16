@@ -36,6 +36,7 @@ GO
 CREATE TABLE [dbo].[RegistrationForms](
     [Id] [uniqueidentifier] NOT NULL,
     [EventId] [uniqueidentifier] NULL,
+    QuestionId_FirstName uniqueidentifier NULL,
     [ExternalIdentifier] [varchar](50) NULL,
     [Title] [varchar](50) NULL,
     [State] [int] NOT NULL,
@@ -80,7 +81,8 @@ CREATE TABLE [dbo].[Registrations](
     [Id] [uniqueidentifier] NOT NULL,
     [RegistrationFormId] [uniqueidentifier] NOT NULL,
     [ExternalIdentifier] [varchar](100) NULL,
-    [RespondentEmail] [varchar](200) NULL,
+    [RespondentEmail] nvarchar(200) NULL,
+	RespondentFirstName nvarchar(100) NULL,
     ReceivedAt datetime2(7) NOT NULL,
     ExternalTimestamp datetime2(7) NULL,
     [RowVersion] rowversion NOT NULL,

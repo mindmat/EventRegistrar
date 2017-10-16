@@ -10,6 +10,7 @@ namespace EventRegistrator.Functions.Registrations
         public RegistrationForm RegistrationForm { get; set; }
         public string ExternalIdentifier { get; set; }
         public string RespondentEmail { get; set; }
+        public string RespondentFirstName { get; set; }
         public DateTime ReceivedAt { get; set; }
         public DateTime ExternalTimestamp { get; set; }
     }
