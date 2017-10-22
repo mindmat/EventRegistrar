@@ -15,5 +15,6 @@ namespace EventRegistrator.Functions.RegistrationForms
         public string Title { get; set; }
         public QuestionType Type { get; set; }
         public ICollection<QuestionOption> QuestionOptions { get; set; }
+        public string TemplateKey { get; set; }
     }
 }

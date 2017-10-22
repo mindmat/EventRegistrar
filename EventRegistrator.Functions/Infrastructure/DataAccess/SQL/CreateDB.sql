@@ -48,17 +48,18 @@ CREATE TABLE [dbo].[RegistrationForms](
 )
 GO
 
-CREATE TABLE [dbo].[Question](
-    [Id] [uniqueidentifier] NOT NULL,
-    [RegistrationFormId] [uniqueidentifier] NOT NULL,
-    [ExternalId] [int] NULL,
-    [Index] [int] NULL,
-    [Title] [varchar](max) NULL,
-    [Type] [int] NULL,
-    [RowVersion] rowversion NOT NULL,
+CREATE TABLE [dbo].[Questions](
+	[Id] [uniqueidentifier] NOT NULL,
+	[RegistrationFormId] [uniqueidentifier] NOT NULL,
+	[ExternalId] [int] NULL,
+	[Index] [int] NULL,
+	[Title] [nvarchar](max) NULL,
+	[TemplateKey] [nvarchar](200) NULL,
+	[Type] [int] NULL,
+	[RowVersion] [timestamp] NOT NULL,
  CONSTRAINT [PK_Question] PRIMARY KEY CLUSTERED 
 (
-    [Id] ASC
+	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
@@ -68,6 +69,7 @@ CREATE TABLE [dbo].[QuestionOptions](
     [Id] [uniqueidentifier] NOT NULL,
     [QuestionId] [uniqueidentifier] NOT NULL,
     [Answer] [varchar](max) NOT NULL,
+	[TemplateKey] [nvarchar](200) NULL,
     [RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_QuestionOptions] PRIMARY KEY CLUSTERED 
 (
@@ -158,6 +160,24 @@ CREATE TABLE [dbo].[QuestionOptionToRegistrableMappings](
 )
 GO
 
+
+CREATE TABLE [dbo].[MailTemplates](
+	[Id] [uniqueidentifier] NOT NULL,
+	[EventId] [uniqueidentifier] NOT NULL,
+	[Language] nchar(2) NOT NULL,
+	[Subject] nvarchar(max) NOT NULL,
+	SenderMail nvarchar(200) NOT NULL,
+	SenderName nvarchar(200) NOT NULL,
+	[Type] [int] NOT NULL,
+	[ContentType] [int] NOT NULL,
+	[Template] [nvarchar](max) NOT NULL,
+	[RowVersion] [timestamp] NOT NULL,
+ CONSTRAINT [PK_MailTemplates] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
 
 
 

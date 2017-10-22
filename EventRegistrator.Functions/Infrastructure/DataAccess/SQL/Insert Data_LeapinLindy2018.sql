@@ -1,5 +1,6 @@
 ﻿BEGIN TRAN
 
+DELETE FROM MailTemplates
 DELETE FROM Registrables
 DELETE FROM QuestionOptionToRegistrableMappings
 
@@ -87,8 +88,176 @@ INSERT INTO [dbo].[QuestionOptionToRegistrableMappings](Id, RegistrableId, Quest
 		 -- Helfereinsatz
          (NEWID(), '16371CE3-8316-49E3-B791-AD38B03BD859', '948F6AF3-1596-4715-90AB-CE64B89A0F51', NULL, NULL, NULL)
 
+
+INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
+VALUES ('A3A7144D-F51F-4B51-ACDD-9FE96F197506', '762A93A4-56E0-402C-B700-1CFB3362B39D', 1, 1, 'Anmeldebestätigung', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
+'*********************************************************************************************
+BITTE NICHT AUF DIESE EMAIL ANTWORTEN.
+DU KANNST UNS VIA WEBSITE LEAPINLINDY.CH KONTAKTIEREN.
+*********************************************************************************************
+
+
+Herzlichen Dank für deine Anmeldung zu Leapin'' Lindy 2016! 
+Beiliegend findest du  alle deine Anmeldedetails. Bitte erwähne deine 
+Mailadresse bei der Überweisung des Kursgeldes. 
+Falls du auf der WARTELISTE bist, zahle bitte erst ein, nachdem du 
+von uns eine entsprechende Email bekommen hast. Deine Teilnahme wird 
+erst nach Eingang deiner Zahlung bestätigt.
+
+Wir freuen uns, dass du dabei bist!
+
+Das Leapin'' Lindy Team
+
+*********************************************************************************************
+
+---------------------------------
+Details 
+---------------------------------
+First name : {{Firstname}}
+Last name : {{Lastname}}
+Address : Sickingerstrasse 5
+Postal code : 3014
+City : {{City}}
+Country : Switzerland
+Phone : {{Phone}}
+Email : {{EMail}}
+---------------------------------
+Track or Ticket
+---------------------------------
+Track or Ticket : Lindy Level B, C, D, E Full Pass
+Price category : Regular (CHF 300.00)
+---------------------------------
+Course Options
+---------------------------------
+Course level : Level C
+Role : Leader
+Partner or single registration : Single
+---------------------------------
+Lunch Break Options
+---------------------------------
+{{Lunch}}
+---------------------------------
+Solo Friday
+---------------------------------
+Solo class on Friday afternoon : {{SoloFriday}}
+---------------------------------
+Hosting
+---------------------------------
+Private hosting : 
+---------------------------------
+Terms
+---------------------------------
+I accept.
+Ich akzeptiere. : {{AcceptTerms}}
+---------------------------------
+Comments
+---------------------------------
+Comments : {{Comments}}
+---------------------------------
+Submit
+---------------------------------
+---------------------------------
+Cost
+---------------------------------
+Total Cost: {{TotalPrice}}
+
+
+*********************************************************************************************
+
+Zahlungsinformationen: 
+
+WICHTIG: MACHE EINE ÜBERWEISUNG PRO ANMELDUNG UND VERMERKE 
+DEINE MAILADRESSE!
+
+Deine Zahlung muss innerhalb von 14 Tagen nach Erhalt dieser 
+Email bei uns eintreffen.  Wenn wir deine Zahlung erhalten haben, 
+schicken wir dir eine Buchungsbestätigung. Bezahlst du nicht 
+innerhalb der Frist, wird deine Registrierung möglicherweise 
+storniert. Bitte beachte die untenstehende Regelung bezüglich 
+Absage und Rückerstattung.
+
+Konto: 60-224741-6
+Swing Machine Bern / Leapin Lindy
+3000 Bern
+
+IBAN: CH93 0900 0000 6022 4741 6
+BLZ: 09000
+BIC: POFICHBEXXX
+
+Bankadresse:
+Swiss Post - PostFinance
+Nordring 8
+3030 Bern
+Switzerland
+
+Bitte überweise immer Schweizer Franken. Spesen zu Lasten 
+des Absenders.
+
+Absagen und Rückerstattung: 
+Wenn du deine Anmeldung zurücknehmen musst, gelten folgende 
+Regeln für die Rückerstattungen:
+Absage bis zum 10. Januar 2018: volle Rückerstattung
+11. Januar - 31. Januar 2018: 50% Rückerstattung
+1. Februar 2018 und später: keine Rückerstattung
+
+Wenn du deine Anmeldung annulieren willst, kontaktiere uns 
+in jedem Fall damit wir deinen Platz freigeben können.
+
+WICHTIG:  Krankheit und Verletzung sind in der obigen 
+Regelung eingeschlossen.
+
+Kannst du kurzfristig nicht teilnehmen, werden wir versuchen, 
+einen Ersatz auf der Warteliste zu finden. Gelingt uns dies, 
+ist eine Rückerstattung möglich, aber nicht garantiert. 
+Im Grundsatz behält die Regelung Gültigkeit.
+
+In jedem Falle steht es dir frei, selbst einen Ersatz für 
+deinen Workshopplatz oder Partypass zu finden. Bitte 
+kontaktiere uns vor dem Check-In, wenn du deine Anmeldung an 
+eine andere  Person übertragen hast. Du bleibst aber 
+weiterhin für die Zahlung des Kursgeledes verantwortlich.
+
+Versicherung:
+Versicherung ist Sache der Teilnehmenden. Der Veranstalter 
+lehnt jede Haftung ab.
+
+*********************************************************************************************
+')
+
+
 SELECT * FROM [Registrables]
 SELECT * FROM [QuestionOptionToRegistrableMappings]
+SELECT * FROM MailTemplates
+
+/*
+INSERT INTO Questions(Id,RegistrationFormId, ExternalId, [Index], Title, [Type], TemplateKey)
+VALUES ('97E64CF7-C90A-42B3-B22F-00799A7D9D99', 'A64607FD-C7D3-4B49-A136-C8B900554CE5',  889980871, 12, 'Hosting',                                                              10, NULL),
+       ('151BA324-DF83-4B96-862E-09D044527E31', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 1920996284, 14, 'Wieviele Plätze suchst du/bietest du an?',                             14, NULL),
+       ('B96DFED0-5D10-4EA1-AFAA-0F2E164FE4A5', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 2076833470,  5, 'PartnerIn',                                                            14, NULL),
+       ('C9765EF8-9982-45B8-8D1E-17A55DAC8630', 'A64607FD-C7D3-4B49-A136-C8B900554CE5',  804832609, 24, 'Bemerkung',                                                            11, 'Comments'),
+       ('21428024-5148-4CE1-865D-2208565C514A', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 2133664923, 23, 'Ermässigung',                                                           1, 'Reduction'),
+       ('A1E3A0C1-D20C-4982-BECB-339BC393D0D2', 'A64607FD-C7D3-4B49-A136-C8B900554CE5',  608838139,  2, 'Lindy Hop',                                                            10, NULL),
+       ('A9AC2D64-3FD2-4CDB-9C97-3D2678D4C7D4', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 1899243752, 22, 'Möchtest du das Leapin'' Lindy mit einem Helfereinsatz unterstützen?',  9, 'Volunteer'),
+       ('DC20E341-0C70-4586-82DC-3F1C68A0332D', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 1369312054,  8, 'Level',                                                                 9, NULL),
+       ('E4D2134C-3715-480F-9AA5-3FA48B8DDE09', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 1255242239, 21, 'Telefon',                                                              14, 'Phone'),
+       ('FFA094EB-4D86-4EDE-A38B-471642D0E89A', 'A64607FD-C7D3-4B49-A136-C8B900554CE5',  344556095, 10, 'Parties',                                                              10, NULL),
+       ('F7D92B84-1585-4439-A7C4-4742BFD1DBD5', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 1143546962, 15, 'Name der Personen, die neben dir eine Privatunterkunft suchen',        11, NULL),
+       ('72B20546-C4B1-4359-9EB5-49DD321E91E7', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 2089526903,  3, 'Level',                                                                 9, NULL),
+       ('DDD3DBC1-A5C6-44C8-BDE1-58A07EDE65AD', 'A64607FD-C7D3-4B49-A136-C8B900554CE5',  470443258,  7, 'Solo Jazz',                                                            10, NULL),
+       ('F0498AD3-10F7-47C1-B5E5-5E076DAD309E', 'A64607FD-C7D3-4B49-A136-C8B900554CE5',  879403399, 19, 'Vorname',                                                              14, 'FirstName'),
+       ('0FD29EF5-ED63-44E1-B97B-7E8C98112CDE', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 2102833682, 11, 'Abende',                                                                1, NULL),
+       ('728ED78D-FC07-4999-B495-A30B96FFBE16', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 1604925183,  4, 'Rolle',                                                                 9, 'LindyRole'),
+       ('B02B82C9-416C-4F80-92CC-A46BBBF62831', 'A64607FD-C7D3-4B49-A136-C8B900554CE5',  950704349,  6, 'Mittagessen',                                                           9, 'Lunch'),
+       ('A21BAD00-BF6E-4B60-8C26-A8518B33BA11', 'A64607FD-C7D3-4B49-A136-C8B900554CE5',  494424461,  1, 'Bist du am Solo Friday dabei?',                                         9, 'SoloFriday'),
+       ('3F27FAB6-67D2-450D-8D74-B7005B2694C1', 'A64607FD-C7D3-4B49-A136-C8B900554CE5',  297145218,  0, 'Was möchtest du buchen?',                                               9, NULL),
+       ('EC314126-6C0A-4A35-A66E-B7BF027824CA', 'A64607FD-C7D3-4B49-A136-C8B900554CE5',  801386634,  9, 'Mittagessen',                                                           9, 'Lunch'),
+       ('5A4B6454-CF84-4765-9DB0-C06405F9E6B7', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 1368088649, 20, 'Wohnort',                                                              14, NULL),
+       ('648DA814-1AAB-499A-A8C7-C184F7CC81BF', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 1755807979, 16, 'Anreise',                                                               1, NULL),
+       ('B726121A-2B10-474E-AE94-C9B8049AB432', 'A64607FD-C7D3-4B49-A136-C8B900554CE5',  215264059, 18, 'Name',                                                                 14, 'LastName'),
+       ('4E520EDE-5059-47D5-8884-DEEEC0A24498', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 1942708452, 17, 'Persönliche Angaben',                                                  10, NULL),
+       ('95144651-99E4-45C9-870A-F4058DEDFF09', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 1684283454, 25, 'AGBs',                                                                  1, 'AcceptTerms'),
+       ('54F64506-D9B9-4379-9CDB-F641DE6986A2', 'A64607FD-C7D3-4B49-A136-C8B900554CE5', 1059862823, 13, '',                                                                      9, NULL)
+*/
 
 ROLLBACK
 

@@ -1,5 +1,6 @@
 ﻿using EventRegistrator.Functions.Events;
 using EventRegistrator.Functions.Infrastructure.DomainEvents;
+using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Registrables;
 using EventRegistrator.Functions.RegistrationForms;
 using EventRegistrator.Functions.Registrations;
@@ -22,6 +23,7 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
         public DbSet<Registration> Registrations { get; set; }
         public DbSet<Response> Responses { get; set; }
         public DbSet<Seat> Seats { get; set; }
+        public DbSet<MailTemplate> MailTemplates { get; set; }
 
         public DbSet<DomainEvent> DomainEvents { get; set; }
         public DbSet<Registrable> Registrables { get; set; }
@@ -43,6 +45,11 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
                 .HasRequired(frm => frm.RegistrationForm)
                 .WithMany()
                 .HasForeignKey(frm => frm.RegistrationFormId);
+
+            modelBuilder.Entity<Response>()
+                .HasOptional(frm => frm.Question)
+                .WithMany()
+                .HasForeignKey(frm => frm.QuestionId);
 
             //modelBuilder.Entity<QuestionOption>()
             //    .HasRequired(qop => qop.Question)

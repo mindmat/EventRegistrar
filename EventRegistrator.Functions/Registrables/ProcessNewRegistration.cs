@@ -55,20 +55,20 @@ namespace EventRegistrator.Functions.Registrables
                         ownSeats.Add(seat);
                     }
                 }
+                var eventRegistrable = await context.Registrables.Where(rbl => rbl.EventId == @event.EventId).ToListAsync();
+                await SendStatusMail(eventRegistrable, ownSeats);
 
                 await context.SaveChangesAsync();
-
-                await SendStatusMail(registrables, ownSeats);
             }
         }
 
-        private static async Task SendStatusMail(List<QuestionOptionToRegistrableMapping> registrables, List<Seat> seats)
+        private static async Task SendStatusMail(ICollection<Registrable> registrables, List<Seat> seats)
         {
             // Assumption: Only one Registrable has a limit
             SendMailCommand sendMailCommand = null;
             foreach (var seat in seats)
             {
-                var registrable = registrables.FirstOrDefault(rbl => rbl.Id == seat.RegistrableId)?.Registrable;
+                var registrable = registrables.FirstOrDefault(rbl => rbl.Id == seat.RegistrableId);
                 if (registrable == null)
                 {
                     throw new Exception($"No registrable found with Id {seat.RegistrableId}");
