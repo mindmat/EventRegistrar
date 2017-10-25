@@ -97,7 +97,7 @@ DU KANNST UNS VIA WEBSITE LEAPINLINDY.CH KONTAKTIEREN.
 *********************************************************************************************
 
 
-Herzlichen Dank für deine Anmeldung zu Leapin'' Lindy 2016! 
+Herzlichen Dank für deine Anmeldung zu Leapin'' Lindy 2018! 
 Beiliegend findest du  alle deine Anmeldedetails. Bitte erwähne deine 
 Mailadresse bei der Überweisung des Kursgeldes. 
 Falls du auf der WARTELISTE bist, zahle bitte erst ein, nachdem du 

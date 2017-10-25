@@ -49,9 +49,9 @@ namespace EventRegistrator.Functions.Mailing
                                                  rsp.ResponseString
                                              })
                                              .ToListAsync();
-                foreach (var key in templateFiller.Parameters.Keys.Select(k => k?.ToUpper()).ToList())
+                foreach (var key in templateFiller.Parameters.Keys.ToList())
                 {
-                    templateFiller[key] = responses.FirstOrDefault(rsp => rsp.TemplateKey?.ToUpper() == key)?.ResponseString;
+                    templateFiller[key] = responses.FirstOrDefault(rsp => rsp.TemplateKey == key)?.ResponseString;
                 }
 
                 var msg = new SendGridMessage

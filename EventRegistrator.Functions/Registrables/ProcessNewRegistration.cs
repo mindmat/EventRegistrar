@@ -273,7 +273,7 @@ namespace EventRegistrator.Functions.Registrables
         private static bool CanAddNewDoubleSeat(Registrable registrable, Role ownRole)
         {
             // check overall
-            if (registrable.Seats.Count >= registrable.MaximumDoubleSeats.Value)
+            if (registrable.Seats.Count >= (registrable.MaximumDoubleSeats ?? int.MaxValue))
             {
                 return false;
             }
