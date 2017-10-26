@@ -119,6 +119,7 @@ CREATE TABLE [dbo].[Registrables](
 	MaximumSingleSeats int NULL,
 	MaximumDoubleSeats int NULL,
 	MaximumAllowedImbalance int NULL,
+	ShowInMailListOrder int NULL,
 	[RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_LimitedResource] PRIMARY KEY CLUSTERED 
 (

@@ -4,29 +4,29 @@ DELETE FROM MailTemplates
 DELETE FROM Registrables
 DELETE FROM QuestionOptionToRegistrableMappings
 
-INSERT INTO [dbo].[Registrables]([Id], [EventId], [Name], [MaximumSingleSeats], [MaximumDoubleSeats], MaximumAllowedImbalance)
-     VALUES('118A9B4F-D14E-4FD4-9E1C-A6771416E088', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Lindy Hop Beginner Intermediate', NULL, 33,   3),
-           ('2DBF19B6-6DBD-4050-AC4B-683B9BBA9A98', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Lindy Hop Intermediate',          NULL, 33,   3),
-           ('9310B016-D70F-4EB1-8F04-57412132F4A8', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Lindy Hop Intermediate Advanced', NULL, 33,   3),
-           ('373E0514-2F5F-4499-990A-A130B9D38142', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Lindy Hop Advanced/Advanced+',    NULL, 66,   5),
+INSERT INTO [dbo].[Registrables]([Id], [EventId], [Name], [MaximumSingleSeats], [MaximumDoubleSeats], MaximumAllowedImbalance, ShowInMailList)
+     VALUES('118A9B4F-D14E-4FD4-9E1C-A6771416E088', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Lindy Hop Beginner Intermediate', NULL, 33,   3,    1),
+           ('2DBF19B6-6DBD-4050-AC4B-683B9BBA9A98', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Lindy Hop Intermediate',          NULL, 33,   3,    1),
+           ('9310B016-D70F-4EB1-8F04-57412132F4A8', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Lindy Hop Intermediate Advanced', NULL, 33,   3,    1),
+           ('373E0514-2F5F-4499-990A-A130B9D38142', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Lindy Hop Advanced/Advanced+',    NULL, 66,   5,    1),
 
-           ('0488F651-A8B7-4369-8918-31EBABF7763B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Solo Jazz Intermediate',          40,   NULL, NULL),
-           ('57DE8C38-09EB-47EC-8697-A8D700CBDA44', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Solo Jazz Advanced',              40,   NULL, NULL),
+           ('0488F651-A8B7-4369-8918-31EBABF7763B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Solo Jazz Intermediate',          40,   NULL, NULL, 1),
+           ('57DE8C38-09EB-47EC-8697-A8D700CBDA44', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Solo Jazz Advanced',              40,   NULL, NULL, 1),
 
-           ('CC695010-41F4-4B6B-B4E5-32294284EDB5', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Solo Friday',                     NULL, NULL, NULL),
+           ('CC695010-41F4-4B6B-B4E5-32294284EDB5', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Solo Friday',                     NULL, NULL, NULL, 1),
 
-           ('8720326D-D055-4E65-A1F9-A8CA14510652', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Fleisch',             NULL, NULL, NULL),
-           ('B6A69D4B-9FB8-4E6B-89E5-4BCFEA0EAC31', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Vegi',                NULL, NULL, NULL),
-           ('60E2A4B1-5577-4499-B3FC-B202FC360F2B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Salatbar',            NULL, NULL, NULL),
+           ('8720326D-D055-4E65-A1F9-A8CA14510652', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Fleisch',             NULL, NULL, NULL, 1),
+           ('B6A69D4B-9FB8-4E6B-89E5-4BCFEA0EAC31', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Vegi',                NULL, NULL, NULL, 1),
+           ('60E2A4B1-5577-4499-B3FC-B202FC360F2B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Salatbar',            NULL, NULL, NULL, 1),
 
-           ('A425D0FD-DAF0-4783-8AE9-10029076063E', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Party Donnerstag',                60,   NULL, NULL),
-           ('88F013C5-5915-4513-98CE-E58D4DB9875E', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Party Freitag',                   60,   NULL, NULL),
-           ('C202D212-E69E-44DB-81AF-09045CD5E13B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Party Samstag',                   60,   NULL, NULL),
+           ('A425D0FD-DAF0-4783-8AE9-10029076063E', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Party Donnerstag',                60,   NULL, NULL, 1),
+           ('88F013C5-5915-4513-98CE-E58D4DB9875E', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Party Freitag',                   60,   NULL, NULL, 1),
+           ('C202D212-E69E-44DB-81AF-09045CD5E13B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Party Samstag',                   60,   NULL, NULL, 1),
 
-           ('1746CC39-7C95-4D03-B1BF-D599689B7B6A', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Bietet Hosting',                  NULL, NULL, NULL),
-           ('EE10CE23-8219-44DF-9F2A-4FDEC3DE1867', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Sucht Hosting',                   NULL, NULL, NULL),
+           ('1746CC39-7C95-4D03-B1BF-D599689B7B6A', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Bietet Hosting',                  NULL, NULL, NULL, 0),
+           ('EE10CE23-8219-44DF-9F2A-4FDEC3DE1867', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Sucht Hosting',                   NULL, NULL, NULL, 0),
 
-           ('16371CE3-8316-49E3-B791-AD38B03BD859', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Helfereinsatz',                   NULL, NULL, NULL)
+           ('16371CE3-8316-49E3-B791-AD38B03BD859', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Helfereinsatz',                   NULL, NULL, NULL, 0)
 
 INSERT INTO [dbo].[QuestionOptionToRegistrableMappings](Id, RegistrableId, QuestionOptionId, QuestionId_PartnerEmail, QuestionOptionId_Leader, QuestionOptionId_Follower)
   VALUES -- Lindy Hop Workshop

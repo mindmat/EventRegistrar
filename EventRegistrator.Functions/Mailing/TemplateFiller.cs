@@ -19,7 +19,11 @@ namespace EventRegistrator.Functions.Mailing
 
             foreach (Match match in _regex.Matches(template))
             {
-                _parameters.Add(match.Groups["property"].Value.ToUpper(), string.Empty);
+                var key = match.Groups["property"].Value.ToUpper();
+                if (!_parameters.ContainsKey(key))
+                {
+                    _parameters.Add(key, string.Empty);
+                }
             }
 
             //r.Matches(template).Select(m=> m);

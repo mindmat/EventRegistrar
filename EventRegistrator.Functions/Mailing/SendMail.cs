@@ -51,7 +51,14 @@ namespace EventRegistrator.Functions.Mailing
                                              .ToListAsync();
                 foreach (var key in templateFiller.Parameters.Keys.ToList())
                 {
-                    templateFiller[key] = responses.FirstOrDefault(rsp => rsp.TemplateKey == key)?.ResponseString;
+                    if (key == "SEATLIST")
+                    {
+                        templateFiller[key] = await GetSeatList(context, command);
+                    }
+                    else
+                    {
+                        templateFiller[key] = responses.FirstOrDefault(rsp => rsp.TemplateKey == key)?.ResponseString;
+                    }
                 }
 
                 var msg = new SendGridMessage
@@ -87,6 +94,16 @@ namespace EventRegistrator.Functions.Mailing
                     log.Warning($"SendMail status {response.StatusCode}, Body {await response.Body.ReadAsStringAsync()}");
                 }
             }
+        }
+
+        private static async Task<string> GetSeatList(EventRegistratorDbContext context, SendMailCommand command)
+        {
+            var registrables = await context.Seats
+                                     .Where(seat => seat.RegistrationId == command.RegistrationId && seat.Registrable.ShowInMailListOrder.HasValue)
+                                     .OrderBy(seat => seat.Registrable.ShowInMailListOrder.Value)
+                                     .Select(seat => seat.Registrable.Name)
+                                     .ToListAsync();
+            return string.Join("<br />", registrables.Select(rbl => $"- {rbl}"));
         }
     }
 }

@@ -14,5 +14,6 @@ namespace EventRegistrator.Functions.Registrables
         public int? MaximumAllowedImbalance { get; set; }
         public ICollection<QuestionOptionToRegistrableMapping> QuestionOptionMappings { get; set; }
         public ICollection<Seat> Seats { get; set; }
+        public int? ShowInMailListOrder { get; set; }
     }
 }
