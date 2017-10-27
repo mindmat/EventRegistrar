@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Threading.Tasks;
 using EventRegistrator.Functions.Infrastructure.Bus;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
 using EventRegistrator.Functions.Mailing;
@@ -6,11 +11,6 @@ using EventRegistrator.Functions.Seats;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ServiceBus.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EventRegistrator.Functions.Registrables
 {
@@ -56,13 +56,13 @@ namespace EventRegistrator.Functions.Registrables
                     }
                 }
                 var eventRegistrable = await context.Registrables.Where(rbl => rbl.EventId == @event.EventId).ToListAsync();
-                await SendStatusMail(eventRegistrable, ownSeats);
+                await SendStatusMail(eventRegistrable, ownSeats, @event.RegistrationId);
 
                 await context.SaveChangesAsync();
             }
         }
 
-        private static async Task SendStatusMail(ICollection<Registrable> registrables, List<Seat> seats)
+        private static async Task SendStatusMail(ICollection<Registrable> registrables, List<Seat> seats, Guid mainRegistrationId)
         {
             // Assumption: Only one Registrable has a limit
             SendMailCommand sendMailCommand = null;
@@ -80,7 +80,7 @@ namespace EventRegistrator.Functions.Registrables
                         sendMailCommand = new SendMailCommand
                         {
                             Type = MailType.SingleRegistrationOnWaitingList,
-                            RegistrationId = seat.RegistrationId
+                            RegistrationId = mainRegistrationId,
                         };
                     }
                     else
@@ -88,40 +88,34 @@ namespace EventRegistrator.Functions.Registrables
                         sendMailCommand = new SendMailCommand
                         {
                             Type = MailType.SingleRegistrationAccepted,
-                            RegistrationId = seat.RegistrationId
+                            RegistrationId = mainRegistrationId
                         };
                     }
                     break;
                 }
                 if (registrable.MaximumDoubleSeats.HasValue)
                 {
-                    if (seat.IsWaitingList)
+                    if (seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
                     {
                         sendMailCommand = new SendMailCommand
                         {
-                            Type = MailType.DoubleRegistrationOnWaitingList,
-                            RegistrationId = seat.RegistrationId
+                            Type = seat.IsWaitingList ? MailType.DoubleRegistrationMatchedOnWaitingList :
+                                                        MailType.DoubleRegistrationMatchedAndAccepted,
+                            RegistrationId = mainRegistrationId,
+                            RegistrationId_Partner = seat.RegistrationId == mainRegistrationId ? seat.RegistrationId_Follower : seat.RegistrationId
                         };
                     }
                     else
                     {
-                        if (seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
+                        sendMailCommand = new SendMailCommand
                         {
-                            sendMailCommand = new SendMailCommand
-                            {
-                                Type = MailType.DoubleRegistrationMatchedAndAccepted,
-                                RegistrationId = seat.RegistrationId
-                            };
-                        }
-                        else
-                        {
-                            sendMailCommand = new SendMailCommand
-                            {
-                                Type = MailType.DoubleRegistrationFirstPartnerAccepted,
-                                RegistrationId = seat.RegistrationId
-                            };
-                        }
+                            Type = seat.IsWaitingList ? MailType.DoubleRegistrationFirstPartnerOnWaitingList :
+                                                        MailType.DoubleRegistrationFirstPartnerAccepted,
+                            RegistrationId = mainRegistrationId
+                        };
                     }
+                    sendMailCommand.MainRegistrationRole = seat.RegistrationId == mainRegistrationId ? Role.Leader : Role.Follower;
+
                     break;
                 }
             }

@@ -30,6 +30,18 @@ namespace EventRegistrator.Functions.Test.Mailing
         }
 
         [TestMethod]
+        public void TestExtractParametersWithDot()
+        {
+            const string template = "Hallo {{Firstname}}, hallo {{Follower.FirstName}}";
+
+            var filler = new TemplateFiller(template);
+
+            filler.Parameters.Count.ShouldBe(2);
+            filler["Firstname"].ShouldBeNullOrEmpty();
+            filler["Follower.FirstName"].ShouldBeNullOrEmpty();
+        }
+
+        [TestMethod]
         public void TestFill()
         {
             const string template = "Hallo {{Firstname}} {{LastName}}";

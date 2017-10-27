@@ -6,6 +6,7 @@
         SingleRegistrationOnWaitingList = 2,
         DoubleRegistrationFirstPartnerAccepted = 11,
         DoubleRegistrationMatchedAndAccepted = 12,
-        DoubleRegistrationOnWaitingList = 13,
+        DoubleRegistrationFirstPartnerOnWaitingList = 13,
+        DoubleRegistrationMatchedOnWaitingList = 14
     }
 }
