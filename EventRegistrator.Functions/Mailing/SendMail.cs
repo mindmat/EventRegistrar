@@ -21,7 +21,7 @@ namespace EventRegistrator.Functions.Mailing
     public static class SendMail
     {
         public const string SendMailCommandsQueueName = "SendMailCommands";
-        public const string FallbackLanguage = "en";
+        public const string FallbackLanguage = Language.English;
         private const string PrefixLeader = "LEADER";
         private const string PrefixFollower = "FOLLOWER";
 
