@@ -1,8 +1,8 @@
 ﻿namespace EventRegistrator.Functions.RegistrationForms
 {
-    public enum Language
+    public static class Language
     {
-        English = 1,
-        Deutsch,
+        public const string English = "en";
+        public const string Deutsch = "de";
     }
 }

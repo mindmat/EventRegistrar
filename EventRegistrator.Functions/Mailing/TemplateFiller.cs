@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace EventRegistrator.Functions.Mailing
@@ -25,8 +26,10 @@ namespace EventRegistrator.Functions.Mailing
                     _parameters.Add(key, string.Empty);
                 }
             }
-
-            //r.Matches(template).Select(m=> m);
+            Prefixes = _parameters.Keys
+                                  .Select(key => key?.Split('.'))
+                                  .Where(parts => parts?.Length > 1)
+                                  .Select(parts => parts.First()).ToList();
         }
 
         public string this[string key]
@@ -36,6 +39,7 @@ namespace EventRegistrator.Functions.Mailing
         }
 
         public IReadOnlyDictionary<string, string> Parameters { get; }
+        public IReadOnlyList<string> Prefixes { get; set; }
 
         public string Fill()
         {

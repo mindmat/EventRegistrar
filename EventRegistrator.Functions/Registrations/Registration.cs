@@ -1,6 +1,6 @@
-﻿using EventRegistrator.Functions.Infrastructure.DataAccess;
+﻿using System;
+using EventRegistrator.Functions.Infrastructure.DataAccess;
 using EventRegistrator.Functions.RegistrationForms;
-using System;
 
 namespace EventRegistrator.Functions.Registrations
 {
@@ -13,5 +13,6 @@ namespace EventRegistrator.Functions.Registrations
         public string RespondentFirstName { get; set; }
         public DateTime ReceivedAt { get; set; }
         public DateTime ExternalTimestamp { get; set; }
+        public string Language { get; set; }
     }
 }
