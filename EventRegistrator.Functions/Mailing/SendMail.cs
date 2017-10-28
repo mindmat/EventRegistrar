@@ -1,9 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 using EventRegistrator.Functions.Infrastructure;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
 using EventRegistrator.Functions.Infrastructure.DomainEvents;
@@ -15,6 +9,13 @@ using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ServiceBus.Messaging;
 using SendGrid;
 using SendGrid.Helpers.Mail;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using Response = EventRegistrator.Functions.Registrations.Response;
 
 namespace EventRegistrator.Functions.Mailing
 {
@@ -54,24 +55,23 @@ namespace EventRegistrator.Functions.Mailing
                                templates.FirstOrDefault(mtp => mtp.Language == FallbackLanguage) ??
                                templates.First();
 
-                IDictionary<string, string> responses = await context.Responses
-                                                              .Where(rsp => rsp.RegistrationId == command.RegistrationId && rsp.Question.TemplateKey != null)
-                                                              .ToDictionaryAsync(rsp => rsp.Question.TemplateKey.ToUpper(), rsp => rsp.ResponseString);
+                IDictionary<string, string> responses = await GetResponses(command.RegistrationId, context.Responses);
                 IDictionary<string, string> leaderResponses = null;
                 IDictionary<string, string> followerResponses = null;
 
                 var templateFiller = new TemplateFiller(template.Template);
                 if (templateFiller.Prefixes.Any())
                 {
-                    var partnerResponses = await context.Responses
-                                                 .Where(rsp => rsp.RegistrationId == command.RegistrationId_Partner && rsp.Question.TemplateKey != null)
-                                                 .ToDictionaryAsync(rsp => rsp.Question.TemplateKey.ToUpper(), rsp => rsp.ResponseString);
+                    log.Info($"Prefixes {string.Join(",", templateFiller.Prefixes)}");
+                    log.Info($"command.MainRegistrationRole {command.MainRegistrationRole}");
+
+                    var partnerResponses = await GetResponses(command.RegistrationId_Partner, context.Responses);
                     if (command.MainRegistrationRole == Role.Leader)
                     {
                         leaderResponses = responses;
                         followerResponses = partnerResponses;
                     }
-                    if (templateFiller.Prefixes.Contains(PrefixLeader))
+                    else
                     {
                         leaderResponses = partnerResponses;
                         followerResponses = responses;
@@ -80,24 +80,25 @@ namespace EventRegistrator.Functions.Mailing
 
                 foreach (var key in templateFiller.Parameters.Keys.ToList())
                 {
-                    var prefix = GetPrefix(key);
+                    var parts = GetPrefix(key);
+
                     var responsesForPrefix = responses;
                     var registrationIdForPrefix = command.RegistrationId;
-                    if (prefix == PrefixLeader)
+                    if (parts.prefix == PrefixLeader)
                     {
                         responsesForPrefix = leaderResponses;
                         registrationIdForPrefix = command.MainRegistrationRole == Role.Leader
                             ? command.RegistrationId
                             : command.RegistrationId_Partner;
                     }
-                    else if (prefix == PrefixFollower)
+                    else if (parts.prefix == PrefixFollower)
                     {
                         responsesForPrefix = followerResponses;
                         registrationIdForPrefix = command.MainRegistrationRole == Role.Follower
                             ? command.RegistrationId
                             : command.RegistrationId_Partner;
                     }
-                    if (key == "SEATLIST")
+                    if (parts.key == "SEATLIST")
                     {
                         templateFiller[key] = await GetSeatList(context,
                                                                 registrationIdForPrefix,
@@ -106,7 +107,7 @@ namespace EventRegistrator.Functions.Mailing
                     }
                     else
                     {
-                        templateFiller[key] = responsesForPrefix.Lookup(key);
+                        templateFiller[key] = responsesForPrefix.Lookup(parts.key);
                     }
                 }
 
@@ -145,17 +146,32 @@ namespace EventRegistrator.Functions.Mailing
                 {
                     log.Warning($"SendMail status {response.StatusCode}, Body {await response.Body.ReadAsStringAsync()}");
                 }
+                await DomainEventPersistor.Log(new MailSent(msg), command.RegistrationId);
             }
         }
 
-        private static string GetPrefix(string key)
+        private static async Task<Dictionary<string, string>> GetResponses(Guid? registrationId, IQueryable<Response> responses)
+        {
+            return (await responses
+                          .Where(rsp => rsp.RegistrationId == registrationId && rsp.Question.TemplateKey != null)
+                          .Select(rsp => new
+                          {
+                              TemplateKey = rsp.Question.TemplateKey.ToUpper(),
+                              rsp.ResponseString
+                          })
+                          .ToListAsync()
+                  )
+                  .ToDictionary(tmp => tmp.TemplateKey.ToUpper(), tmp => tmp.ResponseString);
+        }
+
+        private static (string prefix, string key) GetPrefix(string key)
         {
             var parts = key?.Split('.');
             if (parts?.Length > 1)
             {
-                return parts?[0];
+                return (parts[0], parts[1]);
             }
-            return null;
+            return (null, key);
         }
 
         private static async Task<string> GetSeatList(EventRegistratorDbContext context, Guid? registrationId, IDictionary<string, string> responses, string language)

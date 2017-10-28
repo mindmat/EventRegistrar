@@ -29,7 +29,9 @@ namespace EventRegistrator.Functions.Mailing
             Prefixes = _parameters.Keys
                                   .Select(key => key?.Split('.'))
                                   .Where(parts => parts?.Length > 1)
-                                  .Select(parts => parts.First()).ToList();
+                                  .Select(parts => parts.First())
+                                  .Distinct()
+                                  .ToList();
         }
 
         public string this[string key]
@@ -39,7 +41,7 @@ namespace EventRegistrator.Functions.Mailing
         }
 
         public IReadOnlyDictionary<string, string> Parameters { get; }
-        public IReadOnlyList<string> Prefixes { get; set; }
+        public IReadOnlyList<string> Prefixes { get; }
 
         public string Fill()
         {
