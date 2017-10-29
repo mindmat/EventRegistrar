@@ -13,41 +13,41 @@ VALUES ('A3A7144D-F51F-4B51-ACDD-9FE96F197506', '762A93A4-56E0-402C-B700-1CFB336
       <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
     </tr>
     <tr>
-      <td><br /><strong>Hallo {{FirstName}}!</strong><br />
-        <p>Herzlichen Dank f&uuml;r deine Anmeldung zum Leapin'' Lindy 2018!<br />Wir haben einen Platz f&uuml;r dich reserviert, bitte bezahle die Anmeldegeb&uuml;hr in den n&auml;chsten 5 Arbeitstagen (Details siehe unten).<br />Beiliegend findest du deine Anmeldedetails.</p>
+      <td><br /><strong>Hallo {{FirstName}}</strong><br />
+        <p>Herzlichen Dank f&uuml;r deine Anmeldung zum Leapin'' Lindy 2018!<br />Wir haben einen Platz f&uuml;r dich reserviert, bitte bezahle die Anmeldegeb&uuml;hr in den n&auml;chsten 5 Arbeitstagen (Details siehe unten).</p>
         <p>Wir freuen uns, dass du dabei bist!</p>
         <p>Das Leapin'' Lindy Team</p>
         <hr />
         <p>Du hast folgendes gebucht:<br />{{SeatList}}</p>
-        <table style="width: 474px;">
+        <table style="width: 826px;">
           <tbody>
             <tr>
-              <td style="width: 129px;"><strong>Name</strong></td>
-              <td style="width: 335px;">{{FirstName}} {{LastName}}</td>
+              <td style="width: 130px;"><strong>Name</strong></td>
+              <td style="width: 700px;">{{FirstName}} {{LastName}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Wohnort</strong></td>
-              <td style="width: 335px;">{{City}}</td>
+              <td style="width: 130px;"><strong>Wohnort</strong></td>
+              <td style="width: 700px;">{{City}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Telefon</strong></td>
-              <td style="width: 335px;">{{Phone}}</td>
+              <td style="width: 130px;"><strong>Telefon</strong></td>
+              <td style="width: 700px;">{{Phone}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Helfereinsatz</strong></td>
-              <td style="width: 335px;">{{Volunteer}}</td>
+              <td style="width: 130px;"><strong>Helfereinsatz</strong></td>
+              <td style="width: 700px;">{{Volunteer}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Erm&auml;ssigung</strong></td>
-              <td style="width: 335px;">{{Reduction}}</td>
+              <td style="width: 130px;"><strong>Erm&auml;ssigung</strong></td>
+              <td style="width: 700px;">{{Reduction}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Bemerkung</strong></td>
-              <td style="width: 335px;">{{Comments}}</td>
+              <td style="width: 130px;"><strong>Bemerkung</strong></td>
+              <td style="width: 700px;">{{Comments}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>AGBs</strong></td>
-              <td style="width: 335px;">{{AcceptTerms}}</td>
+              <td style="width: 130px;"><strong>AGBs</strong></td>
+              <td style="width: 700px;">{{AcceptTerms}}</td>
             </tr>
           </tbody>
         </table>
@@ -83,40 +83,40 @@ VALUES ('77204060-8E30-4055-B797-92A324A00214', '762A93A4-56E0-402C-B700-1CFB336
       <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
     </tr>
     <tr>
-      <td><br /><strong>Hallo {{FirstName}}!</strong><br />
-        <p>Herzlichen Dank f&uuml;r deine Anmeldung zum Leapin'' Lindy 2018!<br /><strong>Du bist auf der Warteliste, bitte bezahle die Anmeldegeb&uuml;hr noch nicht.</strong><br />Beiliegend findest du deine Anmeldedetails.</p>
+      <td><br /><strong>Hallo {{FirstName}}</strong><br />
+        <p>Herzlichen Dank f&uuml;r deine Anmeldung zum Leapin'' Lindy 2018!<br /><strong>Du bist auf der Warteliste, bitte bezahle die Anmeldegeb&uuml;hr noch nicht.</strong></p>
         <p>Das Leapin'' Lindy Team</p>
         <hr />
         <p>Du hast folgendes gebucht:<br />{{SeatList}}</p>
         <table style="width: 474px;">
           <tbody>
             <tr>
-              <td style="width: 129px;"><strong>Name</strong></td>
-              <td style="width: 335px;">{{FirstName}} {{LastName}}</td>
+              <td style="width: 130px;"><strong>Name</strong></td>
+              <td style="width: 600px;">{{FirstName}} {{LastName}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Wohnort</strong></td>
-              <td style="width: 335px;">{{City}}</td>
+              <td style="width: 130px;"><strong>Wohnort</strong></td>
+              <td style="width: 600px;">{{City}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Telefon</strong></td>
-              <td style="width: 335px;">{{Phone}}</td>
+              <td style="width: 130px;"><strong>Telefon</strong></td>
+              <td style="width: 600px;">{{Phone}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Helfereinsatz</strong></td>
-              <td style="width: 335px;">{{Volunteer}}</td>
+              <td style="width: 130px;"><strong>Helfereinsatz</strong></td>
+              <td style="width: 600px;">{{Volunteer}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Erm&auml;ssigung</strong></td>
-              <td style="width: 335px;">{{Reduction}}</td>
+              <td style="width: 130px;"><strong>Erm&auml;ssigung</strong></td>
+              <td style="width: 600px;">{{Reduction}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Bemerkung</strong></td>
-              <td style="width: 335px;">{{Comments}}</td>
+              <td style="width: 130px;"><strong>Bemerkung</strong></td>
+              <td style="width: 600px;">{{Comments}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>AGBs</strong></td>
-              <td style="width: 335px;">{{AcceptTerms}}</td>
+              <td style="width: 130px;"><strong>AGBs</strong></td>
+              <td style="width: 600px;">{{AcceptTerms}}</td>
             </tr>
           </tbody>
         </table>
@@ -135,40 +135,40 @@ VALUES ('E5AB6F99-8A43-4D99-9CCD-B10B4F711B5C', '762A93A4-56E0-402C-B700-1CFB336
       <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
     </tr>
     <tr>
-      <td><br /><strong>Hallo {{FirstName}}!</strong><br />
-        <p>Herzlichen Dank f&uuml;r deine Anmeldung zum Leapin'' Lindy 2018!<br />Wir haben einen Platz f&uuml;r dich reserviert und warten nun auf die Anmeldung von {{Partner}}. Sobald diese eingegangen ist, erhaltet ihr die Best&auml;tigung eurer Paaranmeldung.<br />Beiliegend findest du deine Anmeldedetails.</p>
+      <td><br /><strong>Hallo {{FirstName}}</strong><br />
+        <p>Herzlichen Dank f&uuml;r deine Anmeldung zum Leapin'' Lindy 2018!<br />Wir haben einen Platz f&uuml;r dich reserviert und warten nun auf die Anmeldung von {{Partner}}. Sobald diese eingegangen ist, erhaltet ihr die Best&auml;tigung eurer Paaranmeldung.</p>
         <p>Das Leapin'' Lindy Team</p>
         <hr />
         <p>Du hast folgendes gebucht:<br />{{SeatList}}</p>
         <table style="width: 474px;">
           <tbody>
             <tr>
-              <td style="width: 129px;"><strong>Name</strong></td>
-              <td style="width: 335px;">{{FirstName}} {{LastName}}</td>
+              <td style="width: 130px;"><strong>Name</strong></td>
+              <td style="width: 600px;">{{FirstName}} {{LastName}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Wohnort</strong></td>
-              <td style="width: 335px;">{{City}}</td>
+              <td style="width: 130px;"><strong>Wohnort</strong></td>
+              <td style="width: 600px;">{{City}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Telefon</strong></td>
-              <td style="width: 335px;">{{Phone}}</td>
+              <td style="width: 130px;"><strong>Telefon</strong></td>
+              <td style="width: 600px;">{{Phone}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Helfereinsatz</strong></td>
-              <td style="width: 335px;">{{Volunteer}}</td>
+              <td style="width: 130px;"><strong>Helfereinsatz</strong></td>
+              <td style="width: 600px;">{{Volunteer}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Erm&auml;ssigung</strong></td>
-              <td style="width: 335px;">{{Reduction}}</td>
+              <td style="width: 130px;"><strong>Erm&auml;ssigung</strong></td>
+              <td style="width: 600px;">{{Reduction}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Bemerkung</strong></td>
-              <td style="width: 335px;">{{Comments}}</td>
+              <td style="width: 130px;"><strong>Bemerkung</strong></td>
+              <td style="width: 600px;">{{Comments}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>AGBs</strong></td>
-              <td style="width: 335px;">{{AcceptTerms}}</td>
+              <td style="width: 130px;"><strong>AGBs</strong></td>
+              <td style="width: 600px;">{{AcceptTerms}}</td>
             </tr>
           </tbody>
         </table>
@@ -194,8 +194,7 @@ VALUES ('E5AB6F99-8A43-4D99-9CCD-B10B4F711B5C', '762A93A4-56E0-402C-B700-1CFB336
       </td>
     </tr>
   </tbody>
-</table>
-<p>&nbsp;</p>')
+</table>')
 
 INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
 VALUES ('C16F52CC-DA0A-4319-8A31-C26582CA6381', '762A93A4-56E0-402C-B700-1CFB3362B39D', 12 /*DoubleRegistrationMatchedAndAccepted*/, 2, 'Anmeldebestätigung Paaranmeldung', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
@@ -206,39 +205,39 @@ VALUES ('C16F52CC-DA0A-4319-8A31-C26582CA6381', '762A93A4-56E0-402C-B700-1CFB336
     </tr>
     <tr>
       <td><br /><strong>Hallo {{Follower.FirstName}} &amp; {{Leader.FirstName}}</strong><br />
-        <p>Herzlichen Dank f&uuml;r eure Paaranmeldung zum Leapin'' Lindy 2018!<br />Wir haben einen Platz f&uuml;r euch reserviert, bitte bezahlt eure Anmeldegeb&uuml;hr&nbsp;innerhalb von 5 Arbeitstagen&nbsp;(Details siehe unten).<br />Beiliegend findet ihr eure Anmeldedetails.</p>
+        <p>Herzlichen Dank f&uuml;r eure Paaranmeldung zum Leapin'' Lindy 2018!<br />Wir haben einen Platz f&uuml;r euch reserviert, bitte bezahlt eure Anmeldegeb&uuml;hr&nbsp;innerhalb von 5 Arbeitstagen&nbsp;(Details siehe unten).</p>
         <p>Das Leapin'' Lindy Team</p>
         <hr />
         <p>Ihr habt folgendes gebucht:<br /><br />Leader:<br />{{Leader.SeatList}}</p>
         <table style="width: 474px;">
           <tbody>
             <tr>
-              <td style="width: 129px;"><strong>Name</strong></td>
-              <td style="width: 335px;">{{Leader.FirstName}} {{Leader.LastName}}</td>
+              <td style="width: 130px;"><strong>Name</strong></td>
+              <td style="width: 600px;">{{Leader.FirstName}} {{Leader.LastName}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Wohnort</strong></td>
-              <td style="width: 335px;">{{Leader.City}}</td>
+              <td style="width: 130px;"><strong>Wohnort</strong></td>
+              <td style="width: 600px;">{{Leader.City}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Telefon</strong></td>
-              <td style="width: 335px;">{{Leader.Phone}}</td>
+              <td style="width: 130px;"><strong>Telefon</strong></td>
+              <td style="width: 600px;">{{Leader.Phone}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Helfereinsatz</strong></td>
-              <td style="width: 335px;">{{Leader.Volunteer}}</td>
+              <td style="width: 130px;"><strong>Helfereinsatz</strong></td>
+              <td style="width: 600px;">{{Leader.Volunteer}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Erm&auml;ssigung</strong></td>
-              <td style="width: 335px;">{{Leader.Reduction}}</td>
+              <td style="width: 130px;"><strong>Erm&auml;ssigung</strong></td>
+              <td style="width: 600px;">{{Leader.Reduction}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Bemerkung</strong></td>
-              <td style="width: 335px;">{{Leader.Comments}}</td>
+              <td style="width: 130px;"><strong>Bemerkung</strong></td>
+              <td style="width: 600px;">{{Leader.Comments}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>AGBs</strong></td>
-              <td style="width: 335px;">{{Leader.AcceptTerms}}</td>
+              <td style="width: 130px;"><strong>AGBs</strong></td>
+              <td style="width: 600px;">{{Leader.AcceptTerms}}</td>
             </tr>
           </tbody>
         </table>
@@ -246,32 +245,32 @@ VALUES ('C16F52CC-DA0A-4319-8A31-C26582CA6381', '762A93A4-56E0-402C-B700-1CFB336
         <table style="width: 474px;">
           <tbody>
             <tr>
-              <td style="width: 129px;"><strong>Name</strong></td>
-              <td style="width: 335px;">{{Follower.FirstName}} {{Follower.LastName}}</td>
+              <td style="width: 130px;"><strong>Name</strong></td>
+              <td style="width: 600px;">{{Follower.FirstName}} {{Follower.LastName}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Wohnort</strong></td>
-              <td style="width: 335px;">{{Follower.City}}</td>
+              <td style="width: 130px;"><strong>Wohnort</strong></td>
+              <td style="width: 600px;">{{Follower.City}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Telefon</strong></td>
-              <td style="width: 335px;">{{Follower.Phone}}</td>
+              <td style="width: 130px;"><strong>Telefon</strong></td>
+              <td style="width: 600px;">{{Follower.Phone}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Helfereinsatz</strong></td>
-              <td style="width: 335px;">{{Follower.Volunteer}}</td>
+              <td style="width: 130px;"><strong>Helfereinsatz</strong></td>
+              <td style="width: 600px;">{{Follower.Volunteer}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Erm&auml;ssigung</strong></td>
-              <td style="width: 335px;">{{Follower.Reduction}}</td>
+              <td style="width: 130px;"><strong>Erm&auml;ssigung</strong></td>
+              <td style="width: 600px;">{{Follower.Reduction}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Bemerkung</strong></td>
-              <td style="width: 335px;">{{Follower.Comments}}</td>
+              <td style="width: 130px;"><strong>Bemerkung</strong></td>
+              <td style="width: 600px;">{{Follower.Comments}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>AGBs</strong></td>
-              <td style="width: 335px;">{{Follower.AcceptTerms}}</td>
+              <td style="width: 130px;"><strong>AGBs</strong></td>
+              <td style="width: 600px;">{{Follower.AcceptTerms}}</td>
             </tr>
           </tbody>
         </table>
@@ -297,8 +296,7 @@ VALUES ('C16F52CC-DA0A-4319-8A31-C26582CA6381', '762A93A4-56E0-402C-B700-1CFB336
       </td>
     </tr>
   </tbody>
-</table>
-<p>&nbsp;</p>')
+</table>')
 
 INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
 VALUES ('B312E47B-0AD3-43D3-AB90-580FE321788F', '762A93A4-56E0-402C-B700-1CFB3362B39D', 13 /*DoubleRegistrationFirstPartnerOnWaitingList*/, 2, 'Anmeldebestätigung Paaranmeldung (Warteliste)', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
@@ -308,40 +306,40 @@ VALUES ('B312E47B-0AD3-43D3-AB90-580FE321788F', '762A93A4-56E0-402C-B700-1CFB336
       <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
     </tr>
     <tr>
-      <td><br /><strong>Hallo {{FirstName}}!</strong><br />
+      <td><br /><strong>Hallo {{FirstName}}</strong><br />
         <p>Herzlichen Dank f&uuml;r deine Anmeldung zum Leapin'' Lindy 2018!<br /><strong>Deine Paaranmeldung mit {{Partner}} ist auf der Warteliste,&nbsp;bitte bezahle die Anmeldegeb&uuml;hr noch nicht</strong>.</p>
         <p>Das Leapin'' Lindy Team</p>
         <hr />
         <p>Du hast folgendes gebucht:<br />{{SeatList}}</p>
-        <table style="width: 474px;">
+        <table style="width: 816px;">
           <tbody>
             <tr>
-              <td style="width: 129px;"><strong>Name</strong></td>
-              <td style="width: 335px;">{{FirstName}} {{LastName}}</td>
+              <td style="width: 130px;"><strong>Name</strong></td>
+              <td style="width: 700px;">{{FirstName}} {{LastName}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Wohnort</strong></td>
-              <td style="width: 335px;">{{City}}</td>
+              <td style="width: 130px;"><strong>Wohnort</strong></td>
+              <td style="width: 700px;">{{City}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Telefon</strong></td>
-              <td style="width: 335px;">{{Phone}}</td>
+              <td style="width: 130px;"><strong>Telefon</strong></td>
+              <td style="width: 700px;">{{Phone}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Helfereinsatz</strong></td>
-              <td style="width: 335px;">{{Volunteer}}</td>
+              <td style="width: 130px;"><strong>Helfereinsatz</strong></td>
+              <td style="width: 700px;">{{Volunteer}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Erm&auml;ssigung</strong></td>
-              <td style="width: 335px;">{{Reduction}}</td>
+              <td style="width: 130px;"><strong>Erm&auml;ssigung</strong></td>
+              <td style="width: 700px;">{{Reduction}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Bemerkung</strong></td>
-              <td style="width: 335px;">{{Comments}}</td>
+              <td style="width: 130px;"><strong>Bemerkung</strong></td>
+              <td style="width: 700px;">{{Comments}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>AGBs</strong></td>
-              <td style="width: 335px;">{{AcceptTerms}}</td>
+              <td style="width: 130px;"><strong>AGBs</strong></td>
+              <td style="width: 700px;">{{AcceptTerms}}</td>
             </tr>
           </tbody>
         </table>
@@ -360,72 +358,72 @@ VALUES ('BB09F868-D619-4392-B25C-08C6B83CD0DF', '762A93A4-56E0-402C-B700-1CFB336
     </tr>
     <tr>
       <td><br /><strong>Hallo {{Follower.FirstName}} &amp; {{Leader.FirstName}}</strong><br />
-        <p>Herzlichen Dank f&uuml;r eure Paaranmeldung zum Leapin'' Lindy 2018!<br /><strong>Eure Paaranmeldung ist auf der Warteliste, bitte bezahlt die Anmeldegeb&uuml;hr noch nicht.</strong><br />Beiliegend findet ihr eure Anmeldedetails.</p>
+        <p>Herzlichen Dank f&uuml;r eure Paaranmeldung zum Leapin'' Lindy 2018!<br /><strong>Eure Paaranmeldung ist auf der Warteliste, bitte bezahlt die Anmeldegeb&uuml;hr noch nicht.</strong></p>
         <p>Das Leapin'' Lindy Team</p>
         <hr />
         <p>Ihr habt folgendes gebucht:<br /><br />Leader:<br />{{Leader.SeatList}}</p>
-        <table style="width: 474px;">
+        <table style="width: 713.5px;">
           <tbody>
             <tr>
-              <td style="width: 129px;"><strong>Name</strong></td>
-              <td style="width: 335px;">{{Leader.FirstName}} {{Leader.LastName}}</td>
+              <td style="width: 130px;"><strong>Name</strong></td>
+              <td style="width: 600px;">{{Leader.FirstName}} {{Leader.LastName}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Wohnort</strong></td>
-              <td style="width: 335px;">{{Leader.City}}</td>
+              <td style="width: 130px;"><strong>Wohnort</strong></td>
+              <td style="width: 600px;">{{Leader.City}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Telefon</strong></td>
-              <td style="width: 335px;">{{Leader.Phone}}</td>
+              <td style="width: 130px;"><strong>Telefon</strong></td>
+              <td style="width: 600px;">{{Leader.Phone}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Helfereinsatz</strong></td>
-              <td style="width: 335px;">{{Leader.Volunteer}}</td>
+              <td style="width: 130px;"><strong>Helfereinsatz</strong></td>
+              <td style="width: 600px;">{{Leader.Volunteer}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Erm&auml;ssigung</strong></td>
-              <td style="width: 335px;">{{Leader.Reduction}}</td>
+              <td style="width: 130px;"><strong>Erm&auml;ssigung</strong></td>
+              <td style="width: 600px;">{{Leader.Reduction}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Bemerkung</strong></td>
-              <td style="width: 335px;">{{Leader.Comments}}</td>
+              <td style="width: 130px;"><strong>Bemerkung</strong></td>
+              <td style="width: 600px;">{{Leader.Comments}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>AGBs</strong></td>
-              <td style="width: 335px;">{{Leader.AcceptTerms}}</td>
+              <td style="width: 130px;"><strong>AGBs</strong></td>
+              <td style="width: 600px;">{{Leader.AcceptTerms}}</td>
             </tr>
           </tbody>
         </table>
         <p>&nbsp;Follower:<br />{{Follower.SeatList}}</p>
-        <table style="width: 474px;">
+        <table style="width: 710.5px;">
           <tbody>
             <tr>
-              <td style="width: 129px;"><strong>Name</strong></td>
-              <td style="width: 335px;">{{Follower.FirstName}} {{Follower.LastName}}</td>
+              <td style="width: 130px;"><strong>Name</strong></td>
+              <td style="width: 600px;">{{Follower.FirstName}} {{Follower.LastName}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Wohnort</strong></td>
-              <td style="width: 335px;">{{Follower.City}}</td>
+              <td style="width: 130px;"><strong>Wohnort</strong></td>
+              <td style="width: 600px;">{{Follower.City}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Telefon</strong></td>
-              <td style="width: 335px;">{{Follower.Phone}}</td>
+              <td style="width: 130px;"><strong>Telefon</strong></td>
+              <td style="width: 600px;">{{Follower.Phone}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Helfereinsatz</strong></td>
-              <td style="width: 335px;">{{Follower.Volunteer}}</td>
+              <td style="width: 130px;"><strong>Helfereinsatz</strong></td>
+              <td style="width: 600px;">{{Follower.Volunteer}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Erm&auml;ssigung</strong></td>
-              <td style="width: 335px;">{{Follower.Reduction}}</td>
+              <td style="width: 130px;"><strong>Erm&auml;ssigung</strong></td>
+              <td style="width: 600px;">{{Follower.Reduction}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>Bemerkung</strong></td>
-              <td style="width: 335px;">{{Follower.Comments}}</td>
+              <td style="width: 130px;"><strong>Bemerkung</strong></td>
+              <td style="width: 600px;">{{Follower.Comments}}</td>
             </tr>
             <tr>
-              <td style="width: 129px;"><strong>AGBs</strong></td>
-              <td style="width: 335px;">{{Follower.AcceptTerms}}</td>
+              <td style="width: 130px;"><strong>AGBs</strong></td>
+              <td style="width: 600px;">{{Follower.AcceptTerms}}</td>
             </tr>
           </tbody>
         </table>

@@ -4,29 +4,33 @@ DELETE FROM MailTemplates
 DELETE FROM Registrables
 DELETE FROM QuestionOptionToRegistrableMappings
 
-INSERT INTO [dbo].[Registrables]([Id], [EventId], [Name], [MaximumSingleSeats], [MaximumDoubleSeats], MaximumAllowedImbalance, ShowInMailList)
+INSERT INTO [dbo].[Registrables]([Id], [EventId], [Name], [MaximumSingleSeats], [MaximumDoubleSeats], MaximumAllowedImbalance, ShowInMailListOrder)
      VALUES('118A9B4F-D14E-4FD4-9E1C-A6771416E088', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Lindy Hop Beginner Intermediate', NULL, 33,   3,    1),
            ('2DBF19B6-6DBD-4050-AC4B-683B9BBA9A98', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Lindy Hop Intermediate',          NULL, 33,   3,    1),
            ('9310B016-D70F-4EB1-8F04-57412132F4A8', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Lindy Hop Intermediate Advanced', NULL, 33,   3,    1),
            ('373E0514-2F5F-4499-990A-A130B9D38142', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Lindy Hop Advanced/Advanced+',    NULL, 66,   5,    1),
 
-           ('0488F651-A8B7-4369-8918-31EBABF7763B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Solo Jazz Intermediate',          40,   NULL, NULL, 1),
-           ('57DE8C38-09EB-47EC-8697-A8D700CBDA44', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Solo Jazz Advanced',              40,   NULL, NULL, 1),
+           ('0488F651-A8B7-4369-8918-31EBABF7763B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Solo Jazz Intermediate',          40,   NULL, NULL, 2),
+           ('57DE8C38-09EB-47EC-8697-A8D700CBDA44', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Solo Jazz Advanced',              40,   NULL, NULL, 2),
 
-           ('CC695010-41F4-4B6B-B4E5-32294284EDB5', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Solo Friday',                     NULL, NULL, NULL, 1),
+           ('CC695010-41F4-4B6B-B4E5-32294284EDB5', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Solo Friday',                     NULL, NULL, NULL, 3),
 
-           ('8720326D-D055-4E65-A1F9-A8CA14510652', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Fleisch',             NULL, NULL, NULL, 1),
-           ('B6A69D4B-9FB8-4E6B-89E5-4BCFEA0EAC31', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Vegi',                NULL, NULL, NULL, 1),
-           ('60E2A4B1-5577-4499-B3FC-B202FC360F2B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Salatbar',            NULL, NULL, NULL, 1),
+           ('8720326D-D055-4E65-A1F9-A8CA14510652', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Fleisch Samstag',     NULL, NULL, NULL, 4),
+           ('B6A69D4B-9FB8-4E6B-89E5-4BCFEA0EAC31', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Vegi Samstag',        NULL, NULL, NULL, 4),
+           ('60E2A4B1-5577-4499-B3FC-B202FC360F2B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Salatbar Samstag',    NULL, NULL, NULL, 4),
 
-           ('A425D0FD-DAF0-4783-8AE9-10029076063E', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Party Donnerstag',                60,   NULL, NULL, 1),
-           ('88F013C5-5915-4513-98CE-E58D4DB9875E', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Party Freitag',                   60,   NULL, NULL, 1),
-           ('C202D212-E69E-44DB-81AF-09045CD5E13B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Party Samstag',                   60,   NULL, NULL, 1),
+           ('A60092D1-AA11-4466-8DB8-BBAED948244B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Fleisch Sonntag',     NULL, NULL, NULL, 5),
+           ('58B75D14-C274-42E5-9122-003E383F6BCB', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Vegi Sonntag',        NULL, NULL, NULL, 5),
+           ('98E9780E-8B27-4186-8BE7-75ECD164D957', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Mittagessen Salatbar Sonntag',    NULL, NULL, NULL, 5),
 
-           ('1746CC39-7C95-4D03-B1BF-D599689B7B6A', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Bietet Hosting',                  NULL, NULL, NULL, 0),
-           ('EE10CE23-8219-44DF-9F2A-4FDEC3DE1867', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Sucht Hosting',                   NULL, NULL, NULL, 0),
+           ('A425D0FD-DAF0-4783-8AE9-10029076063E', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Party Donnerstag',                60,   NULL, NULL, 6),
+           ('88F013C5-5915-4513-98CE-E58D4DB9875E', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Party Freitag',                   60,   NULL, NULL, 7),
+           ('C202D212-E69E-44DB-81AF-09045CD5E13B', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Party Samstag',                   60,   NULL, NULL, 8),
 
-           ('16371CE3-8316-49E3-B791-AD38B03BD859', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Helfereinsatz',                   NULL, NULL, NULL, 0)
+           ('1746CC39-7C95-4D03-B1BF-D599689B7B6A', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Bietet Hosting',                  NULL, NULL, NULL, NULL),
+           ('EE10CE23-8219-44DF-9F2A-4FDEC3DE1867', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Sucht Hosting',                   NULL, NULL, NULL, NULL),
+
+           ('16371CE3-8316-49E3-B791-AD38B03BD859', '762A93A4-56E0-402C-B700-1CFB3362B39D', 'Helfereinsatz',                   NULL, NULL, NULL, NULL)
 
 INSERT INTO [dbo].[QuestionOptionToRegistrableMappings](Id, RegistrableId, QuestionOptionId, QuestionId_PartnerEmail, QuestionOptionId_Leader, QuestionOptionId_Follower)
   VALUES -- Lindy Hop Workshop
@@ -39,47 +43,43 @@ INSERT INTO [dbo].[QuestionOptionToRegistrableMappings](Id, RegistrableId, Quest
          (NEWID(), '0488F651-A8B7-4369-8918-31EBABF7763B', '7BBB7580-1108-4503-A357-DE038D458058', NULL, NULL, NULL),
          (NEWID(), '57DE8C38-09EB-47EC-8697-A8D700CBDA44', '43BD5FEA-A45C-458A-A54E-F345C89D7009', NULL, NULL, NULL),
          
-         -- Solo Firday
-         (NEWID(), 'CC695010-41F4-4B6B-B4E5-32294284EDB5', '54DA45AE-3F9C-4DBC-8D85-39ADA67CD9D6', NULL, NULL, NULL),
+         -- Solo Friday
+         (NEWID(), 'CC695010-41F4-4B6B-B4E5-32294284EDB5', '6336F8BB-EE33-4F9B-BC94-F2141EBEBE6D', NULL, NULL, NULL),
+         (NEWID(), 'CC695010-41F4-4B6B-B4E5-32294284EDB5', '9B8B71D7-73F3-4580-B49E-8E47A9E06CB5', NULL, NULL, NULL),
+         (NEWID(), 'CC695010-41F4-4B6B-B4E5-32294284EDB5', '3B2B7CAE-265E-48FA-8B24-9211CFB3EC95', NULL, NULL, NULL),
          
          -- Essen
-         (NEWID(), '8720326D-D055-4E65-A1F9-A8CA14510652', 'AA139C77-D8E2-4A87-BA6F-CC43B6B2C7C5', NULL, NULL, NULL),
-         (NEWID(), '8720326D-D055-4E65-A1F9-A8CA14510652', 'F1746343-DEFF-489C-9F26-431B389FD632', NULL, NULL, NULL),
-         (NEWID(), 'B6A69D4B-9FB8-4E6B-89E5-4BCFEA0EAC31', '2459C5E1-F548-4F81-A789-5FA308D469DC', NULL, NULL, NULL),
-         (NEWID(), 'B6A69D4B-9FB8-4E6B-89E5-4BCFEA0EAC31', '359A7EA0-9C18-4E4F-9013-E55024B73CB0', NULL, NULL, NULL),
-         (NEWID(), '60E2A4B1-5577-4499-B3FC-B202FC360F2B', 'FA4ECCAA-4C7C-439E-96DD-FE21AE0DBE4B', NULL, NULL, NULL),
-         (NEWID(), '60E2A4B1-5577-4499-B3FC-B202FC360F2B', 'DB17EA8E-4F9C-45B6-9F94-38FE4055023E', NULL, NULL, NULL),
+		 --- Samstag
+         (NEWID(), '8720326D-D055-4E65-A1F9-A8CA14510652', '08D2FA25-319E-4504-874E-DFCA4C4B3ED7', NULL, NULL, NULL),
+         (NEWID(), '8720326D-D055-4E65-A1F9-A8CA14510652', '1EA9FB43-7099-445F-8325-AFB17A058A20', NULL, NULL, NULL),
+         (NEWID(), 'B6A69D4B-9FB8-4E6B-89E5-4BCFEA0EAC31', 'EC75EDA3-894A-42BE-AE6F-822B39B21244', NULL, NULL, NULL),
+         (NEWID(), 'B6A69D4B-9FB8-4E6B-89E5-4BCFEA0EAC31', '736BFC12-A40B-4A5A-9C83-BDA55C52FB88', NULL, NULL, NULL),
+         (NEWID(), '60E2A4B1-5577-4499-B3FC-B202FC360F2B', '13EF8261-6847-40D6-9346-D817658C9397', NULL, NULL, NULL),
+         (NEWID(), '60E2A4B1-5577-4499-B3FC-B202FC360F2B', '43FA0FEB-C58E-434B-8B7C-A869A87D2C79', NULL, NULL, NULL),
+
+		 --- Sonntag
+         (NEWID(), 'A60092D1-AA11-4466-8DB8-BBAED948244B', '19CF3B34-DAFA-47BB-8B6B-1A35673C5296', NULL, NULL, NULL),
+         (NEWID(), 'A60092D1-AA11-4466-8DB8-BBAED948244B', '0D0D6197-474A-483F-B035-6019B2B82A4D', NULL, NULL, NULL),
+         (NEWID(), '58B75D14-C274-42E5-9122-003E383F6BCB', '3ED56335-1479-400E-9864-04CE63798B57', NULL, NULL, NULL),
+         (NEWID(), '58B75D14-C274-42E5-9122-003E383F6BCB', '6A563F68-57DD-4E9C-8BF2-AF828821F733', NULL, NULL, NULL),
+         (NEWID(), '98E9780E-8B27-4186-8BE7-75ECD164D957', '74C3EC09-0E0D-4CE5-A7FE-821D5001160F', NULL, NULL, NULL),
+         (NEWID(), '98E9780E-8B27-4186-8BE7-75ECD164D957', '65CF99D6-554E-4AC3-9571-7FD21AF2343C', NULL, NULL, NULL),
          
          -- Parties
-         /*
+		 --- Donnerstag
+         (NEWID(), 'A425D0FD-DAF0-4783-8AE9-10029076063E', 'B64FC781-46E5-4FA1-B53E-BF153B83826F', NULL, NULL, NULL),
+         (NEWID(), 'A425D0FD-DAF0-4783-8AE9-10029076063E', '3B2B7CAE-265E-48FA-8B24-9211CFB3EC95', NULL, NULL, NULL),
          (NEWID(), 'A425D0FD-DAF0-4783-8AE9-10029076063E', 'F0E33B02-EEB7-46D5-B98C-5329CCF43F55', NULL, NULL, NULL),
+
+		 --- Freitag
+         (NEWID(), '88F013C5-5915-4513-98CE-E58D4DB9875E', 'B64FC781-46E5-4FA1-B53E-BF153B83826F', NULL, NULL, NULL),
+         (NEWID(), '88F013C5-5915-4513-98CE-E58D4DB9875E', '3B2B7CAE-265E-48FA-8B24-9211CFB3EC95', NULL, NULL, NULL),
          (NEWID(), '88F013C5-5915-4513-98CE-E58D4DB9875E', '69820841-65C0-42D9-A569-196A16470FF1', NULL, NULL, NULL),
+
+		 --- Samstag
+         (NEWID(), 'C202D212-E69E-44DB-81AF-09045CD5E13B', 'B64FC781-46E5-4FA1-B53E-BF153B83826F', NULL, NULL, NULL),
+         (NEWID(), 'C202D212-E69E-44DB-81AF-09045CD5E13B', '3B2B7CAE-265E-48FA-8B24-9211CFB3EC95', NULL, NULL, NULL),
          (NEWID(), 'C202D212-E69E-44DB-81AF-09045CD5E13B', 'E4C10FAB-BD0C-46B6-883F-5CF3F9DAA03B', NULL, NULL, NULL),
-
-         (NEWID(), 'A425D0FD-DAF0-4783-8AE9-10029076063E', '6CC551CC-E8D0-43A5-AA6A-937CEB611D41', NULL, NULL, NULL),
-         (NEWID(), '88F013C5-5915-4513-98CE-E58D4DB9875E', '6CC551CC-E8D0-43A5-AA6A-937CEB611D41', NULL, NULL, NULL),
-         (NEWID(), 'C202D212-E69E-44DB-81AF-09045CD5E13B', '6CC551CC-E8D0-43A5-AA6A-937CEB611D41', NULL, NULL, NULL),
-
-         (NEWID(), 'A425D0FD-DAF0-4783-8AE9-10029076063E', '9CC93D82-0D28-4A9D-8921-77935DD3B145', NULL, NULL, NULL),
-         (NEWID(), '88F013C5-5915-4513-98CE-E58D4DB9875E', '9CC93D82-0D28-4A9D-8921-77935DD3B145', NULL, NULL, NULL),
-         (NEWID(), 'C202D212-E69E-44DB-81AF-09045CD5E13B', '9CC93D82-0D28-4A9D-8921-77935DD3B145', NULL, NULL, NULL),
-
-         (NEWID(), 'A425D0FD-DAF0-4783-8AE9-10029076063E', 'EE307BC1-67A4-4574-A1E7-997AF010A5A0', NULL, NULL, NULL),
-         (NEWID(), '88F013C5-5915-4513-98CE-E58D4DB9875E', 'EE307BC1-67A4-4574-A1E7-997AF010A5A0', NULL, NULL, NULL),
-         (NEWID(), 'C202D212-E69E-44DB-81AF-09045CD5E13B', 'EE307BC1-67A4-4574-A1E7-997AF010A5A0', NULL, NULL, NULL),
-
-         (NEWID(), 'A425D0FD-DAF0-4783-8AE9-10029076063E', '30D30F2B-42B4-4A8C-9287-55C0D8350E90', NULL, NULL, NULL),
-         (NEWID(), '88F013C5-5915-4513-98CE-E58D4DB9875E', '30D30F2B-42B4-4A8C-9287-55C0D8350E90', NULL, NULL, NULL),
-         (NEWID(), 'C202D212-E69E-44DB-81AF-09045CD5E13B', '30D30F2B-42B4-4A8C-9287-55C0D8350E90', NULL, NULL, NULL),
-
-         (NEWID(), 'A425D0FD-DAF0-4783-8AE9-10029076063E', '7BBB7580-1108-4503-A357-DE038D458058', NULL, NULL, NULL),
-         (NEWID(), '88F013C5-5915-4513-98CE-E58D4DB9875E', '7BBB7580-1108-4503-A357-DE038D458058', NULL, NULL, NULL),
-         (NEWID(), 'C202D212-E69E-44DB-81AF-09045CD5E13B', '7BBB7580-1108-4503-A357-DE038D458058', NULL, NULL, NULL),
-
-         (NEWID(), 'A425D0FD-DAF0-4783-8AE9-10029076063E', '43BD5FEA-A45C-458A-A54E-F345C89D7009', NULL, NULL, NULL),
-         (NEWID(), '88F013C5-5915-4513-98CE-E58D4DB9875E', '43BD5FEA-A45C-458A-A54E-F345C89D7009', NULL, NULL, NULL),
-         (NEWID(), 'C202D212-E69E-44DB-81AF-09045CD5E13B', '43BD5FEA-A45C-458A-A54E-F345C89D7009', NULL, NULL, NULL),
-         */
 
          -- Hosting
          (NEWID(), '1746CC39-7C95-4D03-B1BF-D599689B7B6A', '0E311F67-FB0F-4241-936E-C8BE0BAB9EE0', NULL, NULL, NULL),
@@ -88,141 +88,6 @@ INSERT INTO [dbo].[QuestionOptionToRegistrableMappings](Id, RegistrableId, Quest
          -- Helfereinsatz
          (NEWID(), '16371CE3-8316-49E3-B791-AD38B03BD859', '948F6AF3-1596-4715-90AB-CE64B89A0F51', NULL, NULL, NULL)
 
-
-INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
-VALUES ('A3A7144D-F51F-4B51-ACDD-9FE96F197506', '762A93A4-56E0-402C-B700-1CFB3362B39D', 1, 1, 'Anmeldebestätigung', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
-'*********************************************************************************************
-BITTE NICHT AUF DIESE EMAIL ANTWORTEN.
-DU KANNST UNS VIA WEBSITE LEAPINLINDY.CH KONTAKTIEREN.
-*********************************************************************************************
-
-
-Herzlichen Dank für deine Anmeldung zu Leapin'' Lindy 2018! 
-Beiliegend findest du  alle deine Anmeldedetails. Bitte erwähne deine 
-Mailadresse bei der Überweisung des Kursgeldes. 
-Falls du auf der WARTELISTE bist, zahle bitte erst ein, nachdem du 
-von uns eine entsprechende Email bekommen hast. Deine Teilnahme wird 
-erst nach Eingang deiner Zahlung bestätigt.
-
-Wir freuen uns, dass du dabei bist!
-
-Das Leapin'' Lindy Team
-
-*********************************************************************************************
-
----------------------------------
-Details 
----------------------------------
-First name : {{Firstname}}
-Last name : {{Lastname}}
-Address : Sickingerstrasse 5
-Postal code : 3014
-City : {{City}}
-Country : Switzerland
-Phone : {{Phone}}
-Email : {{EMail}}
----------------------------------
-Track or Ticket
----------------------------------
-Track or Ticket : Lindy Level B, C, D, E Full Pass
-Price category : Regular (CHF 300.00)
----------------------------------
-Course Options
----------------------------------
-Course level : Level C
-Role : Leader
-Partner or single registration : Single
----------------------------------
-Lunch Break Options
----------------------------------
-{{Lunch}}
----------------------------------
-Solo Friday
----------------------------------
-Solo class on Friday afternoon : {{SoloFriday}}
----------------------------------
-Hosting
----------------------------------
-Private hosting : 
----------------------------------
-Terms
----------------------------------
-I accept.
-Ich akzeptiere. : {{AcceptTerms}}
----------------------------------
-Comments
----------------------------------
-Comments : {{Comments}}
----------------------------------
-Submit
----------------------------------
----------------------------------
-Cost
----------------------------------
-Total Cost: {{TotalPrice}}
-
-
-*********************************************************************************************
-
-Zahlungsinformationen: 
-
-WICHTIG: MACHE EINE ÜBERWEISUNG PRO ANMELDUNG UND VERMERKE 
-DEINE MAILADRESSE!
-
-Deine Zahlung muss innerhalb von 14 Tagen nach Erhalt dieser 
-Email bei uns eintreffen.  Wenn wir deine Zahlung erhalten haben, 
-schicken wir dir eine Buchungsbestätigung. Bezahlst du nicht 
-innerhalb der Frist, wird deine Registrierung möglicherweise 
-storniert. Bitte beachte die untenstehende Regelung bezüglich 
-Absage und Rückerstattung.
-
-Konto: 60-224741-6
-Swing Machine Bern / Leapin Lindy
-3000 Bern
-
-IBAN: CH93 0900 0000 6022 4741 6
-BLZ: 09000
-BIC: POFICHBEXXX
-
-Bankadresse:
-Swiss Post - PostFinance
-Nordring 8
-3030 Bern
-Switzerland
-
-Bitte überweise immer Schweizer Franken. Spesen zu Lasten 
-des Absenders.
-
-Absagen und Rückerstattung: 
-Wenn du deine Anmeldung zurücknehmen musst, gelten folgende 
-Regeln für die Rückerstattungen:
-Absage bis zum 10. Januar 2018: volle Rückerstattung
-11. Januar - 31. Januar 2018: 50% Rückerstattung
-1. Februar 2018 und später: keine Rückerstattung
-
-Wenn du deine Anmeldung annulieren willst, kontaktiere uns 
-in jedem Fall damit wir deinen Platz freigeben können.
-
-WICHTIG:  Krankheit und Verletzung sind in der obigen 
-Regelung eingeschlossen.
-
-Kannst du kurzfristig nicht teilnehmen, werden wir versuchen, 
-einen Ersatz auf der Warteliste zu finden. Gelingt uns dies, 
-ist eine Rückerstattung möglich, aber nicht garantiert. 
-Im Grundsatz behält die Regelung Gültigkeit.
-
-In jedem Falle steht es dir frei, selbst einen Ersatz für 
-deinen Workshopplatz oder Partypass zu finden. Bitte 
-kontaktiere uns vor dem Check-In, wenn du deine Anmeldung an 
-eine andere  Person übertragen hast. Du bleibst aber 
-weiterhin für die Zahlung des Kursgeledes verantwortlich.
-
-Versicherung:
-Versicherung ist Sache der Teilnehmenden. Der Veranstalter 
-lehnt jede Haftung ab.
-
-*********************************************************************************************
-')
 
 
 SELECT * FROM [Registrables]

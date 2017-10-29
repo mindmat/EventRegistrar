@@ -157,19 +157,13 @@ namespace EventRegistrator.Functions.Registrables
             if (registrable.MaximumSingleSeats.HasValue)
             {
                 log.Info($"Registrable {registrable.Name}, Seat count {registrable.Seats.Count}");
-                if (registrable.Seats.Count < registrable.MaximumSingleSeats.Value)
+                seat = new Seat
                 {
-                    seat = new Seat
-                    {
-                        FirstPartnerJoined = DateTime.UtcNow,
-                        RegistrationId = response.RegistrationId,
-                        RegistrableId = registrable.Id
-                    };
-                }
-                else
-                {
-                    return null;
-                }
+                    FirstPartnerJoined = DateTime.UtcNow,
+                    RegistrationId = response.RegistrationId,
+                    RegistrableId = registrable.Id,
+                    IsWaitingList = registrable.Seats.Count >= registrable.MaximumSingleSeats.Value
+                };
             }
             else if (registrable.MaximumDoubleSeats.HasValue)
             {
