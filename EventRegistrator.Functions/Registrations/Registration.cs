@@ -14,5 +14,6 @@ namespace EventRegistrator.Functions.Registrations
         public DateTime ReceivedAt { get; set; }
         public DateTime ExternalTimestamp { get; set; }
         public string Language { get; set; }
+        public decimal? Price { get; set; }
     }
 }

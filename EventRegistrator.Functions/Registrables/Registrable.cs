@@ -1,7 +1,7 @@
-﻿using EventRegistrator.Functions.Infrastructure.DataAccess;
-using EventRegistrator.Functions.Seats;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using EventRegistrator.Functions.Infrastructure.DataAccess;
+using EventRegistrator.Functions.Seats;
 
 namespace EventRegistrator.Functions.Registrables
 {
@@ -15,5 +15,6 @@ namespace EventRegistrator.Functions.Registrables
         public ICollection<QuestionOptionToRegistrableMapping> QuestionOptionMappings { get; set; }
         public ICollection<Seat> Seats { get; set; }
         public int? ShowInMailListOrder { get; set; }
+        public decimal? Price { get; set; }
     }
 }

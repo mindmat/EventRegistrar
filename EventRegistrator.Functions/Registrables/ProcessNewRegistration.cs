@@ -29,8 +29,13 @@ namespace EventRegistrator.Functions.Registrables
             var ownSeats = new List<Seat>();
             using (var context = new EventRegistratorDbContext())
             {
+                var registration = await context.Registrations.FirstOrDefaultAsync(reg => reg.Id == @event.RegistrationId);
+                if (registration == null)
+                {
+                    throw new Exception($"Invalid RegistrationId received {@event.RegistrationId}");
+                }
                 var responses = await context.Responses.Where(rsp => rsp.RegistrationId == @event.RegistrationId).ToListAsync();
-                var questionOptionIds = responses.Where(rsp => rsp.QuestionOptionId.HasValue).Select(rsp => rsp.QuestionOptionId.Value).ToList();
+                var questionOptionIds = new HashSet<Guid>(responses.Where(rsp => rsp.QuestionOptionId.HasValue).Select(rsp => rsp.QuestionOptionId.Value));
                 var registrables = await context.QuestionOptionToRegistrableMappings
                     .Where(map => questionOptionIds.Contains(map.QuestionOptionId))
                     .Include(map => map.Registrable)
@@ -55,11 +60,39 @@ namespace EventRegistrator.Functions.Registrables
                         ownSeats.Add(seat);
                     }
                 }
-                var eventRegistrable = await context.Registrables.Where(rbl => rbl.EventId == @event.EventId).ToListAsync();
-                await SendStatusMail(eventRegistrable, ownSeats, @event.RegistrationId);
+                var eventRegistrables = await context.Registrables.Where(rbl => rbl.EventId == @event.EventId).ToListAsync();
+                var registrableIds = new HashSet<Guid>(eventRegistrables.Select(rbl => rbl.Id));
+                var reductions = await context.Reductions.Where(red => registrableIds.Contains(red.RegistrableId)).ToListAsync();
+                registration.Price = CalculatePrice(ownSeats, eventRegistrables, reductions, questionOptionIds);
 
                 await context.SaveChangesAsync();
+
+                await SendStatusMail(eventRegistrables, ownSeats, @event.RegistrationId);
             }
+        }
+
+        private static decimal CalculatePrice(List<Seat> seats, List<Registrable> registrables, List<Reduction> reductions, HashSet<Guid> questionOptionIds)
+        {
+            var bookedRegistrableIds = new HashSet<Guid>(seats.Select(seat => seat.RegistrableId));
+            var price = 0m;
+            foreach (var seat in seats)
+            {
+                var registrable = registrables.FirstOrDefault(reg => reg.Id == seat.RegistrableId);
+                if (registrable == null)
+                {
+                    continue;
+                }
+                price += registrable.Price ?? 0m;
+                var potentialReductions = reductions.Where(red => red.RegistrableId == seat.RegistrableId).ToList();
+                var applicableReductions = potentialReductions.Where(red => red.QuestionOptionId_ActivatesReduction.HasValue && questionOptionIds.Contains(red.QuestionOptionId_ActivatesReduction.Value)).ToList();
+
+                applicableReductions.AddRange(potentialReductions.Where(red => red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue && bookedRegistrableIds.Contains(red.RegistrableId1_ReductionActivatedIfCombinedWith.Value) &&
+                                                                               (!red.RegistrableId2_ReductionActivatedIfCombinedWith.HasValue || bookedRegistrableIds.Contains(red.RegistrableId2_ReductionActivatedIfCombinedWith.Value))));
+
+                price -= applicableReductions.Sum(red => red.Amount);
+            }
+
+            return price;
         }
 
         private static async Task SendStatusMail(ICollection<Registrable> registrables, List<Seat> seats, Guid mainRegistrationId)

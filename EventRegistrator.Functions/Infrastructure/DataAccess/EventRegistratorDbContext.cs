@@ -1,11 +1,11 @@
-﻿using EventRegistrator.Functions.Events;
+﻿using System.Data.Entity;
+using EventRegistrator.Functions.Events;
 using EventRegistrator.Functions.Infrastructure.DomainEvents;
 using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Registrables;
 using EventRegistrator.Functions.RegistrationForms;
 using EventRegistrator.Functions.Registrations;
 using EventRegistrator.Functions.Seats;
-using System.Data.Entity;
 
 namespace EventRegistrator.Functions.Infrastructure.DataAccess
 {
@@ -16,6 +16,7 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
         {
         }
 
+        public DbSet<Reduction> Reductions { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<RegistrationForm> RegistrationForms { get; set; }
         public DbSet<Question> Questions { get; set; }

@@ -2,8 +2,8 @@
                                            '77204060-8E30-4055-B797-92A324A00214',
                                            'E5AB6F99-8A43-4D99-9CCD-B10B4F711B5C',
                                            'C16F52CC-DA0A-4319-8A31-C26582CA6381',
-										   'B312E47B-0AD3-43D3-AB90-580FE321788F',
-										   'BB09F868-D619-4392-B25C-08C6B83CD0DF')
+                                           'B312E47B-0AD3-43D3-AB90-580FE321788F',
+                                           'BB09F868-D619-4392-B25C-08C6B83CD0DF')
 
 INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
 VALUES ('A3A7144D-F51F-4B51-ACDD-9FE96F197506', '762A93A4-56E0-402C-B700-1CFB3362B39D', 1 /*SingleRegistrationAccepted*/, 2, 'Anmeldebestätigung', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
@@ -14,7 +14,7 @@ VALUES ('A3A7144D-F51F-4B51-ACDD-9FE96F197506', '762A93A4-56E0-402C-B700-1CFB336
     </tr>
     <tr>
       <td><br /><strong>Hallo {{FirstName}}</strong><br />
-        <p>Herzlichen Dank f&uuml;r deine Anmeldung zum Leapin'' Lindy 2018!<br />Wir haben einen Platz f&uuml;r dich reserviert, bitte bezahle die Anmeldegeb&uuml;hr in den n&auml;chsten 5 Arbeitstagen (Details siehe unten).</p>
+        <p>Herzlichen Dank f&uuml;r deine Anmeldung zum Leapin'' Lindy 2018!<br />Wir haben einen Platz f&uuml;r dich reserviert, bitte bezahle die Anmeldegeb&uuml;hr von CHF{{Price}} in den n&auml;chsten 5 Arbeitstagen (Details siehe unten).</p>
         <p>Wir freuen uns, dass du dabei bist!</p>
         <p>Das Leapin'' Lindy Team</p>
         <hr />
@@ -48,6 +48,10 @@ VALUES ('A3A7144D-F51F-4B51-ACDD-9FE96F197506', '762A93A4-56E0-402C-B700-1CFB336
             <tr>
               <td style="width: 130px;"><strong>AGBs</strong></td>
               <td style="width: 700px;">{{AcceptTerms}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Preis</strong></td>
+              <td style="width: 700px;">CHF{{Price}}</td>
             </tr>
           </tbody>
         </table>
@@ -118,6 +122,10 @@ VALUES ('77204060-8E30-4055-B797-92A324A00214', '762A93A4-56E0-402C-B700-1CFB336
               <td style="width: 130px;"><strong>AGBs</strong></td>
               <td style="width: 600px;">{{AcceptTerms}}</td>
             </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Preis</strong></td>
+              <td style="width: 600px;">CHF{{Price}}</td>
+            </tr>
           </tbody>
         </table>
       </td>
@@ -169,6 +177,10 @@ VALUES ('E5AB6F99-8A43-4D99-9CCD-B10B4F711B5C', '762A93A4-56E0-402C-B700-1CFB336
             <tr>
               <td style="width: 130px;"><strong>AGBs</strong></td>
               <td style="width: 600px;">{{AcceptTerms}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Preis</strong></td>
+              <td style="width: 600px;">{{Price}}</td>
             </tr>
           </tbody>
         </table>
@@ -239,6 +251,10 @@ VALUES ('C16F52CC-DA0A-4319-8A31-C26582CA6381', '762A93A4-56E0-402C-B700-1CFB336
               <td style="width: 130px;"><strong>AGBs</strong></td>
               <td style="width: 600px;">{{Leader.AcceptTerms}}</td>
             </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Preis</strong></td>
+              <td style="width: 600px;">{{Leader.Price}}</td>
+            </tr>
           </tbody>
         </table>
         <p>&nbsp;Follower:<br />{{Follower.SeatList}}</p>
@@ -271,6 +287,10 @@ VALUES ('C16F52CC-DA0A-4319-8A31-C26582CA6381', '762A93A4-56E0-402C-B700-1CFB336
             <tr>
               <td style="width: 130px;"><strong>AGBs</strong></td>
               <td style="width: 600px;">{{Follower.AcceptTerms}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Preis</strong></td>
+              <td style="width: 600px;">{{Follower.Price}}</td>
             </tr>
           </tbody>
         </table>
@@ -341,6 +361,10 @@ VALUES ('B312E47B-0AD3-43D3-AB90-580FE321788F', '762A93A4-56E0-402C-B700-1CFB336
               <td style="width: 130px;"><strong>AGBs</strong></td>
               <td style="width: 700px;">{{AcceptTerms}}</td>
             </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Preis</strong></td>
+              <td style="width: 700px;">CHF{{Price}}</td>
+            </tr>
           </tbody>
         </table>
       </td>
@@ -362,7 +386,7 @@ VALUES ('BB09F868-D619-4392-B25C-08C6B83CD0DF', '762A93A4-56E0-402C-B700-1CFB336
         <p>Das Leapin'' Lindy Team</p>
         <hr />
         <p>Ihr habt folgendes gebucht:<br /><br />Leader:<br />{{Leader.SeatList}}</p>
-        <table style="width: 713.5px;">
+        <table style="width: 730px;">
           <tbody>
             <tr>
               <td style="width: 130px;"><strong>Name</strong></td>
@@ -392,10 +416,14 @@ VALUES ('BB09F868-D619-4392-B25C-08C6B83CD0DF', '762A93A4-56E0-402C-B700-1CFB336
               <td style="width: 130px;"><strong>AGBs</strong></td>
               <td style="width: 600px;">{{Leader.AcceptTerms}}</td>
             </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Preis</strong></td>
+              <td style="width: 600px;">CHF{{Leader.Price}}</td>
+            </tr>
           </tbody>
         </table>
         <p>&nbsp;Follower:<br />{{Follower.SeatList}}</p>
-        <table style="width: 710.5px;">
+        <table style="width: 730px;">
           <tbody>
             <tr>
               <td style="width: 130px;"><strong>Name</strong></td>
@@ -424,6 +452,10 @@ VALUES ('BB09F868-D619-4392-B25C-08C6B83CD0DF', '762A93A4-56E0-402C-B700-1CFB336
             <tr>
               <td style="width: 130px;"><strong>AGBs</strong></td>
               <td style="width: 600px;">{{Follower.AcceptTerms}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Preis</strong></td>
+              <td style="width: 600px;">CHF{{Follower.Price}}</td>
             </tr>
           </tbody>
         </table>

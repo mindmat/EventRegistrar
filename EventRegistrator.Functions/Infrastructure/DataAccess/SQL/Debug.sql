@@ -2,6 +2,7 @@
 delete from RegistrationForm
 delete from Questions
 delete from QuestionOptions
+
 delete from registrations
 delete from responses
 delete from seats

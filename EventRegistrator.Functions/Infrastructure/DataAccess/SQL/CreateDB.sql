@@ -122,6 +122,7 @@ CREATE TABLE [dbo].[Registrables](
     MaximumDoubleSeats int NULL,
     MaximumAllowedImbalance int NULL,
     ShowInMailListOrder int NULL,
+	Price money NULL,
     [RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_LimitedResource] PRIMARY KEY CLUSTERED 
 (
@@ -129,6 +130,23 @@ CREATE TABLE [dbo].[Registrables](
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
 )
 GO
+
+
+CREATE TABLE [dbo].[Reductions](
+	[Id] [uniqueidentifier] NOT NULL,
+	[RegistrableId] [uniqueidentifier] NOT NULL,
+	[RegistrableId1_ReductionActivatedIfCombinedWith] [uniqueidentifier] NULL,
+	[RegistrableId2_ReductionActivatedIfCombinedWith] [uniqueidentifier] NULL,
+	[QuestionOptionId_ActivatesReduction] [uniqueidentifier] NULL,
+	Amount money NOT NULL,
+	[RowVersion] rowversion NOT NULL,
+ CONSTRAINT [PK_Reductions] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+
 
 
 CREATE TABLE [dbo].[Seats](

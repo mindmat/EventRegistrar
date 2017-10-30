@@ -55,7 +55,7 @@ namespace EventRegistrator.Functions.Mailing
             {
                 return value;
             }
-            return null;
+            return "~";
         }
     }
 }
