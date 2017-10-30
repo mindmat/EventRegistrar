@@ -1,3 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 using EventRegistrator.Functions.Events;
 using EventRegistrator.Functions.GoogleForms;
 using EventRegistrator.Functions.Infrastructure.Bus;
@@ -8,13 +15,6 @@ using EventRegistrator.Functions.RegistrationForms;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Threading.Tasks;
 using QuestionType = EventRegistrator.Functions.RegistrationForms.QuestionType;
 
 namespace EventRegistrator.Functions.Registrations
@@ -72,37 +72,41 @@ namespace EventRegistrator.Functions.Registrations
                     };
                 }
 
-                var registration = await context.Registrations.FirstOrDefaultAsync(reg => reg.ExternalIdentifier == id);
-                if (registration == null)
+                var registrationWithSameEmail = await context.Registrations.FirstOrDefaultAsync(reg => reg.RespondentEmail == googleRegistration.Email);
+                if (registrationWithSameEmail != null)
                 {
-                    registration = new Registration
+                    //await ServiceBusClient.SendEvent(new SendMailCommand { }, SendMail.SendMailCommandsQueueName);
+                    //return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                    //{
+                    //    Content = new StringContent($"Registration with mail '{googleRegistration.Email}' already exists")
+                    //};
+                }
+
+                var registration = await context.Registrations.FirstOrDefaultAsync(reg => reg.ExternalIdentifier == id);
+                if (registration != null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest)
                     {
-                        Id = Guid.NewGuid(),
-                        ExternalIdentifier = id,
-                        RegistrationFormId = form.Id,
-                        ReceivedAt = DateTime.UtcNow,
-                        ExternalTimestamp = googleRegistration.Timestamp,
-                        RespondentEmail = googleRegistration.Email,
-                        Language = form.Language
+                        Content = new StringContent($"Registration with id '{id}' already exists")
                     };
-                    foreach (var response in googleRegistration.Responses)
+                }
+
+                registration = new Registration
+                {
+                    Id = Guid.NewGuid(),
+                    ExternalIdentifier = id,
+                    RegistrationFormId = form.Id,
+                    ReceivedAt = DateTime.UtcNow,
+                    ExternalTimestamp = googleRegistration.Timestamp,
+                    RespondentEmail = googleRegistration.Email,
+                    Language = form.Language
+                };
+                foreach (var response in googleRegistration.Responses)
+                {
+                    var responseLookup = LookupResponse(response, form.Questions, log);
+                    if (responseLookup.questionOptionId.Any())
                     {
-                        var responseLookup = LookupResponse(response, form.Questions, log);
-                        if (responseLookup.questionOptionId.Any())
-                        {
-                            foreach (var questionOptionId in responseLookup.questionOptionId)
-                            {
-                                context.Responses.Add(new Response
-                                {
-                                    Id = Guid.NewGuid(),
-                                    RegistrationId = registration.Id,
-                                    ResponseString = string.IsNullOrEmpty(response.Response) ? string.Join(", ", response.Responses) : response.Response,
-                                    QuestionId = responseLookup.questionId,
-                                    QuestionOptionId = questionOptionId
-                                });
-                            }
-                        }
-                        else
+                        foreach (var questionOptionId in responseLookup.questionOptionId)
                         {
                             context.Responses.Add(new Response
                             {
@@ -110,23 +114,27 @@ namespace EventRegistrator.Functions.Registrations
                                 RegistrationId = registration.Id,
                                 ResponseString = string.IsNullOrEmpty(response.Response) ? string.Join(", ", response.Responses) : response.Response,
                                 QuestionId = responseLookup.questionId,
+                                QuestionOptionId = questionOptionId
                             });
                         }
-                        if (form.QuestionId_FirstName.HasValue &&
-                            responseLookup.questionId == form.QuestionId_FirstName)
-                        {
-                            registration.RespondentFirstName = response.Response;
-                        }
                     }
-                    context.Registrations.Add(registration);
-                }
-                else
-                {
-                    return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                    else
                     {
-                        Content = new StringContent($"Registration with id '{id}' already exists")
-                    };
+                        context.Responses.Add(new Response
+                        {
+                            Id = Guid.NewGuid(),
+                            RegistrationId = registration.Id,
+                            ResponseString = string.IsNullOrEmpty(response.Response) ? string.Join(", ", response.Responses) : response.Response,
+                            QuestionId = responseLookup.questionId,
+                        });
+                    }
+                    if (form.QuestionId_FirstName.HasValue &&
+                        responseLookup.questionId == form.QuestionId_FirstName)
+                    {
+                        registration.RespondentFirstName = response.Response;
+                    }
                 }
+                context.Registrations.Add(registration);
 
                 await context.SaveChangesAsync();
 

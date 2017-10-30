@@ -95,14 +95,14 @@ namespace EventRegistrator.Functions.Registrables
             return price;
         }
 
-        private static async Task SendStatusMail(ICollection<Registrable> registrables, List<Seat> seats, Guid mainRegistrationId)
+        private static async Task SendStatusMail(ICollection<Registrable> registrables, IEnumerable<Seat> seats, Guid mainRegistrationId)
         {
             // Assumption: Only one Registrable has a limit
-            SendMailCommand sendMailCommand = new SendMailCommand
+            var sendMailCommand = new SendMailCommand
             {
                 RegistrationId = mainRegistrationId
             };
-            ;
+
             foreach (var seat in seats)
             {
                 var registrable = registrables.FirstOrDefault(rbl => rbl.Id == seat.RegistrableId);
@@ -157,7 +157,7 @@ namespace EventRegistrator.Functions.Registrables
                                                     Role? role,
                                                     TraceWriter log)
         {
-            Seat seat = null;
+            Seat seat;
             if (registrable.MaximumSingleSeats.HasValue)
             {
                 log.Info($"Registrable {registrable.Name}, Seat count {registrable.Seats.Count}");

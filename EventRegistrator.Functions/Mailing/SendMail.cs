@@ -51,7 +51,7 @@ namespace EventRegistrator.Functions.Mailing
                 {
                     throw new ArgumentException($"No template in event {registration.RegistrationForm.EventId} with type {command.Type}");
                 }
-                var language = "de"; // ToDo: read from registration
+                var language = registration.Language ?? FallbackLanguage;
                 var template = templates.FirstOrDefault(mtp => mtp.Language == language) ??
                                templates.FirstOrDefault(mtp => mtp.Language == FallbackLanguage) ??
                                templates.First();
@@ -220,9 +220,9 @@ namespace EventRegistrator.Functions.Mailing
                 var partner = responses.Lookup("PARTNER", "?");
                 if (language == Language.Deutsch)
                 {
-                    return $"- {seat.Registrable.Name}, Rolle: {role}, Partner: {partner}";
+                    return $"- {seat.Registrable.Name}, Rolle: {role}" + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
                 }
-                return $"- {seat.Registrable.Name}, Role: {role}, Partner: {partner}";
+                return $"- {seat.Registrable.Name}, Role: {role}" + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
             }
             return $"- {seat.Registrable.Name}";
         }
