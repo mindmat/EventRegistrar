@@ -118,7 +118,14 @@ namespace EventRegistrator.Functions.Registrables
                 }
                 if (registrable.MaximumDoubleSeats.HasValue)
                 {
-                    if (seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
+                    sendMailCommand.MainRegistrationRole = seat.RegistrationId == mainRegistrationId ? Role.Leader : Role.Follower;
+                    if (seat.PartnerEmail == null)
+                    {
+                        // single registration for double registrable
+                        sendMailCommand.Type = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
+                                                                    MailType.SingleRegistrationAccepted;
+                    }
+                    else if (seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
                     {
                         sendMailCommand.Type = seat.IsWaitingList ? MailType.DoubleRegistrationMatchedOnWaitingList :
                                                                     MailType.DoubleRegistrationMatchedAndAccepted;
@@ -127,25 +134,18 @@ namespace EventRegistrator.Functions.Registrables
                     }
                     else
                     {
-                        if (seat.PartnerEmail == null)
-                        {
-                            // single registration for double registrable
-                            sendMailCommand.Type = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
-                                                                        MailType.SingleRegistrationAccepted;
-                        }
-                        else
-                        {
-                            // partner registration for double registrable
-                            sendMailCommand.Type = seat.IsWaitingList ? MailType.DoubleRegistrationFirstPartnerOnWaitingList :
-                                                                        MailType.DoubleRegistrationFirstPartnerAccepted;
-                        }
+                        // partner registration for double registrable
+                        sendMailCommand.Type = seat.IsWaitingList ? MailType.DoubleRegistrationFirstPartnerOnWaitingList :
+                                                                    MailType.DoubleRegistrationFirstPartnerAccepted;
                     }
-                    sendMailCommand.MainRegistrationRole = seat.RegistrationId == mainRegistrationId ? Role.Leader : Role.Follower;
 
                     break;
                 }
             }
-            await ServiceBusClient.SendEvent(sendMailCommand, SendMail.SendMailCommandsQueueName);
+            if (sendMailCommand.Type != default(MailType))
+            {
+                await ServiceBusClient.SendEvent(sendMailCommand, SendMail.SendMailCommandsQueueName);
+            }
         }
 
         private static async Task<Seat> ReserveSeat(EventRegistratorDbContext context,
