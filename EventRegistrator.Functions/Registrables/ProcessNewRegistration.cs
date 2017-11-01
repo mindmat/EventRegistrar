@@ -8,6 +8,7 @@ using EventRegistrator.Functions.Infrastructure.DataAccess;
 using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Registrations;
 using EventRegistrator.Functions.Seats;
+using EventRegistrator.Functions.WaitingList;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ServiceBus.Messaging;
@@ -124,9 +125,12 @@ namespace EventRegistrator.Functions.Registrables
                         // single registration for double registrable
                         sendMailCommand.Type = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
                                                                     MailType.SingleRegistrationAccepted;
+                        // maybe now sb can get off the waiting list
+                        await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { EventId = registrable.EventId, RegistrableId = registrable.Id }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
                     }
                     else if (seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
                     {
+                        // partner registration for double registrable, both partner registered
                         sendMailCommand.Type = seat.IsWaitingList ? MailType.DoubleRegistrationMatchedOnWaitingList :
                                                                     MailType.DoubleRegistrationMatchedAndAccepted;
                         sendMailCommand.RegistrationId_Partner = seat.RegistrationId == mainRegistrationId ? seat.RegistrationId_Follower :
@@ -134,7 +138,7 @@ namespace EventRegistrator.Functions.Registrables
                     }
                     else
                     {
-                        // partner registration for double registrable
+                        // partner registration for double registrable, both partner registered
                         sendMailCommand.Type = seat.IsWaitingList ? MailType.DoubleRegistrationFirstPartnerOnWaitingList :
                                                                     MailType.DoubleRegistrationFirstPartnerAccepted;
                     }
