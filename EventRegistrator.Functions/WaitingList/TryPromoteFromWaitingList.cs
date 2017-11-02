@@ -45,11 +45,13 @@ namespace EventRegistrator.Functions.WaitingList
             {
                 // try match single leaders and followers
                 var singleSeats = registrable.Seats.Where(seat => seat.PartnerEmail == null).ToList();
-                //var acceptedSeats = registrable.Seats.Where(seat => !seat.IsWaitingList).ToList();
-                var acceptedExtraLeaders = singleSeats.Where(seat => !seat.IsWaitingList &&
-                                                                     !seat.RegistrationId_Follower.HasValue);
-                var acceptedExtraFollowers = singleSeats.Where(seat => !seat.IsWaitingList &&
-                                                                       !seat.RegistrationId.HasValue);
+                var acceptedSingleLeaders = singleSeats.Where(seat => !seat.IsWaitingList &&
+                                                                      !seat.RegistrationId_Follower.HasValue)
+                                                      .ToList();
+                var acceptedSingleFollowers = singleSeats.Where(seat => !seat.IsWaitingList &&
+                                                                        !seat.RegistrationId.HasValue)
+                                                        .ToList();
+
                 var waitingFollowers = new Queue<Seat>(registrable.Seats.Where(seat => seat.IsWaitingList &&
                                                                                        !seat.RegistrationId.HasValue)
                                                                         .OrderBy(seat => seat.FirstPartnerJoined));
@@ -57,9 +59,9 @@ namespace EventRegistrator.Functions.WaitingList
                                                                                      !seat.RegistrationId_Follower.HasValue)
                                                                       .OrderBy(seat => seat.FirstPartnerJoined));
 
-                if (acceptedExtraLeaders.Any() && waitingFollowers.Any())
+                if (acceptedSingleLeaders.Any() && waitingFollowers.Any())
                 {
-                    foreach (var acceptedExtraLeader in acceptedExtraLeaders)
+                    foreach (var acceptedSingleLeader in acceptedSingleLeaders)
                     {
                         if (waitingFollowers.Peek() == null)
                         {
@@ -67,22 +69,42 @@ namespace EventRegistrator.Functions.WaitingList
                             break;
                         }
                         var waitingFollower = waitingFollowers.Dequeue();
-                        acceptedExtraLeader.RegistrationId_Follower = waitingFollower.RegistrationId_Follower;
+                        acceptedSingleLeader.RegistrationId_Follower = waitingFollower.RegistrationId_Follower;
                         dbContext.Seats.Remove(waitingFollower);
                     }
                 }
 
-                var leadersOnWaitingList = registrable.Seats
-                    .Where(seat => seat.IsWaitingList && seat.RegistrationId.HasValue)
-                    .OrderBy(seat => seat.FirstPartnerJoined);
+                if (acceptedSingleFollowers.Any() && waitingLeaders.Any())
+                {
+                    foreach (var acceptedSingleFollower in acceptedSingleFollowers)
+                    {
+                        if (waitingLeaders.Peek() == null)
+                        {
+                            // no more waiting followers
+                            break;
+                        }
+                        var waitingLeader = waitingLeaders.Dequeue();
+                        acceptedSingleFollower.RegistrationId_Follower = waitingLeader.RegistrationId;
+                        dbContext.Seats.Remove(waitingLeader);
+                    }
+                }
 
                 // try promote partner registration
+                var acceptedSeatCount = registrable.Seats.Count(seat => !seat.IsWaitingList);
+                var seatsLeft = registrable.MaximumDoubleSeats.Value - acceptedSeatCount;
+                if (seatsLeft > 0)
+                {
+                    AcceptPartnerSeatsFromWaitingList(registrable.Seats.Where(seat => seat.IsWaitingList).OrderBy(seat => seat.FirstPartnerJoined).Take(seatsLeft));
+                }
             }
+        }
+
+        private static void AcceptPartnerSeatsFromWaitingList(IEnumerable<Seat> take)
+        {
         }
 
         private static void AcceptSingleSeatsFromWaitingList(IEnumerable<Seat> seatsToAccept)
         {
-            throw new System.NotImplementedException();
         }
     }
 }

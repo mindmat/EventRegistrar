@@ -8,7 +8,6 @@ using EventRegistrator.Functions.Infrastructure.DataAccess;
 using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Registrations;
 using EventRegistrator.Functions.Seats;
-using EventRegistrator.Functions.WaitingList;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ServiceBus.Messaging;
@@ -57,7 +56,7 @@ namespace EventRegistrator.Functions.Registrables
                         var isFollower = registrable.QuestionOptionId_Follower.HasValue &&
                                          responses.Any(rsp => rsp.QuestionOptionId == registrable.QuestionOptionId_Follower.Value);
                         var role = isLeader ? Role.Leader : (isFollower ? Role.Follower : (Role?)null);
-                        var seat = await ReserveSeat(context, @event.EventId, registrable.Registrable, response, @event.Registration.RespondentEmail, partnerEmail, role, log);
+                        var seat = await ReserveSeat(context, @event.EventId, registrable.Registrable, response, registration.RespondentEmail, partnerEmail, role, log);
                         ownSeats.Add(seat);
                     }
                 }
@@ -68,7 +67,8 @@ namespace EventRegistrator.Functions.Registrables
 
                 await context.SaveChangesAsync();
 
-                await SendStatusMail(eventRegistrables, ownSeats, @event.RegistrationId);
+                await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registration.Id }, SendMail.ComposeAndSendMailCommandsQueueName);
+                //await SendStatusMail(eventRegistrables, ownSeats, @event.RegistrationId);
             }
         }
 
@@ -96,61 +96,61 @@ namespace EventRegistrator.Functions.Registrables
             return price;
         }
 
-        private static async Task SendStatusMail(ICollection<Registrable> registrables, IEnumerable<Seat> seats, Guid mainRegistrationId)
-        {
-            // Assumption: Only one Registrable has a limit
-            var sendMailCommand = new SendMailCommand
-            {
-                RegistrationId = mainRegistrationId
-            };
+        //private static async Task SendStatusMail(ICollection<Registrable> registrables, IEnumerable<Seat> seats, Guid mainRegistrationId)
+        //{
+        //    // Assumption: Only one Registrable has a limit
+        //    var sendMailCommand = new ComposeAndSendMailCommand
+        //    {
+        //        RegistrationId = mainRegistrationId
+        //    };
 
-            foreach (var seat in seats)
-            {
-                var registrable = registrables.FirstOrDefault(rbl => rbl.Id == seat.RegistrableId);
-                if (registrable == null)
-                {
-                    throw new Exception($"No registrable found with Id {seat.RegistrableId}");
-                }
-                if (registrable.MaximumSingleSeats.HasValue)
-                {
-                    sendMailCommand.Type = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
-                                                                MailType.SingleRegistrationAccepted;
-                    break;
-                }
-                if (registrable.MaximumDoubleSeats.HasValue)
-                {
-                    sendMailCommand.MainRegistrationRole = seat.RegistrationId == mainRegistrationId ? Role.Leader : Role.Follower;
-                    if (seat.PartnerEmail == null)
-                    {
-                        // single registration for double registrable
-                        sendMailCommand.Type = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
-                                                                    MailType.SingleRegistrationAccepted;
-                        // maybe now sb can get off the waiting list
-                        await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { EventId = registrable.EventId, RegistrableId = registrable.Id }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
-                    }
-                    else if (seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
-                    {
-                        // partner registration for double registrable, both partner registered
-                        sendMailCommand.Type = seat.IsWaitingList ? MailType.DoubleRegistrationMatchedOnWaitingList :
-                                                                    MailType.DoubleRegistrationMatchedAndAccepted;
-                        sendMailCommand.RegistrationId_Partner = seat.RegistrationId == mainRegistrationId ? seat.RegistrationId_Follower :
-                                                                                                             seat.RegistrationId;
-                    }
-                    else
-                    {
-                        // partner registration for double registrable, both partner registered
-                        sendMailCommand.Type = seat.IsWaitingList ? MailType.DoubleRegistrationFirstPartnerOnWaitingList :
-                                                                    MailType.DoubleRegistrationFirstPartnerAccepted;
-                    }
+        //    foreach (var seat in seats)
+        //    {
+        //        var registrable = registrables.FirstOrDefault(rbl => rbl.Id == seat.RegistrableId);
+        //        if (registrable == null)
+        //        {
+        //            throw new Exception($"No registrable found with Id {seat.RegistrableId}");
+        //        }
+        //        if (registrable.MaximumSingleSeats.HasValue)
+        //        {
+        //            sendMailCommand.Type = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
+        //                                                        MailType.SingleRegistrationAccepted;
+        //            break;
+        //        }
+        //        if (registrable.MaximumDoubleSeats.HasValue)
+        //        {
+        //            sendMailCommand.MainRegistrationRole = seat.RegistrationId == mainRegistrationId ? Role.Leader : Role.Follower;
+        //            if (seat.PartnerEmail == null)
+        //            {
+        //                // single registration for double registrable
+        //                sendMailCommand.Type = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
+        //                                                            MailType.SingleRegistrationAccepted;
+        //                // maybe now sb can get off the waiting list
+        //                await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { EventId = registrable.EventId, RegistrableId = registrable.Id }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
+        //            }
+        //            else if (seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
+        //            {
+        //                // partner registration for double registrable, both partner registered
+        //                sendMailCommand.Type = seat.IsWaitingList ? MailType.DoubleRegistrationMatchedOnWaitingList :
+        //                                                            MailType.DoubleRegistrationMatchedAndAccepted;
+        //                sendMailCommand.RegistrationId_Partner = seat.RegistrationId == mainRegistrationId ? seat.RegistrationId_Follower :
+        //                                                                                                     seat.RegistrationId;
+        //            }
+        //            else
+        //            {
+        //                // partner registration for double registrable, both partner registered
+        //                sendMailCommand.Type = seat.IsWaitingList ? MailType.DoubleRegistrationFirstPartnerOnWaitingList :
+        //                                                            MailType.DoubleRegistrationFirstPartnerAccepted;
+        //            }
 
-                    break;
-                }
-            }
-            if (sendMailCommand.Type != default(MailType))
-            {
-                await ServiceBusClient.SendEvent(sendMailCommand, SendMail.SendMailCommandsQueueName);
-            }
-        }
+        //            break;
+        //        }
+        //    }
+        //    if (sendMailCommand.Type != default(MailType))
+        //    {
+        //        await ServiceBusClient.SendEvent(sendMailCommand, SendMail.SendMailCommandsQueueName);
+        //    }
+        //}
 
         private static async Task<Seat> ReserveSeat(EventRegistratorDbContext context,
                                                     Guid? eventId,

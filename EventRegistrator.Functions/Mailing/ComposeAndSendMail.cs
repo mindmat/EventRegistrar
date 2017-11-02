@@ -5,12 +5,14 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using EventRegistrator.Functions.Infrastructure;
+using EventRegistrator.Functions.Infrastructure.Bus;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
 using EventRegistrator.Functions.Infrastructure.DomainEvents;
 using EventRegistrator.Functions.Registrables;
 using EventRegistrator.Functions.RegistrationForms;
 using EventRegistrator.Functions.Registrations;
 using EventRegistrator.Functions.Seats;
+using EventRegistrator.Functions.WaitingList;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ServiceBus.Messaging;
@@ -22,15 +24,15 @@ namespace EventRegistrator.Functions.Mailing
 {
     public static class SendMail
     {
-        public const string SendMailCommandsQueueName = "SendMailCommands";
+        public const string ComposeAndSendMailCommandsQueueName = "ComposeAndSendMailCommands";
         public const string FallbackLanguage = Language.English;
         private const string PrefixLeader = "LEADER";
         private const string PrefixFollower = "FOLLOWER";
 
-        [FunctionName("SendMail")]
-        public static async Task Run([ServiceBusTrigger(SendMailCommandsQueueName, AccessRights.Listen, Connection = "ServiceBusEndpoint")]SendMailCommand command, TraceWriter log)
+        [FunctionName("ComposeAndSendMailCommands")]
+        public static async Task Run([ServiceBusTrigger(ComposeAndSendMailCommandsQueueName, AccessRights.Listen, Connection = "ServiceBusEndpoint")]ComposeAndSendMailCommand command, TraceWriter log)
         {
-            log.Info($"C# ServiceBus queue trigger function processed message: RegistrationId {command.RegistrationId}, RegistrationId_Partner {command.RegistrationId_Partner}, MainRegistrationRole {command.MainRegistrationRole}, Type {command.Type}");
+            log.Info($"ComposeAndSendMailCommand: RegistrationId {command.RegistrationId}");
 
             var logTask = DomainEventPersistor.Log(command);
 
@@ -44,12 +46,69 @@ namespace EventRegistrator.Functions.Mailing
                 {
                     throw new ArgumentException($"No registration with id {command.RegistrationId}");
                 }
+
+                var seats = await context.Seats.Where(seat => seat.RegistrationId == command.RegistrationId).ToListAsync();
+                var registrables = await context.Registrables.Where(rbl => rbl.EventId == registration.RegistrationForm.EventId).ToListAsync();
+                MailType? mailType = null;
+                var mainRegistrationRole = Role.Leader;
+                Guid? registrationId_Partner = null;
+                foreach (var seat in seats)
+                {
+                    var registrable = registrables.FirstOrDefault(rbl => rbl.Id == seat.RegistrableId);
+                    if (registrable == null)
+                    {
+                        throw new Exception($"No registrable found with Id {seat.RegistrableId}");
+                    }
+                    if (registrable.MaximumSingleSeats.HasValue)
+                    {
+                        mailType = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
+                                                        MailType.SingleRegistrationAccepted;
+                        break;
+                    }
+                    if (registrable.MaximumDoubleSeats.HasValue)
+                    {
+                        if (seat.RegistrationId_Follower == registration.RegistrationForm.Id)
+                        {
+                            mainRegistrationRole = Role.Follower;
+                        }
+                        if (seat.PartnerEmail == null)
+                        {
+                            // single registration for double registrable
+                            mailType = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
+                                                            MailType.SingleRegistrationAccepted;
+                            // maybe now sb can get off the waiting list
+                            await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { EventId = registrable.EventId, RegistrableId = registrable.Id }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
+                        }
+                        else if (seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
+                        {
+                            // partner registration for double registrable, both partner registered
+                            mailType = seat.IsWaitingList ? MailType.DoubleRegistrationMatchedOnWaitingList :
+                                                            MailType.DoubleRegistrationMatchedAndAccepted;
+                            registrationId_Partner = seat.RegistrationId == registration.Id ? seat.RegistrationId_Follower :
+                                                                                              seat.RegistrationId;
+                        }
+                        else
+                        {
+                            // partner registration for double registrable, both partner registered
+                            mailType = seat.IsWaitingList ? MailType.DoubleRegistrationFirstPartnerOnWaitingList :
+                                                            MailType.DoubleRegistrationFirstPartnerAccepted;
+                        }
+
+                        break;
+                    }
+                }
+                if (mailType == null)
+                {
+                    log.Info("no action needed");
+                    return;
+                }
+
                 var templates = await context.MailTemplates.Where(mtp => mtp.EventId == registration.RegistrationForm.EventId &&
-                                                                         mtp.Type == command.Type)
+                                                                         mtp.Type == mailType.Value)
                                                            .ToListAsync();
                 if (!templates.Any())
                 {
-                    throw new ArgumentException($"No template in event {registration.RegistrationForm.EventId} with type {command.Type}");
+                    throw new ArgumentException($"No template in event {registration.RegistrationForm.EventId} with type {mailType}");
                 }
                 var language = registration.Language ?? FallbackLanguage;
                 var template = templates.FirstOrDefault(mtp => mtp.Language == language) ??
@@ -65,11 +124,11 @@ namespace EventRegistrator.Functions.Mailing
                 if (templateFiller.Prefixes.Any())
                 {
                     log.Info($"Prefixes {string.Join(",", templateFiller.Prefixes)}");
-                    log.Info($"command.MainRegistrationRole {command.MainRegistrationRole}");
+                    log.Info($"mainRegistrationRole {mainRegistrationRole}");
 
-                    var partnerResponses = await GetResponses(command.RegistrationId_Partner, context.Responses);
-                    var partnerRegistration = await context.Registrations.FirstOrDefaultAsync(reg => reg.Id == command.RegistrationId_Partner);
-                    if (command.MainRegistrationRole == Role.Leader)
+                    var partnerResponses = await GetResponses(registrationId_Partner, context.Responses);
+                    var partnerRegistration = await context.Registrations.FirstOrDefaultAsync(reg => reg.Id == registrationId_Partner);
+                    if (mainRegistrationRole == Role.Leader)
                     {
                         leaderResponses = responses;
                         followerResponses = partnerResponses;
@@ -98,17 +157,17 @@ namespace EventRegistrator.Functions.Mailing
                     {
                         responsesForPrefix = leaderResponses;
                         registrationForPrefix = leaderRegistration;
-                        registrationIdForPrefix = command.MainRegistrationRole == Role.Leader
+                        registrationIdForPrefix = mainRegistrationRole == Role.Leader
                             ? command.RegistrationId
-                            : command.RegistrationId_Partner;
+                            : registrationId_Partner;
                     }
                     else if (parts.prefix == PrefixFollower)
                     {
                         responsesForPrefix = followerResponses;
                         registrationForPrefix = followerRegistration;
-                        registrationIdForPrefix = command.MainRegistrationRole == Role.Follower
+                        registrationIdForPrefix = mainRegistrationRole == Role.Follower
                             ? command.RegistrationId
-                            : command.RegistrationId_Partner;
+                            : registrationId_Partner;
                     }
                     if (parts.key == "SEATLIST")
                     {
@@ -146,9 +205,9 @@ namespace EventRegistrator.Functions.Mailing
 
                 msg.AddTo(new EmailAddress(registration.RespondentEmail, registration.RespondentFirstName));
                 // add partner mail
-                if (command.RegistrationId_Partner.HasValue)
+                if (registrationId_Partner.HasValue)
                 {
-                    var partnerRegistration = await context.Registrations.FirstOrDefaultAsync(reg => reg.Id == command.RegistrationId_Partner);
+                    var partnerRegistration = await context.Registrations.FirstOrDefaultAsync(reg => reg.Id == registrationId_Partner);
                     if (partnerRegistration != null)
                     {
                         msg.AddTo(new EmailAddress(partnerRegistration.RespondentEmail, partnerRegistration.RespondentFirstName));
