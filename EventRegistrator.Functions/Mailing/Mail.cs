@@ -4,6 +4,7 @@ namespace EventRegistrator.Functions.Mailing
 {
     public class Mail : Entity
     {
+        public MailType? Type { get; set; }
         public string ContentHtml { get; set; }
         public string ContentPlainText { get; set; }
 

@@ -44,11 +44,12 @@ namespace EventRegistrator.Functions.Mailing
                     throw new ArgumentException($"No registration with id {command.RegistrationId}");
                 }
 
-                var seats = await context.Seats.Where(seat => seat.RegistrationId == command.RegistrationId).ToListAsync();
+                var seats = await context.Seats.Where(seat => seat.RegistrationId == command.RegistrationId || seat.RegistrationId_Follower == command.RegistrationId).ToListAsync();
                 var registrables = await context.Registrables.Where(rbl => rbl.EventId == registration.RegistrationForm.EventId).ToListAsync();
                 MailType? mailType = null;
                 var mainRegistrationRole = Role.Leader;
                 Guid? registrationId_Partner = null;
+                var registrablesToCheckWaitingList = new List<Registrable>();
                 foreach (var seat in seats)
                 {
                     var registrable = registrables.FirstOrDefault(rbl => rbl.Id == seat.RegistrableId);
@@ -74,7 +75,7 @@ namespace EventRegistrator.Functions.Mailing
                             mailType = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
                                                             MailType.SingleRegistrationAccepted;
                             // maybe now sb can get off the waiting list
-                            await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { EventId = registrable.EventId, RegistrableId = registrable.Id }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
+                            registrablesToCheckWaitingList.Add(registrable);
                         }
                         else if (seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
                         {
@@ -191,8 +192,10 @@ namespace EventRegistrator.Functions.Mailing
                 var mail = new Mail
                 {
                     Id = Guid.NewGuid(),
+                    Type = mailType,
                     SenderMail = template.SenderMail,
                     SenderName = template.SenderName,
+                    Subject = template.Subject
                 };
 
                 if (template.ContentType == ContentType.Html)
@@ -211,7 +214,7 @@ namespace EventRegistrator.Functions.Mailing
                 }
 
                 context.Mails.Add(mail);
-                context.MailsToRegistrations.AddRange(mappings.Select(reg => new MailToRegistration { MailId = mail.Id, RegistrationId = reg.Id }));
+                context.MailToRegistrations.AddRange(mappings.Select(reg => new MailToRegistration { Id = Guid.NewGuid(), MailId = mail.Id, RegistrationId = reg.Id }));
 
                 var sendMailCommand = new SendMailCommand
                 {
@@ -225,6 +228,10 @@ namespace EventRegistrator.Functions.Mailing
 
                 await context.SaveChangesAsync();
                 await ServiceBusClient.SendEvent(sendMailCommand, SendMailCommandHandler.SendMailQueueName);
+                foreach (var registrable in registrablesToCheckWaitingList)
+                {
+                    await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { EventId = registrable.EventId, RegistrableId = registrable.Id }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
+                }
             }
             await logTask;
         }

@@ -216,7 +216,7 @@ CREATE TABLE [dbo].[Mails](
 )
 GO
 
-CREATE TABLE [dbo].[MailsToRegistrations](
+CREATE TABLE [dbo].[MailToRegistrations](
 	[Id] [uniqueidentifier] NOT NULL,
 	[MailId] [uniqueidentifier] NOT NULL,
 	[RegistrationId] [uniqueidentifier] NOT NULL,

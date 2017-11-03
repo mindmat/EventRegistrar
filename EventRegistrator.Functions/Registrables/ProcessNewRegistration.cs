@@ -44,8 +44,7 @@ namespace EventRegistrator.Functions.Registrables
 
                 foreach (var response in responses.Where(rsp => rsp.QuestionOptionId.HasValue))
                 {
-                    foreach (var registrable in registrables.Where(rbl =>
-                        rbl.QuestionOptionId == response.QuestionOptionId))
+                    foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
                     {
                         var partnerEmail = registrable.QuestionId_PartnerEmail.HasValue
                             ? responses.FirstOrDefault(
@@ -64,11 +63,11 @@ namespace EventRegistrator.Functions.Registrables
                 var registrableIds = new HashSet<Guid>(eventRegistrables.Select(rbl => rbl.Id));
                 var reductions = await context.Reductions.Where(red => registrableIds.Contains(red.RegistrableId)).ToListAsync();
                 registration.Price = CalculatePrice(ownSeats, eventRegistrables, reductions, questionOptionIds);
+                registration.IsWaitingList = ownSeats.Any(seat => seat.IsWaitingList);
 
                 await context.SaveChangesAsync();
 
                 await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registration.Id }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
-                //await SendStatusMail(eventRegistrables, ownSeats, @event.RegistrationId);
             }
         }
 
@@ -173,7 +172,7 @@ namespace EventRegistrator.Functions.Registrables
                         RegistrationId = ownRole == Role.Leader ? response.RegistrationId : (Guid?)null,
                         RegistrationId_Follower = ownRole == Role.Follower ? response.RegistrationId : (Guid?)null,
                         RegistrableId = registrable.Id,
-                        IsWaitingList = waitingListForOwnRole && !CanAddNewDoubleSeat(registrable, ownRole)
+                        IsWaitingList = waitingListForOwnRole || !CanAddNewDoubleSeat(registrable, ownRole)
                     };
                 }
             }
@@ -228,7 +227,7 @@ namespace EventRegistrator.Functions.Registrables
                 var singleLeaderCount = registrable.Seats.Count(seat => string.IsNullOrEmpty(seat.PartnerEmail) && seat.RegistrationId_Follower == null);
                 return singleLeaderCount < registrable.MaximumAllowedImbalance.Value;
             }
-            if (ownRole == Role.Leader)
+            if (ownRole == Role.Follower)
             {
                 var singleFollowerCount = registrable.Seats.Count(seat => string.IsNullOrEmpty(seat.PartnerEmail) && seat.RegistrationId == null);
                 return singleFollowerCount < registrable.MaximumAllowedImbalance.Value;
@@ -238,9 +237,10 @@ namespace EventRegistrator.Functions.Registrables
 
         private static Seat FindMatchingSingleSeat(Registrable registrable, Role ownRole)
         {
-            return registrable.Seats?.FirstOrDefault(st => string.IsNullOrEmpty(st.PartnerEmail) &&
-                                                           ownRole == Role.Leader && !st.RegistrationId.HasValue ||
-                                                           ownRole == Role.Follower && !st.RegistrationId_Follower.HasValue);
+            return registrable.Seats?.FirstOrDefault(seat => string.IsNullOrEmpty(seat.PartnerEmail) &&
+                                                             !seat.IsWaitingList &&
+                                                             (ownRole == Role.Leader && !seat.RegistrationId.HasValue ||
+                                                              ownRole == Role.Follower && !seat.RegistrationId_Follower.HasValue));
         }
 
         private static async Task<Seat> FindPartnerSeat(Guid? eventId, string ownEmail, string partnerEmail, Role ownRole, ICollection<Seat> existingSeats, IQueryable<Registration> registrations, TraceWriter log)

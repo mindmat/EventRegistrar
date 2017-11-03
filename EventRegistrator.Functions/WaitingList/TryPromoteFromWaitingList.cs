@@ -1,8 +1,11 @@
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using EventRegistrator.Functions.Infrastructure.Bus;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
+using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Registrables;
 using EventRegistrator.Functions.Seats;
 using Microsoft.Azure.WebJobs;
@@ -20,25 +23,37 @@ namespace EventRegistrator.Functions.WaitingList
         {
             log.Info($"TryPromoteFromWaitingList triggered: {command.EventId}, {command.RegistrableId}");
 
+            var registrationIdsToCheck = new List<Guid?>();
             using (var context = new EventRegistratorDbContext())
             {
                 var registrablesToCheck = await context.Registrables.Where(rbl => rbl.EventId == command.EventId &&
                                                                                   (!command.RegistrableId.HasValue || rbl.Id == command.RegistrableId.Value))
                                                                     .Include(rbl => rbl.Seats)
                                                                     .ToListAsync();
-                registrablesToCheck.ForEach(registrable => TryPromoteFromRegistrableWaitingList(registrable, context));
+                foreach (var registrable in registrablesToCheck)
+                {
+                    registrationIdsToCheck.AddRange(await TryPromoteFromRegistrableWaitingList(registrable, context, log));
+                }
+                await context.SaveChangesAsync();
+            }
+
+            foreach (var registrationId in registrationIdsToCheck.Where(id => id.HasValue))
+            {
+                await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
             }
         }
 
-        private static void TryPromoteFromRegistrableWaitingList(Registrable registrable, EventRegistratorDbContext dbContext)
+        private static async Task<IEnumerable<Guid?>> TryPromoteFromRegistrableWaitingList(Registrable registrable, EventRegistratorDbContext dbContext, TraceWriter log)
         {
+            var registrationIdsToCheck = new List<Guid?>();
+
             if (registrable.MaximumSingleSeats.HasValue)
             {
                 var acceptedSeatCount = registrable.Seats.Count(seat => !seat.IsWaitingList);
                 var seatsLeft = registrable.MaximumSingleSeats.Value - acceptedSeatCount;
                 if (seatsLeft > 0)
                 {
-                    AcceptSingleSeatsFromWaitingList(registrable.Seats.Where(seat => seat.IsWaitingList).OrderBy(seat => seat.FirstPartnerJoined).Take(seatsLeft));
+                    return await AcceptSingleSeatsFromWaitingList(registrable.Seats.Where(seat => seat.IsWaitingList).OrderBy(seat => seat.FirstPartnerJoined).Take(seatsLeft), dbContext, log);
                 }
             }
             else if (registrable.MaximumDoubleSeats.HasValue)
@@ -47,10 +62,10 @@ namespace EventRegistrator.Functions.WaitingList
                 var singleSeats = registrable.Seats.Where(seat => seat.PartnerEmail == null).ToList();
                 var acceptedSingleLeaders = singleSeats.Where(seat => !seat.IsWaitingList &&
                                                                       !seat.RegistrationId_Follower.HasValue)
-                                                      .ToList();
+                                                       .ToList();
                 var acceptedSingleFollowers = singleSeats.Where(seat => !seat.IsWaitingList &&
                                                                         !seat.RegistrationId.HasValue)
-                                                        .ToList();
+                                                         .ToList();
 
                 var waitingFollowers = new Queue<Seat>(registrable.Seats.Where(seat => seat.IsWaitingList &&
                                                                                        !seat.RegistrationId.HasValue)
@@ -58,7 +73,7 @@ namespace EventRegistrator.Functions.WaitingList
                 var waitingLeaders = new Queue<Seat>(registrable.Seats.Where(seat => seat.IsWaitingList &&
                                                                                      !seat.RegistrationId_Follower.HasValue)
                                                                       .OrderBy(seat => seat.FirstPartnerJoined));
-
+                log.Info($"Registrable {registrable.Name}, leaders in {acceptedSingleLeaders.Count}, followers in {acceptedSingleFollowers.Count}, leaders waiting {waitingLeaders.Count}, followers waiting {waitingFollowers.Count}");
                 if (acceptedSingleLeaders.Any() && waitingFollowers.Any())
                 {
                     foreach (var acceptedSingleLeader in acceptedSingleLeaders)
@@ -71,6 +86,8 @@ namespace EventRegistrator.Functions.WaitingList
                         var waitingFollower = waitingFollowers.Dequeue();
                         acceptedSingleLeader.RegistrationId_Follower = waitingFollower.RegistrationId_Follower;
                         dbContext.Seats.Remove(waitingFollower);
+                        registrationIdsToCheck.Add(waitingFollower.RegistrationId_Follower);
+                        await SetRegistrationNotOnWaitingListAnymore(waitingFollower.RegistrationId_Follower, dbContext, log);
                     }
                 }
 
@@ -86,6 +103,8 @@ namespace EventRegistrator.Functions.WaitingList
                         var waitingLeader = waitingLeaders.Dequeue();
                         acceptedSingleFollower.RegistrationId_Follower = waitingLeader.RegistrationId;
                         dbContext.Seats.Remove(waitingLeader);
+                        registrationIdsToCheck.Add(waitingLeader.RegistrationId_Follower);
+                        await SetRegistrationNotOnWaitingListAnymore(waitingLeader.RegistrationId, dbContext, log);
                     }
                 }
 
@@ -97,14 +116,37 @@ namespace EventRegistrator.Functions.WaitingList
                     AcceptPartnerSeatsFromWaitingList(registrable.Seats.Where(seat => seat.IsWaitingList).OrderBy(seat => seat.FirstPartnerJoined).Take(seatsLeft));
                 }
             }
+            return registrationIdsToCheck;
         }
 
-        private static void AcceptPartnerSeatsFromWaitingList(IEnumerable<Seat> take)
+        private static void AcceptPartnerSeatsFromWaitingList(IEnumerable<Seat> seatsToAccept)
         {
         }
 
-        private static void AcceptSingleSeatsFromWaitingList(IEnumerable<Seat> seatsToAccept)
+        private static async Task<IEnumerable<Guid?>> AcceptSingleSeatsFromWaitingList(IEnumerable<Seat> seatsToAccept, EventRegistratorDbContext dbContext, TraceWriter log)
         {
+            var registrationIdsToCheck = new List<Guid?>();
+            foreach (var seat in seatsToAccept)
+            {
+                seat.IsWaitingList = false;
+                await SetRegistrationNotOnWaitingListAnymore(seat.RegistrationId, dbContext, log);
+                registrationIdsToCheck.Add(seat.RegistrationId);
+            }
+            return registrationIdsToCheck;
+        }
+
+        private static async Task SetRegistrationNotOnWaitingListAnymore(Guid? registrationId, EventRegistratorDbContext dbContext, TraceWriter log)
+        {
+            var registration = await dbContext.Registrations.FirstOrDefaultAsync(reg => registrationId.HasValue && reg.Id == registrationId);
+
+            if (registration == null)
+            {
+                log.Info($"No registration found with id {registrationId}");
+            }
+            else
+            {
+                registration.IsWaitingList = false;
+            }
         }
     }
 }
