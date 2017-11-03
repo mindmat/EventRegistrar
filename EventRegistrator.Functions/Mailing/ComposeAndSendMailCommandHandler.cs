@@ -189,13 +189,20 @@ namespace EventRegistrator.Functions.Mailing
                 log.Info("Parameters: " + string.Join(Environment.NewLine, templateFiller.Parameters.Select(par => $"{par.Key}: {par.Value}")));
                 var content = templateFiller.Fill();
 
+                var mappings = new List<Registration> { registration };
+                if (registrationId_Partner.HasValue && partnerRegistration != null)
+                {
+                    mappings.Add(partnerRegistration);
+                }
+
                 var mail = new Mail
                 {
                     Id = Guid.NewGuid(),
                     Type = mailType,
                     SenderMail = template.SenderMail,
                     SenderName = template.SenderName,
-                    Subject = template.Subject
+                    Subject = template.Subject,
+                    Recipients = string.Join(";", mappings.Select(reg => reg.RespondentEmail))
                 };
 
                 if (template.ContentType == ContentType.Html)
@@ -205,12 +212,6 @@ namespace EventRegistrator.Functions.Mailing
                 else
                 {
                     mail.ContentPlainText = content;
-                }
-
-                var mappings = new List<Registration> { registration };
-                if (registrationId_Partner.HasValue && partnerRegistration != null)
-                {
-                    mappings.Add(partnerRegistration);
                 }
 
                 context.Mails.Add(mail);

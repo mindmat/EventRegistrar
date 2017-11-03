@@ -84,10 +84,14 @@ namespace EventRegistrator.Functions.Registrables
                 }
                 price += registrable.Price ?? 0m;
                 var potentialReductions = reductions.Where(red => red.RegistrableId == seat.RegistrableId).ToList();
-                var applicableReductions = potentialReductions.Where(red => red.QuestionOptionId_ActivatesReduction.HasValue && questionOptionIds.Contains(red.QuestionOptionId_ActivatesReduction.Value)).ToList();
+                var applicableReductions = potentialReductions.Where(red => red.QuestionOptionId_ActivatesReduction.HasValue &&
+                                                                            questionOptionIds.Contains(red.QuestionOptionId_ActivatesReduction.Value) &&
+                                                                            !red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue)
+                                                              .ToList();
 
                 applicableReductions.AddRange(potentialReductions.Where(red => red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue && bookedRegistrableIds.Contains(red.RegistrableId1_ReductionActivatedIfCombinedWith.Value) &&
-                                                                               (!red.RegistrableId2_ReductionActivatedIfCombinedWith.HasValue || bookedRegistrableIds.Contains(red.RegistrableId2_ReductionActivatedIfCombinedWith.Value))));
+                                                                               (!red.RegistrableId2_ReductionActivatedIfCombinedWith.HasValue || bookedRegistrableIds.Contains(red.RegistrableId2_ReductionActivatedIfCombinedWith.Value)) &&
+                                                                               (!red.QuestionOptionId_ActivatesReduction.HasValue || questionOptionIds.Contains(red.QuestionOptionId_ActivatesReduction.Value))));
 
                 price -= applicableReductions.Sum(red => red.Amount);
             }
