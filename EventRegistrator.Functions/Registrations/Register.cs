@@ -75,7 +75,7 @@ namespace EventRegistrator.Functions.Registrations
                 var registrationWithSameEmail = await context.Registrations.FirstOrDefaultAsync(reg => reg.RespondentEmail == googleRegistration.Email);
                 if (registrationWithSameEmail != null)
                 {
-                    //await ServiceBusClient.SendEvent(new SendMailCommand { }, SendMail.SendMailCommandsQueueName);
+                    //await ServiceBusClient.SendEvent(new SendMailCommand { }, ComposeAndSendMailCommandHandler.SendMailCommandsQueueName);
                     //return new HttpResponseMessage(HttpStatusCode.BadRequest)
                     //{
                     //    Content = new StringContent($"Registration with mail '{googleRegistration.Email}' already exists")

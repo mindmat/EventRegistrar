@@ -29,6 +29,8 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
         public DbSet<DomainEvent> DomainEvents { get; set; }
         public DbSet<Registrable> Registrables { get; set; }
         public DbSet<QuestionOptionToRegistrableMapping> QuestionOptionToRegistrableMappings { get; set; }
+        public DbSet<Mail> Mails { get; set; }
+        public DbSet<MailToRegistration> MailsToRegistrations { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

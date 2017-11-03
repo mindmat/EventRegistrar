@@ -1,3 +1,3 @@
 {
-  "functions": [ "Register", "SaveRegistrationForm", "ProcessNewRegistration", "ComposeAndSendMailCommands" ]
+  "functions": [ "Register", "SaveRegistrationForm", "ProcessNewRegistration", "ComposeAndSendMailCommandHandler", "SendMailCommandHandler" ]
 }

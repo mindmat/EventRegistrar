@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using EventRegistrator.Functions.Infrastructure;
 using EventRegistrator.Functions.Infrastructure.Bus;
@@ -16,20 +15,18 @@ using EventRegistrator.Functions.WaitingList;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ServiceBus.Messaging;
-using SendGrid;
-using SendGrid.Helpers.Mail;
 using Response = EventRegistrator.Functions.Registrations.Response;
 
 namespace EventRegistrator.Functions.Mailing
 {
-    public static class SendMail
+    public static class ComposeAndSendMailCommandHandler
     {
         public const string ComposeAndSendMailCommandsQueueName = "ComposeAndSendMailCommands";
         public const string FallbackLanguage = Language.English;
         private const string PrefixLeader = "LEADER";
         private const string PrefixFollower = "FOLLOWER";
 
-        [FunctionName("ComposeAndSendMailCommands")]
+        [FunctionName("ComposeAndSendMailCommandHandler")]
         public static async Task Run([ServiceBusTrigger(ComposeAndSendMailCommandsQueueName, AccessRights.Listen, Connection = "ServiceBusEndpoint")]ComposeAndSendMailCommand command, TraceWriter log)
         {
             log.Info($"ComposeAndSendMailCommand: RegistrationId {command.RegistrationId}");
@@ -121,13 +118,14 @@ namespace EventRegistrator.Functions.Mailing
                 Registration leaderRegistration = null;
                 Registration followerRegistration = null;
                 var templateFiller = new TemplateFiller(template.Template);
+                Registration partnerRegistration = null;
                 if (templateFiller.Prefixes.Any())
                 {
                     log.Info($"Prefixes {string.Join(",", templateFiller.Prefixes)}");
                     log.Info($"mainRegistrationRole {mainRegistrationRole}");
 
                     var partnerResponses = await GetResponses(registrationId_Partner, context.Responses);
-                    var partnerRegistration = await context.Registrations.FirstOrDefaultAsync(reg => reg.Id == registrationId_Partner);
+                    partnerRegistration = await context.Registrations.FirstOrDefaultAsync(reg => reg.Id == registrationId_Partner);
                     if (mainRegistrationRole == Role.Leader)
                     {
                         leaderResponses = responses;
@@ -187,44 +185,48 @@ namespace EventRegistrator.Functions.Mailing
                     }
                 }
 
-                var msg = new SendGridMessage
-                {
-                    From = new EmailAddress(template.SenderMail, template.SenderName),
-                    Subject = template.Subject,
-                };
-                log.Info(string.Join(Environment.NewLine, templateFiller.Parameters.Select(par => $"{par.Key}: {par.Value}")));
+                log.Info("Parameters: " + string.Join(Environment.NewLine, templateFiller.Parameters.Select(par => $"{par.Key}: {par.Value}")));
                 var content = templateFiller.Fill();
+
+                var mail = new Mail
+                {
+                    Id = Guid.NewGuid(),
+                    SenderMail = template.SenderMail,
+                    SenderName = template.SenderName,
+                };
+
                 if (template.ContentType == ContentType.Html)
                 {
-                    msg.HtmlContent = content;
+                    mail.ContentHtml = content;
                 }
                 else
                 {
-                    msg.PlainTextContent = content;
+                    mail.ContentPlainText = content;
                 }
 
-                msg.AddTo(new EmailAddress(registration.RespondentEmail, registration.RespondentFirstName));
-                // add partner mail
-                if (registrationId_Partner.HasValue)
+                var mappings = new List<Registration> { registration };
+                if (registrationId_Partner.HasValue && partnerRegistration != null)
                 {
-                    var partnerRegistration = await context.Registrations.FirstOrDefaultAsync(reg => reg.Id == registrationId_Partner);
-                    if (partnerRegistration != null)
-                    {
-                        msg.AddTo(new EmailAddress(partnerRegistration.RespondentEmail, partnerRegistration.RespondentFirstName));
-                    }
+                    mappings.Add(partnerRegistration);
                 }
 
-                // send mail
-                var apiKey = Environment.GetEnvironmentVariable("SendGrid_ApiKey");
-                var client = new SendGridClient(apiKey);
-                var response = await client.SendEmailAsync(msg);
-                await logTask;
-                if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Accepted)
+                context.Mails.Add(mail);
+                context.MailsToRegistrations.AddRange(mappings.Select(reg => new MailToRegistration { MailId = mail.Id, RegistrationId = reg.Id }));
+
+                var sendMailCommand = new SendMailCommand
                 {
-                    log.Warning($"SendMail status {response.StatusCode}, Body {await response.Body.ReadAsStringAsync()}");
-                }
-                await DomainEventPersistor.Log(new MailSent(msg), command.RegistrationId);
+                    MailId = mail.Id,
+                    ContentHtml = mail.ContentHtml,
+                    ContentPlainText = mail.ContentPlainText,
+                    Subject = mail.Subject,
+                    Sender = new EmailAddress { Email = mail.SenderMail, Name = mail.SenderName },
+                    To = mappings.Select(reg => new EmailAddress { Email = reg.RespondentEmail, Name = reg.RespondentFirstName }).ToList()
+                };
+
+                await context.SaveChangesAsync();
+                await ServiceBusClient.SendEvent(sendMailCommand, SendMailCommandHandler.SendMailQueueName);
             }
+            await logTask;
         }
 
         private static async Task<Dictionary<string, string>> GetResponses(Guid? registrationId, IQueryable<Response> responses)

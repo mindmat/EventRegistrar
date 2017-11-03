@@ -201,7 +201,32 @@ CREATE TABLE [dbo].[MailTemplates](
 GO
 
 
+CREATE TABLE [dbo].[Mails](
+	[Id] [uniqueidentifier] NOT NULL,
+	[SenderMail] [nvarchar](200) NULL,
+	[SenderName] [nvarchar](200) NULL,
+	[Subject] [nvarchar](300) NULL,
+	[ContentHtml] [nvarchar](max) NULL,
+	[ContentPlainText] [nvarchar](max) NULL,
+	[RowVersion] [timestamp] NOT NULL,
+ CONSTRAINT [PK_Mails] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
 
+CREATE TABLE [dbo].[MailsToRegistrations](
+	[Id] [uniqueidentifier] NOT NULL,
+	[MailId] [uniqueidentifier] NOT NULL,
+	[RegistrationId] [uniqueidentifier] NOT NULL,
+	[RowVersion] [timestamp] NOT NULL,
+ CONSTRAINT [PK_MailsToRegistrations] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
 
 CREATE TABLE [dbo].[DomainEvents](
     [Id] [uniqueidentifier] NOT NULL,
