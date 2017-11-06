@@ -91,6 +91,7 @@ CREATE TABLE [dbo].[Registrations](
     [Language] nchar(2) NULL,
 	[Price] [money] NULL,
 	[IsWaitingList] [bit] NOT NULL DEFAULT(0),
+	[SoldOutMessage] [nvarchar](max) NULL,
     [RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_Registration] PRIMARY KEY CLUSTERED 
 (
@@ -126,7 +127,7 @@ CREATE TABLE [dbo].[Registrables](
     ShowInMailListOrder int NULL,
 	Price money NULL,
 	[HasWaitingList] [bit] NOT NULL,
-	[SoldOutMessage] [nvarchar](max) NULL,
+	[IsCore] [bit] NOT NULL,
     [RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_LimitedResource] PRIMARY KEY CLUSTERED 
 (
