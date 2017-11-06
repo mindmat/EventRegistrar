@@ -475,7 +475,7 @@ VALUES ('BB09F868-D619-4392-B25C-08C6B83CD0DF', '762A93A4-56E0-402C-B700-1CFB336
 
 
 INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
-VALUES ('A4198E42-E965-4259-9154-F673A6F38C4E', '762A93A4-56E0-402C-B700-1CFB3362B39D', 20 /*SoldOut*/, 2, 'Ausverkauft', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
+VALUES ('A4198E42-E965-4259-9154-F673A6F38C4E', '762A93A4-56E0-402C-B700-1CFB3362B39D', 21 /*SoldOut*/, 2, 'Ausverkauft', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
 '<table cellspacing="0" cellpadding="0" align="center">
   <tbody>
     <tr>

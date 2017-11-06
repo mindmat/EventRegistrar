@@ -60,7 +60,7 @@ namespace EventRegistrator.Functions.Mailing
                     {
                         throw new Exception($"No registrable found with Id {seat.RegistrableId}");
                     }
-                    if (registrable.MaximumSingleSeats.HasValue)
+                    if (registrable.MaximumSingleSeats.HasValue || registrable.IsCore)
                     {
                         mailType = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
                                                         MailType.SingleRegistrationAccepted;
