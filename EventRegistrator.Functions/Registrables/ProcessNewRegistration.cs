@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using EventRegistrator.Functions.Infrastructure.Bus;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
 using EventRegistrator.Functions.Mailing;
+using EventRegistrator.Functions.Properties;
 using EventRegistrator.Functions.Registrations;
 using EventRegistrator.Functions.Seats;
 using Microsoft.Azure.WebJobs;
@@ -56,7 +57,15 @@ namespace EventRegistrator.Functions.Registrables
                                          responses.Any(rsp => rsp.QuestionOptionId == registrable.QuestionOptionId_Follower.Value);
                         var role = isLeader ? Role.Leader : (isFollower ? Role.Follower : (Role?)null);
                         var seat = await ReserveSeat(context, @event.EventId, registrable.Registrable, response, registration.RespondentEmail, partnerEmail, role, log);
-                        ownSeats.Add(seat);
+                        if (seat == null)
+                        {
+                            registration.SoldOutMessage = (registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +
+                                                          string.Format(Resources.RegistrableSoldOut, registrable.Registrable.Name);
+                        }
+                        else
+                        {
+                            ownSeats.Add(seat);
+                        }
                     }
                 }
                 var eventRegistrables = await context.Registrables.Where(rbl => rbl.EventId == @event.EventId).ToListAsync();
@@ -71,7 +80,7 @@ namespace EventRegistrator.Functions.Registrables
             }
         }
 
-        private static decimal CalculatePrice(List<Seat> seats, List<Registrable> registrables, List<Reduction> reductions, HashSet<Guid> questionOptionIds)
+        private static decimal CalculatePrice(IReadOnlyCollection<Seat> seats, IReadOnlyCollection<Registrable> registrables, IReadOnlyCollection<Reduction> reductions, ICollection<Guid> questionOptionIds)
         {
             var bookedRegistrableIds = new HashSet<Guid>(seats.Select(seat => seat.RegistrableId));
             var price = 0m;
@@ -111,13 +120,19 @@ namespace EventRegistrator.Functions.Registrables
             Seat seat;
             if (registrable.MaximumSingleSeats.HasValue)
             {
-                log.Info($"Registrable {registrable.Name}, Seat count {registrable.Seats.Count}");
+                var waitingList = registrable.Seats.Any(st => st.IsWaitingList);
+                var seatAvailable = !waitingList && registrable.Seats.Count < registrable.MaximumSingleSeats.Value;
+                log.Info($"Registrable {registrable.Name}, Seat count {registrable.Seats.Count}, MaximumSingleSeats {registrable.MaximumSingleSeats}, seat available {seatAvailable}");
+                if (!seatAvailable && !registrable.HasWaitingList)
+                {
+                    return null;
+                }
                 seat = new Seat
                 {
                     FirstPartnerJoined = DateTime.UtcNow,
                     RegistrationId = response.RegistrationId,
                     RegistrableId = registrable.Id,
-                    IsWaitingList = registrable.Seats.Count >= registrable.MaximumSingleSeats.Value
+                    IsWaitingList = !seatAvailable
                 };
             }
             else if (registrable.MaximumDoubleSeats.HasValue)
@@ -142,6 +157,11 @@ namespace EventRegistrator.Functions.Registrables
 
                     // create new partner seat
                     var waitingListForPartnerRegistrations = waitingList.Any(st => !string.IsNullOrEmpty(st.PartnerEmail));
+                    var seatAvailable = !waitingListForPartnerRegistrations && registrable.Seats.Count < registrable.MaximumDoubleSeats.Value;
+                    if (!seatAvailable && !registrable.HasWaitingList)
+                    {
+                        return null;
+                    }
                     seat = new Seat
                     {
                         FirstPartnerJoined = DateTime.UtcNow,
@@ -149,8 +169,7 @@ namespace EventRegistrator.Functions.Registrables
                         RegistrationId = ownRole == Role.Leader ? response.RegistrationId : (Guid?)null,
                         RegistrationId_Follower = ownRole == Role.Follower ? response.RegistrationId : (Guid?)null,
                         RegistrableId = registrable.Id,
-                        IsWaitingList = waitingListForPartnerRegistrations ||
-                                        registrable.Seats.Count >= registrable.MaximumDoubleSeats.Value
+                        IsWaitingList = !seatAvailable
                     };
                 }
                 else
@@ -161,14 +180,16 @@ namespace EventRegistrator.Functions.Registrables
 
                     var waitingListForOwnRole = ownRole == Role.Leader && waitingListForSingleLeaders ||
                                                 ownRole == Role.Follower && waitingListForSingleFollowers;
-                    if (!waitingListForOwnRole)
+                    var matchingSingleSeat = FindMatchingSingleSeat(registrable, ownRole);
+                    var seatAvailable = !waitingListForOwnRole && (CanAddNewDoubleSeatForSingleRegistration(registrable, ownRole) || matchingSingleSeat != null);
+                    if (!seatAvailable && !registrable.HasWaitingList)
                     {
-                        var matchingSingleSeat = FindMatchingSingleSeat(registrable, ownRole);
-                        if (matchingSingleSeat != null)
-                        {
-                            ComplementExistingSeat(response.RegistrationId, ownRole, matchingSingleSeat);
-                            return matchingSingleSeat;
-                        }
+                        return null;
+                    }
+                    if (!waitingListForOwnRole && matchingSingleSeat != null)
+                    {
+                        ComplementExistingSeat(response.RegistrationId, ownRole, matchingSingleSeat);
+                        return matchingSingleSeat;
                     }
                     seat = new Seat
                     {
@@ -176,7 +197,7 @@ namespace EventRegistrator.Functions.Registrables
                         RegistrationId = ownRole == Role.Leader ? response.RegistrationId : (Guid?)null,
                         RegistrationId_Follower = ownRole == Role.Follower ? response.RegistrationId : (Guid?)null,
                         RegistrableId = registrable.Id,
-                        IsWaitingList = waitingListForOwnRole || !CanAddNewDoubleSeat(registrable, ownRole)
+                        IsWaitingList = !seatAvailable
                     };
                 }
             }
@@ -213,7 +234,7 @@ namespace EventRegistrator.Functions.Registrables
             }
         }
 
-        private static bool CanAddNewDoubleSeat(Registrable registrable, Role ownRole)
+        private static bool CanAddNewDoubleSeatForSingleRegistration(Registrable registrable, Role ownRole)
         {
             // check overall
             if (registrable.Seats.Count >= (registrable.MaximumDoubleSeats ?? int.MaxValue))

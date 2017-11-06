@@ -44,7 +44,10 @@ namespace EventRegistrator.Functions.Mailing
                     throw new ArgumentException($"No registration with id {command.RegistrationId}");
                 }
 
-                var seats = await context.Seats.Where(seat => seat.RegistrationId == command.RegistrationId || seat.RegistrationId_Follower == command.RegistrationId).ToListAsync();
+                var seats = await context.Seats.Where(seat => seat.RegistrationId == command.RegistrationId ||
+                                                              seat.RegistrationId_Follower == command.RegistrationId)
+                                               .Include(seat => seat.Registrable)
+                                               .ToListAsync();
                 var registrables = await context.Registrables.Where(rbl => rbl.EventId == registration.RegistrationForm.EventId).ToListAsync();
                 MailType? mailType = null;
                 var mainRegistrationRole = Role.Leader;
@@ -94,6 +97,11 @@ namespace EventRegistrator.Functions.Mailing
 
                         break;
                     }
+                }
+                if (!seats.Any(seat => seat.Registrable.IsCore))
+                {
+                    // no core seats -> sold out
+                    mailType = MailType.SoldOut;
                 }
                 if (mailType == null)
                 {
@@ -150,35 +158,28 @@ namespace EventRegistrator.Functions.Mailing
                     var parts = GetPrefix(key);
 
                     var responsesForPrefix = responses;
-                    var registrationIdForPrefix = command.RegistrationId;
                     var registrationForPrefix = registration;
                     if (parts.prefix == PrefixLeader)
                     {
                         responsesForPrefix = leaderResponses;
                         registrationForPrefix = leaderRegistration;
-                        registrationIdForPrefix = mainRegistrationRole == Role.Leader
-                            ? command.RegistrationId
-                            : registrationId_Partner;
                     }
                     else if (parts.prefix == PrefixFollower)
                     {
                         responsesForPrefix = followerResponses;
                         registrationForPrefix = followerRegistration;
-                        registrationIdForPrefix = mainRegistrationRole == Role.Follower
-                            ? command.RegistrationId
-                            : registrationId_Partner;
                     }
                     if (parts.key == "SEATLIST")
                     {
                         templateFiller[key] = await GetSeatList(context,
-                                                                registrationIdForPrefix,
+                                                                registrationForPrefix,
                                                                 responsesForPrefix,
                                                                 language,
                                                                 log);
                     }
                     else if (parts.key == "PRICE")
                     {
-                        templateFiller[key] = (registrationForPrefix?.Price ?? 0m).ToString("F2"); // HACK: hardcoded
+                        templateFiller[key] = (registrationForPrefix?.Price ?? 0m).ToString("F2"); // HACK: format hardcoded
                     }
                     else
                     {
@@ -261,16 +262,21 @@ namespace EventRegistrator.Functions.Mailing
             return (null, key);
         }
 
-        private static async Task<string> GetSeatList(EventRegistratorDbContext context, Guid? registrationId, IDictionary<string, string> responses, string language, TraceWriter log)
+        private static async Task<string> GetSeatList(EventRegistratorDbContext context, Registration registration, IDictionary<string, string> responses, string language, TraceWriter log)
         {
             var seats = await context.Seats
-                                     .Where(seat => (seat.RegistrationId == registrationId || seat.RegistrationId_Follower == registrationId)
+                                     .Where(seat => (seat.RegistrationId == registration.Id || seat.RegistrationId_Follower == registration.Id)
                                                     && seat.Registrable.ShowInMailListOrder.HasValue)
                                      .OrderBy(seat => seat.Registrable.ShowInMailListOrder.Value)
                                      .Include(seat => seat.Registrable)
                                      .ToListAsync();
             log.Info($"Seat count: {seats.Count}");
             var seatList = string.Join("<br />", seats.Select(seat => GetSeatText(seat, responses, language)));
+
+            if (registration.SoldOutMessage != null)
+            {
+                seatList += $"<br /><br />{registration.SoldOutMessage.Replace(Environment.NewLine, "<br />")}";
+            }
             log.Info($"seat list {seatList}");
             return seatList;
         }

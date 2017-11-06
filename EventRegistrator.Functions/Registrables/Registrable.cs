@@ -16,5 +16,7 @@ namespace EventRegistrator.Functions.Registrables
         public ICollection<Seat> Seats { get; set; }
         public int? ShowInMailListOrder { get; set; }
         public decimal? Price { get; set; }
+        public bool HasWaitingList { get; set; }
+        public bool IsCore { get; set; }
     }
 }

@@ -89,6 +89,8 @@ CREATE TABLE [dbo].[Registrations](
     ReceivedAt datetime2(7) NOT NULL,
     ExternalTimestamp datetime2(7) NULL,
     [Language] nchar(2) NULL,
+	[Price] [money] NULL,
+	[IsWaitingList] [bit] NOT NULL DEFAULT(0),
     [RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_Registration] PRIMARY KEY CLUSTERED 
 (
@@ -123,6 +125,8 @@ CREATE TABLE [dbo].[Registrables](
     MaximumAllowedImbalance int NULL,
     ShowInMailListOrder int NULL,
 	Price money NULL,
+	[HasWaitingList] [bit] NOT NULL,
+	[SoldOutMessage] [nvarchar](max) NULL,
     [RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_LimitedResource] PRIMARY KEY CLUSTERED 
 (
@@ -205,9 +209,11 @@ CREATE TABLE [dbo].[Mails](
 	[Id] [uniqueidentifier] NOT NULL,
 	[SenderMail] [nvarchar](200) NULL,
 	[SenderName] [nvarchar](200) NULL,
+	[Recipients] [nvarchar](max) NULL,
 	[Subject] [nvarchar](300) NULL,
 	[ContentHtml] [nvarchar](max) NULL,
 	[ContentPlainText] [nvarchar](max) NULL,
+	[Type] [int] NULL,
 	[RowVersion] [timestamp] NOT NULL,
  CONSTRAINT [PK_Mails] PRIMARY KEY CLUSTERED 
 (

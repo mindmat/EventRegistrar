@@ -109,18 +109,31 @@ namespace EventRegistrator.Functions.WaitingList
                 }
 
                 // try promote partner registration
+                // ToDo: precedence partner vs. single registrations
                 var acceptedSeatCount = registrable.Seats.Count(seat => !seat.IsWaitingList);
                 var seatsLeft = registrable.MaximumDoubleSeats.Value - acceptedSeatCount;
                 if (seatsLeft > 0)
                 {
-                    AcceptPartnerSeatsFromWaitingList(registrable.Seats.Where(seat => seat.IsWaitingList).OrderBy(seat => seat.FirstPartnerJoined).Take(seatsLeft));
+                    return AcceptPartnerSeatsFromWaitingList(registrable.Seats.Where(seat => seat.IsWaitingList).OrderBy(seat => seat.FirstPartnerJoined).Take(seatsLeft));
                 }
             }
             return registrationIdsToCheck;
         }
 
-        private static void AcceptPartnerSeatsFromWaitingList(IEnumerable<Seat> seatsToAccept)
+        private static IEnumerable<Guid?> AcceptPartnerSeatsFromWaitingList(IEnumerable<Seat> seatsToAccept)
         {
+            foreach (var seat in seatsToAccept)
+            {
+                seat.IsWaitingList = false;
+                if (seat.RegistrationId.HasValue)
+                {
+                    yield return seat.RegistrationId;
+                }
+                if (seat.RegistrationId_Follower.HasValue)
+                {
+                    yield return seat.RegistrationId_Follower;
+                }
+            }
         }
 
         private static async Task<IEnumerable<Guid?>> AcceptSingleSeatsFromWaitingList(IEnumerable<Seat> seatsToAccept, EventRegistratorDbContext dbContext, TraceWriter log)

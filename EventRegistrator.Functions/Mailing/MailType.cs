@@ -7,6 +7,7 @@
         DoubleRegistrationFirstPartnerAccepted = 11,
         DoubleRegistrationMatchedAndAccepted = 12,
         DoubleRegistrationFirstPartnerOnWaitingList = 13,
-        DoubleRegistrationMatchedOnWaitingList = 14
+        DoubleRegistrationMatchedOnWaitingList = 14,
+        SoldOut = 21
     }
 }
