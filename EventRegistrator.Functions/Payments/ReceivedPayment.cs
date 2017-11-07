@@ -5,6 +5,8 @@ namespace EventRegistrator.Functions.Payments
 {
     public class ReceivedPayment : Entity
     {
+        public Guid? EventId { get; set; }
+        public Guid? RegistrationId_Payer { get; set; }
         public decimal Amount { get; set; }
         public string Currency { get; set; }
         public DateTime BookingDate { get; set; }
