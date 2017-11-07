@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EventRegistrator.Functions.Payment
+namespace EventRegistrator.Functions.Payments
 {
     public class CamtEntry
     {
@@ -8,7 +8,7 @@ namespace EventRegistrator.Functions.Payment
         public string Currency { get; set; }
         public string Info { get; set; }
         public CreditDebit Type { get; set; }
-        public DateTime BookgDt { get; set; }
+        public DateTime BookingDate { get; set; }
         public string Reference { get; set; }
     }
 }

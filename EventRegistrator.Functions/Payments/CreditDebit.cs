@@ -1,4 +1,4 @@
-﻿namespace EventRegistrator.Functions.Payment
+﻿namespace EventRegistrator.Functions.Payments
 {
     public enum CreditDebit
     {
