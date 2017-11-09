@@ -965,7 +965,7 @@ VALUES ('C41D025A-84A2-4590-8974-867D8027B490', '762A93A4-56E0-402C-B700-1CFB336
     </tr>
     <tr>
       <td><br /><strong>Hello {{FirstName}}</strong><br />
-        <p>Unfortunately the options you asked for are sold out.<br />We you to see you next time!</p>
+        <p>Unfortunately the options you asked for are sold out.<br />We hope to to see you next time!</p>
         <p>The Leapin'' Lindy Team</p>
         <hr />
         <p>{{SeatList}}</p>
