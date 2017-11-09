@@ -13,5 +13,6 @@ namespace EventRegistrator.Functions.Payments
         public string Info { get; set; }
         public string RecognizedEmail { get; set; }
         public string Reference { get; set; }
+        public bool Settled { get; set; }
     }
 }

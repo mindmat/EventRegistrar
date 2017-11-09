@@ -33,6 +33,7 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
         public DbSet<QuestionOptionToRegistrableMapping> QuestionOptionToRegistrableMappings { get; set; }
         public DbSet<Mail> Mails { get; set; }
         public DbSet<MailToRegistration> MailToRegistrations { get; set; }
+        public DbSet<ReceivedPayment> ReceivedPayments { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
