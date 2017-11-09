@@ -69,5 +69,25 @@ namespace EventRegistrator.Functions.Test.Properties {
                 return ((byte[])(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+        ///&lt;Document xmlns=&quot;urn:iso:std:iso:20022:tech:xsd:camt.053.001.04&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;urn:iso:std:iso:20022:tech:xsd:camt.053.001.04 camt.053.001.04.xsd&quot;&gt;
+        ///  &lt;BkToCstmrStmt&gt;
+        ///    &lt;GrpHdr&gt;
+        ///      &lt;MsgId&gt;20171107375204003535600&lt;/MsgId&gt;
+        ///      &lt;CreDtTm&gt;2017-11-07T14:52:00&lt;/CreDtTm&gt;
+        ///      &lt;MsgPgntn&gt;
+        ///        &lt;PgNb&gt;1&lt;/PgNb&gt;
+        ///        &lt;LastPgInd&gt;true&lt;/LastPgInd&gt;
+        ///      &lt;/MsgPgntn&gt;
+        ///      &lt;AddtlInf&gt;Productive&lt;/AddtlInf&gt;
+        ///    &lt;/GrpHdr [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string camt053Income {
+            get {
+                return ResourceManager.GetString("camt053Income", resourceCulture);
+            }
+        }
     }
 }

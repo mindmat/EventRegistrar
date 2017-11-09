@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:camt.053.001.04 camt.053.001.04.xsd">
+  <BkToCstmrStmt>
+    <GrpHdr>
+      <MsgId>20171107375204003535600</MsgId>
+      <CreDtTm>2017-11-07T14:52:00</CreDtTm>
+      <MsgPgntn>
+        <PgNb>1</PgNb>
+        <LastPgInd>true</LastPgInd>
+      </MsgPgntn>
+      <AddtlInf>Productive</AddtlInf>
+    </GrpHdr>
+    <Stmt>
+      <Id>20171107375204003535601</Id>
+      <ElctrncSeqNb>218</ElctrncSeqNb>
+      <CreDtTm>2017-11-07T14:52:00</CreDtTm>
+      <FrToDt>
+        <FrDtTm>2017-11-07T00:00:00</FrDtTm>
+        <ToDtTm>2017-11-07T23:59:59</ToDtTm>
+      </FrToDt>
+      <Acct>
+        <Id>
+          <IBAN>CH9309000000602247416</IBAN>
+        </Id>
+        <Ownr>
+          <Nm>Swing Machine Bern Leapin Lindy Bern</Nm>
+        </Ownr>
+      </Acct>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>OPBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="CHF">19245.65</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2017-11-06</Dt>
+        </Dt>
+      </Bal>
+      <Bal>
+        <Tp>
+          <CdOrPrtry>
+            <Cd>CLBD</Cd>
+          </CdOrPrtry>
+        </Tp>
+        <Amt Ccy="CHF">19247.65</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <Dt>
+          <Dt>2017-11-07</Dt>
+        </Dt>
+      </Bal>
+      <Ntry>
+        <Amt Ccy="CHF">2.00</Amt>
+        <CdtDbtInd>CRDT</CdtDbtInd>
+        <RvslInd>false</RvslInd>
+        <Sts>BOOK</Sts>
+        <BookgDt>
+          <Dt>2017-11-07</Dt>
+        </BookgDt>
+        <ValDt>
+          <Dt>2017-11-07</Dt>
+        </ValDt>
+        <AcctSvcrRef>20171106000800260937187000000112</AcctSvcrRef>
+        <BkTxCd>
+          <Domn>
+            <Cd>PMNT</Cd>
+            <Fmly>
+              <Cd>RCDT</Cd>
+              <SubFmlyCd>AUTT</SubFmlyCd>
+            </Fmly>
+          </Domn>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <AcctSvcrRef>20171106000800260937187000000112</AcctSvcrRef>
+            </Refs>
+            <Amt Ccy="CHF">2.00</Amt>
+            <CdtDbtInd>CRDT</CdtDbtInd>
+          </TxDtls>
+        </NtryDtls>
+        <AddtlNtryInf>GIRO AUS KONTO 46-298026-1 MINDER MATHIAS SICKINGERSTRASSE 5 3014 BERN MITTEILUNGEN: TEST CAMT (3. VERSUCH)</AddtlNtryInf>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>

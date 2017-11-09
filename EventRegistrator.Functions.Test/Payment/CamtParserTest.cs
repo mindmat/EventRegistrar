@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
-using EventRegistrator.Functions.Payments;
+using EventRegistrator.Functions.Payment;
 using EventRegistrator.Functions.Test.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;

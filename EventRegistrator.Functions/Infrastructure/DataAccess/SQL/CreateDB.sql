@@ -25,6 +25,7 @@ GO
 CREATE TABLE [dbo].[Events](
     [Id] [uniqueidentifier] NOT NULL,
     [Name] [nvarchar](max) NULL,
+	[AccountIban] [nvarchar](50) NULL,
     [RowVersion] rowversion NOT NULL,
  CONSTRAINT [PK_dbo.Events] PRIMARY KEY CLUSTERED 
 (
@@ -229,6 +230,24 @@ CREATE TABLE [dbo].[MailToRegistrations](
 	[RegistrationId] [uniqueidentifier] NOT NULL,
 	[RowVersion] [timestamp] NOT NULL,
  CONSTRAINT [PK_MailsToRegistrations] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)
+)
+GO
+
+CREATE TABLE [dbo].[ReceivedPayments](
+	[Id] [uniqueidentifier] NOT NULL,
+	[EventId] [uniqueidentifier] NULL,
+	[Amount] [money] NOT NULL,
+	[Currency] [nchar](3) NULL,
+	[BookingDate] [datetime2](7) NOT NULL,
+	[Info] [nvarchar](200) NULL,
+	[Reference] [nvarchar](100) NULL,
+	[RecognizedEmail] [nvarchar](100) NULL,
+	[RegistrationId_Payer] [uniqueidentifier] NULL,
+	[RowVersion] [timestamp] NOT NULL,
+ CONSTRAINT [PK_ReceivedPayments] PRIMARY KEY CLUSTERED 
 (
 	[Id] ASC
 )WITH (STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF)

@@ -2,6 +2,7 @@
 using EventRegistrator.Functions.Events;
 using EventRegistrator.Functions.Infrastructure.DomainEvents;
 using EventRegistrator.Functions.Mailing;
+using EventRegistrator.Functions.Payments;
 using EventRegistrator.Functions.Registrables;
 using EventRegistrator.Functions.RegistrationForms;
 using EventRegistrator.Functions.Registrations;
@@ -25,6 +26,7 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
         public DbSet<Response> Responses { get; set; }
         public DbSet<Seat> Seats { get; set; }
         public DbSet<MailTemplate> MailTemplates { get; set; }
+        public DbSet<ReceivedPayment> ReceivedPayments { get; set; }
 
         public DbSet<DomainEvent> DomainEvents { get; set; }
         public DbSet<Registrable> Registrables { get; set; }
