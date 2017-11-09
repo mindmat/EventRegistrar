@@ -17,5 +17,6 @@ namespace EventRegistrator.Functions.Registrations
         public decimal? Price { get; set; }
         public bool? IsWaitingList { get; set; }
         public string SoldOutMessage { get; set; }
+        public bool IsPayed { get; set; }
     }
 }
