@@ -7,5 +7,6 @@ namespace EventRegistrator.Functions.Payments
         public IReadOnlyCollection<CamtEntry> Entries { get; set; }
         public string Account { get; set; }
         public string Owner { get; set; }
+        public string FileId { get; set; }
     }
 }

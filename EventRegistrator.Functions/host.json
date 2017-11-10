@@ -1,3 +1,9 @@
 {
-  "functions": [ "Register", "SaveRegistrationForm", "ProcessNewRegistration", "ComposeAndSendMailCommandHandler", "SendMailCommandHandler", "TryPromoteFromWaitingList" ]
+  "functions": [ "Register", "SaveRegistrationForm", "ProcessNewRegistration", "ComposeAndSendMailCommandHandler", "SendMailCommandHandler", "TryPromoteFromWaitingList", "ProcessCamt", "ProcessPaymentFiles" ],
+  // Configuration settings for 'serviceBus' triggers. (Optional)
+  "serviceBus": {
+    // The maximum number of concurrent calls to the callback the message
+    // pump should initiate. The default is 16.
+    "maxConcurrentCalls": 1
+  }
 }

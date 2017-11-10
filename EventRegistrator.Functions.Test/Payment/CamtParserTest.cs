@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
-using EventRegistrator.Functions.Payment;
+using EventRegistrator.Functions.Payments;
 using EventRegistrator.Functions.Test.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Shouldly;
@@ -16,6 +16,7 @@ namespace EventRegistrator.Functions.Test.Payment
             var camt = CamtParser.Parse(new MemoryStream(Resources.camt053Example));
             camt.Owner.ShouldBe("Papa Schlumpf");
             camt.Account.ShouldBe("CH3309000000462980261");
+            camt.FileId.ShouldBe("20171103375204003463237");
 
             camt.Entries.Count.ShouldBe(7);
             var entry = camt.Entries.First();

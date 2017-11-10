@@ -203,7 +203,8 @@ namespace EventRegistrator.Functions.Mailing
                     SenderMail = template.SenderMail,
                     SenderName = template.SenderName,
                     Subject = template.Subject,
-                    Recipients = string.Join(";", mappings.Select(reg => reg.RespondentEmail))
+                    Recipients = string.Join(";", mappings.Select(reg => reg.RespondentEmail)),
+                    Created = DateTime.UtcNow
                 };
 
                 if (template.ContentType == ContentType.Html)

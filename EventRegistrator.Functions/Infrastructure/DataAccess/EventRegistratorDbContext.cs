@@ -33,7 +33,7 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
         public DbSet<QuestionOptionToRegistrableMapping> QuestionOptionToRegistrableMappings { get; set; }
         public DbSet<Mail> Mails { get; set; }
         public DbSet<MailToRegistration> MailToRegistrations { get; set; }
-        public DbSet<ReceivedPayment> ReceivedPayments { get; set; }
+        public DbSet<PaymentFile> PaymentFiles { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -71,6 +71,11 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
                 .HasRequired(seat => seat.Registrable)
                 .WithMany(rbl => rbl.Seats)
                 .HasForeignKey(seat => seat.RegistrableId);
+
+            modelBuilder.Entity<ReceivedPayment>()
+                .HasRequired(pmt => pmt.PaymentFile)
+                .WithMany()
+                .HasForeignKey(pmt => pmt.PaymentFileId);
 
             base.OnModelCreating(modelBuilder);
         }

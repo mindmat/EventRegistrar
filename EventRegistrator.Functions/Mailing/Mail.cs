@@ -1,4 +1,5 @@
-﻿using EventRegistrator.Functions.Infrastructure.DataAccess;
+﻿using System;
+using EventRegistrator.Functions.Infrastructure.DataAccess;
 
 namespace EventRegistrator.Functions.Mailing
 {
@@ -12,5 +13,6 @@ namespace EventRegistrator.Functions.Mailing
         public string SenderName { get; set; }
         public string Subject { get; set; }
         public string Recipients { get; set; }
+        public DateTime Created { get; set; }
     }
 }

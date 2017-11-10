@@ -28,7 +28,6 @@ namespace EventRegistrator.Functions.Registrations
             string id,
             TraceWriter log)
         {
-            log.Info("C# HTTP trigger function processed a request.");
             var googleRegistration = await req.Content.ReadAsAsync<GoogleForms.Registration>();
 
             var saveEventTask = DomainEventPersistor.Log(new RegistrationReceived
@@ -159,9 +158,7 @@ namespace EventRegistrator.Functions.Registrations
             var question = questions?.FirstOrDefault(qst => qst.ExternalId == response.QuestionExternalId);
             if (question?.Type == QuestionType.Checkbox && response.Responses.Any())
             {
-                log.Info(string.Join(", ", response.Responses));
                 var optionIds = question.QuestionOptions?.Where(qop => response.Responses.Any(rsp => rsp == qop.Answer)).Select(qop => qop.Id).ToList();
-                log.Info(optionIds?.Count.ToString());
                 return (question.Id, optionIds);
             }
             var optionId = question?.QuestionOptions?.Where(qop => qop.Answer == response.Response).FirstOrDefault()?.Id;

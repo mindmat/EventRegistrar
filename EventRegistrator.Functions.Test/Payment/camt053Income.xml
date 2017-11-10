@@ -32,7 +32,7 @@
             <Cd>OPBD</Cd>
           </CdOrPrtry>
         </Tp>
-        <Amt Ccy="CHF">19245.65</Amt>
+        <Amt Ccy="CHF">245.65</Amt>
         <CdtDbtInd>CRDT</CdtDbtInd>
         <Dt>
           <Dt>2017-11-06</Dt>
@@ -44,7 +44,7 @@
             <Cd>CLBD</Cd>
           </CdOrPrtry>
         </Tp>
-        <Amt Ccy="CHF">19247.65</Amt>
+        <Amt Ccy="CHF">247.65</Amt>
         <CdtDbtInd>CRDT</CdtDbtInd>
         <Dt>
           <Dt>2017-11-07</Dt>

@@ -6,7 +6,7 @@ namespace EventRegistrator.Functions.Payments
 {
     public class EmailExtractor
     {
-        private static readonly Regex Email = new Regex("");
+        private static readonly Regex Email = new Regex(@"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
 
         public static IEnumerable<string> TryExtractEmailFromInfo(string input)
         {

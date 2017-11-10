@@ -12,7 +12,11 @@ namespace EventRegistrator.Functions.Payments
         public static CamtFile Parse(Stream stream)
         {
             var xml = XDocument.Load(stream);
+            return Parse(xml);
+        }
 
+        public static CamtFile Parse(XDocument xml)
+        {
             XNamespace ns = "urn:iso:std:iso:20022:tech:xsd:camt.053.001.04";
             if (xml.NodeType != XmlNodeType.Document ||
                 ((XElement)xml.FirstNode).GetDefaultNamespace()?.NamespaceName != ns)
@@ -35,6 +39,7 @@ namespace EventRegistrator.Functions.Payments
             {
                 Account = statement.Descendants(ns + "Acct").FirstOrDefault()?.Descendants(ns + "Id").FirstOrDefault()?.Descendants(ns + "IBAN")?.FirstOrDefault()?.Value,
                 Owner = statement.Descendants(ns + "Acct").FirstOrDefault()?.Descendants(ns + "Ownr").FirstOrDefault()?.Descendants(ns + "Nm")?.FirstOrDefault()?.Value,
+                FileId = xml.Descendants(ns + "GrpHdr").FirstOrDefault()?.Descendants(ns + "MsgId").FirstOrDefault()?.Value,
                 Entries = entries.ToList()
             };
             return camt;
