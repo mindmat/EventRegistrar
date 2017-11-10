@@ -34,6 +34,7 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
         public DbSet<Mail> Mails { get; set; }
         public DbSet<MailToRegistration> MailToRegistrations { get; set; }
         public DbSet<PaymentFile> PaymentFiles { get; set; }
+        public DbSet<PaymentAssignment> PaymentAssignments { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -76,6 +77,16 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
                 .HasRequired(pmt => pmt.PaymentFile)
                 .WithMany()
                 .HasForeignKey(pmt => pmt.PaymentFileId);
+
+            modelBuilder.Entity<PaymentAssignment>()
+                .HasRequired(pas => pas.ReceivedPayment)
+                .WithMany(pmt => pmt.Assignments)
+                .HasForeignKey(pas => pas.ReceivedPaymentId);
+
+            modelBuilder.Entity<PaymentAssignment>()
+                .HasRequired(pas => pas.Registration)
+                .WithMany(pmt => pmt.Payments)
+                .HasForeignKey(pas => pas.RegistrationId);
 
             base.OnModelCreating(modelBuilder);
         }

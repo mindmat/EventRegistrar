@@ -6,5 +6,6 @@ namespace EventRegistrator.Functions.Events
     {
         public string Name { get; set; }
         public string AccountIban { get; set; }
+        public string Currency { get; set; }
     }
 }

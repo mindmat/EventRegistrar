@@ -17,6 +17,7 @@ namespace EventRegistrator.Functions.Payments
             {
                 var unsettledPayments = await dbContext.ReceivedPayments
                                                        .Where(pmt => pmt.PaymentFile.EventId == eventId && !pmt.Settled)
+                                                       .Include(pmt => pmt.Assignments)
                                                        .ToListAsync();
                 if (!unsettledPayments.Any())
                 {
@@ -25,30 +26,56 @@ namespace EventRegistrator.Functions.Payments
                 }
 
                 var unsettledRegistrations = await dbContext.Registrations
-                                                            .Where(reg => reg.RegistrationForm.EventId == eventId && !reg.IsPayed)
+                                                            .Where(reg => reg.RegistrationForm.EventId == eventId && !reg.IsPaid)
+                                                            .Include(pmt => pmt.Payments)
                                                             .ToListAsync();
 
-                unsettledPayments.ForEach(payment => TryMatchToRegistration(payment, unsettledRegistrations, log));
+                unsettledPayments.ForEach(payment => TryMatchToRegistration(payment, unsettledRegistrations, dbContext, log));
+
+                await dbContext.SaveChangesAsync();
             }
         }
 
-        private static void TryMatchToRegistration(ReceivedPayment payment, IReadOnlyList<Registration> unsettledRegistrations, TraceWriter log)
+        private static void TryMatchToRegistration(ReceivedPayment payment, IReadOnlyList<Registration> unsettledRegistrations, EventRegistratorDbContext dbContext, TraceWriter log)
         {
-            var mails = EmailExtractor.TryExtractEmailFromInfo(payment.Info);
+            var mails = EmailExtractor.TryExtractEmailFromInfo(payment.Info).ToList();
             payment.RecognizedEmail = string.Join(";", mails);
             if (payment.RecognizedEmail != null)
             {
-                var registrations = mails.Select(mail => unsettledRegistrations.FirstOrDefault(reg => reg.RespondentEmail == mail))
-                                         .Where(reg => reg != null)
+                var registrations = mails.SelectMany(mail => unsettledRegistrations.Where(reg => reg.RespondentEmail == mail))
                                          .ToList();
                 if (!registrations.Any())
                 {
                     return;
                 }
-                var price = registrations.Sum(reg => reg.Price);
-                foreach (var registration in registrations)
+
+                var unassignedAmount = payment.Amount - payment.Assignments.Sum(pas => pas.Amount);
+                foreach (var registration in registrations.OrderBy(reg => Math.Abs(unassignedAmount - (reg.Price ?? 0m) + reg.Payments.Sum(pmt => pmt.Amount))))
                 {
-                    log.Info($"matched {registration.Id}, payment {payment.Id}, amount {payment.Amount}");
+                    var unpaidAmount = (registration.Price ?? 0m) - registration.Payments.Sum(pmt => pmt.Amount);
+
+                    log.Info($"matched {registration.Id}, payment {payment.Id}, unpaid {unpaidAmount}, unassigned {unassignedAmount}");
+
+                    var assignedAmount = Math.Min(unpaidAmount, unassignedAmount);
+                    if (assignedAmount > 0m)
+                    {
+                        dbContext.PaymentAssignments.Add(new PaymentAssignment
+                        {
+                            Id = Guid.NewGuid(),
+                            RegistrationId = registration.Id,
+                            ReceivedPaymentId = payment.Id,
+                            Amount = assignedAmount
+                        });
+                        if (assignedAmount == unpaidAmount)
+                        {
+                            registration.IsPaid = true;
+                        }
+                        unassignedAmount -= assignedAmount;
+                    }
+                }
+                if (unassignedAmount == 0m)
+                {
+                    payment.Settled = true;
                 }
             }
         }

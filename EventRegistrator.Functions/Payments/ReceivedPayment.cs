@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
 
 namespace EventRegistrator.Functions.Payments
@@ -15,5 +16,6 @@ namespace EventRegistrator.Functions.Payments
         public string RecognizedEmail { get; set; }
         public string Reference { get; set; }
         public bool Settled { get; set; }
+        public ICollection<PaymentAssignment> Assignments { get; set; }
     }
 }

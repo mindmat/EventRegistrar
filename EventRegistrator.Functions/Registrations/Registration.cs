@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
+using EventRegistrator.Functions.Payments;
 using EventRegistrator.Functions.RegistrationForms;
 
 namespace EventRegistrator.Functions.Registrations
@@ -17,6 +19,7 @@ namespace EventRegistrator.Functions.Registrations
         public decimal? Price { get; set; }
         public bool? IsWaitingList { get; set; }
         public string SoldOutMessage { get; set; }
-        public bool IsPayed { get; set; }
+        public bool IsPaid { get; set; }
+        public ICollection<PaymentAssignment> Payments { get; set; }
     }
 }
