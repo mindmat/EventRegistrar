@@ -72,6 +72,7 @@ function postAnswerToBackend(response) {
     var responseData =
         {
             email: response.getRespondentEmail(),
+            timestamp: response.getTimestamp(),
             responses: responsesData
         };
 
@@ -166,7 +167,11 @@ function resyncAnswers() {
     var form = FormApp.getActiveForm();
     var responses = form.getResponses();
     for (var i = 0; i < responses.length; i++) {
-        postAnswerToBackend(responses[i]);
+        try {
+            postAnswerToBackend(responses[i]);
+        }
+        catch (err) {
+        }
     }
 }
 

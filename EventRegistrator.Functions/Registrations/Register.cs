@@ -72,6 +72,15 @@ namespace EventRegistrator.Functions.Registrations
                     };
                 }
 
+                var registration = await context.Registrations.FirstOrDefaultAsync(reg => reg.ExternalIdentifier == id);
+                if (registration != null)
+                {
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                    {
+                        Content = new StringContent($"Registration with id '{id}' already exists")
+                    };
+                }
+
                 var registrationWithSameEmail = await context.Registrations.FirstOrDefaultAsync(reg => reg.RegistrationForm.EventId == form.EventId && reg.RespondentEmail == googleRegistration.Email);
                 if (registrationWithSameEmail != null)
                 {
@@ -88,15 +97,6 @@ namespace EventRegistrator.Functions.Registrations
                     return new HttpResponseMessage(HttpStatusCode.BadRequest)
                     {
                         Content = new StringContent($"Registration with mail '{googleRegistration.Email}' already exists")
-                    };
-                }
-
-                var registration = await context.Registrations.FirstOrDefaultAsync(reg => reg.ExternalIdentifier == id);
-                if (registration != null)
-                {
-                    return new HttpResponseMessage(HttpStatusCode.BadRequest)
-                    {
-                        Content = new StringContent($"Registration with id '{id}' already exists")
                     };
                 }
 
