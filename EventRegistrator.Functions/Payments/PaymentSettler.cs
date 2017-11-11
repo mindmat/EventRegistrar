@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using EventRegistrator.Functions.Infrastructure.Bus;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
+using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Registrations;
 using Microsoft.Azure.WebJobs.Host;
 
@@ -30,14 +32,24 @@ namespace EventRegistrator.Functions.Payments
                                                             .Include(pmt => pmt.Payments)
                                                             .ToListAsync();
 
-                unsettledPayments.ForEach(payment => TryMatchToRegistration(payment, unsettledRegistrations, dbContext, log));
+                var registrationIdsToCheck = new List<Guid>();
+                foreach (var payment in unsettledPayments)
+                {
+                    registrationIdsToCheck.AddRange(TryMatchToRegistration(payment, unsettledRegistrations, dbContext, log));
+                }
 
                 await dbContext.SaveChangesAsync();
+
+                foreach (var registrationId in registrationIdsToCheck)
+                {
+                    await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
+                }
             }
         }
 
-        private static void TryMatchToRegistration(ReceivedPayment payment, IReadOnlyList<Registration> unsettledRegistrations, EventRegistratorDbContext dbContext, TraceWriter log)
+        private static IEnumerable<Guid> TryMatchToRegistration(ReceivedPayment payment, IReadOnlyList<Registration> unsettledRegistrations, EventRegistratorDbContext dbContext, TraceWriter log)
         {
+            var registrationIdsToCheck = new List<Guid>();
             var mails = EmailExtractor.TryExtractEmailFromInfo(payment.Info).ToList();
             payment.RecognizedEmail = string.Join(";", mails);
             if (payment.RecognizedEmail != null)
@@ -46,7 +58,7 @@ namespace EventRegistrator.Functions.Payments
                                          .ToList();
                 if (!registrations.Any())
                 {
-                    return;
+                    return registrationIdsToCheck;
                 }
 
                 var unassignedAmount = payment.Amount - payment.Assignments.Sum(pas => pas.Amount);
@@ -69,6 +81,7 @@ namespace EventRegistrator.Functions.Payments
                         if (assignedAmount == unpaidAmount)
                         {
                             registration.State = RegistrationState.Paid;
+                            registrationIdsToCheck.Add(registration.Id);
                         }
                         unassignedAmount -= assignedAmount;
                     }
@@ -78,6 +91,7 @@ namespace EventRegistrator.Functions.Payments
                     payment.Settled = true;
                 }
             }
+            return registrationIdsToCheck;
         }
     }
 }

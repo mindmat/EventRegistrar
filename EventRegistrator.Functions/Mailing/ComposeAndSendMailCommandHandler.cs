@@ -53,20 +53,24 @@ namespace EventRegistrator.Functions.Mailing
                 {
                     mailType = MailType.RegistrationCancelled;
                 }
+                else if (registration.State == RegistrationState.Paid)
+                {
+                    mailType = MailType.FullyPaid;
+                }
                 else
                 {
                     var seats = await context.Seats.Where(seat => seat.RegistrationId == command.RegistrationId ||
                                                                   seat.RegistrationId_Follower == command.RegistrationId)
                                                    .Include(seat => seat.Registrable)
                                                    .ToListAsync();
-                    foreach (var seat in seats)
+                    foreach (var seat in seats.OrderBy(seat => seat.Registrable.ShowInMailListOrder ?? int.MaxValue))
                     {
                         var registrable = registrables.FirstOrDefault(rbl => rbl.Id == seat.RegistrableId);
                         if (registrable == null)
                         {
                             throw new Exception($"No registrable found with Id {seat.RegistrableId}");
                         }
-                        if (registrable.MaximumSingleSeats.HasValue || registrable.IsCore)
+                        if (registrable.MaximumSingleSeats.HasValue || !registrable.MaximumDoubleSeats.HasValue && registrable.IsCore)
                         {
                             mailType = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
                                                             MailType.SingleRegistrationAccepted;

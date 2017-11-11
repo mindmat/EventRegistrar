@@ -500,6 +500,39 @@ VALUES ('A4198E42-E965-4259-9154-F673A6F38C4E', '762A93A4-56E0-402C-B700-1CFB336
   </tbody>
 </table>');
 
+INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
+VALUES ('22844150-3210-4854-ADCF-5DCFD6A79757', '762A93A4-56E0-402C-B700-1CFB3362B39D', 41 /*FullyPaid*/, 2, 'Buchungsbestätigung', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
+'<table cellspacing="0" cellpadding="0" align="center">
+  <tbody>
+    <tr>
+      <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
+    </tr>
+    <tr>
+      <td><br /><strong>Hallo {{FirstName}}</strong><br />
+        <p>Wir haben deine Zahlung erhalten und best&auml;tigen deine Buchung f&uuml;r Leapin'' Lindy 2018.<br />Wir freuen uns darauf, dich im Februar begr&uuml;ssen zu d&uuml;rfen!</p>
+        <p>Schau dir doch die Leapin'' Lindy-App an:&nbsp;<a href="https://lineupr.com/ll18/leapin-lindy-2018">https://lineupr.com/ll18/leapin-lindy-2018</a></p>
+        <p>Das Leapin'' Lindy Team</p>
+      </td>
+    </tr>
+  </tbody>
+</table>');
+
+INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
+VALUES ('186F48DC-9927-464E-B4B7-55262DCB941C', '762A93A4-56E0-402C-B700-1CFB3362B39D', 31 /*RegistrationCancelled*/, 2, 'Booking cancelled', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
+'<table cellspacing="0" cellpadding="0" align="center">
+  <tbody>
+    <tr>
+      <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
+    </tr>
+    <tr>
+      <td><br /><strong>Hallo {{FirstName}}</strong><br />
+        <p>Wir haben keine Zahlung von dir erhalten und deshalb deine Buchung storniert, um den Platz f&uuml;r jemand anderen freizugeben.</p>
+        <p>Das Leapin'' Lindy Team</p>
+      </td>
+    </tr>
+  </tbody>
+</table>');
+
 
 INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
 VALUES ('05A0F1D1-7F43-4F30-A29A-9D5E2E38FA66', '762A93A4-56E0-402C-B700-1CFB3362B39D', 1 /*SingleRegistrationAccepted*/, 2, 'Registration received', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'en', 
@@ -989,6 +1022,40 @@ VALUES ('C41D025A-84A2-4590-8974-867D8027B490', '762A93A4-56E0-402C-B700-1CFB336
             </tr>
           </tbody>
         </table>
+      </td>
+    </tr>
+  </tbody>
+</table>');
+
+
+INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
+VALUES ('CDCBA09B-84D2-4B58-A54C-ECF9F7497667', '762A93A4-56E0-402C-B700-1CFB3362B39D', 41 /*FullyPaid*/, 2, 'Booking confirmation', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'en', 
+'<table cellspacing="0" cellpadding="0" align="center">
+  <tbody>
+    <tr>
+      <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
+    </tr>
+    <tr>
+      <td><br /><strong>Hello {{FirstName}}</strong><br />
+        <p>We have received your payment and confirm your booking for Leapin'' Lindy 2018.<br />We are looking forward to welcoming you at Leapin'' Lindy!</p>
+        <p>Have a look at the&nbsp;Leapin'' Lindy-App an:&nbsp;<a href="https://lineupr.com/ll18/leapin-lindy-2018">https://lineupr.com/ll18/leapin-lindy-2018</a></p>
+        <p>The Leapin'' Lindy Team</p>
+      </td>
+    </tr>
+  </tbody>
+</table>');
+
+INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
+VALUES ('2ACB5061-6936-4BD9-8AC6-1905A4E86EE9', '762A93A4-56E0-402C-B700-1CFB3362B39D', 31 /*RegistrationCancelled*/, 2, 'Booking cancelled', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'en', 
+'<table cellspacing="0" cellpadding="0" align="center">
+  <tbody>
+    <tr>
+      <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
+    </tr>
+    <tr>
+      <td><br /><strong>Hello {{FirstName}}</strong><br />
+        <p>We have not received your payment in time and have cancelled your registration for Leapin'' Lindy 2018 to give the place to somebody else.</p>
+        <p>The Leapin'' Lindy Team</p>
       </td>
     </tr>
   </tbody>

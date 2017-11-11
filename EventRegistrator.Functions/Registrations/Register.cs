@@ -108,7 +108,8 @@ namespace EventRegistrator.Functions.Registrations
                     ReceivedAt = DateTime.UtcNow,
                     ExternalTimestamp = googleRegistration.Timestamp,
                     RespondentEmail = googleRegistration.Email,
-                    Language = form.Language
+                    Language = form.Language,
+                    State = RegistrationState.Received
                 };
                 foreach (var response in googleRegistration.Responses)
                 {

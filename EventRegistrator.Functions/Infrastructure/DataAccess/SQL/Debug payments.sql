@@ -3,7 +3,7 @@ delete from paymentfiles
 delete from ReceivedPayments
 delete from [PaymentAssignments]
 update Registrations
-set ispaid = 0
+set state = 1
 */
 select *
 from paymentfiles
@@ -16,4 +16,4 @@ from [dbo].[PaymentAssignments]
 
 select *
 from Registrations
-where ispaid = 1
+where state = 2
