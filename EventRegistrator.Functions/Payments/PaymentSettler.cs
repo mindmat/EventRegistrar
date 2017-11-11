@@ -9,7 +9,7 @@ using Microsoft.Azure.WebJobs.Host;
 
 namespace EventRegistrator.Functions.Payments
 {
-    public class PaymentSettler
+    public static class PaymentSettler
     {
         public static async Task Settle(Guid eventId, TraceWriter log)
         {
@@ -26,7 +26,7 @@ namespace EventRegistrator.Functions.Payments
                 }
 
                 var unsettledRegistrations = await dbContext.Registrations
-                                                            .Where(reg => reg.RegistrationForm.EventId == eventId && !reg.IsPaid)
+                                                            .Where(reg => reg.RegistrationForm.EventId == eventId && (reg.State == RegistrationState.Received || reg.State == RegistrationState.PaymentOverdue))
                                                             .Include(pmt => pmt.Payments)
                                                             .ToListAsync();
 
@@ -68,7 +68,7 @@ namespace EventRegistrator.Functions.Payments
                         });
                         if (assignedAmount == unpaidAmount)
                         {
-                            registration.IsPaid = true;
+                            registration.State = RegistrationState.Paid;
                         }
                         unassignedAmount -= assignedAmount;
                     }

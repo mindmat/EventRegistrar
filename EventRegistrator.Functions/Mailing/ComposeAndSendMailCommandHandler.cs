@@ -44,65 +44,74 @@ namespace EventRegistrator.Functions.Mailing
                     throw new ArgumentException($"No registration with id {command.RegistrationId}");
                 }
 
-                var seats = await context.Seats.Where(seat => seat.RegistrationId == command.RegistrationId ||
-                                                              seat.RegistrationId_Follower == command.RegistrationId)
-                                               .Include(seat => seat.Registrable)
-                                               .ToListAsync();
                 var registrables = await context.Registrables.Where(rbl => rbl.EventId == registration.RegistrationForm.EventId).ToListAsync();
                 MailType? mailType = null;
                 var mainRegistrationRole = Role.Leader;
                 Guid? registrationId_Partner = null;
                 var registrablesToCheckWaitingList = new List<Registrable>();
-                foreach (var seat in seats)
+                if (registration.State == RegistrationState.Cancelled)
                 {
-                    var registrable = registrables.FirstOrDefault(rbl => rbl.Id == seat.RegistrableId);
-                    if (registrable == null)
+                    mailType = MailType.RegistrationCancelled;
+                }
+                else
+                {
+                    var seats = await context.Seats.Where(seat => seat.RegistrationId == command.RegistrationId ||
+                                                                  seat.RegistrationId_Follower == command.RegistrationId)
+                                                   .Include(seat => seat.Registrable)
+                                                   .ToListAsync();
+                    foreach (var seat in seats)
                     {
-                        throw new Exception($"No registrable found with Id {seat.RegistrableId}");
-                    }
-                    if (registrable.MaximumSingleSeats.HasValue || registrable.IsCore)
-                    {
-                        mailType = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
-                                                        MailType.SingleRegistrationAccepted;
-                        break;
-                    }
-                    if (registrable.MaximumDoubleSeats.HasValue)
-                    {
-                        if (seat.RegistrationId_Follower == registration.RegistrationForm.Id)
+                        var registrable = registrables.FirstOrDefault(rbl => rbl.Id == seat.RegistrableId);
+                        if (registrable == null)
                         {
-                            mainRegistrationRole = Role.Follower;
+                            throw new Exception($"No registrable found with Id {seat.RegistrableId}");
                         }
-                        if (seat.PartnerEmail == null)
+                        if (registrable.MaximumSingleSeats.HasValue || registrable.IsCore)
                         {
-                            // single registration for double registrable
                             mailType = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
                                                             MailType.SingleRegistrationAccepted;
-                            // maybe now sb can get off the waiting list
-                            registrablesToCheckWaitingList.Add(registrable);
+                            break;
                         }
-                        else if (seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
+                        if (registrable.MaximumDoubleSeats.HasValue)
                         {
-                            // partner registration for double registrable, both partner registered
-                            mailType = seat.IsWaitingList ? MailType.DoubleRegistrationMatchedOnWaitingList :
-                                                            MailType.DoubleRegistrationMatchedAndAccepted;
-                            registrationId_Partner = seat.RegistrationId == registration.Id ? seat.RegistrationId_Follower :
-                                                                                              seat.RegistrationId;
-                        }
-                        else
-                        {
-                            // partner registration for double registrable, both partner registered
-                            mailType = seat.IsWaitingList ? MailType.DoubleRegistrationFirstPartnerOnWaitingList :
-                                                            MailType.DoubleRegistrationFirstPartnerAccepted;
-                        }
+                            if (seat.RegistrationId_Follower == registration.RegistrationForm.Id)
+                            {
+                                mainRegistrationRole = Role.Follower;
+                            }
+                            if (seat.PartnerEmail == null)
+                            {
+                                // single registration for double registrable
+                                mailType = seat.IsWaitingList ? MailType.SingleRegistrationOnWaitingList :
+                                                                MailType.SingleRegistrationAccepted;
+                                // maybe now sb can get off the waiting list
+                                // HACK: this should not be here (SRP)
+                                registrablesToCheckWaitingList.Add(registrable);
+                            }
+                            else if (seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
+                            {
+                                // partner registration for double registrable, both partner registered
+                                mailType = seat.IsWaitingList ? MailType.DoubleRegistrationMatchedOnWaitingList :
+                                                                MailType.DoubleRegistrationMatchedAndAccepted;
+                                registrationId_Partner = seat.RegistrationId == registration.Id ? seat.RegistrationId_Follower :
+                                                                                                  seat.RegistrationId;
+                            }
+                            else
+                            {
+                                // partner registration for double registrable, both partner registered
+                                mailType = seat.IsWaitingList ? MailType.DoubleRegistrationFirstPartnerOnWaitingList :
+                                                                MailType.DoubleRegistrationFirstPartnerAccepted;
+                            }
 
-                        break;
+                            break;
+                        }
+                    }
+                    if (!seats.Any(seat => seat.Registrable.IsCore))
+                    {
+                        // no core seats -> sold out
+                        mailType = MailType.SoldOut;
                     }
                 }
-                if (!seats.Any(seat => seat.Registrable.IsCore))
-                {
-                    // no core seats -> sold out
-                    mailType = MailType.SoldOut;
-                }
+
                 if (mailType == null)
                 {
                     log.Info("no action needed");

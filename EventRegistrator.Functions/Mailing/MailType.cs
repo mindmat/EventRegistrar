@@ -9,6 +9,7 @@
         DoubleRegistrationFirstPartnerOnWaitingList = 13,
         DoubleRegistrationMatchedOnWaitingList = 14,
         SoldOut = 21,
-        OnlyOneRegistrationPerEmail = 22
+        OnlyOneRegistrationPerEmail = 22,
+        RegistrationCancelled = 31
     }
 }

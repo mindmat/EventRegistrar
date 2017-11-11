@@ -1,11 +1,9 @@
 ﻿/*
-delete from RegistrationForm
-delete from Questions
-delete from QuestionOptions
-
 delete from registrations
 delete from responses
 delete from seats
+delete from mails
+delete from mailtoregistrations
 */
 --948f6af3-1596-4715-90ab-ce64b89a0f51
 --select * from RegistrationForms --762A93A4-56E0-402C-B700-1CFB3362B39D

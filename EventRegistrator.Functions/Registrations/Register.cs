@@ -10,6 +10,7 @@ using EventRegistrator.Functions.GoogleForms;
 using EventRegistrator.Functions.Infrastructure.Bus;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
 using EventRegistrator.Functions.Infrastructure.DomainEvents;
+using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Registrables;
 using EventRegistrator.Functions.RegistrationForms;
 using Microsoft.Azure.WebJobs;
@@ -71,14 +72,23 @@ namespace EventRegistrator.Functions.Registrations
                     };
                 }
 
-                var registrationWithSameEmail = await context.Registrations.FirstOrDefaultAsync(reg => reg.RespondentEmail == googleRegistration.Email);
+                var registrationWithSameEmail = await context.Registrations.FirstOrDefaultAsync(reg => reg.RegistrationForm.EventId == form.EventId && reg.RespondentEmail == googleRegistration.Email);
                 if (registrationWithSameEmail != null)
                 {
-                    //await ServiceBusClient.SendEvent(new SendMailCommand { }, ComposeAndSendMailCommandHandler.SendMailCommandsQueueName);
-                    //return new HttpResponseMessage(HttpStatusCode.BadRequest)
-                    //{
-                    //    Content = new StringContent($"Registration with mail '{googleRegistration.Email}' already exists")
-                    //};
+                    // HACK: hardcoded
+                    var sendMailCommand = new SendMailCommand
+                    {
+                        MailId = Guid.NewGuid(),
+                        Subject = "Duplicate registration",
+                        ContentPlainText = "Hello, you can only register once so we have to discard your later registration.",
+                        Sender = new EmailAddress { Email = "noreply@leadinlindy.ch" },
+                        To = new[] { new EmailAddress { Email = googleRegistration.Email } }
+                    };
+                    await ServiceBusClient.SendEvent(sendMailCommand, SendMailCommandHandler.SendMailQueueName);
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest)
+                    {
+                        Content = new StringContent($"Registration with mail '{googleRegistration.Email}' already exists")
+                    };
                 }
 
                 var registration = await context.Registrations.FirstOrDefaultAsync(reg => reg.ExternalIdentifier == id);

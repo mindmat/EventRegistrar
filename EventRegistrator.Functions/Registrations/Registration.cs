@@ -19,7 +19,7 @@ namespace EventRegistrator.Functions.Registrations
         public decimal? Price { get; set; }
         public bool? IsWaitingList { get; set; }
         public string SoldOutMessage { get; set; }
-        public bool IsPaid { get; set; }
+        public RegistrationState State { get; set; }
         public ICollection<PaymentAssignment> Payments { get; set; }
     }
 }

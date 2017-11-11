@@ -73,7 +73,7 @@ namespace EventRegistrator.Functions.WaitingList
                 var waitingLeaders = new Queue<Seat>(registrable.Seats.Where(seat => seat.IsWaitingList &&
                                                                                      !seat.RegistrationId_Follower.HasValue)
                                                                       .OrderBy(seat => seat.FirstPartnerJoined));
-                log.Info($"Registrable {registrable.Name}, leaders in {acceptedSingleLeaders.Count}, followers in {acceptedSingleFollowers.Count}, leaders waiting {waitingLeaders.Count}, followers waiting {waitingFollowers.Count}");
+                log.Info($"Registrable {registrable.Name}, single leaders in {acceptedSingleLeaders.Count}, single followers in {acceptedSingleFollowers.Count}, leaders waiting {waitingLeaders.Count}, followers waiting {waitingFollowers.Count}");
                 if (acceptedSingleLeaders.Any() && waitingFollowers.Any())
                 {
                     foreach (var acceptedSingleLeader in acceptedSingleLeaders)
@@ -114,16 +114,26 @@ namespace EventRegistrator.Functions.WaitingList
                 var seatsLeft = registrable.MaximumDoubleSeats.Value - acceptedSeatCount;
                 if (seatsLeft > 0)
                 {
-                    return AcceptPartnerSeatsFromWaitingList(registrable.Seats.Where(seat => seat.IsWaitingList).OrderBy(seat => seat.FirstPartnerJoined).Take(seatsLeft));
+                    return AcceptPartnerSeatsFromWaitingList(registrable, seatsLeft);
                 }
             }
             return registrationIdsToCheck;
         }
 
-        private static IEnumerable<Guid?> AcceptPartnerSeatsFromWaitingList(IEnumerable<Seat> seatsToAccept)
+        private static IEnumerable<Guid?> AcceptPartnerSeatsFromWaitingList(Registrable registrable, int seatsLeft)
         {
+            var seatsToAccept = registrable.Seats.Where(seat => seat.IsWaitingList).OrderBy(seat => seat.FirstPartnerJoined);
             foreach (var seat in seatsToAccept)
             {
+                if (seat.PartnerEmail == null)
+                {
+                    // single registration, check imbalance
+                    var ownRole = seat.RegistrationId.HasValue ? Role.Leader : Role.Follower;
+                    if (!ImbalanceManager.CanAddNewDoubleSeatForSingleRegistration(registrable, ownRole))
+                    {
+                        yield break;
+                    }
+                }
                 seat.IsWaitingList = false;
                 if (seat.RegistrationId.HasValue)
                 {
@@ -132,6 +142,10 @@ namespace EventRegistrator.Functions.WaitingList
                 if (seat.RegistrationId_Follower.HasValue)
                 {
                     yield return seat.RegistrationId_Follower;
+                }
+                if (--seatsLeft <= 0)
+                {
+                    yield break;
                 }
             }
         }

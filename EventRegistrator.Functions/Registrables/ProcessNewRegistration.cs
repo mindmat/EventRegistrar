@@ -9,6 +9,7 @@ using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Properties;
 using EventRegistrator.Functions.Registrations;
 using EventRegistrator.Functions.Seats;
+using EventRegistrator.Functions.WaitingList;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.ServiceBus.Messaging;
@@ -38,25 +39,28 @@ namespace EventRegistrator.Functions.Registrables
                 var responses = await context.Responses.Where(rsp => rsp.RegistrationId == @event.RegistrationId).ToListAsync();
                 var questionOptionIds = new HashSet<Guid>(responses.Where(rsp => rsp.QuestionOptionId.HasValue).Select(rsp => rsp.QuestionOptionId.Value));
                 var registrables = await context.QuestionOptionToRegistrableMappings
-                    .Where(map => questionOptionIds.Contains(map.QuestionOptionId))
-                    .Include(map => map.Registrable)
-                    .Include(map => map.Registrable.Seats)
-                    .ToListAsync();
-
+                                                .Where(map => questionOptionIds.Contains(map.QuestionOptionId))
+                                                .Include(map => map.Registrable)
+                                                .Include(map => map.Registrable.Seats)
+                                                .ToListAsync();
+                var registrableIds_CheckWaitingList = new List<Guid>();
                 foreach (var response in responses.Where(rsp => rsp.QuestionOptionId.HasValue))
                 {
                     foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
                     {
                         var partnerEmail = registrable.QuestionId_PartnerEmail.HasValue
-                            ? responses.FirstOrDefault(
-                                rsp => rsp.QuestionId == registrable.QuestionId_PartnerEmail.Value)?.ResponseString
+                            ? responses.FirstOrDefault(rsp => rsp.QuestionId == registrable.QuestionId_PartnerEmail.Value)?.ResponseString
                             : null;
                         var isLeader = registrable.QuestionOptionId_Leader.HasValue &&
                                        responses.Any(rsp => rsp.QuestionOptionId == registrable.QuestionOptionId_Leader.Value);
                         var isFollower = registrable.QuestionOptionId_Follower.HasValue &&
                                          responses.Any(rsp => rsp.QuestionOptionId == registrable.QuestionOptionId_Follower.Value);
                         var role = isLeader ? Role.Leader : (isFollower ? Role.Follower : (Role?)null);
-                        var seat = await ReserveSeat(context, @event.EventId, registrable.Registrable, response, registration.RespondentEmail, partnerEmail, role, log);
+                        var seat = ReserveSeat(context, @event.EventId, registrable.Registrable, response, registration.RespondentEmail, partnerEmail, role, log, out Guid? registrableId_CheckWaitingList);
+                        if (registrableId_CheckWaitingList != null)
+                        {
+                            registrableIds_CheckWaitingList.Add(registrableId_CheckWaitingList.Value);
+                        }
                         if (seat == null)
                         {
                             registration.SoldOutMessage = (registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +
@@ -77,6 +81,13 @@ namespace EventRegistrator.Functions.Registrables
                 await context.SaveChangesAsync();
 
                 await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registration.Id }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
+                if (registrableIds_CheckWaitingList.Any() && @event.EventId.HasValue)
+                {
+                    foreach (var registrableId in registrableIds_CheckWaitingList)
+                    {
+                        await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { EventId = @event.EventId.Value, RegistrableId = registrableId }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
+                    }
+                }
             }
         }
 
@@ -108,16 +119,18 @@ namespace EventRegistrator.Functions.Registrables
             return price;
         }
 
-        private static async Task<Seat> ReserveSeat(EventRegistratorDbContext context,
-                                                    Guid? eventId,
-                                                    Registrable registrable,
-                                                    Response response,
-                                                    string ownEmail,
-                                                    string partnerEmail,
-                                                    Role? role,
-                                                    TraceWriter log)
+        private static Seat ReserveSeat(EventRegistratorDbContext context,
+                                        Guid? eventId,
+                                        Registrable registrable,
+                                        Response response,
+                                        string ownEmail,
+                                        string partnerEmail,
+                                        Role? role,
+                                        TraceWriter log,
+                                        out Guid? registrableId_CheckWaitingList)
         {
             Seat seat;
+            registrableId_CheckWaitingList = null;
             if (registrable.MaximumSingleSeats.HasValue)
             {
                 var waitingList = registrable.Seats.Any(st => st.IsWaitingList);
@@ -147,7 +160,7 @@ namespace EventRegistrator.Functions.Registrables
                 if (isPartnerRegistration)
                 {
                     // complement existing partner seat
-                    var existingPartnerSeat = await FindPartnerSeat(eventId, ownEmail, partnerEmail, ownRole, registrable.Seats, context.Registrations, log);
+                    var existingPartnerSeat = FindPartnerSeat(eventId, ownEmail, partnerEmail, ownRole, registrable.Seats, context.Registrations, log);
 
                     if (existingPartnerSeat != null)
                     {
@@ -181,10 +194,15 @@ namespace EventRegistrator.Functions.Registrables
                     var waitingListForOwnRole = ownRole == Role.Leader && waitingListForSingleLeaders ||
                                                 ownRole == Role.Follower && waitingListForSingleFollowers;
                     var matchingSingleSeat = FindMatchingSingleSeat(registrable, ownRole);
-                    var seatAvailable = !waitingListForOwnRole && (CanAddNewDoubleSeatForSingleRegistration(registrable, ownRole) || matchingSingleSeat != null);
+                    var seatAvailable = !waitingListForOwnRole && (ImbalanceManager.CanAddNewDoubleSeatForSingleRegistration(registrable, ownRole) || matchingSingleSeat != null);
                     if (!seatAvailable && !registrable.HasWaitingList)
                     {
                         return null;
+                    }
+                    if (ownRole == Role.Leader && waitingListForSingleFollowers ||
+                        ownRole == Role.Follower && waitingListForSingleLeaders)
+                    {
+                        registrableId_CheckWaitingList = registrable.Id;
                     }
                     if (!waitingListForOwnRole && matchingSingleSeat != null)
                     {
@@ -234,32 +252,6 @@ namespace EventRegistrator.Functions.Registrables
             }
         }
 
-        private static bool CanAddNewDoubleSeatForSingleRegistration(Registrable registrable, Role ownRole)
-        {
-            // check overall
-            if (registrable.Seats.Count >= (registrable.MaximumDoubleSeats ?? int.MaxValue))
-            {
-                return false;
-            }
-            // check imbalance
-            if (!registrable.MaximumAllowedImbalance.HasValue)
-            {
-                return true;
-            }
-
-            if (ownRole == Role.Leader)
-            {
-                var singleLeaderCount = registrable.Seats.Count(seat => string.IsNullOrEmpty(seat.PartnerEmail) && seat.RegistrationId_Follower == null);
-                return singleLeaderCount < registrable.MaximumAllowedImbalance.Value;
-            }
-            if (ownRole == Role.Follower)
-            {
-                var singleFollowerCount = registrable.Seats.Count(seat => string.IsNullOrEmpty(seat.PartnerEmail) && seat.RegistrationId == null);
-                return singleFollowerCount < registrable.MaximumAllowedImbalance.Value;
-            }
-            return false;
-        }
-
         private static Seat FindMatchingSingleSeat(Registrable registrable, Role ownRole)
         {
             return registrable.Seats?.FirstOrDefault(seat => string.IsNullOrEmpty(seat.PartnerEmail) &&
@@ -268,7 +260,7 @@ namespace EventRegistrator.Functions.Registrables
                                                               ownRole == Role.Follower && !seat.RegistrationId_Follower.HasValue));
         }
 
-        private static async Task<Seat> FindPartnerSeat(Guid? eventId, string ownEmail, string partnerEmail, Role ownRole, ICollection<Seat> existingSeats, IQueryable<Registration> registrations, TraceWriter log)
+        private static Seat FindPartnerSeat(Guid? eventId, string ownEmail, string partnerEmail, Role ownRole, ICollection<Seat> existingSeats, IQueryable<Registration> registrations, TraceWriter log)
         {
             var partnerSeats = existingSeats.Where(seat => seat.PartnerEmail == ownEmail).ToList();
             if (!partnerSeats.Any())
@@ -277,9 +269,9 @@ namespace EventRegistrator.Functions.Registrables
             }
             var otherRole = ownRole == Role.Leader ? Role.Follower : Role.Leader;
             var partnerRegistrationIds = partnerSeats.Select(seat => otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower).ToList();
-            var partnerRegistrationThatReferenceThisEmail = await registrations.Where(reg => (!eventId.HasValue || reg.RegistrationForm.EventId == eventId.Value) &&
-                                                                                             partnerRegistrationIds.Contains(reg.Id))
-                                                                               .ToListAsync();
+            var partnerRegistrationThatReferenceThisEmail = registrations.Where(reg => (!eventId.HasValue || reg.RegistrationForm.EventId == eventId.Value) &&
+                                                                                       partnerRegistrationIds.Contains(reg.Id))
+                                                                         .ToList();
             log.Info($"Partner registrations with this partner mail: {string.Join(", ", partnerRegistrationThatReferenceThisEmail.Select(reg => reg.Id))}");
             var partnerRegistrationId = partnerRegistrationThatReferenceThisEmail.FirstOrDefault(reg => reg.RespondentEmail == partnerEmail)?.Id;
             return partnerSeats.FirstOrDefault(seat => partnerRegistrationId == (otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower));

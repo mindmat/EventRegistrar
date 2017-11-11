@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace EventRegistrator.Functions.Payments
 {
-    public class EmailExtractor
+    public static class EmailExtractor
     {
         private static readonly Regex Email = new Regex(@"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
 
