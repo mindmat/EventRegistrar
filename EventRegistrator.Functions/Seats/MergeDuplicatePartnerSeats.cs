@@ -5,7 +5,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using EventRegistrator.Functions.Infrastructure.Bus;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
+using EventRegistrator.Functions.Mailing;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
@@ -24,6 +26,7 @@ namespace EventRegistrator.Functions.Seats
 
             using (var dbContext = new EventRegistratorDbContext())
             {
+                var registrationsToCheckMail = new List<Guid>();
                 var registrables = await dbContext.Registrables
                                                   .Where(rbl => rbl.EventId == eventId && rbl.MaximumDoubleSeats.HasValue)
                                                   .Include(rbl => rbl.Seats)
@@ -34,31 +37,42 @@ namespace EventRegistrator.Functions.Seats
                                                    .ToDictionaryAsync(reg => reg.RespondentEmail, reg => reg.Id);
                 foreach (var registrable in registrables)
                 {
-                    await MergeDuplicatePartnerSeatsInRegistrable(registrable.Id, registrations, dbContext, log);
+                    registrationsToCheckMail.AddRange(await MergeDuplicatePartnerSeatsInRegistrable(registrable.Id, registrations, dbContext, log));
                 }
-                //await dbContext.SaveChangesAsync();
+                await dbContext.SaveChangesAsync();
+
+                foreach (var registrationIdToCheckMail in registrationsToCheckMail)
+                {
+                    await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationIdToCheckMail }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
+                }
             }
             return req.CreateResponse(HttpStatusCode.OK);
         }
 
-        private static async Task MergeDuplicatePartnerSeatsInRegistrable(Guid registrableId, Dictionary<string, Guid> registrations, EventRegistratorDbContext dbContext, TraceWriter log)
+        private static async Task<IEnumerable<Guid>> MergeDuplicatePartnerSeatsInRegistrable(Guid registrableId, Dictionary<string, Guid> registrations, EventRegistratorDbContext dbContext, TraceWriter log)
         {
             var unmatchedPartnerSeats = await dbContext.Seats
                                                        .Where(seat => seat.RegistrableId == registrableId &&
                                                                       seat.PartnerEmail != null &&
                                                                       (seat.RegistrationId == null || seat.RegistrationId_Follower == null))
                                                        .ToListAsync();
-            foreach (var unmatchedLeaderSeat in unmatchedPartnerSeats.Where(seat => seat.RegistrationId_Follower == null))
+            log.Info($"Merge for registrable {registrableId}, registration lookup count {registrations.Count}, unmatchedPartnerSeats {unmatchedPartnerSeats.Count}");
+
+            var registrationsToCheckMail = new List<Guid>();
+
+            foreach (var unmatchedLeaderSeat in unmatchedPartnerSeats.Where(seat => seat.RegistrationId_Follower == null && seat.RegistrationId.HasValue))
             {
-                if (!registrations.ContainsValue(unmatchedLeaderSeat.Id))
+                if (!unmatchedLeaderSeat.RegistrationId.HasValue || !registrations.ContainsValue(unmatchedLeaderSeat.RegistrationId.Value))
                 {
                     continue;
                 }
-                var leaderEmail = registrations.First(kvp => kvp.Value == unmatchedLeaderSeat.Id).Key;
+                var leaderEmail = registrations.First(kvp => kvp.Value == unmatchedLeaderSeat.RegistrationId.Value).Key?.ToLowerInvariant().Trim();
                 if (!registrations.TryGetValue(unmatchedLeaderSeat.PartnerEmail, out var followerRegistrationId))
                 {
                     continue;
                 }
+                log.Info($"followerRegistrationId {followerRegistrationId}");
+
                 var unmatchedFollowerSeat = unmatchedPartnerSeats
                                             .FirstOrDefault(seat => seat.RegistrationId_Follower == followerRegistrationId &&
                                                                     seat.PartnerEmail == leaderEmail);
@@ -70,12 +84,15 @@ namespace EventRegistrator.Functions.Seats
                 var mergedFirstPartnerJoined = unmatchedLeaderSeat.FirstPartnerJoined < unmatchedFollowerSeat.FirstPartnerJoined ? unmatchedLeaderSeat.FirstPartnerJoined : unmatchedFollowerSeat.FirstPartnerJoined;
                 log.Info($"duplicate registration detected: leader seat {unmatchedLeaderSeat.Id}, follower seat {unmatchedFollowerSeat.Id}, Waiting List {mergedSeatIsWaitingList}, FirstPartnerJoined {mergedFirstPartnerJoined}");
 
-                //unmatchedLeaderSeat.RegistrationId_Follower = unmatchedFollowerSeat.RegistrationId_Follower;
-                //unmatchedLeaderSeat.IsWaitingList = mergedSeatIsWaitingList;
-                //unmatchedLeaderSeat.FirstPartnerJoined = mergedFirstPartnerJoined;
+                unmatchedLeaderSeat.RegistrationId_Follower = unmatchedFollowerSeat.RegistrationId_Follower;
+                unmatchedLeaderSeat.IsWaitingList = mergedSeatIsWaitingList;
+                unmatchedLeaderSeat.FirstPartnerJoined = mergedFirstPartnerJoined;
 
-                //dbContext.Seats.Remove(unmatchedFollowerSeat);
+                dbContext.Seats.Remove(unmatchedFollowerSeat);
+
+                registrationsToCheckMail.Add(unmatchedLeaderSeat.RegistrationId.Value);
             }
+            return registrationsToCheckMail;
         }
     }
 }

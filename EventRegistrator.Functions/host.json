@@ -1,5 +1,5 @@
 {
-  "functions": [ "Register", "SaveRegistrationForm", "ProcessNewRegistration", "ComposeAndSendMailCommandHandler", "SendMailCommandHandler", "TryPromoteFromWaitingList", "ProcessCamt", "ProcessPaymentFiles", "TryPromoteFromWaitingListHttpHandler", "CancelRegistration", "GetExternalIdentifiers", "MergeDuplicatePartnerSeats" ],
+  "functions": [ "Register", "SaveRegistrationForm", "ProcessNewRegistration", "ComposeAndSendMailCommandHandler", "SendMailCommandHandler", "TryPromoteFromWaitingList", "ProcessCamt", "ProcessPaymentFiles", "TryPromoteFromWaitingListHttpHandler", "CancelRegistration", "GetExternalIdentifiers", "MergeDuplicatePartnerSeats", "ComposeAndSendMailHttpHandler" ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {
     // The maximum number of concurrent calls to the callback the message

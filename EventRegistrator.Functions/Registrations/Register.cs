@@ -90,7 +90,7 @@ namespace EventRegistrator.Functions.Registrations
                         MailId = Guid.NewGuid(),
                         Subject = "Duplicate registration",
                         ContentPlainText = "Hello, you can only register once so we have to discard your later registration.",
-                        Sender = new EmailAddress { Email = "noreply@leadinlindy.ch" },
+                        Sender = new EmailAddress { Email = "noreply@leapinlindy.ch" },
                         To = new[] { new EmailAddress { Email = googleRegistration.Email } }
                     };
                     await ServiceBusClient.SendEvent(sendMailCommand, SendMailCommandHandler.SendMailQueueName);

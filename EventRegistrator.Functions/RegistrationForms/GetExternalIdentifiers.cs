@@ -14,7 +14,7 @@ namespace EventRegistrator.Functions.RegistrationForms
     public static class GetExternalIdentifiers
     {
         [FunctionName("GetExternalIdentifiers")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrationform{formId}/ExternalIdentifiers")]
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrationform/{formId}/ExternalIdentifiers")]
                    HttpRequestMessage req,
                    string formId,
                    TraceWriter log)
