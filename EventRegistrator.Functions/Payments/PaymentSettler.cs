@@ -42,7 +42,7 @@ namespace EventRegistrator.Functions.Payments
 
                 foreach (var registrationId in registrationIdsToCheck)
                 {
-                    await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
+                    await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId, Withhold = true }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
                 }
             }
         }

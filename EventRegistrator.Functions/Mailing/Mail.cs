@@ -14,5 +14,6 @@ namespace EventRegistrator.Functions.Mailing
         public string Subject { get; set; }
         public string Recipients { get; set; }
         public DateTime Created { get; set; }
+        public bool Withhold { get; set; }
     }
 }

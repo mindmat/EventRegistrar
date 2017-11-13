@@ -48,7 +48,9 @@ namespace EventRegistrator.Functions.Registrations
                 }
 
                 registration.State = RegistrationState.Cancelled;
-                var places = await dbContext.Seats.Where(plc => plc.RegistrationId == registrationId || plc.RegistrationId_Follower == registrationId).ToListAsync();
+                var places = await dbContext.Seats
+                                            .Where(plc => plc.RegistrationId == registrationId || plc.RegistrationId_Follower == registrationId)
+                                            .ToListAsync();
                 foreach (var place in places.Where(plc => plc.RegistrationId == registrationId))
                 {
                     if (place.RegistrationId_Follower.HasValue)
@@ -58,8 +60,8 @@ namespace EventRegistrator.Functions.Registrations
                     }
                     else
                     {
-                        // single place, remove the place
-                        dbContext.Seats.Remove(place);
+                        // single place, cancel the place
+                        place.IsCancelled = true;
                     }
                 }
                 foreach (var place in places.Where(plc => plc.RegistrationId_Follower == registrationId))
@@ -71,8 +73,8 @@ namespace EventRegistrator.Functions.Registrations
                     }
                     else
                     {
-                        // single place, remove the place
-                        dbContext.Seats.Remove(place);
+                        // single place, cancel the place
+                        place.IsCancelled = true;
                     }
                 }
                 await dbContext.SaveChangesAsync();

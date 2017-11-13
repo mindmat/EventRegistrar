@@ -1,6 +1,6 @@
-﻿using EventRegistrator.Functions.Infrastructure.DataAccess;
+﻿using System;
+using EventRegistrator.Functions.Infrastructure.DataAccess;
 using EventRegistrator.Functions.Registrables;
-using System;
 
 namespace EventRegistrator.Functions.Seats
 {
@@ -13,5 +13,6 @@ namespace EventRegistrator.Functions.Seats
         public string PartnerEmail { get; set; }
         public DateTime FirstPartnerJoined { get; set; }
         public bool IsWaitingList { get; set; }
+        public bool IsCancelled { get; set; }
     }
 }

@@ -29,7 +29,6 @@ namespace EventRegistrator.Functions.Seats
                 var registrationsToCheckMail = new List<Guid>();
                 var registrables = await dbContext.Registrables
                                                   .Where(rbl => rbl.EventId == eventId && rbl.MaximumDoubleSeats.HasValue)
-                                                  .Include(rbl => rbl.Seats)
                                                   .ToListAsync();
 
                 var registrations = await dbContext.Registrations
@@ -53,6 +52,7 @@ namespace EventRegistrator.Functions.Seats
         {
             var unmatchedPartnerSeats = await dbContext.Seats
                                                        .Where(seat => seat.RegistrableId == registrableId &&
+                                                                      !seat.IsCancelled &&
                                                                       seat.PartnerEmail != null &&
                                                                       (seat.RegistrationId == null || seat.RegistrationId_Follower == null))
                                                        .ToListAsync();

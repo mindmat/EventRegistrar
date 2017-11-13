@@ -131,11 +131,12 @@ namespace EventRegistrator.Functions.Registrables
         {
             Seat seat;
             registrableId_CheckWaitingList = null;
+            var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();
             if (registrable.MaximumSingleSeats.HasValue)
             {
-                var waitingList = registrable.Seats.Any(st => st.IsWaitingList);
-                var seatAvailable = !waitingList && registrable.Seats.Count < registrable.MaximumSingleSeats.Value;
-                log.Info($"Registrable {registrable.Name}, Seat count {registrable.Seats.Count}, MaximumSingleSeats {registrable.MaximumSingleSeats}, seat available {seatAvailable}");
+                var waitingList = seats.Any(st => st.IsWaitingList);
+                var seatAvailable = !waitingList && seats.Count < registrable.MaximumSingleSeats.Value;
+                log.Info($"Registrable {registrable.Name}, Seat count {seats.Count}, MaximumSingleSeats {registrable.MaximumSingleSeats}, seat available {seatAvailable}");
                 if (!seatAvailable && !registrable.HasWaitingList)
                 {
                     return null;
@@ -156,11 +157,11 @@ namespace EventRegistrator.Functions.Registrables
                 }
                 var isPartnerRegistration = !string.IsNullOrEmpty(partnerEmail);
                 var ownRole = role.Value;
-                var waitingList = registrable.Seats.Where(st => st.IsWaitingList).ToList();
+                var waitingList = seats.Where(st => st.IsWaitingList).ToList();
                 if (isPartnerRegistration)
                 {
                     // complement existing partner seat
-                    var existingPartnerSeat = FindPartnerSeat(eventId, ownEmail, partnerEmail, ownRole, registrable.Seats, context.Registrations, log);
+                    var existingPartnerSeat = FindPartnerSeat(eventId, ownEmail, partnerEmail, ownRole, seats, context.Registrations, log);
 
                     if (existingPartnerSeat != null)
                     {
@@ -170,7 +171,7 @@ namespace EventRegistrator.Functions.Registrables
 
                     // create new partner seat
                     var waitingListForPartnerRegistrations = waitingList.Any(st => !string.IsNullOrEmpty(st.PartnerEmail));
-                    var seatAvailable = !waitingListForPartnerRegistrations && registrable.Seats.Count < registrable.MaximumDoubleSeats.Value;
+                    var seatAvailable = !waitingListForPartnerRegistrations && seats.Count < registrable.MaximumDoubleSeats.Value;
                     if (!seatAvailable && !registrable.HasWaitingList)
                     {
                         return null;
@@ -193,7 +194,7 @@ namespace EventRegistrator.Functions.Registrables
 
                     var waitingListForOwnRole = ownRole == Role.Leader && waitingListForSingleLeaders ||
                                                 ownRole == Role.Follower && waitingListForSingleFollowers;
-                    var matchingSingleSeat = FindMatchingSingleSeat(registrable, ownRole);
+                    var matchingSingleSeat = FindMatchingSingleSeat(seats, ownRole);
                     var seatAvailable = !waitingListForOwnRole && (ImbalanceManager.CanAddNewDoubleSeatForSingleRegistration(registrable, ownRole) || matchingSingleSeat != null);
                     if (!seatAvailable && !registrable.HasWaitingList)
                     {
@@ -252,12 +253,12 @@ namespace EventRegistrator.Functions.Registrables
             }
         }
 
-        private static Seat FindMatchingSingleSeat(Registrable registrable, Role ownRole)
+        private static Seat FindMatchingSingleSeat(IEnumerable<Seat> seats, Role ownRole)
         {
-            return registrable.Seats?.FirstOrDefault(seat => string.IsNullOrEmpty(seat.PartnerEmail) &&
-                                                             !seat.IsWaitingList &&
-                                                             (ownRole == Role.Leader && !seat.RegistrationId.HasValue ||
-                                                              ownRole == Role.Follower && !seat.RegistrationId_Follower.HasValue));
+            return seats?.FirstOrDefault(seat => string.IsNullOrEmpty(seat.PartnerEmail) &&
+                                                 !seat.IsWaitingList &&
+                                                 (ownRole == Role.Leader && !seat.RegistrationId.HasValue ||
+                                                  ownRole == Role.Follower && !seat.RegistrationId_Follower.HasValue));
         }
 
         private static Seat FindPartnerSeat(Guid? eventId, string ownEmail, string partnerEmail, Role ownRole, ICollection<Seat> existingSeats, IQueryable<Registration> registrations, TraceWriter log)

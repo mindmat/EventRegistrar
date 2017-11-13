@@ -46,20 +46,20 @@ namespace EventRegistrator.Functions.WaitingList
         private static async Task<IEnumerable<Guid?>> TryPromoteFromRegistrableWaitingList(Registrable registrable, EventRegistratorDbContext dbContext, TraceWriter log)
         {
             var registrationIdsToCheck = new List<Guid?>();
-
+            var seats = registrable.Seats.Where(seat => !seat.IsCancelled).ToList();
             if (registrable.MaximumSingleSeats.HasValue)
             {
-                var acceptedSeatCount = registrable.Seats.Count(seat => !seat.IsWaitingList);
+                var acceptedSeatCount = seats.Count(seat => !seat.IsWaitingList);
                 var seatsLeft = registrable.MaximumSingleSeats.Value - acceptedSeatCount;
                 if (seatsLeft > 0)
                 {
-                    return await AcceptSingleSeatsFromWaitingList(registrable.Seats.Where(seat => seat.IsWaitingList).OrderBy(seat => seat.FirstPartnerJoined).Take(seatsLeft), dbContext, log);
+                    return await AcceptSingleSeatsFromWaitingList(seats.Where(seat => seat.IsWaitingList).OrderBy(seat => seat.FirstPartnerJoined).Take(seatsLeft), dbContext, log);
                 }
             }
             else if (registrable.MaximumDoubleSeats.HasValue)
             {
                 // try match single leaders and followers
-                var singleSeats = registrable.Seats.Where(seat => seat.PartnerEmail == null).ToList();
+                var singleSeats = seats.Where(seat => seat.PartnerEmail == null).ToList();
                 var acceptedSingleLeaders = singleSeats.Where(seat => !seat.IsWaitingList &&
                                                                       !seat.RegistrationId_Follower.HasValue)
                                                        .ToList();
@@ -118,7 +118,7 @@ namespace EventRegistrator.Functions.WaitingList
                 {
                     // try promote partner registration
                     // ToDo: precedence partner vs. single registrations
-                    var acceptedSeatCount = registrable.Seats.Count(seat => !seat.IsWaitingList);
+                    var acceptedSeatCount = seats.Count(seat => !seat.IsWaitingList);
                     var seatsLeft = registrable.MaximumDoubleSeats.Value - acceptedSeatCount;
                     if (seatsLeft > 0)
                     {
@@ -131,7 +131,9 @@ namespace EventRegistrator.Functions.WaitingList
 
         private static IEnumerable<Guid?> AcceptPartnerSeatsFromWaitingList(Registrable registrable, int seatsLeft)
         {
-            var seatsToAccept = registrable.Seats.Where(seat => seat.IsWaitingList).OrderBy(seat => seat.FirstPartnerJoined);
+            var seatsToAccept = registrable.Seats
+                                           .Where(seat => seat.IsWaitingList && !seat.IsCancelled)
+                                           .OrderBy(seat => seat.FirstPartnerJoined);
             foreach (var seat in seatsToAccept)
             {
                 if (seat.PartnerEmail == null)

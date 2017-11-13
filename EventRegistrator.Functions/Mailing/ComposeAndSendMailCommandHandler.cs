@@ -217,6 +217,7 @@ namespace EventRegistrator.Functions.Mailing
                     SenderName = template.SenderName,
                     Subject = template.Subject,
                     Recipients = string.Join(";", mappings.Select(reg => reg.RespondentEmail)),
+                    Withhold = command.Withhold,
                     Created = DateTime.UtcNow
                 };
 
@@ -243,7 +244,10 @@ namespace EventRegistrator.Functions.Mailing
                 };
 
                 await context.SaveChangesAsync();
-                await ServiceBusClient.SendEvent(sendMailCommand, SendMailCommandHandler.SendMailQueueName);
+                if (!command.Withhold)
+                {
+                    await ServiceBusClient.SendEvent(sendMailCommand, SendMailCommandHandler.SendMailQueueName);
+                }
                 foreach (var registrable in registrablesToCheckWaitingList)
                 {
                     await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { EventId = registrable.EventId, RegistrableId = registrable.Id }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
@@ -301,6 +305,7 @@ namespace EventRegistrator.Functions.Mailing
             {
                 return "?";
             }
+            var text = $"- {seat.Registrable.Name}";
             if (seat.Registrable.MaximumDoubleSeats.HasValue)
             {
                 // enrich info, e.g. "Lindy Hop Intermediate, Role: {role}, Partner: {email}"
@@ -309,11 +314,19 @@ namespace EventRegistrator.Functions.Mailing
                 var partner = responses.Lookup("PARTNER", "?");
                 if (language == Language.Deutsch)
                 {
-                    return $"- {seat.Registrable.Name}, Rolle: {role}" + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
+                    text += $", Rolle: {role}" + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
                 }
-                return $"- {seat.Registrable.Name}, Role: {role}" + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
+                else
+                {
+                    text += $", Role: {role}" + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
+                }
             }
-            return $"- {seat.Registrable.Name}";
+
+            if (seat.IsCancelled)
+            {
+                text += language == Language.Deutsch ? " (storniert)" : " (cancelled)";
+            }
+            return text;
         }
     }
 }

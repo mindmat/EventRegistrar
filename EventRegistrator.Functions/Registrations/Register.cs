@@ -89,7 +89,7 @@ namespace EventRegistrator.Functions.Registrations
                     {
                         MailId = Guid.NewGuid(),
                         Subject = "Duplicate registration",
-                        ContentPlainText = "Hello, you can only register once so we have to discard your later registration.",
+                        ContentPlainText = $"Hello, you can only register once so we have to discard your later registration. Your first registration we received at {registrationWithSameEmail.ReceivedAt.ToLocalTime()} is still valid",
                         Sender = new EmailAddress { Email = "noreply@leapinlindy.ch" },
                         To = new[] { new EmailAddress { Email = googleRegistration.Email } }
                     };
