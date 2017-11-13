@@ -67,13 +67,16 @@ namespace EventRegistrator.Functions.WaitingList
                                                                         !seat.RegistrationId.HasValue)
                                                          .ToList();
 
-                var waitingFollowers = new Queue<Seat>(registrable.Seats.Where(seat => seat.IsWaitingList &&
-                                                                                       !seat.RegistrationId.HasValue)
-                                                                        .OrderBy(seat => seat.FirstPartnerJoined));
-                var waitingLeaders = new Queue<Seat>(registrable.Seats.Where(seat => seat.IsWaitingList &&
-                                                                                     !seat.RegistrationId_Follower.HasValue)
-                                                                      .OrderBy(seat => seat.FirstPartnerJoined));
-                log.Info($"Registrable {registrable.Name}, single leaders in {acceptedSingleLeaders.Count}, single followers in {acceptedSingleFollowers.Count}, leaders waiting {waitingLeaders.Count}, followers waiting {waitingFollowers.Count}");
+                var waitingFollowers = new Queue<Seat>(singleSeats.Where(seat => seat.IsWaitingList &&
+                                                                                 !seat.RegistrationId.HasValue)
+                                                                  .OrderBy(seat => seat.FirstPartnerJoined)
+                                                                  .ToList());
+                var waitingLeaders = new Queue<Seat>(singleSeats.Where(seat => seat.IsWaitingList &&
+                                                                               !seat.RegistrationId_Follower.HasValue)
+                                                                .OrderBy(seat => seat.FirstPartnerJoined)
+                                                                .ToList());
+                log.Info($"Registrable {registrable.Name}, single leaders in {acceptedSingleLeaders.Count}, single followers in {acceptedSingleFollowers.Count}, single leaders waiting {waitingLeaders.Count}, single followers waiting {waitingFollowers.Count}");
+                var singleRegistrationsPromoted = false;
                 if (acceptedSingleLeaders.Any() && waitingFollowers.Any())
                 {
                     foreach (var acceptedSingleLeader in acceptedSingleLeaders)
@@ -88,6 +91,7 @@ namespace EventRegistrator.Functions.WaitingList
                         dbContext.Seats.Remove(waitingFollower);
                         registrationIdsToCheck.Add(waitingFollower.RegistrationId_Follower);
                         await SetRegistrationNotOnWaitingListAnymore(waitingFollower.RegistrationId_Follower, dbContext, log);
+                        singleRegistrationsPromoted = true;
                     }
                 }
 
@@ -105,16 +109,21 @@ namespace EventRegistrator.Functions.WaitingList
                         dbContext.Seats.Remove(waitingLeader);
                         registrationIdsToCheck.Add(waitingLeader.RegistrationId_Follower);
                         await SetRegistrationNotOnWaitingListAnymore(waitingLeader.RegistrationId, dbContext, log);
+                        singleRegistrationsPromoted = true;
                     }
                 }
 
-                // try promote partner registration
-                // ToDo: precedence partner vs. single registrations
-                var acceptedSeatCount = registrable.Seats.Count(seat => !seat.IsWaitingList);
-                var seatsLeft = registrable.MaximumDoubleSeats.Value - acceptedSeatCount;
-                if (seatsLeft > 0)
+                // be defenisve - registrable.Seats might be inconsistent with the actual seats on the db
+                if (!singleRegistrationsPromoted)
                 {
-                    return AcceptPartnerSeatsFromWaitingList(registrable, seatsLeft);
+                    // try promote partner registration
+                    // ToDo: precedence partner vs. single registrations
+                    var acceptedSeatCount = registrable.Seats.Count(seat => !seat.IsWaitingList);
+                    var seatsLeft = registrable.MaximumDoubleSeats.Value - acceptedSeatCount;
+                    if (seatsLeft > 0)
+                    {
+                        return AcceptPartnerSeatsFromWaitingList(registrable, seatsLeft);
+                    }
                 }
             }
             return registrationIdsToCheck;
