@@ -55,7 +55,23 @@ namespace EventRegistrator.Functions.Mailing
                 }
                 else if (registration.State == RegistrationState.Paid)
                 {
-                    mailType = MailType.FullyPaid;
+                    var partnerSeat = await context.Seats.FirstOrDefaultAsync(seat => (seat.RegistrationId == command.RegistrationId ||
+                                                                                       seat.RegistrationId_Follower == command.RegistrationId) &&
+                                                                                      !seat.IsCancelled &&
+                                                                                      seat.PartnerEmail != null);
+                    log.Info($"paid, partner id {partnerSeat?.RegistrationId}");
+                    if (partnerSeat == null)
+                    {
+                        // single registration
+                        mailType = MailType.SingleRegistrationFullyPaid;
+                    }
+                    else
+                    {
+                        // partner registration
+                        registrationId_Partner = partnerSeat.RegistrationId == command.RegistrationId ? partnerSeat.RegistrationId_Follower : partnerSeat.RegistrationId;
+                        var partnerRegistrationPaid = await context.Registrations.AnyAsync(reg => reg.Id == registrationId_Partner && reg.State == RegistrationState.Paid);
+                        mailType = partnerRegistrationPaid ? MailType.PartnerRegistrationFullyPaid : MailType.PartnerRegistrationFirstPaid;
+                    }
                 }
                 else
                 {

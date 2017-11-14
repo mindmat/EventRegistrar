@@ -11,6 +11,8 @@
         SoldOut = 21,
         OnlyOneRegistrationPerEmail = 22,
         RegistrationCancelled = 31,
-        FullyPaid = 41
+        SingleRegistrationFullyPaid = 41,
+        PartnerRegistrationFirstPaid = 42,
+        PartnerRegistrationFullyPaid = 43
     }
 }

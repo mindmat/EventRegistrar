@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
 
 namespace EventRegistrator.Functions.Mailing
@@ -15,5 +16,6 @@ namespace EventRegistrator.Functions.Mailing
         public string Recipients { get; set; }
         public DateTime Created { get; set; }
         public bool Withhold { get; set; }
+        public ICollection<MailToRegistration> Registrations { get; set; }
     }
 }

@@ -14,8 +14,8 @@ namespace EventRegistrator.Functions.Payments
             {
                 return null;
             }
-            var matches = Email.Matches(input);
-            return matches.OfType<Match>().Select(mat => mat.Value);
+            var matches = Email.Matches(input?.ToLowerInvariant());
+            return matches.OfType<Match>().Select(mat => mat.Value?.ToLowerInvariant());
         }
     }
 }

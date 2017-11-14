@@ -7,7 +7,7 @@ namespace EventRegistrator.Functions.Test.Payment
     [TestClass]
     public class EmailExtractorTest
     {
-        private const string Email1 = "papa.schlumpf@google.com";
+        private const string Email1 = "PAPA.SCHLUMPF@GOOGLE.COM";
         private const string Email2 = "donald.duck@outlook.com";
 
         [TestMethod]
@@ -18,7 +18,7 @@ namespace EventRegistrator.Functions.Test.Payment
         public void ExtractPureEmail(string input, string expectedResult)
         {
             var result = string.Join(";", EmailExtractor.TryExtractEmailFromInfo(input));
-            result.ShouldBe(expectedResult);
+            result.ShouldBe(expectedResult.ToLowerInvariant());
         }
     }
 }

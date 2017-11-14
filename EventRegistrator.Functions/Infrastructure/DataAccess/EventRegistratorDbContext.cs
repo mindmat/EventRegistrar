@@ -88,6 +88,11 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
                 .WithMany(pmt => pmt.Payments)
                 .HasForeignKey(pas => pas.RegistrationId);
 
+            modelBuilder.Entity<MailToRegistration>()
+                .HasRequired(map => map.Mail)
+                .WithMany(mail => mail.Registrations)
+                .HasForeignKey(map => map.MailId);
+
             base.OnModelCreating(modelBuilder);
         }
     }

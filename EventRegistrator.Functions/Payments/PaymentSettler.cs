@@ -32,6 +32,7 @@ namespace EventRegistrator.Functions.Payments
                                                             .Include(pmt => pmt.Payments)
                                                             .ToListAsync();
 
+                log.Info($"unsettledRegistrations {unsettledRegistrations.Count}, unsettledPayments {unsettledPayments.Count}");
                 var registrationIdsToCheck = new List<Guid>();
                 foreach (var payment in unsettledPayments)
                 {
@@ -50,12 +51,22 @@ namespace EventRegistrator.Functions.Payments
         private static IEnumerable<Guid> TryMatchToRegistration(ReceivedPayment payment, IReadOnlyList<Registration> unsettledRegistrations, EventRegistratorDbContext dbContext, TraceWriter log)
         {
             var registrationIdsToCheck = new List<Guid>();
-            var mails = EmailExtractor.TryExtractEmailFromInfo(payment.Info).ToList();
-            payment.RecognizedEmail = string.Join(";", mails);
+            // RecognizedEmail may be entered manually
+            if (payment.RecognizedEmail == null)
+            {
+                var mails = EmailExtractor.TryExtractEmailFromInfo(payment.Info).ToList();
+                var mailsJoined = string.Join(";", mails);
+                if (!string.IsNullOrEmpty(mailsJoined))
+                {
+                    payment.RecognizedEmail = mailsJoined;
+                }
+            }
             if (payment.RecognizedEmail != null)
             {
-                var registrations = mails.SelectMany(mail => unsettledRegistrations.Where(reg => reg.RespondentEmail == mail))
-                                         .ToList();
+                var registrations = payment.RecognizedEmail
+                                           .Split(';')
+                                           .SelectMany(mail => unsettledRegistrations.Where(reg => reg.RespondentEmail == mail))
+                                           .ToList();
                 if (!registrations.Any())
                 {
                     return registrationIdsToCheck;
