@@ -17,8 +17,9 @@ namespace EventRegistrator.Functions.Mailing
                HttpRequestMessage req, string registrationIdString, TraceWriter log)
         {
             var registrationId = Guid.Parse(registrationIdString);
-            await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
-            return req.CreateResponse(HttpStatusCode.OK, "command has been queried");
+            var withhold = req.GetQueryNameValuePairs().FirstOrDefault(kvp => string.Compare(kvp.Key, "withhold", StringComparison.OrdinalIgnoreCase) == 0).Value == "true";
+            await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId, Withhold = withhold }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
+            return req.CreateResponse(HttpStatusCode.OK, $"command has been queried (withhold = {withhold})");
         }
     }
 }

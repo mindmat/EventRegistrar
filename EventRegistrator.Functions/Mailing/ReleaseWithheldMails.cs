@@ -46,6 +46,7 @@ namespace EventRegistrator.Functions.Mailing
                     };
 
                     withheldMail.Mail.Withhold = false;
+                    dbContext.Mails.Attach(withheldMail.Mail);
                     await ServiceBusClient.SendEvent(sendMailCommand, SendMailCommandHandler.SendMailQueueName);
                 }
                 await dbContext.SaveChangesAsync();

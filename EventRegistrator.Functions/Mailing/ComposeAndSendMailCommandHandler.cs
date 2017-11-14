@@ -59,7 +59,7 @@ namespace EventRegistrator.Functions.Mailing
                                                                                        seat.RegistrationId_Follower == command.RegistrationId) &&
                                                                                       !seat.IsCancelled &&
                                                                                       seat.PartnerEmail != null);
-                    log.Info($"paid, partner id {partnerSeat?.RegistrationId}");
+                    log.Info($"paid, partner seat id {partnerSeat?.Id}");
                     if (partnerSeat == null)
                     {
                         // single registration

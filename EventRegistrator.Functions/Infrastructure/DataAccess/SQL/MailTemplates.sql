@@ -527,7 +527,7 @@ VALUES ('22844150-3210-4854-ADCF-5DCFD6A79757', '762A93A4-56E0-402C-B700-1CFB336
     </tr>
     <tr>
       <td><br /><strong>Hallo {{FirstName}}</strong><br />
-        <p>Wir haben deine Zahlung erhalten und best&auml;tigen deine Buchung f&uuml;r Leapin'' Lindy 2018.<br />Wir freuen uns darauf, dich im Februar begr&uuml;ssen zu d&uuml;rfen!</p>
+        <p>Wir haben deine Zahlung erhalten und best&auml;tigen deine Buchung f&uuml;rs Leapin'' Lindy 2018.<br />Wir freuen uns darauf, dich im Februar begr&uuml;ssen zu d&uuml;rfen!</p>
         <p>Schau dir doch die Leapin'' Lindy-App an:&nbsp;<a href="https://lineupr.com/ll18/leapin-lindy-2018">https://lineupr.com/ll18/leapin-lindy-2018</a></p>
         <p>Das Leapin'' Lindy Team</p>
       </td>
@@ -561,8 +561,8 @@ VALUES ('E2EE1519-EA1F-488A-80B4-F0F2ECB453C1', '762A93A4-56E0-402C-B700-1CFB336
       <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
     </tr>
     <tr>
-      <td><br /><strong>Hallo {{FirstName}}</strong><br />
-        <p>Wir haben eure Zahlungen erhalten und best&auml;tigen eure Buchung f&uuml;r Leapin'' Lindy 2018.<br />Wir freuen uns darauf, euch im Februar begr&uuml;ssen zu d&uuml;rfen!</p>
+      <td><br /><strong>Hallo {{Follower.FirstName}} &amp; {{Leader.FirstName}}</strong><br />
+        <p>Wir haben eure Zahlungen erhalten und best&auml;tigen eure Buchung f&uuml;rs Leapin'' Lindy 2018.<br />Wir freuen uns darauf, euch im Februar begr&uuml;ssen zu d&uuml;rfen!</p>
         <p>Schaut euch doch die Leapin'' Lindy-App an:&nbsp;<a href="https://lineupr.com/ll18/leapin-lindy-2018">https://lineupr.com/ll18/leapin-lindy-2018</a></p>
         <p>Das Leapin'' Lindy Team</p>
       </td>
