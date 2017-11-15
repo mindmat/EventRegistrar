@@ -45,8 +45,9 @@ namespace EventRegistrator.Functions.Mailing
                         To = withheldMail.To.Select(reg => new EmailAddress { Email = reg.RespondentEmail, Name = reg.RespondentFirstName }).ToList()
                     };
 
-                    withheldMail.Mail.Withhold = false;
                     dbContext.Mails.Attach(withheldMail.Mail);
+                    withheldMail.Mail.Withhold = false;
+                    //dbContext.Entry(withheldMail.Mail).State = EntityState.Modified;
                     await ServiceBusClient.SendEvent(sendMailCommand, SendMailCommandHandler.SendMailQueueName);
                 }
                 await dbContext.SaveChangesAsync();

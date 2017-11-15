@@ -138,6 +138,17 @@ namespace EventRegistrator.Functions.Mailing
                     return;
                 }
 
+                // Avoid duplicate mails
+                if (!command.AllowDuplicate)
+                {
+                    var duplicate = await context.Mails.FirstOrDefaultAsync(ml => ml.Type == mailType.Value && ml.Registrations.Any(map => map.RegistrationId == command.RegistrationId));
+                    if (duplicate != null)
+                    {
+                        log.Info($"Duplicate Mail found, Id {duplicate.Id}");
+                        return;
+                    }
+                }
+
                 var templates = await context.MailTemplates.Where(mtp => mtp.EventId == registration.RegistrationForm.EventId &&
                                                                          mtp.Type == mailType.Value)
                                                            .ToListAsync();

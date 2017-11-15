@@ -6,5 +6,6 @@ namespace EventRegistrator.Functions.Mailing
     {
         public Guid? RegistrationId { get; set; }
         public bool Withhold { get; set; }
+        public bool AllowDuplicate { get; set; }
     }
 }

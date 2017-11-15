@@ -18,7 +18,8 @@ namespace EventRegistrator.Functions.Mailing
         {
             var registrationId = Guid.Parse(registrationIdString);
             var withhold = req.GetQueryNameValuePairs().FirstOrDefault(kvp => string.Compare(kvp.Key, "withhold", StringComparison.OrdinalIgnoreCase) == 0).Value == "true";
-            await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId, Withhold = withhold }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
+            var allowDuplicate = req.GetQueryNameValuePairs().FirstOrDefault(kvp => string.Compare(kvp.Key, "allowDuplicate", StringComparison.OrdinalIgnoreCase) == 0).Value == "true";
+            await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId, Withhold = withhold, AllowDuplicate = allowDuplicate }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
             return req.CreateResponse(HttpStatusCode.OK, $"command has been queried (withhold = {withhold})");
         }
     }
