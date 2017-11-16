@@ -81,7 +81,10 @@ namespace EventRegistrator.Functions.Registrations
                     };
                 }
 
-                var registrationWithSameEmail = await context.Registrations.FirstOrDefaultAsync(reg => reg.RegistrationForm.EventId == form.EventId && reg.RespondentEmail == googleRegistration.Email);
+                var registrationWithSameEmail = await context.Registrations
+                                                             .FirstOrDefaultAsync(reg => reg.RegistrationForm.EventId == form.EventId &&
+                                                                                         reg.RespondentEmail == googleRegistration.Email &&
+                                                                                         reg.State != RegistrationState.Cancelled);
                 if (registrationWithSameEmail != null)
                 {
                     // HACK: hardcoded
