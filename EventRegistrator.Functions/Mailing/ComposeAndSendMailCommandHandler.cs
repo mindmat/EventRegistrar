@@ -144,7 +144,7 @@ namespace EventRegistrator.Functions.Mailing
                     var duplicate = await context.Mails.FirstOrDefaultAsync(ml => ml.Type == mailType.Value && ml.Registrations.Any(map => map.RegistrationId == command.RegistrationId));
                     if (duplicate != null)
                     {
-                        log.Info($"Duplicate Mail found, Id {duplicate.Id}");
+                        log.Info($"Duplicate Mail found, Id {duplicate.Id}, Mail type {mailType}");
                         return;
                     }
                 }

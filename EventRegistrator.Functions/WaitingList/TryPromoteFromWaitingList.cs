@@ -105,9 +105,9 @@ namespace EventRegistrator.Functions.WaitingList
                             break;
                         }
                         var waitingLeader = waitingLeaders.Dequeue();
-                        acceptedSingleFollower.RegistrationId_Follower = waitingLeader.RegistrationId;
+                        acceptedSingleFollower.RegistrationId = waitingLeader.RegistrationId;
                         dbContext.Seats.Remove(waitingLeader);
-                        registrationIdsToCheck.Add(waitingLeader.RegistrationId_Follower);
+                        registrationIdsToCheck.Add(waitingLeader.RegistrationId);
                         await SetRegistrationNotOnWaitingListAnymore(waitingLeader.RegistrationId, dbContext, log);
                         singleRegistrationsPromoted = true;
                     }
