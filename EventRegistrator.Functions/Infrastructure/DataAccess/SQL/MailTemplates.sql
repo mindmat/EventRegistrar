@@ -547,6 +547,33 @@ VALUES ('2631FC6B-B673-404E-BC25-B5099FBAB003', '762A93A4-56E0-402C-B700-1CFB336
       <td><br /><strong>Hallo {{Follower.FirstName}} &amp; {{Leader.FirstName}}</strong><br />
         <p>Wir haben die erste Zahlung erhalten; sobald die zweite eintrifft werden wir eure Anmeldung best&auml;tigen.</p>
         <p>Das Leapin'' Lindy Team</p>
+        <hr />
+        <p>Leader:<br />{{Leader.SeatList}}</p>
+        <table style="width: 800px;">
+          <tbody>
+            <tr>
+              <td style="width: 160px;"><strong>Name</strong></td>
+              <td style="width: 640px;">{{Leader.FirstName}} {{Leader.LastName}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Preis</strong></td>
+              <td style="width: 640px;">CHF{{Leader.Price}}, bezahlt CHF{{Leader.PaidAmount}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>&nbsp;Follower:<br />{{Follower.SeatList}}</p>
+        <table style="width: 800px;">
+          <tbody>
+            <tr>
+              <td style="width: 160px;"><strong>Name</strong></td>
+              <td style="width: 640px;">{{Follower.FirstName}} {{Follower.LastName}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Preis</strong></td>
+              <td style="width: 640px;">CHF{{Follower.Price}}, bezahlt CHF{{Follower.PaidAmount}}</td>
+            </tr>
+          </tbody>
+        </table>
       </td>
     </tr>
   </tbody>
@@ -1111,6 +1138,33 @@ VALUES ('BA2076AB-39AA-4687-AEFF-E55846213B82', '762A93A4-56E0-402C-B700-1CFB336
       <td><br /><strong>Hello {{Follower.FirstName}} &amp; {{Leader.FirstName}}</strong><br />
         <p>We have received the first payment; as soon as we get the second one we''ll confirm your booking.</p>
         <p>The Leapin'' Lindy Team</p>
+        <hr />
+        <p>Leader:<br />{{Leader.SeatList}}</p>
+        <table style="width: 800px;">
+          <tbody>
+            <tr>
+              <td style="width: 160px;"><strong>Name</strong></td>
+              <td style="width: 640px;">{{Leader.FirstName}} {{Leader.LastName}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Price</strong></td>
+              <td style="width: 640px;">CHF{{Leader.Price}}, Paid CHF{{Leader.PaidAmount}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>&nbsp;Follower:<br />{{Follower.SeatList}}</p>
+        <table style="width: 800px;">
+          <tbody>
+            <tr>
+              <td style="width: 160px;"><strong>Name</strong></td>
+              <td style="width: 640px;">{{Follower.FirstName}} {{Follower.LastName}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Price</strong></td>
+              <td style="width: 640px;">CHF{{Follower.Price}}, Paid CHF{{Follower.PaidAmount}}</td>
+            </tr>
+          </tbody>
+        </table>
       </td>
     </tr>
   </tbody>

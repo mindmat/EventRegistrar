@@ -221,6 +221,10 @@ namespace EventRegistrator.Functions.Mailing
                     {
                         templateFiller[key] = (registrationForPrefix?.Price ?? 0m).ToString("F2"); // HACK: format hardcoded
                     }
+                    else if (parts.key == "PAIDAMOUNT")
+                    {
+                        templateFiller[key] = (await GetPaidAmount(context, registrationForPrefix.Id)).ToString("F2"); // HACK: format hardcoded
+                    }
                     else
                     {
                         templateFiller[key] = responsesForPrefix.Lookup(parts.key);
@@ -281,6 +285,11 @@ namespace EventRegistrator.Functions.Mailing
                 }
             }
             await logTask;
+        }
+
+        private static Task<decimal> GetPaidAmount(EventRegistratorDbContext context, Guid registrationId)
+        {
+            return context.PaymentAssignments.Where(ass => ass.RegistrationId == registrationId).SumAsync(ass => ass.Amount);
         }
 
         private static async Task<Dictionary<string, string>> GetResponses(Guid? registrationId, IQueryable<Response> responses)

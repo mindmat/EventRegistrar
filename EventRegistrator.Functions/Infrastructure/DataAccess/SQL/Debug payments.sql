@@ -8,6 +8,8 @@ set state = 1
 select *
 from paymentfiles
 
+SELECT SUM(Amount) FROM ReceivedPayments
+
 select diff = PMT.Amount - MAP.Summe,*
 from ReceivedPayments PMT
   left join (SELECT ReceivedPaymentId, Summe = SUM(Amount)
@@ -16,7 +18,7 @@ from ReceivedPayments PMT
 where PMT.Settled = 0
   or RecognizedEmail is null
 
-select Diff = Price - map.Summe, Price, map.Summe, veg.id, reg.state, *
+select Diff = Price - map.Summe, Ausgeglichen = map.Summe, Preis = reg.Price, veg.id, reg.state, *
 from Registrations reg
   inner join (SELECT RegistrationId, Summe = SUM(Amount)
               FROM PaymentAssignments

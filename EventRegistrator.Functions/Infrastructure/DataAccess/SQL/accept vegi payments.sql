@@ -14,13 +14,14 @@ where Price - map.Summe <> 0
   and reg.state = 1
 
 
-update reg
-set state = 2
+--update reg
+--set state = 2
+select *
 from Registrations reg
   inner join (SELECT RegistrationId, Summe = SUM(Amount)
               FROM PaymentAssignments
 		 	 GROUP BY RegistrationId) MAP ON MAP.RegistrationId= reg.id
-  left join (select reg.id
+  inner join (select reg.id
              from Responses rsp
                inner join Registrations reg on reg.Id = rsp.RegistrationId
                left join QuestionOptionToRegistrableMappings map on map.QuestionOptionId = rsp.QuestionOptionId
@@ -42,5 +43,5 @@ from Registrations reg
 where Price - map.Summe <> 0
    and reg.state = 1
 
---rollback
-commit
+rollback
+--commit

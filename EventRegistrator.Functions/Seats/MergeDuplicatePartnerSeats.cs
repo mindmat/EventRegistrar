@@ -31,9 +31,10 @@ namespace EventRegistrator.Functions.Seats
                                                   .Where(rbl => rbl.EventId == eventId && rbl.MaximumDoubleSeats.HasValue)
                                                   .ToListAsync();
 
-                var registrations = await dbContext.Registrations
+                var registrations = (await dbContext.Registrations
                                                    .Where(reg => reg.RegistrationForm.EventId == eventId)
-                                                   .ToDictionaryAsync(reg => reg.RespondentEmail, reg => reg.Id);
+                                                   .ToDictionaryAsync(reg => reg.RespondentEmail, reg => reg.Id))
+                                    .ToDictionary(tmp => tmp.Key?.ToLowerInvariant(), tmp => tmp.Value);
                 foreach (var registrable in registrables)
                 {
                     registrationsToCheckMail.AddRange(await MergeDuplicatePartnerSeatsInRegistrable(registrable.Id, registrations, dbContext, log));

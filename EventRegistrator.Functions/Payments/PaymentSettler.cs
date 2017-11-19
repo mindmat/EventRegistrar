@@ -89,7 +89,9 @@ namespace EventRegistrator.Functions.Payments
                             ReceivedPaymentId = payment.Id,
                             Amount = assignedAmount
                         });
-                        if (assignedAmount == unpaidAmount)
+                        if (assignedAmount == unpaidAmount &&
+                            (registration.State == RegistrationState.Received || registration.State == RegistrationState.PaymentOverdue) &&
+                            !dbContext.Seats.Any(seat => seat.IsWaitingList))
                         {
                             registration.State = RegistrationState.Paid;
                             registrationIdsToCheck.Add(registration.Id);
