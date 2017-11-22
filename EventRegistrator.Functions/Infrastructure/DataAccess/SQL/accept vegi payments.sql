@@ -14,9 +14,9 @@ where Price - map.Summe <> 0
   and reg.state = 1
 
 
---update reg
---set state = 2
-select *
+update reg
+set state = 2
+--select *
 from Registrations reg
   inner join (SELECT RegistrationId, Summe = SUM(Amount)
               FROM PaymentAssignments
@@ -43,5 +43,5 @@ from Registrations reg
 where Price - map.Summe <> 0
    and reg.state = 1
 
-rollback
+--rollback
 --commit
