@@ -7,10 +7,10 @@ insert into @registrationids
 select id
 from Registrations
 where 1=1
-  --and RespondentEmail in( 'simonhunziker@gmx.net','camilleperrochet@gmail.com')
+  and RespondentEmail in( 'phzimmermann@gmx.ch', 'yifanwang2010@gmail.com')
   --and RespondentEmail in('igor.bogomolov@gmail.com', 'demange.pauline@yahoo.com')
-  --and RespondentFirstName like 'rahel%'
-  and RespondentEmail like '%anja.repinc@gmail.com%'
+  --and RespondentFirstName like 'andrea%'
+  --and RespondentEmail like '%jan.nydegger@gmail.com%'
   --or id in('E502B0BC-B3BA-475B-B8F4-20BB10DEAF59')
   --and ExternalIdentifier = '2_ABaOnueyyMvCyfoRdeowyfgi8sDCvVVs5WObREYP3d4Q3jmbk00V4V4lvnyMmp4'
   

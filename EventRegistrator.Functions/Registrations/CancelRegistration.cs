@@ -91,7 +91,7 @@ namespace EventRegistrator.Functions.Registrations
                     }
                 }
 
-                await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
+                await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId, Withhold = true }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
             }
 
             return req.CreateResponse(HttpStatusCode.OK, "Registration cancelled");

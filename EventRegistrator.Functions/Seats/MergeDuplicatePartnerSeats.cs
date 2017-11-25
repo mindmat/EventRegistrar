@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using EventRegistrator.Functions.Infrastructure.Bus;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
 using EventRegistrator.Functions.Mailing;
+using EventRegistrator.Functions.Registrations;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
@@ -32,8 +33,9 @@ namespace EventRegistrator.Functions.Seats
                                                   .ToListAsync();
 
                 var registrations = (await dbContext.Registrations
-                                                   .Where(reg => reg.RegistrationForm.EventId == eventId)
-                                                   .ToDictionaryAsync(reg => reg.RespondentEmail, reg => reg.Id))
+                                                    .Where(reg => reg.RegistrationForm.EventId == eventId && 
+                                                                  reg.State != RegistrationState.Cancelled)
+                                                    .ToDictionaryAsync(reg => reg.RespondentEmail, reg => reg.Id))
                                     .ToDictionary(tmp => tmp.Key?.ToLowerInvariant(), tmp => tmp.Value);
                 foreach (var registrable in registrables)
                 {

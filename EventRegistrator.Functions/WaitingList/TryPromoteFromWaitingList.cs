@@ -39,7 +39,8 @@ namespace EventRegistrator.Functions.WaitingList
 
             foreach (var registrationId in registrationIdsToCheck.Where(id => id.HasValue))
             {
-                await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
+                await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId, Withhold = true }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
+                await ServiceBusClient.SendEvent(new CheckIsWaitingListCommand { RegistrationId = registrationId.Value }, CheckIsWaitingListCommandHandler.CheckIsWaitingListCommandsQueueName);
             }
         }
 
@@ -122,14 +123,14 @@ namespace EventRegistrator.Functions.WaitingList
                     var seatsLeft = registrable.MaximumDoubleSeats.Value - acceptedSeatCount;
                     if (seatsLeft > 0)
                     {
-                        return AcceptPartnerSeatsFromWaitingList(registrable, seatsLeft);
+                        return AcceptPartnerSeatsFromWaitingList(registrable, seatsLeft, log);
                     }
                 }
             }
             return registrationIdsToCheck;
         }
 
-        private static IEnumerable<Guid?> AcceptPartnerSeatsFromWaitingList(Registrable registrable, int seatsLeft)
+        private static IEnumerable<Guid?> AcceptPartnerSeatsFromWaitingList(Registrable registrable, int seatsLeft, TraceWriter log)
         {
             var seatsToAccept = registrable.Seats
                                            .Where(seat => seat.IsWaitingList && !seat.IsCancelled)
@@ -142,7 +143,7 @@ namespace EventRegistrator.Functions.WaitingList
                     var ownRole = seat.RegistrationId.HasValue ? Role.Leader : Role.Follower;
                     if (!ImbalanceManager.CanAddNewDoubleSeatForSingleRegistration(registrable, ownRole))
                     {
-                        yield break;
+                        continue;
                     }
                 }
                 seat.IsWaitingList = false;
