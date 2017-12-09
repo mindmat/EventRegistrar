@@ -7,12 +7,14 @@ insert into @registrationids
 select id
 from Registrations
 where 1=1
-  and RespondentEmail in( 'phzimmermann@gmx.ch', 'yifanwang2010@gmail.com')
-  --and RespondentEmail in('igor.bogomolov@gmail.com', 'demange.pauline@yahoo.com')
-  --and RespondentFirstName like 'andrea%'
-  --and RespondentEmail like '%jan.nydegger@gmail.com%'
-  --or id in('E502B0BC-B3BA-475B-B8F4-20BB10DEAF59')
+  and state <> 4
+  --and RespondentEmail in( 'jonas_huber11@hotmail.com','rebecca.goodman@yahoo.co.uk')
+  --and RespondentEmail in('helen.wipfli@gmail.com')
+  --and RespondentFirstName like 'andrea.b.empoli@gmail.com%'
+  and RespondentEmail like '%FLORIANA.SALERNO%'
+  --and id in('bf87454c-c35a-4ba8-b23d-242f331e9fd9')
   --and ExternalIdentifier = '2_ABaOnueyyMvCyfoRdeowyfgi8sDCvVVs5WObREYP3d4Q3jmbk00V4V4lvnyMmp4'
+  --or id = 'D5BD659A-E5B8-49F8-B458-0558F6E5CA72'
   
 select *
 from Registrations
@@ -25,7 +27,7 @@ from Seats seat
 where (RegistrationId in (select id from @registrationids) or RegistrationId_Follower in (select id from @registrationids))
   --and rbl.MaximumDoubleSeats is not null
 
-select *
+select withhold, *
 from Mails mail
   inner join Registrations reg on mail.Recipients like '%'+ reg.RespondentEmail+'%'
 where reg.Id in (select id from @registrationids)
@@ -37,11 +39,11 @@ from PaymentAssignments map
 where map.RegistrationId in (select id from @registrationids)
 
 
---select *
---from seats
---where RegistrableId = '373E0514-2F5F-4499-990A-A130B9D38142'
---order by isWaitingList, FirstPartnerJoined
+select *
+from seats
+where RegistrableId = '2DBF19B6-6DBD-4050-AC4B-683B9BBA9A98'
+  and IsCancelled = 0
+order by isWaitingList, FirstPartnerJoined
 
 
 
---GUTSCHRIFT VON FREMDBANK  NDEAFIHHXXX AUFTRAGGEBER: TIKANOJA ESSI HELINA MAKELANKATU 95A B 22 00610  HELSINK I 171116CH02D1Y8MD MITTEILUNGEN: LEAPIN LINDY / ESSI TIKANOJA, ESSI. TIKANOJA(AT)GMAIL.COM

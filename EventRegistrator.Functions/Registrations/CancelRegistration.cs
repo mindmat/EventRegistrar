@@ -17,11 +17,17 @@ namespace EventRegistrator.Functions.Registrations
     public static class CancelRegistration
     {
         [FunctionName("CancelRegistration")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "CancelRegistration/{registrationIdString}")]HttpRequestMessage req, string registrationIdString, TraceWriter log)
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "CancelRegistration/{registrationIdString}")]
+            HttpRequestMessage req, 
+            string registrationIdString, 
+            TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
 
             var registrationId = Guid.Parse(registrationIdString);
+
+            var ignorePayments = req.GetQueryNameValuePairs().FirstOrDefault(kvp => string.Compare(kvp.Key, "ignorePayments", StringComparison.OrdinalIgnoreCase) == 0).Value == "true";
+
 
             using (var dbContext = new EventRegistratorDbContext())
             {
@@ -34,7 +40,7 @@ namespace EventRegistrator.Functions.Registrations
                     return req.CreateResponse(HttpStatusCode.NotFound, $"No registration with id {registrationId}");
                 }
 
-                if (registration.Payments.Any())
+                if (registration.Payments.Any() && !ignorePayments)
                 {
                     return req.CreateResponse(HttpStatusCode.PreconditionFailed, $"There are already payments for registration {registrationId}");
                 }
@@ -42,7 +48,7 @@ namespace EventRegistrator.Functions.Registrations
                 {
                     return req.CreateResponse(HttpStatusCode.PreconditionFailed, $"Registration {registrationId} is already cancelled");
                 }
-                if (registration.State == RegistrationState.Paid)
+                if (registration.State == RegistrationState.Paid && !ignorePayments)
                 {
                     return req.CreateResponse(HttpStatusCode.PreconditionFailed, $"Registration {registrationId} is already paid and cannot be cancelled anymore");
                 }

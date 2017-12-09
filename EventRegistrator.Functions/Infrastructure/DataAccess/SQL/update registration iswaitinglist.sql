@@ -16,5 +16,6 @@ where IsWaitingList = 1
                  where RegistrationId_Follower is not null
 				   and IsWaitingList = 1
 				   and rbl.HasWaitingList = 1)
+rollback
 
 --commit
