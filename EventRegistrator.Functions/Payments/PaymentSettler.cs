@@ -91,7 +91,9 @@ namespace EventRegistrator.Functions.Payments
                         });
                         if (assignedAmount == unpaidAmount &&
                             (registration.State == RegistrationState.Received || registration.State == RegistrationState.PaymentOverdue) &&
-                            !dbContext.Seats.Any(seat => seat.IsWaitingList))
+                            !dbContext.Seats.Any(seat => (seat.RegistrationId == registration.Id || seat.RegistrationId_Follower ==registration.Id) &&
+                                                         seat.IsWaitingList &&
+                                                         !seat.IsCancelled))
                         {
                             registration.State = RegistrationState.Paid;
                             registrationIdsToCheck.Add(registration.Id);

@@ -231,7 +231,6 @@ namespace EventRegistrator.Functions.Mailing
                     }
                 }
 
-                log.Info("Parameters: " + string.Join(Environment.NewLine, templateFiller.Parameters.Select(par => $"{par.Key}: {par.Value}")));
                 var content = templateFiller.Fill();
 
                 var mappings = new List<Registration> { registration };
@@ -289,7 +288,11 @@ namespace EventRegistrator.Functions.Mailing
 
         private static Task<decimal> GetPaidAmount(EventRegistratorDbContext context, Guid registrationId)
         {
-            return context.PaymentAssignments.Where(ass => ass.RegistrationId == registrationId).SumAsync(ass => ass.Amount);
+            return context.PaymentAssignments
+                          .Where(ass => ass.RegistrationId == registrationId)
+                          .Select(ass => ass.Amount)
+                          .DefaultIfEmpty(0m)
+                          .SumAsync();
         }
 
         private static async Task<Dictionary<string, string>> GetResponses(Guid? registrationId, IQueryable<Response> responses)

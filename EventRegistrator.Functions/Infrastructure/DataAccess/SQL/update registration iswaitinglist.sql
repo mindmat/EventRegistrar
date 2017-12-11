@@ -1,27 +1,21 @@
-select *
-from 
-
 begin tran
-update registrations
-set iswaitinglist = 0
-where iswaitinglist = 1
-  and id not in
-(
-select registrationid
-from seats
-where iswaitinglist = 1
-  and registrationid is not null
-union
-select registrationid_follower
-from seats
-where iswaitinglist = 1
-  and registrationid_follower is not null
-) 
 
-select *
-from seats
-where registrationid = '189276E0-C8BE-4568-B392-B36082DD71FC' or registrationid_follower ='189276E0-C8BE-4568-B392-B36082DD71FC'
---select *
---from registrations reg
-  
-  commit
+update reg
+set IsWaitingList = 0
+from registrations reg
+where IsWaitingList = 1
+  and id not in (select registrationid 
+                 from Seats seat
+                   inner join Registrables rbl on rbl.Id = seat.RegistrableId
+                 where registrationid is not null
+				   and IsWaitingList = 1
+				   and rbl.HasWaitingList = 1)
+  and id not in (select RegistrationId_Follower
+                 from Seats seat
+                   inner join Registrables rbl on rbl.Id = seat.RegistrableId
+                 where RegistrationId_Follower is not null
+				   and IsWaitingList = 1
+				   and rbl.HasWaitingList = 1)
+rollback
+
+--commit

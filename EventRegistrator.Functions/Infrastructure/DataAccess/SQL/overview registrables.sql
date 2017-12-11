@@ -10,10 +10,10 @@ where 1=1
 group by rbl.id, rbl.name, rbl.MaximumDoubleSeats
 order by rbl.name
 
-select *
-from seats
-where RegistrableId = '373E0514-2F5F-4499-990A-A130B9D38142'
-order by IsWaitingList, FirstPartnerJoined
+--select *
+--from seats
+--where RegistrableId = '373E0514-2F5F-4499-990A-A130B9D38142'
+--order by IsWaitingList, FirstPartnerJoined
 
 /*
 Warteliste für
