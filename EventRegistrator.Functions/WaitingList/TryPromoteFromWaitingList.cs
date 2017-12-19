@@ -82,7 +82,7 @@ namespace EventRegistrator.Functions.WaitingList
                 {
                     foreach (var acceptedSingleLeader in acceptedSingleLeaders)
                     {
-                        if (waitingFollowers.Peek() == null)
+                        if (!waitingFollowers.Any())
                         {
                             // no more waiting followers
                             break;
@@ -100,7 +100,7 @@ namespace EventRegistrator.Functions.WaitingList
                 {
                     foreach (var acceptedSingleFollower in acceptedSingleFollowers)
                     {
-                        if (waitingLeaders.Peek() == null)
+                        if (!waitingLeaders.Any())
                         {
                             // no more waiting followers
                             break;

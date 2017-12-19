@@ -7,4 +7,5 @@ from seats stl
 where rbl.maximumdoubleseats is not null
   and stl.partneremail is not null
   and (stl.registrationid is null or stl.registrationid_follower is null)
-  order by registrableid
+  and reg.State <> 4
+order by registrableid
