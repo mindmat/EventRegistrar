@@ -304,6 +304,7 @@ namespace EventRegistrator.Functions.Mailing
                               TemplateKey = rsp.Question.TemplateKey.ToUpper(),
                               rsp.ResponseString
                           })
+                          .Distinct()
                           .ToListAsync()
                   )
                   .ToDictionary(tmp => tmp.TemplateKey.ToUpper(), tmp => tmp.ResponseString);
