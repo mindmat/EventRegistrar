@@ -10,6 +10,7 @@ using EventRegistrator.Functions.Infrastructure.DomainEvents;
 using EventRegistrator.Functions.Registrables;
 using EventRegistrator.Functions.RegistrationForms;
 using EventRegistrator.Functions.Registrations;
+using EventRegistrator.Functions.Reminders;
 using EventRegistrator.Functions.Seats;
 using EventRegistrator.Functions.WaitingList;
 using Microsoft.Azure.WebJobs;
@@ -138,6 +139,38 @@ namespace EventRegistrator.Functions.Mailing
                     return;
                 }
 
+                DateTime? acceptedDate = null;
+                if (SendReminderCommandHandler.IsMailTypeThatTriggerPaymentDeadline(mailType.Value))
+                {
+                    // overdue?
+                    var type = mailType;
+                    var acceptedMail = await context
+                                             .MailToRegistrations
+                                             .Where(map => map.RegistrationId == command.RegistrationId && map.Mail.Type == type.Value)
+                                             .OrderByDescending(map => map.Mail.Created)
+                                             .Include(map => map.Mail)
+                                             .FirstOrDefaultAsync();
+                    if (acceptedMail == null)
+                    {
+                        log.Info("unexpected situation: no accepted mail found");
+                        return;
+                    }
+
+                    acceptedDate = acceptedMail.Mail.Created;
+                    if (SendReminderCommandHandler.IsPaymentDue(acceptedDate.Value))
+                    {
+                        // payment is overdue, check reminder level
+                        var newLevel = registration.ReminderLevel + 1;
+                        if (newLevel == 1)
+                        {
+                            mailType = registrationId_Partner.HasValue
+                                ? MailType.DoubleRegistrationFirstReminder
+                                : MailType.SingleRegistrationFirstReminder;
+                            registration.ReminderLevel = newLevel;
+                        }
+                    }
+                }
+
                 // Avoid duplicate mails
                 if (!command.AllowDuplicate)
                 {
@@ -224,6 +257,10 @@ namespace EventRegistrator.Functions.Mailing
                     else if (parts.key == "PAIDAMOUNT")
                     {
                         templateFiller[key] = (await GetPaidAmount(context, registrationForPrefix.Id)).ToString("F2"); // HACK: format hardcoded
+                    }
+                    else if (parts.key == "ACCEPTEDDATE" && acceptedDate.HasValue)
+                    {
+                        templateFiller[key] = acceptedDate.Value.ToString("dd.MM.yy");
                     }
                     else
                     {

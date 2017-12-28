@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
+using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Payments;
 using EventRegistrator.Functions.RegistrationForms;
 
@@ -21,5 +22,7 @@ namespace EventRegistrator.Functions.Registrations
         public string SoldOutMessage { get; set; }
         public RegistrationState State { get; set; }
         public ICollection<PaymentAssignment> Payments { get; set; }
+        public ICollection<MailToRegistration> Mails { get; set; }
+        public int ReminderLevel { get; set; }
     }
 }

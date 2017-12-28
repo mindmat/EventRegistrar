@@ -13,6 +13,8 @@
         RegistrationCancelled = 31,
         SingleRegistrationFullyPaid = 41,
         PartnerRegistrationFirstPaid = 42,
-        PartnerRegistrationFullyPaid = 43
+        PartnerRegistrationFullyPaid = 43,
+        SingleRegistrationFirstReminder = 51,
+        DoubleRegistrationFirstReminder = 61,
     }
 }
