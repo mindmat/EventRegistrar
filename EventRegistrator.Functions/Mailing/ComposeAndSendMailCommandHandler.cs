@@ -150,24 +150,25 @@ namespace EventRegistrator.Functions.Mailing
                                              .OrderByDescending(map => map.Mail.Created)
                                              .Include(map => map.Mail)
                                              .FirstOrDefaultAsync();
-                    if (acceptedMail == null)
+                    if (acceptedMail != null)
+                    {
+                        acceptedDate = acceptedMail.Mail.Created;
+                        if (SendReminderCommandHandler.IsPaymentDue(acceptedDate.Value))
+                        {
+                            // payment is overdue, check reminder level
+                            var newLevel = registration.ReminderLevel + 1;
+                            if (newLevel == 1)
+                            {
+                                mailType = registrationId_Partner.HasValue
+                                    ? MailType.DoubleRegistrationFirstReminder
+                                    : MailType.SingleRegistrationFirstReminder;
+                                registration.ReminderLevel = newLevel;
+                            }
+                        }
+                    }
+                    else
                     {
                         log.Info("unexpected situation: no accepted mail found");
-                        return;
-                    }
-
-                    acceptedDate = acceptedMail.Mail.Created;
-                    if (SendReminderCommandHandler.IsPaymentDue(acceptedDate.Value))
-                    {
-                        // payment is overdue, check reminder level
-                        var newLevel = registration.ReminderLevel + 1;
-                        if (newLevel == 1)
-                        {
-                            mailType = registrationId_Partner.HasValue
-                                ? MailType.DoubleRegistrationFirstReminder
-                                : MailType.SingleRegistrationFirstReminder;
-                            registration.ReminderLevel = newLevel;
-                        }
                     }
                 }
 

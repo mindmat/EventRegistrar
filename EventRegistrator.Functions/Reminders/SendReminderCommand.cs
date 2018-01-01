@@ -6,5 +6,6 @@ namespace EventRegistrator.Functions.Reminders
     {
         public Guid? RegistrationId { get; set; }
         public int? GracePeriodInDays { get; set; }
+        public Guid EventId { get; set; }
     }
 }

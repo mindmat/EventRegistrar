@@ -17,7 +17,9 @@
     "ReleaseWithheldMails",
     "CheckIsWaitingListCommandHandler",
     "DoubleRegistrableOverview",
-    "SingleRegistrableOverview"
+    "SingleRegistrableOverview",
+    "SendReminderCommandHandler",
+    "SendRemindersHttpHandler"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using EventRegistrator.Functions.Infrastructure.Bus;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
 using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Registrations;
@@ -39,7 +40,8 @@ namespace EventRegistrator.Functions.Reminders
                 var gracePeriod = command.GracePeriodInDays ?? DefaultPaymentGracePeriod;
 
                 var registrations = dbContext.Registrations
-                                             .Where(reg => reg.State == RegistrationState.Received)
+                                             .Where(reg => reg.State == RegistrationState.Received && 
+                                                           reg.IsWaitingList == false)
                                              .Select(reg => new
                                              {
                                                  Registration = reg,
@@ -47,8 +49,8 @@ namespace EventRegistrator.Functions.Reminders
                                                                                    .Select(map => map.Mail)
                                                                                    .OrderByDescending(mail => mail.Created)
                                                                                    .FirstOrDefault()
-                                             })
-                                             .Where(tmp => (DateTime.UtcNow - tmp.StartPaymentPeriodMail.Created).Days > gracePeriod);
+                                             });
+                                             //.Where(tmp => (DateTime.UtcNow - tmp.StartPaymentPeriodMail.Created).Days > gracePeriod);
                 if (command.RegistrationId.HasValue)
                 {
                     registrations = registrations.Where(reg => reg.Registration.Id == command.RegistrationId);
@@ -58,6 +60,22 @@ namespace EventRegistrator.Functions.Reminders
 
                 foreach (var dueRegistration in registrationsLocal)
                 {
+                    if (dueRegistration.StartPaymentPeriodMail == null)
+                    {
+                        log.Info($"Registration with id {dueRegistration.Registration.Id} has no accepted mail");
+                        continue;
+                    }
+                    if (IsPaymentDue(dueRegistration.StartPaymentPeriodMail.Created, gracePeriod))
+                    {
+                        await ServiceBusClient.SendEvent(
+                            new ComposeAndSendMailCommand
+                            {
+                                RegistrationId = dueRegistration.Registration.Id,
+                                Withhold = true,
+                                AllowDuplicate = false
+                            }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
+                    }
+
                 }
             }
         }

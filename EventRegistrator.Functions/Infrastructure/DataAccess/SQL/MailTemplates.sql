@@ -1311,7 +1311,7 @@ VALUES ('C8469A4C-897A-46C0-B243-3FD28F0CA56B', '762A93A4-56E0-402C-B700-1CFB336
             </tr>
             <tr>
               <td style="width: 130px;"><strong>Preis</strong></td>
-              <td style="width: 600px;">{{Leader.Price}}</td>
+              <td style="width: 600px;">{{Leader.Price}}, bezahlt CHF{{Leader.PaidAmount}}</td>
             </tr>
           </tbody>
         </table>
@@ -1348,7 +1348,7 @@ VALUES ('C8469A4C-897A-46C0-B243-3FD28F0CA56B', '762A93A4-56E0-402C-B700-1CFB336
             </tr>
             <tr>
               <td style="width: 130px;"><strong>Preis</strong></td>
-              <td style="width: 600px;">{{Follower.Price}}</td>
+              <td style="width: 600px;">{{Follower.Price}}, bezahlt CHF{{Follower.PaidAmount}}</td>
             </tr>
           </tbody>
         </table>
