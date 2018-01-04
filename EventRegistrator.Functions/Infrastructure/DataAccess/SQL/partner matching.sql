@@ -8,4 +8,4 @@ where rbl.maximumdoubleseats is not null
   and stl.partneremail is not null
   and (stl.registrationid is null or stl.registrationid_follower is null)
   and reg.State <> 4
-order by registrableid
+order by registrableid, FirstPartnerJoined

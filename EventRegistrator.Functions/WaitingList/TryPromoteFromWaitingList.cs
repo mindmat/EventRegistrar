@@ -134,7 +134,8 @@ namespace EventRegistrator.Functions.WaitingList
         {
             var seatsToAccept = registrable.Seats
                                            .Where(seat => seat.IsWaitingList && !seat.IsCancelled)
-                                           .OrderBy(seat => seat.FirstPartnerJoined);
+                                           .OrderByDescending(seat => seat.RegistrationId.HasValue && seat.RegistrationId_Follower.HasValue)
+                                           .ThenBy(seat => seat.FirstPartnerJoined);
             foreach (var seat in seatsToAccept)
             {
                 if (seat.PartnerEmail == null)
