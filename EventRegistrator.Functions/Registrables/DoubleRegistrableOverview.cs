@@ -24,8 +24,10 @@ namespace EventRegistrator.Functions.Registrables
 
             using (var dbContext = new EventRegistratorDbContext())
             {
-                var registrables = await dbContext.Registrables.Where(rbl => rbl.MaximumDoubleSeats.HasValue).Include(rbl => rbl.Seats).ToListAsync();
-
+                var registrables = await dbContext.Registrables
+                                                  .Where(rbl => rbl.MaximumDoubleSeats.HasValue)
+                                                  .Include(rbl => rbl.Seats)
+                                                  .ToListAsync();
 
                 return req.CreateResponse(HttpStatusCode.OK, registrables.Select(rbl => new
                 {
@@ -37,7 +39,6 @@ namespace EventRegistrator.Functions.Registrables
                     FollowersOnWaitingList = rbl.Seats.Count(seat => !seat.IsCancelled && seat.RegistrationId_Follower.HasValue && seat.IsWaitingList),
                 }));
             }
-
         }
     }
 }
