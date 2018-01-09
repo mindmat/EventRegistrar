@@ -2,10 +2,10 @@ import { Component, Inject } from '@angular/core';
 import { Http } from '@angular/http';
 
 @Component({
-  selector: 'fetchdata',
-  templateUrl: './fetchdata.component.html'
+  selector: 'registrables',
+  templateUrl: './registrables.component.html'
 })
-export class FetchDataComponent {
+export class RegistrablesComponent {
   public doubleRegistrables: DoubleRegistrable[];
   public singleRegistrables: SingleRegistrable[];
 
