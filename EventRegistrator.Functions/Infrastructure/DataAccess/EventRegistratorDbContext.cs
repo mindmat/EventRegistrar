@@ -73,6 +73,16 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
                 .WithMany(rbl => rbl.Seats)
                 .HasForeignKey(seat => seat.RegistrableId);
 
+            modelBuilder.Entity<Seat>()
+                .HasRequired(seat => seat.Registration)
+                .WithMany()
+                .HasForeignKey(seat => seat.RegistrationId);
+
+            modelBuilder.Entity<Seat>()
+                .HasRequired(seat => seat.Registration_Follower)
+                .WithMany()
+                .HasForeignKey(seat => seat.RegistrationId_Follower);
+
             modelBuilder.Entity<ReceivedPayment>()
                 .HasRequired(pmt => pmt.PaymentFile)
                 .WithMany()

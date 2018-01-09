@@ -27,5 +27,5 @@ from Registrations reg
 where Price - map.Summe < 13
    and reg.state = 1
 
-rollback
+--rollback
 --commit

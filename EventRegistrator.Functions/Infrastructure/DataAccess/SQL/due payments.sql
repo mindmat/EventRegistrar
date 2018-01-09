@@ -11,7 +11,16 @@ where IsWaitingList = 0
   and State = 1
 order by MAIL.LastMail
 
-select sum(price)
+select ausstehend = sum(price), Anzahl = count(*)
 from Registrations
 where IsWaitingList = 0
   and State = 1
+
+select bezahlt = sum(ass.Amount), Anzahl = count(distinct reg.id)
+from Registrations reg
+  inner join dbo.PaymentAssignments ass on ass.RegistrationId = reg.Id
+where IsWaitingList = 0
+  and State <> 4
+
+select sum(Amount-isnull(repaid,0))
+from ReceivedPayments

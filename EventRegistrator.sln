@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistrator.Functions.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistrator.Web", "EventRegistrator.Web\EventRegistrator.Web.csproj", "{D434408F-0827-4D58-B108-524D55A231FC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistrator.Web.Admin", "EventRegistrator.Web.Admin\EventRegistrator.Web.Admin.csproj", "{452E6B02-5E86-40D2-B8B5-A1397A973D8F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{D434408F-0827-4D58-B108-524D55A231FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D434408F-0827-4D58-B108-524D55A231FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D434408F-0827-4D58-B108-524D55A231FC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{452E6B02-5E86-40D2-B8B5-A1397A973D8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{452E6B02-5E86-40D2-B8B5-A1397A973D8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{452E6B02-5E86-40D2-B8B5-A1397A973D8F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{452E6B02-5E86-40D2-B8B5-A1397A973D8F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
