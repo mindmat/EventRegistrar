@@ -13,7 +13,8 @@ namespace EventRegistrator.Functions.Registrables
     public static class DoubleRegistrableOverview
     {
         [FunctionName("DoubleRegistrableOverview")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", "post", Route = null)]HttpRequestMessage req, TraceWriter log)
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)]
+            HttpRequestMessage req, TraceWriter log)
         {
             log.Info("C# HTTP trigger function processed a request.");
 
@@ -35,10 +36,24 @@ namespace EventRegistrator.Functions.Registrables
                     rbl.Id,
                     rbl.Name,
                     SpotsAvailable = rbl.MaximumDoubleSeats,
-                    LeadersAccepted = rbl.Seats.Count(seat => !seat.IsCancelled && seat.RegistrationId.HasValue && !seat.IsWaitingList),
-                    FollowersAccepted = rbl.Seats.Count(seat => !seat.IsCancelled && seat.RegistrationId_Follower.HasValue && !seat.IsWaitingList),
-                    LeadersOnWaitingList = rbl.Seats.Count(seat => !seat.IsCancelled && seat.RegistrationId.HasValue && seat.IsWaitingList),
-                    FollowersOnWaitingList = rbl.Seats.Count(seat => !seat.IsCancelled && seat.RegistrationId_Follower.HasValue && seat.IsWaitingList),
+                    LeadersAccepted = rbl.Seats.Count(seat => !seat.IsCancelled &&
+                                                              seat.RegistrationId.HasValue &&
+                                                              !seat.IsWaitingList),
+                    FollowersAccepted = rbl.Seats.Count(seat => !seat.IsCancelled &&
+                                                                seat.RegistrationId_Follower.HasValue &&
+                                                                !seat.IsWaitingList),
+                    LeadersOnWaitingList = rbl.Seats.Count(seat => !seat.IsCancelled &&
+                                                                   seat.RegistrationId.HasValue &&
+                                                                   seat.IsWaitingList &&
+                                                                   seat.PartnerEmail == null),
+                    FollowersOnWaitingList = rbl.Seats.Count(seat => !seat.IsCancelled &&
+                                                                     seat.RegistrationId_Follower.HasValue &&
+                                                                     seat.IsWaitingList &&
+                                                                     seat.PartnerEmail == null),
+                    CouplesOnWaitingList = rbl.Seats.Count(seat => !seat.IsCancelled &&
+                                                                   seat.RegistrationId_Follower.HasValue &&
+                                                                   seat.IsWaitingList &&
+                                                                   seat.PartnerEmail != null)
                 }));
             }
         }
