@@ -20,6 +20,7 @@ export class RegistrablesComponent {
 }
 
 interface DoubleRegistrable {
+  Id: string;
   Name: string;
   SpotsAvailable: number;
   LeadersAccepted: number;
@@ -29,6 +30,7 @@ interface DoubleRegistrable {
 }
 
 interface SingleRegistrable {
+  Id: string;
   Name: string;
   SpotsAvailable: number;
   Accepted: number;

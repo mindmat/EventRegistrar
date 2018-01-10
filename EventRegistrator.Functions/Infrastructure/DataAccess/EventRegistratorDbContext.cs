@@ -74,12 +74,12 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
                 .HasForeignKey(seat => seat.RegistrableId);
 
             modelBuilder.Entity<Seat>()
-                .HasRequired(seat => seat.Registration)
+                .HasOptional(seat => seat.Registration)
                 .WithMany()
                 .HasForeignKey(seat => seat.RegistrationId);
 
             modelBuilder.Entity<Seat>()
-                .HasRequired(seat => seat.Registration_Follower)
+                .HasOptional(seat => seat.Registration_Follower)
                 .WithMany()
                 .HasForeignKey(seat => seat.RegistrationId_Follower);
 

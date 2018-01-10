@@ -20,7 +20,7 @@
     "SingleRegistrableOverview",
     "SendReminderCommandHandler",
     "SendRemindersHttpHandler",
-    "GetSingleRegistrableParticipants"
+    "GetRegistrableParticipants"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {

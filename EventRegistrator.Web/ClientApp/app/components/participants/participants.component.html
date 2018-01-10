@@ -1,0 +1,23 @@
+<h1>Teilnehmer {{ registrable.Name }} </h1>
+
+<p *ngIf="!registrable"><em>Loading...</em></p>
+
+<table class='table' *ngIf="registrable">
+    <thead>
+        <tr>
+            <th *ngIf="!registrable.MaximumDoubleSeats">Name</th>
+            <th *ngIf="registrable.MaximumDoubleSeats">Leader</th>
+            <th *ngIf="registrable.MaximumDoubleSeats">Follower</th>
+            <th *ngIf="registrable.MaximumDoubleSeats">Partnerregistrierung</th>
+            <th *ngIf="registrable.HasWaitingList">Warteliste</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let participant of registrable.Participants">
+            <td>{{ participant.Leader?.FirstName }} {{participant.Leader?.LastName}}</td>
+            <td *ngIf="registrable.MaximumDoubleSeats">{{ participant.Follower?.FirstName }} {{participant.Follower?.LastName}}</td>
+            <td *ngIf="registrable.MaximumDoubleSeats"><p *ngIf="participant.IsPartnerRegistration">x</p></td>
+            <td *ngIf="registrable.HasWaitingList"><p *ngIf="participant.IsOnWaitingList">x</p></td>
+        </tr>
+    </tbody>
+</table>

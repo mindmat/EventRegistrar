@@ -15,7 +15,7 @@
     </thead>
     <tbody>
         <tr *ngFor="let registrable of doubleRegistrables">
-            <td>{{ registrable.Name }}</td>
+            <td><a [routerLink]="['/participants', registrable.Id]">{{ registrable.Name }}</a></td>
             <td>{{ registrable.SpotsAvailable }}</td>
             <td>{{ registrable.LeadersAccepted }}</td>
             <td>{{ registrable.FollowersAccepted }}</td>
@@ -38,7 +38,7 @@
     </thead>
     <tbody>
         <tr *ngFor="let registrable of singleRegistrables">
-            <td>{{ registrable.Name }}</td>
+            <td><a [routerLink]="['/participants', registrable.Id]">{{ registrable.Name }}</a></td>
             <td>{{ registrable.SpotsAvailable }}</td>
             <td>{{ registrable.Accepted }}</td>
             <td>{{ registrable.OnWaitingList }}</td>

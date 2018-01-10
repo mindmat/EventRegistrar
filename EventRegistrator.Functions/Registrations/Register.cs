@@ -146,6 +146,11 @@ namespace EventRegistrator.Functions.Registrations
                     {
                         registration.RespondentFirstName = response.Response;
                     }
+                    if (form.QuestionId_LastName.HasValue &&
+                        responseLookup.questionId == form.QuestionId_LastName)
+                    {
+                        registration.RespondentLastName = response.Response;
+                    }
                 }
                 context.Registrations.Add(registration);
 

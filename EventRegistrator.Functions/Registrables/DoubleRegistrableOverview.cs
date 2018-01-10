@@ -26,11 +26,13 @@ namespace EventRegistrator.Functions.Registrables
             {
                 var registrables = await dbContext.Registrables
                                                   .Where(rbl => rbl.MaximumDoubleSeats.HasValue)
+                                                  .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
                                                   .Include(rbl => rbl.Seats)
                                                   .ToListAsync();
 
                 return req.CreateResponse(HttpStatusCode.OK, registrables.Select(rbl => new
                 {
+                    rbl.Id,
                     rbl.Name,
                     SpotsAvailable = rbl.MaximumDoubleSeats,
                     LeadersAccepted = rbl.Seats.Count(seat => !seat.IsCancelled && seat.RegistrationId.HasValue && !seat.IsWaitingList),
