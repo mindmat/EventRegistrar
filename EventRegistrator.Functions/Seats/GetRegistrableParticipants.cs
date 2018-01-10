@@ -37,7 +37,8 @@ namespace EventRegistrator.Functions.Seats
 
                 var participants = await dbContext
                                          .Seats
-                                         .Where(seat => seat.RegistrableId == registrableId)
+                                         .Where(seat => seat.RegistrableId == registrableId &&
+                                                        !seat.IsCancelled)
                                          .OrderBy(seat => seat.IsWaitingList)
                                          .ThenBy(seat => seat.FirstPartnerJoined)
                                          .Select(seat => new PlaceDisplayInfo
@@ -72,7 +73,8 @@ namespace EventRegistrator.Functions.Seats
                     MaximumSingleSeats = registrable.MaximumSingleSeats,
                     MaximumAllowedImbalance = registrable.MaximumAllowedImbalance,
                     HasWaitingList = registrable.HasWaitingList,
-                    Participants = participants
+                    Participants = participants.Where(prt => !prt.IsOnWaitingList),
+                    WaitingList = participants.Where(prt => prt.IsOnWaitingList)
                 });
             }
         }

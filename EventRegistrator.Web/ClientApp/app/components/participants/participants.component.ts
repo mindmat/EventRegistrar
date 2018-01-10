@@ -8,7 +8,6 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 })
 export class ParticipantsComponent {
   public registrable: Registrable;
-  private selectedId: number;
 
   constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string, private router: Router, private route: ActivatedRoute) {
   }
@@ -29,7 +28,7 @@ interface Registrable {
   MaximumAllowedImbalance: number;
   HasWaitingList: boolean;
   Participants: Place[];
-  //ParticipantsOnWaitingList: number;
+  WaitingList: Place[];
 }
 
 interface Place {

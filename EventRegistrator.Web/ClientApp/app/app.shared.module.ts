@@ -30,7 +30,7 @@ import { ParticipantsComponent } from './components/participants/participants.co
       { path: 'home', component: HomeComponent },
       { path: 'counter', component: CounterComponent },
       { path: 'registrables', component: RegistrablesComponent },
-      { path: 'participants/:id', component: ParticipantsComponent },
+      { path: 'registrables/:id/participants', component: ParticipantsComponent },
       { path: '**', redirectTo: 'registrables' }
     ])
   ]

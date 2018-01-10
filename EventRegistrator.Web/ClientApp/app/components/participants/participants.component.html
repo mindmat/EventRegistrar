@@ -9,15 +9,33 @@
             <th *ngIf="registrable.MaximumDoubleSeats">Leader</th>
             <th *ngIf="registrable.MaximumDoubleSeats">Follower</th>
             <th *ngIf="registrable.MaximumDoubleSeats">Partnerregistrierung</th>
-            <th *ngIf="registrable.HasWaitingList">Warteliste</th>
         </tr>
     </thead>
     <tbody>
         <tr *ngFor="let participant of registrable.Participants">
+            <td [style.font-weight]="participant.Leader?.State == 1 ? 'bold' : 'normal'">{{ participant.Leader?.FirstName }} {{participant.Leader?.LastName}}</td>
+            <td [style.font-weight]="participant.Follower?.State == 1 ? 'bold' : 'normal'" *ngIf="registrable.MaximumDoubleSeats">{{ participant.Follower?.FirstName }} {{participant.Follower?.LastName}}</td>
+            <td *ngIf="registrable.MaximumDoubleSeats"><p *ngIf="participant.IsPartnerRegistration">x</p></td>
+        </tr>
+    </tbody>
+</table>
+<br />
+<h2 *ngIf="registrable && registrable.HasWaitingList">Warteliste</h2>
+
+<table class='table' *ngIf="registrable && registrable.HasWaitingList">
+    <thead>
+        <tr>
+            <th *ngIf="!registrable.MaximumDoubleSeats">Name</th>
+            <th *ngIf="registrable.MaximumDoubleSeats">Leader</th>
+            <th *ngIf="registrable.MaximumDoubleSeats">Follower</th>
+            <th *ngIf="registrable.MaximumDoubleSeats">Partnerregistrierung</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let participant of registrable.WaitingList">
             <td>{{ participant.Leader?.FirstName }} {{participant.Leader?.LastName}}</td>
             <td *ngIf="registrable.MaximumDoubleSeats">{{ participant.Follower?.FirstName }} {{participant.Follower?.LastName}}</td>
             <td *ngIf="registrable.MaximumDoubleSeats"><p *ngIf="participant.IsPartnerRegistration">x</p></td>
-            <td *ngIf="registrable.HasWaitingList"><p *ngIf="participant.IsOnWaitingList">x</p></td>
         </tr>
     </tbody>
 </table>

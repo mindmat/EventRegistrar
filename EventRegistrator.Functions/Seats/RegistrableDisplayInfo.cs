@@ -10,5 +10,6 @@ namespace EventRegistrator.Functions.Seats
         public int? MaximumAllowedImbalance { get; set; }
         public IEnumerable<PlaceDisplayInfo> Participants { get; set; }
         public bool HasWaitingList { get; set; }
+        public IEnumerable<PlaceDisplayInfo> WaitingList { get; set; }
     }
 }
