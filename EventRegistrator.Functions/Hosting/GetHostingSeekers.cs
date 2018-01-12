@@ -56,21 +56,23 @@ namespace EventRegistrator.Functions.Hosting
                                                  seat.Registration.RespondentLastName,
                                                  seat.Registration.RespondentEmail,
                                                  seat.RegistrationId,
-                                                 seat.Registration.State
+                                                 seat.Registration.State,
+                                                 seat.Registration.Language
                                              })
                                              .ToListAsync();
 
-                return req.CreateResponse(HttpStatusCode.OK, seekers.Select(off => new
+                return req.CreateResponse(HttpStatusCode.OK, seekers.Select(sek => new
                 {
-                    Id = off.RegistrationId,
-                    FirstName = off.RespondentFirstName,
-                    LastName = off.RespondentLastName,
-                    Mail = off.RespondentEmail,
-                    off.State,
-                    Partners = responsesPartners.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
-                    Travel = responsesTravel.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
-                    Comment = responsesComment.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
-                    Phone = responsesPhone.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
+                    Id = sek.RegistrationId,
+                    FirstName = sek.RespondentFirstName,
+                    LastName = sek.RespondentLastName,
+                    Mail = sek.RespondentEmail,
+                    sek.Language,
+                    sek.State,
+                    Partners = responsesPartners.FirstOrDefault(rsp => rsp.RegistrationId == sek.RegistrationId)?.ResponseString,
+                    Travel = responsesTravel.FirstOrDefault(rsp => rsp.RegistrationId == sek.RegistrationId)?.ResponseString,
+                    Comment = responsesComment.FirstOrDefault(rsp => rsp.RegistrationId == sek.RegistrationId)?.ResponseString,
+                    Phone = responsesPhone.FirstOrDefault(rsp => rsp.RegistrationId == sek.RegistrationId)?.ResponseString,
                 }));
             }
         }

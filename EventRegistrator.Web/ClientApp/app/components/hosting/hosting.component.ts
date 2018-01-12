@@ -25,6 +25,7 @@ interface HostingOffer {
     LastName: string;
     Mail: string;
     Phone: string;
+    Language: string;
     State: number;
     Address: string;
     PlaceCount: number;
@@ -37,6 +38,7 @@ interface HostingSeeker {
     LastName: string;
     Mail: string;
     Phone: string;
+    Language: string;
     State: number;
     Partners: string;
     Travel: string;

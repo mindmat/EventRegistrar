@@ -56,7 +56,8 @@ namespace EventRegistrator.Functions.Hosting
                                                 seat.Registration.RespondentLastName,
                                                 seat.Registration.RespondentEmail,
                                                 seat.RegistrationId,
-                                                seat.Registration.State
+                                                seat.Registration.State,
+                                                seat.Registration.Language
                                             })
                                             .ToListAsync();
 
@@ -66,6 +67,7 @@ namespace EventRegistrator.Functions.Hosting
                     FirstName = off.RespondentFirstName,
                     LastName = off.RespondentLastName,
                     Mail = off.RespondentEmail,
+                    off.Language,
                     off.State,
                     Address = responsesAddress.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
                     PlaceCount = responsesPlaceCount.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
