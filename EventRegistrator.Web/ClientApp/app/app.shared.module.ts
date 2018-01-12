@@ -11,6 +11,7 @@ import { CounterComponent } from './components/counter/counter.component';
 
 import { RegistrablesComponent } from './components/registrables/registrables.component';
 import { ParticipantsComponent } from './components/participants/participants.component';
+import { HostingComponent } from './components/hosting/hosting.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { ParticipantsComponent } from './components/participants/participants.co
     CounterComponent,
     RegistrablesComponent,
     ParticipantsComponent,
+    HostingComponent,
     HomeComponent
   ],
   imports: [
@@ -31,6 +33,7 @@ import { ParticipantsComponent } from './components/participants/participants.co
       { path: 'counter', component: CounterComponent },
       { path: 'registrables', component: RegistrablesComponent },
       { path: 'registrables/:id/participants', component: ParticipantsComponent },
+      { path: 'hosting', component: HostingComponent },
       { path: '**', redirectTo: 'registrables' }
     ])
   ]
