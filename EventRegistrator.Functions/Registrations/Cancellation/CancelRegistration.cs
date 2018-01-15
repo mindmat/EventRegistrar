@@ -12,12 +12,12 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 
-namespace EventRegistrator.Functions.Registrations
+namespace EventRegistrator.Functions.Registrations.Cancellation
 {
     public static class CancelRegistration
     {
         [FunctionName("CancelRegistration")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "CancelRegistration/{registrationIdString}")]
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "Registration/{registrationIdString}/Cancel")]
             HttpRequestMessage req, 
             string registrationIdString, 
             TraceWriter log)
@@ -27,6 +27,7 @@ namespace EventRegistrator.Functions.Registrations
             var registrationId = Guid.Parse(registrationIdString);
 
             var ignorePayments = req.GetQueryNameValuePairs().FirstOrDefault(kvp => string.Compare(kvp.Key, "ignorePayments", StringComparison.OrdinalIgnoreCase) == 0).Value == "true";
+            var reason = req.GetQueryNameValuePairs().FirstOrDefault(kvp => string.Compare(kvp.Key, "reason", StringComparison.OrdinalIgnoreCase) == 0).Value;
 
 
             using (var dbContext = new EventRegistratorDbContext())
@@ -83,6 +84,17 @@ namespace EventRegistrator.Functions.Registrations
                         place.IsCancelled = true;
                     }
                 }
+
+                var cancellation = new RegistrationCancellation
+                {
+                    Id = Guid.NewGuid(),
+                    RegistrationId = registrationId,
+                    Reason = reason,
+                    Created = DateTime.UtcNow
+                    
+                };
+                dbContext.RegistrationCancellations.Add(cancellation);
+
                 await dbContext.SaveChangesAsync();
 
                 if (registration.RegistrationForm.EventId.HasValue)

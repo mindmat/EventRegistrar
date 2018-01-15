@@ -28,7 +28,9 @@ namespace EventRegistrator.Functions.Mailing
         private const string PrefixFollower = "FOLLOWER";
 
         [FunctionName("ComposeAndSendMailCommandHandler")]
-        public static async Task Run([ServiceBusTrigger(ComposeAndSendMailCommandsQueueName, AccessRights.Listen, Connection = "ServiceBusEndpoint")]ComposeAndSendMailCommand command, TraceWriter log)
+        public static async Task Run([ServiceBusTrigger(ComposeAndSendMailCommandsQueueName, AccessRights.Listen, Connection = "ServiceBusEndpoint")]
+            ComposeAndSendMailCommand command, 
+            TraceWriter log)
         {
             log.Info($"ComposeAndSendMailCommand: RegistrationId {command.RegistrationId}");
 
@@ -258,6 +260,12 @@ namespace EventRegistrator.Functions.Mailing
                     else if (parts.key == "PAIDAMOUNT")
                     {
                         templateFiller[key] = (await GetPaidAmount(context, registrationForPrefix.Id)).ToString("F2"); // HACK: format hardcoded
+                    }
+                    else if (parts.key == "CANCELLATIONREASON")
+                    {
+                        templateFiller[key] = (await context
+                                                     .RegistrationCancellations
+                                                     .FirstOrDefaultAsync(rcl => rcl.RegistrationId == command.RegistrationId))?.Reason;
                     }
                     else if (parts.key == "ACCEPTEDDATE" && acceptedDate.HasValue)
                     {

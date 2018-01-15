@@ -502,7 +502,7 @@ VALUES ('A4198E42-E965-4259-9154-F673A6F38C4E', '762A93A4-56E0-402C-B700-1CFB336
 
 
 INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
-VALUES ('186F48DC-9927-464E-B4B7-55262DCB941C', '762A93A4-56E0-402C-B700-1CFB3362B39D', 31 /*RegistrationCancelled*/, 2, 'Booking cancelled', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
+VALUES ('186F48DC-9927-464E-B4B7-55262DCB941C', '762A93A4-56E0-402C-B700-1CFB3362B39D', 31 /*RegistrationCancelled*/, 2, 'Buchung storniert', 'registration@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
 '<table cellspacing="0" cellpadding="0" align="center">
   <tbody>
     <tr>
@@ -510,7 +510,7 @@ VALUES ('186F48DC-9927-464E-B4B7-55262DCB941C', '762A93A4-56E0-402C-B700-1CFB336
     </tr>
     <tr>
       <td><br /><strong>Hallo {{FirstName}}</strong><br />
-        <p>Wir haben keine Zahlung von dir erhalten und deshalb deine Buchung storniert, um den Platz f&uuml;r jemand anderen freizugeben.</p>
+        <p>Wir haben deine Buchung storniert. Grund: {{CancellationReason}}</p>
         <p>Das Leapin'' Lindy Team</p>
       </td>
     </tr>
@@ -1093,7 +1093,7 @@ VALUES ('C41D025A-84A2-4590-8974-867D8027B490', '762A93A4-56E0-402C-B700-1CFB336
 
 
 INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
-VALUES ('2ACB5061-6936-4BD9-8AC6-1905A4E86EE9', '762A93A4-56E0-402C-B700-1CFB3362B39D', 31 /*RegistrationCancelled*/, 2, 'Booking cancelled', 'noreply@leapinlindy.ch', 'Leapin'' Lindy', 'en', 
+VALUES ('2ACB5061-6936-4BD9-8AC6-1905A4E86EE9', '762A93A4-56E0-402C-B700-1CFB3362B39D', 31 /*RegistrationCancelled*/, 2, 'Booking cancelled', 'registration@leapinlindy.ch', 'Leapin'' Lindy', 'en', 
 '<table cellspacing="0" cellpadding="0" align="center">
   <tbody>
     <tr>
@@ -1101,7 +1101,7 @@ VALUES ('2ACB5061-6936-4BD9-8AC6-1905A4E86EE9', '762A93A4-56E0-402C-B700-1CFB336
     </tr>
     <tr>
       <td><br /><strong>Hello {{FirstName}}</strong><br />
-        <p>We have not received your payment in time and have cancelled your registration for Leapin'' Lindy 2018 to give the place to somebody else.</p>
+        <p>We have cancelled your registration for Leapin'' Lindy 2018. Reason: {{CancellationReason}}</p>
         <p>The Leapin'' Lindy Team</p>
       </td>
     </tr>

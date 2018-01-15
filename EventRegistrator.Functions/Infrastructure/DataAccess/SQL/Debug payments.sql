@@ -10,9 +10,9 @@ from paymentfiles
 
 SELECT SUM(Amount) FROM ReceivedPayments
 
-select diff = PMT.Amount - MAP.Summe, Zahlung = PMT.Amount, Zugeordnet = MAP.Summe, MAP.Preis, *
+select diff = PMT.Amount - MAP.Summe, Zahlung = PMT.Amount, Zugeordnet = MAP.Summe, MAP.Preis, MAP.State, *
 from ReceivedPayments PMT
-  left join (SELECT ReceivedPaymentId, Summe = SUM(Amount), Preis = MAX(REG.Price)
+  left join (SELECT ReceivedPaymentId, Summe = SUM(Amount), Preis = MAX(REG.Price), State = MIN(REG.State)
              FROM PaymentAssignments ASS
 			   INNER JOIN Registrations REG ON REG.Id = ASS.RegistrationId
 			 GROUP BY ReceivedPaymentId) MAP ON MAP.ReceivedPaymentId = PMt.Id

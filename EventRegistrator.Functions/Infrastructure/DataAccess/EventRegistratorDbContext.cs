@@ -6,6 +6,7 @@ using EventRegistrator.Functions.Payments;
 using EventRegistrator.Functions.Registrables;
 using EventRegistrator.Functions.RegistrationForms;
 using EventRegistrator.Functions.Registrations;
+using EventRegistrator.Functions.Registrations.Cancellation;
 using EventRegistrator.Functions.Seats;
 
 namespace EventRegistrator.Functions.Infrastructure.DataAccess
@@ -35,6 +36,7 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
         public DbSet<MailToRegistration> MailToRegistrations { get; set; }
         public DbSet<PaymentFile> PaymentFiles { get; set; }
         public DbSet<PaymentAssignment> PaymentAssignments { get; set; }
+        public DbSet<RegistrationCancellation> RegistrationCancellations { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

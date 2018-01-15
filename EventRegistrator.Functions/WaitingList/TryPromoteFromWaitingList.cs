@@ -39,7 +39,7 @@ namespace EventRegistrator.Functions.WaitingList
 
             foreach (var registrationId in registrationIdsToCheck.Where(id => id.HasValue))
             {
-                await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId, Withhold = true }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
+                await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registrationId.Value, Withhold = true }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
                 await ServiceBusClient.SendEvent(new CheckIsWaitingListCommand { RegistrationId = registrationId.Value }, CheckIsWaitingListCommandHandler.CheckIsWaitingListCommandsQueueName);
             }
         }
