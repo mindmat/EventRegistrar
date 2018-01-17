@@ -35,7 +35,9 @@ namespace EventRegistrator.Functions.Payments
                     EventId = @event?.Id,
                     Content = content,
                     FileId = camt.FileId,
-                    AccountIban = camt.Account
+                    AccountIban = camt.Account,
+                    Balance = camt.Balance,
+                    Currency = camt.Currency
                 };
 
                 dbContext.PaymentFiles.Add(paymentFile);

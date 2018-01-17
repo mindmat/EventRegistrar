@@ -8,5 +8,7 @@ namespace EventRegistrator.Functions.Payments
         public string Account { get; set; }
         public string Owner { get; set; }
         public string FileId { get; set; }
+        public decimal Balance { get; set; }
+        public string Currency { get; set; }
     }
 }

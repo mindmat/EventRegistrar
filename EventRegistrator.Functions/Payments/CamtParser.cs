@@ -19,7 +19,7 @@ namespace EventRegistrator.Functions.Payments
         {
             XNamespace ns = "urn:iso:std:iso:20022:tech:xsd:camt.053.001.04";
             if (xml.NodeType != XmlNodeType.Document ||
-                ((XElement)xml.FirstNode).GetDefaultNamespace()?.NamespaceName != ns)
+                ((XElement)xml.FirstNode).GetDefaultNamespace().NamespaceName != ns)
             {
                 throw new Exception("invalid xml");
             }
@@ -37,9 +37,11 @@ namespace EventRegistrator.Functions.Payments
 
             var camt = new CamtFile
             {
-                Account = statement.Descendants(ns + "Acct").FirstOrDefault()?.Descendants(ns + "Id").FirstOrDefault()?.Descendants(ns + "IBAN")?.FirstOrDefault()?.Value,
-                Owner = statement.Descendants(ns + "Acct").FirstOrDefault()?.Descendants(ns + "Ownr").FirstOrDefault()?.Descendants(ns + "Nm")?.FirstOrDefault()?.Value,
+                Account = statement.Descendants(ns + "Acct").FirstOrDefault()?.Descendants(ns + "Id").FirstOrDefault()?.Descendants(ns + "IBAN").FirstOrDefault()?.Value,
+                Owner = statement.Descendants(ns + "Acct").FirstOrDefault()?.Descendants(ns + "Ownr").FirstOrDefault()?.Descendants(ns + "Nm").FirstOrDefault()?.Value,
                 FileId = xml.Descendants(ns + "GrpHdr").FirstOrDefault()?.Descendants(ns + "MsgId").FirstOrDefault()?.Value,
+                Balance = decimal.Parse(statement.Descendants(ns + "Bal").Last().Descendants(ns + "Amt").First().Value, CultureInfo.InvariantCulture),
+                Currency = statement.Descendants(ns + "Bal").Last().Descendants(ns + "Amt").First().Attribute("Ccy")?.Value,
                 Entries = entries.ToList()
             };
             return camt;

@@ -22,7 +22,8 @@
     "SendRemindersHttpHandler",
     "GetRegistrableParticipants",
     "GetHostingOffers",
-    "GetHostingSeekers"
+    "GetHostingSeekers",
+    "GetPaymentOverview"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {

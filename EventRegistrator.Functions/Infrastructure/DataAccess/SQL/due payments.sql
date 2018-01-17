@@ -24,3 +24,16 @@ where IsWaitingList = 0
 
 select sum(Amount-isnull(repaid,0))
 from ReceivedPayments
+
+
+SELECT diff = (PMT.Amount - pmt.Repaid) - MAP.Summe, Zahlung = PMT.Amount, Zugeordnet = MAP.Summe, MAP.Preis, MAP.State, *
+FROM ReceivedPayments PMT
+  LEFT JOIN (SELECT ReceivedPaymentId, Summe = SUM(Amount), Preis = MAX(REG.Price), State = MIN(REG.State)
+             FROM PaymentAssignments ASS
+			   INNER JOIN Registrations REG ON REG.Id = ASS.RegistrationId and REG.State <> 4
+			 GROUP BY ReceivedPaymentId) MAP ON MAP.ReceivedPaymentId = PMT.Id
+WHERE (PMT.Amount - pmt.Repaid) <> MAP.Summe
+  
+  --OR RecognizedEmail IS NULL
+
+
