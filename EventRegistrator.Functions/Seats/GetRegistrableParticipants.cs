@@ -59,7 +59,7 @@ namespace EventRegistrator.Functions.Seats
                                                  FirstName = seat.Registration_Follower.RespondentFirstName,
                                                  LastName = seat.Registration_Follower.RespondentLastName
                                              },
-                                             IsOnWaitingList = seat.IsWaitingList,
+                                             IsOnWaitingList = seat.IsWaitingList || seat.Registration != null && seat.Registration.IsWaitingList == true,
                                              IsPartnerRegistration = seat.PartnerEmail != null
                                          })
                                          .ToListAsync();

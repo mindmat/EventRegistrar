@@ -20,9 +20,9 @@
     </tbody>
 </table>
 <br />
-<h2 *ngIf="registrable && registrable.HasWaitingList">Warteliste</h2>
+<h2 *ngIf="registrable && registrable.WaitingList">Warteliste</h2>
 
-<table class='table' *ngIf="registrable && registrable.HasWaitingList">
+<table class='table' *ngIf="registrable && registrable.WaitingList">
     <thead>
         <tr>
             <th *ngIf="!registrable.MaximumDoubleSeats">Name</th>
