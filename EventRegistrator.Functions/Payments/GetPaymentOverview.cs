@@ -22,7 +22,7 @@ namespace EventRegistrator.Functions.Payments
 
             if (!Guid.TryParse(eventIdString, out var eventId))
             {
-                return req.CreateErrorResponse(HttpStatusCode.NotFound, $"No event with Id {eventIdString} found");
+                return req.CreateErrorResponse(HttpStatusCode.NotFound, $"{eventIdString} is not a guid");
             }
             // parse query parameter
             string name = req.GetQueryNameValuePairs()

@@ -1,0 +1,30 @@
+<h1>Nicht erkannte Zahlungen</h1>
+
+<p *ngIf="!payments"><em>Loading...</em></p>
+
+<table class='table' *ngIf="payments">
+    <thead>
+        <tr>
+            <th>Mitteilungstext</th>
+            <th>Email</th>
+            <th>Datum</th>
+            <th>Betrag</th>
+            <th>Zugeordnet</th>
+            <th>Zurückbezahlt</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let payment of payments">
+            <td>{{ payment.Info }}</td>
+            <td>
+                <input ng-switch-default type="text" ng-model="payment.RecognizedEmail" class="editable-input form-control input-sm" />
+                <button class="btn btn-primary btn-sm" (click)="saveMail(payment)"><span class="glyphicon glyphicon-ok"></span></button>
+            </td>
+            <td>{{ payment.BookingDate | date: 'dd.MM.yy' }}</td>
+            <td>{{ payment.Amount }}{{ payment.Currency}}</td>
+            <td>{{ payment.Assigned }}</td>
+            <td>{{ payment.Repaid }}</td>
+        </tr>
+    </tbody>
+</table>
+<br />

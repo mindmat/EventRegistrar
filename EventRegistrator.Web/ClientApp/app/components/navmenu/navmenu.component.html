@@ -13,11 +13,11 @@
         <div class='navbar-collapse collapse'>
             <ul class='nav navbar-nav'>
                 <!--<li [routerLinkActive]="['link-active']">
-                                    <a [routerLink]="['/home']">
-                                        <span class='glyphicon glyphicon-home'></span> Home
-                                    </a>
-                                </li>
-                -->
+                        <a [routerLink]="['/home']">
+                            <span class='glyphicon glyphicon-home'></span> Home
+                        </a>
+                    </li>
+    -->
                 <li [routerLinkActive]="['link-active']">
                     <a [routerLink]="['/registrables']">
                         <span class='glyphicon glyphicon-th-list'></span> Übersicht Anmeldungen
@@ -25,7 +25,12 @@
                 </li>
                 <li [routerLinkActive]="['link-active']">
                     <a [routerLink]="['/hosting']">
-                        <span class='glyphicon glyphicon-education'></span> Hosting
+                        <span class='glyphicon glyphicon-home'></span> Hosting
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/unrecognizedPayments']">
+                        <span class='glyphicon glyphicon-usd'></span> Nicht erkannte Zahlungen
                     </a>
                 </li>
             </ul>

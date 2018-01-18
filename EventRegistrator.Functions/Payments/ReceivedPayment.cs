@@ -17,5 +17,6 @@ namespace EventRegistrator.Functions.Payments
         public string Reference { get; set; }
         public bool Settled { get; set; }
         public ICollection<PaymentAssignment> Assignments { get; set; }
+        public decimal? Repaid { get; set; }
     }
 }
