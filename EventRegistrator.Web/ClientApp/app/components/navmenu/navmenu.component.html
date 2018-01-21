@@ -12,12 +12,6 @@
         <div class='clearfix'></div>
         <div class='navbar-collapse collapse'>
             <ul class='nav navbar-nav'>
-                <!--<li [routerLinkActive]="['link-active']">
-                        <a [routerLink]="['/home']">
-                            <span class='glyphicon glyphicon-home'></span> Home
-                        </a>
-                    </li>
-    -->
                 <li [routerLinkActive]="['link-active']">
                     <a [routerLink]="['/registrables']">
                         <span class='glyphicon glyphicon-th-list'></span> Übersicht Anmeldungen
@@ -31,6 +25,11 @@
                 <li [routerLinkActive]="['link-active']">
                     <a [routerLink]="['/unrecognizedPayments']">
                         <span class='glyphicon glyphicon-usd'></span> Nicht erkannte Zahlungen
+                    </a>
+                </li>
+                <li [routerLinkActive]="['link-active']">
+                    <a [routerLink]="['/paymentOverview']">
+                        <span class='glyphicon glyphicon-usd'></span> Übersicht Einnahmen
                     </a>
                 </li>
             </ul>

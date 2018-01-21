@@ -1,0 +1,47 @@
+<h1>Übersicht Einnahmen</h1>
+
+<p *ngIf="!paymentOverview"><em>Loading...</em></p>
+
+<table class='table' *ngIf="paymentOverview">
+    <tbody>
+        <tr>
+            <td>Geld eingenommen:</td>
+            <td align="right">{{ paymentOverview.ReceivedMoney | currency : "CHF" : 2}}</td>
+            <td>aus {{paymentOverview.PaidRegistrations}} Anmeldungen</td>
+        </tr>
+        <tr>
+            <td>Ausstehende Zahlungen:</td>
+            <td align="right" >{{ paymentOverview.OutstandingAmount | currency : "CHF" : 2  }}</td>
+            <td>aus {{ paymentOverview.NotFullyPaidRegistrations }} Anmeldungen</td>
+        </tr>
+        <tr>
+            <td>Kontostand:</td>
+            <td align="right" >{{ paymentOverview.Balance.Currency }} {{ paymentOverview.Balance.Balance | currency : paymentOverview.Balance.Currency : 2 }}</td>
+            <td>IBAN {{ paymentOverview.Balance.AccountIban }}</td>
+        </tr>
+        <tr>
+            <td>Potential durch offene Plätze:</td>
+            <td align="right">{{ paymentOverview.PotentialOfOpenSpotsSum| currency : "CHF" : 2 }}</td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
+
+<table class='table' *ngIf="showPotentialDetails">
+    <thead>
+        <tr>
+            <th>Bezeichnung</th>
+            <th>Plätze verfügbar</th>
+            <th>Akzeptiert</th>
+            <th>Auf Warteliste</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let registrable of singleRegistrables">
+            <td><a [routerLink]="['/registrables', registrable.Id, 'participants']">{{ registrable.Name }}</a></td>
+            <td>{{ registrable.SpotsAvailable }}</td>
+            <td>{{ registrable.Accepted }}</td>
+            <td>{{ registrable.OnWaitingList }}</td>
+        </tr>
+    </tbody>
+</table>
