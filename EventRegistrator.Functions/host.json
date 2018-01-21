@@ -25,7 +25,8 @@
     "GetHostingSeekers",
     "GetPaymentOverview",
     "GetUnrecognizedPayments",
-    "SetRecognizedEmail"
+    "SetRecognizedEmail",
+    "GetRegistrationOverview"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {

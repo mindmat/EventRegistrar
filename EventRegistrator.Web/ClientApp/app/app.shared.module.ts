@@ -14,6 +14,7 @@ import { ParticipantsComponent } from './components/participants/participants.co
 import { HostingComponent } from './components/hosting/hosting.component';
 import { UnrecognizedPaymentsComponent } from './components/unrecognizedPayments/unrecognizedPayments.component';
 import { PaymentOverviewComponent } from './components/paymentOverview/paymentOverview.component';
+import { RegistrationComponent } from './components/registration/registration.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { PaymentOverviewComponent } from './components/paymentOverview/paymentOv
     HostingComponent,
     HomeComponent,
     UnrecognizedPaymentsComponent,
-    PaymentOverviewComponent
+    PaymentOverviewComponent,
+    RegistrationComponent
   ],
   imports: [
     CommonModule,
@@ -37,6 +39,7 @@ import { PaymentOverviewComponent } from './components/paymentOverview/paymentOv
       { path: 'counter', component: CounterComponent },
       { path: 'registrables', component: RegistrablesComponent },
       { path: 'registrables/:id/participants', component: ParticipantsComponent },
+      { path: 'registration/:id', component: RegistrationComponent },
       { path: 'hosting', component: HostingComponent },
       { path: 'unrecognizedPayments', component: UnrecognizedPaymentsComponent },
       { path: 'paymentOverview', component: PaymentOverviewComponent },

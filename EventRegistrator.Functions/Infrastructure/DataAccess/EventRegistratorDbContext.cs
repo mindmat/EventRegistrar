@@ -77,12 +77,12 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
 
             modelBuilder.Entity<Seat>()
                 .HasOptional(seat => seat.Registration)
-                .WithMany()
+                .WithMany(reg => reg.Seats_AsLeader)
                 .HasForeignKey(seat => seat.RegistrationId);
 
             modelBuilder.Entity<Seat>()
                 .HasOptional(seat => seat.Registration_Follower)
-                .WithMany()
+                .WithMany(reg => reg.Seats_AsFollower)
                 .HasForeignKey(seat => seat.RegistrationId_Follower);
 
             modelBuilder.Entity<ReceivedPayment>()
