@@ -13,7 +13,7 @@ export class PaymentOverviewComponent {
     var eventId = '762A93A4-56E0-402C-B700-1CFB3362B39D';
     http.get(`${baseUrl}api/event/${eventId}/PaymentOverview`).subscribe(result => {
       this.paymentOverview = result.json() as PaymentOverview;
-      this.paymentOverview.PotentialOfOpenSpotsSum = this.addOpenSpots(this.paymentOverview.PotentialOfOpenSpots)
+      this.paymentOverview.PotentialOfOpenSpotsSum = this.addOpenSpots(this.paymentOverview.PotentialOfOpenSpots);
     }, error => console.error(error));
   }
 

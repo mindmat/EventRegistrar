@@ -6,23 +6,23 @@
     <tbody>
         <tr>
             <td>Geld eingenommen:</td>
-            <td align="right">{{ paymentOverview.ReceivedMoney | currency : "CHF" : 2}}</td>
+            <td align="right">{{ paymentOverview.ReceivedMoney | currency : paymentOverview.Balance.Currency }}</td>
             <td>aus {{paymentOverview.PaidRegistrations}} Anmeldungen</td>
         </tr>
         <tr>
             <td>Ausstehende Zahlungen:</td>
-            <td align="right" >{{ paymentOverview.OutstandingAmount | currency : "CHF" : 2  }}</td>
+            <td align="right">{{ paymentOverview.OutstandingAmount | currency : paymentOverview.Balance.Currency }}</td>
             <td>aus {{ paymentOverview.NotFullyPaidRegistrations }} Anmeldungen</td>
         </tr>
         <tr>
             <td>Kontostand:</td>
-            <td align="right" >{{ paymentOverview.Balance.Currency }} {{ paymentOverview.Balance.Balance | currency : paymentOverview.Balance.Currency : 2 }}</td>
+            <td align="right">{{ paymentOverview.Balance.Balance | currency : paymentOverview.Balance.Currency }}</td>
             <td>IBAN {{ paymentOverview.Balance.AccountIban }}</td>
         </tr>
         <tr>
             <td>Potential durch offene Plätze:</td>
-            <td align="right">{{ paymentOverview.PotentialOfOpenSpotsSum| currency : "CHF" : 2 }}</td>
-            <td></td>
+            <td align="right">{{ paymentOverview.PotentialOfOpenSpotsSum | currency : paymentOverview.Balance.Currency }}</td>
+            <td><button (click)="showPotentialDetails=!showPotentialDetails">Details</button></td>
         </tr>
     </tbody>
 </table>
@@ -31,17 +31,15 @@
     <thead>
         <tr>
             <th>Bezeichnung</th>
-            <th>Plätze verfügbar</th>
-            <th>Akzeptiert</th>
-            <th>Auf Warteliste</th>
+            <th align="right">Plätze verfügbar</th>
+            <th align="right">Potential</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let registrable of singleRegistrables">
-            <td><a [routerLink]="['/registrables', registrable.Id, 'participants']">{{ registrable.Name }}</a></td>
-            <td>{{ registrable.SpotsAvailable }}</td>
-            <td>{{ registrable.Accepted }}</td>
-            <td>{{ registrable.OnWaitingList }}</td>
+        <tr *ngFor="let potential of paymentOverview.PotentialOfOpenSpots">
+            <td><a [routerLink]="['/registrables', potential.RegistrableId, 'participants']">{{ potential.Name }}</a></td>
+            <td align="right">{{ potential.SpotsAvailable }}</td>
+            <td align="right">{{ potential.PotentialIncome | currency : paymentOverview.Balance.Currency }}</td>
         </tr>
     </tbody>
 </table>

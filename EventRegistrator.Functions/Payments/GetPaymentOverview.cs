@@ -39,6 +39,7 @@ namespace EventRegistrator.Functions.Payments
                                                  pmf.Currency
                                              })
                                              .FirstOrDefaultAsync();
+
                 var activeRegistrations = await dbContext.Registrations
                                                          .Where(reg => reg.IsWaitingList != true &&
                                                                        reg.State != RegistrationState.Cancelled)
