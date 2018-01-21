@@ -37,7 +37,9 @@ namespace EventRegistrator.Functions.Payments
                     FileId = camt.FileId,
                     AccountIban = camt.Account,
                     Balance = camt.Balance,
-                    Currency = camt.Currency
+                    Currency = camt.Currency,
+                    BookingsFrom = camt.BookingsFrom,
+                    BookingsTo = camt.BookingsTo
                 };
 
                 dbContext.PaymentFiles.Add(paymentFile);
@@ -51,7 +53,7 @@ namespace EventRegistrator.Functions.Payments
                         Amount = camtEntry.Amount,
                         BookingDate = camtEntry.BookingDate,
                         Currency = camtEntry.Currency,
-                        Reference = camtEntry.Reference,
+                        Reference = camtEntry.Reference
                     });
                 }
                 await dbContext.SaveChangesAsync();

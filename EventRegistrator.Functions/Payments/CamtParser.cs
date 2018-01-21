@@ -44,6 +44,18 @@ namespace EventRegistrator.Functions.Payments
                 Currency = statement.Descendants(ns + "Bal").Last().Descendants(ns + "Amt").First().Attribute("Ccy")?.Value,
                 Entries = entries.ToList()
             };
+            var filePeriod = statement.Descendants("FrToDt").FirstOrDefault();
+            if (filePeriod != null)
+            {
+                if (DateTime.TryParse(filePeriod.Descendants("FrDtTm").FirstOrDefault()?.Value, out var from))
+                {
+                    camt.BookingsFrom = from;
+                }
+                if (DateTime.TryParse(filePeriod.Descendants("ToDtTm").FirstOrDefault()?.Value, out var to))
+                {
+                    camt.BookingsTo = to;
+                }
+            }
             return camt;
         }
     }

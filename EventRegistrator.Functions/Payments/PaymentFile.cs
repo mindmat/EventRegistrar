@@ -10,6 +10,8 @@ namespace EventRegistrator.Functions.Payments
         public string FileId { get; set; }
         public string AccountIban { get; set; }
         public string Currency { get; set; }
-        public decimal Balance { get; set; }
+        public decimal? Balance { get; set; }
+        public DateTime? BookingsFrom { get; set; }
+        public DateTime? BookingsTo { get; set; }
     }
 }
