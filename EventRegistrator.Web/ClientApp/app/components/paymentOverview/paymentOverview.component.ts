@@ -6,8 +6,8 @@ import { Http } from '@angular/http';
   templateUrl: './paymentOverview.component.html'
 })
 export class PaymentOverviewComponent {
-  private paymentOverview: PaymentOverview;
-  private showPotentialDetails: boolean;
+  public paymentOverview: PaymentOverview;
+  public showPotentialDetails: boolean;
 
   constructor(http: Http, @Inject('BASE_URL') baseUrl: string) {
     var eventId = '762A93A4-56E0-402C-B700-1CFB3362B39D';

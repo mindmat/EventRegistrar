@@ -20,8 +20,9 @@ export class UnrecognizedPaymentsComponent {
   }
 
   saveMail(payment: Payment) {
-    console.log("saveMail called " + payment.Id);
-    this.http.post(this.baseUrl + 'api/payments/' + payment.Id + '/RecognizedEmail', `"${payment.RecognizedEmail}"`)
+      console.log(`saveMail called ${payment.Id}, email ${payment.RecognizedEmail}`);
+      payment.Locked = true;
+      this.http.post(this.baseUrl + 'api/payments/' + payment.Id + '/RecognizedEmail', payment.RecognizedEmail )
       .subscribe(result => { },
       error => console.error(error));
     //payment.RecognizedEmail = "test";
@@ -40,4 +41,5 @@ interface Payment {
   Repaid: number;
   Settled: boolean;
   RecognizedEmail: string;
+  Locked: boolean;
 }

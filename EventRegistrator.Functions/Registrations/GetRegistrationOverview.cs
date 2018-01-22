@@ -42,28 +42,32 @@ namespace EventRegistrator.Functions.Registrations
                         FirstName = reg.RespondentFirstName,
                         LastName = reg.RespondentLastName,
                         reg.SoldOutMessage,
-                        LeaderSpots = reg.Seats_AsLeader.Select(seat => new
-                        {
-                            seat.Id,
-                            seat.IsCancelled,
-                            seat.IsWaitingList,
-                            RegistrableName = seat.Registrable.Name,
-                            seat.RegistrationId,
-                            seat.RegistrationId_Follower,
-                            seat.PartnerEmail,
-                            seat.FirstPartnerJoined
-                        }),
-                        FollowerSpots = reg.Seats_AsFollower.Select(seat => new
-                        {
-                            seat.Id,
-                            seat.IsCancelled,
-                            seat.IsWaitingList,
-                            RegistrableName = seat.Registrable.Name,
-                            seat.RegistrationId,
-                            seat.RegistrationId_Follower,
-                            seat.PartnerEmail,
-                            seat.FirstPartnerJoined
-                        })
+                        LeaderSpots = reg.Seats_AsLeader
+                                         .OrderBy(seat => seat.Registrable.ShowInMailListOrder == int.MaxValue)
+                                         .Select(seat => new
+                                         {
+                                             seat.Id,
+                                             seat.IsCancelled,
+                                             seat.IsWaitingList,
+                                             RegistrableName = seat.Registrable.Name,
+                                             seat.RegistrationId,
+                                             seat.RegistrationId_Follower,
+                                             seat.PartnerEmail,
+                                             seat.FirstPartnerJoined
+                                         }),
+                        FollowerSpots = reg.Seats_AsFollower
+                                           .OrderBy(seat => seat.Registrable.ShowInMailListOrder == int.MaxValue)
+                                           .Select(seat => new
+                                           {
+                                               seat.Id,
+                                               seat.IsCancelled,
+                                               seat.IsWaitingList,
+                                               RegistrableName = seat.Registrable.Name,
+                                               seat.RegistrationId,
+                                               seat.RegistrationId_Follower,
+                                               seat.PartnerEmail,
+                                               seat.FirstPartnerJoined
+                                           })
                     })
                     .FirstOrDefaultAsync();
 

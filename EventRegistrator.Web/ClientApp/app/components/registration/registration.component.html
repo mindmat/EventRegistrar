@@ -1,8 +1,8 @@
 <h1>Anmeldung {{ registration.FirstName }} {{registration.LastName}} </h1>
 
-<p *ngIf="!registrable"><em>Loading...</em></p>
+<p *ngIf="!registration"><em>Loading...</em></p>
 
-<table class='table' *ngIf="registrable">
+<!--<table class='table' *ngIf="registration">
     <thead>
         <tr>
             <th *ngIf="!registrable.MaximumDoubleSeats">Name</th>
@@ -38,4 +38,4 @@
             <td *ngIf="registrable.MaximumDoubleSeats"><p *ngIf="participant.IsPartnerRegistration">x</p></td>
         </tr>
     </tbody>
-</table>
+</table>-->

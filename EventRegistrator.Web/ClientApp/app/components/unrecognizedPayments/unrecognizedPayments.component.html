@@ -7,6 +7,7 @@
         <tr>
             <th>Mitteilungstext</th>
             <th>Email</th>
+            <th></th>
             <th>Datum</th>
             <th>Betrag</th>
             <th>Zugeordnet</th>
@@ -17,8 +18,10 @@
         <tr *ngFor="let payment of payments">
             <td>{{ payment.Info }}</td>
             <td>
-                <input ng-switch-default type="text" ng-model="payment.RecognizedEmail" class="editable-input form-control input-sm" />
-                <button class="btn btn-primary btn-sm" (click)="saveMail(payment)"><span class="glyphicon glyphicon-ok"></span></button>
+                <input [(ngModel)]="payment.RecognizedEmail" type="text" *ngIf="!payment.Locked">
+            </td>
+            <td>
+                <button class="btn btn-primary btn-sm" (click)="saveMail(payment)" *ngIf="!payment.Locked"><span class="glyphicon glyphicon-ok"></span></button>
             </td>
             <td>{{ payment.BookingDate | date: 'dd.MM.yy' }}</td>
             <td>{{ payment.Amount }}{{ payment.Currency}}</td>

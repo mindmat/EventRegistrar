@@ -20,7 +20,7 @@ namespace EventRegistrator.Functions.Payments
             string paymentIdString,
             TraceWriter log)
         {
-            var email = await req.Content.ReadAsAsync<string>();
+            var email = await req.Content.ReadAsStringAsync();
             if (!Guid.TryParse(paymentIdString, out var paymentId))
             {
                 return req.CreateErrorResponse(HttpStatusCode.NotFound, $"{paymentIdString} is not a guid");
