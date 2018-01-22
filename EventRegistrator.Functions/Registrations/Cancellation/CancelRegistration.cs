@@ -64,6 +64,7 @@ namespace EventRegistrator.Functions.Registrations.Cancellation
                     {
                         // double place, leave the partner in
                         place.RegistrationId = null;
+                        place.PartnerEmail = null;
                     }
                     else
                     {
@@ -77,6 +78,7 @@ namespace EventRegistrator.Functions.Registrations.Cancellation
                     {
                         // double place, leave the partner in
                         place.RegistrationId_Follower = null;
+                        place.PartnerEmail = null;
                     }
                     else
                     {
