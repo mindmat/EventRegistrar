@@ -18,6 +18,14 @@ export class RegistrationComponent {
       this.registration = result.json() as Registration;
     }, error => console.error(error));
   }
+
+    cancelRegistration(reason: string) {
+        console.log(`cancel registration ${this.registration.Id}, reason ${reason}`);
+        this.registration.Status = 4; // cancelled
+        this.http.post(`${this.baseUrl}api/registration/${this.registration.Id}/Cancel?reason=${reason}`, null)
+            .subscribe(result => { }, error => console.error(error));
+
+    }
 }
 
 interface Registration {
@@ -29,7 +37,7 @@ interface Registration {
   IsWaitingList: boolean;
   Price: number;
   Paid: number;
-  Status: string;
+  Status: number;
   ReceivedAt: Date;
   ReminderLevel: number;
   SoldOutMessage: string;

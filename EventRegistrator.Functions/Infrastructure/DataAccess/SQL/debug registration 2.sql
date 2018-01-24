@@ -12,12 +12,12 @@ where 1=1
   --and RespondentFirstName like 'passer%'
   --and RespondentEmail in('balthasar@cheiron.ch', 'manuel.pescatore@bluewin.ch', 'daniel.halter@ymail.com')
   --and RespondentEmail in('k.schlueter@gmail.com', 'k.schlueter24@gmail.com', 'stephanie@auderset.ch')
-  --and RespondentEmail in ('l.gurtner@protonmail.ch')
+  and RespondentEmail in ('sara@muerset.net')
   --and RespondentEmail like '%ELODIE.BAERLOCHER%'
   --and id in('bf87454c-c35a-4ba8-b23d-242f331e9fd9')
   --and ExternalIdentifier = '2_ABaOnueyyMvCyfoRdeowyfgi8sDCvVVs5WObREYP3d4Q3jmbk00V4V4lvnyMmp4'
-  --or id = 'EBA99BA9-951D-49C1-9CBC-3C54B95A4BC4'
-  and id in (select registrationid from Responses where ResponseString like 'virginia%')
+  --and id = 'F6F73036-CA15-4155-8B81-B2D0BADC1998'
+  --and id in (select registrationid from Responses where ResponseString like 'hestb%')
   
 select price, State, *
 from Registrations

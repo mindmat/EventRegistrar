@@ -26,6 +26,7 @@ namespace EventRegistrator.Functions.Registrations
         public ICollection<PaymentAssignment> Payments { get; set; }
         public ICollection<MailToRegistration> Mails { get; set; }
         public int ReminderLevel { get; set; }
+        public bool FallbackToPartyPass { get; set; }
         public ICollection<Seat> Seats_AsLeader { get; set; }
         public ICollection<Seat> Seats_AsFollower { get; set; }
     }

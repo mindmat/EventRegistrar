@@ -33,7 +33,7 @@ namespace EventRegistrator.Functions.Registrations
                         reg.Id,
                         reg.IsWaitingList,
                         reg.Price,
-                        Status = reg.State.ToString(),
+                        Status = reg.State,
                         Paid = (decimal?)reg.Payments.Sum(ass => ass.Amount),
                         reg.Language,
                         reg.ReceivedAt,

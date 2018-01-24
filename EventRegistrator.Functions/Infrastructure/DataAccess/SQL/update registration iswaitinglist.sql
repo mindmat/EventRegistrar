@@ -57,6 +57,6 @@ where IsWaitingList = 0
 				   and IsWaitingList = 1
 				   and rbl.HasWaitingList = 1))
 
---rollback
+rollback
 
 --commit
