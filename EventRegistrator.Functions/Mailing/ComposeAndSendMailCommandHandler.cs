@@ -263,9 +263,24 @@ namespace EventRegistrator.Functions.Mailing
                     }
                     else if (parts.key == "CANCELLATIONREASON")
                     {
-                        templateFiller[key] = (await context
-                                                     .RegistrationCancellations
-                                                     .FirstOrDefaultAsync(rcl => rcl.RegistrationId == command.RegistrationId))?.Reason;
+                        var cancellation = (await context
+                                                  .RegistrationCancellations
+                                                  .FirstOrDefaultAsync(rcl => rcl.RegistrationId == command.RegistrationId));
+
+                        if (cancellation != null)
+                        {
+                            var reason = cancellation.Reason;
+                            if (cancellation.Refund > 0m)
+                            {
+                                // HACK: hardcoded addition to template
+                                reason  += language == "de"
+                                    ? ". Bitte sende und deine Kontoinformationen (IBAN, Kontoinhaber, PLZ/Ort) für die Rückzahlung"
+                                    : ". Please give us your bank details (IBAN, account holder name, ZIP/town) for a refund";
+                                
+                            }
+                            templateFiller[key] = reason;
+                        }
+
                     }
                     else if (parts.key == "ACCEPTEDDATE" && acceptedDate.HasValue)
                     {

@@ -16,12 +16,34 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p >Grund:</p>
-                <input #reason value="Abmeldung">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p>Grund:</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <input #reason value="Abmeldung">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p>Trotz Zahlungen</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="checkbox" #ignorePayments />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <p>% Rückzahlung</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <input type="number" #refundPercentage />
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-                <button type="button" class="btn btn-primary" (click)="cancelRegistration(reason.value)" data-dismiss="modal">Stornieren</button>
+                <button type="button" class="btn btn-primary" (click)="cancelRegistration(reason.value, ignorePayments.value, refundPercentage.value)" data-dismiss="modal">Stornieren</button>
             </div>
         </div>
     </div>

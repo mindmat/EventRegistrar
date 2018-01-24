@@ -28,7 +28,15 @@ namespace EventRegistrator.Functions.Registrations.Cancellation
 
             var ignorePayments = req.GetQueryNameValuePairs().FirstOrDefault(kvp => string.Compare(kvp.Key, "ignorePayments", StringComparison.OrdinalIgnoreCase) == 0).Value == "true";
             var reason = req.GetQueryNameValuePairs().FirstOrDefault(kvp => string.Compare(kvp.Key, "reason", StringComparison.OrdinalIgnoreCase) == 0).Value;
-
+            decimal.TryParse(req.GetQueryNameValuePairs().FirstOrDefault(kvp => string.Compare(kvp.Key, "refundPercentage", StringComparison.OrdinalIgnoreCase) == 0).Value, out var refundPercentage);
+            if (refundPercentage < 0m)
+            {
+                refundPercentage = 0m;
+            }
+            else if (refundPercentage > 1m)
+            {
+                refundPercentage = 1m;
+            }
 
             using (var dbContext = new EventRegistratorDbContext())
             {
@@ -92,8 +100,9 @@ namespace EventRegistrator.Functions.Registrations.Cancellation
                     Id = Guid.NewGuid(),
                     RegistrationId = registrationId,
                     Reason = reason,
-                    Created = DateTime.UtcNow
-                    
+                    Created = DateTime.UtcNow,
+                    RefundPercentage = refundPercentage,
+                    Refund = refundPercentage * registration.Payments.Sum(ass=>ass.Amount)
                 };
                 dbContext.RegistrationCancellations.Add(cancellation);
 
