@@ -16,5 +16,6 @@
         PartnerRegistrationFullyPaid = 43,
         SingleRegistrationFirstReminder = 51,
         DoubleRegistrationFirstReminder = 61,
+        OptionsForRegistrationsOnWaitingList = 101
     }
 }

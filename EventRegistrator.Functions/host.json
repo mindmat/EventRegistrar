@@ -26,7 +26,8 @@
     "GetPaymentOverview",
     "GetUnrecognizedPayments",
     "SetRecognizedEmail",
-    "GetRegistrationOverview"
+    "GetRegistrationOverview",
+    "SendOptionsToRegistrationsOnWaitingListHttpHandler"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {

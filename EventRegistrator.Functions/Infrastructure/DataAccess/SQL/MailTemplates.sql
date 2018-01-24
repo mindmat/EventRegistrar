@@ -1561,5 +1561,53 @@ VALUES ('FE111223-B51A-472E-86CA-20A3332AC0AB', '762A93A4-56E0-402C-B700-1CFB336
   </tbody>
 </table>');
 
+
+
+INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
+VALUES ('FBD3DE7D-4502-4584-810B-A7D0D268F45A', 101 /*OptionsForRegistrationsOnWaitingList*/, 2, 'Warteliste - holt mich hier raus', 'registration@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
+'<table cellspacing="0" cellpadding="0" align="center">
+  <tbody>
+    <tr>
+      <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
+    </tr>
+    <tr>
+      <td><br /><strong>Hallo {{FirstName}}</strong><br />
+        <p>Du bekommst dieses Mail, weil du auf der Warteliste f&uuml;rs Leapin'' Lindy 2018 bist. Vielleicht ist dir bereits aufgefallen, dass der Party Pass ausverkauft ist. Aufgrund des Wechsels in das National ist der Platz leider begrenzt und wir werden voraussichtlich auch keine Abendkasse anbieten k&ouml;nnen.</p>
+        <p>Selbstverst&auml;ndlich haben wir aber unsere Freunde auf der Warteliste nicht vergessen. F&uuml;r dich gibt es drei M&ouml;glichkeiten am Leapin'' Lindy 2018 teilzunehmen:&nbsp;</p>
+        <ol>
+          <li>Es gibt noch einige freie Pl&auml;tze in beiden Solo Jazz Levels. Wenn du dich dazu entscheidest dorthin zu wechseln, bist du nat&uuml;rlich an den Partys auch mit dabei.</li>
+          <li>Es gibt noch einige freie Pl&auml;tze im Level Advanced/Advanced+ (Achtung: das Niveau wird hoch sein). Wenn du dich dazu entscheidest dich da anzumelden, bist du an den Partys selbstverst&auml;ndlich auch mit dabei.</li>
+          <li>Wenn du lieber nur an die Partys kommst, kannst du uns das mitteilen. Falls du bis am 1. Februar nicht in den Kurs nachr&uuml;ckst, buchen wir deinen Platz auf der Warteliste in einen Party Pass um.</li>
+        </ol>
+        <p>Damit wir planen k&ouml;nnen, bitten wir dich, uns <strong>innerhalb von&nbsp;5 Tagen</strong>&nbsp;per Antwort auf diese Email mitzuteilen,&nbsp;f&uuml;r welche der drei Optionen du dich entscheidest. Falls wir keine Antwort erhalten, bleibst du zwar auf der Warteliste, erh&auml;ltst aber keinen Party Pass.</p>
+        <p>Swingende Gr&uuml;sse,<br />Dein Leapin'' Lindy Team</p>
+      </td>
+    </tr>
+  </tbody>
+</table>');
+
+INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
+VALUES ('35EBF6A3-FB12-4812-B0D1-3175F328DD53', 101 /*OptionsForRegistrationsOnWaitingList*/, 2, 'Waiting List - get me out of here', 'registration@leapinlindy.ch', 'Leapin'' Lindy', 'en', 
+'<table cellspacing="0" cellpadding="0" align="center">
+  <tbody>
+    <tr>
+      <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
+    </tr>
+    <tr>
+      <td><br /><strong>Hi {{FirstName}}</strong><br />
+        <p>You get this mail because you are on the waiting list for Leapin'' Lindy 2018. You might have noticed that the Party Pass is sold out. Due to the change of venue to the National, the&nbsp;space is unfortunately limited and we will probably not be able to offer a box office.</p>
+        <p>Of course, we didn''t forget our friends on the waiting list. There are three ways for you to participate in Leapin'' Lindy 2018:&nbsp;</p>
+        <ol>
+          <li>There are still spots available for the both Authentic Jazz tracks. If you register for this track the party pass is included.</li>
+          <li>There are still spots available for Lindy Hop Advanced and Advanced + levels, although you must have the level.</li>
+          <li>If you''d rather just come to the parties, let us know. If you do not move up until&nbsp;the 1st February, we will provide a party pass for you.</li>
+        </ol>
+        <p>To be able to plan, we ask you to let us know <strong>within 5 days</strong>&nbsp;which of the three options you chose by answering this email. If we don''t get an answer, you will stay on the waiting list, but you won''t get a Party Pass.</p>
+        <p>Swing Out,<br />Your Leapin&rsquo; Lindy Team</p>
+      </td>
+    </tr>
+  </tbody>
+</table>');
+
 --commit
 --rollback
