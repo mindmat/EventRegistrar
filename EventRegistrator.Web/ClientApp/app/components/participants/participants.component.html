@@ -37,10 +37,8 @@
     </thead>
     <tbody>
         <tr *ngFor="let participant of registrable.WaitingList">
-<!--            <td>{{ participant.Leader?.FirstName }} {{participant.Leader?.LastName}}</td>-->
             <td><a *ngIf="participant.Leader" [routerLink]="['/registration', participant.Leader?.Id]">{{ participant.Leader?.FirstName }} {{participant.Leader?.LastName}}</a></td>
             <td *ngIf="registrable.MaximumDoubleSeats">
-<!--                {{ participant.Follower?.FirstName }} {{participant.Follower?.LastName}}-->
                 <a *ngIf="participant.Follower" [routerLink]="['/registration', participant.Follower?.Id]">{{ participant.Follower?.FirstName }} {{participant.Follower?.LastName}}</a>
             </td>
             <td *ngIf="registrable.MaximumDoubleSeats"><p *ngIf="participant.IsPartnerRegistration">x</p></td>

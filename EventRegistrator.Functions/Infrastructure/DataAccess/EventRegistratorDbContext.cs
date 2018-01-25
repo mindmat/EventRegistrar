@@ -51,14 +51,19 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
                 .HasForeignKey(frm => frm.EventId);
 
             modelBuilder.Entity<Registration>()
-                .HasRequired(frm => frm.RegistrationForm)
+                .HasRequired(reg => reg.RegistrationForm)
                 .WithMany()
-                .HasForeignKey(frm => frm.RegistrationFormId);
+                .HasForeignKey(reg => reg.RegistrationFormId);
 
             modelBuilder.Entity<Response>()
-                .HasOptional(frm => frm.Question)
+                .HasRequired(rsp => rsp.Registration)
+                .WithMany(reg=>reg.Responses)
+                .HasForeignKey(rsp => rsp.RegistrationId);
+
+            modelBuilder.Entity<Response>()
+                .HasOptional(rsp => rsp.Question)
                 .WithMany()
-                .HasForeignKey(frm => frm.QuestionId);
+                .HasForeignKey(rsp => rsp.QuestionId);
 
             //modelBuilder.Entity<QuestionOption>()
             //    .HasRequired(qop => qop.Question)

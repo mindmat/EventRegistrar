@@ -29,5 +29,6 @@ namespace EventRegistrator.Functions.Registrations
         public bool FallbackToPartyPass { get; set; }
         public ICollection<Seat> Seats_AsLeader { get; set; }
         public ICollection<Seat> Seats_AsFollower { get; set; }
+        public ICollection<Response> Responses { get; set; }
     }
 }

@@ -36,7 +36,8 @@ namespace EventRegistrator.Functions.Payments
                                              {
                                                  pmf.AccountIban,
                                                  pmf.Balance,
-                                                 pmf.Currency
+                                                 pmf.Currency,
+                                                 Date = pmf.BookingsTo
                                              })
                                              .FirstOrDefaultAsync();
 
@@ -72,7 +73,8 @@ namespace EventRegistrator.Functions.Payments
                     {
                         balance.Balance,
                         balance.Currency,
-                        balance.AccountIban
+                        balance.AccountIban,
+                        balance.Date?.Date
                     },
                     ReceivedMoney = activeRegistrations.Sum(reg => reg.Paid ?? 0m),
                     PaidRegistrations = activeRegistrations.Count(reg => reg.State == RegistrationState.Paid),

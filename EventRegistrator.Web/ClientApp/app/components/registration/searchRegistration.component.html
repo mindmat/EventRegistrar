@@ -1,0 +1,32 @@
+<h1>Anmeldung suchen</h1>
+
+
+<div class="row">
+    <div class="col-sm-1">
+        <p>Suche:</p>
+    </div>
+    <div class="col-sm-1">
+        <input #searchString type="text" (keyup.enter)="search(searchString.value)">
+    </div>
+</div>
+
+<p *ngIf="isSearching"><em>Loading...</em></p>
+
+
+<table class='table' *ngIf="registrations">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Mail</th>
+            <th>Treffer in Antworten</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let registration of registrations">
+            <td [routerLink]="['/registration', registration.Id]">{{ registration.FirstName }} {{ registration.LastName }}</td>
+            <td>{{ registration.Email }}</td>
+            <td>{{ registration.ResponsesJoined }}</td>
+        </tr>
+    </tbody>
+</table>
+<br />
