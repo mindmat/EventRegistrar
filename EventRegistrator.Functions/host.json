@@ -15,6 +15,7 @@
     "ComposeAndSendMailHttpHandler",
     "ProcessPaymentFilesHttpHandler",
     "ReleaseWithheldMails",
+    "ReleaseWithheldMail",
     "CheckIsWaitingListCommandHandler",
     "DoubleRegistrableOverview",
     "SingleRegistrableOverview",

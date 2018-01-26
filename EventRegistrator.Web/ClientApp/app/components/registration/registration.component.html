@@ -14,7 +14,7 @@
         </tr>
         <tr>
             <td>Preis:</td>
-            <td>{{ registration.Price | currency : 'CHF' }}, bezahlt {{ registration.Paid | currency : 'CHF' }}</td>
+            <td>{{ registration.Price | currency : 'CHF' }}, bezahlt {{ registration.Paid || 0 | currency : 'CHF' }}</td>
         </tr>
         <tr>
             <td>Status:</td>
@@ -42,13 +42,12 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let mail of mails" (click)="showMail(mail.ContentHtml)" data-toggle="modal" data-target="#mailModal">
-            <td>{{ mail.Subject }}</td>
+        <tr *ngFor="let mail of mails" (click)="showMail(mail.ContentHtml)">
+            <td data-toggle="modal" data-target="#mailModal">{{ mail.Subject }}</td>
             <td>{{ mail.Recipients }}</td>
             <td>{{ mail.Created | date: 'dd.MM.yy hh:mm' }}</td>
             <td>{{ mail.SenderName }} ({{ mail.SenderMail }})</td>
-            <td>{{ mail.Withhold }}</td>
-            <td><!--<button (click)="showMail(mail.ContentHtml)"></button>--></td>
+            <td>{{ mail.Withhold }} <button *ngIf="mail.Withhold" class="btn btn-primary btn-sm" (click)="releaseMail(mail.Id)">Freigeben</button></td>
         </tr>
     </tbody>
 </table>
@@ -63,7 +62,7 @@
     </thead>
     <tbody>
         <tr *ngFor="let spot of spots">
-            <td>{{ spot.Registrable }}</td>
+            <td><a [routerLink]="['/registrable', spot.RegistrableId]">{{ spot.Registrable }}</a></td>
             <td>{{ spot.FirstPartnerJoined | date: 'dd.MM.yy hh:mm' }}</td>
             <td><a *ngIf="spot.PartnerRegistrationId" [routerLink]="['/registration', spot.PartnerRegistrationId]">{{ spot.Partner }}</a></td>
         </tr>
