@@ -5,7 +5,7 @@
     <div class="col-sm-1">
         <p>Suche:</p>
     </div>
-    <div class="col-sm-1">
+    <div class="col-lg-4">
         <input #searchString type="text" (keyup.enter)="search(searchString.value)">
     </div>
 </div>
@@ -22,8 +22,8 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let registration of registrations" a [routerLink]="['/registration', registration.Id]">
-            <td>{{ registration.FirstName }} {{ registration.LastName }}</td>
+        <tr *ngFor="let registration of registrations">
+            <td><a a [routerLink]="['/registration', registration.Id]">{{ registration.FirstName }} {{ registration.LastName }}</a></td>
             <td>{{ registration.Email }}</td>
             <td>{{ registration.ResponsesJoined }}</td>
         </tr>
