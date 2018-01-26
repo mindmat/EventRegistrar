@@ -1,9 +1,69 @@
-<h1>Anmeldung {{ registration.FirstName }} {{registration.LastName}} </h1>
+<h1>Anmeldung {{ registration.FirstName }} {{registration.LastName}} <span class="badge badge-primary" *ngIf="registration.IsWaitingList">Warteliste</span></h1>
 
 <p *ngIf="!registration"><em>Loading...</em></p>
 
-<!-- Button trigger modal -->
-<button *ngIf="registration.Status != 4" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Stornieren</button>
+<table class="table" *ngIf="registration">
+    <tbody>
+        <tr>
+            <td>Mail:</td>
+            <td>{{ registration.Email }}</td>
+        </tr>
+        <tr>
+            <td>Sprache:</td>
+            <td><span class="badge badge-primary">{{ registration.Language }}</span></td>
+        </tr>
+        <tr>
+            <td>Preis:</td>
+            <td>{{ registration.Price | currency : 'CHF' }}, bezahlt {{ registration.Paid | currency : 'CHF' }}</td>
+        </tr>
+        <tr>
+            <td>Status:</td>
+            <td><span class="badge badge-primary">{{ registration.StatusText }}</span>   <button *ngIf="registration.Status != 4" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Stornieren</button></td>
+        </tr>
+        <tr>
+            <td>Anmeldezeitpunkt:</td>
+            <td>{{ registration.ReceivedAt | date: 'dd.MM.yy hh:mm:ss' }}</td>
+        </tr>
+        <tr *ngIf="registration.IsWaitingList">
+            <td>Wünscht Partypass:</td>
+            <td><p *ngIf="registration.FallbackToPartyPass">x</p>  <button *ngIf="!registration.FallbackToPartyPass" type="button" class="btn btn-primary btn-sm" (click)="fallbackToPartyPass()">Partypass reservieren</button></td>
+        </tr>
+    </tbody>
+</table>
+
+
+<table class="table table-hover" *ngIf="mails">
+    <thead class="thead-dark">
+        <tr>
+            <th>Betreff</th>
+            <th>Empfänger</th>
+            <th>Gesendet</th>
+            <th>Absender</th>
+            <th>Zurückbehalten</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let mail of mails" (click)="showMail(mail.ContentHtml)" data-toggle="modal" data-target="#mailModal">
+            <td>{{ mail.Subject }}</td>
+            <td>{{ mail.Recipients }}</td>
+            <td>{{ mail.Created | date: 'dd.MM.yy hh:mm' }}</td>
+            <td>{{ mail.SenderName }} ({{ mail.SenderMail }})</td>
+            <td>{{ mail.Withhold }}</td>
+            <td><!--<button (click)="showMail(mail.ContentHtml)"></button>--></td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- mail modal -->
+<div class="modal fade" id="mailModal" tabindex="-1" role="dialog" aria-labelledby="mailModalLabel" aria-hidden="true" >
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body" id="mailContainer">
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

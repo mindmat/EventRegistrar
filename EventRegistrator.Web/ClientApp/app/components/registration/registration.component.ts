@@ -8,14 +8,20 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class RegistrationComponent {
     public registration: Registration;
+    public mails: Mail[];
 
     constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string, private router: Router, private route: ActivatedRoute) {
+        
     }
 
     ngOnInit() {
         var registrationId = this.route.snapshot.params['id'];
         this.http.get(`${this.baseUrl}api/registrations/${registrationId}`).subscribe(result => {
             this.registration = result.json() as Registration;
+        }, error => console.error(error));
+
+        this.http.get(`${this.baseUrl}api/registrations/${registrationId}/mails`).subscribe(result => {
+            this.mails = result.json() as Mail[];
         }, error => console.error(error));
     }
 
@@ -34,6 +40,15 @@ export class RegistrationComponent {
             .subscribe(result => { }, error => console.error(error));
 
     }
+
+    showMail(content: string) {
+        var mailContainer = document.getElementById("mailContainer") as HTMLDivElement;
+        mailContainer.innerHTML = content;
+    }
+
+    fallbackToPartyPass() {
+        
+    }
 }
 
 interface Registration {
@@ -46,9 +61,11 @@ interface Registration {
     Price: number;
     Paid: number;
     Status: number;
+    StatusText: string;
     ReceivedAt: Date;
     ReminderLevel: number;
     SoldOutMessage: string;
+    FallbackToPartyPass: boolean;
     LeaderSpots: Spot[];
     Seats_AsFollower: Spot[];
 }
@@ -62,4 +79,15 @@ interface Spot {
     RegistrationId_Follower: string;
     PartnerEmail: string;
     FirstPartnerJoined: Date;
+}
+
+interface Mail {
+    Id: string;
+    SenderMail: string;
+    SenderName: string;
+    Subject: string;
+    Recipients: string;
+    Created: Date;
+    Withhold: boolean;
+    ContentHtml: string;
 }

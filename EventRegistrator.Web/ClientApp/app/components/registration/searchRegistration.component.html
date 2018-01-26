@@ -13,8 +13,8 @@
 <p *ngIf="isSearching"><em>Loading...</em></p>
 
 
-<table class='table' *ngIf="registrations">
-    <thead>
+<table class="table table-hover" *ngIf="registrations">
+    <thead class="thead-dark">
         <tr>
             <th>Name</th>
             <th>Mail</th>
@@ -22,8 +22,8 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let registration of registrations">
-            <td [routerLink]="['/registration', registration.Id]">{{ registration.FirstName }} {{ registration.LastName }}</td>
+        <tr *ngFor="let registration of registrations" a [routerLink]="['/registration', registration.Id]">
+            <td>{{ registration.FirstName }} {{ registration.LastName }}</td>
             <td>{{ registration.Email }}</td>
             <td>{{ registration.ResponsesJoined }}</td>
         </tr>

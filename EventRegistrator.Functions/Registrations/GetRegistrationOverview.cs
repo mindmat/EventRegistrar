@@ -34,6 +34,7 @@ namespace EventRegistrator.Functions.Registrations
                         reg.IsWaitingList,
                         reg.Price,
                         Status = reg.State,
+                        StatusText = reg.State.ToString(),
                         Paid = (decimal?)reg.Payments.Sum(ass => ass.Amount),
                         reg.Language,
                         reg.ReceivedAt,
@@ -42,6 +43,7 @@ namespace EventRegistrator.Functions.Registrations
                         FirstName = reg.RespondentFirstName,
                         LastName = reg.RespondentLastName,
                         reg.SoldOutMessage,
+                        reg.FallbackToPartyPass,
                         LeaderSpots = reg.Seats_AsLeader
                                          .OrderBy(seat => seat.Registrable.ShowInMailListOrder == int.MaxValue)
                                          .Select(seat => new

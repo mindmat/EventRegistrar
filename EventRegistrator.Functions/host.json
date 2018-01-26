@@ -28,7 +28,8 @@
     "SetRecognizedEmail",
     "GetRegistrationOverview",
     "SendOptionsToRegistrationsOnWaitingListHttpHandler",
-    "SearchRegistration"
+    "SearchRegistration",
+    "GetRegistrationMails"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {
