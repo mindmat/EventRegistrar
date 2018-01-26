@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -19,7 +20,6 @@ namespace EventRegistrator.Functions.Registrations
             string eventIdString,
             TraceWriter log)
         {
-            log.Info("C# HTTP trigger function processed a request.");
             if (!Guid.TryParse(eventIdString, out var eventId))
             {
                 return req.CreateErrorResponse(HttpStatusCode.BadRequest, $"{eventIdString} should be a GUID");
@@ -30,29 +30,54 @@ namespace EventRegistrator.Functions.Registrations
                 .FirstOrDefault(q => string.Compare(q.Key, "searchstring", StringComparison.InvariantCultureIgnoreCase) == 0)
                 .Value;
 
+            log.Info($"Searching in event {eventId} for {searchString}");
+
             using (var dbContext = new EventRegistratorDbContext())
             {
+                var responseMatches = await dbContext.Responses
+                                                     .Where(rsp => rsp.Registration.RegistrationForm.EventId == eventId &&
+                                                                   rsp.ResponseString.Contains(searchString))
+                                                     .Select(rsp => new { rsp.RegistrationId, rsp.Question.Title, rsp.ResponseString })
+                                                     .ToListAsync();
+                var registrationIds = responseMatches.Select(rsp => rsp.RegistrationId).Distinct().ToList();
+
                 var results = await dbContext.Registrations
                                              .Where(reg => reg.RegistrationForm.EventId == eventId)
-                                             .Select(reg => new
+                                             .Where(reg => reg.RespondentEmail.Contains(searchString) ||
+                                                           registrationIds.Contains(reg.Id))
+                                             .Select(reg => new RegistrationMatch
                                              {
-                                                 Registration = reg,
-                                                 MatchResponses = reg.Responses.Where(rsp => rsp.ResponseString.Contains(searchString))
-                                             })
-                                             .Where(reg => reg.Registration.RespondentEmail.Contains(searchString) ||
-                                                           reg.MatchResponses.Any())
-                                             .Select(tmp => new
-                                             {
-                                                 tmp.Registration.Id,
-                                                 Email = tmp.Registration.RespondentEmail,
-                                                 FirstName = tmp.Registration.RespondentFirstName,
-                                                 LastName = tmp.Registration.RespondentLastName,
-                                                 Responses = tmp.MatchResponses.Select(rsp => new { Question = rsp.Question.Title, Response = rsp.ResponseString })
+                                                 Id = reg.Id,
+                                                 Email = reg.RespondentEmail,
+                                                 FirstName = reg.RespondentFirstName,
+                                                 LastName = reg.RespondentLastName
                                              })
                                              .ToListAsync();
 
-                return req.CreateResponse(HttpStatusCode.OK , results);
+                foreach (var registrationMatch in results)
+                {
+                    registrationMatch.Responses = responseMatches.Where(rsp => rsp.RegistrationId == registrationMatch.Id)
+                                                                 .Select(rsp => new ResponseMatch { Question = rsp.Title, Response = rsp.ResponseString })
+                                                                 .ToList();
+
+                }
+                return req.CreateResponse(HttpStatusCode.OK, results);
             }
         }
+    }
+
+    public class RegistrationMatch
+    {
+        public Guid Id { get; set; }
+        public string Email { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public IEnumerable<ResponseMatch> Responses { get; set; }
+    }
+
+    public class ResponseMatch
+    {
+        public string Question { get; set; }
+        public string Response { get; set; }
     }
 }

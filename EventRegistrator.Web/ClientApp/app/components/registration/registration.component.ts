@@ -29,7 +29,7 @@ export class RegistrationComponent {
 
         console.log(`cancel registration ${this.registration.Id}, reason ${reason}, ignorePayments ${ignorePayments}, refundPercentage ${refundPercentage}`);
         this.registration.Status = 4; // cancelled
-        var url = `${this.baseUrl}api/registration/${this.registration.Id}/Cancel?reason=${reason};`;
+        var url = `${this.baseUrl}api/registration/${this.registration.Id}/Cancel?reason=${reason}`;
         if (ignorePayments) {
             url += "&ignorePayments=true";
         }
@@ -47,6 +47,9 @@ export class RegistrationComponent {
     }
 
     fallbackToPartyPass() {
+        var url = `${this.baseUrl}api/registrations/${this.registration.Id}/SetWaitingListFallback`;
+        this.http.post(url, null)
+            .subscribe(result => { }, error => console.error(error));
         
     }
 }

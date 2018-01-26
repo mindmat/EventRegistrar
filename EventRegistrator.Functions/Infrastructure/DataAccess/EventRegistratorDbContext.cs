@@ -57,7 +57,7 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
 
             modelBuilder.Entity<Response>()
                 .HasRequired(rsp => rsp.Registration)
-                .WithMany(reg=>reg.Responses)
+                .WithMany()
                 .HasForeignKey(rsp => rsp.RegistrationId);
 
             modelBuilder.Entity<Response>()
