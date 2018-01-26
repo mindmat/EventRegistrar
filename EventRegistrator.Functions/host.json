@@ -30,7 +30,8 @@
     "SendOptionsToRegistrationsOnWaitingListHttpHandler",
     "SearchRegistration",
     "GetRegistrationMails",
-    "SetWaitingListFallback"
+    "SetWaitingListFallback",
+    "GetRegistrationSpots"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {

@@ -43,33 +43,7 @@ namespace EventRegistrator.Functions.Registrations
                         FirstName = reg.RespondentFirstName,
                         LastName = reg.RespondentLastName,
                         reg.SoldOutMessage,
-                        reg.FallbackToPartyPass,
-                        LeaderSpots = reg.Seats_AsLeader
-                                         .OrderBy(seat => seat.Registrable.ShowInMailListOrder == int.MaxValue)
-                                         .Select(seat => new
-                                         {
-                                             seat.Id,
-                                             seat.IsCancelled,
-                                             seat.IsWaitingList,
-                                             RegistrableName = seat.Registrable.Name,
-                                             seat.RegistrationId,
-                                             seat.RegistrationId_Follower,
-                                             seat.PartnerEmail,
-                                             seat.FirstPartnerJoined
-                                         }),
-                        FollowerSpots = reg.Seats_AsFollower
-                                           .OrderBy(seat => seat.Registrable.ShowInMailListOrder == int.MaxValue)
-                                           .Select(seat => new
-                                           {
-                                               seat.Id,
-                                               seat.IsCancelled,
-                                               seat.IsWaitingList,
-                                               RegistrableName = seat.Registrable.Name,
-                                               seat.RegistrationId,
-                                               seat.RegistrationId_Follower,
-                                               seat.PartnerEmail,
-                                               seat.FirstPartnerJoined
-                                           })
+                        reg.FallbackToPartyPass
                     })
                     .FirstOrDefaultAsync();
 
