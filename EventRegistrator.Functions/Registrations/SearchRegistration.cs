@@ -50,7 +50,8 @@ namespace EventRegistrator.Functions.Registrations
                                                  Id = reg.Id,
                                                  Email = reg.RespondentEmail,
                                                  FirstName = reg.RespondentFirstName,
-                                                 LastName = reg.RespondentLastName
+                                                 LastName = reg.RespondentLastName,
+                                                 Price = reg.Price ?? 0m
                                              })
                                              .ToListAsync();
 
@@ -73,6 +74,7 @@ namespace EventRegistrator.Functions.Registrations
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public IEnumerable<ResponseMatch> Responses { get; set; }
+        public decimal Price { get; set; }
     }
 
     public class ResponseMatch

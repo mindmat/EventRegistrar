@@ -87,6 +87,7 @@ interface Registration {
     Language: string;
     Responses: Response[];
     ResponsesJoined: string;
+    Price: number;
 }
 
 interface Response {
