@@ -16,7 +16,8 @@ namespace EventRegistrator.Functions.Reminders
     public static class SendReminderCommandHandler
     {
         public const string SendReminderCommandsQueueName = "SendReminderCommands";
-        private static readonly HashSet<MailType?> MailTypesThatTriggerPaymentDeadline = new HashSet<MailType?> { MailType.DoubleRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted };
+        public static readonly HashSet<MailType?> MailTypes_Accepted = new HashSet<MailType?> { MailType.DoubleRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted };
+        public static readonly HashSet<MailType?> MailTypes_Reminder = new HashSet<MailType?> { MailType.DoubleRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder };
         private const int DefaultPaymentGracePeriod = 14;
 
         public static bool IsPaymentDue(DateTime startOfGracePeriodUtc, int? paymentGracePeriod = null)
@@ -26,7 +27,7 @@ namespace EventRegistrator.Functions.Reminders
 
         public static bool IsMailTypeThatTriggerPaymentDeadline(MailType mailType)
         {
-            return MailTypesThatTriggerPaymentDeadline.Contains(mailType);
+            return MailTypes_Accepted.Contains(mailType);
         }
 
         [FunctionName("SendReminderCommandHandler")]
@@ -40,17 +41,17 @@ namespace EventRegistrator.Functions.Reminders
                 var gracePeriod = command.GracePeriodInDays ?? DefaultPaymentGracePeriod;
 
                 var registrations = dbContext.Registrations
-                                             .Where(reg => reg.State == RegistrationState.Received && 
+                                             .Where(reg => reg.State == RegistrationState.Received &&
                                                            reg.IsWaitingList == false)
                                              .Select(reg => new
                                              {
                                                  Registration = reg,
-                                                 StartPaymentPeriodMail = reg.Mails.Where(map => MailTypesThatTriggerPaymentDeadline.Contains(map.Mail.Type))
+                                                 StartPaymentPeriodMail = reg.Mails.Where(map => MailTypes_Accepted.Contains(map.Mail.Type))
                                                                                    .Select(map => map.Mail)
                                                                                    .OrderByDescending(mail => mail.Created)
                                                                                    .FirstOrDefault()
                                              });
-                                             //.Where(tmp => (DateTime.UtcNow - tmp.StartPaymentPeriodMail.Created).Days > gracePeriod);
+                //.Where(tmp => (DateTime.UtcNow - tmp.StartPaymentPeriodMail.Created).Days > gracePeriod);
                 if (command.RegistrationId.HasValue)
                 {
                     registrations = registrations.Where(reg => reg.Registration.Id == command.RegistrationId);
