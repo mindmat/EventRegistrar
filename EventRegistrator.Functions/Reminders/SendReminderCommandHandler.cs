@@ -17,8 +17,9 @@ namespace EventRegistrator.Functions.Reminders
     {
         public const string SendReminderCommandsQueueName = "SendReminderCommands";
         public static readonly HashSet<MailType?> MailTypes_Accepted = new HashSet<MailType?> { MailType.DoubleRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted };
-        public static readonly HashSet<MailType?> MailTypes_Reminder = new HashSet<MailType?> { MailType.DoubleRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder };
-        private const int DefaultPaymentGracePeriod = 14;
+        public static readonly HashSet<MailType?> MailTypes_Reminder1 = new HashSet<MailType?> { MailType.DoubleRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder };
+        public static readonly HashSet<MailType?> MailTypes_Reminder2 = new HashSet<MailType?> { MailType.DoubleRegistrationSecondReminder, MailType.SingleRegistrationSecondReminder };
+        public const int DefaultPaymentGracePeriod = 14;
 
         public static bool IsPaymentDue(DateTime startOfGracePeriodUtc, int? paymentGracePeriod = null)
         {
@@ -32,52 +33,60 @@ namespace EventRegistrator.Functions.Reminders
 
         [FunctionName("SendReminderCommandHandler")]
         public static async Task Run([ServiceBusTrigger(SendReminderCommandsQueueName, AccessRights.Listen, Connection = "ServiceBusEndpoint")]
-            SendReminderCommand command, TraceWriter log)
+            SendReminderCommand command,
+            TraceWriter log)
         {
-            //log.Info($"C# ServiceBus queue trigger function processed message: {myQueueItem}");
-
             using (var dbContext = new EventRegistratorDbContext())
             {
-                var gracePeriod = command.GracePeriodInDays ?? DefaultPaymentGracePeriod;
-
-                var registrations = dbContext.Registrations
-                                             .Where(reg => reg.State == RegistrationState.Received &&
-                                                           reg.IsWaitingList == false)
-                                             .Select(reg => new
-                                             {
-                                                 Registration = reg,
-                                                 StartPaymentPeriodMail = reg.Mails.Where(map => MailTypes_Accepted.Contains(map.Mail.Type))
-                                                                                   .Select(map => map.Mail)
-                                                                                   .OrderByDescending(mail => mail.Created)
-                                                                                   .FirstOrDefault()
-                                             });
-                //.Where(tmp => (DateTime.UtcNow - tmp.StartPaymentPeriodMail.Created).Days > gracePeriod);
-                if (command.RegistrationId.HasValue)
+                var registration = await dbContext.Registrations
+                                                  .Where(reg => reg.Id == command.RegistrationId)
+                                                  .Select(reg => new
+                                                  {
+                                                      Registration = reg,
+                                                      StartPaymentPeriodMail = reg.Mails.Where(map => MailTypes_Accepted.Contains(map.Mail.Type))
+                                                                                        .Select(map => map.Mail)
+                                                                                        .OrderByDescending(mail => mail.Created)
+                                                                                        .FirstOrDefault()
+                                                  })
+                                                  .FirstOrDefaultAsync();
+                if (registration == null)
                 {
-                    registrations = registrations.Where(reg => reg.Registration.Id == command.RegistrationId);
+                    log.Info($"No registration found with Id {command.RegistrationId}");
+                    return;
                 }
-                var registrationsLocal = await registrations.ToListAsync();
-                log.Info($"Due registrations count: {registrationsLocal.Count}");
-
-                foreach (var dueRegistration in registrationsLocal)
+                if (registration.Registration.IsWaitingList == true)
                 {
-                    if (dueRegistration.StartPaymentPeriodMail == null)
-                    {
-                        log.Info($"Registration with id {dueRegistration.Registration.Id} has no accepted mail");
-                        continue;
-                    }
-                    if (IsPaymentDue(dueRegistration.StartPaymentPeriodMail.Created, gracePeriod))
-                    {
-                        await ServiceBusClient.SendEvent(
-                            new ComposeAndSendMailCommand
-                            {
-                                RegistrationId = dueRegistration.Registration.Id,
-                                Withhold = true,
-                                AllowDuplicate = false
-                            }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
-                    }
-
+                    log.Info($"Registration {command.RegistrationId} is on the waiting list and doesn't have to pay yet");
+                    return;
                 }
+                if (registration.Registration.State == RegistrationState.Cancelled)
+                {
+                    log.Info($"Registration {command.RegistrationId} is cancelled, so no payment needed anymore");
+                    return;
+                }
+                if (registration.Registration.State == RegistrationState.Paid)
+                {
+                    log.Info($"Registration {command.RegistrationId} is already paid");
+                    return;
+                }
+                if (registration.StartPaymentPeriodMail == null)
+                {
+                    log.Info($"Registration {registration.Registration.Id} lacks the accepted mail");
+                    return;
+                }
+                if (!IsPaymentDue(registration.StartPaymentPeriodMail.Created, DefaultPaymentGracePeriod))
+                {
+                    log.Info($"Registration {registration.Registration.Id} is not due yet");
+                    return;
+                }
+
+                await ServiceBusClient.SendEvent(
+                    new ComposeAndSendMailCommand
+                    {
+                        RegistrationId = registration.Registration.Id,
+                        Withhold = command.Withhold,
+                        AllowDuplicate = false
+                    }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
             }
         }
     }

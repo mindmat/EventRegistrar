@@ -3,27 +3,29 @@
 <p *ngIf="!dueRegistrations"><em>Loading...</em></p>
 
 <table class='table' *ngIf="dueRegistrations">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Preis</th>
-      <th>bezahlt</th>
-      <th>akzeptiert</th>
-      <th>Erinnerung</th>
-      <th>Email</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let dueRegsitration of dueRegistrations">
-      <td>
-        <a [routerLink]="['/registration', dueRegsitration.Id]">{{ dueRegsitration.FirstName }} {{ dueRegsitration.LastName}}</a>
-      </td>
-      <td class="text-right">{{ dueRegsitration.Price | currency : 'CHF' }}</td>
-      <td class="text-right">{{ dueRegsitration.Paid | currency : 'CHF' }}</td>
-      <td>{{ dueRegsitration.AcceptedMail?.Created | date: 'dd.MM.yy hh:mm:ss' }}</td>
-      <td>{{ dueRegsitration.Reminder1Mail?.Created | date: 'dd.MM.yy hh:mm:ss' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegsitration.Reminder1Possible">Erinnern</button></td>
-      <td>{{ dueRegsitration.Email }}</td>
-    </tr>
-  </tbody>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Preis</th>
+            <th>bezahlt</th>
+            <th>akzeptiert</th>
+            <th>Erinnerung 1</th>
+            <th>Erinnerung 2</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let dueRegsitration of dueRegistrations">
+            <td>
+                <a [routerLink]="['/registration', dueRegsitration.Id]">{{ dueRegsitration.FirstName }} {{ dueRegsitration.LastName}}</a>
+            </td>
+            <td class="text-right">{{ dueRegsitration.Price | currency : 'CHF' }}</td>
+            <td class="text-right">{{ dueRegsitration.Paid | currency : 'CHF' }}</td>
+            <td>{{ dueRegsitration.AcceptedMail?.Created | date: 'dd.MM.yy hh:mm:ss' }}</td>
+            <td>{{ dueRegsitration.Reminder1Mail?.Created | date: 'dd.MM.yy hh:mm:ss' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegsitration.Reminder1Due">erinnern</button></td>
+            <td>{{ dueRegsitration.Reminder2Mail?.Created | date: 'dd.MM.yy hh:mm:ss' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegsitration.Reminder2Due">erinnern</button></td>
+            <td>{{ dueRegsitration.Email }}</td>
+        </tr>
+    </tbody>
 </table>
 <br />

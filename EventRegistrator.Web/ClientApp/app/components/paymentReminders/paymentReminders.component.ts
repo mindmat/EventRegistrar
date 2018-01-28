@@ -14,13 +14,8 @@ export class PaymentRemindersComponent {
 
   ngOnInit() {
     const eventId = "762A93A4-56E0-402C-B700-1CFB3362B39D";
-    const millisecondsPerDay = 1000 * 3600 * 24;
     this.http.get(`${this.baseUrl}api/events/${eventId}/duepayments`).subscribe(result => {
       this.dueRegistrations = result.json() as Registration[];
-      for (let registration of this.dueRegistrations) {
-        registration.Reminder1Possible = registration.Reminder1Mail == null &&
-                                         ((registration.AcceptedMail.Created.valueOf() - registration.ReceivedAt.valueOf()) / millisecondsPerDay) > 5;
-      }
     }, error => console.error(error));
   }
 }
@@ -36,7 +31,8 @@ interface Registration {
   Paid: number;
   AcceptedMail: Mail;
   Reminder1Mail: Mail;
-  Reminder1Possible: boolean;
+  Reminder1Due: boolean;
+  Reminder2Due: boolean;
 }
 
 interface Mail {

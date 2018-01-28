@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
-using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Registrations;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -25,6 +24,7 @@ namespace EventRegistrator.Functions.Reminders
 
             using (var dbContext = new EventRegistratorDbContext())
             {
+                var reminderDueFrom = DateTime.UtcNow.AddDays(-SendReminderCommandHandler.DefaultPaymentGracePeriod);
                 var dueRegistrations = await dbContext.Registrations
                                                       .Where(reg => reg.RegistrationForm.EventId == eventId &&
                                                                     reg.State == RegistrationState.Received &&
@@ -47,7 +47,16 @@ namespace EventRegistrator.Functions.Reminders
                                                                                   .OrderByDescending(mail => mail.Created)
                                                                                   .FirstOrDefault(),
                                                           Reminder1Mail = reg.Mails.Where(map => !map.Mail.Withhold &&
-                                                                                                 SendReminderCommandHandler.MailTypes_Reminder.Contains(map.Mail.Type))
+                                                                                                 SendReminderCommandHandler.MailTypes_Reminder1.Contains(map.Mail.Type))
+                                                                                   .Select(map => new
+                                                                                   {
+                                                                                       map.MailId,
+                                                                                       map.Mail.Created
+                                                                                   })
+                                                                                   .OrderByDescending(mail => mail.Created)
+                                                                                   .FirstOrDefault(),
+                                                          Reminder2Mail = reg.Mails.Where(map => !map.Mail.Withhold &&
+                                                                                                 SendReminderCommandHandler.MailTypes_Reminder2.Contains(map.Mail.Type))
                                                                                    .Select(map => new
                                                                                    {
                                                                                        map.MailId,
@@ -59,6 +68,25 @@ namespace EventRegistrator.Functions.Reminders
                                                           Paid = (decimal?)reg.Payments.Sum(ass => ass.Amount)
                                                       })
                                                       .OrderBy(reg => reg.AcceptedMail.Created)
+                                                      .Select(reg => new
+                                                      {
+                                                          reg.Id,
+                                                          reg.FirstName,
+                                                          reg.LastName,
+                                                          reg.Email,
+                                                          reg.Price,
+                                                          reg.Paid,
+                                                          reg.ReceivedAt,
+                                                          reg.AcceptedMail,
+                                                          reg.Reminder1Mail,
+                                                          reg.ReminderLevel,
+                                                          Reminder1Due = reg.Reminder1Mail == null &&
+                                                                         reg.AcceptedMail != null &&
+                                                                         reg.AcceptedMail.Created < reminderDueFrom,
+                                                          Reminder2Due = reg.Reminder2Mail == null &&
+                                                                         reg.Reminder1Mail != null &&
+                                                                         reg.Reminder1Mail.Created < reminderDueFrom,
+                                                      })
                                                       .ToListAsync();
 
                 return req.CreateResponse(HttpStatusCode.OK, dueRegistrations);

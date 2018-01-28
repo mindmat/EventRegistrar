@@ -20,7 +20,7 @@
     "DoubleRegistrableOverview",
     "SingleRegistrableOverview",
     "SendReminderCommandHandler",
-    "SendRemindersHttpHandler",
+    "SendReminderHttpHandler",
     "GetRegistrableParticipants",
     "GetHostingOffers",
     "GetHostingSeekers",
