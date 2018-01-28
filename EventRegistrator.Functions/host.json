@@ -32,7 +32,8 @@
     "SearchRegistration",
     "GetRegistrationMails",
     "SetWaitingListFallback",
-    "GetRegistrationSpots"
+    "GetRegistrationSpots",
+    "GetDuePayments"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {

@@ -1,0 +1,27 @@
+<h1>Ausstehende Zahlungen</h1>
+
+<p *ngIf="!dueRegsitrations"><em>Loading...</em></p>
+
+<table class='table' *ngIf="dueRegsitrations">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Preis</th>
+            <th>bezahlt</th>
+            <th>Angemeldet</th>
+            <th>Mahnstufe</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let dueRegsitration of dueRegsitrations">
+            <td>
+                <a [routerLink]="['/registration', dueRegsitration.Id]">{{ dueRegsitration.FirstName }} {{ dueRegsitration.LastName}}</a>
+            </td>
+            <td>{{ dueRegsitration.Price }}</td>
+            <td>{{ dueRegsitration.Paid }}</td>
+            <td>{{ dueRegsitration.ReceivedAt | date: 'dd.MM.yy hh:mm:ss' }}</td>
+            <td>{{ dueRegsitration.ReminderLevel }}</td>
+        </tr>
+    </tbody>
+</table>
+<br />

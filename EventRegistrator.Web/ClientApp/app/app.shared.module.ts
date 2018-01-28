@@ -15,6 +15,7 @@ import { UnrecognizedPaymentsComponent } from './components/unrecognizedPayments
 import { PaymentOverviewComponent } from './components/paymentOverview/paymentOverview.component';
 import { RegistrationComponent } from './components/registration/registration.component';
 import { SearchRegistrationComponent } from './components/registration/searchRegistration.component';
+import { PaymentRemindersComponent } from './components/paymentReminders/paymentReminders.component';
 
 @NgModule({
     declarations: [
@@ -27,7 +28,8 @@ import { SearchRegistrationComponent } from './components/registration/searchReg
         UnrecognizedPaymentsComponent,
         PaymentOverviewComponent,
         RegistrationComponent,
-        SearchRegistrationComponent
+        SearchRegistrationComponent,
+        PaymentRemindersComponent
     ],
     imports: [
         CommonModule,
@@ -43,6 +45,7 @@ import { SearchRegistrationComponent } from './components/registration/searchReg
             { path: 'hosting', component: HostingComponent },
             { path: 'unrecognizedPayments', component: UnrecognizedPaymentsComponent },
             { path: 'paymentOverview', component: PaymentOverviewComponent },
+            { path: 'paymentReminders', component: PaymentRemindersComponent },
             { path: '**', redirectTo: 'registrables' }
         ])
     ]

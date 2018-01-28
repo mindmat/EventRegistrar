@@ -56,13 +56,6 @@ export class UnrecognizedPaymentsComponent {
             error => console.error(error));
 
     }
-
-    //@HostListener('document:select', ['$event'])
-    //onSelect() {
-    //    var selection = document.getSelection();
-    //    // do something meaningful with it
-    //    console.log(selection.toString());
-    //}
 }
 
 interface Payment {
