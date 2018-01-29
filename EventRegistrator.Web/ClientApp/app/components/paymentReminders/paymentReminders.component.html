@@ -2,6 +2,8 @@
 
 <p *ngIf="!dueRegistrations"><em>Loading...</em></p>
 
+<input type="checkbox" />Mails zurückhalten
+
 <table class='table' *ngIf="dueRegistrations">
     <thead>
         <tr>
@@ -15,16 +17,16 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let dueRegsitration of dueRegistrations">
+        <tr *ngFor="let dueRegistration of dueRegistrations">
             <td>
-                <a [routerLink]="['/registration', dueRegsitration.Id]">{{ dueRegsitration.FirstName }} {{ dueRegsitration.LastName}}</a>
+                <a [routerLink]="['/registration', dueRegistration.Id]">{{ dueRegistration.FirstName }} {{ dueRegistration.LastName}}</a>
             </td>
-            <td class="text-right">{{ dueRegsitration.Price | currency : 'CHF' }}</td>
-            <td class="text-right">{{ dueRegsitration.Paid | currency : 'CHF' }}</td>
-            <td>{{ dueRegsitration.AcceptedMail?.Created | date: 'dd.MM.yy hh:mm:ss' }}</td>
-            <td>{{ dueRegsitration.Reminder1Mail?.Created | date: 'dd.MM.yy hh:mm:ss' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegsitration.Reminder1Due">erinnern</button></td>
-            <td>{{ dueRegsitration.Reminder2Mail?.Created | date: 'dd.MM.yy hh:mm:ss' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegsitration.Reminder2Due">erinnern</button></td>
-            <td>{{ dueRegsitration.Email }}</td>
+            <td class="text-right">{{ dueRegistration.Price | currency : 'CHF' }}</td>
+            <td class="text-right">{{ dueRegistration.Paid | currency : 'CHF' }}</td>
+            <td>{{ dueRegistration.AcceptedMail?.Created | date: 'dd.MM.yy hh:mm:ss' }}</td>
+            <td>{{ dueRegistration.Reminder1Mail?.Created | date: 'dd.MM.yy hh:mm:ss' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.Reminder1Due" (click)="sendReminder(dueRegistration?.Id, 1)">erinnern</button></td>
+            <td>{{ dueRegistration.Reminder2Mail?.Created | date: 'dd.MM.yy hh:mm:ss' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.Reminder2Due" (click)="sendReminder(dueRegistration?.Id, 2)">erinnern</button></td>
+            <td>{{ dueRegistration.Email }}</td>
         </tr>
     </tbody>
 </table>

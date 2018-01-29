@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -18,8 +19,9 @@ namespace EventRegistrator.Functions.Reminders
             TraceWriter log)
         {
             var registrationId = Guid.Parse(registrationIdString);
+            var withhold = req.GetQueryNameValuePairs().FirstOrDefault(kvp => string.Compare(kvp.Key, "withhold", StringComparison.OrdinalIgnoreCase) == 0).Value == "true";
 
-            await ServiceBusClient.SendEvent(new SendReminderCommand { RegistrationId = registrationId }, SendReminderCommandHandler.SendReminderCommandsQueueName);
+            await ServiceBusClient.SendEvent(new SendReminderCommand { RegistrationId = registrationId, Withhold = withhold }, SendReminderCommandHandler.SendReminderCommandsQueueName);
 
             return req.CreateResponse(HttpStatusCode.OK, "Command is queued");
         }

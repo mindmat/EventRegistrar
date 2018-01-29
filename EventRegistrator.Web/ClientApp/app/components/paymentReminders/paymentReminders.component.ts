@@ -1,6 +1,5 @@
 import { Component, Inject, } from "@angular/core";
-import { Http } from "@angular/http";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Http, URLSearchParams } from "@angular/http";
 
 @Component({
   selector: "paymentReminders",
@@ -8,15 +7,39 @@ import { Router, ActivatedRoute } from "@angular/router";
 })
 export class PaymentRemindersComponent {
   public dueRegistrations: Registration[];
+  public withholdMails: boolean = true;
 
-  constructor(private http: Http, @Inject("BASE_URL") private baseUrl: string, private router: Router, private route: ActivatedRoute) {
+  constructor(private http: Http,
+    @Inject("BASE_URL") private baseUrl: string) {
   }
 
   ngOnInit() {
     const eventId = "762A93A4-56E0-402C-B700-1CFB3362B39D";
-    this.http.get(`${this.baseUrl}api/events/${eventId}/duepayments`).subscribe(result => {
-      this.dueRegistrations = result.json() as Registration[];
-    }, error => console.error(error));
+    this.withholdMails = true;
+    this.http.get(`${this.baseUrl}api/events/${eventId}/duepayments`)
+      .subscribe(result => { this.dueRegistrations = result.json() as Registration[]; },
+      error => console.error(error));
+  }
+
+  sendReminder(registrationId: string, level: number) {
+    var url = `${this.baseUrl}api/registration/${registrationId}/sendReminder`;
+    if (this.withholdMails) {
+      url += "?withhold=true";
+    }
+
+    this.http.post(url, null)
+      .subscribe(result => {
+        var registration = this.dueRegistrations.find(reg => reg.Id === registrationId);
+
+        if (registration != null && level === 1) {
+          registration.Reminder1Due = false;
+        }
+        if (registration != null && level === 2) {
+          registration.Reminder2Due = false;
+        }
+      },
+      error => console.error(error));
+
   }
 }
 

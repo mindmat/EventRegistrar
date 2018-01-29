@@ -1564,6 +1564,380 @@ VALUES ('FE111223-B51A-472E-86CA-20A3332AC0AB', '762A93A4-56E0-402C-B700-1CFB336
 
 
 INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
+VALUES ('8166687B-89ED-4FE5-9A1F-8A839037E3D4', '762A93A4-56E0-402C-B700-1CFB3362B39D', 52 /*SingleRegistrationSecondReminder*/, 2, 'Zahlungserinnerung - letzte Chance', 'registration@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
+'<table cellspacing="0" cellpadding="0" align="center">
+  <tbody>
+    <tr>
+      <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
+    </tr>
+    <tr>
+      <td><br /><strong>Hallo {{FirstName}}</strong><br />
+        <p>Du hast dich f&uuml;rs Leapin'' Lindy 2018 angemeldet und am {{AcceptedDate}} eine Anmeldebest&auml;tigung mit der Bitte erhalten, innert 5 Tage die Anmeldegeb&uuml;hr zu &uuml;berweisen. Leider konnten wir bis heute keinen Zahlungseingang von dir feststellen - auch nach der Zahlungserinnerung am {{Reminder1Date}} noch nicht! Du hast nun eine letzte Chance, die Zahlung vorzunehmen. <strong>Wenn wir in den n&auml;chsten 4 Arbeitstagen keinen Zahlungseingang von dir feststellen k&ouml;nnen,&nbsp;nehmen wir an, dass du nicht mehr teilnehmen m&ouml;chtest</strong> und geben deinen Platz jemandem auf der Warteliste frei.</p>
+        <p>Falls du nicht teilnehmen m&ouml;chtest, melde dich bitte unter <a href="mailto:registration@leapinlindy.ch">registration@leapinlindy.ch</a>&nbsp;ab. Dann k&ouml;nnen wir deinen Platz ohne weitere Verz&ouml;gerung jemandem auf der Warteliste freigeben.</p>
+        <p>Falls du bezahlt hast, bitte sende eine Zahlungsbest&auml;tigung an <a href="mailto:registration@leapinlindy.ch">registration@leapinlindy.ch</a>.</p>
+        <p>Das Leapin'' Lindy Team</p>
+        <hr />
+        <p>Du hast folgendes gebucht:<br />{{SeatList}}</p>
+        <table style="width: 826px;">
+          <tbody>
+            <tr>
+              <td style="width: 130px;"><strong>Name</strong></td>
+              <td style="width: 700px;">{{FirstName}} {{LastName}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Wohnort</strong></td>
+              <td style="width: 700px;">{{City}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Telefon</strong></td>
+              <td style="width: 700px;">{{Phone}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Helfereinsatz</strong></td>
+              <td style="width: 700px;">{{Volunteer}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Erm&auml;ssigung</strong></td>
+              <td style="width: 700px;">{{Reduction}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Bemerkung</strong></td>
+              <td style="width: 700px;">{{Comments}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>AGBs</strong></td>
+              <td style="width: 700px;">{{AcceptTerms}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Preis</strong></td>
+              <td style="width: 700px;">CHF{{Price}}, bezahlt CHF{{PaidAmount}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><hr />
+        <p>Zahlungsinformationen:</p>
+        <p><strong>WICHTIG: Mache eine &Uuml;berweisung pro Anmeldung und vermerke&nbsp;deine&nbsp;Emailadresse!&nbsp;</strong></p>
+        <p>Deine Zahlung muss innerhalb von 5 Arbeitstagen nach Erhalt dieser Email bei uns eintreffen. Wenn wir deine Zahlung erhalten haben, schicken wir dir eine Buchungsbest&auml;tigung. Bezahlst du nicht innerhalb der Frist, wird deine Registrierung m&ouml;glicherweise storniert. Bitte beachte die untenstehende Regelung bez&uuml;glich Absage und R&uuml;ckerstattung.</p>
+        <p>Konto: 60-224741-6<br />Swing Machine Bern / Leapin Lindy<br />3000 Bern&nbsp;</p>
+        <p>IBAN: CH93 0900 0000 6022 4741 6<br />BLZ: 09000<br />BIC: POFICHBEXXX</p>
+        <p><strong>Bankadresse</strong><br />Swiss Post - PostFinance<br />Nordring 8<br />3030 Bern<br />Switzerland</p>
+        <p>Bitte &uuml;berweise immer Schweizer Franken. Spesen zu Lasten des Absenders.&nbsp;</p>
+        <p><strong>Absagen und R&uuml;ckerstattung:</strong><br />Wenn du deine Anmeldung zur&uuml;cknehmen musst, gelten folgende Regeln f&uuml;r die R&uuml;ckerstattungen:</p>
+        <p>Absage bis zum 10. Januar 2018: volle R&uuml;ckerstattung<br />11. Januar - 31. Januar 2018: 50% R&uuml;ckerstattung<br />Februar 2018 und sp&auml;ter: keine R&uuml;ckerstattung&nbsp;</p>
+        <p>Wenn du deine Anmeldung annulieren willst, kontaktiere uns in jedem Fall damit wir deinen Platz freigeben k&ouml;nnen.</p>
+        <p><strong>WICHTIG</strong>: Krankheit und Verletzung sind in der obigen Regelung eingeschlossen.</p>
+        <p>Kannst du kurzfristig nicht teilnehmen, werden wir versuchen, einen Ersatz auf der Warteliste zu finden. Gelingt uns dies, ist eine R&uuml;ckerstattung m&ouml;glich, aber nicht garantiert.<br />Im Grundsatz beh&auml;lt die Regelung G&uuml;ltigkeit.&nbsp;</p>
+        <p>In jedem Falle steht es dir frei, selbst einen Ersatz f&uuml;r deinen Workshopplatz oder Partypass zu finden. Bitte kontaktiere uns vor dem Check-In, wenn du deine Anmeldung an eine andere&nbsp; Person &uuml;bertragen hast. Du bleibst aber weiterhin f&uuml;r die Zahlung des Kursgeledes verantwortlich.</p>
+        <p><strong>Versicherung<br /></strong>Versicherung ist Sache der Teilnehmenden. Der Veranstalter lehnt jede Haftung ab.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>');
+
+INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
+VALUES ('F79029E6-87BA-4F22-95D9-823FACE6EC6F', '762A93A4-56E0-402C-B700-1CFB3362B39D', 62 /*DoubleRegistrationSecondReminder*/, 2, 'Zahlungserinnerung - letzte Chance', 'registration@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
+'<table cellspacing="0" cellpadding="0" align="center">
+  <tbody>
+    <tr>
+      <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
+    </tr>
+    <tr>
+      <td><br /><strong>Hallo {{Follower.FirstName}} &amp; {{Leader.FirstName}}</strong><br />
+        <p>Ihr habt euch&nbsp;f&uuml;rs Leapin'' Lindy angemeldet und am {{AcceptedDate}} eine Anmeldebest&auml;tigung mit der Bitte erhalten, innert 5 Tage die Anmeldegeb&uuml;hr zu &uuml;berweisen. Leider haben wir bis heute nicht den gesamten Betrag von euch erhalten - auch nach der Zahlungserinnerung am {{Reminder1Date}} noch nicht!&nbsp;Ihr habt&nbsp;nun eine letzte Chance, die Zahlung vorzunehmen.&nbsp;<strong>Wenn wir in den n&auml;chsten 4 Arbeitstagen keinen Zahlungseingang von euch feststellen k&ouml;nnen,&nbsp;nehmen&nbsp;wir&nbsp;an, dass ihr nicht mehr teilnehmen m&ouml;chtet</strong>&nbsp;und geben euren Platz T&auml;nzern auf der Warteliste frei.</p>
+        <p>Falls ihr nicht teilnehmen m&ouml;chtet, meldet euch bitte unter&nbsp;<a href="mailto:registration@leapinlindy.ch">registration@leapinlindy.ch</a>&nbsp;ab. Dann k&ouml;nnen wir euren Pl&auml;tze ohne weitere Verz&ouml;gerung an T&auml;nzer&nbsp;auf der Warteliste freigeben.</p>
+        <p>Falls ihr bezahlt habt, bitte sendet eine Zahlungsbest&auml;tigung an&nbsp;<a href="mailto:registration@leapinlindy.ch">registration@leapinlindy.ch</a>.</p>
+        <p>Das Leapin'' Lindy Team</p>
+        <hr />
+        <p>Ihr habt folgendes gebucht:<br /><br />Leader:<br />{{Leader.SeatList}}</p>
+        <table style="width: 474px;">
+          <tbody>
+            <tr>
+              <td style="width: 130px;"><strong>Name</strong></td>
+              <td style="width: 600px;">{{Leader.FirstName}} {{Leader.LastName}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Wohnort</strong></td>
+              <td style="width: 600px;">{{Leader.City}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Telefon</strong></td>
+              <td style="width: 600px;">{{Leader.Phone}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Helfereinsatz</strong></td>
+              <td style="width: 600px;">{{Leader.Volunteer}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Erm&auml;ssigung</strong></td>
+              <td style="width: 600px;">{{Leader.Reduction}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Bemerkung</strong></td>
+              <td style="width: 600px;">{{Leader.Comments}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>AGBs</strong></td>
+              <td style="width: 600px;">{{Leader.AcceptTerms}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Preis</strong></td>
+              <td style="width: 600px;">{{Leader.Price}}, bezahlt CHF{{Leader.PaidAmount}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>&nbsp;Follower:<br />{{Follower.SeatList}}</p>
+        <table style="width: 474px;">
+          <tbody>
+            <tr>
+              <td style="width: 130px;"><strong>Name</strong></td>
+              <td style="width: 600px;">{{Follower.FirstName}} {{Follower.LastName}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Wohnort</strong></td>
+              <td style="width: 600px;">{{Follower.City}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Telefon</strong></td>
+              <td style="width: 600px;">{{Follower.Phone}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Helfereinsatz</strong></td>
+              <td style="width: 600px;">{{Follower.Volunteer}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Erm&auml;ssigung</strong></td>
+              <td style="width: 600px;">{{Follower.Reduction}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Bemerkung</strong></td>
+              <td style="width: 600px;">{{Follower.Comments}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>AGBs</strong></td>
+              <td style="width: 600px;">{{Follower.AcceptTerms}}</td>
+            </tr>
+            <tr>
+              <td style="width: 130px;"><strong>Preis</strong></td>
+              <td style="width: 600px;">{{Follower.Price}}, bezahlt CHF{{Follower.PaidAmount}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>&nbsp;</p>
+      </td>
+    </tr>
+    <tr>
+      <td><hr />
+        <p>Zahlungsinformationen:</p>
+        <p><strong>WICHTIG: Mache eine &Uuml;berweisung pro Anmeldung und vermerke&nbsp;deine&nbsp;Emailadresse!&nbsp;</strong></p>
+        <p>Deine Zahlung muss innerhalb von 5 Arbeitstagen nach Erhalt dieser Email bei uns eintreffen. Wenn wir deine Zahlung erhalten haben, schicken wir dir eine Buchungsbest&auml;tigung. Bezahlst du nicht innerhalb der Frist, wird deine Registrierung m&ouml;glicherweise storniert. Bitte beachte die untenstehende Regelung bez&uuml;glich Absage und R&uuml;ckerstattung.</p>
+        <p>Konto: 60-224741-6<br />Swing Machine Bern / Leapin Lindy<br />3000 Bern&nbsp;</p>
+        <p>IBAN: CH93 0900 0000 6022 4741 6<br />BLZ: 09000<br />BIC: POFICHBEXXX</p>
+        <p><strong>Bankadresse</strong><br />Swiss Post - PostFinance<br />Nordring 8<br />3030 Bern<br />Switzerland</p>
+        <p>Bitte &uuml;berweise immer Schweizer Franken. Spesen zu Lasten des Absenders.&nbsp;</p>
+        <p><strong>Absagen und R&uuml;ckerstattung:</strong><br />Wenn du deine Anmeldung zur&uuml;cknehmen musst, gelten folgende Regeln f&uuml;r die R&uuml;ckerstattungen:</p>
+        <p>Absage bis zum 10. Januar 2018: volle R&uuml;ckerstattung<br />11. Januar - 31. Januar 2018: 50% R&uuml;ckerstattung<br />Februar 2018 und sp&auml;ter: keine R&uuml;ckerstattung&nbsp;</p>
+        <p>Wenn du deine Anmeldung annulieren willst, kontaktiere uns in jedem Fall damit wir deinen Platz freigeben k&ouml;nnen.</p>
+        <p><strong>WICHTIG</strong>: Krankheit und Verletzung sind in der obigen Regelung eingeschlossen.</p>
+        <p>Kannst du kurzfristig nicht teilnehmen, werden wir versuchen, einen Ersatz auf der Warteliste zu finden. Gelingt uns dies, ist eine R&uuml;ckerstattung m&ouml;glich, aber nicht garantiert. Im Grundsatz beh&auml;lt die Regelung G&uuml;ltigkeit.&nbsp;</p>
+        <p>In jedem Falle steht es dir frei, selbst einen Ersatz f&uuml;r deinen Workshopplatz oder Partypass zu finden. Bitte kontaktiere uns vor dem Check-In, wenn du deine Anmeldung an eine andere&nbsp; Person &uuml;bertragen hast. Du bleibst aber weiterhin f&uuml;r die Zahlung des Kursgeledes verantwortlich.</p>
+        <p><strong>Versicherung<br /></strong>Versicherung ist Sache der Teilnehmenden. Der Veranstalter lehnt jede Haftung ab.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>');
+
+
+INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
+VALUES ('A2FCC46F-2C40-4327-B5C8-7D66E186A1CB', '762A93A4-56E0-402C-B700-1CFB3362B39D', 52 /*SingleRegistrationSecondReminder*/, 2, 'Payment reminder - last chance', 'registration@leapinlindy.ch', 'Leapin'' Lindy', 'en', 
+'<table cellspacing="0" cellpadding="0" align="center">
+  <tbody>
+    <tr>
+      <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
+    </tr>
+    <tr>
+      <td><br /><strong>Hello {{Follower.FirstName}} &amp; {{Leader.FirstName}}</strong><br />
+        <p>You''ve registered for Leapin'' Lindy and have received a&nbsp;registration confirmation the {{AcceptedDate}} with the request&nbsp;to pay within 5 days. Unfortunately we have not received the required amount yet from you&nbsp;- even after the reminder the {{Reminder1Date}}.&nbsp;You now have one last chance to make the payment.&nbsp;<strong>If we&nbsp;don''t receive&nbsp;any payment from you in the next 4 working days</strong>, we assume that you don''t want to participate any more and give your places to people on the waiting list.</p>
+        <p>If you don''t want to take part anymore please cancel your registration by email to&nbsp;<a href="mailto:registration@leapinlindy.ch">registration@leapinlindy.ch</a>. We then can give your places to people on the waiting list without further delay.</p>
+        <p>If you''ve paid, please send a confirmation of your payment to&nbsp;<a href="mailto:registration@leapinlindy.ch">registration@leapinlindy.ch</a>.</p>
+        <p>The Leapin'' Lindy Team</p>
+        <hr />
+        <p>You booked the following:<br /><br />Leader:<br />{{Leader.SeatList}}</p>
+        <table style="width: 800px;">
+          <tbody>
+            <tr>
+              <td style="width: 160px;"><strong>Name</strong></td>
+              <td style="width: 640px;">{{Leader.FirstName}} {{Leader.LastName}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Place of Residence</strong></td>
+              <td style="width: 640px;">{{Leader.City}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Phone</strong></td>
+              <td style="width: 640px;">{{Leader.Phone}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Volunteer</strong></td>
+              <td style="width: 640px;">{{Leader.Volunteer}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Reduction</strong></td>
+              <td style="width: 640px;">{{Leader.Reduction}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Comments</strong></td>
+              <td style="width: 640px;">{{Leader.Comments}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Terms</strong></td>
+              <td style="width: 640px;">{{Leader.AcceptTerms}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Price</strong></td>
+              <td style="width: 640px;">CHF{{Leader.Price}}, paid {{Leader.PaidAmount}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>&nbsp;Follower:<br />{{Follower.SeatList}}</p>
+        <table style="width: 800px;">
+          <tbody>
+            <tr>
+              <td style="width: 160px;"><strong>Name</strong></td>
+              <td style="width: 640px;">{{Follower.FirstName}} {{Follower.LastName}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Place of Residence</strong></td>
+              <td style="width: 640px;">{{Follower.City}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Phone</strong></td>
+              <td style="width: 640px;">{{Follower.Phone}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Volunteer</strong></td>
+              <td style="width: 640px;">{{Follower.Volunteer}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Reduction</strong></td>
+              <td style="width: 640px;">{{Follower.Reduction}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Comments</strong></td>
+              <td style="width: 640px;">{{Follower.Comments}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Terms</strong></td>
+              <td style="width: 640px;">{{Follower.AcceptTerms}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Price</strong></td>
+              <td style="width: 640px;">CHF{{Follower.Price}}, paid {{Follower.PaidAmount}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td><hr />
+        <p>Payment information:</p>
+        <p><strong>Please make one payment per person and quote your email address&nbsp;</strong></p>
+        <p>Your payment has to reach us within 5 working days upon the receipt of this email. As soon as we have received your payment, we will send you a booking confirmation. Should we not receive your payment in time, your registration may be cancelled. Please note the regulations concerning cancellations as mentioned below.</p>
+        <p>IBAN: CH93 0900 0000 6022 4741 6<br />BIC: POFICHBEXXX<br />BLZ: 09000<br />Account: 60-224741-6<br />Swing Machine Bern / Leapin Lindy<br />3000 Bern&nbsp;</p>
+        <p><strong>Address of the Bank</strong><br />Swiss Post - PostFinance<br />Nordring 8<br />3030 Bern<br />Switzerland</p>
+        <p>Please pay in Swiss Francs. Additional expenses on sender&rsquo;s account.</p>
+        <p><strong>Cancellations and Refunds:</strong><br />If you have to withdraw your booking, the following regulations or refunding apply:</p>
+        <p>Cancellations until the 10th January 2018:&nbsp;full refund<br />11th January 2018 - 31th Januar 2018: 50%&nbsp;refund<br />February 2018 and later:&nbsp;no refund</p>
+        <p>Should you wish to cancel your registration, contact us in any case so that we can give your place to someone else.</p>
+        <p><strong>Important</strong>: Illness and injury are included in the above-mentioned regulations.</p>
+        <p>Should you be unable to&nbsp;participate at short notice, we will do our best to find a replacement from the waiting list. If we succeed, a refund might be possible. However, we cannot guarantee it. As a principle, the regulations apply.</p>
+        <p>However, you are free to find your own replacement for workshop or party. Please let us know before check in, if you have passed your booking on to someone else. Nonetheless, you remain responsible for the payment of the booking fee.&nbsp;</p>
+        <p><strong>Insurance: </strong>To be properly insured is the responsibility of the participant. We herewith decline any liability.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>');
+
+
+INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
+VALUES ('4547E41C-0F61-41F2-8CB2-9F81A01FBB02', '762A93A4-56E0-402C-B700-1CFB3362B39D', 62 /*DoubleRegistrationSecondReminder*/, 2, 'Payment reminder - last chance', 'registration@leapinlindy.ch', 'Leapin'' Lindy', 'en', 
+'<table cellspacing="0" cellpadding="0" align="center">
+  <tbody>
+    <tr>
+      <td style="text-align: center;"><img src="https://scontent-frx5-1.xx.fbcdn.net/v/t31.0-8/22042178_1480177115410174_419267934679857047_o.jpg?oh=d6833f06299ceb688c53b8439413a696&amp;oe=5A7EF2E1" width="800" height="304" /></td>
+    </tr>
+    <tr>
+      <td><br /><strong>Hello {{FirstName}}</strong><br />
+        <p>You''ve registered for Leapin'' Lindy and have received a&nbsp;registration confirmation the {{AcceptedDate}} with the request to pay within 5 days. Unfortunately we have not received the required amount yet from you - even after the reminder the {{Reminder1Date}}. You now have one last chance to make the payment. <strong>If we don''t receive any payment from you in the next 4 working days</strong>, we assume that you don''t want to participate any more and give your place to someone else on the waiting list.</p>
+        <p>If you don''t want to take part anymore please cancel your registration by email to <a href="mailto:registration@leapinlindy.ch">registration@leapinlindy.ch</a>. We then can give your place to somebody on the waiting list without further delay.</p>
+        <p>If you''ve paid, please send a confirmation of your payment to <a href="mailto:registration@leapinlindy.ch">registration@leapinlindy.ch</a>.</p>
+        <p>The Leapin'' Lindy Team</p>
+        <hr />
+        <p>You booked the following:<br />{{SeatList}}</p>
+        <table style="width: 800px;">
+          <tbody>
+            <tr>
+              <td style="width: 160px;"><strong>Name</strong></td>
+              <td style="width: 640px;">{{FirstName}} {{LastName}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Place of Residence</strong></td>
+              <td style="width: 640px;">{{City}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Phone</strong></td>
+              <td style="width: 640px;">{{Phone}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Volunteer</strong></td>
+              <td style="width: 640px;">{{Volunteer}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Reduction</strong></td>
+              <td style="width: 640px;">{{Reduction}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Comments</strong></td>
+              <td style="width: 640px;">{{Comments}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Terms</strong></td>
+              <td style="width: 640px;">{{AcceptTerms}}</td>
+            </tr>
+            <tr>
+              <td style="width: 160px;"><strong>Price</strong></td>
+              <td style="width: 640px;">CHF{{Price}}, paid CHF{{PaidAmount}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td><hr />
+        <p>Payment information:</p>
+        <p><strong>Please make one payment per person and quote your email address&nbsp;</strong></p>
+        <p>Your payment has to reach us within 5 working days upon the receipt of this email. As soon as we have received your payment, we will send you a booking confirmation. Should we not receive your payment in time, your registration may be cancelled. Please note the regulations concerning cancellations as mentioned below.</p>
+        <p>IBAN: CH93 0900 0000 6022 4741 6<br />BIC: POFICHBEXXX<br />BLZ: 09000<br />Account: 60-224741-6<br />Swing Machine Bern / Leapin Lindy<br />3000 Bern&nbsp;</p>
+        <p><strong>Address of the Bank</strong><br />Swiss Post - PostFinance<br />Nordring 8<br />3030 Bern<br />Switzerland</p>
+        <p>Please pay in Swiss Francs. Additional expenses on sender&rsquo;s account.</p>
+        <p><strong>Cancellations and Refunds:</strong><br />If you have to withdraw your booking, the following regulations or refunding apply:</p>
+        <p>Cancellations until the 10th January 2018:&nbsp;full refund<br />11th January 2018 - 31th Januar 2018: 50%&nbsp;refund<br />February 2018 and later:&nbsp;no refund</p>
+        <p>Should you wish to cancel your registration, contact us in any case so that we can give your place to someone else.</p>
+        <p><strong>Important</strong>: Illness and injury are included in the above-mentioned regulations.</p>
+        <p>Should you be unable to&nbsp;participate at short notice, we will do our best to find a replacement from the waiting list. If we succeed, a refund might be possible. However, we cannot guarantee it. As a principle, the regulations apply.</p>
+        <p>However, you are free to find your own replacement for workshop or party. Please let us know before check in, if you have passed your booking on to someone else. Nonetheless, you remain responsible for the payment of the booking fee.&nbsp;</p>
+        <p><strong>Insurance: </strong>To be properly insured is the responsibility of the participant. We herewith decline any liability.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>');
+
+
+
+INSERT INTO dbo.MailTemplates(Id, EventId, [Type], ContentType, [Subject], SenderMail, SenderName, [Language], Template)
 VALUES ('FBD3DE7D-4502-4584-810B-A7D0D268F45A', 101 /*OptionsForRegistrationsOnWaitingList*/, 2, 'Warteliste - holt mich hier raus', 'registration@leapinlindy.ch', 'Leapin'' Lindy', 'de', 
 '<table cellspacing="0" cellpadding="0" align="center">
   <tbody>
