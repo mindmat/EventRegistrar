@@ -3,126 +3,134 @@
 <p *ngIf="!registration"><em>Loading...</em></p>
 
 <table class="table" *ngIf="registration">
-    <tbody>
-        <tr>
-            <td>Mail:</td>
-            <td>{{ registration.Email }}</td>
-        </tr>
-        <tr>
-            <td>Sprache:</td>
-            <td><span class="badge badge-primary">{{ registration.Language }}</span></td>
-        </tr>
-        <tr>
-            <td>Preis:</td>
-            <td>{{ registration.Price | currency : 'CHF' }}, bezahlt {{ registration.Paid || 0 | currency : 'CHF' }}</td>
-        </tr>
-        <tr>
-            <td>Status:</td>
-            <td><span class="badge badge-primary">{{ registration.StatusText }}</span>   <button *ngIf="registration.Status != 4" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Stornieren</button></td>
-        </tr>
-        <tr>
-            <td>Anmeldezeitpunkt:</td>
-            <td>{{ registration.ReceivedAt | date: 'dd.MM.yy hh:mm:ss' }}</td>
-        </tr>
-        <tr *ngIf="registration.IsWaitingList">
-            <td>Wünscht Partypass:</td>
-            <td><p *ngIf="registration.FallbackToPartyPass">x</p>  <button *ngIf="!registration.FallbackToPartyPass" type="button" class="btn btn-primary btn-sm" (click)="fallbackToPartyPass()">Partypass reservieren</button></td>
-        </tr>
-    </tbody>
+  <tbody>
+    <tr>
+      <td>Mail:</td>
+      <td>{{ registration.Email }}</td>
+    </tr>
+    <tr>
+      <td>Sprache:</td>
+      <td><span class="badge badge-primary">{{ registration.Language }}</span></td>
+    </tr>
+    <tr>
+      <td>Preis:</td>
+      <td>{{ registration.Price | currency : 'CHF' }}, bezahlt {{ registration.Paid || 0 | currency : 'CHF' }}</td>
+    </tr>
+    <tr>
+      <td>Status:</td>
+      <td><span class="badge badge-primary">{{ registration.StatusText }}</span>   <button *ngIf="registration.Status != 4" type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#exampleModal">Stornieren</button></td>
+    </tr>
+    <tr>
+      <td>Anmeldezeitpunkt:</td>
+      <td>{{ registration.ReceivedAt | date: 'dd.MM.yy hh:mm:ss' }}</td>
+    </tr>
+    <tr *ngIf="registration.IsWaitingList">
+      <td>Wünscht Partypass:</td>
+      <td><p *ngIf="registration.FallbackToPartyPass">x</p>  <button *ngIf="!registration.FallbackToPartyPass" type="button" class="btn btn-primary btn-sm" (click)="fallbackToPartyPass()">Partypass reservieren</button></td>
+    </tr>
+  </tbody>
 </table>
 
 <h3>Mails</h3>
 
 <table class="table table-hover" *ngIf="mails">
-    <thead class="thead-dark">
-        <tr>
-            <th>Betreff</th>
-            <th>Empfänger</th>
-            <th>Gesendet</th>
-            <th>Absender</th>
-            <th>Zurückbehalten</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let mail of mails" (click)="showMail(mail.ContentHtml)">
-            <td data-toggle="modal" data-target="#mailModal">{{ mail.Subject }}</td>
-            <td>{{ mail.Recipients }}</td>
-            <td>{{ mail.Created | date: 'dd.MM.yy hh:mm' }}</td>
-            <td>{{ mail.SenderName }} ({{ mail.SenderMail }})</td>
-            <td>{{ mail.Withhold }} <button *ngIf="mail.Withhold" class="btn btn-primary btn-sm" (click)="releaseMail(mail.Id)">Freigeben</button></td>
-        </tr>
-    </tbody>
+  <thead class="thead-dark">
+    <tr>
+      <th>Betreff</th>
+      <th>Empfänger</th>
+      <th>Gesendet</th>
+      <th>Absender</th>
+      <th>Zurückbehalten</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let mail of mails" (click)="showMail(mail.ContentHtml)">
+      <td data-toggle="modal" data-target="#mailModal">{{ mail.Subject }}</td>
+      <td>{{ mail.Recipients }}</td>
+      <td>{{ mail.Created | date: 'dd.MM.yy hh:mm' }}</td>
+      <td>{{ mail.SenderName }} ({{ mail.SenderMail }})</td>
+      <td>{{ mail.Withhold }} <button *ngIf="mail.Withhold" class="btn btn-primary btn-sm" (click)="releaseMail(mail.Id)">Freigeben</button></td>
+    </tr>
+  </tbody>
 </table>
 
 <h3>Plätze</h3>
 
 <table class="table table-hover" *ngIf="spots">
-    <thead class="thead-dark">
-        <tr>
-            <th>Name</th>
-            <th>Erstellt</th>
-            <th>Partner</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let spot of spots">
-            <td><a [routerLink]="['/registrables', spot.RegistrableId]">{{ spot.Registrable }}</a></td>
-            <td>{{ spot.FirstPartnerJoined | date: 'dd.MM.yy hh:mm' }}</td>
-            <td><a *ngIf="spot.PartnerRegistrationId" [routerLink]="['/registration', spot.PartnerRegistrationId]">{{ spot.Partner }}</a></td>
-        </tr>
-    </tbody>
+  <thead class="thead-dark">
+    <tr>
+      <th>Name</th>
+      <th>Erstellt</th>
+      <th>Partner</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let spot of spots">
+      <td><a [routerLink]="['/registrables', spot.RegistrableId]">{{ spot.Registrable }}</a></td>
+      <td>{{ spot.FirstPartnerJoined | date: 'dd.MM.yy hh:mm' }}</td>
+      <td><a *ngIf="spot.PartnerRegistrationId" [routerLink]="['/registration', spot.PartnerRegistrationId]">{{ spot.Partner }}</a></td>
+    </tr>
+  </tbody>
 </table>
 
 <!-- mail modal -->
 <div class="modal fade" id="mailModal" tabindex="-1" role="dialog" aria-labelledby="mailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-body" id="mailContainer">
-            </div>
-        </div>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body" id="mailContainer">
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Anmeldung stornieren</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <p>Grund:</p>
-                    </div>
-                    <div class="col-sm-6">
-                        <input #reason value="Abmeldung">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <p>Trotz Zahlungen</p>
-                    </div>
-                    <div class="col-sm-6">
-                        <input type="checkbox" #ignorePayments />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <p>% Rückzahlung</p>
-                    </div>
-                    <div class="col-sm-6">
-                        <input type="number" #refundPercentage />
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-                <button type="button" class="btn btn-primary" (click)="cancelRegistration(reason.value, ignorePayments.value, refundPercentage.value)" data-dismiss="modal">Stornieren</button>
-            </div>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Anmeldung stornieren</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <p>Grund:</p>
+          </div>
+          <div class="col-sm-6">
+            <input #reason value="Abmeldung">
+          </div>
         </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <p>Trotz Zahlungen</p>
+          </div>
+          <div class="col-sm-6">
+            <input type="checkbox" #ignorePayments />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <p>% Rückzahlung</p>
+          </div>
+          <div class="col-sm-6">
+            <input type="number" #refundPercentage />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <p>Nachrücken verhindern</p>
+          </div>
+          <div class="col-sm-6">
+            <input type="checkbox" #preventPromotion />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+        <button type="button" class="btn btn-primary" (click)="cancelRegistration(reason.value, ignorePayments.value, refundPercentage.value, preventPromotion.value)" data-dismiss="modal">Stornieren</button>
+      </div>
     </div>
+  </div>
 </div>

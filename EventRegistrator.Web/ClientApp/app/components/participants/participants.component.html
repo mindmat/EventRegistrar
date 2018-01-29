@@ -14,10 +14,10 @@
     <tbody>
         <tr *ngFor="let participant of registrable.Participants">
             <td [style.font-weight]="participant.Leader?.State == 1 ? 'bold' : 'normal'">
-                <a *ngIf="participant.Leader" [routerLink]="['/registration', participant.Leader.Id]">{{ participant.Leader?.FirstName }} {{participant.Leader?.LastName}}</a>
+                <a *ngIf="participant.Leader" [routerLink]="['/registration', participant.Leader.Id]">{{ participant.Leader?.FirstName }} {{ participant.Leader?.LastName }}</a>
             </td>
             <td [style.font-weight]="participant.Follower?.State == 1 ? 'bold' : 'normal'" *ngIf="registrable.MaximumDoubleSeats">
-                <a *ngIf="participant.Follower" [routerLink]="['/registration', participant.Follower?.Id]">{{ participant.Follower?.FirstName }} {{participant.Follower?.LastName}}</a>
+                <a *ngIf="participant.Follower" [routerLink]="['/registration', participant.Follower?.Id]">{{ participant.Follower?.FirstName }} {{ participant.Follower?.LastName }}</a>
             </td>
             <td *ngIf="registrable.MaximumDoubleSeats"><p *ngIf="participant.IsPartnerRegistration">x</p></td>
         </tr>
@@ -26,8 +26,10 @@
 <br />
 <h2 *ngIf="registrable && registrable.WaitingList">Warteliste</h2>
 
+<button class="btn btn-primary" *ngIf="registrable.HasWaitingList" (click)="promote()">Nachrücken auslösen</button>
+
 <table class='table' *ngIf="registrable && registrable.WaitingList">
-    <thead>
+  <thead>
         <tr>
             <th *ngIf="!registrable.MaximumDoubleSeats">Name</th>
             <th *ngIf="registrable.MaximumDoubleSeats">Leader</th>
@@ -37,9 +39,9 @@
     </thead>
     <tbody>
         <tr *ngFor="let participant of registrable.WaitingList">
-            <td><a *ngIf="participant.Leader" [routerLink]="['/registration', participant.Leader?.Id]">{{ participant.Leader?.FirstName }} {{participant.Leader?.LastName}}</a></td>
+            <td><a *ngIf="participant.Leader" [routerLink]="['/registration', participant.Leader?.Id]">{{ participant.Leader?.FirstName }} {{participant.Leader?.LastName }}</a></td>
             <td *ngIf="registrable.MaximumDoubleSeats">
-                <a *ngIf="participant.Follower" [routerLink]="['/registration', participant.Follower?.Id]">{{ participant.Follower?.FirstName }} {{participant.Follower?.LastName}}</a>
+                <a *ngIf="participant.Follower" [routerLink]="['/registration', participant.Follower?.Id]">{{ participant.Follower?.FirstName }} {{participant.Follower?.LastName }}</a>
             </td>
             <td *ngIf="registrable.MaximumDoubleSeats"><p *ngIf="participant.IsPartnerRegistration">x</p></td>
         </tr>

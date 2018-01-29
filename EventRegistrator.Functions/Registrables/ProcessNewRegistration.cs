@@ -85,7 +85,7 @@ namespace EventRegistrator.Functions.Registrables
                 {
                     foreach (var registrableId in registrableIds_CheckWaitingList)
                     {
-                        await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { EventId = @event.EventId.Value, RegistrableId = registrableId }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
+                        await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { RegistrableId = registrableId }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
                     }
                 }
             }

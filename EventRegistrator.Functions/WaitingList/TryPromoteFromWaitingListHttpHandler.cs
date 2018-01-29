@@ -10,18 +10,22 @@ using Microsoft.Azure.WebJobs.Host;
 
 namespace EventRegistrator.Functions.WaitingList
 {
-    public static class TryPromoteFromWaitingListHttpHandler
+  public static class TryPromoteFromWaitingListHttpHandler
+  {
+    [FunctionName("TryPromoteFromWaitingListHttpHandler")]
+    public static async Task<HttpResponseMessage> Run(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registrables/{registrableIdString:guid}/TryPromoteFromWaitingList")]
+        HttpRequestMessage req,
+        string registrableIdString, 
+        TraceWriter log)
     {
-        [FunctionName("TryPromoteFromWaitingListHttpHandler")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "TryPromoteFromWaitingList/{eventIdString}")]HttpRequestMessage req, string eventIdString, TraceWriter log)
-        {
-            log.Info($"TryPromoteFromWaitingList for event {eventIdString}");
+      log.Info($"TryPromoteFromWaitingList for registrable {registrableIdString}");
 
-            var eventId = Guid.Parse(eventIdString);
+      var registrableId = Guid.Parse(registrableIdString);
 
-            await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { EventId = eventId }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
+      await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { RegistrableId = registrableId }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
 
-            return req.CreateResponse(HttpStatusCode.OK, "Command is queued");
-        }
+      return req.CreateResponse(HttpStatusCode.OK, "Command is queued");
     }
+  }
 }

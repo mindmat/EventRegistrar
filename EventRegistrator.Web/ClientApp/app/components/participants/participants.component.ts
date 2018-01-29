@@ -8,17 +8,29 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class ParticipantsComponent {
   public registrable: Registrable;
+  registrableId: any;
 
   constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string, private router: Router, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    var registrableId = this.route.snapshot.params['id'];
-    this.http.get(this.baseUrl + 'api/registrables/' + registrableId + '/participants').subscribe(result => {
-      //http.get(baseUrl + 'api/registrables/{registrableId}/participants').subscribe(result => {
-      this.registrable = result.json() as Registrable;
-    }, error => console.error(error));
+    this.registrableId = this.route.snapshot.params['id'];
+    this.refreshParticipants();
   }
+
+  refreshParticipants() {
+    this.http.get(`${this.baseUrl}api/registrables/${this.registrableId}/participants`)
+      .subscribe(result => { this.registrable = result.json() as Registrable; },
+      error => console.error(error));
+  }
+
+  promote() {
+    this.http.post(`${this.baseUrl}api/registrables/${this.registrableId}/tryPromoteFromWaitingList`, null)
+      .subscribe(result => { },
+      error => console.error(error));
+
+  }
+
 }
 
 interface Registrable {
