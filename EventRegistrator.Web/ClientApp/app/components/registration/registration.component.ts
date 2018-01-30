@@ -11,12 +11,22 @@ export class RegistrationComponent {
   public mails: Mail[];
   public spots: Spot[];
   private registrationId: string;
+  public allRegistrables: Registrable[];
+  private bookedRegistrableIds: string[];
 
   constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string, private router: Router, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
     this.registrationId = this.route.snapshot.params['id'];
+
+    const eventId = "762A93A4-56E0-402C-B700-1CFB3362B39D";
+    this.http.get(`${this.baseUrl}api/events/${eventId}/registrables`).subscribe(result => {
+      this.allRegistrables = result.json() as Registrable[];
+      if (this.spots != null) {
+        this.changeAvailability();
+      }
+    }, error => console.error(error));
 
     this.reloadRegistration();
     this.reloadMails();
@@ -38,6 +48,11 @@ export class RegistrationComponent {
   reloadSpots() {
     this.http.get(`${this.baseUrl}api/registrations/${this.registrationId}/spots`).subscribe(result => {
       this.spots = result.json() as Spot[];
+      this.bookedRegistrableIds = this.spots.map(spot => spot.RegistrableId);
+
+      if (this.allRegistrables != null) {
+        this.changeAvailability();
+      }
     }, error => console.error(error));
   }
 
@@ -55,7 +70,7 @@ export class RegistrationComponent {
       url += `&preventPromotion=true`;
     }
     this.http.post(url, null)
-        .subscribe(result => { this.reloadRegistration(); }, error => console.error(error));
+      .subscribe(result => { this.reloadRegistration(); }, error => console.error(error));
   }
 
   showMail(content: string) {
@@ -70,9 +85,33 @@ export class RegistrationComponent {
   }
 
   fallbackToPartyPass() {
-    var url = `${this.baseUrl}api/registrations/${this.registration.Id}/SetWaitingListFallback`;
+    var url = `${this.baseUrl}api/registrations/${this.registration.Id}/setWaitingListFallback`;
     this.http.post(url, null)
       .subscribe(result => { this.reloadRegistration(); }, error => console.error(error));
+  }
+
+  addRegistrable(registrableId: string) {
+    var url = `${this.baseUrl}api/registrations/${this.registration.Id}/addSpot?registrableId=${registrableId}`;
+    this.http.post(url, null)
+      .subscribe(result => { this.reloadSpots(); }, error => console.error(error));    
+  }
+
+  removeRegistrable(registrableId: string) {
+    var url = `${this.baseUrl}api/registrations/${this.registration.Id}/removeSpot?registrableId=${registrableId}`;
+    this.http.post(url, null)
+      .subscribe(result => { this.reloadSpots(); }, error => console.error(error));    
+  }
+
+  changeAvailability() {
+    for (let registrable of this.allRegistrables) {
+      if (this.bookedRegistrableIds.indexOf(registrable.Id) >= 0) {
+        registrable.addAvailable = false;
+        registrable.removeAvailable = true;
+      } else {
+        registrable.addAvailable = true;
+        registrable.removeAvailable = false;
+      }
+    }
   }
 }
 
@@ -112,4 +151,14 @@ interface Mail {
   Created: Date;
   Withhold: boolean;
   ContentHtml: string;
+}
+
+interface Registrable {
+  Id: string;
+  Name: string;
+  HasWaitingList: boolean;
+  IsDoubleRegistrable: boolean;
+  ShowInMailListOrder: number;
+  addAvailable: boolean;
+  removeAvailable: boolean;
 }

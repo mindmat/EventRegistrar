@@ -91,7 +91,10 @@ namespace EventRegistrator.Functions.Registrables
             }
         }
 
-        private static decimal CalculatePrice(IReadOnlyCollection<Seat> seats, IReadOnlyCollection<Registrable> registrables, IReadOnlyCollection<Reduction> reductions, ICollection<Guid> questionOptionIds)
+        private static decimal CalculatePrice(IReadOnlyCollection<Seat> seats, 
+                                              IReadOnlyCollection<Registrable> registrables,
+                                              IReadOnlyCollection<Reduction> reductions,
+                                              ICollection<Guid> questionOptionIds)
         {
             var bookedRegistrableIds = new HashSet<Guid>(seats.Select(seat => seat.RegistrableId));
             var price = 0m;

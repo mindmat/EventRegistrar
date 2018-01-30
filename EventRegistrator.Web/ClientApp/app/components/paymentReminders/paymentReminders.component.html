@@ -23,9 +23,9 @@
             </td>
             <td class="text-right">{{ dueRegistration.Price | currency : 'CHF' }}</td>
             <td class="text-right">{{ dueRegistration.Paid | currency : 'CHF' }}</td>
-            <td>{{ dueRegistration.AcceptedMail?.Created | date: 'dd.MM.yy hh:mm' }}</td>
-            <td>{{ dueRegistration.Reminder1Mail?.Created | date: 'dd.MM.yy hh:mm' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.Reminder1Due" (click)="sendReminder(dueRegistration?.Id, 1)">erinnern</button></td>
-            <td>{{ dueRegistration.Reminder2Mail?.Created | date: 'dd.MM.yy hh:mm' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.Reminder2Due" (click)="sendReminder(dueRegistration?.Id, 2)">erinnern</button></td>
+            <td>{{ dueRegistration.AcceptedMail?.Created | date: 'dd.MM.yy HH:mm' }}</td>
+            <td>{{ dueRegistration.Reminder1Mail?.Created | date: 'dd.MM.yy HH:mm' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.Reminder1Due" (click)="sendReminder(dueRegistration?.Id, 1)">erinnern</button></td>
+            <td>{{ dueRegistration.Reminder2Mail?.Created | date: 'dd.MM.yy HH:mm' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.Reminder2Due" (click)="sendReminder(dueRegistration?.Id, 2)">erinnern</button></td>
             <td>{{ dueRegistration.Email }}</td>
         </tr>
     </tbody>
