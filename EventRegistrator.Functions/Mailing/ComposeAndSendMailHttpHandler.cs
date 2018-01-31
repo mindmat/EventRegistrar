@@ -13,7 +13,7 @@ namespace EventRegistrator.Functions.Mailing
     public static class ComposeAndSendMailHttpHandler
     {
         [FunctionName("ComposeAndSendMailHttpHandler")]
-        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registration/{registrationIdString}/ComposeAndSendMail")]
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registrations/{registrationIdString}/composeAndSendMail")]
                HttpRequestMessage req, string registrationIdString, TraceWriter log)
         {
             var registrationId = Guid.Parse(registrationIdString);
