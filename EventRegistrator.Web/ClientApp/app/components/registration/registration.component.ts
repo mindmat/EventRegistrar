@@ -84,6 +84,12 @@ export class RegistrationComponent {
          .subscribe(result => { this.reloadMails(); }, error => console.error(error));
    }
 
+   deleteMail(mailId: string) {
+      var url = `${this.baseUrl}api/mails/${mailId}/delete`;
+      this.http.post(url, null)
+         .subscribe(result => { this.reloadMails(); }, error => console.error(error));
+   }
+
    fallbackToPartyPass() {
       var url = `${this.baseUrl}api/registrations/${this.registration.Id}/setWaitingListFallback`;
       this.http.post(url, null)

@@ -49,7 +49,7 @@
          <td>{{ mail.Recipients }}</td>
          <td>{{ mail.Created | date: 'dd.MM.yy HH:mm' }}</td>
          <td>{{ mail.SenderName }} ({{ mail.SenderMail }})</td>
-         <td><p *ngIf="mail.Withhold">x</p>  <button *ngIf="mail.Withhold" class="btn btn-primary btn-xs" (click)="releaseMail(mail.Id)">Freigeben</button></td>
+         <td><p *ngIf="mail.Withhold">x</p>  <button *ngIf="mail.Withhold" class="btn btn-primary btn-xs" (click)="releaseMail(mail.Id)">Freigeben</button><button *ngIf="mail.Withhold" class="btn btn-primary btn-xs" (click)="deleteMail(mail.Id)">Löschen</button></td>
       </tr>
    </tbody>
 </table>
@@ -66,7 +66,7 @@
    </thead>
    <tbody>
       <tr *ngFor="let spot of spots">
-         <td><a [routerLink]="['/registrables', spot.RegistrableId]">{{ spot.Registrable }}</a></td>
+         <td><a [routerLink]="['/registrables', spot.RegistrableId, 'participants']">{{ spot.Registrable }}</a></td>
          <td>{{ spot.FirstPartnerJoined | date: 'dd.MM.yy HH:mm' }}</td>
          <td><a *ngIf="spot.PartnerRegistrationId" [routerLink]="['/registration', spot.PartnerRegistrationId]">{{ spot.Partner }}</a></td>
       </tr>

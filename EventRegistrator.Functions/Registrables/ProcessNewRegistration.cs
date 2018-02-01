@@ -80,8 +80,7 @@ namespace EventRegistrator.Functions.Registrables
 
             await context.SaveChangesAsync();
 
-            registration.Price = await PriceCalculator.CalculatePrice(registration.Id);
-
+            await PriceCalculator.CalculatePrice(registration.Id, true);
 
             await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registration.Id }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
             if (registrableIds_CheckWaitingList.Any() && @event.EventId.HasValue)
