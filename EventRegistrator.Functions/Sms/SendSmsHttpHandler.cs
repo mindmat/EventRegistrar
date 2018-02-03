@@ -1,4 +1,5 @@
 using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,8 +11,6 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
 using Twilio;
-using Twilio.Clients;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Twilio.Rest.Api.V2010.Account;
 
 namespace EventRegistrator.Functions.Sms
@@ -25,35 +24,39 @@ namespace EventRegistrator.Functions.Sms
            TraceWriter log)
         {
             var registrationId = Guid.Parse(registrationIdString);
-
             var azureServiceTokenProvider = new AzureServiceTokenProvider();
+
             var kvClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
-            var twilioSid = (await kvClient.GetSecretAsync(Environment.GetEnvironmentVariable("TwilioSID"))).Value;
-            var twilioToken = (await kvClient.GetSecretAsync(Environment.GetEnvironmentVariable("TwilioToken"))).Value;
+            var keyVaultUrl = Environment.GetEnvironmentVariable("KeyVaultUri");
+            var twilioSid = (await kvClient.GetSecretAsync(keyVaultUrl, "TwilioSID"))?.Value;
+            var twilioToken = (await kvClient.GetSecretAsync(keyVaultUrl, "TwilioToken"))?.Value;
 
+            if (twilioSid == null || twilioToken == null)
+            {
+                log.Error("No Twilio SID/Token found");
+                return req.CreateErrorResponse(HttpStatusCode.InternalServerError, "No Twilio SID/Token found");
+            }
 
-            log.Info($"sid {twilioSid}, token {twilioToken}");
+            using (var dbContext = new EventRegistratorDbContext())
+            {
+                var number = dbContext.Registrations
+                    .Where(reg => reg.Id == registrationId)
+                    .Select(reg => reg.Phone)
+                    .FirstOrDefaultAsync();
 
-            //var keyVault = new KeyVaultClient(async (authority, resource, scope) => {
-            //    var authContext = new AuthenticationContext(authority);
-            //    var credential = new ClientCredential(adClientId, adKey);
-            //    var token = await authContext.AcquireTokenAsync(resource, credential);
+                if (number == null)
+                {
+                    log.Error("No number found in registration");
+                    return req.CreateErrorResponse(HttpStatusCode.InternalServerError, "No number found in registration");
+                }
 
-            //    return token.AccessToken;
-            //});
-
-            // Get the API key out of the vault
-            //var apiKey = keyVault.GetSecretAsync(keyUrl).Result.Value;
-            TwilioClient.Init(twilioSid, twilioToken);
-            var message = await MessageResource.CreateAsync("+41798336129", from: "+41 79 807 42 62 ", body: "Hello World through twilio");
-            
-            log.Info($"{message.Sid}, {message.Price}, {message.PriceUnit}, {message.ErrorCode}, {message}");
-
-            //using (var dbContext = new EventRegistratorDbContext())
-            //{
-            //    var smsClient = new TwilioRestClient(twilioSid, ) TwilioClient.GetRestClient();
-            //}
-            return req.CreateResponse(HttpStatusCode.OK, message);
+                TwilioClient.Init(twilioSid, twilioToken);
+                var fromNumber = Environment.GetEnvironmentVariable("TwilioNumber");
+                //var body =
+                var message = await MessageResource.CreateAsync("+41798336129", from: fromNumber, body: "Hello World through twilio");
+                log.Info($"{message.Sid}, {message.Price}, {message.PriceUnit}, {message.ErrorCode}, {message}");
+                return req.CreateResponse(HttpStatusCode.OK, message);
+            }
         }
     }
 }
