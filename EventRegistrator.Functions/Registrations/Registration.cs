@@ -16,6 +16,7 @@ namespace EventRegistrator.Functions.Registrations
         public string RespondentEmail { get; set; }
         public string RespondentFirstName { get; set; }
         public string RespondentLastName { get; set; }
+        public string Phone { get; set; }
         public DateTime ReceivedAt { get; set; }
         public DateTime ExternalTimestamp { get; set; }
         public string Language { get; set; }

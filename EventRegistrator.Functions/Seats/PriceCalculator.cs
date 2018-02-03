@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
+using EventRegistrator.Functions.Registrations;
 using Microsoft.Azure.WebJobs.Host;
 
 namespace EventRegistrator.Functions.Seats
@@ -14,7 +15,7 @@ namespace EventRegistrator.Functions.Seats
       {
          using (var dbContext = new EventRegistratorDbContext())
          {
-            var registration = await dbContext.Registrations.FirstOrDefaultAsync(reg => reg.Id == registrationId);
+            var registration = await dbContext.Registrations.Include(reg => reg.Payments).FirstOrDefaultAsync(reg => reg.Id == registrationId);
             if (registration == null)
             {
                throw new ArgumentException($"Registration with ID {registrationId} not found");
@@ -55,6 +56,11 @@ namespace EventRegistrator.Functions.Seats
             if (savePrice)
             {
                registration.Price = price;
+               if (registration.State != RegistrationState.Cancelled)
+               {
+                  var paidAmount = (decimal?)registration.Payments.Sum(ass => ass.Amount);
+                  registration.State = (paidAmount ?? 0m) >= price ? RegistrationState.Paid : RegistrationState.Received;
+               }
                await dbContext.SaveChangesAsync();
             }
 

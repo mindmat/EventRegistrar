@@ -12,6 +12,7 @@ namespace EventRegistrator.Functions.RegistrationForms
         public ICollection<Question> Questions { get; set; }
         public Guid? QuestionId_FirstName { get; set; }
         public Guid? QuestionId_LastName { get; set; }
+        public Guid? QuestionId_Phone { get; set; }
         public Guid? EventId { get; set; }
         public Event Event { get; set; }
         public State State { get; set; }
