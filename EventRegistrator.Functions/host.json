@@ -38,7 +38,10 @@
         "AddSpot",
         "RemoveSpot",
         "DeleteMailHttpHandler",
-        "SendSmsHttpHandler"
+        "SendReminderSmsHttpHandler",
+        "ReceiveSmsHttpHandler",
+        "NormalizePhoneNumbers",
+        "ReceiveSmsStatus"
     ],
     // Configuration settings for 'serviceBus' triggers. (Optional)
     "serviceBus": {
