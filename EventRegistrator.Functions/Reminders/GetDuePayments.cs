@@ -94,7 +94,9 @@ namespace EventRegistrator.Functions.Reminders
                                                                          reg.Reminder1Mail.Created < reminderDueFrom,
                                                           reg.ReminderSmsSent,
                                                           reg.PhoneNormalized,
-                                                          ReminderSmsPossible = reg.ReminderSmsSent < reminderDueFrom && reg.PhoneNormalized != null
+                                                          ReminderSmsPossible = !reg.ReminderSmsSent.HasValue &&
+                                                                                reg.AcceptedMail.Created < reminderDueFrom &&
+                                                                                reg.PhoneNormalized != null
                                                       })
                                                       .ToListAsync();
 

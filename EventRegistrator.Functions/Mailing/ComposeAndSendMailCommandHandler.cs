@@ -79,8 +79,9 @@ namespace EventRegistrator.Functions.Mailing
                 }
                 else
                 {
-                    var seats = await context.Seats.Where(seat => seat.RegistrationId == command.RegistrationId ||
-                                                                  seat.RegistrationId_Follower == command.RegistrationId)
+                    var seats = await context.Seats.Where(seat => (seat.RegistrationId == command.RegistrationId
+                                                                || seat.RegistrationId_Follower == command.RegistrationId)
+                                                               && !seat.IsCancelled)
                                                    .Include(seat => seat.Registrable)
                                                    .ToListAsync();
                     foreach (var seat in seats.OrderBy(seat => seat.Registrable.ShowInMailListOrder ?? int.MaxValue))
@@ -402,8 +403,10 @@ namespace EventRegistrator.Functions.Mailing
         private static async Task<string> GetSeatList(EventRegistratorDbContext context, Registration registration, IDictionary<string, string> responses, string language, TraceWriter log)
         {
             var seats = await context.Seats
-                                     .Where(seat => (seat.RegistrationId == registration.Id || seat.RegistrationId_Follower == registration.Id)
-                                                    && seat.Registrable.ShowInMailListOrder.HasValue)
+                                     .Where(seat => (seat.RegistrationId == registration.Id 
+                                                  || seat.RegistrationId_Follower == registration.Id)
+                                                 && seat.Registrable.ShowInMailListOrder.HasValue
+                                                 && !seat.IsCancelled)
                                      .OrderBy(seat => seat.Registrable.ShowInMailListOrder.Value)
                                      .Include(seat => seat.Registrable)
                                      .ToListAsync();
@@ -444,6 +447,10 @@ namespace EventRegistrator.Functions.Mailing
             if (seat.IsCancelled)
             {
                 text += language == Language.Deutsch ? " (storniert)" : " (cancelled)";
+            }
+            if (seat.IsWaitingList)
+            {
+                text += language == Language.Deutsch ? " (Warteliste)" : " (waiting list)";
             }
             return text;
         }

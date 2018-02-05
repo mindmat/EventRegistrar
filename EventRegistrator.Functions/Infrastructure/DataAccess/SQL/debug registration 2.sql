@@ -10,14 +10,14 @@ where 1=1
   --and state <> 4
   --and RespondentEmail in('kellett.stephen@gmail.com', 'monika.ecker@gmx.de')
   --and RespondentFirstName like 'passer%'
-  --and RespondentEmail in('christian.mounir@bluewin.ch')
+  and RespondentEmail in('v.bushkov@gmail.com', 'jeanne.rohner@gmail.com')
   --and RespondentEmail in('k.schlueter@gmail.com', 'k.schlueter24@gmail.com', 'stephanie@auderset.ch')
-  and RespondentEmail in ('sara@muerset.net')
+  --and RespondentEmail in ('sara@muerset.net')
   --and RespondentEmail like '%ELODIE.BAERLOCHER%'
   --and id in('bf87454c-c35a-4ba8-b23d-242f331e9fd9')
   --and ExternalIdentifier = '2_ABaOnueyyMvCyfoRdeowyfgi8sDCvVVs5WObREYP3d4Q3jmbk00V4V4lvnyMmp4'
   --and id = '606F7967-B971-46AF-8D7F-15013F5BF8DB'
-  --and id in (select registrationid from Responses where ResponseString like 'christian.mounir@bluewin.ch%')
+  --and id in (select registrationid from Responses where ResponseString like 'lorraine%')
   
 select price, State, *
 from Registrations

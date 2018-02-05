@@ -69,7 +69,10 @@ namespace EventRegistrator.Functions.Sms
 
                 var callbackUrl = new Uri($"{req.RequestUri.Scheme}://{req.RequestUri.Authority}/api/sms/status");
 
-                var message = await MessageResource.CreateAsync("+41798336129", from: fromNumber, body: body, statusCallback: callbackUrl);
+                var message = await MessageResource.CreateAsync(registration.PhoneNormalized,
+                                                                from: fromNumber, 
+                                                                body: body, 
+                                                                statusCallback: callbackUrl);
 
                 var sms = new Sms
                 {

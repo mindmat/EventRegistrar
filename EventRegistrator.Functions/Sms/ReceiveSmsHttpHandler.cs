@@ -24,7 +24,6 @@ namespace EventRegistrator.Functions.Sms
         {
             var form = await req.Content.ReadAsFormDataAsync();
             var data = FormDeserializer.Read<TwilioSms>(form);
-            log.Info($"Content: {JsonConvert.SerializeObject(data)}");
 
             using (var dbContext = new EventRegistratorDbContext())
             {
