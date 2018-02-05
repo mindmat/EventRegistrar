@@ -56,6 +56,11 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
                 .WithMany()
                 .HasForeignKey(reg => reg.RegistrationFormId);
 
+            modelBuilder.Entity<Sms.Sms>()
+                .HasOptional(sms => sms.Registration)
+                .WithMany(reg => reg.Sms)
+                .HasForeignKey(sms => sms.RegistrationId);
+
             modelBuilder.Entity<Response>()
                 .HasRequired(rsp => rsp.Registration)
                 .WithMany()

@@ -40,6 +40,13 @@ namespace EventRegistrator.Functions.Sms
 
             using (var dbContext = new EventRegistratorDbContext())
             {
+                var alreadySent = await dbContext.Sms.AnyAsync(s => s.RegistrationId == registrationId 
+                                                                 && s.Type == SmsType.Reminder);
+                if (alreadySent)
+                {
+                    log.Error("Reminder already sent");
+                    return req.CreateErrorResponse(HttpStatusCode.MethodNotAllowed, "Reminder already sent");
+                }
                 var registration = await dbContext.Registrations
                                                   .Where(reg => reg.Id == registrationId)
                                                   .Select(reg => new { reg.PhoneNormalized, reg.Language })
@@ -58,7 +65,7 @@ namespace EventRegistrator.Functions.Sms
                     ? @"Hallo {{FirstName}}, hast du die Mails vom Leapin' Lindy an {{EMail}} erhalten? Bitte melde dich in den nächsten 24h, ob du immer noch dabei bist oder deine Anmeldung stornieren willst. Liebe Grüsse, das Leapin' Lindy-Team"
                     : @"Hello {{FirstName}}, did you receive the mails from Leapin' Lindy to {{EMail}}? Please let us know in the next 24 hours whether you are still in or want to cancel your registration. Regards, the Leapin' Lindy Team";
 
-                var body = await new TemplateParameterFinder().Fill(template, registrationId, log);
+                var body = await new TemplateParameterFinder().Fill(template, registrationId);
 
                 var callbackUrl = new Uri($"{req.RequestUri.Scheme}://{req.RequestUri.Authority}/api/sms/status");
 
@@ -78,6 +85,7 @@ namespace EventRegistrator.Functions.Sms
                     Price = $"{message.Price}{message.PriceUnit}",
                     ErrorCode = message.ErrorCode,
                     Error = message.ErrorMessage,
+                    Type = SmsType.Reminder,
                     RawData = JsonConvert.SerializeObject(message)
                 };
 

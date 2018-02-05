@@ -10,7 +10,7 @@ namespace EventRegistrator.Functions.Sms
 {
     public class TemplateParameterFinder
     {
-        public async Task<string> Fill(string template, Guid registrationId, TraceWriter log)
+        public async Task<string> Fill(string template, Guid registrationId)
         {
             var filler = new TemplateFiller(template);
             var parameters = filler.Parameters;

@@ -1,11 +1,13 @@
 ﻿using System;
 using EventRegistrator.Functions.Infrastructure.DataAccess;
+using EventRegistrator.Functions.Registrations;
 
 namespace EventRegistrator.Functions.Sms
 {
     public class Sms : Entity
     {
         public Guid? RegistrationId { get; set; }
+        public Registration Registration { get; set; }
 
         public string Body { get; set; }
 
@@ -22,5 +24,7 @@ namespace EventRegistrator.Functions.Sms
         public string Error { get; set; }
         public DateTime? Received { get; set; }
         public DateTime? Sent { get; set; }
+        public SmsType Type { get; set; }
+
     }
 }
