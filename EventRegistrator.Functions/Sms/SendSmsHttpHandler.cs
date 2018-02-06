@@ -20,9 +20,7 @@ namespace EventRegistrator.Functions.Sms
             var registrationId = Guid.Parse(registrationIdString);
             var body = await req.Content.ReadAsStringAsync();
 
-            log.Info(body);
-            return req.CreateResponse(HttpStatusCode.OK);
-            //return await SmsSender.SendSms(registrationId, body, req, log);
+            return await SmsSender.SendSms(registrationId, body, req, log);
         }
     }
 }
