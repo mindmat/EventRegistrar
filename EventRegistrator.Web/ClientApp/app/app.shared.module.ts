@@ -16,6 +16,7 @@ import { PaymentOverviewComponent } from './components/paymentOverview/paymentOv
 import { RegistrationComponent } from './components/registration/registration.component';
 import { SearchRegistrationComponent } from './components/registration/searchRegistration.component';
 import { PaymentRemindersComponent } from './components/paymentReminders/paymentReminders.component';
+import { SmsConversationComponent } from './components/smsConversation/smsConversation.component';
 
 @NgModule({
     declarations: [
@@ -29,7 +30,8 @@ import { PaymentRemindersComponent } from './components/paymentReminders/payment
         PaymentOverviewComponent,
         RegistrationComponent,
         SearchRegistrationComponent,
-        PaymentRemindersComponent
+        PaymentRemindersComponent,
+        SmsConversationComponent,
     ],
     imports: [
         CommonModule,
@@ -46,6 +48,7 @@ import { PaymentRemindersComponent } from './components/paymentReminders/payment
             { path: 'unrecognizedPayments', component: UnrecognizedPaymentsComponent },
             { path: 'paymentOverview', component: PaymentOverviewComponent },
             { path: 'paymentReminders', component: PaymentRemindersComponent },
+            { path: 'registrations/:id/sms', component: SmsConversationComponent },
             { path: '**', redirectTo: 'registrables' }
         ])
     ]

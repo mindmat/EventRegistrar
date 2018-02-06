@@ -43,7 +43,8 @@ namespace EventRegistrator.Functions.Registrations
                         FirstName = reg.RespondentFirstName,
                         LastName = reg.RespondentLastName,
                         reg.SoldOutMessage,
-                        reg.FallbackToPartyPass
+                        reg.FallbackToPartyPass,
+                        SmsCount = reg.Sms.Count
                     })
                     .FirstOrDefaultAsync();
 

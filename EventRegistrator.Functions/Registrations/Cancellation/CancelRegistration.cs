@@ -23,8 +23,6 @@ namespace EventRegistrator.Functions.Registrations.Cancellation
             string registrationIdString,
             TraceWriter log)
         {
-            log.Info("C# HTTP trigger function processed a request.");
-
             var registrationId = Guid.Parse(registrationIdString);
 
             var ignorePayments = req.GetQueryNameValuePairs().FirstOrDefault(kvp => string.Compare(kvp.Key, "ignorePayments", StringComparison.OrdinalIgnoreCase) == 0).Value == "true";
