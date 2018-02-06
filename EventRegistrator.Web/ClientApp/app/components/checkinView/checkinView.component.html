@@ -1,0 +1,29 @@
+<h1>Übersicht Checkin</h1>
+
+<p *ngIf="!registrations"><em>Loading...</em></p>
+
+<table class="table" *ngIf="registrations">
+    <thead>
+        <tr>
+            <th>Mail</th>
+            <th>Name</th>
+            <th>Kurs</th>
+            <th>Mittagessen Sa</th>
+            <th>Mittagessen So</th>
+            <th>Partypass</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let registration of registrations">
+            <td>{{ registration.Email }}</td>
+            <td><a [routerLink]="['/registration', registration.Id]">{{ registration.FirstName }} {{ registration.LastName }}</a></td>
+            <td>{{ registration.Kurs }}</td>
+            <td>{{ registration.MittagessenSamstag }}</td>
+            <td>{{ registration.MittagessenSonntag }}</td>
+            <td><p *ngIf="registration.PartyPass">x</p></td>
+            <td>{{ registration.Status }}</td>
+        </tr>
+    </tbody>
+</table>
+<br />

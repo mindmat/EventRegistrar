@@ -43,7 +43,8 @@
     "NormalizePhoneNumbers",
     "ReceiveSmsStatus",
     "GetSmsConversation",
-    "SendSmsHttpHandler"
+    "SendSmsHttpHandler",
+    "GetRegistrationInfosForCheckin"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {

@@ -84,8 +84,8 @@ namespace EventRegistrator.Functions.Payments
                     {
                         rbl.RegistrableId,
                         rbl.Name,
-                        SpotsAvailable = rbl.SpotsAvailable - rbl.LeaderCount - rbl.FollowerCount,
-                        PotentialIncome = (rbl.SpotsAvailable - rbl.LeaderCount - rbl.FollowerCount) * rbl.Price
+                        SpotsAvailable = Math.Max(0, rbl.SpotsAvailable - rbl.LeaderCount - rbl.FollowerCount),
+                        PotentialIncome = Math.Max(0, rbl.SpotsAvailable - rbl.LeaderCount - rbl.FollowerCount) * rbl.Price
                     })
                 });
             }
