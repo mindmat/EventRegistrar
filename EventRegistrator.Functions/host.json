@@ -44,7 +44,8 @@
     "ReceiveSmsStatus",
     "GetSmsConversation",
     "SendSmsHttpHandler",
-    "GetRegistrationInfosForCheckin"
+    "GetRegistrationInfosForCheckin",
+    "GetCheckinCsv"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {
