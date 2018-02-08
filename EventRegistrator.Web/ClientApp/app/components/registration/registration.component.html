@@ -29,8 +29,12 @@
             <td><p *ngIf="registration.FallbackToPartyPass">x</p>  <button *ngIf="!registration.FallbackToPartyPass" type="button" class="btn btn-primary btn-xs" (click)="fallbackToPartyPass()">Partypass reservieren</button></td>
         </tr>
         <tr>
-            <td>SMS:</td>
-            <td><button type="button" class="btn btn-primary btn-xs" [routerLink]="['/registrations', registration.Id, 'sms']">Anzeigen ({{ registration.SmsCount }})</button></td>
+            <td>SMS ({{ registration.PhoneNormalized }}):</td>
+            <td><button type="button" *ngIf="registration.PhoneNormalized != null" class="btn btn-primary btn-xs" [routerLink]="['/registrations', registration.Id, 'sms']">Anzeigen ({{ registration.SmsCount }})</button></td>
+        </tr>
+        <tr>
+            <td>Bemerkung:</td>
+            <td>{{ registration.Remarks }}</td>
         </tr>
     </tbody>
 </table>

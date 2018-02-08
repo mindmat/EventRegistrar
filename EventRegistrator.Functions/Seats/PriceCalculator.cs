@@ -23,8 +23,7 @@ namespace EventRegistrator.Functions.Seats
                 var seats = await dbContext.Seats
                                            .Where(seat => (seat.RegistrationId == registrationId
                                                         || seat.RegistrationId_Follower == registrationId)
-                                                        && !seat.IsCancelled
-                                                        && !seat.IsWaitingList)
+                                                        && !seat.IsCancelled)
                                            .Include(seat => seat.Registrable)
                                            .Include(seat => seat.Registrable.Reductions)
                                            .ToListAsync();

@@ -25,6 +25,8 @@ namespace EventRegistrator.Functions.Registrations
         public bool? IsWaitingList { get; set; }
         public string SoldOutMessage { get; set; }
         public RegistrationState State { get; set; }
+        public string Remarks { get; set; }
+        public bool RemarksProcessed { get; set; }
         public ICollection<PaymentAssignment> Payments { get; set; }
         public ICollection<MailToRegistration> Mails { get; set; }
         public int ReminderLevel { get; set; }

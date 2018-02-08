@@ -150,6 +150,8 @@ interface Registration {
     SoldOutMessage: string;
     FallbackToPartyPass: boolean;
     SmsCount: number;
+    Remarks: string;
+    PhoneNormalized: string;
 }
 
 interface Spot {

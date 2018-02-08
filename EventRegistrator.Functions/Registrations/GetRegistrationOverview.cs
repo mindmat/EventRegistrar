@@ -39,12 +39,14 @@ namespace EventRegistrator.Functions.Registrations
                         reg.Language,
                         reg.ReceivedAt,
                         reg.ReminderLevel,
-                        Email = reg.RespondentEmail,
+                        reg.Remarks,
+                        Email = reg.RespondentEmail, 
                         FirstName = reg.RespondentFirstName,
                         LastName = reg.RespondentLastName,
                         reg.SoldOutMessage,
                         reg.FallbackToPartyPass,
-                        SmsCount = reg.Sms.Count
+                        SmsCount = reg.Sms.Count,
+                        reg.PhoneNormalized
                     })
                     .FirstOrDefaultAsync();
 
