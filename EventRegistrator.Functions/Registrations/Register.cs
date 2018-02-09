@@ -23,8 +23,8 @@ namespace EventRegistrator.Functions.Registrations
     public static class Register
     {
         [FunctionName("Register")]
-        public static async Task<HttpResponseMessage> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registrationform/{formId}/registration/{id}")]HttpRequestMessage req,
+        public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registrationform/{formId}/registration/{id}")]
+            HttpRequestMessage req,
             string formId,
             string id,
             TraceWriter log)
@@ -150,6 +150,16 @@ namespace EventRegistrator.Functions.Registrations
                         responseLookup.questionId == form.QuestionId_LastName)
                     {
                         registration.RespondentLastName = response.Response;
+                    }
+                    if (form.QuestionId_Remarks.HasValue &&
+                        responseLookup.questionId == form.QuestionId_Remarks)
+                    {
+                        registration.Remarks = response.Response;
+                    }
+                    if (form.QuestionId_Phone.HasValue &&
+                        responseLookup.questionId == form.QuestionId_Phone)
+                    {
+                        registration.Phone = response.Response;
                     }
                 }
                 context.Registrations.Add(registration);

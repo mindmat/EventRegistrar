@@ -39,8 +39,12 @@ namespace EventRegistrator.Functions.Sms
             }
         }
 
-        private static string NormalizePhone(string phone)
+        public static string NormalizePhone(string phone)
         {
+            if (string.IsNullOrEmpty(phone))
+            {
+                return phone;
+            }
             var phoneNormalized = phone.Replace(" ", "").Replace("-", "");
 
             // Replace 0041 with +41
