@@ -38,6 +38,7 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
         public DbSet<PaymentAssignment> PaymentAssignments { get; set; }
         public DbSet<RegistrationCancellation> RegistrationCancellations { get; set; }
         public DbSet<Sms.Sms> Sms { get; set; }
+        public DbSet<RegistrableComposition> RegistrableCompositions { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -125,6 +126,16 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
                 .HasRequired(map => map.Registration)
                 .WithMany(reg => reg.Mails)
                 .HasForeignKey(map => map.RegistrationId);
+
+            modelBuilder.Entity<RegistrableComposition>()
+                .HasRequired(cmp => cmp.Registrable_Contains)
+                .WithMany()
+                .HasForeignKey(cmp => cmp.RegistrableId_Contains);
+
+            modelBuilder.Entity<RegistrableComposition>()
+                .HasRequired(cmp => cmp.Registrable)
+                .WithMany(rbl=>rbl.Compositions)
+                .HasForeignKey(cmp => cmp.RegistrableId_Contains);
 
             base.OnModelCreating(modelBuilder);
         }

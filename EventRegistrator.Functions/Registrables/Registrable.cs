@@ -20,5 +20,6 @@ namespace EventRegistrator.Functions.Registrables
         public bool IsCore { get; set; }
         public ICollection<Reduction> Reductions { get; set; }
         public string CheckinListColumn { get; set; }
+        public ICollection<RegistrableComposition> Compositions { get; set; }
     }
 }
