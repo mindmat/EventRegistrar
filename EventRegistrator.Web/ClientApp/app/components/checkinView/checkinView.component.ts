@@ -36,5 +36,6 @@ interface Registration {
     MittagessenSamstag: string;
     MittagessenSonntag: string;
     PartyPass: boolean;
+    SoloFriday: boolean;
     Status: string;
 }

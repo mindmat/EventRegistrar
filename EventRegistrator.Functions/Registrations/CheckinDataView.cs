@@ -18,6 +18,7 @@ namespace EventRegistrator.Functions.Registrations
             public string Kurs { get; set; }
             public string MittagessenSamstag { get; set; }
             public string MittagessenSonntag { get; set; }
+            public bool SoloFriday { get; set; }
             public bool PartyPass { get; set; }
             public string Status { get; set; }
         }
@@ -42,13 +43,18 @@ namespace EventRegistrator.Functions.Registrations
                                                               reg.Seats_AsFollower.Where(seat => seat.Registrable.CheckinListColumn == "Kurs" && !seat.IsCancelled)
                                                                                   .Select(seat => seat.Registrable.Name)
                                                                                   .FirstOrDefault(),
-                                                       MittagessenSamstag = reg.Seats_AsLeader.Where(seat => seat.Registrable.CheckinListColumn == "Mittagessen Samstag" && !seat.IsCancelled)
+                                                       MittagessenSamstag = reg.Seats_AsLeader.Where(seat => seat.Registrable.CheckinListColumn == "Mittagessen Samstag" 
+                                                                                                          && !seat.IsCancelled)
                                                                                               .Select(seat => seat.Registrable.Name)
                                                                                               .FirstOrDefault(),
-                                                       MittagessenSonntag = reg.Seats_AsLeader.Where(seat => seat.Registrable.CheckinListColumn == "Mittagessen Sonntag" && !seat.IsCancelled)
+                                                       MittagessenSonntag = reg.Seats_AsLeader.Where(seat => seat.Registrable.CheckinListColumn == "Mittagessen Sonntag"
+                                                                                                          && !seat.IsCancelled)
                                                                                               .Select(seat => seat.Registrable.Name)
                                                                                               .FirstOrDefault(),
-                                                       PartyPass = reg.Seats_AsLeader.Count(seat => seat.Registrable.CheckinListColumn == "Parties" && !seat.IsCancelled) == 3,
+                                                       SoloFriday = reg.Seats_AsLeader.Any(seat => seat.Registrable.CheckinListColumn == "Solo Friday" 
+                                                                                                && !seat.IsCancelled),
+                                                       PartyPass = reg.Seats_AsLeader.Count(seat => seat.Registrable.CheckinListColumn == "Parties"
+                                                                                                 && !seat.IsCancelled) == 3,
                                                        Status = reg.State.ToString()
                                                    })
                                                    .Where(reg => reg.PartyPass || reg.Kurs != null)

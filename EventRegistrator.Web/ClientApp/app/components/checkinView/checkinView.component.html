@@ -13,6 +13,7 @@
             <th>Kurs</th>
             <th>Mittagessen Sa</th>
             <th>Mittagessen So</th>
+            <th>Solo Friday</th>
             <th>Partypass</th>
             <th>Status</th>
         </tr>
@@ -24,6 +25,7 @@
             <td>{{ registration.Kurs }}</td>
             <td>{{ registration.MittagessenSamstag }}</td>
             <td>{{ registration.MittagessenSonntag }}</td>
+            <td><p *ngIf="registration.SoloFriday">x</p></td>
             <td><p *ngIf="registration.PartyPass">x</p></td>
             <td>{{ registration.Status }}</td>
         </tr>
