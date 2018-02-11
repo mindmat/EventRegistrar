@@ -60,7 +60,9 @@ namespace EventRegistrator.Functions.Seats
                     if (registration.State != RegistrationState.Cancelled)
                     {
                         var paidAmount = (decimal?)registration.Payments.Sum(ass => ass.Amount);
-                        registration.State = (paidAmount ?? 0m) >= price ? RegistrationState.Paid : RegistrationState.Received;
+                        registration.State = (paidAmount ?? 0m) >= price && price > 0m && registration.State != RegistrationState.Paid
+                            ? RegistrationState.Paid 
+                            : RegistrationState.Received;
                     }
                     await dbContext.SaveChangesAsync();
                 }

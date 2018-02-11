@@ -17,5 +17,6 @@ namespace EventRegistrator.Functions.Mailing
         public DateTime Created { get; set; }
         public bool Withhold { get; set; }
         public ICollection<MailToRegistration> Registrations { get; set; }
+        public string MailingKey { get; set; }
     }
 }

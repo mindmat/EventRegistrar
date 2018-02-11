@@ -46,6 +46,10 @@
             <td><input [(ngModel)]="mailTemplate.SenderName" type="text" class="form-control" /></td>
         </tr>
         <tr>
+            <td>Adressaten</td>
+            <td><input [(ngModel)]="mailTemplate.Audience" type="number" class="form-control" /></td>
+        </tr>
+        <tr>
             <td>Template (HTML)</td>
             <td><textarea [(ngModel)]="mailTemplate.Template" type="" class="form-control" (keyup)="renderMail()"></textarea></td>
         </tr>

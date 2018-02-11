@@ -8,5 +8,6 @@
         public string SenderMail { get; set; }
         public string SenderName { get; set; }
         public string Key { get; set; }
+        public MailingAudience? Audience { get; set; }
     }
 }

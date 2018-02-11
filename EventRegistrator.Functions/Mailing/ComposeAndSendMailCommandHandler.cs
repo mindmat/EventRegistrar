@@ -57,6 +57,10 @@ namespace EventRegistrator.Functions.Mailing
                 {
                     mailType = MailType.RegistrationCancelled;
                 }
+                else if (registration.State == RegistrationState.Paid && registration.Price == 0 && registration.SoldOutMessage != null)
+                {
+                    mailType = MailType.SoldOut;
+                }
                 else if (registration.State == RegistrationState.Paid)
                 {
                     var partnerSeat = await context.Seats.FirstOrDefaultAsync(seat => (seat.RegistrationId == command.RegistrationId ||

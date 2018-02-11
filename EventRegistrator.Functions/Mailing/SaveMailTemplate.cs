@@ -65,6 +65,7 @@ namespace EventRegistrator.Functions.Mailing
                 template.SenderMail = dto.SenderMail;
                 template.SenderName = dto.SenderName;
                 template.Subject = dto.Subject;
+                template.MailingAudience = dto.Audience;
 
                 await dbContext.SaveChangesAsync();
 

@@ -56,7 +56,8 @@ namespace EventRegistrator.Functions.Mailing
                     Template = template.Template,
                     SenderMail = template.SenderMail,
                     SenderName = template.SenderName,
-                    Subject = template.Subject
+                    Subject = template.Subject,
+                    Audience = template.MailingAudience
                 };
 
                 return req.CreateResponse(HttpStatusCode.OK, dto);

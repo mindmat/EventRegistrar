@@ -69,4 +69,5 @@ interface MailTemplate {
     SenderMail: string;
     SenderName: string;
     Subject: string;
+    Audience: number;
 }
