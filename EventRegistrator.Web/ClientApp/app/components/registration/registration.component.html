@@ -39,7 +39,7 @@
     </tbody>
 </table>
 
-<h3>Mails   <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#composeAndSendMailModal">Mail auslösen</button></h3>
+<h3 *ngIf="mails">Mails   <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#composeAndSendMailModal">Mail auslösen</button></h3>
 
 <table class="table table-hover" *ngIf="mails">
     <thead class="thead-dark">
@@ -62,7 +62,7 @@
     </tbody>
 </table>
 
-<h3>Plätze   <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#registrablesModal">Ändern</button></h3>
+<h3 *ngIf="spots">Plätze   <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#registrablesModal">Ändern</button></h3>
 
 <table class="table table-hover" *ngIf="spots">
     <thead class="thead-dark">

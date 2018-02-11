@@ -31,7 +31,7 @@ namespace EventRegistrator.Functions.Mailing
                 return req.CreateErrorResponse(HttpStatusCode.BadRequest, "no language provided");
             }
             var eventId = Guid.Parse(eventIdString);
-            mailingKey = mailingKey?.ToLowerInvariant();
+            mailingKey = Normalize(mailingKey);
             log.Info($"key {mailingKey}, lang {language}");
 
             using (var dbContext = new EventRegistratorDbContext())
@@ -51,6 +51,7 @@ namespace EventRegistrator.Functions.Mailing
                 }
                 var dto = new MailTemplateDto
                 {
+                    Key = template.MailingKey,
                     Language = template.Language,
                     Template = template.Template,
                     SenderMail = template.SenderMail,
@@ -60,6 +61,11 @@ namespace EventRegistrator.Functions.Mailing
 
                 return req.CreateResponse(HttpStatusCode.OK, dto);
             }
+        }
+
+        public static string Normalize(string key)
+        {
+            return key?.ToLowerInvariant()?.Replace(" ", "");
         }
     }
 }

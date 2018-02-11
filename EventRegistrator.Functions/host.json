@@ -48,6 +48,7 @@
     "GetCheckinCsv",
     "GetPartyOverview",
     "GetMailTemplate",
+    "GetMailTemplates",
     "SaveMailTemplate"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)

@@ -22,7 +22,7 @@ namespace EventRegistrator.Functions.Mailing
         {
             var eventId = Guid.Parse(eventIdString);
             var dto = await req.Content.ReadAsAsync<MailTemplateDto>();
-            mailingKey = mailingKey?.ToLowerInvariant();
+            mailingKey = GetMailTemplate.Normalize(mailingKey);
 
             if (dto.Language == null)
             {
