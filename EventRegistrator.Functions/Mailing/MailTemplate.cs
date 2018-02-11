@@ -13,5 +13,6 @@ namespace EventRegistrator.Functions.Mailing
         public string Subject { get; set; }
         public string SenderName { get; set; }
         public string SenderMail { get; set; }
+        public string MailingKey { get; set; }
     }
 }

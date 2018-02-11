@@ -46,7 +46,9 @@
     "SendSmsHttpHandler",
     "GetRegistrationInfosForCheckin",
     "GetCheckinCsv",
-    "GetPartyOverview"
+    "GetPartyOverview",
+    "GetMailTemplate",
+    "SaveMailTemplate"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {

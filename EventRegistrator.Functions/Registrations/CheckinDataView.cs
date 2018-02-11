@@ -21,6 +21,7 @@ namespace EventRegistrator.Functions.Registrations
             public bool SoloFriday { get; set; }
             public bool PartyPass { get; set; }
             public string Status { get; set; }
+            public decimal UnsettledAmount { get; set; }
         }
 
         public static async Task<List<CheckinItem>> GetCheckinData(Guid eventId)
@@ -43,7 +44,7 @@ namespace EventRegistrator.Functions.Registrations
                                                               reg.Seats_AsFollower.Where(seat => seat.Registrable.CheckinListColumn == "Kurs" && !seat.IsCancelled)
                                                                                   .Select(seat => seat.Registrable.Name)
                                                                                   .FirstOrDefault(),
-                                                       MittagessenSamstag = reg.Seats_AsLeader.Where(seat => seat.Registrable.CheckinListColumn == "Mittagessen Samstag" 
+                                                       MittagessenSamstag = reg.Seats_AsLeader.Where(seat => seat.Registrable.CheckinListColumn == "Mittagessen Samstag"
                                                                                                           && !seat.IsCancelled)
                                                                                               .Select(seat => seat.Registrable.Name)
                                                                                               .FirstOrDefault(),
@@ -51,11 +52,12 @@ namespace EventRegistrator.Functions.Registrations
                                                                                                           && !seat.IsCancelled)
                                                                                               .Select(seat => seat.Registrable.Name)
                                                                                               .FirstOrDefault(),
-                                                       SoloFriday = reg.Seats_AsLeader.Any(seat => seat.Registrable.CheckinListColumn == "Solo Friday" 
+                                                       SoloFriday = reg.Seats_AsLeader.Any(seat => seat.Registrable.CheckinListColumn == "Solo Friday"
                                                                                                 && !seat.IsCancelled),
                                                        PartyPass = reg.Seats_AsLeader.Count(seat => seat.Registrable.CheckinListColumn == "Parties"
                                                                                                  && !seat.IsCancelled) == 3,
-                                                       Status = reg.State.ToString()
+                                                       Status = reg.State.ToString(),
+                                                       UnsettledAmount = (reg.Price ?? 0m) - (((decimal?)reg.Payments.Sum(ass => ass.Amount)) ?? 0m)
                                                    })
                                                    .Where(reg => reg.PartyPass || reg.Kurs != null)
                                                    .OrderBy(reg => reg.Kurs)

@@ -38,4 +38,5 @@ interface Registration {
     PartyPass: boolean;
     SoloFriday: boolean;
     Status: string;
+    UnsettledAmount: number;
 }

@@ -1,0 +1,41 @@
+<h1>Mailing</h1>
+
+
+<table class="table">
+    <tbody>
+        <tr>
+            <td>Template ID:</td>
+            <td><input #mailingKey type="text" class="form-control" /></td>
+        </tr>
+        <tr>
+            <td>Sprache:</td>
+            <td><input #language type="text" class="form-control" /></td>
+        </tr>
+    </tbody>
+</table>
+<button class="btn btn-primary" (click)="getTemplate(mailingKey.value, language.value)">Suchen</button>
+
+<p *ngIf="searching"><em>Loading...</em></p>
+
+<table class="table" *ngIf="mailTemplate">
+    <tbody>
+    <tr>
+        <td>Betreff</td>
+        <td><input [(ngModel)]="mailTemplate.Subject" type="text" class="form-control" /></td>
+    </tr>
+    <tr>
+        <td>Absender</td>
+        <td><input [(ngModel)]="mailTemplate.SenderMail" type="text" class="form-control" /></td>
+    </tr>
+    <tr>
+        <td>Absender Alias</td>
+        <td><input [(ngModel)]="mailTemplate.SenderName" type="text" class="form-control" /></td>
+    </tr>
+    <tr>
+        <td>Template</td>
+        <td><textarea [(ngModel)]="mailTemplate.Template" type="" class="form-control"></textarea></td>
+    </tr>
+    </tbody>
+</table>
+
+<button class="btn btn-primary" (click)="saveTemplate(mailingKey.value, language.value)">Speichern</button>

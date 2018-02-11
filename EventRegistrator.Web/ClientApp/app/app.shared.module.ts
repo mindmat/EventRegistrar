@@ -19,6 +19,7 @@ import { PaymentRemindersComponent } from './components/paymentReminders/payment
 import { SmsConversationComponent } from './components/smsConversation/smsConversation.component';
 import { CheckinViewComponent } from "./components/checkinView/checkinView.component";
 import { PartyOverviewComponent } from "./components/partyOverview/partyOverview.component";
+import { MailTemplatesComponent } from "./components/mailTemplates/mailTemplates.component";
 
 @NgModule({
     declarations: [
@@ -35,7 +36,8 @@ import { PartyOverviewComponent } from "./components/partyOverview/partyOverview
         PaymentRemindersComponent,
         SmsConversationComponent,
         CheckinViewComponent,
-        PartyOverviewComponent
+        PartyOverviewComponent,
+        MailTemplatesComponent
     ],
     imports: [
         CommonModule,
@@ -55,6 +57,7 @@ import { PartyOverviewComponent } from "./components/partyOverview/partyOverview
             { path: 'checkinView', component: CheckinViewComponent },
             { path: 'registrations/:id/sms', component: SmsConversationComponent },
             { path: 'partyOverview', component: PartyOverviewComponent },
+            { path: 'mailTemplates', component: MailTemplatesComponent },
             { path: '**', redirectTo: 'registrables' }
         ])
     ]
