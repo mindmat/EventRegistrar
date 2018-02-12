@@ -48,10 +48,25 @@ namespace EventRegistrator.Functions.Mailing
                     {
                         var registrations = await dbContext.Registrations
                                                            .Where(reg => reg.State == RegistrationState.Received
+                                                                      && reg.IsWaitingList != true
                                                                       && reg.RegistrationForm.Language == mailTemplate.Language
                                                                       && !reg.Mails.Any(mail => mail.Mail.MailingKey == mailTemplate.MailingKey))
                                                            .ToListAsync();
                         log.Info($"unpaid {registrations.Count}");
+                        foreach (var registration in registrations)
+                        {
+                            await CreateMail(dbContext, mailTemplate, registration);
+                        }
+                    }
+                    if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.WaitingList) == true)
+                    {
+                        var registrations = await dbContext.Registrations
+                                                           .Where(reg => reg.State == RegistrationState.Received
+                                                                      && reg.IsWaitingList == true
+                                                                      && reg.RegistrationForm.Language == mailTemplate.Language
+                                                                      && !reg.Mails.Any(mail => mail.Mail.MailingKey == mailTemplate.MailingKey))
+                                                           .ToListAsync();
+                        log.Info($"waiting list {registrations.Count}");
                         foreach (var registration in registrations)
                         {
                             await CreateMail(dbContext, mailTemplate, registration);
