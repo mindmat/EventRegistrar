@@ -19,7 +19,7 @@ namespace EventRegistrator.Functions.Reminders
         public static readonly HashSet<MailType?> MailTypes_Accepted = new HashSet<MailType?> { MailType.DoubleRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted };
         public static readonly HashSet<MailType?> MailTypes_Reminder1 = new HashSet<MailType?> { MailType.DoubleRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder };
         public static readonly HashSet<MailType?> MailTypes_Reminder2 = new HashSet<MailType?> { MailType.DoubleRegistrationSecondReminder, MailType.SingleRegistrationSecondReminder };
-        public const int DefaultPaymentGracePeriod = 14;
+        public const int DefaultPaymentGracePeriod = 6;
 
         public static bool IsPaymentDue(DateTime startOfGracePeriodUtc, int? paymentGracePeriod = null)
         {
