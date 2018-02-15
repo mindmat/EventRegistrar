@@ -57,23 +57,27 @@ namespace EventRegistrator.Functions.Hosting
                                                 seat.Registration.RespondentEmail,
                                                 seat.RegistrationId,
                                                 seat.Registration.State,
-                                                seat.Registration.Language
+                                                seat.Registration.Language,
+                                                seat.Registration.AdmittedAt
                                             })
                                             .ToListAsync();
 
-                return req.CreateResponse(HttpStatusCode.OK, offers.Select(off => new
-                {
-                    Id = off.RegistrationId,
-                    FirstName = off.RespondentFirstName,
-                    LastName = off.RespondentLastName,
-                    Mail = off.RespondentEmail,
-                    off.Language,
-                    off.State,
-                    Address = responsesAddress.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
-                    PlaceCount = responsesPlaceCount.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
-                    Comment = responsesComment.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
-                    Phone = responsesPhone.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
-                }));
+                return req.CreateResponse(HttpStatusCode.OK, offers
+                                                             .Select(off => new
+                                                             {
+                                                                 Id = off.RegistrationId,
+                                                                 FirstName = off.RespondentFirstName,
+                                                                 LastName = off.RespondentLastName,
+                                                                 Mail = off.RespondentEmail,
+                                                                 off.Language,
+                                                                 off.State,
+                                                                 off.AdmittedAt,
+                                                                 Address = responsesAddress.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
+                                                                 PlaceCount = responsesPlaceCount.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
+                                                                 Comment = responsesComment.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
+                                                                 Phone = responsesPhone.FirstOrDefault(rsp => rsp.RegistrationId == off.RegistrationId)?.ResponseString,
+                                                             })
+                                                             .OrderBy(off => off.AdmittedAt ?? DateTime.MaxValue));
             }
         }
     }

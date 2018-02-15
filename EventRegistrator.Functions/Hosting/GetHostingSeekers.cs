@@ -19,9 +19,6 @@ namespace EventRegistrator.Functions.Hosting
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "hostingseekers")]
             HttpRequestMessage req, TraceWriter log)
         {
-            log.Info("C# HTTP trigger function processed a request.");
-
-
             using (var dbContext = new EventRegistratorDbContext())
             {
                 var registrableIdHostingSeekers = Guid.Parse("EE10CE23-8219-44DF-9F2A-4FDEC3DE1867");
@@ -57,23 +54,27 @@ namespace EventRegistrator.Functions.Hosting
                                                  seat.Registration.RespondentEmail,
                                                  seat.RegistrationId,
                                                  seat.Registration.State,
-                                                 seat.Registration.Language
+                                                 seat.Registration.Language,
+                                                 seat.Registration.AdmittedAt
                                              })
                                              .ToListAsync();
 
-                return req.CreateResponse(HttpStatusCode.OK, seekers.Select(sek => new
-                {
-                    Id = sek.RegistrationId,
-                    FirstName = sek.RespondentFirstName,
-                    LastName = sek.RespondentLastName,
-                    Mail = sek.RespondentEmail,
-                    sek.Language,
-                    sek.State,
-                    Partners = responsesPartners.FirstOrDefault(rsp => rsp.RegistrationId == sek.RegistrationId)?.ResponseString,
-                    Travel = responsesTravel.FirstOrDefault(rsp => rsp.RegistrationId == sek.RegistrationId)?.ResponseString,
-                    Comment = responsesComment.FirstOrDefault(rsp => rsp.RegistrationId == sek.RegistrationId)?.ResponseString,
-                    Phone = responsesPhone.FirstOrDefault(rsp => rsp.RegistrationId == sek.RegistrationId)?.ResponseString,
-                }));
+                return req.CreateResponse(HttpStatusCode.OK, seekers
+                                                             .Select(sek => new
+                                                             {
+                                                                 Id = sek.RegistrationId,
+                                                                 FirstName = sek.RespondentFirstName,
+                                                                 LastName = sek.RespondentLastName,
+                                                                 Mail = sek.RespondentEmail,
+                                                                 sek.Language,
+                                                                 sek.State,
+                                                                 sek.AdmittedAt,
+                                                                 Partners = responsesPartners.FirstOrDefault(rsp => rsp.RegistrationId == sek.RegistrationId)?.ResponseString,
+                                                                 Travel = responsesTravel.FirstOrDefault(rsp => rsp.RegistrationId == sek.RegistrationId)?.ResponseString,
+                                                                 Comment = responsesComment.FirstOrDefault(rsp => rsp.RegistrationId == sek.RegistrationId)?.ResponseString,
+                                                                 Phone = responsesPhone.FirstOrDefault(rsp => rsp.RegistrationId == sek.RegistrationId)?.ResponseString,
+                                                             })
+                                                             .OrderBy(sek => sek.AdmittedAt ?? DateTime.MaxValue));
             }
         }
     }

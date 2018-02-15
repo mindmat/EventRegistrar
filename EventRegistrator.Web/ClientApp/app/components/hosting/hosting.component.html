@@ -12,6 +12,7 @@
             <th>Adresse</th>
             <th>Anzahl Plätze</th>
             <th>Kommentar</th>
+            <th>Zugelassen</th>
         </tr>
     </thead>
     <tbody>
@@ -23,6 +24,7 @@
             <td>{{ offer.Address }}</td>
             <td>{{ offer.PlaceCount }}</td>
             <td>{{ offer.Comment }}</td>
+            <td>{{ offer.AdmittedAt | date: 'dd.MM.yy HH:mm' }}</td>
         </tr>
     </tbody>
 </table>
@@ -41,6 +43,7 @@
             <th>Zusammen mit</th>
             <th>Anreise</th>
             <th>Kommentar</th>
+            <th>Zugelassen</th>
         </tr>
     </thead>
     <tbody>
@@ -52,6 +55,7 @@
             <td>{{ seeker.Partners }}</td>
             <td>{{ seeker.Travel }}</td>
             <td>{{ seeker.Comment }}</td>
+            <td>{{ seeker.AdmittedAt | date: 'dd.MM.yy HH:mm' }}</td>
         </tr>
     </tbody>
 </table>

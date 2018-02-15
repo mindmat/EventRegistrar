@@ -30,6 +30,7 @@ interface HostingOffer {
     Address: string;
     PlaceCount: number;
     Comment: string;
+    AdmittedAt: Date;
 }
 
 interface HostingSeeker {
@@ -43,4 +44,5 @@ interface HostingSeeker {
     Partners: string;
     Travel: string;
     Comment: string;
+    AdmittedAt: Date;
 }
