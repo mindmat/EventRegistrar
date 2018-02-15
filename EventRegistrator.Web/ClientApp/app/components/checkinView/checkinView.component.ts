@@ -38,5 +38,6 @@ interface Registration {
     PartyPass: boolean;
     SoloFriday: boolean;
     Status: string;
+    AdmittedAt: Date;
     UnsettledAmount: number;
 }

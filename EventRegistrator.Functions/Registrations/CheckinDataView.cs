@@ -22,6 +22,7 @@ namespace EventRegistrator.Functions.Registrations
             public bool PartyPass { get; set; }
             public string Status { get; set; }
             public decimal UnsettledAmount { get; set; }
+            public DateTime? AdmittedAt { get; set; }
         }
 
         public static async Task<List<CheckinItem>> GetCheckinData(Guid eventId)
@@ -57,10 +58,11 @@ namespace EventRegistrator.Functions.Registrations
                                                        PartyPass = reg.Seats_AsLeader.Count(seat => seat.Registrable.CheckinListColumn == "Parties"
                                                                                                  && !seat.IsCancelled) == 3,
                                                        Status = reg.State.ToString(),
+                                                       AdmittedAt = reg.AdmittedAt,
                                                        UnsettledAmount = (reg.Price ?? 0m) - (((decimal?)reg.Payments.Sum(ass => ass.Amount)) ?? 0m)
                                                    })
                                                    .Where(reg => reg.PartyPass || reg.Kurs != null)
-                                                   .OrderBy(reg => reg.Kurs)
+                                                   .OrderBy(reg => reg.AdmittedAt)
                                                    .ToListAsync();
 
                 return registrations;

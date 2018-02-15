@@ -16,6 +16,7 @@
             <th>Solo Friday</th>
             <th>Partypass</th>
             <th>Status</th>
+            <th>Zugelassen</th>
             <th>Betrag ausstehend</th>
         </tr>
     </thead>
@@ -29,7 +30,8 @@
             <td><p *ngIf="registration.SoloFriday">x</p></td>
             <td><p *ngIf="registration.PartyPass">x</p></td>
             <td>{{ registration.Status }}</td>
-            <td *ngIf="registration.UnsettledAmount != 0">{{ registration.UnsettledAmount | currency : 'CHF' }}</td>
+            <td>{{ registration.AdmittedAt | date: 'dd.MM.yy HH:mm' }}</td>
+            <td><span *ngIf="registration.UnsettledAmount != 0">{{ registration.UnsettledAmount | currency : 'CHF' }}</span></td>
         </tr>
     </tbody>
 </table>

@@ -74,7 +74,10 @@ namespace EventRegistrator.Functions.Registrables
                     }
                 }
                 registration.IsWaitingList = ownSeats.Any(seat => seat.IsWaitingList);
-
+                if (registration.IsWaitingList==false && !registration.AdmittedAt.HasValue)
+                {
+                    registration.AdmittedAt = DateTime.UtcNow;
+                }
                 registration.PhoneNormalized = NormalizePhoneNumbers.NormalizePhone(registration.Phone);
 
                 await context.SaveChangesAsync();

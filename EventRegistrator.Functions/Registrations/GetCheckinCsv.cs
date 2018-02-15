@@ -26,7 +26,7 @@ namespace EventRegistrator.Functions.Registrations
             var registrations = await CheckinDataView.GetCheckinData(eventId);
 
             var dataTable = new DataTable("Checkin");
-            var properties = typeof(CheckinDataView.CheckinItem).GetProperties();
+            var properties = typeof(CheckinDataView.CheckinItem).GetProperties().Where(prp => !(prp.PropertyType.IsGenericType && prp.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))).ToList();
             foreach (var property in properties)
             {
                 dataTable.Columns.Add(property.Name, property.PropertyType);
@@ -50,7 +50,7 @@ namespace EventRegistrator.Functions.Registrations
             workbook.SaveAs(stream);
             stream.Position = 0;
 
-            var response =  req.CreateResponse(HttpStatusCode.OK);
+            var response = req.CreateResponse(HttpStatusCode.OK);
             response.Content = new StreamContent(stream);
             response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             return response;
