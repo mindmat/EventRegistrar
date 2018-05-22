@@ -22,45 +22,45 @@ import { PartyOverviewComponent } from "./components/partyOverview/partyOverview
 import { MailTemplatesComponent } from "./components/mailTemplates/mailTemplates.component";
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        NavMenuComponent,
-        RegistrablesComponent,
-        ParticipantsComponent,
-        HostingComponent,
-        HomeComponent,
-        UnrecognizedPaymentsComponent,
-        PaymentOverviewComponent,
-        RegistrationComponent,
-        SearchRegistrationComponent,
-        PaymentRemindersComponent,
-        SmsConversationComponent,
-        CheckinViewComponent,
-        PartyOverviewComponent,
-        MailTemplatesComponent
-    ],
-    imports: [
-        CommonModule,
-        HttpModule,
-        FormsModule,
-        RouterModule.forRoot([
-            { path: '', redirectTo: 'registrables', pathMatch: 'full' },
-            { path: 'home', component: HomeComponent },
-            { path: 'registrables', component: RegistrablesComponent },
-            { path: 'registrables/:id/participants', component: ParticipantsComponent },
-            { path: 'registration/:id', component: RegistrationComponent },
-            { path: 'searchRegistration', component: SearchRegistrationComponent },
-            { path: 'hosting', component: HostingComponent },
-            { path: 'unrecognizedPayments', component: UnrecognizedPaymentsComponent },
-            { path: 'paymentOverview', component: PaymentOverviewComponent },
-            { path: 'paymentReminders', component: PaymentRemindersComponent },
-            { path: 'checkinView', component: CheckinViewComponent },
-            { path: 'registrations/:id/sms', component: SmsConversationComponent },
-            { path: 'partyOverview', component: PartyOverviewComponent },
-            { path: 'mailTemplates', component: MailTemplatesComponent },
-            { path: '**', redirectTo: 'registrables' }
-        ])
-    ]
+  declarations: [
+    AppComponent,
+    NavMenuComponent,
+    RegistrablesComponent,
+    ParticipantsComponent,
+    HostingComponent,
+    HomeComponent,
+    UnrecognizedPaymentsComponent,
+    PaymentOverviewComponent,
+    RegistrationComponent,
+    SearchRegistrationComponent,
+    PaymentRemindersComponent,
+    SmsConversationComponent,
+    CheckinViewComponent,
+    PartyOverviewComponent,
+    MailTemplatesComponent
+  ],
+  imports: [
+    CommonModule,
+    HttpModule,
+    FormsModule,
+    RouterModule.forRoot([
+      { path: '', redirectTo: 'registrables', pathMatch: 'full' },
+      { path: ':eventAcronym/home', component: HomeComponent },
+      { path: ':eventAcronym/registrables', component: RegistrablesComponent },
+      { path: ':eventAcronym/registrables/:id/participants', component: ParticipantsComponent },
+      { path: 'registration/:id', component: RegistrationComponent },
+      { path: 'searchRegistration', component: SearchRegistrationComponent },
+      { path: 'hosting', component: HostingComponent },
+      { path: 'unrecognizedPayments', component: UnrecognizedPaymentsComponent },
+      { path: 'paymentOverview', component: PaymentOverviewComponent },
+      { path: 'paymentReminders', component: PaymentRemindersComponent },
+      { path: 'checkinView', component: CheckinViewComponent },
+      { path: 'registrations/:id/sms', component: SmsConversationComponent },
+      { path: 'partyOverview', component: PartyOverviewComponent },
+      { path: 'mailTemplates', component: MailTemplatesComponent },
+      { path: '**', redirectTo: 'registrables' }
+    ])
+  ]
 })
 export class AppModuleShared {
 }

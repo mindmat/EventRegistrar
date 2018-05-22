@@ -7,11 +7,14 @@
     <IsPackable>false</IsPackable>
     <UserSecretsId>fb0afa0f-7e2d-46c4-8148-b3493d11f6a8</UserSecretsId>
     <ApplicationIcon>wwwroot\favicon.ico</ApplicationIcon>
+    <StartupObject>EventRegistrator.Web.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IdentityServer4" Version="2.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.5" />
+    <PackageReference Include="IdentityServer4" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.8" />
+    <PackageReference Include="Microsoft.Azure.KeyVault" Version="2.3.2" />
+    <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.1.0-preview" />
     <PackageReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.0" />
   </ItemGroup>
 

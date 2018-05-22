@@ -1,6 +1,6 @@
 import { Component, Inject, } from '@angular/core';
 import { Http } from '@angular/http';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'participants',
@@ -10,7 +10,7 @@ export class ParticipantsComponent {
   public registrable: Registrable;
   registrableId: any;
 
-  constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string, private router: Router, private route: ActivatedRoute) {
+  constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -21,16 +21,18 @@ export class ParticipantsComponent {
   refreshParticipants() {
     this.http.get(`${this.baseUrl}api/registrables/${this.registrableId}/participants`)
       .subscribe(result => { this.registrable = result.json() as Registrable; },
-      error => console.error(error));
+        error => console.error(error));
   }
 
   promote() {
     this.http.post(`${this.baseUrl}api/registrables/${this.registrableId}/tryPromoteFromWaitingList`, null)
       .subscribe(result => { },
-      error => console.error(error));
-
+        error => console.error(error));
   }
 
+  getEventId() {
+    return this.route.snapshot.params['eventAcronym'];
+  }
 }
 
 interface Registrable {
