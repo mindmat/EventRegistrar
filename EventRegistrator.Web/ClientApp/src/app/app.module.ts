@@ -7,38 +7,38 @@ import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
-//import { HomeComponent } from './components/home/home.component';
+//import { HomeComponent } from './home/home.component';
 
 import { RegistrablesComponent } from './registrables/registrables.component';
-//import { ParticipantsComponent } from './components/participants/participants.component';
-//import { HostingComponent } from './components/hosting/hosting.component';
-//import { UnrecognizedPaymentsComponent } from './components/unrecognizedPayments/unrecognizedPayments.component';
-//import { PaymentOverviewComponent } from './components/paymentOverview/paymentOverview.component';
-//import { RegistrationComponent } from './components/registration/registration.component';
-//import { SearchRegistrationComponent } from './components/registration/searchRegistration.component';
-//import { PaymentRemindersComponent } from './components/paymentReminders/paymentReminders.component';
-//import { SmsConversationComponent } from './components/smsConversation/smsConversation.component';
-//import { CheckinViewComponent } from "./components/checkinView/checkinView.component";
-//import { PartyOverviewComponent } from "./components/partyOverview/partyOverview.component";
-//import { MailTemplatesComponent } from "./components/mailTemplates/mailTemplates.component";
+import { ParticipantsComponent } from './participants/participants.component';
+import { HostingComponent } from './hosting/hosting.component';
+import { UnrecognizedPaymentsComponent } from './unrecognizedPayments/unrecognizedPayments.component';
+import { PaymentOverviewComponent } from './paymentOverview/paymentOverview.component';
+import { RegistrationComponent } from './registration/registration.component';
+import { SearchRegistrationComponent } from './registration/searchRegistration.component';
+import { PaymentRemindersComponent } from './paymentReminders/paymentReminders.component';
+import { SmsConversationComponent } from './smsConversation/smsConversation.component';
+import { CheckinViewComponent } from "./checkinView/checkinView.component";
+import { PartyOverviewComponent } from "./partyOverview/partyOverview.component";
+import { MailTemplatesComponent } from "./mailTemplates/mailTemplates.component";
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     RegistrablesComponent,
-    //ParticipantsComponent,
-    //HostingComponent,
+    ParticipantsComponent,
+    HostingComponent,
     //HomeComponent,
-    //UnrecognizedPaymentsComponent,
-    //PaymentOverviewComponent,
-    //RegistrationComponent,
-    //SearchRegistrationComponent,
-    //PaymentRemindersComponent,
-    //SmsConversationComponent,
-    //CheckinViewComponent,
-    //PartyOverviewComponent,
-    //MailTemplatesComponent
+    UnrecognizedPaymentsComponent,
+    PaymentOverviewComponent,
+    RegistrationComponent,
+    SearchRegistrationComponent,
+    PaymentRemindersComponent,
+    SmsConversationComponent,
+    CheckinViewComponent,
+    PartyOverviewComponent,
+    MailTemplatesComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -48,17 +48,17 @@ import { RegistrablesComponent } from './registrables/registrables.component';
       { path: '', redirectTo: 'll18/registrables', pathMatch: 'full' },
       //{ path: 'home', component: HomeComponent },
       { path: ':eventAcronym/registrables', component: RegistrablesComponent },
-      //{ path: 'registrables/:id/participants', component: ParticipantsComponent },
-      //{ path: 'registration/:id', component: RegistrationComponent },
-      //{ path: 'searchRegistration', component: SearchRegistrationComponent },
-      //{ path: 'hosting', component: HostingComponent },
-      //{ path: 'unrecognizedPayments', component: UnrecognizedPaymentsComponent },
-      //{ path: 'paymentOverview', component: PaymentOverviewComponent },
-      //{ path: 'paymentReminders', component: PaymentRemindersComponent },
-      //{ path: 'checkinView', component: CheckinViewComponent },
-      //{ path: 'registrations/:id/sms', component: SmsConversationComponent },
-      //{ path: 'partyOverview', component: PartyOverviewComponent },
-      //{ path: 'mailTemplates', component: MailTemplatesComponent },
+      { path: ':eventAcronym/registrables/:id/participants', component: ParticipantsComponent },
+      { path: ':eventAcronym/registration/:id', component: RegistrationComponent },
+      { path: ':eventAcronym/searchRegistration', component: SearchRegistrationComponent },
+      { path: ':eventAcronym/hosting', component: HostingComponent },
+      { path: ':eventAcronym/unrecognizedPayments', component: UnrecognizedPaymentsComponent },
+      { path: ':eventAcronym/paymentOverview', component: PaymentOverviewComponent },
+      { path: ':eventAcronym/paymentReminders', component: PaymentRemindersComponent },
+      { path: ':eventAcronym/checkinView', component: CheckinViewComponent },
+      { path: ':eventAcronym/registrations/:id/sms', component: SmsConversationComponent },
+      { path: ':eventAcronym/partyOverview', component: PartyOverviewComponent },
+      { path: ':eventAcronym/mailTemplates', component: MailTemplatesComponent },
       { path: '**', redirectTo: 'll18/registrables' }
     ])
   ],

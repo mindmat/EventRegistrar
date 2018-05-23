@@ -1,0 +1,45 @@
+<h1>Übersicht Einnahmen</h1>
+
+<p *ngIf="!paymentOverview"><em>Loading...</em></p>
+
+<table class='table' *ngIf="paymentOverview">
+    <tbody>
+        <tr>
+            <td>Geld eingenommen:</td>
+            <td class="text-right">{{ paymentOverview.ReceivedMoney | currency : paymentOverview.Balance.Currency }}</td>
+            <td>aus {{paymentOverview.PaidRegistrations}} Anmeldungen</td>
+        </tr>
+        <tr>
+            <td>Ausstehende Zahlungen:</td>
+            <td class="text-right">{{ paymentOverview.OutstandingAmount | currency : paymentOverview.Balance.Currency }}</td>
+            <td><a [routerLink]="['/paymentReminders']">aus {{ paymentOverview.NotFullyPaidRegistrations }} Anmeldungen</a></td>
+        </tr>
+        <tr>
+            <td>Kontostand:</td>
+            <td class="text-right">{{ paymentOverview.Balance.Balance | currency : paymentOverview.Balance.Currency }}</td>
+            <td>Konto {{ paymentOverview.Balance.AccountIban }}, Stand {{ paymentOverview.Balance.Date | date: 'dd.MM.yy' }}</td>
+        </tr>
+        <tr>
+            <td>Potential durch offene Plätze:</td>
+            <td class="text-right">{{ paymentOverview.PotentialOfOpenSpotsSum | currency : paymentOverview.Balance.Currency }}</td>
+            <td><button (click)="showPotentialDetails=!showPotentialDetails">Details</button></td>
+        </tr>
+    </tbody>
+</table>
+
+<table class='table' *ngIf="showPotentialDetails">
+    <thead>
+        <tr>
+            <th>Bezeichnung</th>
+            <th class="text-right">Plätze verfügbar</th>
+            <th class="text-right">Potential</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let potential of paymentOverview.PotentialOfOpenSpots">
+            <td><a [routerLink]="['/registrables', potential.RegistrableId, 'participants']">{{ potential.Name }}</a></td>
+            <td class="text-right">{{ potential.SpotsAvailable }}</td>
+            <td class="text-right">{{ potential.PotentialIncome | currency : paymentOverview.Balance.Currency }}</td>
+        </tr>
+    </tbody>
+</table>

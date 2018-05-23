@@ -1,0 +1,64 @@
+<h1>Mailing</h1>
+
+<table class="table table-hover">
+    <thead class="thead-dark">
+        <tr>
+            <th>ID</th>
+            <th>Sprache</th>
+            <th>Betreff</th>
+            <th>Absender</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let template of mailTemplates" (click)="showTemplate(template.Key, template.Language)">
+            <td>{{ template.Key }}</td>
+            <td>{{ template.Language }}</td>
+            <td>{{ template.Subject }}</td>
+            <td>{{ template.SenderName }} ({{ template.SenderMail }})</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr />
+
+<p *ngIf="searching"><em>Loading...</em></p>
+
+<table class="table" *ngIf="mailTemplate">
+    <tbody>
+        <tr>
+            <td>Template ID</td>
+            <td><input [(ngModel)]="mailTemplate.Key" type="text" class="form-control" /></td>
+        </tr>
+        <tr>
+            <td>Sprache</td>
+            <td><input [(ngModel)]="mailTemplate.Language" type="text" class="form-control" /></td>
+        </tr>
+        <tr>
+            <td>Betreff</td>
+            <td><input [(ngModel)]="mailTemplate.Subject" type="text" class="form-control" /></td>
+        </tr>
+        <tr>
+            <td>Absender</td>
+            <td><input [(ngModel)]="mailTemplate.SenderMail" type="text" class="form-control" /></td>
+        </tr>
+        <tr>
+            <td>Absender Alias</td>
+            <td><input [(ngModel)]="mailTemplate.SenderName" type="text" class="form-control" /></td>
+        </tr>
+        <tr>
+            <td>Adressaten</td>
+            <td><input [(ngModel)]="mailTemplate.Audience" type="number" class="form-control" /></td>
+        </tr>
+        <tr>
+            <td>Template (HTML)</td>
+            <td><textarea [(ngModel)]="mailTemplate.Template" type="" class="form-control" (keyup)="renderMail()"></textarea></td>
+        </tr>
+    </tbody>
+</table>
+
+<button class="btn btn-primary" (click)="saveTemplate()">Speichern</button>
+
+<br /><br />
+
+<div id="templateRenderSpace" class="table-bordered">
+</div>

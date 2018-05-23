@@ -1,0 +1,22 @@
+<h1>Übersicht Parties</h1>
+
+<p *ngIf="!parties"><em>Loading...</em></p>
+
+<table class="table" *ngIf="parties">
+    <thead>
+        <tr>
+            <th>Party</th>
+            <th>Total</th>
+            <th>Potential Workshop</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let party of parties">
+            <td>{{ party.Name }}</td>
+            <td>{{ party.Total }}</td>
+            <td>{{ party.Potential }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<br />

@@ -1,0 +1,55 @@
+<h1>Nicht erkannte Zahlungen</h1>
+
+<p *ngIf="!payments"><em>Loading...</em></p>
+
+<table class='table' *ngIf="payments">
+    <thead>
+        <tr>
+            <th>Mitteilungstext</th>
+            <th>Email</th>
+            <th></th>
+            <th>Datum</th>
+            <th>Betrag</th>
+            <th>Zugeordnet</th>
+            <th>Zurückbezahlt</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let payment of payments">
+            <td class="col-lg-5"><textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected()">{{ payment.Info }}</textarea></td>
+            <td>
+                <input [(ngModel)]="payment.RecognizedEmail" type="text" *ngIf="!payment.Locked">
+            </td>
+            <td>
+                <button class="btn btn-primary btn-sm" (click)="saveMail(payment)" *ngIf="!payment.Locked"><span class="glyphicon glyphicon-ok"></span></button>
+            </td>
+            <td>{{ payment.BookingDate | date: 'dd.MM.yy' }}</td>
+            <td>{{ payment.Amount }}{{ payment.Currency}}</td>
+            <td>{{ payment.Assigned }}</td>
+            <td>{{ payment.Repaid }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<br />
+
+<h3>Suchtreffer</h3>
+
+<table class="table table-hover" *ngIf="registrations">
+    <thead class="thead-dark">
+        <tr>
+            <th>Name</th>
+            <th>Mail</th>
+            <th>Preis</th>
+            <th>Treffer in Antworten</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let registration of registrations">
+            <td><a [routerLink]="['/registration', registration.Id]">{{ registration.FirstName }} {{ registration.LastName }}</a></td>
+            <td>{{ registration.Email }}</td>
+            <td>{{ registration.Price }}</td>
+            <td>{{ registration.ResponsesJoined }}</td>
+        </tr>
+    </tbody>
+</table>
