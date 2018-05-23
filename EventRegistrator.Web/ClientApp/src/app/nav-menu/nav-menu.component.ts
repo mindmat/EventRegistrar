@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 })
 export class NavMenuComponent {
   isExpanded = false;
+  public eventAcronym: string = "ll18";
 
   collapse() {
     this.isExpanded = false;
