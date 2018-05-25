@@ -2,11 +2,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
+import { AuthService } from './authentication/authService.service';
 //import { HomeComponent } from './home/home.component';
 
 import { RegistrablesComponent } from './registrables/registrables.component';
@@ -21,6 +23,7 @@ import { SmsConversationComponent } from './smsConversation/smsConversation.comp
 import { CheckinViewComponent } from "./checkinView/checkinView.component";
 import { PartyOverviewComponent } from "./partyOverview/partyOverview.component";
 import { MailTemplatesComponent } from "./mailTemplates/mailTemplates.component";
+import { TokenInterceptor } from "./authentication/tokenInterceptor";
 
 @NgModule({
   declarations: [
@@ -42,6 +45,7 @@ import { MailTemplatesComponent } from "./mailTemplates/mailTemplates.component"
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    HttpModule,
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
@@ -63,7 +67,13 @@ import { MailTemplatesComponent } from "./mailTemplates/mailTemplates.component"
     ])
   ],
   providers: [
-    { provide: 'BASE_URL', useFactory: getBaseUrl }
+    { provide: 'BASE_URL', useFactory: getBaseUrl },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    AuthService
   ],
   bootstrap: [AppComponent]
 })

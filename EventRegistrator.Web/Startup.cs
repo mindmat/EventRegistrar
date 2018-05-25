@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.Azure.KeyVault;
+using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,18 +17,6 @@ namespace EventRegistrator.Web
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddMvc();
-
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
-        }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
@@ -39,6 +29,12 @@ namespace EventRegistrator.Web
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            app.UseCors(builder => builder.AllowAnyOrigin()
+                                          .AllowAnyHeader()
+                                          .AllowAnyMethod()
+                                          .AllowCredentials());
+
+            app.UseAuthentication();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
@@ -60,6 +56,31 @@ namespace EventRegistrator.Web
                 {
                     spa.UseAngularCliServer(npmScript: "start");
                 }
+            });
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            var azureServiceTokenProvider = new AzureServiceTokenProvider();
+            var kvClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+
+            var keyVaultUrl = Configuration["KeyVaultUri"];
+            var googleClientId = kvClient.GetSecretAsync(keyVaultUrl, "Google-ClientId").Result.Value;
+            var googleClientSecret = kvClient.GetSecretAsync(keyVaultUrl, "Google-ClientSecret").Result.Value;
+
+            services.AddAuthentication().AddGoogle(o =>
+            {
+                //o.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+                o.ClientId = googleClientId;
+                o.ClientSecret = googleClientSecret;
+            });
+            services.AddMvc();
+
+            // In production, the Angular files will be served from this directory
+            services.AddSpaStaticFiles(configuration =>
+            {
+                configuration.RootPath = "ClientApp/dist";
             });
         }
     }
