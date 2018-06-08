@@ -1,4 +1,5 @@
 ﻿using EventRegistrator.Functions.Infrastructure.DataAccess;
+using System.Collections.Generic;
 
 namespace EventRegistrator.Functions.Events
 {
@@ -10,5 +11,6 @@ namespace EventRegistrator.Functions.Events
         public string Name { get; set; }
         public State State { get; set; }
         public string TwilioAccountSid { get; set; }
+        public ICollection<UserInEvent> Users { get; set; }
     }
 }

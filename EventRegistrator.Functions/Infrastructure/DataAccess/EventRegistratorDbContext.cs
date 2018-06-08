@@ -1,5 +1,4 @@
-﻿using System.Data.Entity;
-using EventRegistrator.Functions.Events;
+﻿using EventRegistrator.Functions.Events;
 using EventRegistrator.Functions.Infrastructure.DomainEvents;
 using EventRegistrator.Functions.Mailing;
 using EventRegistrator.Functions.Payments;
@@ -8,6 +7,8 @@ using EventRegistrator.Functions.RegistrationForms;
 using EventRegistrator.Functions.Registrations;
 using EventRegistrator.Functions.Registrations.Cancellation;
 using EventRegistrator.Functions.Seats;
+using EventRegistrator.Functions.Users;
+using System.Data.Entity;
 
 namespace EventRegistrator.Functions.Infrastructure.DataAccess
 {
@@ -18,27 +19,28 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
         {
         }
 
-        public DbSet<Reduction> Reductions { get; set; }
+        public DbSet<DomainEvent> DomainEvents { get; set; }
         public DbSet<Event> Events { get; set; }
-        public DbSet<RegistrationForm> RegistrationForms { get; set; }
-        public DbSet<Question> Questions { get; set; }
+        public DbSet<Mail> Mails { get; set; }
+        public DbSet<MailTemplate> MailTemplates { get; set; }
+        public DbSet<MailToRegistration> MailToRegistrations { get; set; }
+        public DbSet<PaymentAssignment> PaymentAssignments { get; set; }
+        public DbSet<PaymentFile> PaymentFiles { get; set; }
         public DbSet<QuestionOption> QuestionOptions { get; set; }
+        public DbSet<QuestionOptionToRegistrableMapping> QuestionOptionToRegistrableMappings { get; set; }
+        public DbSet<Question> Questions { get; set; }
+        public DbSet<ReceivedPayment> ReceivedPayments { get; set; }
+        public DbSet<Reduction> Reductions { get; set; }
+        public DbSet<RegistrableComposition> RegistrableCompositions { get; set; }
+        public DbSet<Registrable> Registrables { get; set; }
+        public DbSet<RegistrationCancellation> RegistrationCancellations { get; set; }
+        public DbSet<RegistrationForm> RegistrationForms { get; set; }
         public DbSet<Registration> Registrations { get; set; }
         public DbSet<Response> Responses { get; set; }
         public DbSet<Seat> Seats { get; set; }
-        public DbSet<MailTemplate> MailTemplates { get; set; }
-        public DbSet<ReceivedPayment> ReceivedPayments { get; set; }
-
-        public DbSet<DomainEvent> DomainEvents { get; set; }
-        public DbSet<Registrable> Registrables { get; set; }
-        public DbSet<QuestionOptionToRegistrableMapping> QuestionOptionToRegistrableMappings { get; set; }
-        public DbSet<Mail> Mails { get; set; }
-        public DbSet<MailToRegistration> MailToRegistrations { get; set; }
-        public DbSet<PaymentFile> PaymentFiles { get; set; }
-        public DbSet<PaymentAssignment> PaymentAssignments { get; set; }
-        public DbSet<RegistrationCancellation> RegistrationCancellations { get; set; }
         public DbSet<Sms.Sms> Sms { get; set; }
-        public DbSet<RegistrableComposition> RegistrableCompositions { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<UserInEvent> UsersInEvents { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -134,8 +136,18 @@ namespace EventRegistrator.Functions.Infrastructure.DataAccess
 
             modelBuilder.Entity<RegistrableComposition>()
                 .HasRequired(cmp => cmp.Registrable)
-                .WithMany(rbl=>rbl.Compositions)
+                .WithMany(rbl => rbl.Compositions)
                 .HasForeignKey(cmp => cmp.RegistrableId_Contains);
+
+            modelBuilder.Entity<UserInEvent>()
+                .HasRequired(uie => uie.Event)
+                .WithMany(evt => evt.Users)
+                .HasForeignKey(uie => uie.EventId);
+
+            modelBuilder.Entity<UserInEvent>()
+                .HasRequired(uie => uie.User)
+                .WithMany(evt => evt.Events)
+                .HasForeignKey(uie => uie.UserId);
 
             base.OnModelCreating(modelBuilder);
         }

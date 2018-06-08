@@ -50,7 +50,10 @@
     "GetMailTemplate",
     "GetMailTemplates",
     "SaveMailTemplate",
-    "StartMailing"
+    "StartMailing",
+
+    "EventsOfUserQuery",
+    "UsersOfEventQuery"
   ],
   // Configuration settings for 'serviceBus' triggers. (Optional)
   "serviceBus": {

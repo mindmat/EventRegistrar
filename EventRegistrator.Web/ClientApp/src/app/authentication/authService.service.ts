@@ -4,15 +4,34 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AuthService {
-  constructor(private http: Http , @Inject('BASE_URL') private baseUrl: string) {
-    http.get(`${baseUrl}/.auth/me`).subscribe(result => {
+  constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string) {
+    this.baseUrl = "https://eventregistratorweb.azurewebsites.net";
+  }
+  isAuthenticated: boolean = false;
+  access_token: string;
+  //ticket: Ticket;
+  user: string;
+
+  public login() {
+    this.http.post(`${this.baseUrl}/.auth/me`, null, { withCredentials: true }).subscribe(result => {
       var response = result.json();
       this.access_token = response.access_token;
       var test = response.claims.find(c => c.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname");
-    }, error => console.error(error));
+      this.user = test;
+      this.isAuthenticated = true;
+    }, error => {
+      console.error(error);
+      this.user = error;
+      this.isAuthenticated = false;
+    });
+
+    //var token: LoginToken;
+    //token.access_token = "748160993732-5uqm6arq75f2e37bvgnpsjbqj7jfoq14.apps.googleusercontent.com";
+    //this.http.post(`${this.baseUrl}/.auth/login/google`, token).subscribe(result => {
+    //  console.info(result);
+    //},
+    //  error => { console.error(error); });
   }
-  access_token: string;
-  //ticket: Ticket;
 }
 
 interface Ticket {
@@ -20,6 +39,10 @@ interface Ticket {
   user_id: string;
   provider_name: string;
   claims: Claim[];
+}
+
+class LoginToken {
+  access_token: string;
 }
 
 interface Claim {
