@@ -1,15 +1,19 @@
+using EventRegistrar.Backend;
+using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
-using Microsoft.Azure.KeyVault;
-using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SimpleInjector;
 
 namespace EventRegistrator.Web
 {
     public class Startup
     {
+        private readonly Container _container = new Container();
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -20,6 +24,11 @@ namespace EventRegistrator.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseSimpleInjector(_container);
+            _container.RegisterInstance(new ConnectionString(Configuration.GetConnectionString("DefaultConnection")));
+            AddRegistrations(_container);
+            _container.Verify();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -62,19 +71,19 @@ namespace EventRegistrator.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var azureServiceTokenProvider = new AzureServiceTokenProvider();
-            var kvClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
+            //var azureServiceTokenProvider = new AzureServiceTokenProvider();
+            //var kvClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
 
-            var keyVaultUrl = Configuration["KeyVaultUri"];
-            var googleClientId = kvClient.GetSecretAsync(keyVaultUrl, "Google-ClientId").Result.Value;
-            var googleClientSecret = kvClient.GetSecretAsync(keyVaultUrl, "Google-ClientSecret").Result.Value;
+            //var keyVaultUrl = Configuration["KeyVaultUri"];
+            //var googleClientId = kvClient.GetSecretAsync(keyVaultUrl, "Google-ClientId").Result.Value;
+            //var googleClientSecret = kvClient.GetSecretAsync(keyVaultUrl, "Google-ClientSecret").Result.Value;
 
-            services.AddAuthentication().AddGoogle(o =>
-            {
-                //o.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-                o.ClientId = googleClientId;
-                o.ClientSecret = googleClientSecret;
-            });
+            //services.AddAuthentication().AddGoogle(o =>
+            //{
+            //    //o.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
+            //    o.ClientId = googleClientId;
+            //    o.ClientSecret = googleClientSecret;
+            //});
             services.AddMvc();
 
             // In production, the Angular files will be served from this directory
@@ -82,6 +91,15 @@ namespace EventRegistrator.Web
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.UseSimpleInjector(_container);
+
+            //services.AddDbContext<EventRegistratorDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+        }
+
+        private void AddRegistrations(Container container)
+        {
+            Setup.RegisterTypes(container);
         }
     }
 }

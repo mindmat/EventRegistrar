@@ -1,0 +1,23 @@
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Registrables;
+using System;
+
+namespace EventRegistrar.Backend.Seats
+{
+    public class Seat : Entity
+    {
+        public DateTime FirstPartnerJoined { get; set; }
+        public bool IsCancelled { get; set; }
+        public bool IsWaitingList { get; set; }
+        public string PartnerEmail { get; set; }
+
+        //public Registration Registration_Follower { get; set; }
+        public Registrable Registrable { get; set; }
+
+        public Guid RegistrableId { get; set; }
+        public Guid? RegistrationId { get; set; }
+
+        //public Registration Registration { get; set; }
+        public Guid? RegistrationId_Follower { get; set; }
+    }
+}
