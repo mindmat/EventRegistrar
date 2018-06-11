@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using EventRegistrar.Backend.Registrations;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,8 @@ namespace EventRegistrar.Backend.Registrables
     {
         private readonly IQueryable<Registrable> _registrables;
 
-        public SingleRegistrablesOverviewQueryHandler(IQueryable<Registrable> registrables)
+        public SingleRegistrablesOverviewQueryHandler(IQueryable<Registrable> registrables,
+                                                      IQueryable<Registration> registrations)
         {
             _registrables = registrables;
         }

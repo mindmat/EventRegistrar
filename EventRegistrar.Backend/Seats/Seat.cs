@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrations;
 using System;
 
 namespace EventRegistrar.Backend.Seats
@@ -10,14 +11,11 @@ namespace EventRegistrar.Backend.Seats
         public bool IsCancelled { get; set; }
         public bool IsWaitingList { get; set; }
         public string PartnerEmail { get; set; }
-
-        //public Registration Registration_Follower { get; set; }
         public Registrable Registrable { get; set; }
-
         public Guid RegistrableId { get; set; }
+        public Registration Registration { get; set; }
+        public Registration Registration_Follower { get; set; }
         public Guid? RegistrationId { get; set; }
-
-        //public Registration Registration { get; set; }
         public Guid? RegistrationId_Follower { get; set; }
     }
 }

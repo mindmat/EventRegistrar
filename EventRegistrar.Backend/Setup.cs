@@ -1,4 +1,7 @@
-﻿using EventRegistrar.Backend.Infrastructure;
+﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +26,14 @@ namespace EventRegistrar.Backend
             //container.Collection.Register(typeof(IRequestPostProcessor<,>), new[] { typeof(GenericRequestPostProcessor<,>), typeof(ConstrainedRequestPostProcessor<,>) });
 
             container.Register(typeof(IQueryable<>), typeof(Queryable<>));
+            container.Register(typeof(IRepository<>), typeof(Repository<>));
             container.Register<DbContext, EventRegistratorDbContext>();
+
+            container.Register(() => new AuthenticatedUser(container.GetInstance<IAuthenticatedUserProvider>().GetAuthenticatedUserId().Result));
+
+            container.Register<IEventAcronymResolver, EventAcronymResolver>();
+            container.Register<IAuthorizationChecker, AuthorizationChecker>();
+            container.Register<IAuthenticatedUserProvider, AuthenticatedUserProvider>();
         }
     }
 }

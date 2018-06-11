@@ -11,22 +11,16 @@ namespace EventRegistrar.Backend.Seats
             base.Configure(builder);
             builder.ToTable("Seats");
             builder.HasOne(seat => seat.Registrable)
-                .WithMany(rbl => rbl.Seats)
-                .HasForeignKey(rbl => rbl.RegistrableId);
+                   .WithMany(rbl => rbl.Seats)
+                   .HasForeignKey(rbl => rbl.RegistrableId);
 
-            //builder.Property  HasRequired(seat => seat.Registrable)
-            //    .WithMany(rbl => rbl.Seats)
-            //    .HasForeignKey(seat => seat.RegistrableId);
+            builder.HasOne(seat => seat.Registration)
+                   .WithMany(reg => reg.Seats_AsLeader)
+                   .HasForeignKey(seat => seat.RegistrationId);
 
-            //builder.Entity<Seat>()
-            //    .HasOptional(seat => seat.Registration)
-            //    .WithMany(reg => reg.Seats_AsLeader)
-            //    .HasForeignKey(seat => seat.RegistrationId);
-
-            //builder.Entity<Seat>()
-            //    .HasOptional(seat => seat.Registration_Follower)
-            //    .WithMany(reg => reg.Seats_AsFollower)
-            //    .HasForeignKey(seat => seat.RegistrationId_Follower);
+            builder.HasOne(seat => seat.Registration_Follower)
+                   .WithMany(reg => reg.Seats_AsFollower)
+                   .HasForeignKey(seat => seat.RegistrationId_Follower);
         }
     }
 }
