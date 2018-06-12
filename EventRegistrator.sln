@@ -9,7 +9,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistrator.Functions.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistrator.Web", "EventRegistrator.Web\EventRegistrator.Web.csproj", "{B391955D-5F4D-4D86-9F68-1F9BF4A4C813}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistrar.Backend", "EventRegistrar.Backend\EventRegistrar.Backend.csproj", "{C4ED365D-3E30-4ED9-B98F-ED3FCD666552}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistrar.Backend", "EventRegistrar.Backend\EventRegistrar.Backend.csproj", "{C4ED365D-3E30-4ED9-B98F-ED3FCD666552}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{16EDE4B2-05F6-4DAF-9060-CC2E760DF050}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistrar.Backend.Test", "tests\EventRegistrar.Backend.Test\EventRegistrar.Backend.Test.csproj", "{200A3096-D9BA-4073-BC2A-0D413652D177}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,9 +37,16 @@ Global
 		{C4ED365D-3E30-4ED9-B98F-ED3FCD666552}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C4ED365D-3E30-4ED9-B98F-ED3FCD666552}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4ED365D-3E30-4ED9-B98F-ED3FCD666552}.Release|Any CPU.Build.0 = Release|Any CPU
+		{200A3096-D9BA-4073-BC2A-0D413652D177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{200A3096-D9BA-4073-BC2A-0D413652D177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{200A3096-D9BA-4073-BC2A-0D413652D177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{200A3096-D9BA-4073-BC2A-0D413652D177}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{200A3096-D9BA-4073-BC2A-0D413652D177} = {16EDE4B2-05F6-4DAF-9060-CC2E760DF050}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A92B6D2F-B9FB-43F7-BA30-B1B71D4480E1}

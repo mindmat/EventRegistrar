@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Authorization;
+﻿using System.Linq;
+using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
@@ -6,7 +7,6 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SimpleInjector;
-using System.Linq;
 
 namespace EventRegistrar.Backend
 {
@@ -27,6 +27,9 @@ namespace EventRegistrar.Backend
 
             container.Register(typeof(IQueryable<>), typeof(Queryable<>));
             container.Register(typeof(IRepository<>), typeof(Repository<>));
+            var dbOptions = new DbContextOptionsBuilder<EventRegistratorDbContext>();
+            dbOptions.UseInMemoryDatabase("InMemoryDb");
+            container.RegisterInstance(dbOptions.Options);
             container.Register<DbContext, EventRegistratorDbContext>();
 
             container.Register(() => new AuthenticatedUser(container.GetInstance<IAuthenticatedUserProvider>().GetAuthenticatedUserId().Result));

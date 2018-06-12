@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
@@ -25,8 +26,10 @@ namespace EventRegistrator.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseSimpleInjector(_container);
-            _container.RegisterInstance(new ConnectionString(Configuration.GetConnectionString("DefaultConnection")));
-            AddRegistrations(_container);
+            //_container.RegisterInstance(new ConnectionString());
+            _container.RegisterInstance(GetDbOptions());
+
+            Setup.RegisterTypes(_container);
             _container.Verify();
 
             if (env.IsDevelopment())
@@ -93,13 +96,18 @@ namespace EventRegistrator.Web
             });
 
             services.UseSimpleInjector(_container);
-
-            //services.AddDbContext<EventRegistratorDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }
 
-        private void AddRegistrations(Container container)
+        protected virtual DbContextOptionsBuilder<EventRegistratorDbContext> GetDbOptions()
         {
-            Setup.RegisterTypes(container);
+            var optionsBuilder = new DbContextOptionsBuilder<EventRegistratorDbContext>();
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            optionsBuilder.UseSqlServer(connectionString, builder =>
+             {
+                 builder.EnableRetryOnFailure();
+             });
+
+            return optionsBuilder;
         }
     }
 }

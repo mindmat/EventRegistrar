@@ -10,19 +10,9 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
 {
     public class EventRegistratorDbContext : DbContext
     {
-        private readonly ConnectionString _connectionString;
-
-        public EventRegistratorDbContext(ConnectionString connectionString)
+        public EventRegistratorDbContext(DbContextOptions<EventRegistratorDbContext> options)
+           : base(options)
         {
-            _connectionString = connectionString;
-        }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(_connectionString.ToString(), builder =>
-             {
-                 builder.EnableRetryOnFailure();
-             });
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
