@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess
 {
@@ -34,7 +34,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             DbSet.Add(rootEntity);
         }
 
-        public async Task InsertOrUpdateEntity(TEntity entity, CancellationToken cancellationToken)
+        public async Task InsertOrUpdateEntity(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
         {
             if (entity == null)
             {

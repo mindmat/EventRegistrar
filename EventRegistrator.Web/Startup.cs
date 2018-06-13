@@ -96,6 +96,7 @@ namespace EventRegistrator.Web
             });
 
             services.UseSimpleInjector(_container);
+            services.AddSingleton(_container);
         }
 
         protected virtual DbContextOptionsBuilder<EventRegistratorDbContext> GetDbOptions()

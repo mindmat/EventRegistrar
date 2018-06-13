@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System;
+﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess
 {
@@ -14,7 +14,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
 
         Task<TEntity> GetById(Guid id);
 
-        Task InsertOrUpdateEntity(TEntity entity, CancellationToken cancellationToken);
+        Task InsertOrUpdateEntity(TEntity entity, CancellationToken cancellationToken = default(CancellationToken));
 
         EntityEntry<TEntity> Remove(TEntity entity);
 

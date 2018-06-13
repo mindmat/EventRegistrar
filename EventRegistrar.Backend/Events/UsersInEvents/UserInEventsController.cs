@@ -1,7 +1,7 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents
 {
@@ -14,7 +14,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
             _mediator = mediator;
         }
 
-        [HttpGet("me/events")]
+        [HttpGet("api/me/events")]
         public Task<IEnumerable<UserInEventDisplayItem>> GetMyEvents()
         {
             return _mediator.Send(new EventsOfUserQuery());
