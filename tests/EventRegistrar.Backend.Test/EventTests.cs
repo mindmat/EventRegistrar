@@ -4,7 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Events.UsersInEvents;
-using EventRegistrar.Backend.Test.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
 using EventRegistrator.Web;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +31,7 @@ namespace EventRegistrar.Backend.Test
             client.DefaultRequestHeaders.Add(GoogleIdentityProvider.HeaderKeyIdToken, "abc");
             var container = _factory.Server.Host.Services.GetService<Container>();
             var scenario = new TestScenario();
-            scenario.Create(container);
+            await scenario.Create(container);
 
             var response = await client.GetAsync("api/me/events");
             response.EnsureSuccessStatusCode();

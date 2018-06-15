@@ -19,4 +19,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\EventRegistrator.Web\EventRegistrator.Web.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Infrastructure\" />
+  </ItemGroup>
 </Project>

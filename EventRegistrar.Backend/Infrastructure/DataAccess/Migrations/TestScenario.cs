@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Threading.Tasks;
 using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Authentication.Users;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.RegistrationForms;
 using Microsoft.EntityFrameworkCore;
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 
-namespace EventRegistrar.Backend.Test.Infrastructure
+namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
 {
     public class TestScenario : IDisposable
     {
@@ -47,12 +47,12 @@ namespace EventRegistrar.Backend.Test.Infrastructure
             IdentityProviderUserIdentifier = "ulysses.user@gmail.com"
         };
 
-        public void Create(Container container)
+        public async Task Create(Container container)
         {
             using (AsyncScopedLifestyle.BeginScope(container))
             {
-                InsertData(container);
-                container.GetInstance<DbContext>().SaveChanges();
+                await InsertData(container);
+                await container.GetInstance<DbContext>().SaveChangesAsync();
             }
         }
 
@@ -60,10 +60,10 @@ namespace EventRegistrar.Backend.Test.Infrastructure
         {
         }
 
-        private void InsertData(Container container)
+        private async Task InsertData(Container container)
         {
             var events = container.GetInstance<IRepository<Event>>();
-            events.InsertOrUpdateEntity(new Event
+            await events.InsertOrUpdateEntity(new Event
             {
                 Id = new Guid("F569251D-E1FB-444B-AD68-3BBAFD64319D"),
                 Name = "PastEvent",
@@ -71,16 +71,16 @@ namespace EventRegistrar.Backend.Test.Infrastructure
                 State = State.Finished
             });
 
-            events.InsertOrUpdateEntity(TestEvent);
-            events.InsertOrUpdateEntity(new Event
+            await events.InsertOrUpdateEntity(TestEvent);
+            await events.InsertOrUpdateEntity(new Event
             {
                 Id = new Guid("6A916C80-AD0F-4548-BCD6-80F2DC617365"),
                 Name = "OtherCurrentEvent",
                 Acronym = "cev",
                 State = State.RegistrationOpen
             });
-            events.InsertOrUpdateEntity(OtherOwnEvent);
-            events.InsertOrUpdateEntity(new Event
+            await events.InsertOrUpdateEntity(OtherOwnEvent);
+            await events.InsertOrUpdateEntity(new Event
             {
                 Id = new Guid("E5AB67E4-9D1E-49CA-8069-FAA6F785C107"),
                 Name = "FutureEvent",
@@ -89,9 +89,9 @@ namespace EventRegistrar.Backend.Test.Infrastructure
             });
 
             var users = container.GetInstance<IRepository<User>>();
-            users.InsertOrUpdateEntity(User);
-            users.InsertOrUpdateEntity(Administrator);
-            users.InsertOrUpdateEntity(new User
+            await users.InsertOrUpdateEntity(User);
+            await users.InsertOrUpdateEntity(Administrator);
+            await users.InsertOrUpdateEntity(new User
             {
                 Id = new Guid("0083875C-3945-4CCD-88F7-4F39AF52765E"),
                 FirstName = "Bob",
@@ -101,25 +101,25 @@ namespace EventRegistrar.Backend.Test.Infrastructure
             });
 
             var usersInEvents = container.GetInstance<IRepository<UserInEvent>>();
-            usersInEvents.InsertOrUpdateEntity(new UserInEvent
+            await usersInEvents.InsertOrUpdateEntity(new UserInEvent
             {
                 EventId = TestEvent.Id,
                 UserId = Administrator.Id,
                 Role = UserInEventRole.Admin
             });
-            usersInEvents.InsertOrUpdateEntity(new UserInEvent
+            await usersInEvents.InsertOrUpdateEntity(new UserInEvent
             {
                 EventId = TestEvent.Id,
                 UserId = User.Id,
                 Role = UserInEventRole.Writer
             });
-            usersInEvents.InsertOrUpdateEntity(new UserInEvent
+            await usersInEvents.InsertOrUpdateEntity(new UserInEvent
             {
                 EventId = OtherOwnEvent.Id,
                 UserId = Administrator.Id,
                 Role = UserInEventRole.Admin
             });
-            usersInEvents.InsertOrUpdateEntity(new UserInEvent
+            await usersInEvents.InsertOrUpdateEntity(new UserInEvent
             {
                 EventId = OtherOwnEvent.Id,
                 UserId = User.Id,

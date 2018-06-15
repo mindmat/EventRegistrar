@@ -32,7 +32,7 @@ namespace EventRegistrar.Backend.Authorization
             var key = new UserInEventCacheKey(_user.UserId, eventId);
             var rightsOfUserInEvent = await _memoryCache.GetOrCreateAsync(key, entry => GetRightsOfUserInEvent(entry, eventId));
 
-            if (rightsOfUserInEvent.Contains(requestTypeName))
+            if (!rightsOfUserInEvent.Contains(requestTypeName))
             {
                 throw new UnauthorizedAccessException($"You are not authorized for {requestTypeName} in event {eventId}");
             }
@@ -41,7 +41,7 @@ namespace EventRegistrar.Backend.Authorization
         private async Task<HashSet<string>> GetRightsOfUserInEvent(ICacheEntry entry, Guid eventId)
         {
             entry.SlidingExpiration = _slidingExpiration;
-            var usersRolesInEvent = await _usersInEvents.Where(uie => uie.Id == _user.UserId &&
+            var usersRolesInEvent = await _usersInEvents.Where(uie => uie.UserId == _user.UserId &&
                                                                       uie.EventId == eventId)
                                                         .Select(uie => uie.Role)
                                                         .ToListAsync();
