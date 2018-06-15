@@ -1,9 +1,9 @@
 ﻿using EventRegistrar.Backend.Events.UsersInEvents;
-using EventRegistrar.Backend.Users;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Authentication.Users;
 
 namespace EventRegistrar.Backend.Authorization
 {

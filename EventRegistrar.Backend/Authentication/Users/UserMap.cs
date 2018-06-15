@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EventRegistrar.Backend.Users
+namespace EventRegistrar.Backend.Authentication.Users
 {
     public class UserMap : EntityTypeConfiguration<User>
     {

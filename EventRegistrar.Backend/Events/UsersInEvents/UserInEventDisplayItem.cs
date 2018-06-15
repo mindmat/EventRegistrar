@@ -8,7 +8,8 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
         public string EventName { get; set; }
         public State EventState { get; set; }
         public UserInEventRole Role { get; set; }
+        public string UserFirstName { get; set; }
         public string UserIdentifier { get; set; }
-        public string UserName { get; set; }
+        public string UserLastName { get; set; }
     }
 }

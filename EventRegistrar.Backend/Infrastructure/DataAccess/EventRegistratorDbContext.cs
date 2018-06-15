@@ -1,9 +1,9 @@
-﻿using EventRegistrar.Backend.Events.UsersInEvents;
+﻿using EventRegistrar.Backend.Authentication.Users;
+using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Seats;
-using EventRegistrar.Backend.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess

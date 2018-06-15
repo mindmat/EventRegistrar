@@ -1,6 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Users;
 using System;
+using EventRegistrar.Backend.Authentication.Users;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents
 {

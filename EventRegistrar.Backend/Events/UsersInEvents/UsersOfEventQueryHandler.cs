@@ -1,10 +1,10 @@
-using EventRegistrar.Backend.Authorization;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Authorization;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents
 {
@@ -35,7 +35,8 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
                                            EventAcronym = uie.Event.Acronym,
                                            EventState = uie.Event.State,
                                            Role = uie.Role,
-                                           UserName = uie.User.Name,
+                                           UserFirstName = uie.User.FirstName,
+                                           UserLastName = uie.User.LastName,
                                            UserIdentifier = uie.User.IdentityProviderUserIdentifier
                                        })
                                        .ToListAsync(cancellationToken);
