@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authentication.Users;
+using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;
@@ -17,6 +18,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new EventMap());
             builder.ApplyConfiguration(new RegistrableMap());
             builder.ApplyConfiguration(new RegistrationFormMap());
             builder.ApplyConfiguration(new RegistrationMap());

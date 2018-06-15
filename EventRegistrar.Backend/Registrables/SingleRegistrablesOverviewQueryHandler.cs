@@ -1,10 +1,10 @@
-﻿using EventRegistrar.Backend.Registrations;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Registrations;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrables
 {

@@ -21,15 +21,19 @@ namespace EventRegistrar.Backend
 
             container.RegisterSingleton<IMediator, Mediator>();
             container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
-            container.Collection.Register(typeof(IPipelineBehavior<,>), assemblies);
-            //container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(GenericRequestPreProcessor<>) });
+
+            container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
+            {
+                typeof(AuthorizationDecorator<,>)
+            });
+            //container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(RequestPreProcessorBehavior<,>) });
             //container.Collection.Register(typeof(IRequestPostProcessor<,>), new[] { typeof(GenericRequestPostProcessor<,>), typeof(ConstrainedRequestPostProcessor<,>) });
 
             container.Register(typeof(IQueryable<>), typeof(Queryable<>));
             container.Register(typeof(IRepository<>), typeof(Repository<>));
-            var dbOptions = new DbContextOptionsBuilder<EventRegistratorDbContext>();
-            dbOptions.UseInMemoryDatabase("InMemoryDb");
-            container.RegisterInstance(dbOptions.Options);
+            //var dbOptions = new DbContextOptionsBuilder<EventRegistratorDbContext>();
+            //dbOptions.UseInMemoryDatabase("InMemoryDb");
+            //container.RegisterInstance(dbOptions.Options);
             container.Register<DbContext, EventRegistratorDbContext>();
 
             container.Register(() => new AuthenticatedUser(container.GetInstance<IAuthenticatedUserProvider>().GetAuthenticatedUserId().Result));
@@ -37,6 +41,7 @@ namespace EventRegistrar.Backend
             container.Register<IEventAcronymResolver, EventAcronymResolver>();
             container.Register<IAuthorizationChecker, AuthorizationChecker>();
             container.Register<IAuthenticatedUserProvider, AuthenticatedUserProvider>();
+            container.Register<IRightsOfEventRoleProvider, RightsOfEventRoleProvider>();
         }
     }
 }

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
@@ -26,8 +27,8 @@ namespace EventRegistrator.Web
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             app.UseSimpleInjector(_container);
-            //_container.RegisterInstance(new ConnectionString());
             _container.RegisterInstance(GetDbOptions());
+            _container.CrossWire<IMemoryCache>(app);
 
             Setup.RegisterTypes(_container);
             _container.Verify();
@@ -94,12 +95,12 @@ namespace EventRegistrator.Web
             {
                 configuration.RootPath = "ClientApp/dist";
             });
-
+            services.AddMemoryCache();
             services.UseSimpleInjector(_container);
             services.AddSingleton(_container);
         }
 
-        protected virtual DbContextOptionsBuilder<EventRegistratorDbContext> GetDbOptions()
+        protected virtual DbContextOptions<EventRegistratorDbContext> GetDbOptions()
         {
             var optionsBuilder = new DbContextOptionsBuilder<EventRegistratorDbContext>();
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
@@ -108,7 +109,7 @@ namespace EventRegistrator.Web
                  builder.EnableRetryOnFailure();
              });
 
-            return optionsBuilder;
+            return optionsBuilder.Options;
         }
     }
 }

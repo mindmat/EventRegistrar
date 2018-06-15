@@ -1,0 +1,2 @@
+﻿PMC:
+EntityFrameworkCore\Add-Migration InitialCreate -o Infrastructure\DataAccess\Migrations -p EventRegistrar.Backend

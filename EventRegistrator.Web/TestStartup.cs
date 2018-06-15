@@ -10,11 +10,11 @@ namespace EventRegistrator.Web
         {
         }
 
-        protected override DbContextOptionsBuilder<EventRegistratorDbContext> GetDbOptions()
+        protected override DbContextOptions<EventRegistratorDbContext> GetDbOptions()
         {
             var optionsBuilder = new DbContextOptionsBuilder<EventRegistratorDbContext>();
             optionsBuilder.UseInMemoryDatabase("InMemoryDb");
-            return optionsBuilder;
+            return optionsBuilder.Options;
         }
     }
 }

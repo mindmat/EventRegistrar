@@ -111,7 +111,7 @@ namespace EventRegistrar.Backend.Test.Infrastructure
             {
                 EventId = TestEvent.Id,
                 UserId = User.Id,
-                Role = UserInEventRole.User
+                Role = UserInEventRole.Writer
             });
             usersInEvents.InsertOrUpdateEntity(new UserInEvent
             {
@@ -123,7 +123,7 @@ namespace EventRegistrar.Backend.Test.Infrastructure
             {
                 EventId = OtherOwnEvent.Id,
                 UserId = User.Id,
-                Role = UserInEventRole.User
+                Role = UserInEventRole.Reader
             });
         }
     }

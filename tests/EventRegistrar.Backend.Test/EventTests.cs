@@ -39,8 +39,8 @@ namespace EventRegistrar.Backend.Test
 
             events.ShouldNotBeNull();
             events.Count.ShouldBe(2);
-            events.ShouldContain(evt => evt.EventAcronym == scenario.TestEvent.Acronym && evt.Role == UserInEventRole.User);
-            events.ShouldContain(evt => evt.EventAcronym == scenario.OtherOwnEvent.Acronym && evt.Role == UserInEventRole.User);
+            events.ShouldContain(evt => evt.EventAcronym == scenario.TestEvent.Acronym && evt.Role == UserInEventRole.Writer);
+            events.ShouldContain(evt => evt.EventAcronym == scenario.OtherOwnEvent.Acronym && evt.Role == UserInEventRole.Reader);
         }
     }
 }
