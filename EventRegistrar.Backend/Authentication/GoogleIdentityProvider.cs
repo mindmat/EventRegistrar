@@ -18,11 +18,16 @@ namespace EventRegistrar.Backend.Authentication
 
         public string GetIdentifier(IHttpContextAccessor contextAccessor)
         {
-            var idTokenString = contextAccessor.HttpContext?.Request?.Headers?[HeaderKeyIdToken];
-            var token = new JwtSecurityToken(idTokenString);
+            var idTokenString = (string)contextAccessor.HttpContext?.Request?.Headers?[HeaderKeyIdToken];
+            if (idTokenString != null)
+            {
+                var token = new JwtSecurityToken(idTokenString);
 
-            _logger.Log(LogLevel.Information, "token {0}, subject {1}", idTokenString, token.Subject);
-            return token.Subject;
+                _logger.Log(LogLevel.Information, "token {0}, subject {1}", idTokenString, token.Subject);
+                return token.Subject;
+            }
+
+            return null;
         }
     }
 }
