@@ -1,32 +1,40 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Authentication;
+using EventRegistrar.Backend.Authentication.Users;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents
 {
     internal class AuthenticatedUserProvider : IAuthenticatedUserProvider
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly GoogleIdentityProvider _identityProvider;
-        private readonly ILogger _logger;
+        private readonly IIdentityProvider _identityProvider;
+        private readonly IQueryable<User> _users;
 
         public AuthenticatedUserProvider(IHttpContextAccessor httpContextAccessor,
-                                         GoogleIdentityProvider identityProvider,
-                                         ILogger logger)
+                                         IIdentityProvider identityProvider,
+                                         IQueryable<User> users)
         {
             _httpContextAccessor = httpContextAccessor;
             _identityProvider = identityProvider;
-            _logger = logger;
+            _users = users;
         }
 
-        public Task<Guid> GetAuthenticatedUserId()
+        public async Task<Guid> GetAuthenticatedUserId()
         {
-            var idToken = _identityProvider.GetIdentifier(_httpContextAccessor);
-            _logger.Log(LogLevel.Information, "token {0}", idToken);
-            //_httpContextAccessor.HttpContext.Request.Headers.FirstOrDefault()
-            return Task.FromResult(new Guid("E24CFA7C-20D7-4AA4-B646-4CB0B1E8D6FC"));
+            var identifier = _identityProvider.GetIdentifier(_httpContextAccessor);
+            var user = await _users.FirstOrDefaultAsync(usr => usr.IdentityProvider == _identityProvider.Provider
+                                                            && usr.IdentityProviderUserIdentifier == identifier);
+            if (user == null)
+            {
+                //throw new AuthenticationException($"There is no user {identifier} registered (provider {_identityProvider.Provider})");
+                return new Guid();
+            }
+
+            return user.Id; //new Guid("E24CFA7C-20D7-4AA4-B646-4CB0B1E8D6FC"));
         }
     }
 }

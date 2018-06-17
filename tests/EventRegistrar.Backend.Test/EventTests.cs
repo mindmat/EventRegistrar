@@ -2,36 +2,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Events.UsersInEvents;
-using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
-using EventRegistrator.Web;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
+using EventRegistrar.Backend.Test.Infrastructure;
 using Shouldly;
-using SimpleInjector;
 using Xunit;
 
 namespace EventRegistrar.Backend.Test
 {
-    public class EventTests : IClassFixture<WebApplicationFactory<TestStartup>>
+    public class EventTests : IClassFixture<IntegrationTestEnvironment>
     {
-        private readonly WebApplicationFactory<TestStartup> _factory;
+        private readonly IntegrationTestEnvironment _testEnvironment;
 
-        public EventTests(WebApplicationFactory<TestStartup> factory)
+        public EventTests(IntegrationTestEnvironment testEnvironment)
         {
-            _factory = factory;
+            _testEnvironment = testEnvironment;
         }
 
         [Fact]
         public async Task GetEventsOfUser()
         {
-            var client = _factory.CreateClient();
-
-            client.DefaultRequestHeaders.Add(GoogleIdentityProvider.HeaderKeyIdToken, "abc");
-            var container = _factory.Server.Host.Services.GetService<Container>();
-            var scenario = new TestScenario();
-            await scenario.Create(container);
+            var client = _testEnvironment.GetClient();
 
             var response = await client.GetAsync("api/me/events");
             response.EnsureSuccessStatusCode();
@@ -39,8 +29,8 @@ namespace EventRegistrar.Backend.Test
 
             events.ShouldNotBeNull();
             events.Count.ShouldBe(2);
-            events.ShouldContain(evt => evt.EventAcronym == scenario.TestEvent.Acronym && evt.Role == UserInEventRole.Writer);
-            events.ShouldContain(evt => evt.EventAcronym == scenario.OtherOwnEvent.Acronym && evt.Role == UserInEventRole.Reader);
+            events.ShouldContain(evt => evt.EventAcronym == _testEnvironment.Scenario.TestEvent.Acronym && evt.Role == UserInEventRole.Writer);
+            events.ShouldContain(evt => evt.EventAcronym == _testEnvironment.Scenario.OtherOwnEvent.Acronym && evt.Role == UserInEventRole.Reader);
         }
     }
 }

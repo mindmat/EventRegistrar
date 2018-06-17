@@ -1,4 +1,5 @@
 using EventRegistrar.Backend;
+using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Builder;
@@ -31,7 +32,7 @@ namespace EventRegistrator.Web
             _container.RegisterInstance(GetDbOptions());
             _container.CrossWire<IMemoryCache>(app);
             _container.CrossWire<ILoggerFactory>(app);
-
+            SetIdentityProvider(_container);
             Setup.RegisterTypes(_container);
             _container.Verify();
 
@@ -112,6 +113,11 @@ namespace EventRegistrator.Web
              });
 
             return optionsBuilder.Options;
+        }
+
+        protected virtual void SetIdentityProvider(Container container)
+        {
+            container.Register<IIdentityProvider, GoogleIdentityProvider>();
         }
     }
 }

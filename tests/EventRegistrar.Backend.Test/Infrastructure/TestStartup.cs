@@ -1,8 +1,11 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Authentication;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrator.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using SimpleInjector;
 
-namespace EventRegistrator.Web
+namespace EventRegistrar.Backend.Test.Infrastructure
 {
     public class TestStartup : Startup
     {
@@ -15,6 +18,11 @@ namespace EventRegistrator.Web
             var optionsBuilder = new DbContextOptionsBuilder<EventRegistratorDbContext>();
             optionsBuilder.UseInMemoryDatabase("InMemoryDb");
             return optionsBuilder.Options;
+        }
+
+        protected override void SetIdentityProvider(Container container)
+        {
+            container.Register<IIdentityProvider, TestGoogleIdentityProvider>();
         }
     }
 }
