@@ -80,5 +80,5 @@ import { TokenInterceptor } from "./authentication/tokenInterceptor";
 export class AppModule { }
 
 export function getBaseUrl() {
-  return 'https://eventregistratorweb.azurewebsites.net/'; //  document.getElementsByTagName('base')[0].href;
+  return 'https://eventregistrator.azurewebsites.net/'; //  document.getElementsByTagName('base')[0].href;
 }
