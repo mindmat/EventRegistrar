@@ -4,14 +4,16 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
 {
     [DbContext(typeof(EventRegistratorDbContext))]
-    partial class EventRegistratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180617113947_m2")]
+    partial class m2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

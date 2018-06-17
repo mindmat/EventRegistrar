@@ -1,14 +1,15 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using System;
+using System.Collections.Generic;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Seats;
-using System;
-using System.Collections.Generic;
 
 namespace EventRegistrar.Backend.Registrations
 {
     public class Registration : Entity
     {
         public DateTime? AdmittedAt { get; set; }
+        public Guid EventId { get; set; }
         public string ExternalIdentifier { get; set; }
         public DateTime ExternalTimestamp { get; set; }
         public bool FallbackToPartyPass { get; set; }

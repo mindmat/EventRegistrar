@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,12 +14,14 @@ namespace EventRegistrar.Backend.Registrables
     {
         private readonly IEventAcronymResolver _acronymResolver;
         private readonly IQueryable<Registrable> _registrables;
+        private readonly IQueryable<Registration> _registrations;
 
         public SingleRegistrablesOverviewQueryHandler(IQueryable<Registrable> registrables,
                                                       IQueryable<Registration> registrations,
                                                       IEventAcronymResolver acronymResolver)
         {
             _registrables = registrables;
+            _registrations = registrations;
             _acronymResolver = acronymResolver;
         }
 
@@ -31,7 +34,9 @@ namespace EventRegistrar.Backend.Registrables
                                                   .Include(rbl => rbl.Seats)
                                                   .ToListAsync(cancellationToken);
 
-            //var registrationsOnWaitingList = new HashSet<Guid>(dbContext.Registrations.Where(reg => reg.IsWaitingList ?? false).Select(reg => reg.Id));
+            var registrationsOnWaitingList = new HashSet<Guid>(_registrations.Where(reg => reg.EventId == eventId
+                                                                                        && (reg.IsWaitingList ?? false))
+                                                                             .Select(reg => reg.Id));
 
             return registrables.OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
                                .Select(rbl => new SingleRegistrableDisplayItem
@@ -39,8 +44,8 @@ namespace EventRegistrar.Backend.Registrables
                                    Id = rbl.Id,
                                    Name = rbl.Name,
                                    SpotsAvailable = rbl.MaximumSingleSeats,
-                                   //Accepted = rbl.Seats.Count(seat => !seat.IsCancelled && !seat.IsWaitingList && !registrationsOnWaitingList.Contains(seat.RegistrationId ?? Guid.Empty)),
-                                   //OnWaitingList = (int?)rbl.Seats.Count(seat => !seat.IsCancelled && (seat.IsWaitingList || registrationsOnWaitingList.Contains(seat.RegistrationId ?? Guid.Empty)))
+                                   Accepted = rbl.Seats.Count(seat => !seat.IsCancelled && !seat.IsWaitingList && !registrationsOnWaitingList.Contains(seat.RegistrationId ?? Guid.Empty)),
+                                   OnWaitingList = rbl.Seats.Count(seat => !seat.IsCancelled && (seat.IsWaitingList || registrationsOnWaitingList.Contains(seat.RegistrationId ?? Guid.Empty)))
                                });
         }
     }
