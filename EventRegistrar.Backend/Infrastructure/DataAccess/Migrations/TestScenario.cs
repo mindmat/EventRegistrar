@@ -191,24 +191,28 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
             var usersInEvents = container.GetInstance<IRepository<UserInEvent>>();
             await usersInEvents.InsertOrUpdateEntity(new UserInEvent
             {
+                Id = new Guid("313EE6C4-87DB-4957-946E-661BF375B370"),
                 EventId = TestEvent.Id,
                 UserId = Administrator.Id,
                 Role = UserInEventRole.Admin
             });
             await usersInEvents.InsertOrUpdateEntity(new UserInEvent
             {
+                Id = new Guid("657111B0-180C-496D-8A64-A875893E9D0A"),
                 EventId = TestEvent.Id,
                 UserId = User.Id,
                 Role = UserInEventRole.Writer
             });
             await usersInEvents.InsertOrUpdateEntity(new UserInEvent
             {
+                Id = new Guid("8A166C5C-14FA-4FC8-B787-3520D3E013A1"),
                 EventId = OtherOwnEvent.Id,
                 UserId = Administrator.Id,
                 Role = UserInEventRole.Admin
             });
             await usersInEvents.InsertOrUpdateEntity(new UserInEvent
             {
+                Id = new Guid("38AB3F52-D3BD-43CF-978B-564782C26734"),
                 EventId = OtherOwnEvent.Id,
                 UserId = User.Id,
                 Role = UserInEventRole.Reader

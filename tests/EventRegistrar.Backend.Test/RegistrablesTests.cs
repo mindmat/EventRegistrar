@@ -24,6 +24,31 @@ namespace EventRegistrar.Backend.Test
         }
 
         [Fact]
+        public async Task GetDoubleRegistrablesOverview()
+        {
+            var client = _factory.CreateClient();
+
+            client.DefaultRequestHeaders.Add(GoogleIdentityProvider.HeaderKeyIdToken, "abc");
+            var container = _factory.Server.Host.Services.GetService<Container>();
+            var scenario = new TestScenario();
+            await scenario.Create(container);
+
+            var response = await client.GetAsync("api/events/tev/DoubleRegistrableOverview");
+            response.EnsureSuccessStatusCode();
+            var registrables = (await response.Content.ReadAsAsync<IEnumerable<DoubleRegistrableDisplayItem>>()).ToList();
+            registrables.Count.ShouldBe(3);
+            registrables.ShouldContain(rbl => rbl.Id == scenario.RegistrableDouble1.Id
+                                              && rbl.Name == scenario.RegistrableDouble1.Name
+                                              && rbl.SpotsAvailable == scenario.RegistrableDouble1.MaximumDoubleSeats);
+            registrables.ShouldContain(rbl => rbl.Id == scenario.RegistrableDouble2.Id
+                                              && rbl.Name == scenario.RegistrableDouble2.Name
+                                              && rbl.SpotsAvailable == scenario.RegistrableDouble2.MaximumDoubleSeats);
+            registrables.ShouldContain(rbl => rbl.Id == scenario.RegistrableDouble3.Id
+                                              && rbl.Name == scenario.RegistrableDouble3.Name
+                                              && rbl.SpotsAvailable == scenario.RegistrableDouble3.MaximumDoubleSeats);
+        }
+
+        [Fact]
         public async Task GetSingleRegistrablesOverview()
         {
             var client = _factory.CreateClient();

@@ -18,11 +18,16 @@ namespace EventRegistrar.Backend.Authorization
             _authorizationChecker = authorizationChecker;
         }
 
-        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+            RequestHandlerDelegate<TResponse> next)
         {
             var requestType = request.GetType().Name;
-            var eventId = await _acronymResolver.GetEventIdFromAcronym((request as IEventBoundRequest)?.EventAcronym);
-            await _authorizationChecker.ThrowIfUserHasNotRight(eventId, requestType);
+            if (request is IEventBoundRequest eventBoundRequest)
+            {
+                var eventId = await _acronymResolver.GetEventIdFromAcronym(eventBoundRequest.EventAcronym);
+                await _authorizationChecker.ThrowIfUserHasNotRight(eventId, requestType);
+            }
+
             return await next();
         }
     }
