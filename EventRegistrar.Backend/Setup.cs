@@ -6,6 +6,7 @@ using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SimpleInjector;
 
 namespace EventRegistrar.Backend
@@ -28,6 +29,12 @@ namespace EventRegistrar.Backend
             });
             //container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(RequestPreProcessorBehavior<,>) });
             //container.Collection.Register(typeof(IRequestPostProcessor<,>), new[] { typeof(GenericRequestPostProcessor<,>), typeof(ConstrainedRequestPostProcessor<,>) });
+
+            container.RegisterConditional(
+                typeof(ILogger),
+                c => typeof(Logger<>).MakeGenericType(c.Consumer.ImplementationType),
+                Lifestyle.Singleton,
+                c => true);
 
             container.Register(typeof(IQueryable<>), typeof(Queryable<>));
             container.Register(typeof(IRepository<>), typeof(Repository<>));

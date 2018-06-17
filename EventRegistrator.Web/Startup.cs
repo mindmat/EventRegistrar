@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using SimpleInjector;
 
 namespace EventRegistrator.Web
@@ -29,6 +30,7 @@ namespace EventRegistrator.Web
             app.UseSimpleInjector(_container);
             _container.RegisterInstance(GetDbOptions());
             _container.CrossWire<IMemoryCache>(app);
+            _container.CrossWire<ILoggerFactory>(app);
 
             Setup.RegisterTypes(_container);
             _container.Verify();
