@@ -1,7 +1,7 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Registrables
 {
@@ -12,6 +12,12 @@ namespace EventRegistrar.Backend.Registrables
         public RegistrablesController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet("api/events/{eventAcronym}/DoubleRegistrableOverview")]
+        public Task<IEnumerable<DoubleRegistrableDisplayItem>> GetDoubleRegistrablesOverivew(string eventAcronym)
+        {
+            return _mediator.Send(new DoubleRegistrablesOverviewQuery { EventAcronym = eventAcronym });
         }
 
         [HttpGet("api/events/{eventAcronym}/SingleRegistrableOverview")]

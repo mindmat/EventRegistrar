@@ -10,6 +10,8 @@ namespace EventRegistrator.Web
                 .UseApplicationInsights()
                 .UseStartup<Startup>();
 
+        //.UseSerilog(ConfigureSerilog);
+
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();

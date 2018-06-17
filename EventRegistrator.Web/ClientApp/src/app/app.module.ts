@@ -49,7 +49,7 @@ import { TokenInterceptor } from "./authentication/tokenInterceptor";
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', redirectTo: 'll18/registrables', pathMatch: 'full' },
+      { path: '', redirectTo: 'tev/registrables', pathMatch: 'full' },
       //{ path: 'home', component: HomeComponent },
       { path: ':eventAcronym/registrables', component: RegistrablesComponent },
       { path: ':eventAcronym/registrables/:id/participants', component: ParticipantsComponent },
@@ -63,7 +63,7 @@ import { TokenInterceptor } from "./authentication/tokenInterceptor";
       { path: ':eventAcronym/registrations/:id/sms', component: SmsConversationComponent },
       { path: ':eventAcronym/partyOverview', component: PartyOverviewComponent },
       { path: ':eventAcronym/mailTemplates', component: MailTemplatesComponent },
-      { path: '**', redirectTo: 'll18/registrables' }
+      { path: '**', redirectTo: 'tev/registrables' }
     ])
   ],
   providers: [

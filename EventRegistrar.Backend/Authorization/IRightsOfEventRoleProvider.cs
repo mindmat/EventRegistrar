@@ -26,6 +26,7 @@ namespace EventRegistrar.Backend.Authorization
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
             {
                 yield return typeof(SingleRegistrablesOverviewQuery).Name;
+                yield return typeof(DoubleRegistrablesOverviewQuery).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

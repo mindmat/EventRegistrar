@@ -8,11 +8,10 @@ import { AuthService } from "../authentication/authService.service";
 })
 export class NavMenuComponent {
   constructor(public authService: AuthService) {
-
   }
 
   isExpanded = false;
-  public eventAcronym: string = "ll18";
+  public eventAcronym: string = "tev";
 
   collapse() {
     this.isExpanded = false;

@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
@@ -10,11 +10,11 @@ export class RegistrablesComponent {
   public doubleRegistrables: DoubleRegistrable[];
   public singleRegistrables: SingleRegistrable[];
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string, private route: ActivatedRoute) {
-    http.get<DoubleRegistrable[]>(`${baseUrl}api/${this.getEventAcronym()}/DoubleRegistrableOverview`).subscribe(result => {
+  constructor(http: HttpClient, private route: ActivatedRoute) {
+    http.get<DoubleRegistrable[]>(`api/events/${this.getEventAcronym()}/DoubleRegistrableOverview`).subscribe(result => {
       this.doubleRegistrables = result;
     }, error => console.error(error));
-    http.get<SingleRegistrable[]>(`${baseUrl}api/${this.getEventAcronym()}/SingleRegistrableOverview`).subscribe(result => {
+    http.get<SingleRegistrable[]>(`api/events/${this.getEventAcronym()}/SingleRegistrableOverview`).subscribe(result => {
       this.singleRegistrables = result;
     }, error => console.error(error));
   }
