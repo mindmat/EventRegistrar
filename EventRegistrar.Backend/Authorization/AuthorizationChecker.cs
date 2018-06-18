@@ -34,7 +34,7 @@ namespace EventRegistrar.Backend.Authorization
 
             if (!rightsOfUserInEvent.Contains(requestTypeName))
             {
-                throw new UnauthorizedAccessException($"You are not authorized for {requestTypeName} in event {eventId}");
+                throw new UnauthorizedAccessException($"You ({_user.UserId}) are not authorized for {requestTypeName} in event {eventId}");
             }
         }
 
