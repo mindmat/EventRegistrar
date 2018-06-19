@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'paymentOverview',
@@ -9,9 +10,9 @@ export class PaymentOverviewComponent {
   public paymentOverview: PaymentOverview;
   public showPotentialDetails: boolean;
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    var eventId = '762A93A4-56E0-402C-B700-1CFB3362B39D';
-    http.get<PaymentOverview>(`${baseUrl}api/event/${eventId}/PaymentOverview`).subscribe(result => {
+  constructor(http: HttpClient, private route: ActivatedRoute) {
+    //var eventId = '762A93A4-56E0-402C-B700-1CFB3362B39D';
+    http.get<PaymentOverview>(`api/event/${this.getEventAcronym()}/payments/overview`).subscribe(result => {
       this.paymentOverview = result;
       this.paymentOverview.PotentialOfOpenSpotsSum = this.addOpenSpots(this.paymentOverview.PotentialOfOpenSpots);
     }, error => console.error(error));
@@ -19,6 +20,10 @@ export class PaymentOverviewComponent {
 
   private addOpenSpots(openSpots: OpenSpots[]) {
     return openSpots.map(spot => spot.PotentialIncome).reduce((sum, currrent) => sum + currrent);
+  }
+
+  getEventAcronym() {
+    return this.route.snapshot.params['eventAcronym'];
   }
 }
 
