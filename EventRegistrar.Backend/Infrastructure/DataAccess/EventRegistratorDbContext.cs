@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Authentication.Users;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations;
@@ -25,6 +26,9 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new UserMap());
             builder.ApplyConfiguration(new UserInEventMap());
             builder.ApplyConfiguration(new SeatMap());
+
+            builder.ApplyConfiguration(new ReceivedPaymentMap());
+            builder.ApplyConfiguration(new PaymentAssignmentMap());
         }
 
         /*
@@ -59,21 +63,6 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
                    .HasRequired(qop => qop.Registrable)
                    .WithMany(qst => qst.QuestionOptionMappings)
                    .HasForeignKey(qop => qop.RegistrableId);
-
-            modelBuilder.Entity<ReceivedPayment>()
-                .HasRequired(pmt => pmt.PaymentFile)
-                .WithMany()
-                .HasForeignKey(pmt => pmt.PaymentFileId);
-
-            modelBuilder.Entity<PaymentAssignment>()
-                .HasRequired(pas => pas.ReceivedPayment)
-                .WithMany(pmt => pmt.Assignments)
-                .HasForeignKey(pas => pas.ReceivedPaymentId);
-
-            modelBuilder.Entity<PaymentAssignment>()
-                .HasRequired(pas => pas.Registration)
-                .WithMany(pmt => pmt.Payments)
-                .HasForeignKey(pas => pas.RegistrationId);
 
             modelBuilder.Entity<MailToRegistration>()
                 .HasRequired(map => map.Mail)

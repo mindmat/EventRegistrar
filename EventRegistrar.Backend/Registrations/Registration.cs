@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Seats;
 
@@ -15,6 +16,7 @@ namespace EventRegistrar.Backend.Registrations
         public bool FallbackToPartyPass { get; set; }
         public bool? IsWaitingList { get; set; }
         public string Language { get; set; }
+        public ICollection<PaymentAssignment> Payments { get; set; }
         public string Phone { get; set; }
         public string PhoneNormalized { get; set; }
         public decimal? Price { get; set; }
@@ -24,7 +26,6 @@ namespace EventRegistrar.Backend.Registrations
         public string Remarks { get; set; }
         public bool RemarksProcessed { get; set; }
 
-        //public ICollection<PaymentAssignment> Payments { get; set; }
         //public ICollection<MailToRegistration> Mails { get; set; }
         public int ReminderLevel { get; set; }
 
