@@ -11,7 +11,7 @@ export class PaymentOverviewComponent {
   public showPotentialDetails: boolean;
 
   constructor(http: HttpClient, private route: ActivatedRoute) {
-    http.get<PaymentOverview>(`api/event/${this.getEventAcronym()}/payments/overview`).subscribe(result => {
+    http.get<PaymentOverview>(`api/events/${this.getEventAcronym()}/payments/overview`).subscribe(result => {
       this.paymentOverview = result;
       this.paymentOverview.PotentialOfOpenSpotsSum = this.addOpenSpots(this.paymentOverview.PotentialOfOpenSpots);
     }, error => console.error(error));

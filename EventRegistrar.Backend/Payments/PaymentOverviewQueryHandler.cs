@@ -19,8 +19,8 @@ namespace EventRegistrar.Backend.Payments
 
         public PaymentOverviewQueryHandler(IEventAcronymResolver acronymResolver,
                                            IQueryable<PaymentFile> paymentFiles,
-            IQueryable<Registration> registrations,
-            IQueryable<Registrable> registrables)
+                                           IQueryable<Registration> registrations,
+                                           IQueryable<Registrable> registrables)
         {
             _acronymResolver = acronymResolver;
             _paymentFiles = paymentFiles;
