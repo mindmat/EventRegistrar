@@ -28,7 +28,7 @@ namespace EventRegistrar.Backend.Authorization
             {
                 yield return typeof(SingleRegistrablesOverviewQuery).Name;
                 yield return typeof(DoubleRegistrablesOverviewQuery).Name;
-                yield return typeof(PaymentOverviewQueryHandler).Name;
+                yield return typeof(PaymentOverviewQuery).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))
