@@ -9,7 +9,7 @@ namespace EventRegistrar.Backend.Payments
         public override void Configure(EntityTypeBuilder<ReceivedPayment> builder)
         {
             base.Configure(builder);
-            builder.ToTable("PaymentAssignments");
+            builder.ToTable("ReceivedPayments");
 
             builder.HasOne(pmt => pmt.PaymentFile)
                    .WithMany()
