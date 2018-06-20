@@ -29,6 +29,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
 
             builder.ApplyConfiguration(new ReceivedPaymentMap());
             builder.ApplyConfiguration(new PaymentAssignmentMap());
+            builder.ApplyConfiguration(new PaymentFileMap());
         }
 
         /*
