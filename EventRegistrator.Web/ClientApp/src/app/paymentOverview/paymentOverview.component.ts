@@ -13,12 +13,12 @@ export class PaymentOverviewComponent {
   constructor(http: HttpClient, private route: ActivatedRoute) {
     http.get<PaymentOverview>(`api/events/${this.getEventAcronym()}/payments/overview`).subscribe(result => {
       this.paymentOverview = result;
-      this.paymentOverview.PotentialOfOpenSpotsSum = this.addOpenSpots(this.paymentOverview.PotentialOfOpenSpots);
+      this.paymentOverview.potentialOfOpenSpotsSum = this.addOpenSpots(this.paymentOverview.potentialOfOpenSpots);
     }, error => console.error(error));
   }
 
   private addOpenSpots(openSpots: OpenSpots[]) {
-    return openSpots.map(spot => spot.PotentialIncome).reduce((sum, currrent) => sum + currrent);
+    return openSpots.map(spot => spot.potentialIncome).reduce((sum, currrent) => sum + currrent);
   }
 
   getEventAcronym() {
@@ -26,25 +26,25 @@ export class PaymentOverviewComponent {
   }
 }
 
-interface PaymentOverview {
-  Balance: Balance;
-  ReceivedMoney: number;
-  PaidRegistrations: number;
-  OutstandingAmount: number;
-  NotFullyPaidRegistrations: number;
-  PotentialOfOpenSpotsSum: number;
-  PotentialOfOpenSpots: OpenSpots[];
+class PaymentOverview {
+  balance: Balance;
+  receivedMoney: number;
+  paidRegistrations: number;
+  outstandingAmount: number;
+  notFullyPaidRegistrations: number;
+  potentialOfOpenSpotsSum: number;
+  potentialOfOpenSpots: OpenSpots[];
 }
 
-interface Balance {
-  Balance: number;
-  Currency: string;
-  AccountIban: string;
-  Date: Date;
+class Balance {
+  balance: number;
+  currency: string;
+  accountIban: string;
+  date: Date;
 }
-interface OpenSpots {
-  RegistrableId: string;
-  Name: string;
-  SpotsAvailable: number;
-  PotentialIncome: number;
+class OpenSpots {
+  registrableId: string;
+  name: string;
+  spotsAvailable: number;
+  potentialIncome: number;
 }

@@ -16,13 +16,13 @@
   </thead>
   <tbody>
     <tr *ngFor="let registrable of doubleRegistrables">
-      <td><a [routerLink]="['/registrables', registrable.Id, 'participants']">{{ registrable.Name }}</a></td>
-      <td>{{ registrable.SpotsAvailable }}</td>
-      <td>{{ registrable.LeadersAccepted }}</td>
-      <td>{{ registrable.FollowersAccepted }}</td>
-      <td>{{ registrable.LeadersOnWaitingList }}</td>
-      <td>{{ registrable.FollowersOnWaitingList }}</td>
-      <td>{{ registrable.CouplesOnWaitingList }}</td>
+      <td><a [routerLink]="['/registrables', registrable.Id, 'participants']">{{ registrable.name }}</a></td>
+      <td>{{ registrable.spotsAvailable }}</td>
+      <td>{{ registrable.leadersAccepted }}</td>
+      <td>{{ registrable.followersAccepted }}</td>
+      <td>{{ registrable.leadersOnWaitingList }}</td>
+      <td>{{ registrable.followersOnWaitingList }}</td>
+      <td>{{ registrable.couplesOnWaitingList }}</td>
     </tr>
   </tbody>
 </table>
@@ -40,10 +40,10 @@
   </thead>
   <tbody>
     <tr *ngFor="let registrable of singleRegistrables">
-      <td><a [routerLink]="['/registrables', registrable.Id, 'participants']">{{ registrable.Name }}</a></td>
-      <td>{{ registrable.SpotsAvailable }}</td>
-      <td>{{ registrable.Accepted }}</td>
-      <td>{{ registrable.OnWaitingList }}</td>
+      <td><a [routerLink]="['/registrables', registrable.Id, 'participants']">{{ registrable.name }}</a></td>
+      <td>{{ registrable.spotsAvailable }}</td>
+      <td>{{ registrable.accepted }}</td>
+      <td>{{ registrable.onWaitingList }}</td>
     </tr>
   </tbody>
 </table>
