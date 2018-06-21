@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { AuthService } from "../authentication/authService.service";
+import { AuthService } from '../authentication/authService.service';
+//import { EventsService } from ('../events/events.service');
 
 @Component({
   selector: 'app-nav-menu',

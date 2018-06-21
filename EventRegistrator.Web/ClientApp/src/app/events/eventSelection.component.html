@@ -1,0 +1,22 @@
+<h1>Events</h1>
+
+<p *ngIf="!events"><em>Loading...</em></p>
+
+<table class="table" *ngIf="events">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Abkürzung</th>
+      <th>Rolle</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let event of events">
+      <td><a [routerLink]="[event.eventAcronym, 'registrables']">{{ event.eventName }}</a></td>
+      <td>{{ event.eventAcronym }}</td>
+      <td>{{ event.role }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<br />

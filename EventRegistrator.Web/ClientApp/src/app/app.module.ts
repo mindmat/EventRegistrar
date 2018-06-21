@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { AuthService } from './authentication/authService.service';
+import { EventsService } from './events/events.service';
 //import { HomeComponent } from './home/home.component';
 
 import { RegistrablesComponent } from './registrables/registrables.component';
@@ -23,6 +24,7 @@ import { SmsConversationComponent } from './smsConversation/smsConversation.comp
 import { CheckinViewComponent } from "./checkinView/checkinView.component";
 import { PartyOverviewComponent } from "./partyOverview/partyOverview.component";
 import { MailTemplatesComponent } from "./mailTemplates/mailTemplates.component";
+import { EventSelectionComponent } from "./events/eventSelection.component";
 import { TokenInterceptor } from "./authentication/tokenInterceptor";
 
 @NgModule({
@@ -41,7 +43,8 @@ import { TokenInterceptor } from "./authentication/tokenInterceptor";
     SmsConversationComponent,
     CheckinViewComponent,
     PartyOverviewComponent,
-    MailTemplatesComponent
+    MailTemplatesComponent,
+    EventSelectionComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -49,8 +52,9 @@ import { TokenInterceptor } from "./authentication/tokenInterceptor";
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot([
-      { path: '', redirectTo: 'll18/registrables', pathMatch: 'full' },
+      //{ path: '', redirectTo: 'eventSelection', pathMatch: 'full' },
       //{ path: 'home', component: HomeComponent },
+      { path: '', component: EventSelectionComponent },
       { path: ':eventAcronym/registrables', component: RegistrablesComponent },
       { path: ':eventAcronym/registrables/:id/participants', component: ParticipantsComponent },
       { path: ':eventAcronym/registration/:id', component: RegistrationComponent },
@@ -63,7 +67,7 @@ import { TokenInterceptor } from "./authentication/tokenInterceptor";
       { path: ':eventAcronym/registrations/:id/sms', component: SmsConversationComponent },
       { path: ':eventAcronym/partyOverview', component: PartyOverviewComponent },
       { path: ':eventAcronym/mailTemplates', component: MailTemplatesComponent },
-      { path: '**', redirectTo: 'll18/registrables' }
+      //{ path: '**', redirectTo: 'll18/registrables' }
     ])
   ],
   providers: [
@@ -73,7 +77,8 @@ import { TokenInterceptor } from "./authentication/tokenInterceptor";
       useClass: TokenInterceptor,
       multi: true
     },
-    AuthService
+    AuthService,
+    EventsService
   ],
   bootstrap: [AppComponent]
 })

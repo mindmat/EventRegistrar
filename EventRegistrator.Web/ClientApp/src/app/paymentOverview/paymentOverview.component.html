@@ -36,7 +36,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let potential of paymentOverview.PotentialOfOpenSpots">
+    <tr *ngFor="let potential of paymentOverview.potentialOfOpenSpots">
       <td><a [routerLink]="['/registrables', potential.RegistrableId, 'participants']">{{ potential.name }}</a></td>
       <td class="text-right">{{ potential.spotsAvailable }}</td>
       <td class="text-right">{{ potential.potentialIncome | currency : paymentOverview.balance.currency }}</td>
