@@ -1,12 +1,13 @@
-﻿using EventRegistrar.Backend.Events.UsersInEvents;
+﻿using System.Collections.Generic;
+using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.RegistrationForms;
-using System.Collections.Generic;
 
 namespace EventRegistrar.Backend.Events
 {
     public class Event : Entity
     {
+        public ICollection<AccessToEventRequest> AccessRequests { get; set; }
         public string AccountIban { get; set; }
         public string Acronym { get; set; }
         public string Currency { get; set; }

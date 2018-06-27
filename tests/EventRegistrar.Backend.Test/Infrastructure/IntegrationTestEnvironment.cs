@@ -34,12 +34,12 @@ namespace EventRegistrar.Backend.Test.Infrastructure
 
         public TestServer TestServer { get; set; }
 
-        public HttpClient GetClient(UserInEventRole role = UserInEventRole.Reader)
+        public HttpClient GetClient(UserInEventRole role)
         {
             var client = TestServer.CreateClient();
             var identifier = role == UserInEventRole.Admin
                 ? Scenario.Administrator.IdentityProviderUserIdentifier
-                : Scenario.User.IdentityProviderUserIdentifier;
+                : Scenario.Reader.IdentityProviderUserIdentifier;
             client.DefaultRequestHeaders.Add(TestGoogleIdentityProvider.TestHeaderUserId, identifier);
             return client;
         }

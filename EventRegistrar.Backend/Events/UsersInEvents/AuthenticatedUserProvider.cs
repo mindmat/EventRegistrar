@@ -27,8 +27,13 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
             _logger = logger;
         }
 
-        public async Task<Guid> GetAuthenticatedUserId()
+        public IdentityProvider IdentityProvider => _identityProvider.Provider;
+
+        public string IdentityProviderUserIdentifier => _identityProvider.GetIdentifier(_httpContextAccessor);
+
+        public async Task<Guid?> GetAuthenticatedUserId()
         {
+            return new Guid("E24CFA7C-20D7-4AA4-B646-4CB0B1E8D6FC");
             var identifier = _identityProvider.GetIdentifier(_httpContextAccessor);
             var user = await _users.FirstOrDefaultAsync(usr => usr.IdentityProvider == _identityProvider.Provider
                                                             && usr.IdentityProviderUserIdentifier == identifier);

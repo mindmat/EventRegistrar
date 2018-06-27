@@ -29,12 +29,18 @@ namespace EventRegistrar.Backend.Authorization
 
         public async Task ThrowIfUserHasNotRight(Guid eventId, string requestTypeName)
         {
-            var key = new UserInEventCacheKey(_user.UserId, eventId);
-            var rightsOfUserInEvent = await _memoryCache.GetOrCreateAsync(key, entry => GetRightsOfUserInEvent(entry, eventId));
-
-            if (!rightsOfUserInEvent.Contains(requestTypeName))
+            if (!_user.UserId.HasValue)
             {
-                throw new UnauthorizedAccessException($"You ({_user.UserId}) are not authorized for {requestTypeName} in event {eventId}");
+            }
+            else
+            {
+                var key = new UserInEventCacheKey(_user.UserId.Value, eventId);
+                var rightsOfUserInEvent = await _memoryCache.GetOrCreateAsync(key, entry => GetRightsOfUserInEvent(entry, eventId));
+
+                if (!rightsOfUserInEvent.Contains(requestTypeName))
+                {
+                    throw new UnauthorizedAccessException($"You ({_user.UserId}) are not authorized for {requestTypeName} in event {eventId}");
+                }
             }
         }
 

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Test.Infrastructure;
 using Shouldly;
@@ -21,7 +22,7 @@ namespace EventRegistrar.Backend.Test
         [Fact]
         public async Task GetDoubleRegistrablesOverview()
         {
-            var client = _integrationTestEnvironment.GetClient();
+            var client = _integrationTestEnvironment.GetClient(UserInEventRole.Reader);
 
             var response = await client.GetAsync("api/events/tev/DoubleRegistrableOverview");
             response.EnsureSuccessStatusCode();
@@ -41,7 +42,7 @@ namespace EventRegistrar.Backend.Test
         [Fact]
         public async Task GetSingleRegistrablesOverview()
         {
-            var client = _integrationTestEnvironment.GetClient();
+            var client = _integrationTestEnvironment.GetClient(UserInEventRole.Reader);
 
             var response = await client.GetAsync("api/events/tev/SingleRegistrableOverview");
             response.EnsureSuccessStatusCode();

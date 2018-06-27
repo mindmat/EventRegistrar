@@ -1,0 +1,57 @@
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+
+namespace EventRegistrar.Backend.Events.UsersInEvents
+{
+    public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand>
+    {
+        private readonly IRepository<AccessToEventRequest> _accessRequests;
+        private readonly IEventAcronymResolver _acronymResolver;
+        private readonly IAuthenticatedUserProvider _authenticatedUserProvider;
+        private readonly DbContext _dbContext;
+        private readonly AuthenticatedUser _user;
+
+        public RequestAccessCommandHandler(IRepository<AccessToEventRequest> accessRequests,
+            IEventAcronymResolver acronymResolver,
+            AuthenticatedUser user,
+            IAuthenticatedUserProvider authenticatedUserProvider,
+            DbContext dbContext)
+        {
+            _accessRequests = accessRequests;
+            _acronymResolver = acronymResolver;
+            _user = user;
+            _authenticatedUserProvider = authenticatedUserProvider;
+            _dbContext = dbContext;
+        }
+
+        public async Task<Unit> Handle(RequestAccessCommand command, CancellationToken cancellationToken)
+        {
+            var eventId = await _acronymResolver.GetEventIdFromAcronym(command.EventAcronym);
+
+            var request = await _accessRequests.FirstOrDefaultAsync(req => req.EventId == eventId
+                                                                        && req.UserId == _user.UserId, cancellationToken);
+
+            if (request == null)
+            {
+                request = new AccessToEventRequest
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = _user.UserId,
+                    IdentityProvider = _authenticatedUserProvider.IdentityProvider.ToString(),
+                    Identifier = _authenticatedUserProvider.IdentityProviderUserIdentifier,
+                    EventId = eventId,
+                    RequestReceived = DateTime.UtcNow
+                };
+                await _accessRequests.InsertOrUpdateEntity(request, cancellationToken);
+            }
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return new Unit();
+        }
+    }
+}

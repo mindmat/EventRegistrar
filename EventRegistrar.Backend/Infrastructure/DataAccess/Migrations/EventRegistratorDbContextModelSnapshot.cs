@@ -67,6 +67,30 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                     b.ToTable("Events");
                 });
 
+            modelBuilder.Entity("EventRegistrar.Backend.Events.UsersInEvents.AccessToEventRequest", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<Guid>("EventId");
+
+                    b.Property<string>("Identifier");
+
+                    b.Property<string>("IdentityProvider");
+
+                    b.Property<DateTime>("RequestReceived");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<Guid?>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AccessToEventRequest");
+                });
+
             modelBuilder.Entity("EventRegistrar.Backend.Events.UsersInEvents.UserInEvent", b =>
                 {
                     b.Property<Guid>("Id")
@@ -89,6 +113,96 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UsersInEvents");
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.PaymentAssignment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("Amount");
+
+                    b.Property<Guid>("ReceivedPaymentId");
+
+                    b.Property<Guid>("RegistrationId");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceivedPaymentId");
+
+                    b.HasIndex("RegistrationId");
+
+                    b.ToTable("PaymentAssignments");
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.PaymentFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("AccountIban");
+
+                    b.Property<decimal?>("Balance");
+
+                    b.Property<DateTime?>("BookingsFrom");
+
+                    b.Property<DateTime?>("BookingsTo");
+
+                    b.Property<string>("Content");
+
+                    b.Property<string>("Currency");
+
+                    b.Property<Guid?>("EventId");
+
+                    b.Property<string>("FileId");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PaymentFiles");
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.ReceivedPayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("Amount");
+
+                    b.Property<DateTime>("BookingDate");
+
+                    b.Property<string>("Currency");
+
+                    b.Property<string>("Info");
+
+                    b.Property<Guid>("PaymentFileId");
+
+                    b.Property<string>("RecognizedEmail");
+
+                    b.Property<string>("Reference");
+
+                    b.Property<Guid?>("RegistrationId_Payer");
+
+                    b.Property<decimal?>("Repaid");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate();
+
+                    b.Property<bool>("Settled");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PaymentFileId");
+
+                    b.ToTable("ReceivedPayments");
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Registrables.Registrable", b =>
@@ -259,6 +373,27 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                     b.HasOne("EventRegistrar.Backend.Authentication.Users.User", "User")
                         .WithMany("Events")
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.PaymentAssignment", b =>
+                {
+                    b.HasOne("EventRegistrar.Backend.Payments.ReceivedPayment", "ReceivedPayment")
+                        .WithMany("Assignments")
+                        .HasForeignKey("ReceivedPaymentId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("EventRegistrar.Backend.Registrations.Registration", "Registration")
+                        .WithMany("Payments")
+                        .HasForeignKey("RegistrationId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.ReceivedPayment", b =>
+                {
+                    b.HasOne("EventRegistrar.Backend.Payments.PaymentFile", "PaymentFile")
+                        .WithMany()
+                        .HasForeignKey("PaymentFileId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

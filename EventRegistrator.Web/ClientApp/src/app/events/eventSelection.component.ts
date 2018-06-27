@@ -9,19 +9,39 @@ import { EventsService } from "./events.service";
 })
 export class EventSelectionComponent {
   events: UserInEventDisplayItem[];
+  furtherEvents: Event[];
+  isSearching: boolean;
 
   constructor(private http: HttpClient, private eventsService: EventsService) {
+  }
+
+  search(searchString: string) {
+    this.isSearching = true;
+    this.http.get<Event[]>(`api/events?searchstring=${searchString}`)
+      .subscribe(result => {
+        this.furtherEvents = result;
+        this.isSearching = false;
+      },
+        error => {
+          console.error(error);
+          this.isSearching = false;
+        });
+  }
+
+  requestAccess(acronym: string) {
+    this.http.post(`api/events/${acronym}/requestAccess`, null)
+      .subscribe(result => {
+      },
+        error => {
+          console.error(error);
+        });
+  }
+
+  ngOnInit() {
     this.http.get<UserInEventDisplayItem[]>("api/me/events").subscribe(result => {
       this.events = result;
     },
       error => console.error(error));
-  }
-
-  ngOnInit() {
-    //var eventId = '762A93A4-56E0-402C-B700-1CFB3362B39D';
-    //this.http.get<Registration[]>(`${this.baseUrl}api/events/${eventId}/checkinView`)
-    //  .subscribe(result => { this.registrations = result; },
-    //    error => console.error(error));
   }
 }
 
@@ -33,4 +53,12 @@ export class UserInEventDisplayItem {
   userFirstName: string;
   userIdentifier: string;
   userLastName: string;
+}
+
+class Event {
+  id: string;
+  acronym: string;
+  name: string;
+  state: string;
+  requestSent: boolean;
 }

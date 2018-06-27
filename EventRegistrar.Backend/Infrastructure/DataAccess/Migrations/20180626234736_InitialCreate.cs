@@ -8,6 +8,23 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "AccessToEventRequest",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    EventId = table.Column<Guid>(nullable: false),
+                    Identifier = table.Column<string>(nullable: true),
+                    IdentityProvider = table.Column<string>(nullable: true),
+                    RequestReceived = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccessToEventRequest", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
@@ -23,6 +40,26 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Events", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PaymentFiles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    AccountIban = table.Column<string>(nullable: true),
+                    Balance = table.Column<decimal>(nullable: true),
+                    BookingsFrom = table.Column<DateTime>(nullable: true),
+                    BookingsTo = table.Column<DateTime>(nullable: true),
+                    Content = table.Column<string>(nullable: true),
+                    Currency = table.Column<string>(nullable: true),
+                    EventId = table.Column<Guid>(nullable: true),
+                    FileId = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PaymentFiles", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,6 +128,34 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ReceivedPayments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Amount = table.Column<decimal>(nullable: false),
+                    BookingDate = table.Column<DateTime>(nullable: false),
+                    Currency = table.Column<string>(nullable: true),
+                    Info = table.Column<string>(nullable: true),
+                    PaymentFileId = table.Column<Guid>(nullable: false),
+                    RecognizedEmail = table.Column<string>(nullable: true),
+                    Reference = table.Column<string>(nullable: true),
+                    RegistrationId_Payer = table.Column<Guid>(nullable: true),
+                    Repaid = table.Column<decimal>(nullable: true),
+                    Settled = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReceivedPayments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ReceivedPayments_PaymentFiles_PaymentFileId",
+                        column: x => x.PaymentFileId,
+                        principalTable: "PaymentFiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UsersInEvents",
                 columns: table => new
                 {
@@ -124,6 +189,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                     Id = table.Column<Guid>(nullable: false),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
                     AdmittedAt = table.Column<DateTime>(nullable: true),
+                    EventId = table.Column<Guid>(nullable: false),
                     ExternalIdentifier = table.Column<string>(nullable: true),
                     ExternalTimestamp = table.Column<DateTime>(nullable: false),
                     FallbackToPartyPass = table.Column<bool>(nullable: false),
@@ -150,6 +216,33 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                         name: "FK_Registrations_RegistrationForms_RegistrationFormId",
                         column: x => x.RegistrationFormId,
                         principalTable: "RegistrationForms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PaymentAssignments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Amount = table.Column<decimal>(nullable: false),
+                    ReceivedPaymentId = table.Column<Guid>(nullable: false),
+                    RegistrationId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PaymentAssignments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PaymentAssignments_ReceivedPayments_ReceivedPaymentId",
+                        column: x => x.ReceivedPaymentId,
+                        principalTable: "ReceivedPayments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PaymentAssignments_Registrations_RegistrationId",
+                        column: x => x.RegistrationId,
+                        principalTable: "Registrations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -192,6 +285,21 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_PaymentAssignments_ReceivedPaymentId",
+                table: "PaymentAssignments",
+                column: "ReceivedPaymentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentAssignments_RegistrationId",
+                table: "PaymentAssignments",
+                column: "RegistrationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReceivedPayments_PaymentFileId",
+                table: "ReceivedPayments",
+                column: "PaymentFileId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RegistrationForms_EventId",
                 table: "RegistrationForms",
                 column: "EventId");
@@ -230,10 +338,19 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
+                name: "AccessToEventRequest");
+
+            migrationBuilder.DropTable(
+                name: "PaymentAssignments");
+
+            migrationBuilder.DropTable(
                 name: "Seats");
 
             migrationBuilder.DropTable(
                 name: "UsersInEvents");
+
+            migrationBuilder.DropTable(
+                name: "ReceivedPayments");
 
             migrationBuilder.DropTable(
                 name: "Registrables");
@@ -243,6 +360,9 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "PaymentFiles");
 
             migrationBuilder.DropTable(
                 name: "RegistrationForms");

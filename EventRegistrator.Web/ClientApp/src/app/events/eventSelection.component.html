@@ -1,4 +1,4 @@
-<h1>Events</h1>
+<h1>Deine Events</h1>
 
 <p *ngIf="!events"><em>Loading...</em></p>
 
@@ -15,6 +15,36 @@
       <td><a [routerLink]="[event.eventAcronym, 'registrables']">{{ event.eventName }}</a></td>
       <td>{{ event.eventAcronym }}</td>
       <td>{{ event.role }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Weitere Events</h2>
+
+<div class="row">
+  <div class="col-sm-1">
+    <p>Suche:</p>
+  </div>
+  <div class="col-lg-4">
+    <input #searchString type="text" (keyup.enter)="search(searchString.value)">
+  </div>
+</div>
+
+<table class="table table-hover" *ngIf="furtherEvents">
+  <thead class="thead-dark">
+    <tr>
+      <th>Name</th>
+      <th>Abkürzung</th>
+      <th>Status</th>
+      <th>Zugriff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let event of furtherEvents">
+      <td>{{ event.name }}</td>
+      <td>{{ event.acronym }}</td>
+      <td>{{ event.state }}</td>
+      <td><button class="btn btn-primary btn-xs" *ngIf="!event.requestSent" (click)="requestAccess(event.acronym)">Zugriff anfragen</button></td>
     </tr>
   </tbody>
 </table>

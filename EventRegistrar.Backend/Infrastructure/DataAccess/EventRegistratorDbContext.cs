@@ -26,6 +26,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new UserMap());
             builder.ApplyConfiguration(new UserInEventMap());
             builder.ApplyConfiguration(new SeatMap());
+            builder.ApplyConfiguration(new AccessToEventRequestMap());
 
             builder.ApplyConfiguration(new ReceivedPaymentMap());
             builder.ApplyConfiguration(new PaymentAssignmentMap());

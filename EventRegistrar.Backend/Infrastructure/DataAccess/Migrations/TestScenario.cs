@@ -23,12 +23,29 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
             IdentityProviderUserIdentifier = "john.admin@gmail.com"
         };
 
+        public Event OtherCurrentEvent => new Event
+        {
+            Id = new Guid("6A916C80-AD0F-4548-BCD6-80F2DC617365"),
+            Name = "OtherCurrentEvent",
+            Acronym = "cev",
+            State = State.RegistrationOpen
+        };
+
         public Event OtherOwnEvent => new Event
         {
             Id = new Guid("733A954C-A751-46DD-A8BA-3AFBBC54D459"),
             Name = "OtherOwnEvent",
             Acronym = "ooe",
             State = State.RegistrationOpen,
+        };
+
+        public User Reader => new User
+        {
+            Id = new Guid("E24CFA7C-20D7-4AA4-B646-4CB0B1E8D6FC"),
+            FirstName = "Ulysses",
+            LastName = "User",
+            IdentityProvider = IdentityProvider.Google,
+            IdentityProviderUserIdentifier = "ulysses.user@gmail.com"
         };
 
         public Registrable RegistrableDouble1 => new Registrable
@@ -102,13 +119,12 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
             State = State.RegistrationOpen,
         };
 
-        public User User => new User
+        private Event FutureEvent => new Event
         {
-            Id = new Guid("E24CFA7C-20D7-4AA4-B646-4CB0B1E8D6FC"),
-            FirstName = "Ulysses",
-            LastName = "User",
-            IdentityProvider = IdentityProvider.Google,
-            IdentityProviderUserIdentifier = "ulysses.user@gmail.com"
+            Id = new Guid("E5AB67E4-9D1E-49CA-8069-FAA6F785C107"),
+            Name = "FutureEvent",
+            Acronym = "fev",
+            State = State.Setup
         };
 
         public async Task Create(Container container)
@@ -124,11 +140,23 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
         {
         }
 
+        private async Task InsertAccessToEventRequests(Container container)
+        {
+            var accessToEventRequests = container.GetInstance<IRepository<AccessToEventRequest>>();
+            await accessToEventRequests.InsertOrUpdateEntity(new AccessToEventRequest
+            {
+                Id = new Guid("7DF6C289-B282-4F86-BAE5-14160BA6CD72"),
+                UserId = Reader.Id,
+                EventId = FutureEvent.Id
+            });
+        }
+
         private async Task InsertData(Container container)
         {
             await InsertEvents(container);
             await InsertUsers(container);
             await InsertUsersInEvents(container);
+            await InsertAccessToEventRequests(container);
             await InsertRegistrables(container);
         }
 
@@ -144,21 +172,9 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
             });
 
             await events.InsertOrUpdateEntity(TestEvent);
-            await events.InsertOrUpdateEntity(new Event
-            {
-                Id = new Guid("6A916C80-AD0F-4548-BCD6-80F2DC617365"),
-                Name = "OtherCurrentEvent",
-                Acronym = "cev",
-                State = State.RegistrationOpen
-            });
+            await events.InsertOrUpdateEntity(OtherCurrentEvent);
             await events.InsertOrUpdateEntity(OtherOwnEvent);
-            await events.InsertOrUpdateEntity(new Event
-            {
-                Id = new Guid("E5AB67E4-9D1E-49CA-8069-FAA6F785C107"),
-                Name = "FutureEvent",
-                Acronym = "fev",
-                State = State.Setup
-            });
+            await events.InsertOrUpdateEntity(FutureEvent);
         }
 
         private async Task InsertRegistrables(Container container)
@@ -174,7 +190,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
         private async Task InsertUsers(Container container)
         {
             var users = container.GetInstance<IRepository<User>>();
-            await users.InsertOrUpdateEntity(User);
+            await users.InsertOrUpdateEntity(Reader);
             await users.InsertOrUpdateEntity(Administrator);
             await users.InsertOrUpdateEntity(new User
             {
@@ -200,7 +216,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
             {
                 Id = new Guid("657111B0-180C-496D-8A64-A875893E9D0A"),
                 EventId = TestEvent.Id,
-                UserId = User.Id,
+                UserId = Reader.Id,
                 Role = UserInEventRole.Writer
             });
             await usersInEvents.InsertOrUpdateEntity(new UserInEvent
@@ -214,7 +230,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
             {
                 Id = new Guid("38AB3F52-D3BD-43CF-978B-564782C26734"),
                 EventId = OtherOwnEvent.Id,
-                UserId = User.Id,
+                UserId = Reader.Id,
                 Role = UserInEventRole.Reader
             });
         }

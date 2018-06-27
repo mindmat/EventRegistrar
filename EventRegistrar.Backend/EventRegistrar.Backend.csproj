@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Infrastructure\DataAccess\Migrations\20180615151320_InitialCreate.cs" />
+    <Compile Remove="Infrastructure\DataAccess\Migrations\20180617113947_m2.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MediatR" Version="5.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.TraceListener" Version="2.6.4" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
