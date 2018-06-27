@@ -33,7 +33,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
 
         public async Task<Guid?> GetAuthenticatedUserId()
         {
-            return new Guid("E24CFA7C-20D7-4AA4-B646-4CB0B1E8D6FC");
+            //return new Guid("E24CFA7C-20D7-4AA4-B646-4CB0B1E8D6FC");
             var identifier = _identityProvider.GetIdentifier(_httpContextAccessor);
             var user = await _users.FirstOrDefaultAsync(usr => usr.IdentityProvider == _identityProvider.Provider
                                                             && usr.IdentityProviderUserIdentifier == identifier);
@@ -41,7 +41,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
             if (user == null)
             {
                 //throw new AuthenticationException($"There is no user {identifier} registered (provider {_identityProvider.Provider})");
-                return new Guid();
+                return null;
             }
 
             return user.Id; //new Guid("E24CFA7C-20D7-4AA4-B646-4CB0B1E8D6FC"));
