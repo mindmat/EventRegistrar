@@ -17,7 +17,7 @@ export class EventSelectionComponent {
 
   search(searchString: string) {
     this.isSearching = true;
-    this.http.get<Event[]>(`api/events?searchstring=${searchString}`)
+    this.http.get<Event[]>(`api/events?searchstring=${searchString}&includeRequestedEvents=true`)
       .subscribe(result => {
         this.furtherEvents = result;
         this.isSearching = false;
@@ -28,11 +28,13 @@ export class EventSelectionComponent {
         });
   }
 
-  requestAccess(acronym: string) {
-    this.http.post(`api/events/${acronym}/requestAccess`, null)
+  requestAccess(event: Event) {
+    event.requestSent = true;
+    this.http.post(`api/events/${event.acronym}/requestAccess`, null)
       .subscribe(result => {
       },
         error => {
+          event.requestSent = false;
           console.error(error);
         });
   }

@@ -44,7 +44,7 @@
       <td>{{ event.name }}</td>
       <td>{{ event.acronym }}</td>
       <td>{{ event.state }}</td>
-      <td><button class="btn btn-primary btn-xs" *ngIf="!event.requestSent" (click)="requestAccess(event.acronym)">Zugriff anfragen</button></td>
+      <td><button class="btn btn-primary btn-xs" *ngIf="!event.requestSent" (click)="requestAccess(event)">Zugriff anfragen</button></td>
     </tr>
   </tbody>
 </table>
