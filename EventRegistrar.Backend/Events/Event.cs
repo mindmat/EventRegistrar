@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.RegistrationForms;
 

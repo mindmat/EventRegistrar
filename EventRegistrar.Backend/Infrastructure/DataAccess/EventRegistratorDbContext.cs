@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Authentication.Users;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;

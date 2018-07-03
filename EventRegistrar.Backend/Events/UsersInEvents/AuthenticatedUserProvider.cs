@@ -5,7 +5,6 @@ using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Authentication.Users;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents
 {
@@ -13,23 +12,21 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IIdentityProvider _identityProvider;
-        private readonly ILogger _logger;
         private readonly IQueryable<User> _users;
 
         public AuthenticatedUserProvider(IHttpContextAccessor httpContextAccessor,
                                          IIdentityProvider identityProvider,
-                                         IQueryable<User> users,
-                                         ILogger logger)
+                                         IQueryable<User> users)
         {
             _httpContextAccessor = httpContextAccessor;
             _identityProvider = identityProvider;
             _users = users;
-            _logger = logger;
         }
 
-        public IdentityProvider IdentityProvider => _identityProvider.Provider;
-
-        public string IdentityProviderUserIdentifier => _identityProvider.GetIdentifier(_httpContextAccessor);
+        public AuthenticatedUser GetAuthenticatedUser()
+        {
+            return _identityProvider.GetUser(_httpContextAccessor);
+        }
 
         public async Task<Guid?> GetAuthenticatedUserId()
         {
@@ -37,7 +34,6 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
             var identifier = _identityProvider.GetIdentifier(_httpContextAccessor);
             var user = await _users.FirstOrDefaultAsync(usr => usr.IdentityProvider == _identityProvider.Provider
                                                             && usr.IdentityProviderUserIdentifier == identifier);
-            _logger.LogInformation("Identifier {0}, header count {1}", identifier, _httpContextAccessor?.HttpContext?.Request?.Headers?.Count);
             if (user == null)
             {
                 //throw new AuthenticationException($"There is no user {identifier} registered (provider {_identityProvider.Provider})");

@@ -5,27 +5,24 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace EventRegistrar.Backend.Events.UsersInEvents
+namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
 {
     public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand>
     {
         private readonly IRepository<AccessToEventRequest> _accessRequests;
         private readonly IEventAcronymResolver _acronymResolver;
         private readonly IAuthenticatedUserProvider _authenticatedUserProvider;
-        private readonly DbContext _dbContext;
-        private readonly AuthenticatedUser _user;
+        private readonly AuthenticatedUserId _user;
 
         public RequestAccessCommandHandler(IRepository<AccessToEventRequest> accessRequests,
-            IEventAcronymResolver acronymResolver,
-            AuthenticatedUser user,
-            IAuthenticatedUserProvider authenticatedUserProvider,
-            DbContext dbContext)
+                                           IEventAcronymResolver acronymResolver,
+                                           AuthenticatedUserId user,
+                                           IAuthenticatedUserProvider authenticatedUserProvider)
         {
             _accessRequests = accessRequests;
             _acronymResolver = acronymResolver;
             _user = user;
             _authenticatedUserProvider = authenticatedUserProvider;
-            _dbContext = dbContext;
         }
 
         public async Task<Unit> Handle(RequestAccessCommand command, CancellationToken cancellationToken)
@@ -33,23 +30,26 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
             var eventId = await _acronymResolver.GetEventIdFromAcronym(command.EventAcronym);
 
             var request = await _accessRequests.FirstOrDefaultAsync(req => req.EventId == eventId
-                                                                        && req.UserId == _user.UserId, cancellationToken);
+                                                                        && req.UserId_Requestor == _user.UserId
+                                                                        && (!req.Response.HasValue || req.Response == RequestResponse.Granted), cancellationToken);
 
             if (request == null)
             {
+                var user = _authenticatedUserProvider.GetAuthenticatedUser();
                 request = new AccessToEventRequest
                 {
                     Id = Guid.NewGuid(),
-                    UserId = _user.UserId,
-                    IdentityProvider = _authenticatedUserProvider.IdentityProvider.ToString(),
-                    Identifier = _authenticatedUserProvider.IdentityProviderUserIdentifier,
+                    UserId_Requestor = _user.UserId,
+                    IdentityProvider = user.IdentityProvider,
+                    Identifier = user.IdentityProviderUserIdentifier,
+                    FirstName = user.FirstName,
+                    LastName = user.FirstName,
+                    RequestText = command.RequestText,
                     EventId = eventId,
                     RequestReceived = DateTime.UtcNow
                 };
                 await _accessRequests.InsertOrUpdateEntity(request, cancellationToken);
             }
-
-            await _dbContext.SaveChangesAsync(cancellationToken);
 
             return new Unit();
         }

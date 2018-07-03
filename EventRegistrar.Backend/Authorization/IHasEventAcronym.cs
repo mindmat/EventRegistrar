@@ -1,4 +1,4 @@
-﻿namespace EventRegistrar.Backend.Registrables
+﻿namespace EventRegistrar.Backend.Authorization
 {
     public interface IEventBoundRequest
     {

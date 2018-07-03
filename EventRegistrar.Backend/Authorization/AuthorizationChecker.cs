@@ -13,10 +13,10 @@ namespace EventRegistrar.Backend.Authorization
         private readonly IMemoryCache _memoryCache;
         private readonly IRightsOfEventRoleProvider _rightsOfEventRoleProvider;
         private readonly TimeSpan _slidingExpiration = new TimeSpan(1, 0, 0, 0);
-        private readonly AuthenticatedUser _user;
+        private readonly AuthenticatedUserId _user;
         private readonly IQueryable<UserInEvent> _usersInEvents;
 
-        public AuthorizationChecker(AuthenticatedUser user,
+        public AuthorizationChecker(AuthenticatedUserId user,
                                     IQueryable<UserInEvent> usersInEventsInEvents,
                                     IMemoryCache memoryCache,
                                     IRightsOfEventRoleProvider rightsOfEventRoleProvider)

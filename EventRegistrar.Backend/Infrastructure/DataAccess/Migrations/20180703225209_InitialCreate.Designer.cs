@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
 {
     [DbContext(typeof(EventRegistratorDbContext))]
-    [Migration("20180626234736_InitialCreate")]
+    [Migration("20180703225209_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,8 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Email");
 
                     b.Property<string>("FirstName");
 
@@ -69,28 +71,48 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                     b.ToTable("Events");
                 });
 
-            modelBuilder.Entity("EventRegistrar.Backend.Events.UsersInEvents.AccessToEventRequest", b =>
+            modelBuilder.Entity("EventRegistrar.Backend.Events.UsersInEvents.AccessRequests.AccessToEventRequest", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<string>("Email")
+                        .HasMaxLength(200);
+
                     b.Property<Guid>("EventId");
 
-                    b.Property<string>("Identifier");
+                    b.Property<string>("FirstName")
+                        .HasMaxLength(200);
 
-                    b.Property<string>("IdentityProvider");
+                    b.Property<string>("Identifier")
+                        .HasMaxLength(200);
+
+                    b.Property<int>("IdentityProvider");
+
+                    b.Property<string>("LastName")
+                        .HasMaxLength(200);
 
                     b.Property<DateTime>("RequestReceived");
+
+                    b.Property<string>("RequestText");
+
+                    b.Property<int?>("Response");
+
+                    b.Property<string>("ResponseText");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate();
 
-                    b.Property<Guid?>("UserId");
+                    b.Property<Guid?>("UserId_Requestor");
+
+                    b.Property<Guid?>("UserId_Responder");
 
                     b.HasKey("Id");
 
-                    b.ToTable("AccessToEventRequest");
+                    b.HasIndex("EventId");
+
+                    b.ToTable("AccessToEventRequests");
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Events.UsersInEvents.UserInEvent", b =>
@@ -363,6 +385,14 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                     b.HasIndex("RegistrationId_Follower");
 
                     b.ToTable("Seats");
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Events.UsersInEvents.AccessRequests.AccessToEventRequest", b =>
+                {
+                    b.HasOne("EventRegistrar.Backend.Events.Event", "Event")
+                        .WithMany("AccessRequests")
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Events.UsersInEvents.UserInEvent", b =>

@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Authentication.Users;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;
 using Microsoft.EntityFrameworkCore;
@@ -146,7 +147,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
             await accessToEventRequests.InsertOrUpdateEntity(new AccessToEventRequest
             {
                 Id = new Guid("7DF6C289-B282-4F86-BAE5-14160BA6CD72"),
-                UserId = Reader.Id,
+                UserId_Requestor = Reader.Id,
                 EventId = FutureEvent.Id
             });
         }

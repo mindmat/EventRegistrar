@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EventRegistrar.Backend.Events.UsersInEvents
+namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
 {
     public class AccessToEventRequestMap : EntityTypeConfiguration<AccessToEventRequest>
     {
@@ -14,6 +14,15 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
             builder.HasOne(arq => arq.Event)
                    .WithMany(evt => evt.AccessRequests)
                    .HasForeignKey(arq => arq.EventId);
+
+            builder.Property(arq => arq.Identifier)
+                .HasMaxLength(200);
+            builder.Property(arq => arq.FirstName)
+                .HasMaxLength(200);
+            builder.Property(arq => arq.LastName)
+                .HasMaxLength(200);
+            builder.Property(arq => arq.Email)
+                .HasMaxLength(200);
         }
     }
 }

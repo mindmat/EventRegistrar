@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EventRegistrar.Backend.Events.UsersInEvents;
+using Microsoft.AspNetCore.Http;
 
 namespace EventRegistrar.Backend.Authentication
 {
@@ -7,5 +8,7 @@ namespace EventRegistrar.Backend.Authentication
         IdentityProvider Provider { get; }
 
         string GetIdentifier(IHttpContextAccessor contextAccessor);
+
+        AuthenticatedUser GetUser(IHttpContextAccessor httpContextAccessor);
     }
 }

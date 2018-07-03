@@ -25,7 +25,8 @@ namespace EventRegistrar.Backend
 
             container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
             {
-                typeof(AuthorizationDecorator<,>)
+                typeof(AuthorizationDecorator<,>),
+                typeof(CommitUnitOfWorkDecorator<,>)
             });
             //container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(RequestPreProcessorBehavior<,>) });
             //container.Collection.Register(typeof(IRequestPostProcessor<,>), new[] { typeof(GenericRequestPostProcessor<,>), typeof(ConstrainedRequestPostProcessor<,>) });
@@ -43,7 +44,8 @@ namespace EventRegistrar.Backend
             //container.RegisterInstance(dbOptions.Options);
             container.Register<DbContext, EventRegistratorDbContext>();
 
-            container.Register(() => new AuthenticatedUser(container.GetInstance<IAuthenticatedUserProvider>().GetAuthenticatedUserId().Result));
+            container.Register(() => new AuthenticatedUserId(container.GetInstance<IAuthenticatedUserProvider>().GetAuthenticatedUserId().Result));
+            container.Register(() => container.GetInstance<IAuthenticatedUserProvider>().GetAuthenticatedUser());
 
             container.Register<IEventAcronymResolver, EventAcronymResolver>();
             container.Register<IAuthorizationChecker, AuthorizationChecker>();

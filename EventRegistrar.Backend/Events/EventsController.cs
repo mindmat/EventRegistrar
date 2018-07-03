@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +18,28 @@ namespace EventRegistrar.Backend.Events
         }
 
         [HttpPost("api/events/{eventAcronym}/requestAccess")]
-        public Task RequestAccess(string eventAcronym)
+        public Task RequestAccess(string eventAcronym, string text)
         {
-            return _mediator.Send(new RequestAccessCommand { EventAcronym = eventAcronym });
+            return _mediator.Send(new RequestAccessCommand
+            {
+                EventAcronym = eventAcronym,
+                RequestText = text
+            });
+        }
+
+        [HttpPost("api/accessrequest/{accessRequestId:guid}/respond")]
+        public Task RespondToAccessRequest(Guid accessRequestId,
+                                           string text,
+                                           RequestResponse response,
+                                           UserInEventRole role)
+        {
+            return _mediator.Send(new RespondToRequestCommand
+            {
+                AccessToEventRequestId = accessRequestId,
+                Response = response,
+                Role = role,
+                ResponseText = text
+            });
         }
 
         [HttpGet("api/events")]

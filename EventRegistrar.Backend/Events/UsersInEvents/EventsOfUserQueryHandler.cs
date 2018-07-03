@@ -9,11 +9,11 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
 {
     public class EventsOfUserQueryHandler : IRequestHandler<EventsOfUserQuery, IEnumerable<UserInEventDisplayItem>>
     {
-        private readonly AuthenticatedUser _authenticatedUser;
+        private readonly AuthenticatedUserId _authenticatedUser;
         private readonly IQueryable<UserInEvent> _usersInEvents;
 
         public EventsOfUserQueryHandler(IQueryable<UserInEvent> usersInEvents,
-                                        AuthenticatedUser authenticatedUser)
+                                        AuthenticatedUserId authenticatedUser)
         {
             _usersInEvents = usersInEvents;
             _authenticatedUser = authenticatedUser;

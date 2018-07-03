@@ -1,4 +1,4 @@
-﻿using EventRegistrar.Backend.Registrables;
+﻿using EventRegistrar.Backend.Authorization;
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments

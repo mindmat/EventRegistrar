@@ -8,23 +8,6 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AccessToEventRequest",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(nullable: false),
-                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
-                    EventId = table.Column<Guid>(nullable: false),
-                    Identifier = table.Column<string>(nullable: true),
-                    IdentityProvider = table.Column<string>(nullable: true),
-                    RequestReceived = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<Guid>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AccessToEventRequest", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Events",
                 columns: table => new
                 {
@@ -90,6 +73,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(nullable: false),
                     RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Email = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(nullable: true),
                     IdentityProvider = table.Column<int>(nullable: false),
                     IdentityProviderUserIdentifier = table.Column<string>(nullable: true),
@@ -98,6 +82,36 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AccessToEventRequests",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(nullable: false),
+                    RowVersion = table.Column<byte[]>(rowVersion: true, nullable: true),
+                    Email = table.Column<string>(maxLength: 200, nullable: true),
+                    EventId = table.Column<Guid>(nullable: false),
+                    FirstName = table.Column<string>(maxLength: 200, nullable: true),
+                    Identifier = table.Column<string>(maxLength: 200, nullable: true),
+                    IdentityProvider = table.Column<int>(nullable: false),
+                    LastName = table.Column<string>(maxLength: 200, nullable: true),
+                    RequestReceived = table.Column<DateTime>(nullable: false),
+                    RequestText = table.Column<string>(nullable: true),
+                    Response = table.Column<int>(nullable: true),
+                    ResponseText = table.Column<string>(nullable: true),
+                    UserId_Requestor = table.Column<Guid>(nullable: true),
+                    UserId_Responder = table.Column<Guid>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AccessToEventRequests", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AccessToEventRequests_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -285,6 +299,11 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_AccessToEventRequests_EventId",
+                table: "AccessToEventRequests",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PaymentAssignments_ReceivedPaymentId",
                 table: "PaymentAssignments",
                 column: "ReceivedPaymentId");
@@ -338,7 +357,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AccessToEventRequest");
+                name: "AccessToEventRequests");
 
             migrationBuilder.DropTable(
                 name: "PaymentAssignments");

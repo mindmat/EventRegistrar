@@ -7,6 +7,7 @@
   <ItemGroup>
     <Compile Remove="Infrastructure\DataAccess\Migrations\20180615151320_InitialCreate.cs" />
     <Compile Remove="Infrastructure\DataAccess\Migrations\20180617113947_m2.cs" />
+    <Compile Remove="Infrastructure\DataAccess\Migrations\20180626234736_InitialCreate.cs" />
   </ItemGroup>
 
   <ItemGroup>

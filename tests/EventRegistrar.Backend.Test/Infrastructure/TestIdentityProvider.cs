@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authentication;
+using EventRegistrar.Backend.Events.UsersInEvents;
 using Microsoft.AspNetCore.Http;
 
 namespace EventRegistrar.Backend.Test.Infrastructure
@@ -11,6 +12,12 @@ namespace EventRegistrar.Backend.Test.Infrastructure
         public string GetIdentifier(IHttpContextAccessor contextAccessor)
         {
             return contextAccessor.HttpContext?.Request?.Headers?[TestHeaderUserId];
+        }
+
+        public AuthenticatedUser GetUser(IHttpContextAccessor httpContextAccessor)
+        {
+            var identifier = GetIdentifier(httpContextAccessor);
+            return new AuthenticatedUser(Provider, identifier, null, null, null);
         }
     }
 }
