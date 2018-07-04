@@ -4,6 +4,10 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
 {
     public class AuthenticatedUser
     {
+        private AuthenticatedUser()
+        {
+        }
+
         public AuthenticatedUser(IdentityProvider identityProvider,
                                  string identityProviderUserIdentifier,
                                  string firstName,
@@ -22,5 +26,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
         public IdentityProvider IdentityProvider { get; }
         public string IdentityProviderUserIdentifier { get; }
         public string LastName { get; }
+
+        public static AuthenticatedUser Default => new AuthenticatedUser();
     }
 }
