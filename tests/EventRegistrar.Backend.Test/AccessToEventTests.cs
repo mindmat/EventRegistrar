@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -50,23 +49,37 @@ namespace EventRegistrar.Backend.Test
             }
         }
 
-        [Theory]
-        [InlineData("other", false, false, new[] { "cev" })]
-        [InlineData("other", false, true, new[] { "cev", "ooe" })]
-        [InlineData("future", true, false, new[] { "fev" })]
-        public async Task SearchEvents(string searchString, bool includeRequestedEvents, bool includeAuthorizedEvents, string[] expectedSearchResultAcronyms)
+        [Fact]
+        public async Task RespondToAccessToEventRequest()
         {
+            const string requestText = "Response";
             var client = _testEnvironment.GetClient(UserInEventRole.Reader);
+            var reader = _testEnvironment.Scenario.Reader;
+            var request = _testEnvironment.Scenario.AccessRequest;
 
-            var response = await client.GetAsync($"api/events?searchString={searchString}&includeRequestedEvents={includeRequestedEvents}&includeAuthorizedEvents={includeAuthorizedEvents}");
-            response.EnsureSuccessStatusCode();
-            var events = (await response.Content.ReadAsAsync<IEnumerable<EventSearchResult>>()).ToList();
-
-            events.ShouldNotBeNull();
-            events.Count.ShouldBe(expectedSearchResultAcronyms.Length);
-            foreach (var acronym in expectedSearchResultAcronyms)
+            // Act
+            var responseDto = new RequestResponseDto
             {
-                events.ShouldContain(evt => evt.Acronym == acronym);
+                Response = RequestResponse.Granted,
+                Role = UserInEventRole.Reader,
+                Text = requestText
+            };
+            var response = await client.PostAsJsonAsync($"api/accessrequest/{request.Id}/respond", responseDto);
+
+            // Assert
+            response.EnsureSuccessStatusCode();
+            var container = _testEnvironment.GetServerContainer();
+            using (new EnsureExecutionScope(container))
+            {
+                var dbRequest = await container.GetInstance<IQueryable<AccessToEventRequest>>().FirstOrDefaultAsync(req => req.Id == request.Id);
+                dbRequest.ShouldNotBeNull();
+                dbRequest.Response.ShouldBe(responseDto.Response);
+                dbRequest.ResponseText.ShouldBe(responseDto.Text);
+
+                var userAccess = await container.GetInstance<IQueryable<UserInEvent>>().FirstOrDefaultAsync(uie => uie.UserId == reader.Id
+                                                                                                                && uie.EventId == request.EventId);
+                userAccess.ShouldNotBeNull();
+                userAccess.Role.ShouldBe(responseDto.Role);
             }
         }
     }

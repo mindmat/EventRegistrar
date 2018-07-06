@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,16 +28,14 @@ namespace EventRegistrar.Backend.Events
 
         [HttpPost("api/accessrequest/{accessRequestId:guid}/respond")]
         public Task RespondToAccessRequest(Guid accessRequestId,
-                                           string text,
-                                           RequestResponse response,
-                                           UserInEventRole role)
+                                           [FromBody]RequestResponseDto response)
         {
             return _mediator.Send(new RespondToRequestCommand
             {
                 AccessToEventRequestId = accessRequestId,
-                Response = response,
-                Role = role,
-                ResponseText = text
+                Response = response.Response,
+                Role = response.Role,
+                ResponseText = response.Text
             });
         }
 

@@ -15,6 +15,13 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
 {
     public class TestScenario : IDisposable
     {
+        public AccessToEventRequest AccessRequest => new AccessToEventRequest
+        {
+            Id = new Guid("7DF6C289-B282-4F86-BAE5-14160BA6CD72"),
+            UserId_Requestor = Reader.Id,
+            EventId = FutureEvent.Id
+        };
+
         public User Administrator => new User
         {
             Id = new Guid("BC4E197E-9EB3-4014-A38F-C08160563267"),
@@ -144,12 +151,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
         private async Task InsertAccessToEventRequests(Container container)
         {
             var accessToEventRequests = container.GetInstance<IRepository<AccessToEventRequest>>();
-            await accessToEventRequests.InsertOrUpdateEntity(new AccessToEventRequest
-            {
-                Id = new Guid("7DF6C289-B282-4F86-BAE5-14160BA6CD72"),
-                UserId_Requestor = Reader.Id,
-                EventId = FutureEvent.Id
-            });
+            await accessToEventRequests.InsertOrUpdateEntity(AccessRequest);
         }
 
         private async Task InsertData(Container container)

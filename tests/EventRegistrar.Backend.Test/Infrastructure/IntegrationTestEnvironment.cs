@@ -1,13 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using EventRegistrar.Backend.Events.UsersInEvents;
-using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
 
@@ -36,12 +32,6 @@ namespace EventRegistrar.Backend.Test.Infrastructure
 
         public TestScenario Scenario { get; set; }
 
-
-        public Container GetServerContainer()
-        {
-            return TestServer.Host.Services.GetService<Container>();
-        }
-
         public TestServer TestServer { get; set; }
 
         public HttpClient GetClient(UserInEventRole role)
@@ -52,6 +42,11 @@ namespace EventRegistrar.Backend.Test.Infrastructure
                 : Scenario.Reader.IdentityProviderUserIdentifier;
             client.DefaultRequestHeaders.Add(TestGoogleIdentityProvider.TestHeaderUserId, identifier);
             return client;
+        }
+
+        public Container GetServerContainer()
+        {
+            return TestServer.Host.Services.GetService<Container>();
         }
     }
 }
