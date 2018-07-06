@@ -46,7 +46,7 @@ namespace EventRegistrar.Backend.Authentication
                 return new AuthenticatedUser(Provider, token.Subject, firstName, lastName, email);
             }
 
-            return AuthenticatedUser.Default;
+            return AuthenticatedUser.None;
         }
     }
 }

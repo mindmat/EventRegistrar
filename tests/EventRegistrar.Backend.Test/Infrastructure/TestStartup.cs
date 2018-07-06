@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
 using EventRegistrator.Web;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,7 @@ namespace EventRegistrar.Backend.Test.Infrastructure
         protected override void SetIdentityProvider(Container container)
         {
             container.Register<IIdentityProvider, TestGoogleIdentityProvider>();
+            container.RegisterSingleton<TestScenario>();
         }
     }
 }

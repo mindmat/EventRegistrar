@@ -1,9 +1,13 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Linq;
+using System.Net.Http;
 using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using SimpleInjector;
 
@@ -25,12 +29,18 @@ namespace EventRegistrar.Backend.Test.Infrastructure
                 .UseStartup<TestStartup>();
 
             TestServer = new TestServer(builderKiss4Web);
-            Scenario = new TestScenario();
             var container = TestServer.Host.Services.GetService<Container>();
+            Scenario = container.GetInstance<TestScenario>();
             Scenario.Create(container).Wait();
         }
 
         public TestScenario Scenario { get; set; }
+
+
+        public Container GetServerContainer()
+        {
+            return TestServer.Host.Services.GetService<Container>();
+        }
 
         public TestServer TestServer { get; set; }
 

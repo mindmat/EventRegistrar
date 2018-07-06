@@ -27,6 +27,6 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
         public string IdentityProviderUserIdentifier { get; }
         public string LastName { get; }
 
-        public static AuthenticatedUser Default => new AuthenticatedUser();
+        public static AuthenticatedUser None => new AuthenticatedUser();
     }
 }

@@ -1,11 +1,9 @@
-import { Inject, } from '@angular/core';
 import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AuthService {
-  constructor(private http: Http, @Inject('BASE_URL') private baseUrl: string) {
-    this.baseUrl = "https://eventregistratorweb.azurewebsites.net";
+  constructor(private http: Http) {
   }
   isAuthenticated: boolean = false;
   access_token: string;
@@ -13,7 +11,7 @@ export class AuthService {
   user: string;
 
   public login() {
-    this.http.post(`${this.baseUrl}/.auth/me`, null, { withCredentials: true }).subscribe(result => {
+    this.http.get("/.auth/me").subscribe(result => {
       var response = result.json();
       this.access_token = response.access_token;
       var test = response.claims.find(c => c.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname");

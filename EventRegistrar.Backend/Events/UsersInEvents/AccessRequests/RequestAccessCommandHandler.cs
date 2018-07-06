@@ -43,7 +43,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
                     IdentityProvider = user.IdentityProvider,
                     Identifier = user.IdentityProviderUserIdentifier,
                     FirstName = user.FirstName,
-                    LastName = user.FirstName,
+                    LastName = user.LastName,
                     RequestText = command.RequestText,
                     EventId = eventId,
                     RequestReceived = DateTime.UtcNow
