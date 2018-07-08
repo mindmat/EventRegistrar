@@ -40,7 +40,7 @@ namespace EventRegistrar.Backend.Events
         }
 
         [HttpGet("api/events")]
-        public Task<IEnumerable<EventSearchResult>> Search(string searchString, bool includeRequestedEvents, bool includeAuthorizedEvents)
+        public Task<IEnumerable<EventSearchResult>> Search(string searchString, bool includeRequestedEvents = false, bool includeAuthorizedEvents = false)
         {
             return _mediator.Send(new SearchEventQuery
             {
