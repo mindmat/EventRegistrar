@@ -30,7 +30,7 @@ export class EventSelectionComponent {
 
   requestAccess(event: Event) {
     event.requestSent = true;
-    this.http.post(`api/events/${event.acronym}/requestAccess`, null)
+    this.http.post(`api/events/${event.acronym}/requestAccess`, "")
       .subscribe(result => {
       },
         error => {
