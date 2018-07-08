@@ -111,6 +111,7 @@ namespace EventRegistrator.Web
              {
                  builder.EnableRetryOnFailure();
              });
+            optionsBuilder.EnableSensitiveDataLogging();
 
             return optionsBuilder.Options;
         }
