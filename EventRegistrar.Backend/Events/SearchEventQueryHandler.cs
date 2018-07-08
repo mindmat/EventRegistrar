@@ -13,27 +13,30 @@ namespace EventRegistrar.Backend.Events
     public class SearchEventQueryHandler : IRequestHandler<SearchEventQuery, IEnumerable<EventSearchResult>>
     {
         private readonly IQueryable<Event> _events;
-        private readonly AuthenticatedUserId _user;
+        private readonly AuthenticatedUser _user;
+        private readonly AuthenticatedUserId _userId;
 
         public SearchEventQueryHandler(IQueryable<Event> events,
-                                       AuthenticatedUserId user)
+                                       AuthenticatedUserId userId,
+                                       AuthenticatedUser user)
         {
             _events = events;
+            _userId = userId;
             _user = user;
         }
 
         public async Task<IEnumerable<EventSearchResult>> Handle(SearchEventQuery request, CancellationToken cancellationToken)
         {
             return await _events.Where(evt => evt.Name.Contains(request.SearchString, StringComparison.InvariantCultureIgnoreCase))
-                                .WhereIf(!request.IncludeAuthorizedEvents && _user.UserId.HasValue, evt => evt.Users.All(usr => usr.UserId != _user.UserId))
-                                .WhereIf(!request.IncludeRequestedEvents && _user.UserId.HasValue, evt => evt.AccessRequests.All(usr => usr.UserId_Requestor != _user.UserId))
+                                .WhereIf(!request.IncludeAuthorizedEvents && _userId.UserId.HasValue, evt => evt.Users.All(usr => usr.UserId != _userId.UserId))
+                                .WhereIf(!request.IncludeRequestedEvents && _userId.UserId.HasValue, evt => evt.AccessRequests.All(usr => usr.UserId_Requestor != _userId.UserId))
                                 .Select(evt => new EventSearchResult
                                 {
                                     Id = evt.Id,
                                     Name = evt.Name,
                                     Acronym = evt.Acronym,
                                     State = evt.State,
-                                    RequestSent = evt.AccessRequests.Any(usr => usr.UserId_Requestor == _user.UserId.Value)
+                                    RequestSent = _userId.UserId.HasValue && evt.AccessRequests.Any(usr => usr.UserId_Requestor == _userId.UserId.Value)
                                 })
                                 .ToListAsync(cancellationToken);
         }
