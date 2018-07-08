@@ -17,12 +17,12 @@ namespace EventRegistrar.Backend.Events
         }
 
         [HttpPost("api/events/{eventAcronym}/requestAccess")]
-        public Task<Guid> RequestAccess(string eventAcronym, [FromBody]string text)
+        public Task<Guid> RequestAccess(string eventAcronym)
         {
             return _mediator.Send(new RequestAccessCommand
             {
                 EventAcronym = eventAcronym,
-                RequestText = text
+                RequestText = null
             });
         }
 
