@@ -25,8 +25,8 @@ namespace EventRegistrar.Backend.Events
         public async Task<IEnumerable<EventSearchResult>> Handle(SearchEventQuery request, CancellationToken cancellationToken)
         {
             return await _events.Where(evt => evt.Name.Contains(request.SearchString, StringComparison.InvariantCultureIgnoreCase))
-                                .WhereIf(!request.IncludeAuthorizedEvents && _user.UserId.HasValue, evt => evt.Users.All(usr => usr.UserId != _user.UserId.Value))
-                                .WhereIf(!request.IncludeRequestedEvents && _user.UserId.HasValue, evt => evt.AccessRequests.All(usr => usr.UserId_Requestor != _user.UserId.Value))
+                                .WhereIf(!request.IncludeAuthorizedEvents && _user.UserId.HasValue, evt => evt.Users.All(usr => usr.UserId != _user.UserId))
+                                .WhereIf(!request.IncludeRequestedEvents && _user.UserId.HasValue, evt => evt.AccessRequests.All(usr => usr.UserId_Requestor != _user.UserId))
                                 .Select(evt => new EventSearchResult
                                 {
                                     Id = evt.Id,
