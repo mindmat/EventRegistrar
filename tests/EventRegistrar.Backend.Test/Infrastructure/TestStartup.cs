@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Authentication;
+﻿using System;
+using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
 using EventRegistrator.Web;
@@ -17,7 +18,7 @@ namespace EventRegistrar.Backend.Test.Infrastructure
         protected override DbContextOptions<EventRegistratorDbContext> GetDbOptions()
         {
             var optionsBuilder = new DbContextOptionsBuilder<EventRegistratorDbContext>();
-            optionsBuilder.UseInMemoryDatabase("InMemoryDb");
+            optionsBuilder.UseInMemoryDatabase($"InMemoryDb{Guid.NewGuid()}");
             return optionsBuilder.Options;
         }
 

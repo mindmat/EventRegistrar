@@ -5,6 +5,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using SimpleInjector;
 
 namespace EventRegistrar.Backend.Test.Infrastructure
@@ -36,11 +37,24 @@ namespace EventRegistrar.Backend.Test.Infrastructure
 
         public HttpClient GetClient(UserInEventRole role)
         {
-            var client = TestServer.CreateClient();
             var identifier = role == UserInEventRole.Admin
                 ? Scenario.Administrator.IdentityProviderUserIdentifier
                 : Scenario.Reader.IdentityProviderUserIdentifier;
-            client.DefaultRequestHeaders.Add(TestGoogleIdentityProvider.TestHeaderUserId, identifier);
+            return GetClient(identifier);
+        }
+
+        public HttpClient GetClient(string userIdentifier)
+        {
+            var client = TestServer.CreateClient();
+            client.DefaultRequestHeaders.Add(TestGoogleIdentityProvider.TestHeaderUserId, userIdentifier);
+            return client;
+        }
+
+        public HttpClient GetClient(AuthenticatedUser userToInject)
+        {
+            var client = TestServer.CreateClient();
+            var userSerialized = JsonConvert.SerializeObject(userToInject);
+            client.DefaultRequestHeaders.Add(TestGoogleIdentityProvider.TestInjectedUser, userSerialized);
             return client;
         }
 

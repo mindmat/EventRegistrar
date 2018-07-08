@@ -1,10 +1,14 @@
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Authentication;
+using EventRegistrar.Backend.Authentication.Users;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
 using EventRegistrar.Backend.Test.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;
@@ -25,7 +29,7 @@ namespace EventRegistrar.Backend.Test
         public async Task RequestAccessToEvent()
         {
             const string requestText = "Please add me!";
-            var eventToRequest = _testEnvironment.Scenario.OtherCurrentEvent;
+            var eventToRequest = _testEnvironment.Scenario.PastEvent;
             var client = _testEnvironment.GetClient(UserInEventRole.Reader);
 
             // Act
@@ -49,37 +53,83 @@ namespace EventRegistrar.Backend.Test
             }
         }
 
-        [Fact]
-        public async Task RespondToAccessToEventRequest()
+        [Theory]
+        [InlineData("cev", RequestResponse.Granted, UserInEventRole.Reader, "Welcome!", TestScenario.IdentityProviderUserIdentifierReader, null)]
+        [InlineData("fev", RequestResponse.Denied, UserInEventRole.Reader, "Nope", TestScenario.IdentityProviderUserIdentifierReader, null)]
+        [InlineData("fev", RequestResponse.Denied, UserInEventRole.Writer, "Nope", null, "new.user@gmail.com")]
+        [InlineData("cev", RequestResponse.Granted, UserInEventRole.Writer, "OK", null, "new.user2@gmail.com")]
+        public async Task RespondToAccessToEventRequest(string eventAcronym,
+                                                        RequestResponse response,
+                                                        UserInEventRole role,
+                                                        string responseText,
+                                                        string userIdentifier,
+                                                        string newUserIdentifier)
         {
-            const string requestText = "Response";
-            var client = _testEnvironment.GetClient(UserInEventRole.Reader);
-            var reader = _testEnvironment.Scenario.Reader;
-            var request = _testEnvironment.Scenario.AccessRequest;
+            // Arrange
+            var unknownUser = new AuthenticatedUser(IdentityProvider.Google,
+                                                    newUserIdentifier,
+                                                    "New",
+                                                    "User",
+                                                    newUserIdentifier);
+            var requestorClient = userIdentifier != null
+                ? _testEnvironment.GetClient(userIdentifier)
+                : _testEnvironment.GetClient(unknownUser);
+
+            var requestHttpResponse = await requestorClient.PostAsJsonAsync($"api/events/{eventAcronym}/requestAccess", string.Empty);
+            requestHttpResponse.EnsureSuccessStatusCode();
+            var accessRequestId = await requestHttpResponse.Content.ReadAsAsync<Guid>();
+            var responderClient = _testEnvironment.GetClient(UserInEventRole.Admin);
 
             // Act
             var responseDto = new RequestResponseDto
             {
-                Response = RequestResponse.Granted,
-                Role = UserInEventRole.Reader,
-                Text = requestText
+                Response = response,
+                Role = role,
+                Text = responseText
             };
-            var response = await client.PostAsJsonAsync($"api/accessrequest/{request.Id}/respond", responseDto);
+            var httpResponse = await responderClient.PostAsJsonAsync($"api/accessrequest/{accessRequestId}/respond", responseDto);
 
             // Assert
-            response.EnsureSuccessStatusCode();
+            httpResponse.EnsureSuccessStatusCode();
             var container = _testEnvironment.GetServerContainer();
             using (new EnsureExecutionScope(container))
             {
-                var dbRequest = await container.GetInstance<IQueryable<AccessToEventRequest>>().FirstOrDefaultAsync(req => req.Id == request.Id);
+                var dbRequest = await container.GetInstance<IQueryable<AccessToEventRequest>>().FirstOrDefaultAsync(req => req.Id == accessRequestId);
                 dbRequest.ShouldNotBeNull();
-                dbRequest.Response.ShouldBe(responseDto.Response);
-                dbRequest.ResponseText.ShouldBe(responseDto.Text);
+                dbRequest.Response.ShouldBe(response);
+                dbRequest.ResponseText.ShouldBe(responseText);
 
-                var userAccess = await container.GetInstance<IQueryable<UserInEvent>>().FirstOrDefaultAsync(uie => uie.UserId == reader.Id
-                                                                                                                && uie.EventId == request.EventId);
-                userAccess.ShouldNotBeNull();
-                userAccess.Role.ShouldBe(responseDto.Role);
+                var user = dbRequest.UserId_Requestor.HasValue
+                    ? await container.GetInstance<IQueryable<User>>()
+                                     .FirstOrDefaultAsync(usr => usr.Id == dbRequest.UserId_Requestor)
+                    : await container.GetInstance<IQueryable<User>>()
+                                     .FirstOrDefaultAsync(usr => usr.IdentityProvider == dbRequest.IdentityProvider
+                                                              && usr.IdentityProviderUserIdentifier == dbRequest.Identifier);
+                var userIdRequestor = dbRequest.UserId_Requestor ?? user?.Id;
+                UserInEvent userAccess = null;
+                if (userIdRequestor.HasValue)
+                {
+                    userAccess = await container.GetInstance<IQueryable<UserInEvent>>().FirstOrDefaultAsync(uie => uie.UserId == user.Id
+                                                                                                                && uie.Event.Acronym == eventAcronym);
+                }
+                if (response == RequestResponse.Granted)
+                {
+                    userAccess.ShouldNotBeNull();
+                    userAccess.Role.ShouldBe(role);
+
+                    user.ShouldNotBeNull();
+                    user.FirstName.ShouldBe(dbRequest.FirstName);
+                    user.LastName.ShouldBe(dbRequest.LastName);
+                    user.Email.ShouldBe(dbRequest.Email);
+                }
+                else
+                {
+                    userAccess.ShouldBeNull();
+                    if (userIdentifier == null)
+                    {
+                        user.ShouldBeNull();
+                    }
+                }
             }
         }
     }

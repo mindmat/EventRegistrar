@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
 {
-    public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand>
+    public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand, Guid>
     {
         private readonly IRepository<AccessToEventRequest> _accessRequests;
         private readonly IEventAcronymResolver _acronymResolver;
@@ -25,7 +25,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
             _authenticatedUserProvider = authenticatedUserProvider;
         }
 
-        public async Task<Unit> Handle(RequestAccessCommand command, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(RequestAccessCommand command, CancellationToken cancellationToken)
         {
             var eventId = await _acronymResolver.GetEventIdFromAcronym(command.EventAcronym);
 
@@ -51,7 +51,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
                 await _accessRequests.InsertOrUpdateEntity(request, cancellationToken);
             }
 
-            return new Unit();
+            return request.Id;
         }
     }
 }

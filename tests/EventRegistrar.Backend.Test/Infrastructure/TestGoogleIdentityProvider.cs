@@ -1,13 +1,15 @@
-﻿using System;
-using EventRegistrar.Backend.Authentication;
+﻿using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.Test.Infrastructure
 {
     public class TestGoogleIdentityProvider : IIdentityProvider
     {
+        public const string TestHeaderUserId = "TestHeaderUserId";
+        public const string TestInjectedUser = "TestInjectedUser";
         private readonly TestScenario _testScenario;
 
         public TestGoogleIdentityProvider(TestScenario testScenario)
@@ -15,7 +17,6 @@ namespace EventRegistrar.Backend.Test.Infrastructure
             _testScenario = testScenario;
         }
 
-        public const string TestHeaderUserId = "TestHeaderUserId";
         public IdentityProvider Provider => IdentityProvider.Google;
 
         public string GetIdentifier(IHttpContextAccessor contextAccessor)
@@ -23,9 +24,9 @@ namespace EventRegistrar.Backend.Test.Infrastructure
             return contextAccessor.HttpContext?.Request?.Headers?[TestHeaderUserId];
         }
 
-        public AuthenticatedUser GetUser(IHttpContextAccessor httpContextAccessor)
+        public AuthenticatedUser GetUser(IHttpContextAccessor contextAccessor)
         {
-            var identifier = GetIdentifier(httpContextAccessor);
+            var identifier = GetIdentifier(contextAccessor);
             if (identifier == _testScenario.Administrator.IdentityProviderUserIdentifier)
             {
                 return new AuthenticatedUser(Provider,
@@ -43,6 +44,13 @@ namespace EventRegistrar.Backend.Test.Infrastructure
                                              _testScenario.Reader.LastName,
                                              _testScenario.Reader.Email);
             }
+
+            var injectedUser = contextAccessor.HttpContext?.Request?.Headers?[TestInjectedUser];
+            if (injectedUser.HasValue)
+            {
+                return JsonConvert.DeserializeObject<AuthenticatedUser>(injectedUser);
+            }
+
             return AuthenticatedUser.None;
         }
     }

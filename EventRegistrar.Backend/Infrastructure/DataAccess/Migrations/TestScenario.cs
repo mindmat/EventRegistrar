@@ -15,11 +15,20 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
 {
     public class TestScenario : IDisposable
     {
+        public const string IdentityProviderUserIdentifierReader = "ulysses.user@gmail.com";
+        public const string UserIdReader = "E24CFA7C-20D7-4AA4-B646-4CB0B1E8D6FC";
+
         public AccessToEventRequest AccessRequest => new AccessToEventRequest
         {
             Id = new Guid("7DF6C289-B282-4F86-BAE5-14160BA6CD72"),
             UserId_Requestor = Reader.Id,
-            EventId = FutureEvent.Id
+            EventId = FutureEvent.Id,
+            IdentityProvider = Reader.IdentityProvider,
+            Identifier = Reader.IdentityProviderUserIdentifier,
+            FirstName = Reader.FirstName,
+            LastName = Reader.LastName,
+            Email = Reader.Email,
+            RequestReceived = new DateTime(2018, 1, 1)
         };
 
         public User Administrator => new User
@@ -47,13 +56,21 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
             State = State.RegistrationOpen,
         };
 
+        public Event PastEvent => new Event
+        {
+            Id = new Guid("F569251D-E1FB-444B-AD68-3BBAFD64319D"),
+            Name = "PastEvent",
+            Acronym = "pev",
+            State = State.Finished
+        };
+
         public User Reader => new User
         {
-            Id = new Guid("E24CFA7C-20D7-4AA4-B646-4CB0B1E8D6FC"),
+            Id = new Guid(UserIdReader),
             FirstName = "Ulysses",
             LastName = "User",
             IdentityProvider = IdentityProvider.Google,
-            IdentityProviderUserIdentifier = "ulysses.user@gmail.com"
+            IdentityProviderUserIdentifier = IdentityProviderUserIdentifierReader
         };
 
         public Registrable RegistrableDouble1 => new Registrable
@@ -166,14 +183,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess.Migrations
         private async Task InsertEvents(Container container)
         {
             var events = container.GetInstance<IRepository<Event>>();
-            await events.InsertOrUpdateEntity(new Event
-            {
-                Id = new Guid("F569251D-E1FB-444B-AD68-3BBAFD64319D"),
-                Name = "PastEvent",
-                Acronym = "pev",
-                State = State.Finished
-            });
-
+            await events.InsertOrUpdateEntity(PastEvent);
             await events.InsertOrUpdateEntity(TestEvent);
             await events.InsertOrUpdateEntity(OtherCurrentEvent);
             await events.InsertOrUpdateEntity(OtherOwnEvent);
