@@ -40,9 +40,9 @@ namespace EventRegistrar.Backend.Authentication
             {
                 var token = new JwtSecurityToken(idTokenString);
 
-                var firstName = (string)headers?[ClaimTypes.GivenName];
-                var lastName = (string)headers?[ClaimTypes.Name];
-                var email = (string)headers?[ClaimTypes.Email];
+                var firstName = token.GetClaim(ClaimTypes.GivenName);
+                var lastName = token.GetClaim(ClaimTypes.Name);
+                var email = token.GetClaim(ClaimTypes.Email);
                 return new AuthenticatedUser(Provider, token.Subject, firstName, lastName, email);
             }
 
