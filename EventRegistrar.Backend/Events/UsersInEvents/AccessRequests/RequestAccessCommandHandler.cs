@@ -44,6 +44,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
                     Identifier = user.IdentityProviderUserIdentifier,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
+                    Email = user.Email,
                     RequestText = command.RequestText,
                     EventId = eventId,
                     RequestReceived = DateTime.UtcNow
