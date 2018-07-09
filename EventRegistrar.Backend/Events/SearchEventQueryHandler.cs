@@ -38,9 +38,11 @@ namespace EventRegistrar.Backend.Events
                                     Name = evt.Name,
                                     Acronym = evt.Acronym,
                                     State = evt.State,
-                                    RequestSent = _userId.UserId.HasValue && evt.AccessRequests.Any(usr => usr.UserId_Requestor == _userId.UserId.Value) ||
-                                                  !_userId.UserId.HasValue && evt.AccessRequests.Any(usr => usr.IdentityProvider == _user.IdentityProvider
-                                                                                                         && usr.Identifier == _user.IdentityProviderUserIdentifier)
+                                    RequestSent = _userId.UserId.HasValue && evt.AccessRequests.Any(req => req.UserId_Requestor == _userId.UserId.Value
+                                                                                                        && !req.Response.HasValue) ||
+                                                  !_userId.UserId.HasValue && evt.AccessRequests.Any(req => req.IdentityProvider == _user.IdentityProvider
+                                                                                                         && req.Identifier == _user.IdentityProviderUserIdentifier
+                                                                                                         && !req.Response.HasValue)
                                 })
                                 .ToListAsync(cancellationToken);
         }

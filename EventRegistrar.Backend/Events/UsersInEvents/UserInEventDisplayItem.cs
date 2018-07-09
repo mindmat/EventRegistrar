@@ -7,6 +7,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
         public string EventAcronym { get; set; }
         public string EventName { get; set; }
         public State EventState { get; set; }
+        public bool RequestSent { get; set; }
         public UserInEventRole Role { get; set; }
         public string UserFirstName { get; set; }
         public string UserIdentifier { get; set; }

@@ -56,7 +56,8 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
                                                                    EventState = req.Event.State,
                                                                    UserFirstName = req.FirstName,
                                                                    UserLastName = req.LastName,
-                                                                   UserIdentifier = req.Identifier
+                                                                   UserIdentifier = req.Identifier,
+                                                                   RequestSent = true
                                                                })
                                                                .ToListAsync(cancellationToken);
                     authorizedEvents.AddRange(requestedEvents);

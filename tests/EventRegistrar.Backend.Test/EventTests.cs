@@ -21,12 +21,13 @@ namespace EventRegistrar.Backend.Test
         }
 
         [Theory]
-        [InlineData(TestScenario.IdentityProviderUserIdentifierReader, new[] { "tev", "ooe" }, new[] { UserInEventRole.Writer, UserInEventRole.Reader })]
-        public async Task GetEventsOfUser(string userIdentifier, string[] expectedEventAcronyms, UserInEventRole[] expectedRoles)
+        [InlineData(TestScenario.IdentityProviderUserIdentifierReader, false, new[] { "tev", "ooe" }, new[] { UserInEventRole.Writer, UserInEventRole.Reader }, new[] { false, false })]
+        [InlineData(TestScenario.IdentityProviderUserIdentifierReader, true, new[] { "tev", "ooe", "fev" }, new[] { UserInEventRole.Writer, UserInEventRole.Reader, (UserInEventRole)0 }, new[] { false, false, true })]
+        public async Task GetEventsOfUser(string userIdentifier, bool includeRequestedEvents, string[] expectedEventAcronyms, UserInEventRole[] expectedRoles, bool[] expectedRequestSent)
         {
             var client = _testEnvironment.GetClient(userIdentifier);
 
-            var response = await client.GetAsync("api/me/events");
+            var response = await client.GetAsync($"api/me/events?includeRequestedEvents={includeRequestedEvents}");
             response.EnsureSuccessStatusCode();
             var events = (await response.Content.ReadAsAsync<IEnumerable<UserInEventDisplayItem>>()).ToList();
 
@@ -35,7 +36,8 @@ namespace EventRegistrar.Backend.Test
             for (var i = 0; i < expectedEventAcronyms.Length; i++)
             {
                 events.ShouldContain(evt => evt.EventAcronym == expectedEventAcronyms[i]
-                                         && evt.Role == expectedRoles[i]);
+                                         && evt.Role == expectedRoles[i]
+                                         && evt.RequestSent == expectedRequestSent[i]);
             }
         }
 

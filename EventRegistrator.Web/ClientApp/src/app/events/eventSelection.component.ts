@@ -17,7 +17,7 @@ export class EventSelectionComponent {
 
   search(searchString: string) {
     this.isSearching = true;
-    this.http.get<Event[]>(`api/events?searchstring=${searchString}&includeRequestedEvents=true`)
+    this.http.get<Event[]>(`api/events?searchstring=${searchString}`)
       .subscribe(result => {
         this.furtherEvents = result;
         this.isSearching = false;
