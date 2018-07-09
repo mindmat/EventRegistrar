@@ -46,9 +46,11 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
                 if (_authenticatedUserId.UserId.HasValue ||
                     _authenticatedUser != AuthenticatedUser.None)
                 {
-                    var requestedEvents = await _accessRequests.WhereIf(_authenticatedUserId.UserId.HasValue, req => req.UserId_Requestor == _authenticatedUserId.UserId.Value)
-                                                               .WhereIf(_authenticatedUser != AuthenticatedUser.None, req => req.IdentityProvider == _authenticatedUser.IdentityProvider
-                                                                                                                          && req.Identifier == _authenticatedUser.IdentityProviderUserIdentifier)
+                    var requestedEvents = await _accessRequests.WhereIf(_authenticatedUserId.UserId.HasValue,
+                                                                        req => req.UserId_Requestor == _authenticatedUserId.UserId.Value)
+                                                               .WhereIf(!_authenticatedUserId.UserId.HasValue && _authenticatedUser != AuthenticatedUser.None,
+                                                                        req => req.IdentityProvider == _authenticatedUser.IdentityProvider
+                                                                            && req.Identifier == _authenticatedUser.IdentityProviderUserIdentifier)
                                                                .Select(req => new UserInEventDisplayItem
                                                                {
                                                                    EventName = req.Event.Name,
