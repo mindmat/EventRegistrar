@@ -1,5 +1,4 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -40,9 +39,9 @@ namespace EventRegistrar.Backend.Authentication
             {
                 var token = new JwtSecurityToken(idTokenString);
 
-                var firstName = token.GetClaim(ClaimTypes.GivenName);
-                var lastName = token.GetClaim(ClaimTypes.Name);
-                var email = token.GetClaim(ClaimTypes.Email);
+                var firstName = token.GetClaim("given_name");
+                var lastName = token.GetClaim("family_name");
+                var email = token.GetClaim("email");
                 return new AuthenticatedUser(Provider, token.Subject, firstName, lastName, email);
             }
 
