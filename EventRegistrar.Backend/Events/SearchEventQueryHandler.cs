@@ -30,13 +30,17 @@ namespace EventRegistrar.Backend.Events
             return await _events.Where(evt => evt.Name.Contains(request.SearchString, StringComparison.InvariantCultureIgnoreCase))
                                 .WhereIf(!request.IncludeAuthorizedEvents && _userId.UserId.HasValue, evt => evt.Users.All(usr => usr.UserId != _userId.UserId))
                                 .WhereIf(!request.IncludeRequestedEvents && _userId.UserId.HasValue, evt => evt.AccessRequests.All(usr => usr.UserId_Requestor != _userId.UserId))
+                                .WhereIf(!request.IncludeRequestedEvents && !_userId.UserId.HasValue, evt => evt.AccessRequests.All(usr => usr.IdentityProvider == _user.IdentityProvider
+                                                                                                                                        && usr.Identifier == _user.IdentityProviderUserIdentifier))
                                 .Select(evt => new EventSearchResult
                                 {
                                     Id = evt.Id,
                                     Name = evt.Name,
                                     Acronym = evt.Acronym,
                                     State = evt.State,
-                                    RequestSent = _userId.UserId.HasValue && evt.AccessRequests.Any(usr => usr.UserId_Requestor == _userId.UserId.Value)
+                                    RequestSent = _userId.UserId.HasValue && evt.AccessRequests.Any(usr => usr.UserId_Requestor == _userId.UserId.Value) ||
+                                                  !_userId.UserId.HasValue && evt.AccessRequests.Any(usr => usr.IdentityProvider == _user.IdentityProvider
+                                                                                                         && usr.Identifier == _user.IdentityProviderUserIdentifier)
                                 })
                                 .ToListAsync(cancellationToken);
         }
