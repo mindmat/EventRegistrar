@@ -40,7 +40,7 @@ export class EventSelectionComponent {
   }
 
   ngOnInit() {
-    this.http.get<UserInEventDisplayItem[]>("api/me/events").subscribe(result => {
+    this.http.get<UserInEventDisplayItem[]>("api/me/events?includeRequestedEvents=true").subscribe(result => {
       this.events = result;
     },
       error => console.error(error));

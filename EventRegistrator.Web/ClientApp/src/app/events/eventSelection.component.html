@@ -8,6 +8,7 @@
       <th>Name</th>
       <th>Abkürzung</th>
       <th>Rolle</th>
+      <th>Angefragt</th>
     </tr>
   </thead>
   <tbody>
@@ -15,6 +16,7 @@
       <td><a [routerLink]="[event.eventAcronym, 'registrables']">{{ event.eventName }}</a></td>
       <td>{{ event.eventAcronym }}</td>
       <td>{{ event.role }}</td>
+      <td><p *ngIf="event.requestSent">x</p></td>
     </tr>
   </tbody>
 </table>

@@ -15,9 +15,9 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
         }
 
         [HttpGet("api/me/events")]
-        public Task<IEnumerable<UserInEventDisplayItem>> GetMyEvents()
+        public Task<IEnumerable<UserInEventDisplayItem>> GetMyEvents(bool includeRequestedEvents)
         {
-            return _mediator.Send(new EventsOfUserQuery());
+            return _mediator.Send(new EventsOfUserQuery { IncludeRequestedEvents = includeRequestedEvents });
         }
     }
 }
