@@ -1,8 +1,9 @@
+import { OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class AuthService {
+export class AuthService implements OnInit {
   constructor(private http: Http) {
   }
   isAuthenticated: boolean = false;
@@ -10,7 +11,7 @@ export class AuthService {
   //ticket: Ticket;
   user: string;
 
-  public login() {
+  public ngOnInit() {
     this.http.get("/.auth/me").subscribe(result => {
       var response = result.json();
       this.access_token = response.access_token;
