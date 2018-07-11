@@ -1,7 +1,5 @@
 import { Component, Inject, } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router, ActivatedRoute } from '@angular/router';
-import { EventsService } from "./events.service";
 
 @Component({
   selector: 'eventSelection',
@@ -12,7 +10,7 @@ export class EventSelectionComponent {
   furtherEvents: Event[];
   isSearching: boolean;
 
-  constructor(private http: HttpClient, private eventsService: EventsService) {
+  constructor(private http: HttpClient) {
   }
 
   search(searchString: string) {

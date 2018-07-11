@@ -9,7 +9,6 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { AuthService } from './authentication/authService.service';
-import { EventsService } from './events/events.service';
 //import { HomeComponent } from './home/home.component';
 
 import { RegistrablesComponent } from './registrables/registrables.component';
@@ -26,6 +25,7 @@ import { PartyOverviewComponent } from "./partyOverview/partyOverview.component"
 import { MailTemplatesComponent } from "./mailTemplates/mailTemplates.component";
 import { EventSelectionComponent } from "./events/eventSelection.component";
 import { TokenInterceptor } from "./authentication/tokenInterceptor";
+import { EventAuthorizationComponent } from "./eventAuthorization/eventAuthorization.component";
 
 @NgModule({
   declarations: [
@@ -44,7 +44,8 @@ import { TokenInterceptor } from "./authentication/tokenInterceptor";
     CheckinViewComponent,
     PartyOverviewComponent,
     MailTemplatesComponent,
-    EventSelectionComponent
+    EventSelectionComponent,
+    EventAuthorizationComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -55,6 +56,7 @@ import { TokenInterceptor } from "./authentication/tokenInterceptor";
       //{ path: '', redirectTo: 'eventSelection', pathMatch: 'full' },
       //{ path: 'home', component: HomeComponent },
       { path: '', component: EventSelectionComponent },
+      { path: ':eventAcronym/authorization', component: EventAuthorizationComponent },
       { path: ':eventAcronym/registrables', component: RegistrablesComponent },
       { path: ':eventAcronym/registrables/:id/participants', component: ParticipantsComponent },
       { path: ':eventAcronym/registration/:id', component: RegistrationComponent },
@@ -77,8 +79,7 @@ import { TokenInterceptor } from "./authentication/tokenInterceptor";
       useClass: TokenInterceptor,
       multi: true
     },
-    AuthService,
-    EventsService
+    AuthService
   ],
   bootstrap: [AppComponent]
 })

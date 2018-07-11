@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,15 @@ namespace EventRegistrar.Backend.Events
         public EventsController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet("api/events/{eventAcronym}/users")]
+        public Task<IEnumerable<UserInEventDisplayItem>> GetUsersOfEvent(string eventAcronym)
+        {
+            return _mediator.Send(new UsersOfEventQuery
+            {
+                EventAcronym = eventAcronym,
+            });
         }
 
         [HttpPost("api/events/{eventAcronym}/requestAccess")]

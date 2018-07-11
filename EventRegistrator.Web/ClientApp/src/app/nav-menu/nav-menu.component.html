@@ -8,6 +8,7 @@
         <span class='icon-bar'></span>
       </button>
       <a class='navbar-brand'>Hallo {{ authService.user }}</a>
+      <button><a href="/.auth/logout">Logout</a></button>
       <a class='navbar-brand' [routerLink]="['/tev/registrables']">Leapin' Lindy 2018</a>
     </div>
     <div class='clearfix'></div>
@@ -61,6 +62,11 @@
         <li [routerLinkActive]="['link-active']">
           <a [routerLink]="[eventAcronym, 'mailTemplates']">
             <span class='glyphicon glyphicon-envelope'></span> Mailing
+          </a>
+        </li>
+        <li [routerLinkActive]="['link-active']">
+          <a [routerLink]="[eventAcronym, 'authorization']">
+            <span class='glyphicon glyphicon-envelope'></span> Berechtigungen
           </a>
         </li>
       </ul>
