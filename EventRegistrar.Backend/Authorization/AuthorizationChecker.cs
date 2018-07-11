@@ -31,16 +31,15 @@ namespace EventRegistrar.Backend.Authorization
         {
             if (!_user.UserId.HasValue)
             {
+                throw new UnauthorizedAccessException("You are not authorized");
             }
-            else
-            {
-                var key = new UserInEventCacheKey(_user.UserId.Value, eventId);
-                var rightsOfUserInEvent = await _memoryCache.GetOrCreateAsync(key, entry => GetRightsOfUserInEvent(entry, eventId));
 
-                if (!rightsOfUserInEvent.Contains(requestTypeName))
-                {
-                    throw new UnauthorizedAccessException($"You ({_user.UserId}) are not authorized for {requestTypeName} in event {eventId}");
-                }
+            var key = new UserInEventCacheKey(_user.UserId.Value, eventId);
+            var rightsOfUserInEvent = await _memoryCache.GetOrCreateAsync(key, entry => GetRightsOfUserInEvent(entry, eventId));
+
+            if (!rightsOfUserInEvent.Contains(requestTypeName))
+            {
+                throw new UnauthorizedAccessException($"You ({_user.UserId}) are not authorized for {requestTypeName} in event {eventId}");
             }
         }
 
