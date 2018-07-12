@@ -29,7 +29,7 @@ namespace EventRegistrar.Backend.Authorization
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))
             {
-                yield return typeof(AccessRequestsOfEventQueryHandler).Name;
+                yield return typeof(AccessRequestsOfEventQuery).Name;
                 yield return typeof(UsersOfEventQuery).Name;
                 yield return typeof(SetUserRoleInEventCommand).Name;
             }
