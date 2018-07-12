@@ -15,8 +15,13 @@ export class EventAuthorizationComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.http.get<UserInEventDisplayItem[]>(`api/events/${this.getEventAcronym()}/users`).subscribe(result => {
+    var eventAcronym = this.getEventAcronym();
+    this.http.get<UserInEventDisplayItem[]>(`api/events/${eventAcronym}/users`).subscribe(result => {
       this.users = result;
+    },
+      error => console.error(error));
+    this.http.get<AccessRequestOfEvent[]>(`api/events/${eventAcronym}/requests`).subscribe(result => {
+      this.requests = result;
     },
       error => console.error(error));
   }
@@ -26,6 +31,7 @@ export class EventAuthorizationComponent implements OnInit {
   }
 
   users: UserInEventDisplayItem[];
+  requests: AccessRequestOfEvent[];
 }
 
 export class UserInEventDisplayItem {
@@ -36,4 +42,13 @@ export class UserInEventDisplayItem {
   userFirstName: string;
   userIdentifier: string;
   userLastName: string;
+}
+
+export class AccessRequestOfEvent {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  requestReceived: string;
+  requestText: string;
 }

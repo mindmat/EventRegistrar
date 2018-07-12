@@ -1,4 +1,4 @@
-<h1>Benutzer in </h1>
+<h1>Berechtigte Benutzer</h1>
 
 <p *ngIf="!users"><em>Loading...</em></p>
 
@@ -15,6 +15,27 @@
       <td>{{ user.userFirstName }} {{ user.userLastName}} ({{ user.userIdentifier }})</td>
       <td>{{ user.role }}</td>
       <td></td>
+    </tr>
+  </tbody>
+</table>
+
+<h1>Zugriffsanfragen</h1>
+
+<p *ngIf="!requests"><em>Loading...</em></p>
+
+<table class="table" *ngIf="requests">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Angefragt</th>
+      <th>Text</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let request of requests">
+      <td>{{ request.firstName }} {{ request.lastName }} ({{ request.email }})</td>
+      <td>{{ request.requestReceived }}</td>
+      <td>{{ request.requestText }}</td>
     </tr>
   </tbody>
 </table>

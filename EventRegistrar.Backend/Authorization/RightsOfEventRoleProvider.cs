@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Registrables;
 
@@ -28,6 +29,7 @@ namespace EventRegistrar.Backend.Authorization
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))
             {
+                yield return typeof(AccessRequestsOfEventQueryHandler).Name;
                 yield return typeof(UsersOfEventQuery).Name;
                 yield return typeof(SetUserRoleInEventCommand).Name;
             }

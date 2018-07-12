@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../authentication/authService.service';
+import { ActivatedRoute } from '@angular/router';
 //import { EventsService } from ('../events/events.service');
 
 @Component({
@@ -7,12 +8,19 @@ import { AuthService } from '../authentication/authService.service';
   templateUrl: './nav-menu.component.html',
   styleUrls: ['./nav-menu.component.css']
 })
-export class NavMenuComponent {
-  constructor(public authService: AuthService) {
+export class NavMenuComponent implements OnInit {
+  constructor(public authService: AuthService, private route: ActivatedRoute) {
+  }
+  ngOnInit() {
+    this.eventAcronym = this.getEventAcronym();
+  }
+
+  getEventAcronym() {
+    return this.route.snapshot.params['eventAcronym'];
   }
 
   isExpanded = false;
-  public eventAcronym: string = "tev";
+  public eventAcronym: string;
 
   collapse() {
     this.isExpanded = false;

@@ -14,6 +14,7 @@ export class AuthService implements OnInit {
   public ngOnInit() {
     this.http.get("/.auth/me").subscribe(result => {
       var response = result.json();
+      console.info(response);
       this.access_token = response.access_token;
       var test = response.claims.find(c => c.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname");
       this.user = test;

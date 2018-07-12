@@ -17,12 +17,22 @@ namespace EventRegistrar.Backend.Events
             _mediator = mediator;
         }
 
+        [HttpGet("api/events/{eventAcronym}/requests")]
+        public Task<IEnumerable<AccessRequestOfEvent>> GetRequestsOfEvent(string eventAcronym, bool includeDeniedRequests = false)
+        {
+            return _mediator.Send(new AccessRequestsOfEventQuery
+            {
+                EventAcronym = eventAcronym,
+                IncludeDeniedRequests = includeDeniedRequests
+            });
+        }
+
         [HttpGet("api/events/{eventAcronym}/users")]
         public Task<IEnumerable<UserInEventDisplayItem>> GetUsersOfEvent(string eventAcronym)
         {
             return _mediator.Send(new UsersOfEventQuery
             {
-                EventAcronym = eventAcronym,
+                EventAcronym = eventAcronym
             });
         }
 
