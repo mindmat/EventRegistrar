@@ -40,7 +40,7 @@ export class UserInEventDisplayItem {
   eventState: string;
   role: string;
   userFirstName: string;
-  userIdentifier: string;
+  userEmail: string;
   userLastName: string;
 }
 

@@ -32,7 +32,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
                                            Role = uie.Role,
                                            UserFirstName = uie.User.FirstName,
                                            UserLastName = uie.User.LastName,
-                                           UserIdentifier = uie.User.IdentityProviderUserIdentifier
+                                           UserEmail = uie.User.Email
                                        })
                                        .ToListAsync(cancellationToken);
         }
