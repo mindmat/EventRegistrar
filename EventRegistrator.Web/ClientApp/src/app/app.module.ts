@@ -26,6 +26,7 @@ import { MailTemplatesComponent } from "./mailTemplates/mailTemplates.component"
 import { EventSelectionComponent } from "./events/eventSelection.component";
 import { TokenInterceptor } from "./authentication/tokenInterceptor";
 import { EventAuthorizationComponent } from "./eventAuthorization/eventAuthorization.component";
+import { EventService } from "./events/eventService.service";
 
 @NgModule({
   declarations: [
@@ -73,13 +74,14 @@ import { EventAuthorizationComponent } from "./eventAuthorization/eventAuthoriza
     ])
   ],
   providers: [
-    { provide: 'BASE_URL', useFactory: getBaseUrl },
+    { provide: 'BASE_URL',  useFactory: getBaseUrl },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: TokenInterceptor,
       multi: true
     },
-    AuthService
+    AuthService,
+    EventService
   ],
   bootstrap: [AppComponent]
 })

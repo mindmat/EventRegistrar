@@ -1,5 +1,6 @@
-import { Component, Inject, } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { EventService } from '../events/eventService.service';
 
 @Component({
   selector: 'eventSelection',
@@ -10,7 +11,7 @@ export class EventSelectionComponent {
   furtherEvents: Event[];
   isSearching: boolean;
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private eventService: EventService) {
   }
 
   search(searchString: string) {
@@ -37,6 +38,10 @@ export class EventSelectionComponent {
         });
   }
 
+  setEvent(event: UserInEventDisplayItem) {
+    this.eventService.setEvent(event);
+  }
+
   ngOnInit() {
     this.http.get<UserInEventDisplayItem[]>("api/me/events?includeRequestedEvents=true").subscribe(result => {
       this.events = result;
@@ -55,7 +60,7 @@ export class UserInEventDisplayItem {
   userLastName: string;
 }
 
-class Event {
+export class Event {
   id: string;
   acronym: string;
   name: string;
