@@ -30,6 +30,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
                                            EventAcronym = uie.Event.Acronym,
                                            EventState = uie.Event.State,
                                            Role = uie.Role,
+                                           UserId = uie.UserId,
                                            UserFirstName = uie.User.FirstName,
                                            UserLastName = uie.User.LastName,
                                            UserEmail = uie.User.Email

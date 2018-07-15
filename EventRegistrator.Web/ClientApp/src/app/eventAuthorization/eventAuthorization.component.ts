@@ -32,6 +32,11 @@ export class EventAuthorizationComponent implements OnInit {
 
   users: UserInEventDisplayItem[];
   requests: AccessRequestOfEvent[];
+
+  removeUserFromEvent(user: UserInEventDisplayItem) {
+    this.http.delete(`api/events/${this.getEventAcronym()}/users/${user.userId}/roles/${user.role}`).subscribe(result => {
+    });
+  }
 }
 
 export class UserInEventDisplayItem {
@@ -39,6 +44,7 @@ export class UserInEventDisplayItem {
   eventName: string;
   eventState: string;
   role: string;
+  userId: string;
   userFirstName: string;
   userEmail: string;
   userLastName: string;

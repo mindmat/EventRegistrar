@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.RegistrationForms;
+﻿using System;
+using EventRegistrar.Backend.RegistrationForms;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents
 {
@@ -11,6 +12,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
         public UserInEventRole Role { get; set; }
         public string UserEmail { get; set; }
         public string UserFirstName { get; set; }
+        public Guid UserId { get; set; }
         public string UserLastName { get; set; }
     }
 }

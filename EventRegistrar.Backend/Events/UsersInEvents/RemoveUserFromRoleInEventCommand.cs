@@ -4,7 +4,7 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents
 {
-    public class SetUserRoleInEventCommand : IRequest<Unit>, IEventBoundRequest
+    public class RemoveUserFromRoleInEventCommand : IRequest<Unit>, IEventBoundRequest
     {
         public string EventAcronym { get; set; }
         public UserInEventRole Role { get; set; }

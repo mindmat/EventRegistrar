@@ -7,14 +7,14 @@
     <tr>
       <th>Name</th>
       <th>Rolle</th>
-      <th>Angefragt</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let user of users">
       <td>{{ user.userFirstName }} {{ user.userLastName}} ({{ user.userEmail }})</td>
       <td>{{ user.role }}</td>
-      <td></td>
+      <td><button class="btn btn-primary btn-xs" (click)="removeUserFromEvent(user)">Entfernen</button></td>
     </tr>
   </tbody>
 </table>
@@ -34,7 +34,7 @@
   <tbody>
     <tr *ngFor="let request of requests">
       <td>{{ request.firstName }} {{ request.lastName }} ({{ request.email }})</td>
-      <td>{{ request.requestReceived }}</td>
+      <td>{{ request.requestReceived | date: 'dd.MM.yy HH:mm' }}</td>
       <td>{{ request.requestText }}</td>
     </tr>
   </tbody>
