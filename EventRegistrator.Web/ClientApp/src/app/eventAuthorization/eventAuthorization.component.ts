@@ -15,6 +15,10 @@ export class EventAuthorizationComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.refresh();
+  }
+
+  refresh() {
     var eventAcronym = this.getEventAcronym();
     this.http.get<UserInEventDisplayItem[]>(`api/events/${eventAcronym}/users`).subscribe(result => {
       this.users = result;
@@ -34,7 +38,10 @@ export class EventAuthorizationComponent implements OnInit {
   requests: AccessRequestOfEvent[];
 
   removeUserFromEvent(user: UserInEventDisplayItem) {
+    var index = this.users.indexOf(user);
+    this.users.splice(index, 1);
     this.http.delete(`api/events/${this.getEventAcronym()}/users/${user.userId}/roles/${user.role}`).subscribe(result => {
+      this.refresh();
     });
   }
 }
