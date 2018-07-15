@@ -32,6 +32,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(AccessRequestsOfEventQuery).Name;
                 yield return typeof(UsersOfEventQuery).Name;
                 yield return typeof(AddUserToRoleInEventCommand).Name;
+                yield return typeof(RemoveUserFromRoleInEventCommand).Name;
             }
         }
     }
