@@ -1,17 +1,9 @@
-import { OnInit } from '@angular/core';
 import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
 
 @Injectable()
-export class AuthService implements OnInit {
+export class AuthService {
   constructor(private http: Http) {
-  }
-  isAuthenticated: boolean = false;
-  access_token: string;
-  //ticket: Ticket;
-  user: string;
-
-  public ngOnInit() {
     this.http.get("/.auth/me").subscribe(result => {
       var response = result.json();
       console.info(response);
@@ -32,6 +24,10 @@ export class AuthService implements OnInit {
     //},
     //  error => { console.error(error); });
   }
+  isAuthenticated: boolean = false;
+  access_token: string;
+  //ticket: Ticket;
+  user: string;
 }
 
 interface Ticket {

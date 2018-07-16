@@ -10,7 +10,7 @@ import { EventService } from '../events/eventService.service';
   styleUrls: ['./nav-menu.component.css']
 })
 export class NavMenuComponent implements OnInit {
-  constructor(public authService: AuthService, private route: ActivatedRoute, private eventService: EventService) {
+  constructor(public authService: AuthService, private readonly route: ActivatedRoute, public eventService: EventService) {
   }
 
   ngOnInit() {
