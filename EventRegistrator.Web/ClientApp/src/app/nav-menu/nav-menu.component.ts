@@ -19,12 +19,12 @@ export class NavMenuComponent implements OnInit {
   isExpanded = false;
 
   collapse() {
-    console.info(this.eventService.eventAcronym);
+    console.info(this.eventService.acronym);
     this.isExpanded = false;
   }
 
   toggle() {
-    console.info(this.eventService.eventAcronym);
+    console.info(this.eventService.acronym);
     this.isExpanded = !this.isExpanded;
   }
 }
