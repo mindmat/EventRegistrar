@@ -1,16 +1,18 @@
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable()
 export class AuthService {
-  constructor(private http: Http) {
-    this.http.get("/.auth/me").subscribe(result => {
-      var response = result.json();
-      console.info(response);
-      this.access_token = response.access_token;
-      var test = response.claims.find(c => c.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname");
-      this.user = test;
-      this.isAuthenticated = true;
+  constructor(private http: HttpClient) {
+    this.http.get<Ticket>("https://eventregistratorweb.azurewebsites.net/.auth/me").subscribe(ticket => {
+      try {
+        var firstName = ticket.user_claims.find(c => c.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname").val;
+        var lastName = ticket.user_claims.find(c => c.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname").val;
+        this.user = firstName;
+        this.isAuthenticated = true;
+      } catch (ex) {
+        console.log(ex);
+      }
     }, error => {
       console.error(error);
       this.user = error;
@@ -25,23 +27,18 @@ export class AuthService {
     //  error => { console.error(error); });
   }
   isAuthenticated: boolean = false;
-  access_token: string;
-  //ticket: Ticket;
   user: string;
 }
 
-interface Ticket {
+class Ticket {
   access_token: string;
+  id_token: string;
   user_id: string;
   provider_name: string;
-  claims: Claim[];
+  user_claims: Claim[];
 }
 
-class LoginToken {
-  access_token: string;
-}
-
-interface Claim {
+class Claim {
   typ: string;
   val: string;
 }
