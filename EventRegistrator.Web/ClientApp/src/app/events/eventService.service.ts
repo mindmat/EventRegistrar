@@ -4,10 +4,12 @@ import { UserInEventDisplayItem } from '../events/eventSelection.component';
 @Injectable()
 export class EventService {
   constructor() { }
-  public eventAcronym: string;
+  public acronym: string;
+  public name: string;
 
   public setEvent(event: UserInEventDisplayItem) {
     console.info(event.eventAcronym);
-    this.eventAcronym = event.eventAcronym;
+    this.acronym = event.eventAcronym;
+    this.name = event.eventName;
   }
 }
