@@ -9,7 +9,7 @@
       </button>
       <a class='navbar-brand'>Hallo {{ authService.user }}</a>
       <button><a href="/.auth/logout">Logout</a></button>
-      <a class='navbar-brand'>{{ eventService.eventName }}</a>
+      <a class='navbar-brand'>{{ eventService.name }}</a>
     </div>
     <div class='clearfix'></div>
     <div class='navbar-collapse collapse' [ngClass]='{ "in": isExpanded }'>
