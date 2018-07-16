@@ -24,7 +24,6 @@ import { CheckinViewComponent } from "./checkinView/checkinView.component";
 import { PartyOverviewComponent } from "./partyOverview/partyOverview.component";
 import { MailTemplatesComponent } from "./mailTemplates/mailTemplates.component";
 import { EventSelectionComponent } from "./events/eventSelection.component";
-import { TokenInterceptor } from "./authentication/tokenInterceptor";
 import { EventAuthorizationComponent } from "./eventAuthorization/eventAuthorization.component";
 import { EventService } from "./events/eventService.service";
 
@@ -74,12 +73,7 @@ import { EventService } from "./events/eventService.service";
     ])
   ],
   providers: [
-    { provide: 'BASE_URL',  useFactory: getBaseUrl },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true
-    },
+    { provide: 'BASE_URL', useFactory: getBaseUrl },
     AuthService,
     EventService
   ],
