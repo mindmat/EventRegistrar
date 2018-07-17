@@ -29,6 +29,8 @@
       <th>Name</th>
       <th>Angefragt</th>
       <th>Text</th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -36,6 +38,8 @@
       <td>{{ request.firstName }} {{ request.lastName }} ({{ request.email }})</td>
       <td>{{ request.requestReceived | date: 'dd.MM.yy HH:mm' }}</td>
       <td>{{ request.requestText }}</td>
+      <td><button class="btn btn-primary btn-xs" (click)="grantAccess(user)">Bestätigen</button></td>
+      <td><button class="btn btn-primary btn-xs" (click)="denyAccess(user)">Ablehnen</button></td>
     </tr>
   </tbody>
 </table>

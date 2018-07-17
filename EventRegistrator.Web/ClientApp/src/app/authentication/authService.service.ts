@@ -8,6 +8,7 @@ export class AuthService {
       try {
         var firstName = ticket[0].user_claims.find(c => c.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname").val;
         var lastName = ticket[0].user_claims.find(c => c.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname").val;
+        this.userPictureUrl = ticket[0].user_claims.find(c => c.typ === "picture").val;
         this.user = firstName;
         this.isAuthenticated = true;
       } catch (ex) {
@@ -28,6 +29,7 @@ export class AuthService {
   }
   isAuthenticated: boolean = false;
   user: string;
+  userPictureUrl: string;
 }
 
 class Ticket {

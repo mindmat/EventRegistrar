@@ -1,7 +1,4 @@
-﻿using EventRegistrar.Backend.Events.UsersInEvents;
-using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
-
-namespace EventRegistrar.Backend.Events
+﻿namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
 {
     public class RequestResponseDto
     {

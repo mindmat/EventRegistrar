@@ -44,6 +44,27 @@ export class EventAuthorizationComponent implements OnInit {
       this.refresh();
     });
   }
+
+  grantAccess(request: AccessRequestOfEvent) {
+    var index = this.requests.indexOf(request);
+    this.requests.splice(index, 1);
+    var response = new RequestResponseDto();
+    response.response = RequestResponse.Granted;
+    response.role = UserInEventRole.Reader;
+    this.http.post(`api/accessrequest/${request.id}/respond`, response).subscribe(result => {
+      this.refresh();
+    });
+  }
+
+  denyAccess(request: AccessRequestOfEvent) {
+    var index = this.requests.indexOf(request);
+    this.requests.splice(index, 1);
+    var response = new RequestResponseDto();
+    response.response = RequestResponse.Denied;
+    this.http.post(`api/accessrequest/${request.id}/respond`, response).subscribe(result => {
+      this.refresh();
+    });
+  }
 }
 
 export class UserInEventDisplayItem {
@@ -64,4 +85,22 @@ export class AccessRequestOfEvent {
   email: string;
   requestReceived: string;
   requestText: string;
+}
+
+enum RequestResponse {
+  Granted = 1,
+  Denied = 2
+}
+
+enum UserInEventRole {
+  None = 0,
+  Reader = 1,
+  Writer = 2,
+  Admin = 3
+}
+
+class RequestResponseDto {
+  response: RequestResponse;
+  role: UserInEventRole;
+  text: string;
 }
