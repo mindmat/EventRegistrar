@@ -1,6 +1,6 @@
 import { Component, Inject, } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { HostListener } from '@angular/core';
 
 @Component({
@@ -13,7 +13,7 @@ export class UnrecognizedPaymentsComponent {
   isSearching: boolean;
   eventId: string = '762A93A4-56E0-402C-B700-1CFB3362B39D';
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
