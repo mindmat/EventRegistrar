@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Payments;
+using EventRegistrar.Backend.Payments.Unrecognized;
 using EventRegistrar.Backend.Registrables;
 
 namespace EventRegistrar.Backend.Authorization
@@ -25,6 +26,11 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(SingleRegistrablesOverviewQuery).Name;
                 yield return typeof(DoubleRegistrablesOverviewQuery).Name;
                 yield return typeof(PaymentOverviewQuery).Name;
+            }
+            if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
+                usersRolesInEvent.Contains(UserInEventRole.Admin))
+            {
+                yield return typeof(UnrecognizedPaymentsQuery).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

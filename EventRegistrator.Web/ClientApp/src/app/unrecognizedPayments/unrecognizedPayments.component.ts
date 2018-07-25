@@ -13,24 +13,27 @@ export class UnrecognizedPaymentsComponent {
   isSearching: boolean;
   eventId: string = '762A93A4-56E0-402C-B700-1CFB3362B39D';
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string, private router: Router, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    //var eventId = this.route.snapshot.params['eventId'];
-    this.http.get<Payment[]>(this.baseUrl + 'api/event/' + this.eventId + '/payments?unrecognized')
+    this.http.get<Payment[]>(`api/events/${this.getEventAcronym()}/payments?unrecognized=true`)
       .subscribe(result => { this.payments = result; },
         error => console.error(error));
   }
 
+  getEventAcronym() {
+    return this.route.snapshot.params['eventAcronym'];
+  }
+
   saveMail(payment: Payment) {
-    console.log(`saveMail called ${payment.Id}, email ${payment.RecognizedEmail}`);
     payment.Locked = true;
-    this.http.post(this.baseUrl + 'api/payments/' + payment.Id + '/RecognizedEmail', payment.RecognizedEmail)
+    this.http.post(`api/events/${this.getEventAcronym()}/payments/${payment.Id}/RecognizedEmail`, payment.RecognizedEmail)
       .subscribe(result => { },
-        error => console.error(error));
-    //payment.RecognizedEmail = "test";
-    //alert("test");
+        error => {
+          console.error(error);
+          payment.Locked = false;
+        });
   }
 
   textSelected() {
@@ -43,9 +46,8 @@ export class UnrecognizedPaymentsComponent {
   }
 
   searchRegistration(searchString: string) {
-    const eventId = "762A93A4-56E0-402C-B700-1CFB3362B39D";
     this.isSearching = true;
-    this.http.get<Registration[]>(`${this.baseUrl}api/event/${eventId}/registrations?searchstring=${searchString}`)
+    this.http.get<Registration[]>(`api/event/${this.getEventAcronym()}/registrations?searchstring=${searchString}`)
       .subscribe(result => {
         this.registrations = result;
         this.registrations.map(reg => reg.ResponsesJoined =
