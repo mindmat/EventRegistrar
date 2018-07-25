@@ -5,6 +5,7 @@ using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Unrecognized;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrations.Search;
 
 namespace EventRegistrar.Backend.Authorization
 {
@@ -26,11 +27,13 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(SingleRegistrablesOverviewQuery).Name;
                 yield return typeof(DoubleRegistrablesOverviewQuery).Name;
                 yield return typeof(PaymentOverviewQuery).Name;
+                yield return typeof(SearchRegistrationQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
             {
                 yield return typeof(UnrecognizedPaymentsQuery).Name;
+                yield return typeof(SetRecognizedEmailCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))
@@ -39,6 +42,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(UsersOfEventQuery).Name;
                 yield return typeof(AddUserToRoleInEventCommand).Name;
                 yield return typeof(RemoveUserFromRoleInEventCommand).Name;
+                yield return typeof(RespondToRequestCommand).Name;
             }
         }
     }
