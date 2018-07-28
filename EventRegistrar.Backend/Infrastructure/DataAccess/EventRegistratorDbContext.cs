@@ -6,6 +6,7 @@ using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Seats;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +21,8 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.ApplyConfiguration(new ResponseMap());
+
             builder.ApplyConfiguration(new EventMap());
             builder.ApplyConfiguration(new RegistrableMap());
             builder.ApplyConfiguration(new RegistrationFormMap());

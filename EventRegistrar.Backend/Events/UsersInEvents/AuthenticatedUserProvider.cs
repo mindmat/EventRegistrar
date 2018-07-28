@@ -30,7 +30,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
 
         public async Task<Guid?> GetAuthenticatedUserId()
         {
-            //return new Guid("E24CFA7C-20D7-4AA4-B646-4CB0B1E8D6FC");
+            return new Guid("73B167CE-61CC-46AC-BC7D-F72A1EA5D7C9");
             var identifier = _identityProvider.GetIdentifier(_httpContextAccessor);
             var user = await _users.FirstOrDefaultAsync(usr => usr.IdentityProvider == _identityProvider.Provider
                                                             && usr.IdentityProviderUserIdentifier == identifier);

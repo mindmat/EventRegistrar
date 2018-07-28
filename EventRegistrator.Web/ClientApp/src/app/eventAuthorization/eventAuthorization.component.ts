@@ -51,7 +51,7 @@ export class EventAuthorizationComponent implements OnInit {
     var response = new RequestResponseDto();
     response.response = RequestResponse.Granted;
     response.role = UserInEventRole.Reader;
-    this.http.post(`api/accessrequest/${request.id}/respond`, response).subscribe(result => {
+    this.http.post(`api/events/${this.getEventAcronym()}/accessrequest/${request.id}/respond`, response).subscribe(result => {
       this.refresh();
     });
   }
@@ -61,7 +61,7 @@ export class EventAuthorizationComponent implements OnInit {
     this.requests.splice(index, 1);
     var response = new RequestResponseDto();
     response.response = RequestResponse.Denied;
-    this.http.post(`api/accessrequest/${request.id}/respond`, response).subscribe(result => {
+    this.http.post(`api/events/${this.getEventAcronym()}/accessrequest/${request.id}/respond`, response).subscribe(result => {
       this.refresh();
     });
   }

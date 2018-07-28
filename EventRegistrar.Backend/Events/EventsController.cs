@@ -46,12 +46,14 @@ namespace EventRegistrar.Backend.Events
             });
         }
 
-        [HttpPost("api/accessrequest/{accessRequestId:guid}/respond")]
-        public Task RespondToAccessRequest(Guid accessRequestId,
+        [HttpPost("api/events/{eventAcronym}/accessrequests/{accessRequestId:guid}/respond")]
+        public Task RespondToAccessRequest(string eventAcronym,
+                                           Guid accessRequestId,
                                            [FromBody]RequestResponseDto response)
         {
             return _mediator.Send(new RespondToRequestCommand
             {
+                EventAcronym = eventAcronym,
                 AccessToEventRequestId = accessRequestId,
                 Response = response.Response,
                 Role = response.Role,
