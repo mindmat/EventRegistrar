@@ -31,7 +31,7 @@ export class SearchRegistrationComponent {
   }
 }
 
-interface Registration {
+class Registration {
   id: string;
   email: string;
   firstName: string;
@@ -41,7 +41,7 @@ interface Registration {
   responsesJoined: string;
 }
 
-interface Response {
+class Response {
   response: string;
   question: string;
 }
