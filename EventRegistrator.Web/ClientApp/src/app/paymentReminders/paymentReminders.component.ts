@@ -1,81 +1,83 @@
-import { Component, Inject, } from "@angular/core";
-import { Http, URLSearchParams } from "@angular/http";
+import { Component } from "@angular/core";
+import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
-    selector: "paymentReminders",
-    templateUrl: "./paymentReminders.component.html"
+  selector: "paymentReminders",
+  templateUrl: "./paymentReminders.component.html"
 })
 export class PaymentRemindersComponent {
-    public dueRegistrations: Registration[];
-    public withholdMails: boolean = true;
+  public dueRegistrations: Registration[];
+  public withholdMails: boolean = true;
 
-    constructor(private http: Http,
-        @Inject("BASE_URL") private baseUrl: string) {
+  constructor(private readonly http: HttpClient, private route: ActivatedRoute) {
+  }
+
+  getEventAcronym() {
+    return this.route.snapshot.params['eventAcronym'];
+  }
+
+  ngOnInit() {
+    this.withholdMails = true;
+    this.http.get<Registration[]>(`api/events/${this.getEventAcronym()}/duepayments`)
+      .subscribe(result => { this.dueRegistrations = result; },
+        error => console.error(error));
+  }
+
+  sendReminder(registrationId: string, level: number) {
+    var url = `api/events/${this.getEventAcronym()}/registrations/${registrationId}/sendReminder`;
+    if (this.withholdMails) {
+      url += "?withholdMail=true";
     }
 
-    ngOnInit() {
-        const eventId = "762A93A4-56E0-402C-B700-1CFB3362B39D";
-        this.withholdMails = true;
-        this.http.get(`${this.baseUrl}api/events/${eventId}/duepayments`)
-            .subscribe(result => { this.dueRegistrations = result.json() as Registration[]; },
-            error => console.error(error));
-    }
+    this.http.post(url, null)
+      .subscribe(result => {
+        var registration = this.dueRegistrations.find(reg => reg.id === registrationId);
 
-    sendReminder(registrationId: string, level: number) {
-        var url = `${this.baseUrl}api/registration/${registrationId}/sendReminder`;
-        if (this.withholdMails) {
-            url += "?withhold=true";
+        if (registration != null && level === 1) {
+          registration.reminder1Due = false;
         }
+        if (registration != null && level === 2) {
+          registration.reminder2Due = false;
+        }
+      },
+        error => console.error(error));
+  }
 
-        this.http.post(url, null)
-            .subscribe(result => {
-                var registration = this.dueRegistrations.find(reg => reg.Id === registrationId);
+  sendSmsReminder(registrationId: string) {
+    var url = `api/events/${this.getEventAcronym()}/registrations/${registrationId}/sendReminderSms`;
 
-                if (registration != null && level === 1) {
-                    registration.Reminder1Due = false;
-                }
-                if (registration != null && level === 2) {
-                    registration.Reminder2Due = false;
-                }
-            },
-            error => console.error(error));
-    }
+    this.http.post(url, null)
+      .subscribe(result => {
+        var registration = this.dueRegistrations.find(reg => reg.id === registrationId);
 
-    sendSmsReminder(registrationId: string) {
-        var url = `${this.baseUrl}api/registrations/${registrationId}/sendReminderSms`;
-
-        this.http.post(url, null)
-            .subscribe(result => {
-                var registration = this.dueRegistrations.find(reg => reg.Id === registrationId);
-
-                if (registration != null) {
-                    registration.ReminderSmsSent = new Date(Date.now());
-                }
-            },
-            error => console.error(error));
-
-    }
+        if (registration != null) {
+          registration.reminderSmsSent = new Date(Date.now());
+        }
+      },
+        error => console.error(error));
+  }
 }
 
 interface Registration {
-    Id: string;
-    FirstName: string;
-    LastName: string;
-    Email: string;
-    Price: number;
-    ReceivedAt: Date;
-    ReminderLevel: number;
-    Paid: number;
-    AcceptedMail: Mail;
-    Reminder1Mail: Mail;
-    Reminder1Due: boolean;
-    Reminder2Due: boolean;
-    ReminderSmsSent: Date;
-    PhoneNormalized: string;
-    ReminderSmsPossible: boolean;
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  price: number;
+  receivedAt: Date;
+  reminderLevel: number;
+  paid: number;
+  acceptedMail: Mail;
+  reminder1Mail: Mail;
+  reminder1Due: boolean;
+  reminder2Due: boolean;
+  reminderSmsSent: Date;
+  phoneNormalized: string;
+  reminderSmsPossible: boolean;
 }
 
 interface Mail {
-    Id: string;
-    Created: Date;
+  id: string;
+  created: Date;
 }

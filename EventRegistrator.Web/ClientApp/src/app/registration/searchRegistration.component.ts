@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Http } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -10,16 +10,16 @@ export class SearchRegistrationComponent {
   registrations: Registration[];
   isSearching: boolean;
 
-  constructor(private readonly http: Http, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private route: ActivatedRoute) {
     this.isSearching = false;
   }
 
   search(searchString: string) {
     this.isSearching = true;
-    this.http.get(`api/events/${this.getEventAcronym()}/registrations?searchstring=${searchString}`)
+    this.http.get<Registration[]>(`api/events/${this.getEventAcronym()}/registrations?searchstring=${searchString}`)
       .subscribe(result => {
-        this.registrations = result.json() as Registration[];
-        this.registrations.map(reg => reg.ResponsesJoined = reg.Responses.map(rsp => `${rsp.Question} = ${rsp.Response}`)
+        this.registrations = result;
+        this.registrations.map(reg => reg.responsesJoined = reg.responses.map(rsp => `${rsp.question} = ${rsp.response}`)
           .reduce((agg, line) => `${agg} / ${line}`));
         this.isSearching = false;
       },
@@ -32,16 +32,16 @@ export class SearchRegistrationComponent {
 }
 
 interface Registration {
-  Id: string;
-  Email: string;
-  FirstName: string;
-  LastName: string;
-  Language: string;
-  Responses: Response[];
-  ResponsesJoined: string;
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  language: string;
+  responses: Response[];
+  responsesJoined: string;
 }
 
 interface Response {
-  Response: string;
-  Question: string;
+  response: string;
+  question: string;
 }

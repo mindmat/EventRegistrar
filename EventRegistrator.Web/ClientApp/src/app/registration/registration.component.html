@@ -1,212 +1,211 @@
-<h1>Anmeldung {{ registration.FirstName }} {{registration.LastName}} <span class="badge badge-primary" *ngIf="registration.IsWaitingList">Warteliste</span></h1>
+<h1>Anmeldung {{ registration.firstName }} {{registration.lastName}} <span class="badge badge-primary" *ngIf="registration.IsWaitingList">Warteliste</span></h1>
 
 <p *ngIf="!registration"><em>Loading...</em></p>
 
 <table class="table" *ngIf="registration">
-    <tbody>
-        <tr>
-            <td>Mail:</td>
-            <td>{{ registration.Email }}</td>
-        </tr>
-        <tr>
-            <td>Sprache:</td>
-            <td><span class="badge badge-primary">{{ registration.Language }}</span></td>
-        </tr>
-        <tr>
-            <td>Preis:</td>
-            <td>{{ registration.Price | currency : 'CHF' }}, bezahlt {{ registration.Paid || 0 | currency : 'CHF' }}</td>
-        </tr>
-        <tr>
-            <td>Status:</td>
-            <td><span class="badge badge-primary">{{ registration.StatusText }}</span>   <button *ngIf="registration.Status != 4" type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#cancelModal">Stornieren</button></td>
-        </tr>
-        <tr>
-            <td>Anmeldezeitpunkt:</td>
-            <td>{{ registration.ReceivedAt | date: 'dd.MM.yy HH:mm:ss' }}</td>
-        </tr>
-        <tr *ngIf="registration.IsWaitingList">
-            <td>Wünscht Partypass:</td>
-            <td><p *ngIf="registration.FallbackToPartyPass">x</p>  <button *ngIf="!registration.FallbackToPartyPass" type="button" class="btn btn-primary btn-xs" (click)="fallbackToPartyPass()">Partypass reservieren</button></td>
-        </tr>
-        <tr>
-            <td>SMS ({{ registration.PhoneNormalized }}):</td>
-            <td><button type="button" *ngIf="registration.PhoneNormalized != null" class="btn btn-primary btn-xs" [routerLink]="['/registrations', registration.Id, 'sms']">Anzeigen ({{ registration.SmsCount }})</button></td>
-        </tr>
-        <tr>
-            <td>Bemerkung:</td>
-            <td>{{ registration.Remarks }}</td>
-        </tr>
-    </tbody>
+  <tbody>
+    <tr>
+      <td>Mail:</td>
+      <td>{{ registration.email }}</td>
+    </tr>
+    <tr>
+      <td>Sprache:</td>
+      <td><span class="badge badge-primary">{{ registration.language }}</span></td>
+    </tr>
+    <tr>
+      <td>Preis:</td>
+      <td>{{ registration.price | currency : 'CHF' }}, bezahlt {{ registration.paid || 0 | currency : 'CHF' }}</td>
+    </tr>
+    <tr>
+      <td>Status:</td>
+      <td><span class="badge badge-primary">{{ registration.statusText }}</span>   <button *ngIf="registration.Status != 4" type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#cancelModal">Stornieren</button></td>
+    </tr>
+    <tr>
+      <td>Anmeldezeitpunkt:</td>
+      <td>{{ registration.receivedAt | date: 'dd.MM.yy HH:mm:ss' }}</td>
+    </tr>
+    <tr *ngIf="registration.IsWaitingList">
+      <td>Wünscht Partypass:</td>
+      <td><p *ngIf="registration.FallbackToPartyPass">x</p>  <button *ngIf="!registration.FallbackToPartyPass" type="button" class="btn btn-primary btn-xs" (click)="fallbackToPartyPass()">Partypass reservieren</button></td>
+    </tr>
+    <tr>
+      <td>SMS ({{ registration.phoneNormalized }}):</td>
+      <td><button type="button" *ngIf="registration.PhoneNormalized != null" class="btn btn-primary btn-xs" [routerLink]="['/registrations', registration.Id, 'sms']">Anzeigen ({{ registration.smsCount }})</button></td>
+    </tr>
+    <tr>
+      <td>Bemerkung:</td>
+      <td>{{ registration.remarks }}</td>
+    </tr>
+  </tbody>
 </table>
 
 <h3 *ngIf="mails">Mails   <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#composeAndSendMailModal">Mail auslösen</button></h3>
 
 <table class="table table-hover" *ngIf="mails">
-    <thead class="thead-dark">
-        <tr>
-            <th>Betreff</th>
-            <th>Empfänger</th>
-            <th>Gesendet</th>
-            <th>Absender</th>
-            <th>Zurückbehalten</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let mail of mails" (click)="showMail(mail.ContentHtml)">
-            <td data-toggle="modal" data-target="#mailModal">{{ mail.Subject }}</td>
-            <td>{{ mail.Recipients }}</td>
-            <td>{{ mail.Created | date: 'dd.MM.yy HH:mm' }}</td>
-            <td>{{ mail.SenderName }} ({{ mail.SenderMail }})</td>
-            <td><p *ngIf="mail.Withhold">x</p>  <button *ngIf="mail.Withhold" class="btn btn-primary btn-xs" (click)="releaseMail(mail.Id)">Freigeben</button><button *ngIf="mail.Withhold" class="btn btn-primary btn-xs" (click)="deleteMail(mail.Id)">Löschen</button></td>
-        </tr>
-    </tbody>
+  <thead class="thead-dark">
+    <tr>
+      <th>Betreff</th>
+      <th>Empfänger</th>
+      <th>Gesendet</th>
+      <th>Absender</th>
+      <th>Zurückbehalten</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let mail of mails" (click)="showMail(mail.ContentHtml)">
+      <td data-toggle="modal" data-target="#mailModal">{{ mail.subject }}</td>
+      <td>{{ mail.recipients }}</td>
+      <td>{{ mail.created | date: 'dd.MM.yy HH:mm' }}</td>
+      <td>{{ mail.senderName }} ({{ mail.senderMail }})</td>
+      <td><p *ngIf="mail.Withhold">x</p>  <button *ngIf="mail.Withhold" class="btn btn-primary btn-xs" (click)="releaseMail(mail.Id)">Freigeben</button><button *ngIf="mail.Withhold" class="btn btn-primary btn-xs" (click)="deleteMail(mail.Id)">Löschen</button></td>
+    </tr>
+  </tbody>
 </table>
 
 <h3 *ngIf="spots">Plätze   <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#registrablesModal">Ändern</button></h3>
 
 <table class="table table-hover" *ngIf="spots">
-    <thead class="thead-dark">
-        <tr>
-            <th>Name</th>
-            <th>Erstellt</th>
-            <th>Partner</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let spot of spots">
-            <td><a [routerLink]="['/registrables', spot.RegistrableId, 'participants']">{{ spot.Registrable }}</a></td>
-            <td>{{ spot.FirstPartnerJoined | date: 'dd.MM.yy HH:mm' }}</td>
-            <td><a *ngIf="spot.PartnerRegistrationId" [routerLink]="['/registration', spot.PartnerRegistrationId]">{{ spot.Partner }}</a></td>
-        </tr>
-    </tbody>
+  <thead class="thead-dark">
+    <tr>
+      <th>Name</th>
+      <th>Erstellt</th>
+      <th>Partner</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let spot of spots">
+      <td><a [routerLink]="['/registrables', spot.RegistrableId, 'participants']">{{ spot.registrable }}</a></td>
+      <td>{{ spot.firstPartnerJoined | date: 'dd.MM.yy HH:mm' }}</td>
+      <td><a *ngIf="spot.PartnerRegistrationId" [routerLink]="['/registration', spot.PartnerRegistrationId]">{{ spot.partner }}</a></td>
+    </tr>
+  </tbody>
 </table>
-
 
 <!-- mail modal -->
 <div class="modal fade" id="mailModal" tabindex="-1" role="dialog" aria-labelledby="mailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-body" id="mailContainer">
-            </div>
-        </div>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body" id="mailContainer">
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- compose and send mail modal -->
 <div class="modal fade" id="composeAndSendMailModal" tabindex="-1" role="dialog" aria-labelledby="composeAndSendMailModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="composeAndSendMailModalLabel">Mail auslösen</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <p>Zurückbehalten</p>
-                    </div>
-                    <div class="col-sm-2">
-                        <input type="checkbox" #withhold />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-2">
-                        <p>Duplikat zulassen</p>
-                    </div>
-                    <div class="col-sm-2">
-                        <input type="checkbox" #allowDuplicate />
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="composeAndSendMailModal">Abbrechen</button>
-                <button type="button" class="btn btn-primary" (click)="composeAndSendMail(withhold.value, allowDuplicate.value)" data-dismiss="composeAndSendMailModal">Auslösen</button>
-            </div>
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="composeAndSendMailModalLabel">Mail auslösen</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-2">
+            <p>Zurückbehalten</p>
+          </div>
+          <div class="col-sm-2">
+            <input type="checkbox" #withhold />
+          </div>
         </div>
+        <div class="row">
+          <div class="col-sm-2">
+            <p>Duplikat zulassen</p>
+          </div>
+          <div class="col-sm-2">
+            <input type="checkbox" #allowDuplicate />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="composeAndSendMailModal">Abbrechen</button>
+        <button type="button" class="btn btn-primary" (click)="composeAndSendMail(withhold.value, allowDuplicate.value)" data-dismiss="composeAndSendMailModal">Auslösen</button>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Modal -->
 <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="cancelModalLabel">Anmeldung stornieren</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <p>Grund:</p>
-                    </div>
-                    <div class="col-sm-6">
-                        <input #reason value="Abmeldung">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <p>Trotz Zahlungen</p>
-                    </div>
-                    <div class="col-sm-6">
-                        <input type="checkbox" #ignorePayments />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <p>% Rückzahlung</p>
-                    </div>
-                    <div class="col-sm-6">
-                        <input type="number" #refundPercentage />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <p>Nachrücken verhindern</p>
-                    </div>
-                    <div class="col-sm-6">
-                        <input type="checkbox" #preventPromotion />
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-                <button type="button" class="btn btn-primary" (click)="cancelRegistration(reason.value, ignorePayments.value, refundPercentage.value, preventPromotion.value)" data-dismiss="modal">Stornieren</button>
-            </div>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cancelModalLabel">Anmeldung stornieren</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <p>Grund:</p>
+          </div>
+          <div class="col-sm-6">
+            <input #reason value="Abmeldung">
+          </div>
         </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <p>Trotz Zahlungen</p>
+          </div>
+          <div class="col-sm-6">
+            <input type="checkbox" #ignorePayments />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <p>% Rückzahlung</p>
+          </div>
+          <div class="col-sm-6">
+            <input type="number" #refundPercentage />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <p>Nachrücken verhindern</p>
+          </div>
+          <div class="col-sm-6">
+            <input type="checkbox" #preventPromotion />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+        <button type="button" class="btn btn-primary" (click)="cancelRegistration(reason.value, ignorePayments.value, refundPercentage.value, preventPromotion.value)" data-dismiss="modal">Stornieren</button>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="modal fade" id="registrablesModal" tabindex="-1" role="dialog" aria-labelledby="registrablesModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="registrablesModalLabel">Anmeldung verwalten</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let registrable of allRegistrables">
-                            <td>{{ registrable.Name }}</td>
-                            <td><button class="btn btn-primary btn-xs" *ngIf="registrable.addAvailable" (click)="addRegistrable(registrable.Id)">+</button></td>
-                            <td><button class="btn btn-primary btn-xs" *ngIf="registrable.removeAvailable" (click)="removeRegistrable(registrable.Id)">-</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registrablesModalLabel">Anmeldung verwalten</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let registrable of allRegistrables">
+              <td>{{ registrable.name }}</td>
+              <td><button class="btn btn-primary btn-xs" *ngIf="registrable.addAvailable" (click)="addRegistrable(registrable.Id)">+</button></td>
+              <td><button class="btn btn-primary btn-xs" *ngIf="registrable.removeAvailable" (click)="removeRegistrable(registrable.Id)">-</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
 </div>

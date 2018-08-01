@@ -2,12 +2,14 @@
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
+using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Seats;
+using EventRegistrar.Backend.Sms;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess
@@ -36,26 +38,15 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new ReceivedPaymentMap());
             builder.ApplyConfiguration(new PaymentAssignmentMap());
             builder.ApplyConfiguration(new PaymentFileMap());
+
+            builder.ApplyConfiguration(new MailMap());
+            builder.ApplyConfiguration(new MailToRegistrationMap());
+            builder.ApplyConfiguration(new SmsMap());
         }
 
         /*
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Sms.Sms>()
-                .HasOptional(sms => sms.Registration)
-                .WithMany(reg => reg.Sms)
-                .HasForeignKey(sms => sms.RegistrationId);
-
-            modelBuilder.Entity<Response>()
-                .HasRequired(rsp => rsp.Registration)
-                .WithMany()
-                .HasForeignKey(rsp => rsp.RegistrationId);
-
-            modelBuilder.Entity<Response>()
-                .HasOptional(rsp => rsp.Question)
-                .WithMany()
-                .HasForeignKey(rsp => rsp.QuestionId);
-
             modelBuilder.Entity<Reduction>()
                .HasRequired(red => red.Registrable)
                .WithMany(rbl => rbl.Reductions)
@@ -70,16 +61,6 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
                    .HasRequired(qop => qop.Registrable)
                    .WithMany(qst => qst.QuestionOptionMappings)
                    .HasForeignKey(qop => qop.RegistrableId);
-
-            modelBuilder.Entity<MailToRegistration>()
-                .HasRequired(map => map.Mail)
-                .WithMany(mail => mail.Registrations)
-                .HasForeignKey(map => map.MailId);
-
-            modelBuilder.Entity<MailToRegistration>()
-                .HasRequired(map => map.Registration)
-                .WithMany(reg => reg.Mails)
-                .HasForeignKey(map => map.RegistrationId);
 
             modelBuilder.Entity<RegistrableComposition>()
                 .HasRequired(cmp => cmp.Registrable_Contains)

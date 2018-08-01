@@ -51,6 +51,15 @@ namespace EventRegistrar.Backend
             container.Register<IAuthorizationChecker, AuthorizationChecker>();
             container.Register<IAuthenticatedUserProvider, AuthenticatedUserProvider>();
             container.Register<IRightsOfEventRoleProvider, RightsOfEventRoleProvider>();
+
+            var assembly = typeof(Setup).Assembly;
+
+            // first version: only use default config
+            var configItemTypes = container.GetTypesToRegister<IDefaultConfigurationItem>(assembly);
+            foreach (var configItemType in configItemTypes)
+            {
+                container.Register(configItemType.BaseType, configItemType);
+            }
         }
     }
 }

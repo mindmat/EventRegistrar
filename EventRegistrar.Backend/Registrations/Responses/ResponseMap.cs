@@ -14,6 +14,9 @@ namespace EventRegistrar.Backend.Registrations.Responses
             builder.HasOne(rsp => rsp.Question)
                    .WithMany()
                    .HasForeignKey(rsp => rsp.QuestionId);
+            builder.HasOne(rsp => rsp.Registration)
+                   .WithMany()
+                   .HasForeignKey(rsp => rsp.RegistrationId);
         }
     }
 }

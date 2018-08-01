@@ -1,6 +1,6 @@
-import { Component, Inject, } from '@angular/core';
+import { Component, } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'registration',
@@ -14,14 +14,17 @@ export class RegistrationComponent {
   public allRegistrables: Registrable[];
   private bookedRegistrableIds: string[];
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string, private router: Router, private route: ActivatedRoute) {
+  constructor(private readonly http: HttpClient, private route: ActivatedRoute) {
+  }
+
+  getEventAcronym() {
+    return this.route.snapshot.params['eventAcronym'];
   }
 
   ngOnInit() {
     this.registrationId = this.route.snapshot.params['id'];
 
-    const eventId = "762A93A4-56E0-402C-B700-1CFB3362B39D";
-    this.http.get<Registrable[]>(`${this.baseUrl}api/events/${eventId}/registrables`).subscribe(result => {
+    this.http.get<Registrable[]>(`api/events/${this.getEventAcronym()}/registrables`).subscribe(result => {
       this.allRegistrables = result;
       if (this.spots != null) {
         this.changeAvailability();
@@ -34,21 +37,21 @@ export class RegistrationComponent {
   }
 
   reloadRegistration() {
-    this.http.get<Registration>(`${this.baseUrl}api/registrations/${this.registrationId}`).subscribe(result => {
+    this.http.get<Registration>(`api/events/${this.getEventAcronym()}/registrations/${this.registrationId}`).subscribe(result => {
       this.registration = result;
     }, error => console.error(error));
   }
 
   reloadMails() {
-    this.http.get<Mail[]>(`${this.baseUrl}api/registrations/${this.registrationId}/mails`).subscribe(result => {
+    this.http.get<Mail[]>(`api/events/${this.getEventAcronym()}/registrations/${this.registrationId}/mails`).subscribe(result => {
       this.mails = result;
     }, error => console.error(error));
   }
 
   reloadSpots() {
-    this.http.get<Spot[]>(`${this.baseUrl}api/registrations/${this.registrationId}/spots`).subscribe(result => {
+    this.http.get<Spot[]>(`api/events/${this.getEventAcronym()}/registrations/${this.registrationId}/spots`).subscribe(result => {
       this.spots = result;
-      this.bookedRegistrableIds = this.spots.map(spot => spot.RegistrableId);
+      this.bookedRegistrableIds = this.spots.map(spot => spot.registrableId);
 
       if (this.allRegistrables != null) {
         this.changeAvailability();
@@ -57,9 +60,9 @@ export class RegistrationComponent {
   }
 
   cancelRegistration(reason: string, ignorePayments: boolean, refundPercentage: number, preventPromotion: boolean) {
-    console.log(`cancel registration ${this.registration.Id}, reason ${reason}, ignorePayments ${ignorePayments}, refundPercentage ${refundPercentage}, preventPromotion ${preventPromotion}`);
-    this.registration.Status = 4; // cancelled
-    let url = `${this.baseUrl}api/registration/${this.registration.Id}/Cancel?reason=${reason}`;
+    console.log(`cancel registration ${this.registration.id}, reason ${reason}, ignorePayments ${ignorePayments}, refundPercentage ${refundPercentage}, preventPromotion ${preventPromotion}`);
+    this.registration.status = 4; // cancelled
+    let url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/Cancel?reason=${reason}`;
     if (ignorePayments) {
       url += "&ignorePayments=true";
     }
@@ -79,38 +82,38 @@ export class RegistrationComponent {
   }
 
   releaseMail(mailId: string) {
-    var url = `${this.baseUrl}api/mails/${mailId}/release`;
+    var url = `api/events/${this.getEventAcronym()}/mails/${mailId}/release`;
     this.http.post(url, null)
       .subscribe(result => { this.reloadMails(); }, error => console.error(error));
   }
 
   deleteMail(mailId: string) {
-    var url = `${this.baseUrl}api/mails/${mailId}/delete`;
+    var url = `api/events/${this.getEventAcronym()}/mails/${mailId}/delete`;
     this.http.post(url, null)
       .subscribe(result => { this.reloadMails(); }, error => console.error(error));
   }
 
   fallbackToPartyPass() {
-    var url = `${this.baseUrl}api/registrations/${this.registration.Id}/setWaitingListFallback`;
+    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/setWaitingListFallback`;
     this.http.post(url, null)
       .subscribe(result => { this.reloadRegistration(); }, error => console.error(error));
   }
 
   addRegistrable(registrableId: string) {
-    var url = `${this.baseUrl}api/registrations/${this.registration.Id}/addSpot?registrableId=${registrableId}`;
+    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/addSpot?registrableId=${registrableId}`;
     this.http.post(url, null)
       .subscribe(result => { this.reloadSpots(); this.reloadRegistration(); }, error => console.error(error));
   }
 
   removeRegistrable(registrableId: string) {
-    var url = `${this.baseUrl}api/registrations/${this.registration.Id}/removeSpot?registrableId=${registrableId}`;
+    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/removeSpot?registrableId=${registrableId}`;
     this.http.post(url, null)
       .subscribe(result => { this.reloadSpots(); this.reloadRegistration(); }, error => console.error(error));
   }
 
   changeAvailability() {
     for (let registrable of this.allRegistrables) {
-      if (this.bookedRegistrableIds.indexOf(registrable.Id) >= 0) {
+      if (this.bookedRegistrableIds.indexOf(registrable.id) >= 0) {
         registrable.addAvailable = false;
         registrable.removeAvailable = true;
       } else {
@@ -121,7 +124,7 @@ export class RegistrationComponent {
   }
 
   composeAndSendMail(withhold: boolean, allowDuplicate: boolean) {
-    var url = `${this.baseUrl}api/registrations/${this.registration.Id}/ComposeAndSendMail?`;
+    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/ComposeAndSendMail?`;
     if (withhold) {
       url += "&withhold=true";
     }
@@ -135,52 +138,52 @@ export class RegistrationComponent {
 }
 
 interface Registration {
-  Id: string;
-  Email: string;
-  FirstName: string;
-  LastName: string;
-  Language: string;
-  IsWaitingList: boolean;
-  Price: number;
-  Paid: number;
-  Status: number;
-  StatusText: string;
-  ReceivedAt: Date;
-  ReminderLevel: number;
-  SoldOutMessage: string;
-  FallbackToPartyPass: boolean;
-  SmsCount: number;
-  Remarks: string;
-  PhoneNormalized: string;
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  language: string;
+  isWaitingList: boolean;
+  price: number;
+  paid: number;
+  status: number;
+  statusText: string;
+  receivedAt: Date;
+  reminderLevel: number;
+  soldOutMessage: string;
+  fallbackToPartyPass: boolean;
+  smsCount: number;
+  remarks: string;
+  phoneNormalized: string;
 }
 
 interface Spot {
-  Id: string;
-  RegistrableId: string;
-  Registrable: string;
-  PartnerRegistrationId: string;
-  FirstPartnerJoined: Date;
-  Partner: string;
-  IsCore: boolean;
+  id: string;
+  registrableId: string;
+  registrable: string;
+  partnerRegistrationId: string;
+  firstPartnerJoined: Date;
+  partner: string;
+  isCore: boolean;
 }
 
 interface Mail {
-  Id: string;
-  SenderMail: string;
-  SenderName: string;
-  Subject: string;
-  Recipients: string;
-  Created: Date;
-  Withhold: boolean;
-  ContentHtml: string;
+  id: string;
+  senderMail: string;
+  senderName: string;
+  subject: string;
+  recipients: string;
+  created: Date;
+  withhold: boolean;
+  contentHtml: string;
 }
 
 interface Registrable {
-  Id: string;
-  Name: string;
-  HasWaitingList: boolean;
-  IsDoubleRegistrable: boolean;
-  ShowInMailListOrder: number;
+  id: string;
+  name: string;
+  hasWaitingList: boolean;
+  isDoubleRegistrable: boolean;
+  showInMailListOrder: number;
   addAvailable: boolean;
   removeAvailable: boolean;
 }

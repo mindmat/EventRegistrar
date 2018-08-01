@@ -1,0 +1,29 @@
+﻿using System;
+using System.Text;
+using System.Threading.Tasks;
+using EventRegistrar.Backend.Mailing;
+using Microsoft.Azure.ServiceBus;
+using Newtonsoft.Json;
+
+namespace EventRegistrar.Backend.Infrastructure
+{
+    public class ServiceBusClient
+    {
+        private string _serviceBusEndpoint;
+
+        public ServiceBusClient()
+        {
+            _serviceBusEndpoint = Environment.GetEnvironmentVariable("ServiceBusEndpoint");
+        }
+
+        public Task SendCommand<T>(T command)
+            where T : IQueueBoundCommand
+        {
+            var queueName = command.QueueName;
+            var queueClient = new QueueClient(_serviceBusEndpoint, queueName);
+            var serialized = JsonConvert.SerializeObject(command);
+            var message = new Message(Encoding.UTF8.GetBytes(serialized));
+            return queueClient.SendAsync(message);
+        }
+    }
+}
