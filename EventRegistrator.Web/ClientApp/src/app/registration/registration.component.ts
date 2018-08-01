@@ -137,7 +137,7 @@ export class RegistrationComponent {
   }
 }
 
-interface Registration {
+class Registration {
   id: string;
   email: string;
   firstName: string;
@@ -157,7 +157,7 @@ interface Registration {
   phoneNormalized: string;
 }
 
-interface Spot {
+class Spot {
   id: string;
   registrableId: string;
   registrable: string;
@@ -167,7 +167,7 @@ interface Spot {
   isCore: boolean;
 }
 
-interface Mail {
+class Mail {
   id: string;
   senderMail: string;
   senderName: string;
@@ -178,7 +178,7 @@ interface Mail {
   contentHtml: string;
 }
 
-interface Registrable {
+class Registrable {
   id: string;
   name: string;
   hasWaitingList: boolean;
