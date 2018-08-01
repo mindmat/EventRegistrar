@@ -24,13 +24,13 @@
       <td>Anmeldezeitpunkt:</td>
       <td>{{ registration.receivedAt | date: 'dd.MM.yy HH:mm:ss' }}</td>
     </tr>
-    <tr *ngIf="registration.IsWaitingList">
+    <tr *ngIf="registration.isWaitingList">
       <td>Wünscht Partypass:</td>
-      <td><p *ngIf="registration.FallbackToPartyPass">x</p>  <button *ngIf="!registration.FallbackToPartyPass" type="button" class="btn btn-primary btn-xs" (click)="fallbackToPartyPass()">Partypass reservieren</button></td>
+      <td><p *ngIf="registration.fallbackToPartyPass">x</p>  <button *ngIf="!registration.fallbackToPartyPass" type="button" class="btn btn-primary btn-xs" (click)="fallbackToPartyPass()">Partypass reservieren</button></td>
     </tr>
     <tr>
       <td>SMS ({{ registration.phoneNormalized }}):</td>
-      <td><button type="button" *ngIf="registration.PhoneNormalized != null" class="btn btn-primary btn-xs" [routerLink]="['/registrations', registration.Id, 'sms']">Anzeigen ({{ registration.smsCount }})</button></td>
+      <td><button type="button" *ngIf="registration.phoneNormalized != null" class="btn btn-primary btn-xs" [routerLink]="['/registrations', registration.Id, 'sms']">Anzeigen ({{ registration.smsCount }})</button></td>
     </tr>
     <tr>
       <td>Bemerkung:</td>
@@ -57,7 +57,7 @@
       <td>{{ mail.recipients }}</td>
       <td>{{ mail.created | date: 'dd.MM.yy HH:mm' }}</td>
       <td>{{ mail.senderName }} ({{ mail.senderMail }})</td>
-      <td><p *ngIf="mail.Withhold">x</p>  <button *ngIf="mail.Withhold" class="btn btn-primary btn-xs" (click)="releaseMail(mail.Id)">Freigeben</button><button *ngIf="mail.Withhold" class="btn btn-primary btn-xs" (click)="deleteMail(mail.Id)">Löschen</button></td>
+      <td><p *ngIf="mail.withhold">x</p>  <button *ngIf="mail.withhold" class="btn btn-primary btn-xs" (click)="releaseMail(mail.id)">Freigeben</button><button *ngIf="mail.withhold" class="btn btn-primary btn-xs" (click)="deleteMail(mail.id)">Löschen</button></td>
     </tr>
   </tbody>
 </table>
@@ -74,9 +74,9 @@
   </thead>
   <tbody>
     <tr *ngFor="let spot of spots">
-      <td><a [routerLink]="['/registrables', spot.RegistrableId, 'participants']">{{ spot.registrable }}</a></td>
+      <td><a [routerLink]="['/registrables', spot.registrableId, 'participants']">{{ spot.registrable }}</a></td>
       <td>{{ spot.firstPartnerJoined | date: 'dd.MM.yy HH:mm' }}</td>
-      <td><a *ngIf="spot.PartnerRegistrationId" [routerLink]="['/registration', spot.PartnerRegistrationId]">{{ spot.partner }}</a></td>
+      <td><a *ngIf="spot.partnerRegistrationId" [routerLink]="['/registration', spot.partnerRegistrationId]">{{ spot.partner }}</a></td>
     </tr>
   </tbody>
 </table>
@@ -200,8 +200,8 @@
           <tbody>
             <tr *ngFor="let registrable of allRegistrables">
               <td>{{ registrable.name }}</td>
-              <td><button class="btn btn-primary btn-xs" *ngIf="registrable.addAvailable" (click)="addRegistrable(registrable.Id)">+</button></td>
-              <td><button class="btn btn-primary btn-xs" *ngIf="registrable.removeAvailable" (click)="removeRegistrable(registrable.Id)">-</button></td>
+              <td><button class="btn btn-primary btn-xs" *ngIf="registrable.addAvailable" (click)="addRegistrable(registrable.id)">+</button></td>
+              <td><button class="btn btn-primary btn-xs" *ngIf="registrable.removeAvailable" (click)="removeRegistrable(registrable.id)">-</button></td>
             </tr>
           </tbody>
         </table>
