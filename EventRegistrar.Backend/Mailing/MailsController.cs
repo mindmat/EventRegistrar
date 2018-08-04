@@ -18,7 +18,7 @@ namespace EventRegistrar.Backend.Mailing
         [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails")]
         public Task<IEnumerable<Mail>> GetMailsOfRegistration(string eventAcronym, Guid registrationId)
         {
-            return _mediator.Send(new SpotsOfRegistrationQuery { EventAcronym = eventAcronym, RegistrationId = registrationId });
+            return _mediator.Send(new MailsOfRegistrationQuery { EventAcronym = eventAcronym, RegistrationId = registrationId });
         }
     }
 }

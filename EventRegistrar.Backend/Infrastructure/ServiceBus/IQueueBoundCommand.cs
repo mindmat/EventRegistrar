@@ -1,4 +1,4 @@
-﻿namespace EventRegistrar.Backend.Mailing
+﻿namespace EventRegistrar.Backend.Infrastructure.ServiceBus
 {
     public interface IQueueBoundCommand
     {

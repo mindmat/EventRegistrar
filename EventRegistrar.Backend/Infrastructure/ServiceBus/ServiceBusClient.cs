@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Text;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Mailing;
 using Microsoft.Azure.ServiceBus;
 using Newtonsoft.Json;
 
-namespace EventRegistrar.Backend.Infrastructure
+namespace EventRegistrar.Backend.Infrastructure.ServiceBus
 {
     public class ServiceBusClient
     {

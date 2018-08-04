@@ -1,4 +1,5 @@
 ﻿using System;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Mailing
 {

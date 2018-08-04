@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Mailing
 {
-    public class SpotsOfRegistrationQueryHandler : IRequestHandler<SpotsOfRegistrationQuery, IEnumerable<Mail>>
+    public class SpotsOfRegistrationQueryHandler : IRequestHandler<MailsOfRegistrationQuery, IEnumerable<Mail>>
     {
         private readonly IEventAcronymResolver _acronymResolver;
         private readonly IQueryable<MailToRegistration> _mails;
@@ -20,7 +20,7 @@ namespace EventRegistrar.Backend.Mailing
             _acronymResolver = acronymResolver;
         }
 
-        public async Task<IEnumerable<Mail>> Handle(SpotsOfRegistrationQuery query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<Mail>> Handle(MailsOfRegistrationQuery query, CancellationToken cancellationToken)
         {
             var eventId = await _acronymResolver.GetEventIdFromAcronym(query.EventAcronym);
 
