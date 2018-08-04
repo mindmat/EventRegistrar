@@ -1,4 +1,4 @@
-import { Component, Inject, } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -11,14 +11,13 @@ export class MailTemplatesComponent {
   mailTemplate: MailTemplate;
   searching: boolean;
   saving: boolean;
-  eventId = "762A93A4-56E0-402C-B700-1CFB3362B39D";
 
-  constructor(private http: HttpClient, @Inject('BASE_URL') private baseUrl: string, private router: Router, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
     this.searching = false;
   }
 
   ngOnInit() {
-    this.http.get<MailTemplate[]>(`${this.baseUrl}api/events/${this.eventId}/mailTemplates`)
+    this.http.get<MailTemplate[]>(`api/events/${this.getEventAcronym()}/mailTemplates`)
       .subscribe(result => {
         this.mailTemplates = result;
       },
@@ -29,7 +28,7 @@ export class MailTemplatesComponent {
 
   showTemplate(mailingKey: string, language: string) {
     this.searching = true;
-    this.http.get<MailTemplate>(`${this.baseUrl}api/events/${this.eventId}/mailTemplates/${mailingKey}?lang=${language}`)
+    this.http.get<MailTemplate>(`api/events/${this.getEventAcronym()}/mailTemplates/${mailingKey}?lang=${language}`)
       .subscribe(result => {
         this.mailTemplate = result;
         this.renderMail();
@@ -44,7 +43,7 @@ export class MailTemplatesComponent {
   saveTemplate() {
     this.saving = true;
 
-    this.http.post<MailTemplate>(`${this.baseUrl}api/events/${this.eventId}/mailTemplates/${this.mailTemplate.Key}`, this.mailTemplate)
+    this.http.post<MailTemplate>(`api/events/${this.getEventAcronym()}/mailTemplates/${this.mailTemplate.key}`, this.mailTemplate)
       .subscribe(result => {
         this.mailTemplate = result;
         this.saving = false;
@@ -55,18 +54,22 @@ export class MailTemplatesComponent {
         });
   }
 
+  getEventAcronym() {
+    return this.route.snapshot.params['eventAcronym'];
+  }
+
   renderMail() {
     var mailContainer = document.getElementById("templateRenderSpace") as HTMLDivElement;
-    mailContainer.innerHTML = this.mailTemplate.Template;
+    mailContainer.innerHTML = this.mailTemplate.template;
   }
 }
 
-interface MailTemplate {
-  Key: string;
-  Language: string;
-  Template: string;
-  SenderMail: string;
-  SenderName: string;
-  Subject: string;
-  Audience: number;
+class MailTemplate {
+  key: string;
+  language: string;
+  template: string;
+  senderMail: string;
+  senderName: string;
+  subject: string;
+  audience: number;
 }

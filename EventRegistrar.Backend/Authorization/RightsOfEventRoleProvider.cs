@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Mailing;
+using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
+using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Unrecognized;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
@@ -35,6 +37,8 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(RegistrationQuery).Name;
                 yield return typeof(MailsOfRegistrationQuery).Name;
                 yield return typeof(SpotsOfRegistrationQuery).Name;
+                yield return typeof(DuePaymentsQuery).Name;
+                yield return typeof(MailTemplatesQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
