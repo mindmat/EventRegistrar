@@ -20,6 +20,12 @@ namespace EventRegistrar.Backend.Registrables
             return _mediator.Send(new DoubleRegistrablesOverviewQuery { EventAcronym = eventAcronym });
         }
 
+        [HttpGet("api/events/{eventAcronym}/registrables")]
+        public Task<IEnumerable<RegistrableItem>> GetRegistrables(string eventAcronym)
+        {
+            return _mediator.Send(new RegistrablesQuery { EventAcronym = eventAcronym });
+        }
+
         [HttpGet("api/events/{eventAcronym}/SingleRegistrableOverview")]
         public Task<IEnumerable<SingleRegistrableDisplayItem>> GetSingleRegistrablesOverivew(string eventAcronym)
         {
