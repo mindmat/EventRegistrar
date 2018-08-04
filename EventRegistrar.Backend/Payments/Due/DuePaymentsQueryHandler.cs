@@ -78,7 +78,7 @@ namespace EventRegistrar.Backend.Payments.Due
                                              reg.ReminderLevel,
                                              Paid = (decimal?)reg.Payments.Sum(ass => ass.Amount)
                                          })
-                                         .OrderBy(reg => reg.AcceptedMail.Sent)
+                                         .OrderBy(reg => reg.AcceptedMail == null ? DateTime.MaxValue : reg.AcceptedMail.Sent)
                                          .Select(reg => new DuePaymentItem
                                          {
                                              Id = reg.Id,
