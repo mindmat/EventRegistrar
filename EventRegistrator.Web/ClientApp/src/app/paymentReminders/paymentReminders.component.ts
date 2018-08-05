@@ -59,7 +59,7 @@ export class PaymentRemindersComponent {
   }
 }
 
-interface Registration {
+class Registration {
   id: string;
   firstName: string;
   lastName: string;
@@ -77,7 +77,7 @@ interface Registration {
   reminderSmsPossible: boolean;
 }
 
-interface Mail {
+class Mail {
   id: string;
   created: Date;
 }
