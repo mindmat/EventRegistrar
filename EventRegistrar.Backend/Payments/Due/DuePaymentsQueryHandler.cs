@@ -32,7 +32,7 @@ namespace EventRegistrar.Backend.Payments.Due
         {
             var eventId = await _eventAcronymResolver.GetEventIdFromAcronym(query.EventAcronym);
             var reminderDueFrom = DateTime.UtcNow.AddDays(-DefaultPaymentGracePeriod);
-            var dueRegistrations = await _registrations
+            var data = await _registrations
                                          .Where(reg => reg.RegistrationForm.EventId == eventId &&
                                                        reg.State == RegistrationState.Received &&
                                                        reg.IsWaitingList != true)
@@ -44,67 +44,80 @@ namespace EventRegistrar.Backend.Payments.Due
                                              Email = reg.RespondentEmail,
                                              reg.Price,
                                              reg.ReceivedAt,
-                                             AcceptedMail = reg.Mails.Where(map => !map.Mail.Withhold &&
-                                                                                   MailTypes_Accepted.Contains(map.Mail.Type))
-                                                                     .Select(map => new SentMailDto
-                                                                     {
-                                                                         Id = map.MailId,
-                                                                         Sent = map.Mail.Created
-                                                                     })
-                                                                     .OrderByDescending(mail => mail.Sent)
-                                                                     .FirstOrDefault(),
-                                             Reminder1Mail = reg.Mails.Where(map => !map.Mail.Withhold &&
-                                                                                    MailTypes_Reminder1.Contains(map.Mail.Type))
-                                                                      .Select(map => new SentMailDto
-                                                                      {
-                                                                          Id = map.MailId,
-                                                                          Sent = map.Mail.Created
-                                                                      })
-                                                                      .OrderByDescending(mail => mail.Sent)
-                                                                      .FirstOrDefault(),
-                                             Reminder2Mail = reg.Mails.Where(map => !map.Mail.Withhold &&
-                                                                                    MailTypes_Reminder2.Contains(map.Mail.Type))
-                                                                      .Select(map => new SentMailDto
-                                                                      {
-                                                                          Id = map.MailId,
-                                                                          Sent = map.Mail.Created
-                                                                      })
-                                                                      .OrderByDescending(mail => mail.Sent)
-                                                                      .FirstOrDefault(),
-                                             ReminderSmsSent = reg.Sms.Where(sms => sms.Type == SmsType.Reminder)
-                                                                      .Select(sms => sms.Sent)
-                                                                      .FirstOrDefault(),
                                              reg.PhoneNormalized,
                                              reg.ReminderLevel,
-                                             Paid = (decimal?)reg.Payments.Sum(ass => ass.Amount)
-                                         })
-                                         .OrderBy(reg => reg.AcceptedMail == null ? DateTime.MaxValue : reg.AcceptedMail.Sent)
-                                         .Select(reg => new DuePaymentItem
-                                         {
-                                             Id = reg.Id,
-                                             FirstName = reg.FirstName,
-                                             LastName = reg.LastName,
-                                             Email = reg.Email,
-                                             Price = reg.Price,
-                                             Paid = reg.Paid,
-                                             ReceivedAt = reg.ReceivedAt,
-                                             AcceptedMail = reg.AcceptedMail,
-                                             Reminder1Mail = reg.Reminder1Mail,
-                                             Reminder2Mail = reg.Reminder2Mail,
-                                             ReminderLevel = reg.ReminderLevel,
-                                             Reminder1Due = reg.Reminder1Mail == null &&
-                                                            reg.AcceptedMail != null &&
-                                                            reg.AcceptedMail.Sent < reminderDueFrom,
-                                             Reminder2Due = reg.Reminder2Mail == null &&
-                                                            reg.Reminder1Mail != null &&
-                                                            reg.Reminder1Mail.Sent < reminderDueFrom,
-                                             ReminderSmsSent = reg.ReminderSmsSent,
-                                             PhoneNormalized = reg.PhoneNormalized,
-                                             ReminderSmsPossible = !reg.ReminderSmsSent.HasValue &&
-                                                                   reg.AcceptedMail.Sent < reminderDueFrom &&
-                                                                   reg.PhoneNormalized != null
+                                             Paid = (decimal?)reg.Payments.Sum(ass => ass.Amount),
+                                             Mails = reg.Mails.Select(rml => new { rml.Mail.Id, Sent = rml.Mail.Created, rml.Mail.Type, rml.Mail.Withhold }),
+                                             ReminderSms = reg.Sms.Where(sms => sms.Type == SmsType.Reminder)
                                          })
                                          .ToListAsync(cancellationToken);
+            var dueRegistrations = data.Select(tmp => new
+            {
+                tmp.Id,
+                tmp.FirstName,
+                tmp.LastName,
+                tmp.Email,
+                tmp.Price,
+                tmp.ReceivedAt,
+                tmp.PhoneNormalized,
+                tmp.ReminderLevel,
+                tmp.Paid,
+                AcceptedMail = tmp.Mails.Where(mail => !mail.Withhold && MailTypes_Accepted.Contains(mail.Type))
+                                                                .Select(mail => new SentMailDto
+                                                                {
+                                                                    Id = mail.Id,
+                                                                    Sent = mail.Sent
+                                                                })
+                                                                .OrderByDescending(mail => mail.Sent)
+                                                                .FirstOrDefault(),
+                Reminder1Mail = tmp.Mails.Where(mail => !mail.Withhold && MailTypes_Reminder1.Contains(mail.Type))
+                                                                 .Select(mail => new SentMailDto
+                                                                 {
+                                                                     Id = mail.Id,
+                                                                     Sent = mail.Sent
+                                                                 })
+                                                                 .OrderByDescending(mail => mail.Sent)
+                                                                 .FirstOrDefault(),
+                Reminder2Mail = tmp.Mails.Where(mail => !mail.Withhold && MailTypes_Reminder2.Contains(mail.Type))
+                                                                 .Select(mail => new SentMailDto
+                                                                 {
+                                                                     Id = mail.Id,
+                                                                     Sent = mail.Sent
+                                                                 })
+                                                                 .OrderByDescending(mail => mail.Sent)
+                                                                 .FirstOrDefault(),
+
+                ReminderSmsSent = tmp.ReminderSms.Select(sms => sms.Sent)
+                                                                         .FirstOrDefault()
+            })
+            .OrderBy(reg => reg.AcceptedMail?.Sent ?? DateTime.MaxValue)
+            .Select(reg => new DuePaymentItem
+            {
+                Id = reg.Id,
+                FirstName = reg.FirstName,
+                LastName = reg.LastName,
+                Email = reg.Email,
+                Price = reg.Price,
+                Paid = reg.Paid,
+                ReceivedAt = reg.ReceivedAt,
+                AcceptedMail = reg.AcceptedMail,
+                Reminder1Mail = reg.Reminder1Mail,
+                Reminder2Mail = reg.Reminder2Mail,
+                ReminderLevel = reg.ReminderLevel,
+                Reminder1Due = reg.Reminder1Mail == null &&
+                               reg.AcceptedMail != null &&
+                               reg.AcceptedMail.Sent < reminderDueFrom,
+                Reminder2Due = reg.Reminder2Mail == null &&
+                               reg.Reminder1Mail != null &&
+                               reg.Reminder1Mail.Sent < reminderDueFrom,
+                ReminderSmsSent = reg.ReminderSmsSent,
+                PhoneNormalized = reg.PhoneNormalized,
+                ReminderSmsPossible = !reg.ReminderSmsSent.HasValue &&
+                                      reg.AcceptedMail.Sent < reminderDueFrom &&
+                                      reg.PhoneNormalized != null
+            })
+            .ToList();
+
             return dueRegistrations;
         }
     }
