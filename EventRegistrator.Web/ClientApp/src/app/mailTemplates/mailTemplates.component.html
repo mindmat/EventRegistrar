@@ -10,7 +10,7 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let template of mailTemplates" (click)="showTemplate(template.key, template.language)">
+    <tr *ngFor="let template of mailTemplates" (click)="showTemplate(template)">
       <td>{{ template.key }}</td>
       <td>{{ template.language }}</td>
       <td>{{ template.subject }}</td>

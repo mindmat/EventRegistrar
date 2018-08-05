@@ -18,7 +18,7 @@ namespace EventRegistrar.Backend.Payments
         }
 
         [HttpGet("api/events/{eventAcronym}/duepayments")]
-        public Task GetDuePayments(string eventAcronym)
+        public Task<IEnumerable<DuePaymentItem>> GetDuePayments(string eventAcronym)
         {
             return _mediator.Send(new DuePaymentsQuery { EventAcronym = eventAcronym });
         }

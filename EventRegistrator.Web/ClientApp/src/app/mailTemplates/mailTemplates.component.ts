@@ -26,18 +26,9 @@ export class MailTemplatesComponent {
         });
   }
 
-  showTemplate(mailingKey: string, language: string) {
-    this.searching = true;
-    this.http.get<MailTemplate>(`api/events/${this.getEventAcronym()}/mailTemplates/${mailingKey}?lang=${language}`)
-      .subscribe(result => {
-        this.mailTemplate = result;
-        this.renderMail();
-        this.searching = false;
-      },
-        error => {
-          console.error(error);
-          this.searching = false;
-        });
+  showTemplate(mailTemplate: MailTemplate) {
+    this.mailTemplate = mailTemplate;
+    this.renderMail(this.mailTemplate.template);
   }
 
   saveTemplate() {
@@ -58,9 +49,9 @@ export class MailTemplatesComponent {
     return this.route.snapshot.params['eventAcronym'];
   }
 
-  renderMail() {
+  renderMail(template: string) {
     var mailContainer = document.getElementById("templateRenderSpace") as HTMLDivElement;
-    mailContainer.innerHTML = this.mailTemplate.template;
+    mailContainer.innerHTML = template;
   }
 }
 
