@@ -16,7 +16,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let registrable of doubleRegistrables">
-      <td><a [routerLink]="['/registrables', registrable.Id, 'participants']">{{ registrable.name }}</a></td>
+      <td><a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a></td>
       <td>{{ registrable.spotsAvailable }}</td>
       <td>{{ registrable.leadersAccepted }}</td>
       <td>{{ registrable.followersAccepted }}</td>
