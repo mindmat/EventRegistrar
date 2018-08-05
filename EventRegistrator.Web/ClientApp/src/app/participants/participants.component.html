@@ -1,49 +1,49 @@
-<h1>Teilnehmer {{ registrable.Name }} </h1>
+<h1>Teilnehmer {{ registrable.name }} </h1>
 
 <p *ngIf="!registrable"><em>Loading...</em></p>
 
 <table class='table' *ngIf="registrable">
-    <thead>
-        <tr>
-            <th *ngIf="!registrable.MaximumDoubleSeats">Name</th>
-            <th *ngIf="registrable.MaximumDoubleSeats">Leader</th>
-            <th *ngIf="registrable.MaximumDoubleSeats">Follower</th>
-            <th *ngIf="registrable.MaximumDoubleSeats">Partnerregistrierung</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let participant of registrable.Participants">
-            <td [style.font-weight]="participant.Leader?.State == 1 ? 'bold' : 'normal'">
-                <a *ngIf="participant.Leader" [routerLink]="['/registration', participant.Leader.Id]">{{ participant.Leader?.FirstName }} {{ participant.Leader?.LastName }}</a>
-            </td>
-            <td [style.font-weight]="participant.Follower?.State == 1 ? 'bold' : 'normal'" *ngIf="registrable.MaximumDoubleSeats">
-                <a *ngIf="participant.Follower" [routerLink]="['/registration', participant.Follower?.Id]">{{ participant.Follower?.FirstName }} {{ participant.Follower?.LastName }}</a>
-            </td>
-            <td *ngIf="registrable.MaximumDoubleSeats"><p *ngIf="participant.IsPartnerRegistration">x</p></td>
-        </tr>
-    </tbody>
+  <thead>
+    <tr>
+      <th *ngIf="!registrable.maximumDoubleSeats">Name</th>
+      <th *ngIf="registrable.maximumDoubleSeats">Leader</th>
+      <th *ngIf="registrable.maximumDoubleSeats">Follower</th>
+      <th *ngIf="registrable.maximumDoubleSeats">Partnerregistrierung</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let participant of registrable.participants">
+      <td [style.font-weight]="participant.leader?.state == 1 ? 'bold' : 'normal'">
+        <a *ngIf="participant.leader" [routerLink]="['/', getEventAcronym(), 'registration', participant.leader.id]">{{ participant.leader?.firstName }} {{ participant.leader?.lastName }}</a>
+      </td>
+      <td [style.font-weight]="participant.follower?.state == 1 ? 'bold' : 'normal'" *ngIf="registrable.MaximumDoubleSeats">
+        <a *ngIf="participant.follower" [routerLink]="['/', getEventAcronym(), 'registration', participant.follower?.id]">{{ participant.follower?.firstName }} {{ participant.follower?.lastName }}</a>
+      </td>
+      <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">x</p></td>
+    </tr>
+  </tbody>
 </table>
 <br />
-<h2 *ngIf="registrable && registrable.WaitingList">Warteliste</h2>
+<h2 *ngIf="registrable && registrable.waitingList">Warteliste</h2>
 
-<button class="btn btn-primary" *ngIf="registrable.HasWaitingList" (click)="promote()">Nachrücken auslösen</button>
+<button class="btn btn-primary" *ngIf="registrable.hasWaitingList" (click)="promote()">Nachrücken auslösen</button>
 
-<table class='table' *ngIf="registrable && registrable.WaitingList">
+<table class='table' *ngIf="registrable && registrable.waitingList">
   <thead>
-        <tr>
-            <th *ngIf="!registrable.MaximumDoubleSeats">Name</th>
-            <th *ngIf="registrable.MaximumDoubleSeats">Leader</th>
-            <th *ngIf="registrable.MaximumDoubleSeats">Follower</th>
-            <th *ngIf="registrable.MaximumDoubleSeats">Partnerregistrierung</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let participant of registrable.WaitingList">
-            <td><a *ngIf="participant.Leader" [routerLink]="['/registration', participant.Leader?.Id]">{{ participant.Leader?.FirstName }} {{participant.Leader?.LastName }}</a></td>
-            <td *ngIf="registrable.MaximumDoubleSeats">
-                <a *ngIf="participant.Follower" [routerLink]="['/registration', participant.Follower?.Id]">{{ participant.Follower?.FirstName }} {{participant.Follower?.LastName }}</a>
-            </td>
-            <td *ngIf="registrable.MaximumDoubleSeats"><p *ngIf="participant.IsPartnerRegistration">x</p></td>
-        </tr>
-    </tbody>
+    <tr>
+      <th *ngIf="!registrable.maximumDoubleSeats">Name</th>
+      <th *ngIf="registrable.maximumDoubleSeats">Leader</th>
+      <th *ngIf="registrable.maximumDoubleSeats">Follower</th>
+      <th *ngIf="registrable.maximumDoubleSeats">Partnerregistrierung</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let participant of registrable.WaitingList">
+      <td><a *ngIf="participant.leader" [routerLink]="['/registration', participant.leader?.Id]">{{ participant.leader?.firstName }} {{ participant.leader?.lastName }}</a></td>
+      <td *ngIf="registrable.maximumDoubleSeats">
+        <a *ngIf="participant.follower" [routerLink]="['/registration', participant.follower?.Id]">{{ participant.follower?.firstName }} {{ participant.follower?.lastName }}</a>
+      </td>
+      <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">x</p></td>
+    </tr>
+  </tbody>
 </table>
