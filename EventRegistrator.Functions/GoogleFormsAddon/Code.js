@@ -43,48 +43,48 @@ the same form will be able to adjust the notification settings, but will not be 
 able to disable the notification triggers set by other collaborators.";
 
 function onSubmit(e) {
-    postAnswerToBackend(e.response);
+  postAnswerToBackend(e.response);
 }
 
 function postAnswerToBackend(response) {
-    var responsesData = [];
-    var itemResponses = response.getItemResponses();
-    for (var i = 0; i < itemResponses.length; i++) {
-        var itemResponse = itemResponses[i];
-        var stringAnswer = '';
-        var stringArrayAnswer = [];
-        var type = itemResponse.getItem().getType();
-        if (type == FormApp.ItemType.CHECKBOX || type == FormApp.ItemType.GRID) {
-            stringArrayAnswer = itemResponse.getResponse()
-        }
-        else {
-            stringAnswer = itemResponse.getResponse();
-        }
-        var responseItem =
-            {
-                questionExternalId: itemResponse.getItem().getId(),
-                response: stringAnswer,
-                responses: stringArrayAnswer
-            };
-        responsesData.push(responseItem);
+  var responsesData = [];
+  var itemResponses = response.getItemResponses();
+  for (var i = 0; i < itemResponses.length; i++) {
+    var itemResponse = itemResponses[i];
+    var stringAnswer = '';
+    var stringArrayAnswer = [];
+    var type = itemResponse.getItem().getType();
+    if (type == FormApp.ItemType.CHECKBOX || type == FormApp.ItemType.GRID) {
+      stringArrayAnswer = itemResponse.getResponse()
     }
+    else {
+      stringAnswer = itemResponse.getResponse();
+    }
+    var responseItem =
+      {
+        questionExternalId: itemResponse.getItem().getId(),
+        response: stringAnswer,
+        responses: stringArrayAnswer
+      };
+    responsesData.push(responseItem);
+  }
 
-    var responseData =
-        {
-            email: response.getRespondentEmail(),
-            timestamp: response.getTimestamp(),
-            responses: responsesData
-        };
-
-    var options = {
-        'method': 'post',
-        'contentType': 'application/json',
-        'payload': JSON.stringify(responseData)
+  var responseData =
+    {
+      //email: response.getRespondentEmail(),
+      timestamp: response.getTimestamp(),
+      responses: responsesData
     };
 
-    var form = FormApp.getActiveForm();
-    var url = 'https://eventregistrator.azurewebsites.net/api/registrationform/' + form.getId() + '/registration/' + response.getId();
-    UrlFetchApp.fetch(url, options);
+  var options = {
+    'method': 'post',
+    'contentType': 'application/json',
+    'payload': JSON.stringify(responseData)
+  };
+
+  var form = FormApp.getActiveForm();
+  var url = 'https://eventregistrarfunctions.azurewebsites.net/api/registrationform/' + form.getId() + '/registration/' + response.getId();
+  UrlFetchApp.fetch(url, options);
 }
 
 /**
@@ -97,7 +97,7 @@ function postAnswerToBackend(response) {
  *     AuthMode.NONE).
  */
 function onInstall(e) {
-    onOpen(e);
+  onOpen(e);
 }
 
 /**
@@ -108,60 +108,60 @@ function onInstall(e) {
  *     running in, inspect e.authMode.
  */
 function onOpen(e) {
-    FormApp.getUi()
-        .createAddonMenu()
-        .addItem('Update Questions in Event Registrator', 'updateFormDefinitionInEventRegistrator')
-        //.addItem('Resync answers', 'resyncAnswers')
-        .addItem('Resync missing answers', 'resyncMissingAnswers')
-        .addToUi();
+  FormApp.getUi()
+    .createAddonMenu()
+    .addItem('Update Questions in Event Registrator', 'updateFormDefinitionInEventRegistrator')
+    //.addItem('Resync answers', 'resyncAnswers')
+    .addItem('Resync missing answers', 'resyncMissingAnswers')
+    .addToUi();
 }
 
 function updateFormDefinitionInEventRegistrator() {
-    var form = FormApp.getActiveForm();
+  var form = FormApp.getActiveForm();
 
-    var questions = [];
-    var formItems = form.getItems();
-    for (var i = 0; i < formItems.length; i++) {
-        var formItem = formItems[i];
-        var question =
-            {
-                id: formItem.getId(),
-                type: formItem.getType().toString(),
-                title: formItem.getTitle(),
-                index: formItem.getIndex()
-            }
-        if (formItem.getType() == FormApp.ItemType.MULTIPLE_CHOICE) {
-            var multipleChoiceItem = formItem.asMultipleChoiceItem();
-            var choices = multipleChoiceItem.getChoices();
-            question.choices = [];
-            for (var j = 0; j < choices.length; j++) {
-                question.choices.push(choices[j].getValue());
-            }
-        }
-        else if (formItem.getType() == FormApp.ItemType.CHECKBOX) {
-            var checkboxGridItem = formItem.asCheckboxItem();
-            var choices = checkboxGridItem.getChoices();
-            question.choices = [];
-            for (var j = 0; j < choices.length; j++) {
-                question.choices.push(choices[j].getValue());
-            }
-        }
-        questions.push(question);
+  var questions = [];
+  var formItems = form.getItems();
+  for (var i = 0; i < formItems.length; i++) {
+    var formItem = formItems[i];
+    var question =
+      {
+        id: formItem.getId(),
+        type: formItem.getType().toString(),
+        title: formItem.getTitle(),
+        index: formItem.getIndex()
+      }
+    if (formItem.getType() == FormApp.ItemType.MULTIPLE_CHOICE) {
+      var multipleChoiceItem = formItem.asMultipleChoiceItem();
+      var choices = multipleChoiceItem.getChoices();
+      question.choices = [];
+      for (var j = 0; j < choices.length; j++) {
+        question.choices.push(choices[j].getValue());
+      }
+    }
+    else if (formItem.getType() == FormApp.ItemType.CHECKBOX) {
+      var checkboxGridItem = formItem.asCheckboxItem();
+      var choices = checkboxGridItem.getChoices();
+      question.choices = [];
+      for (var j = 0; j < choices.length; j++) {
+        question.choices.push(choices[j].getValue());
+      }
+    }
+    questions.push(question);
+  }
+
+  var registrationFrom =
+    {
+      title: form.getTitle(),
+      'questions': questions
     }
 
-    var registrationFrom =
-        {
-            title: form.getTitle(),
-            'questions': questions
-        }
-
-    var options = {
-        'method': 'post',
-        'contentType': 'application/json',
-        'payload': JSON.stringify(registrationFrom)
-    };
-    var url = 'https://eventregistrator.azurewebsites.net/api/registrationform/' + form.getId();
-    UrlFetchApp.fetch(url, options);
+  var options = {
+    'method': 'post',
+    'contentType': 'application/json',
+    'payload': JSON.stringify(registrationFrom)
+  };
+  var url = 'https://eventregistrator.azurewebsites.net/api/registrationform/' + form.getId();
+  UrlFetchApp.fetch(url, options);
 }
 
 /*
@@ -179,51 +179,43 @@ function resyncAnswers() {
 */
 
 function resyncMissingAnswers() {
-    var form = FormApp.getActiveForm();
-    var options = {
-        'method': 'get'
-    };
-    var url = 'https://eventregistrator.azurewebsites.net/api/registrationform/' + form.getId() + '/ExternalIdentifiers';
-    var httpResult = UrlFetchApp.fetch(url, options);
+  var form = FormApp.getActiveForm();
+  var options = {
+    'method': 'get'
+  };
+  var url = 'https://eventregistratorweb.azurewebsites.net/api/registrationform/' + form.getId() + '/ExternalIdentifiers';
+  var httpResult = UrlFetchApp.fetch(url, options);
 
-    if (httpResult.getResponseCode() != 200) {
-        FormApp.getUi().alert('request result code ' + httpResult.getResponseCode());
-        return;
+  if (httpResult.getResponseCode() != 200) {
+    FormApp.getUi().alert('request result code ' + httpResult.getResponseCode());
+    return;
+  }
+
+  submittedResponseIds = JSON.parse(httpResult.getContentText());
+
+  var responses = form.getResponses();
+
+  //  for (var i = 0; i < responses.length; i++) {
+  for (var i = 0; i < 5; i++) {
+    var response = responses[i];
+    var responseId = response.getId();
+    var matchFound = false;
+    for (i in submittedResponseIds) {
+      if (submittedResponseIds[i] == responseId) {
+        matchFound = true;
+        break;
+      }
+    }
+    if (matchFound) {
+      // response is transmitted, no work to do
+      continue;
     }
 
-    submittedResponseIds = JSON.parse(httpResult.getContentText());
-
-    var responses = form.getResponses();
-
-    //  for (var i = 0; i < responses.length; i++) {
-    for (var i = 0; i < 5; i++) {
-        var response = responses[i];
-        var responseId = response.getId();
-        var matchFound = false;
-        for (i in submittedResponseIds) {
-            if (submittedResponseIds[i] == responseId) {
-                matchFound = true;
-                break;
-            }
-        }
-        if (matchFound) {
-            // response is transmitted, no work to do
-            continue;
-        }
-
-        try {
-            //postAnswerToBackend(response);
-            FormApp.getUi().alert('missing response ' + responseId);
-        }
-        catch (err) {
-        }
+    try {
+      //postAnswerToBackend(response);
+      FormApp.getUi().alert('missing response ' + responseId);
     }
+    catch (err) {
+    }
+  }
 }
-
-/*
-    MailApp.sendEmail("mathias.minder@gmail.com",
-                      "Registrierung",
-                      "A new application has been submitted.\n\n" +
-                      JSON.stringify(responseData),
-                      {name:"From Name"});
-*/

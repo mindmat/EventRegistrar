@@ -1,9 +1,8 @@
 ﻿using System;
 using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Registrables.Participants;
 using MediatR;
 
-namespace EventRegistrar.Backend.Registrables
+namespace EventRegistrar.Backend.Registrables.Participants
 {
     public class ParticipantsOfRegistrableQuery : IRequest<RegistrableDisplayInfo>, IEventBoundRequest
     {

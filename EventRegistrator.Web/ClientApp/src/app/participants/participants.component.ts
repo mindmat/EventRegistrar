@@ -8,13 +8,11 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ParticipantsComponent {
   public registrable: Registrable;
-  registrableId: any;
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    this.registrableId = this.route.snapshot.params["id"];
     this.refreshParticipants();
   }
 

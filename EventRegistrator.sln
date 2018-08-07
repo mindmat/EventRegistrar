@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{16EDE4B2
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistrar.Backend.Test", "tests\EventRegistrar.Backend.Test\EventRegistrar.Backend.Test.csproj", "{200A3096-D9BA-4073-BC2A-0D413652D177}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistrar.Functions", "EventRegistrar.Functions\EventRegistrar.Functions.csproj", "{809D26C5-03FD-435D-85E7-83A584DE2C0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{200A3096-D9BA-4073-BC2A-0D413652D177}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{200A3096-D9BA-4073-BC2A-0D413652D177}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{200A3096-D9BA-4073-BC2A-0D413652D177}.Release|Any CPU.Build.0 = Release|Any CPU
+		{809D26C5-03FD-435D-85E7-83A584DE2C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{809D26C5-03FD-435D-85E7-83A584DE2C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{809D26C5-03FD-435D-85E7-83A584DE2C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{809D26C5-03FD-435D-85E7-83A584DE2C0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
