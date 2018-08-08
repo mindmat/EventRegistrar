@@ -1,4 +1,4 @@
-﻿namespace EventRegistrar.Functions.GoogleForms
+﻿namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
 {
     public class QuestionDescription
     {

@@ -15,9 +15,10 @@ namespace EventRegistrar.Functions
     public static class Register
     {
         [FunctionName("Register")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "registrationform/{formId}/registration/{registrationId}")]
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "events/{eventAcronym}/registrationforms/{formId}/registrations/{registrationId}")]
                                                      HttpRequest req,
                                                      ILogger log,
+                                                     string eventAcronym,
                                                      string formId,
                                                      string registrationId,
                                                      ExecutionContext context)
@@ -36,11 +37,12 @@ namespace EventRegistrar.Functions
             var connectionString = config.GetConnectionString("DefaultConnection");
             using (var connection = new SqlConnection(connectionString))
             {
-                const string insertQuery = @"INSERT INTO dbo.RawRegistrations(Id, ReceivedMessage, FormExternalIdentifier, RegistrationExternalIdentifier, Created) " +
-                                           @"VALUES (@Id, @ReceivedMessage, @FormExternalIdentifier, @RegistrationExternalIdentifier, @Created)";
+                const string insertQuery = @"INSERT INTO dbo.RawRegistrations(Id, EventAcronym, ReceivedMessage, FormExternalIdentifier, RegistrationExternalIdentifier, Created) " +
+                                           @"VALUES (@Id, @EventAcronym, @ReceivedMessage, @FormExternalIdentifier, @RegistrationExternalIdentifier, @Created)";
                 var parameters = new
                 {
                     Id = Guid.NewGuid(),
+                    EventAcronym = eventAcronym,
                     ReceivedMessage = requestBody,
                     FormExternalIdentifier = formId,
                     RegistrationExternalIdentifier = registrationId,

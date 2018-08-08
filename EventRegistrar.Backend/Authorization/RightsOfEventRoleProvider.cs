@@ -8,6 +8,7 @@ using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Unrecognized;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Search;
 using EventRegistrar.Backend.Seats;
@@ -54,6 +55,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(AddUserToRoleInEventCommand).Name;
                 yield return typeof(RemoveUserFromRoleInEventCommand).Name;
                 yield return typeof(RespondToRequestCommand).Name;
+                yield return typeof(SaveRegistrationFormDefinitionCommand).Name;
             }
         }
     }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EventRegistrar.Functions.GoogleForms
+namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
 {
     public class Registration
     {

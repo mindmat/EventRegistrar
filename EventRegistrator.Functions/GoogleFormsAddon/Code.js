@@ -29,6 +29,7 @@
  * used to identify the add-on in the notification emails.
  */
 var ADDON_TITLE = 'Event Registrator';
+var eventAcronym = 'rb18';
 
 /**
  * A global constant 'notice' text to include with each email
@@ -83,7 +84,7 @@ function postAnswerToBackend(response) {
   };
 
   var form = FormApp.getActiveForm();
-  var url = 'https://eventregistrarfunctions.azurewebsites.net/api/registrationform/' + form.getId() + '/registration/' + response.getId();
+  var url = 'https://eventregistrarfunctions.azurewebsites.net/api/' + eventAcronym + '/registrationform/' + form.getId() + '/registration/' + response.getId();
   UrlFetchApp.fetch(url, options);
 }
 
@@ -160,7 +161,7 @@ function updateFormDefinitionInEventRegistrator() {
     'contentType': 'application/json',
     'payload': JSON.stringify(registrationFrom)
   };
-  var url = 'https://eventregistrator.azurewebsites.net/api/registrationform/' + form.getId();
+  var url = 'https://eventregistrator.azurewebsites.net/api/' + eventAcronym + '/registrationform/' + form.getId();
   UrlFetchApp.fetch(url, options);
 }
 
