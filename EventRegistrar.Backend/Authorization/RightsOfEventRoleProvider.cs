@@ -8,6 +8,7 @@ using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Unrecognized;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Search;
@@ -40,6 +41,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(SpotsOfRegistrationQuery).Name;
                 yield return typeof(DuePaymentsQuery).Name;
                 yield return typeof(MailTemplatesQuery).Name;
+                yield return typeof(ParticipantsOfRegistrableQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))

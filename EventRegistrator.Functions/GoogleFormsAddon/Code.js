@@ -84,7 +84,7 @@ function postAnswerToBackend(response) {
   };
 
   var form = FormApp.getActiveForm();
-  var url = 'https://eventregistrarfunctions.azurewebsites.net/api/' + eventAcronym + '/registrationform/' + form.getId() + '/registration/' + response.getId();
+  var url = 'https://eventregistrarfunctions.azurewebsites.net/api/events/' + eventAcronym + '/registrationforms/' + form.getId() + '/registrations/' + response.getId();
   UrlFetchApp.fetch(url, options);
 }
 
@@ -161,7 +161,7 @@ function updateFormDefinitionInEventRegistrator() {
     'contentType': 'application/json',
     'payload': JSON.stringify(registrationFrom)
   };
-  var url = 'https://eventregistrator.azurewebsites.net/api/' + eventAcronym + '/registrationform/' + form.getId();
+  var url = 'https://eventregistratorweb.azurewebsites.net/api/events/' + eventAcronym + '/registrationforms/' + form.getId();
   UrlFetchApp.fetch(url, options);
 }
 

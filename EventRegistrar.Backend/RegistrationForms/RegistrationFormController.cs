@@ -14,7 +14,7 @@ namespace EventRegistrar.Backend.RegistrationForms
             _mediator = mediator;
         }
 
-        [HttpGet("api/events/{eventAcronym}/registrationforms/{formId}")]
+        [HttpPost("api/events/{eventAcronym}/registrationforms/{formId}")]
         public Task SaveRegistrationFormDefinition(string eventAcronym, string formId, FormDescription formDescription)
         {
             return _mediator.Send(new SaveRegistrationFormDefinitionCommand { EventAcronym = eventAcronym, FormId = formId, Description = formDescription });
