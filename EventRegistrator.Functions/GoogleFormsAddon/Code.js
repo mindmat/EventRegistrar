@@ -150,7 +150,7 @@ function updateFormDefinitionInEventRegistrator() {
     questions.push(question);
   }
 
-  var registrationFrom =
+  var registrationForm =
     {
       title: form.getTitle(),
       'questions': questions
@@ -159,10 +159,16 @@ function updateFormDefinitionInEventRegistrator() {
   var options = {
     'method': 'post',
     'contentType': 'application/json',
-    'payload': JSON.stringify(registrationFrom)
+    'payload': JSON.stringify(registrationForm)
   };
-  var url = 'https://eventregistratorweb.azurewebsites.net/api/events/' + eventAcronym + '/registrationforms/' + form.getId();
-  UrlFetchApp.fetch(url, options);
+  var url = 'https://eventregistrarfunctions.azurewebsites.net/api/events/' + eventAcronym + '/registrationforms/' + form.getId();
+  var httpResult = UrlFetchApp.fetch(url, options);
+
+  if (httpResult.getResponseCode() != 200) {
+    FormApp.getUi().alert('request result code ' + httpResult.getResponseCode());
+    FormApp.getUi().alert(httpResult.getContentText());
+    return;
+  }
 }
 
 /*

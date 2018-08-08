@@ -7,20 +7,19 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Functions
 {
-    public static class Register
+    public static class SaveRegistrationForm
     {
-        [FunctionName("Register")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "events/{eventAcronym}/registrationforms/{formId}/registrations/{registrationId}")]
+        [FunctionName("SaveRegistrationForm")]
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "events/{eventAcronym}/registrationforms/{formId}")]
                                                      HttpRequest req,
-                                                     ILogger log,
                                                      string eventAcronym,
                                                      string formId,
-                                                     string registrationId)
+                                                     TraceWriter log)
         {
             var config = new ConfigurationBuilder().AddEnvironmentVariables()
                                                    .Build();
@@ -30,15 +29,14 @@ namespace EventRegistrar.Functions
             var connectionString = config.GetConnectionString("DefaultConnection");
             using (var connection = new SqlConnection(connectionString))
             {
-                const string insertQuery = @"INSERT INTO dbo.RawRegistrations(Id, EventAcronym, ReceivedMessage, FormExternalIdentifier, RegistrationExternalIdentifier, Created) " +
-                                           @"VALUES (@Id, @EventAcronym, @ReceivedMessage, @FormExternalIdentifier, @RegistrationExternalIdentifier, @Created)";
+                const string insertQuery = @"INSERT INTO dbo.RawRegistrationForms(Id, EventAcronym, ReceivedMessage, FormExternalIdentifier, Created) " +
+                                           @"VALUES (@Id, @EventAcronym, @ReceivedMessage, @FormExternalIdentifier, @Created)";
                 var parameters = new
                 {
                     Id = Guid.NewGuid(),
                     EventAcronym = eventAcronym,
                     ReceivedMessage = requestBody,
                     FormExternalIdentifier = formId,
-                    RegistrationExternalIdentifier = registrationId,
                     Created = DateTime.UtcNow
                 };
 
