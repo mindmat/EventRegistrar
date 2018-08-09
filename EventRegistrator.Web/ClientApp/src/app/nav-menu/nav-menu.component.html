@@ -69,6 +69,11 @@
             <span class='glyphicon glyphicon-envelope'></span> Berechtigungen
           </a>
         </li>
+        <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
+          <a [routerLink]="[eventService.acronym, 'registrationForms']">
+            <span class='glyphicon glyphicon-envelope'></span> Anmeldeformulare
+          </a>
+        </li>
       </ul>
     </div>
   </div>

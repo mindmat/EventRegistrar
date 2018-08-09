@@ -1,15 +1,14 @@
 ﻿using System;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 
-namespace EventRegistrar.Backend.Registrations.Raw
+namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
 {
-    public class RawRegistration : Entity
+    public class RawRegistrationForm : Entity
     {
         public DateTime Created { get; set; }
         public string EventAcronym { get; set; }
         public string FormExternalIdentifier { get; set; }
         public bool Processed { get; set; }
         public string ReceivedMessage { get; set; }
-        public string RegistrationExternalIdentifier { get; set; }
     }
 }

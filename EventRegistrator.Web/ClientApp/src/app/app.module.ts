@@ -25,6 +25,7 @@ import { PartyOverviewComponent } from "./partyOverview/partyOverview.component"
 import { MailTemplatesComponent } from "./mailTemplates/mailTemplates.component";
 import { EventSelectionComponent } from "./events/eventSelection.component";
 import { EventAuthorizationComponent } from "./eventAuthorization/eventAuthorization.component";
+import { RegistrationFormsComponent } from "./registrationForms/registrationForms.component";
 import { EventService } from "./events/eventService.service";
 
 @NgModule({
@@ -45,7 +46,8 @@ import { EventService } from "./events/eventService.service";
     PartyOverviewComponent,
     MailTemplatesComponent,
     EventSelectionComponent,
-    EventAuthorizationComponent
+    EventAuthorizationComponent,
+    RegistrationFormsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -69,6 +71,7 @@ import { EventService } from "./events/eventService.service";
       { path: ':eventAcronym/registrations/:id/sms', component: SmsConversationComponent },
       { path: ':eventAcronym/partyOverview', component: PartyOverviewComponent },
       { path: ':eventAcronym/mailTemplates', component: MailTemplatesComponent },
+      { path: ':eventAcronym/registrationForms', component: RegistrationFormsComponent },
       //{ path: '**', redirectTo: 'll18/registrables' }
     ])
   ],

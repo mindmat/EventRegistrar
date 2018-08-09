@@ -7,7 +7,9 @@ using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;
+using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Seats;
 using EventRegistrar.Backend.Sms;
@@ -44,6 +46,9 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new MailToRegistrationMap());
             builder.ApplyConfiguration(new MailTemplateMap());
             builder.ApplyConfiguration(new SmsMap());
+
+            builder.ApplyConfiguration(new RawRegistrationFormMap());
+            builder.ApplyConfiguration(new RawRegistrationMap());
         }
 
         /*
