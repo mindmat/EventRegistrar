@@ -16,7 +16,7 @@
       <td [style.font-weight]="participant.leader?.state == 1 ? 'bold' : 'normal'">
         <a *ngIf="participant.leader" [routerLink]="['/', getEventAcronym(), 'registration', participant.leader.id]">{{ participant.leader?.firstName }} {{ participant.leader?.lastName }}</a>
       </td>
-      <td [style.font-weight]="participant.follower?.state == 1 ? 'bold' : 'normal'" *ngIf="registrable.MaximumDoubleSeats">
+      <td [style.font-weight]="participant.follower?.state == 1 ? 'bold' : 'normal'" *ngIf="registrable.maximumDoubleSeats">
         <a *ngIf="participant.follower" [routerLink]="['/', getEventAcronym(), 'registration', participant.follower?.id]">{{ participant.follower?.firstName }} {{ participant.follower?.lastName }}</a>
       </td>
       <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">x</p></td>
