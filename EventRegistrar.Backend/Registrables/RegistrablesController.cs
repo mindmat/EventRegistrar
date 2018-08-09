@@ -25,7 +25,7 @@ namespace EventRegistrar.Backend.Registrables
         [HttpGet("api/events/{eventAcronym}/registrables/{registrableId:guid}/participants")]
         public Task<RegistrableDisplayInfo> GetParticipants(string eventAcronym, Guid registrableId)
         {
-            return _mediator.Send(new ParticipantsOfRegistrableQuery { EventAcronym = eventAcronym });
+            return _mediator.Send(new ParticipantsOfRegistrableQuery { EventAcronym = eventAcronym, RegistrableId = registrableId });
         }
 
         [HttpGet("api/events/{eventAcronym}/registrables")]

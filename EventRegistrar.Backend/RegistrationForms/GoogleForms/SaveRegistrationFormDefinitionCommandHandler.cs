@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,14 +12,17 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
 {
     public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<SaveRegistrationFormDefinitionCommand>
     {
+        private readonly IEventAcronymResolver _acronymResolver;
         private readonly IRepository<RegistrationForm> _forms;
         private readonly IRepository<RawRegistrationForm> _rawForms;
 
         public SaveRegistrationFormDefinitionCommandHandler(IRepository<RegistrationForm> forms,
-                                                            IRepository<RawRegistrationForm> rawForms)
+                                                            IRepository<RawRegistrationForm> rawForms,
+                                                            IEventAcronymResolver acronymResolver)
         {
             _forms = forms;
             _rawForms = rawForms;
+            _acronymResolver = acronymResolver;
         }
 
         public async Task<Unit> Handle(SaveRegistrationFormDefinitionCommand command, CancellationToken cancellationToken)
@@ -32,6 +36,8 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
             {
                 throw new ArgumentException("No unprocessed form found");
             }
+
+            var eventId = await _acronymResolver.GetEventIdFromAcronym(command.EventAcronym);
 
             var formDescription = JsonConvert.DeserializeObject<FormDescription>(rawForm.ReceivedMessage);
             var form = await _forms.FirstOrDefaultAsync(frm => frm.ExternalIdentifier == command.FormId, cancellationToken);
@@ -51,6 +57,7 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                 form = new RegistrationForm
                 {
                     Id = Guid.NewGuid(),
+                    EventId = eventId,
                     ExternalIdentifier = command.FormId,
                     Title = formDescription.Title,
                     State = State.Setup
