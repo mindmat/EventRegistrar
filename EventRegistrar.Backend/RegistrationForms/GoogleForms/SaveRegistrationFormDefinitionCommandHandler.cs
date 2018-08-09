@@ -14,14 +14,20 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
     {
         private readonly IEventAcronymResolver _acronymResolver;
         private readonly IRepository<RegistrationForm> _forms;
+        private readonly IRepository<QuestionOption> _questionOptions;
+        private readonly IRepository<Question> _questions;
         private readonly IRepository<RawRegistrationForm> _rawForms;
 
         public SaveRegistrationFormDefinitionCommandHandler(IRepository<RegistrationForm> forms,
                                                             IRepository<RawRegistrationForm> rawForms,
+                                                            IRepository<Question> questions,
+                                                            IRepository<QuestionOption> questionOptions,
                                                             IEventAcronymResolver acronymResolver)
         {
             _forms = forms;
             _rawForms = rawForms;
+            _questions = questions;
+            _questionOptions = questionOptions;
             _acronymResolver = acronymResolver;
         }
 
@@ -64,6 +70,81 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                 };
                 await _forms.InsertOrUpdateEntity(form, cancellationToken);
             }
+
+            // update questions
+            var existingQuestions = await _questions.Where(qst => qst.RegistrationFormId == form.Id).ToListAsync(cancellationToken);
+            foreach (var receivedQuestion in formDescription.Questions)
+            {
+                var existingQuestion = existingQuestions.FirstOrDefault(qst => qst.ExternalId == receivedQuestion.Id);
+                if (existingQuestion == null)
+                {
+                    // new question
+                    var question = new Question
+                    {
+                        Id = Guid.NewGuid(),
+                        RegistrationFormId = form.Id,
+                        ExternalId = receivedQuestion.Id,
+                        Index = receivedQuestion.Index,
+                        Title = receivedQuestion.Title,
+                        Type = (RegistrationForms.QuestionType)receivedQuestion.Type
+                    };
+                    await _questions.InsertOrUpdateEntity(question, cancellationToken);
+                    if (receivedQuestion.Choices?.Any() == true)
+                    {
+                        foreach (var choice in receivedQuestion.Choices)
+                        {
+                            await _questionOptions.InsertOrUpdateEntity(new QuestionOption
+                            {
+                                Id = Guid.NewGuid(),
+                                QuestionId = question.Id,
+                                Answer = choice
+                            }, cancellationToken);
+                        }
+                    }
+                }
+                else
+                {
+                    // update existing question
+                    existingQuestion.Index = receivedQuestion.Index;
+                    existingQuestion.Title = receivedQuestion.Title;
+                    existingQuestion.Type = (RegistrationForms.QuestionType)receivedQuestion.Type;
+                    existingQuestions.Remove(existingQuestion);
+
+                    // update options
+                    if (receivedQuestion.Choices?.Any() == true)
+                    {
+                        var existingOptions = await _questionOptions.Where(opt => opt.QuestionId == existingQuestion.Id).ToListAsync(cancellationToken);
+                        foreach (var receivedChoice in receivedQuestion.Choices)
+                        {
+                            var existingOption = existingOptions.FirstOrDefault(exo => exo.Answer == receivedChoice);
+                            if (existingOption == null)
+                            {
+                                await _questionOptions.InsertOrUpdateEntity(new QuestionOption
+                                {
+                                    Id = Guid.NewGuid(),
+                                    QuestionId = existingQuestion.Id,
+                                    Answer = receivedChoice
+                                }, cancellationToken);
+                            }
+                            else
+                            {
+                                existingOptions.Remove(existingOption);
+                            }
+                        }
+
+                        foreach (var existingOption in existingOptions)
+                        {
+                            _questionOptions.Remove(existingOption);
+                        }
+                    }
+                }
+            }
+            foreach (var existingQuestion in existingQuestions)
+            {
+                _questions.Remove(existingQuestion);
+            }
+
+            rawForm.Processed = true;
 
             return Unit.Value;
         }
