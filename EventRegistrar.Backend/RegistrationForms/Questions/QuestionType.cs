@@ -1,4 +1,4 @@
-﻿namespace EventRegistrar.Backend.RegistrationForms
+﻿namespace EventRegistrar.Backend.RegistrationForms.Questions
 {
     public enum QuestionType
     {

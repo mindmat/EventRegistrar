@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EventRegistrar.Backend.RegistrationForms
+namespace EventRegistrar.Backend.RegistrationForms.Questions
 {
     public class QuestionMap : EntityTypeConfiguration<Question>
     {

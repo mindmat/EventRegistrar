@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
 import { AppComponent } from './app.component';
@@ -26,6 +26,7 @@ import { MailTemplatesComponent } from "./mailTemplates/mailTemplates.component"
 import { EventSelectionComponent } from "./events/eventSelection.component";
 import { EventAuthorizationComponent } from "./eventAuthorization/eventAuthorization.component";
 import { RegistrationFormsComponent } from "./registrationForms/registrationForms.component";
+import { QuestionMappingComponent } from "./questionMapping/questionMapping.component";
 import { EventService } from "./events/eventService.service";
 
 @NgModule({
@@ -47,7 +48,8 @@ import { EventService } from "./events/eventService.service";
     MailTemplatesComponent,
     EventSelectionComponent,
     EventAuthorizationComponent,
-    RegistrationFormsComponent
+    RegistrationFormsComponent,
+    QuestionMappingComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -72,6 +74,7 @@ import { EventService } from "./events/eventService.service";
       { path: ':eventAcronym/partyOverview', component: PartyOverviewComponent },
       { path: ':eventAcronym/mailTemplates', component: MailTemplatesComponent },
       { path: ':eventAcronym/registrationForms', component: RegistrationFormsComponent },
+      { path: ':eventAcronym/questionMapping', component: QuestionMappingComponent }
       //{ path: '**', redirectTo: 'll18/registrables' }
     ])
   ],

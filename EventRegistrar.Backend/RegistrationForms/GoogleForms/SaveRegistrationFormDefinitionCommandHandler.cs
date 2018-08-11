@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.RegistrationForms.Questions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -86,7 +87,7 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                         ExternalId = receivedQuestion.Id,
                         Index = receivedQuestion.Index,
                         Title = receivedQuestion.Title,
-                        Type = (RegistrationForms.QuestionType)receivedQuestion.Type
+                        Type = (Questions.QuestionType)receivedQuestion.Type
                     };
                     await _questions.InsertOrUpdateEntity(question, cancellationToken);
                     if (receivedQuestion.Choices?.Any() == true)
@@ -107,7 +108,7 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                     // update existing question
                     existingQuestion.Index = receivedQuestion.Index;
                     existingQuestion.Title = receivedQuestion.Title;
-                    existingQuestion.Type = (RegistrationForms.QuestionType)receivedQuestion.Type;
+                    existingQuestion.Type = (Questions.QuestionType)receivedQuestion.Type;
                     existingQuestions.Remove(existingQuestion);
 
                     // update options

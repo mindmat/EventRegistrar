@@ -1,7 +1,8 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Seats;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.RegistrationForms.Questions;
+using EventRegistrar.Backend.Seats;
 
 namespace EventRegistrar.Backend.Registrables
 {
@@ -20,7 +21,8 @@ namespace EventRegistrar.Backend.Registrables
         public string Name { get; set; }
         public decimal? Price { get; set; }
 
-        //public ICollection<QuestionOptionToRegistrableMapping> QuestionOptionMappings { get; set; }
+        public ICollection<QuestionOptionToRegistrableMapping> QuestionOptionMappings { get; set; }
+
         //public ICollection<Reduction> Reductions { get; set; }
         public List<Seat> Seats { get; set; }
 

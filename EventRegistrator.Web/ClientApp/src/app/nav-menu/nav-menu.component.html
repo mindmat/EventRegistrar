@@ -74,6 +74,11 @@
             <span class='glyphicon glyphicon-envelope'></span> Anmeldeformulare
           </a>
         </li>
+        <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
+          <a [routerLink]="[eventService.acronym, 'questionMapping']">
+            <span class='glyphicon glyphicon-envelope'></span> Zuordnung Fragen zu Listen
+          </a>
+        </li>
       </ul>
     </div>
   </div>

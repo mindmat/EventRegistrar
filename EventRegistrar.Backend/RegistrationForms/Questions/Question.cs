@@ -1,7 +1,7 @@
 ﻿using System;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 
-namespace EventRegistrar.Backend.RegistrationForms
+namespace EventRegistrar.Backend.RegistrationForms.Questions
 {
     public class Question : Entity
     {

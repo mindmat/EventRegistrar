@@ -1,0 +1,18 @@
+<h1>Zuordnung Fragen zu Listen</h1>
+
+<p *ngIf="!mappings"><em>Loading...</em></p>
+
+<table class='table' *ngIf="mappings">
+  <thead>
+    <tr>
+      <th>Antwort</th>
+      <th>Liste</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let mapping of mappings">
+      <td>{{ mapping.answer }}</td>
+      <td><a [routerLink]="['/', getEventAcronym(), 'registrables', mapping.registrableId, 'participants']">{{ mapping.registrableName }}</a></td>
+    </tr>
+  </tbody>
+</table>

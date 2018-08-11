@@ -1,6 +1,6 @@
 ﻿using System;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.RegistrationForms;
+using EventRegistrar.Backend.RegistrationForms.Questions;
 
 namespace EventRegistrar.Backend.Registrations.Responses
 {

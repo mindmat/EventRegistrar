@@ -8,6 +8,7 @@ using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
+using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Responses;
@@ -28,6 +29,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
         {
             builder.ApplyConfiguration(new QuestionMap());
             builder.ApplyConfiguration(new QuestionOptionMap());
+            builder.ApplyConfiguration(new QuestionOptionToRegistrableMappingMap());
             builder.ApplyConfiguration(new ResponseMap());
 
             builder.ApplyConfiguration(new EventMap());
@@ -60,16 +62,6 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
                .WithMany(rbl => rbl.Reductions)
                .HasForeignKey(rsp => rsp.RegistrableId);
 
-            //modelBuilder.Entity<QuestionOption>()
-            //    .HasRequired(qop => qop.Question)
-            //    .WithMany(qst => qst.QuestionOptions)
-            //    .HasForeignKey(qop => qop.QuestionId);
-
-            modelBuilder.Entity<QuestionOptionToRegistrableMapping>()
-                   .HasRequired(qop => qop.Registrable)
-                   .WithMany(qst => qst.QuestionOptionMappings)
-                   .HasForeignKey(qop => qop.RegistrableId);
-
             modelBuilder.Entity<RegistrableComposition>()
                 .HasRequired(cmp => cmp.Registrable_Contains)
                 .WithMany()
@@ -79,8 +71,6 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
                 .HasRequired(cmp => cmp.Registrable)
                 .WithMany(rbl => rbl.Compositions)
                 .HasForeignKey(cmp => cmp.RegistrableId_Contains);
-
-            base.OnModelCreating(modelBuilder);
         }
          */
     }
