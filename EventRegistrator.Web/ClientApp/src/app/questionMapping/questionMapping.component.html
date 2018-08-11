@@ -5,12 +5,14 @@
 <table class='table' *ngIf="mappings">
   <thead>
     <tr>
+      <th>Frage</th>
       <th>Antwort</th>
       <th>Liste</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let mapping of mappings">
+      <td>{{ mapping.question }}</td>
       <td>{{ mapping.answer }}</td>
       <td><a [routerLink]="['/', getEventAcronym(), 'registrables', mapping.registrableId, 'participants']">{{ mapping.registrableName }}</a></td>
     </tr>

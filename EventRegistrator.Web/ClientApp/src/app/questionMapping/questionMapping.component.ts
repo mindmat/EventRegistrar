@@ -26,6 +26,7 @@ export class QuestionMappingComponent implements OnInit {
 class Mapping {
   answer: string;
   questionOptionId: string;
-  registrableId: number;
-  registrableName: number;
+  registrableId: string;
+  registrableName: string;
+  question: string;
 }

@@ -24,14 +24,15 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
         {
             var eventId = await _acronymResolver.GetEventIdFromAcronym(query.EventAcronym);
             return await _questionOptionsToRegistrables.Where(map => map.Registrable.EventId == eventId)
-                         .Select(map => new QuestionToRegistrablesDisplayItem
-                         {
-                             RegistrableId = map.RegistrableId,
-                             RegistrableName = map.Registrable.Name,
-                             QuestionOptionId = map.QuestionOptionId,
-                             Answer = map.QuestionOption.Answer
-                         })
-                         .ToListAsync(cancellationToken);
+                                                       .Select(map => new QuestionToRegistrablesDisplayItem
+                                                       {
+                                                           RegistrableId = map.RegistrableId,
+                                                           RegistrableName = map.Registrable.Name,
+                                                           QuestionOptionId = map.QuestionOptionId,
+                                                           Question = map.QuestionOption.Question.Title,
+                                                           Answer = map.QuestionOption.Answer
+                                                       })
+                                                       .ToListAsync(cancellationToken);
         }
     }
 }

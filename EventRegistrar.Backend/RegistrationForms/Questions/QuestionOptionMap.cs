@@ -11,9 +11,9 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
             base.Configure(builder);
             builder.ToTable("QuestionOptions");
 
-            //builder.HasOne(qop => qop.Question)
-            //       .WithMany(qst => qst.QuestionOptions)
-            //       .HasForeignKey(qop => qop.QuestionId);
+            builder.HasOne(qop => qop.Question)
+                   .WithMany(qst => qst.QuestionOptions)
+                   .HasForeignKey(qop => qop.QuestionId);
         }
     }
 }
