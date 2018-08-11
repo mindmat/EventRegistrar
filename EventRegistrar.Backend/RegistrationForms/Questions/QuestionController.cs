@@ -14,7 +14,7 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
             _mediator = mediator;
         }
 
-        [HttpPost("api/events/{eventAcronym}/questions/mapping")]
+        [HttpGet("api/events/{eventAcronym}/questions/mapping")]
         public Task<IEnumerable<QuestionToRegistrablesDisplayItem>> GetMapping(string eventAcronym, string formId)
         {
             return _mediator.Send(new QuestionToRegistrablesQuery { EventAcronym = eventAcronym });
