@@ -8,7 +8,7 @@ namespace EventRegistrar.Backend.Infrastructure.ServiceBus
 {
     public class ServiceBusClient
     {
-        private string _serviceBusEndpoint;
+        private readonly string _serviceBusEndpoint;
 
         public ServiceBusClient()
         {

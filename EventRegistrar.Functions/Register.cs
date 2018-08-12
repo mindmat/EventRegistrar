@@ -28,13 +28,14 @@ namespace EventRegistrar.Functions
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
             var connectionString = config.GetConnectionString("DefaultConnection");
+            var rawRegistrationId = Guid.NewGuid();
             using (var connection = new SqlConnection(connectionString))
             {
                 const string insertQuery = @"INSERT INTO dbo.RawRegistrations(Id, EventAcronym, ReceivedMessage, FormExternalIdentifier, RegistrationExternalIdentifier, Created) " +
                                            @"VALUES (@Id, @EventAcronym, @ReceivedMessage, @FormExternalIdentifier, @RegistrationExternalIdentifier, @Created)";
                 var parameters = new
                 {
-                    Id = Guid.NewGuid(),
+                    Id = rawRegistrationId,
                     EventAcronym = eventAcronym,
                     ReceivedMessage = requestBody,
                     FormExternalIdentifier = formId,
@@ -44,6 +45,8 @@ namespace EventRegistrar.Functions
 
                 await connection.ExecuteAsync(insertQuery, parameters);
             }
+
+            await ServiceBusClient.SendCommand(new { RawRegistrationId = rawRegistrationId }, "processrawregistration");
 
             return new OkResult();
         }

@@ -1,9 +1,13 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using EventRegistrar.Backend.Registrations.Register;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -28,8 +32,6 @@ namespace EventRegistrar.Backend
                 typeof(AuthorizationDecorator<,>),
                 typeof(CommitUnitOfWorkDecorator<,>)
             });
-            //container.Collection.Register(typeof(IRequestPreProcessor<>), new[] { typeof(RequestPreProcessorBehavior<,>) });
-            //container.Collection.Register(typeof(IRequestPostProcessor<,>), new[] { typeof(GenericRequestPostProcessor<,>), typeof(ConstrainedRequestPostProcessor<,>) });
 
             container.RegisterConditional(
                 typeof(ILogger),
@@ -39,6 +41,7 @@ namespace EventRegistrar.Backend
 
             container.Register(typeof(IQueryable<>), typeof(Queryable<>));
             container.Register(typeof(IRepository<>), typeof(Repository<>));
+
             //var dbOptions = new DbContextOptionsBuilder<EventRegistratorDbContext>();
             //dbOptions.UseInMemoryDatabase("InMemoryDb");
             //container.RegisterInstance(dbOptions.Options);
@@ -60,6 +63,27 @@ namespace EventRegistrar.Backend
             {
                 container.Register(configItemType.BaseType, configItemType);
             }
+
+            var serviceBusConsumers = container.GetTypesToRegister<IRequest>(assembly)
+                .Select(type => new
+                {
+                    RequestType = type,
+                    Attribute = type.GetCustomAttribute<ProcessQueueMessageAttribute>()
+                })
+                .Where(tmp => tmp.Attribute != null)
+                .Select(tmp => new ServiceBusConsumer
+                {
+                    RequestType = tmp.RequestType,
+                    QueueName = tmp.Attribute.QueueName
+                })
+                .ToList();
+
+            container.RegisterInstance<IEnumerable<ServiceBusConsumer>>(serviceBusConsumers);
+            container.RegisterSingleton<MessageQueueReceiver>();
+
+            container.Verify();
+
+            container.GetInstance<MessageQueueReceiver>().RegisterMessageHandlers();
         }
     }
 }
