@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Seats;
 using Microsoft.EntityFrameworkCore;
@@ -12,13 +13,16 @@ namespace EventRegistrar.Backend.Registrations.Price
     public class PriceCalculator
     {
         private readonly ILogger _logger;
+        private readonly IQueryable<Reduction> _reductions;
         private readonly IQueryable<Seat> _seats;
 
         public PriceCalculator(ILogger logger,
-                               IQueryable<Seat> seats)
+                               IQueryable<Seat> seats,
+                               IQueryable<Reduction> reductions)
         {
             _logger = logger;
             _seats = seats;
+            _reductions = reductions;
         }
 
         public async Task<decimal> CalculatePrice(Registration registration)
@@ -32,7 +36,7 @@ namespace EventRegistrar.Backend.Registrations.Price
             var responses = registration.Responses
                 .Where(rsp => rsp.RegistrationId == registration.Id);
 
-            var price = await CalculatePrice(responses, seats);
+            var price = await CalculatePrice(registration.Id, responses, seats);
 
             //if (savePrice)
             //{
@@ -49,7 +53,7 @@ namespace EventRegistrar.Backend.Registrations.Price
             return price;
         }
 
-        public async Task<decimal> CalculatePrice(IEnumerable<Response> responses, IEnumerable<Seat> seats)
+        public async Task<decimal> CalculatePrice(Guid registrationId, IEnumerable<Response> responses, IEnumerable<Seat> seats)
         {
             var notCancelledSeats = seats.Where(seat => !seat.IsCancelled).ToList();
             var registrationQuestionOptionIds = responses.Where(rsp => rsp.QuestionOptionId.HasValue)
@@ -61,20 +65,22 @@ namespace EventRegistrar.Backend.Registrations.Price
             foreach (var seat in notCancelledSeats)
             {
                 price += seat.Registrable.Price ?? 0m;
+                var roleInThisSpot = seat.RegistrationId_Follower == registrationId ? Role.Follower : Role.Leader;
+                var potentialReductions = await _reductions.Where(red => red.RegistrableId == seat.RegistrableId).ToListAsync();
+                _logger.LogInformation($"potential reductions: {potentialReductions.Count}");
 
-                //_logger.LogInformation($"reductions: {seat.Registrable.Reductions.Count}");
-                //var potentialReductions = seat.Registrable.Reductions.ToList();
+                var applicableReductions = potentialReductions.Where(red => red.QuestionOptionId_ActivatesReduction.HasValue
+                                                                         && registrationQuestionOptionIds.Contains(red.QuestionOptionId_ActivatesReduction.Value)
+                                                                         && !red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue
+                                                                         && (!red.OnlyForRole.HasValue || red.OnlyForRole == roleInThisSpot))
+                                                              .ToList();
 
-                //var applicableReductions = potentialReductions.Where(red => red.QuestionOptionId_ActivatesReduction.HasValue &&
-                //                                                            registrationQuestionOptionIds.Contains(red.QuestionOptionId_ActivatesReduction.Value) &&
-                //                                                            !red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue)
-                //                                              .ToList();
+                applicableReductions.AddRange(potentialReductions.Where(red => red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue && bookedRegistrableIds.Contains(red.RegistrableId1_ReductionActivatedIfCombinedWith.Value)
+                                                                            && (!red.RegistrableId2_ReductionActivatedIfCombinedWith.HasValue || bookedRegistrableIds.Contains(red.RegistrableId2_ReductionActivatedIfCombinedWith.Value))
+                                                                            && (!red.QuestionOptionId_ActivatesReduction.HasValue || registrationQuestionOptionIds.Contains(red.QuestionOptionId_ActivatesReduction.Value))
+                                                                            && (!red.OnlyForRole.HasValue || red.OnlyForRole == roleInThisSpot)));
 
-                //applicableReductions.AddRange(potentialReductions.Where(red => red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue && bookedRegistrableIds.Contains(red.RegistrableId1_ReductionActivatedIfCombinedWith.Value) &&
-                //                                                               (!red.RegistrableId2_ReductionActivatedIfCombinedWith.HasValue || bookedRegistrableIds.Contains(red.RegistrableId2_ReductionActivatedIfCombinedWith.Value)) &&
-                //                                                               (!red.QuestionOptionId_ActivatesReduction.HasValue || registrationQuestionOptionIds.Contains(red.QuestionOptionId_ActivatesReduction.Value))));
-
-                //price -= applicableReductions.Sum(red => red.Amount);
+                price -= applicableReductions.Sum(red => red.Amount);
             }
 
             return price;

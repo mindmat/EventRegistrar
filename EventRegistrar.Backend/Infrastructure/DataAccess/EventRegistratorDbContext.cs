@@ -6,6 +6,7 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
@@ -34,6 +35,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
 
             builder.ApplyConfiguration(new EventMap());
             builder.ApplyConfiguration(new RegistrableMap());
+            builder.ApplyConfiguration(new ReductionMap());
             builder.ApplyConfiguration(new RegistrationFormMap());
             builder.ApplyConfiguration(new RegistrationMap());
             builder.ApplyConfiguration(new UserMap());
@@ -57,11 +59,6 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
         /*
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Reduction>()
-               .HasRequired(red => red.Registrable)
-               .WithMany(rbl => rbl.Reductions)
-               .HasForeignKey(rsp => rsp.RegistrableId);
-
             modelBuilder.Entity<RegistrableComposition>()
                 .HasRequired(cmp => cmp.Registrable_Contains)
                 .WithMany()

@@ -97,7 +97,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 followerRegistration.AdmittedAt = DateTime.UtcNow;
             }
 
-            followerRegistration.Price = await _priceCalculator.CalculatePrice(registration.Responses, spots);
+            followerRegistration.Price = await _priceCalculator.CalculatePrice(followerRegistration.Id, registration.Responses, spots);
 
             await _registrations.InsertOrUpdateEntity(followerRegistration);
 

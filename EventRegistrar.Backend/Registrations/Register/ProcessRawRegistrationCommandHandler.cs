@@ -222,7 +222,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 registration.AdmittedAt = DateTime.UtcNow;
             }
 
-            registration.Price = await _priceCalculator.CalculatePrice(registration.Responses, spots);
+            registration.Price = await _priceCalculator.CalculatePrice(registration.Id, registration.Responses, spots);
 
             await _registrations.InsertOrUpdateEntity(registration, cancellationToken);
 

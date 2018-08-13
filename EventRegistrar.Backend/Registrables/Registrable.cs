@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Seats;
 
@@ -23,7 +24,7 @@ namespace EventRegistrar.Backend.Registrables
 
         public ICollection<QuestionOptionToRegistrableMapping> QuestionOptionMappings { get; set; }
 
-        //public ICollection<Reduction> Reductions { get; set; }
+        public ICollection<Reduction> Reductions { get; set; }
         public List<Seat> Seats { get; set; }
 
         public int? ShowInMailListOrder { get; set; }
