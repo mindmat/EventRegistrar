@@ -30,7 +30,7 @@
     </tr>
     <tr>
       <td>SMS ({{ registration.phoneNormalized }}):</td>
-      <td><button type="button" *ngIf="registration.phoneNormalized != null" class="btn btn-primary btn-xs" [routerLink]="['/registrations', registration.Id, 'sms']">Anzeigen ({{ registration.smsCount }})</button></td>
+      <td><button type="button" *ngIf="registration.phoneNormalized != null" class="btn btn-primary btn-xs" [routerLink]="['/', getEventAcronym(), 'registrations', registration.Id, 'sms']">Anzeigen ({{ registration.smsCount }})</button></td>
     </tr>
     <tr>
       <td>Bemerkung:</td>
@@ -74,9 +74,9 @@
   </thead>
   <tbody>
     <tr *ngFor="let spot of spots">
-      <td><a [routerLink]="['/registrables', spot.registrableId, 'participants']">{{ spot.registrable }}</a></td>
+      <td><a [routerLink]="['/', getEventAcronym(), 'registrables', spot.registrableId, 'participants']">{{ spot.registrable }}</a></td>
       <td>{{ spot.firstPartnerJoined | date: 'dd.MM.yy HH:mm' }}</td>
-      <td><a *ngIf="spot.partnerRegistrationId" [routerLink]="['/registration', spot.partnerRegistrationId]">{{ spot.partner }}</a></td>
+      <td><a *ngIf="spot.partnerRegistrationId" [routerLink]="['/', getEventAcronym(), 'registration', spot.partnerRegistrationId]">{{ spot.partner }}</a></td>
     </tr>
   </tbody>
 </table>

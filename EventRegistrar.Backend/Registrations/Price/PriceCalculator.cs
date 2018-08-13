@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Seats;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -23,21 +24,41 @@ namespace EventRegistrar.Backend.Registrations.Price
         public async Task<decimal> CalculatePrice(Registration registration)
         {
             var seats = await _seats.Where(seat => (seat.RegistrationId == registration.Id
-                                                 || seat.RegistrationId_Follower == registration.Id)
-                                                 && !seat.IsCancelled)
-                                    .Include(seat => seat.Registrable)
-                                    //.Include(seat => seat.Registrable.Reductions)
-                                    .ToListAsync();
+                                                    || seat.RegistrationId_Follower == registration.Id)
+                                                   && !seat.IsCancelled)
+                .Include(seat => seat.Registrable)
+                //.Include(seat => seat.Registrable.Reductions)
+                .ToListAsync();
+            var responses = registration.Responses
+                .Where(rsp => rsp.RegistrationId == registration.Id);
 
-            var registrationQuestionOptionIds = registration.Responses
-                                                            .Where(rsp => rsp.RegistrationId == registration.Id
-                                                                       && rsp.QuestionOptionId.HasValue)
-                                                            .Select(rsp => rsp.QuestionOptionId.Value)
-                                                            .ToList();
-            _logger.LogInformation($"seats: {seats.Count}");
-            var bookedRegistrableIds = new HashSet<Guid>(seats.Select(seat => seat.RegistrableId));
+            var price = await CalculatePrice(responses, seats);
+
+            //if (savePrice)
+            //{
+            //    registration.Price = price;
+            //    if (registration.State != RegistrationState.Cancelled)
+            //    {
+            //        var paidAmount = (decimal?)registration.Payments.Sum(ass => ass.Amount);
+            //        registration.State = (paidAmount ?? 0m) >= price && price > 0m && registration.State != RegistrationState.Paid
+            //            ? RegistrationState.Paid
+            //            : RegistrationState.Received;
+            //    }
+            //    await dbContext.SaveChangesAsync();
+            //}
+            return price;
+        }
+
+        public async Task<decimal> CalculatePrice(IEnumerable<Response> responses, IEnumerable<Seat> seats)
+        {
+            var notCancelledSeats = seats.Where(seat => !seat.IsCancelled).ToList();
+            var registrationQuestionOptionIds = responses.Where(rsp => rsp.QuestionOptionId.HasValue)
+                                                         .Select(rsp => rsp.QuestionOptionId.Value)
+                                                         .ToList();
+
+            var bookedRegistrableIds = new HashSet<Guid>(notCancelledSeats.Select(seat => seat.RegistrableId));
             var price = 0m;
-            foreach (var seat in seats)
+            foreach (var seat in notCancelledSeats)
             {
                 price += seat.Registrable.Price ?? 0m;
 
@@ -55,19 +76,6 @@ namespace EventRegistrar.Backend.Registrations.Price
 
                 //price -= applicableReductions.Sum(red => red.Amount);
             }
-
-            //if (savePrice)
-            //{
-            //    registration.Price = price;
-            //    if (registration.State != RegistrationState.Cancelled)
-            //    {
-            //        var paidAmount = (decimal?)registration.Payments.Sum(ass => ass.Amount);
-            //        registration.State = (paidAmount ?? 0m) >= price && price > 0m && registration.State != RegistrationState.Paid
-            //            ? RegistrationState.Paid
-            //            : RegistrationState.Received;
-            //    }
-            //    await dbContext.SaveChangesAsync();
-            //}
 
             return price;
         }

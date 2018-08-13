@@ -6,12 +6,15 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
 {
     public class QuestionOptionToRegistrableMapping : Entity
     {
-        public Guid? QuestionId_PartnerEmail { get; set; }
+        //public Guid? QuestionId_PartnerEmail { get; set; }
         public QuestionOption QuestionOption { get; set; }
+
         public Guid QuestionOptionId { get; set; }
-        public Guid? QuestionOptionId_Follower { get; set; }
-        public Guid? QuestionOptionId_Leader { get; set; }
+
+        //public Guid? QuestionOptionId_Follower { get; set; }
+        //public Guid? QuestionOptionId_Leader { get; set; }
         public Registrable Registrable { get; set; }
+
         public Guid RegistrableId { get; set; }
     }
 }

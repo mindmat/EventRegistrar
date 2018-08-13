@@ -84,10 +84,12 @@ namespace EventRegistrar.Backend.Infrastructure.ServiceBus
             if (_serviceBusConsumers.TryGetValue(queueName, out var consumer))
             {
                 var typedMethod = _typedProcessMethod.MakeGenericMethod(consumer.RequestType);
-                await (Task)(typedMethod.Invoke(this, new object[] { message, cancellationToken }));
+                await (Task)typedMethod.Invoke(this, new object[] { message, cancellationToken });
             }
-
-            throw new NotImplementedException($"No handler registered for queue {queueName}");
+            else
+            {
+                throw new NotImplementedException($"No handler registered for queue {queueName}");
+            }
         }
 
         private async Task ProcessTypedMessage<TRequest>(Message message, CancellationToken cancellationToken)

@@ -14,6 +14,7 @@ export class RegistrationFormsComponent implements OnInit {
   }
 
   import() {
+    // ToDo: hardcoded
     var formId = '1mwsgFgVgNM4Da6C-81gOPxlp9tRZfrW8X62eTtMIRj8';
     this.http.post(`api/events/${this.getEventAcronym()}/registrationforms/${formId}`, null).subscribe(result => { },
       error => { console.error(error); }

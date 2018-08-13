@@ -8,7 +8,7 @@ namespace EventRegistrar.Backend.Registrations.Raw
         public DateTime Created { get; set; }
         public string EventAcronym { get; set; }
         public string FormExternalIdentifier { get; set; }
-        public bool Processed { get; set; }
+        public DateTime? Processed { get; set; }
         public string ReceivedMessage { get; set; }
         public string RegistrationExternalIdentifier { get; set; }
     }
