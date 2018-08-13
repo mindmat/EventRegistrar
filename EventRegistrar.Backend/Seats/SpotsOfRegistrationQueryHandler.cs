@@ -27,7 +27,8 @@ namespace EventRegistrar.Backend.Seats
         public async Task<IEnumerable<Spot>> Handle(SpotsOfRegistrationQuery query, CancellationToken cancellationToken)
         {
             var eventId = await _acronymResolver.GetEventIdFromAcronym(query.EventAcronym);
-            var spots = await _seats.Where(seat => seat.Registration.EventId == eventId
+            var spots = await _seats.Where(seat => (seat.Registration.EventId == eventId ||
+                                                    seat.Registration_Follower.EventId == eventId)
                                                 && (seat.RegistrationId == query.RegistrationId
                                                  || seat.RegistrationId_Follower == query.RegistrationId))
                                     .Where(seat => !seat.IsCancelled)

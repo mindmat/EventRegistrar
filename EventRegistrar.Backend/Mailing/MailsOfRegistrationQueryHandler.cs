@@ -8,12 +8,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Mailing
 {
-    public class SpotsOfRegistrationQueryHandler : IRequestHandler<MailsOfRegistrationQuery, IEnumerable<Mail>>
+    public class MailsOfRegistrationQueryHandler : IRequestHandler<MailsOfRegistrationQuery, IEnumerable<Mail>>
     {
         private readonly IEventAcronymResolver _acronymResolver;
         private readonly IQueryable<MailToRegistration> _mails;
 
-        public SpotsOfRegistrationQueryHandler(IQueryable<MailToRegistration> mails,
+        public MailsOfRegistrationQueryHandler(IQueryable<MailToRegistration> mails,
                                                IEventAcronymResolver acronymResolver)
         {
             _mails = mails;

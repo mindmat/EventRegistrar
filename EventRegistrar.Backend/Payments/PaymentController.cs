@@ -30,7 +30,7 @@ namespace EventRegistrar.Backend.Payments
         }
 
         [HttpGet("api/events/{eventAcronym}/payments")]
-        public Task<IEnumerable<UnrecognizedPaymentDisplayItem>> GetUnregocinzedPaymentsPaymentOverview(string eventAcronym, bool unrecognized)
+        public Task<IEnumerable<UnrecognizedPaymentDisplayItem>> GetUnrecognizedPaymentsPaymentOverview(string eventAcronym, bool unrecognized)
         {
             return _mediator.Send(new UnrecognizedPaymentsQuery { EventAcronym = eventAcronym });
         }

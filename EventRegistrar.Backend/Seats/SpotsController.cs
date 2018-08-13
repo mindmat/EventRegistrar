@@ -16,7 +16,7 @@ namespace EventRegistrar.Backend.Seats
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/spots")]
-        public Task<IEnumerable<Spot>> GetMailsOfRegistration(string eventAcronym, Guid registrationId)
+        public Task<IEnumerable<Spot>> GetSpotsOfRegistration(string eventAcronym, Guid registrationId)
         {
             return _mediator.Send(new SpotsOfRegistrationQuery { EventAcronym = eventAcronym, RegistrationId = registrationId });
         }
