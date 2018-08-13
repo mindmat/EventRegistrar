@@ -26,6 +26,44 @@ namespace EventRegistrar.Backend.Registrations.Register
             _registrations = registrations;
         }
 
+        public Seat ReservePartnerSpot(Guid? eventId,
+                                       Registrable registrable,
+                                       Guid registrationId_Leader,
+                                       Guid registrationId_Follower)
+        {
+            var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();
+            if (registrable.MaximumSingleSeats.HasValue)
+            {
+                throw new InvalidOperationException("Unexpected: Attempt to reserve single spot as partner spot");
+            }
+
+            var seat = new Seat
+            {
+                Id = Guid.NewGuid(),
+                RegistrationId = registrationId_Leader,
+                RegistrationId_Follower = registrationId_Follower,
+                RegistrableId = registrable.Id,
+                IsPartnerSpot = true,
+                FirstPartnerJoined = DateTime.UtcNow
+            };
+            if (registrable.MaximumDoubleSeats.HasValue)
+            {
+                var waitingListForPartnerRegistrations = seats.Any(st => st.IsWaitingList && st.IsPartnerSpot);
+                var seatAvailable = !waitingListForPartnerRegistrations && seats.Count < registrable.MaximumDoubleSeats.Value;
+                if (!seatAvailable && !registrable.HasWaitingList)
+                {
+                    // no spot available, no waiting list
+                    return null;
+                }
+
+                seat.IsWaitingList = !seatAvailable;
+            }
+
+            _seats.InsertOrUpdateEntity(seat);
+
+            return seat;
+        }
+
         public Seat ReserveSeat(Guid? eventId,
                                 Registrable registrable,
                                 Guid registrationId,

@@ -41,7 +41,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let registrable of singleRegistrables">
-      <td><a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.Id, 'participants']">{{ registrable.name }}</a></td>
+      <td><a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a></td>
       <td>{{ registrable.spotsAvailable }}</td>
       <td>{{ registrable.accepted }}</td>
       <td>{{ registrable.onWaitingList }}</td>

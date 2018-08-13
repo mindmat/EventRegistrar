@@ -1,7 +1,7 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using System;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
-using System;
 
 namespace EventRegistrar.Backend.Seats
 {
@@ -9,6 +9,7 @@ namespace EventRegistrar.Backend.Seats
     {
         public DateTime FirstPartnerJoined { get; set; }
         public bool IsCancelled { get; set; }
+        public bool IsPartnerSpot { get; set; }
         public bool IsWaitingList { get; set; }
         public string PartnerEmail { get; set; }
         public Registrable Registrable { get; set; }
