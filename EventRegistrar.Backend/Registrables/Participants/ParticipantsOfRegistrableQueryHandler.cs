@@ -25,7 +25,7 @@ namespace EventRegistrar.Backend.Registrables.Participants
         }
 
         public async Task<RegistrableDisplayInfo> Handle(ParticipantsOfRegistrableQuery query,
-                                                                CancellationToken cancellationToken)
+                                                         CancellationToken cancellationToken)
         {
             var eventId = await _acronymResolver.GetEventIdFromAcronym(query.EventAcronym);
             var registrable = await _registrables.FirstOrDefaultAsync(rbl => rbl.Id == query.RegistrableId, cancellationToken);
@@ -57,7 +57,7 @@ namespace EventRegistrar.Backend.Registrables.Participants
                                                    LastName = seat.Registration_Follower.RespondentLastName
                                                },
                                                IsOnWaitingList = seat.IsWaitingList || seat.Registration != null && seat.Registration.IsWaitingList == true,
-                                               IsPartnerRegistration = seat.PartnerEmail != null
+                                               IsPartnerRegistration = seat.IsPartnerSpot || seat.PartnerEmail != null
                                            })
                                            .ToListAsync(cancellationToken);
 

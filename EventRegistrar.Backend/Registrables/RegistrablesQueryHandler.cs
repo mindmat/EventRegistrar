@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrables
 {
-    public class RegistrablesQueryHandler : IRequestHandler<RegistrablesQuery, IEnumerable<RegistrableItem>>
+    public class RegistrablesQueryHandler : IRequestHandler<RegistrablesQuery, IEnumerable<RegistrableDisplayItem>>
     {
         private readonly IEventAcronymResolver _acronymResolver;
         private readonly IQueryable<Registrable> _registrables;
@@ -20,11 +20,11 @@ namespace EventRegistrar.Backend.Registrables
             _acronymResolver = acronymResolver;
         }
 
-        public async Task<IEnumerable<RegistrableItem>> Handle(RegistrablesQuery query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<RegistrableDisplayItem>> Handle(RegistrablesQuery query, CancellationToken cancellationToken)
         {
             var eventId = await _acronymResolver.GetEventIdFromAcronym(query.EventAcronym);
             var registrables = await _registrables.Where(rbl => rbl.EventId == eventId)
-                                                  .Select(rbl => new RegistrableItem
+                                                  .Select(rbl => new RegistrableDisplayItem
                                                   {
                                                       Id = rbl.Id,
                                                       Name = rbl.Name,

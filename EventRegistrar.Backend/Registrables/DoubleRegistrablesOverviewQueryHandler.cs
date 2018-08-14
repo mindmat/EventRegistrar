@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Registrations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,7 +14,6 @@ namespace EventRegistrar.Backend.Registrables
         private readonly IQueryable<Registrable> _registrables;
 
         public DoubleRegistrablesOverviewQueryHandler(IQueryable<Registrable> registrables,
-                                                      IQueryable<Registration> registrations,
                                                       IEventAcronymResolver acronymResolver)
         {
             _registrables = registrables;
@@ -36,6 +34,7 @@ namespace EventRegistrar.Backend.Registrables
                 Id = rbl.Id,
                 Name = rbl.Name,
                 SpotsAvailable = rbl.MaximumDoubleSeats,
+                MaximumAllowedImbalance = rbl.MaximumAllowedImbalance,
                 LeadersAccepted = rbl.Seats.Count(seat => !seat.IsCancelled &&
                                                           seat.RegistrationId.HasValue &&
                                                           !seat.IsWaitingList),

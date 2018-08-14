@@ -6,12 +6,13 @@
   <thead>
     <tr>
       <th>Bezeichnung</th>
-      <th>Plätze verfügbar</th>
+      <th>Max. Paare</th>
       <th>Leader akzeptiert</th>
       <th>Follower akzeptiert</th>
       <th>Leader auf Warteliste</th>
       <th>Follower auf Warteliste</th>
       <th>Paare auf Warteliste</th>
+      <th>Max Ungleichgewicht</th>
     </tr>
   </thead>
   <tbody>
@@ -23,6 +24,7 @@
       <td>{{ registrable.leadersOnWaitingList }}</td>
       <td>{{ registrable.followersOnWaitingList }}</td>
       <td>{{ registrable.couplesOnWaitingList }}</td>
+      <td>{{ registrable.maximumAllowedImbalance }}</td>
     </tr>
   </tbody>
 </table>

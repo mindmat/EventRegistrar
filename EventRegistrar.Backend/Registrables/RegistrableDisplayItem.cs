@@ -2,7 +2,7 @@
 
 namespace EventRegistrar.Backend.Registrables
 {
-    public class RegistrableItem
+    public class RegistrableDisplayItem
     {
         public bool HasWaitingList { get; set; }
         public Guid Id { get; set; }

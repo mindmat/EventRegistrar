@@ -10,6 +10,7 @@ namespace EventRegistrar.Backend.Registrables
         public Guid Id { get; set; }
         public int LeadersAccepted { get; set; }
         public int LeadersOnWaitingList { get; set; }
+        public int? MaximumAllowedImbalance { get; set; }
         public string Name { get; set; }
         public int? SpotsAvailable { get; set; }
     }

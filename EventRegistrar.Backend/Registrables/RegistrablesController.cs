@@ -29,7 +29,7 @@ namespace EventRegistrar.Backend.Registrables
         }
 
         [HttpGet("api/events/{eventAcronym}/registrables")]
-        public Task<IEnumerable<RegistrableItem>> GetRegistrables(string eventAcronym)
+        public Task<IEnumerable<RegistrableDisplayItem>> GetRegistrables(string eventAcronym)
         {
             return _mediator.Send(new RegistrablesQuery { EventAcronym = eventAcronym });
         }

@@ -35,6 +35,7 @@ class DoubleRegistrable {
   followersAccepted: number;
   leadersOnWaitingList: number;
   followersOnWaitingList: number;
+  maximumAllowedImbalance: number;
 }
 
 class SingleRegistrable {
