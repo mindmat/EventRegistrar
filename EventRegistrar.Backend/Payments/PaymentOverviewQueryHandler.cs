@@ -42,7 +42,8 @@ namespace EventRegistrar.Backend.Payments
                                              })
                                              .FirstOrDefaultAsync(cancellationToken);
 
-            var activeRegistrations = await _registrations.Where(reg => reg.IsWaitingList != true
+            var activeRegistrations = await _registrations.Where(reg => reg.EventId == eventId
+                                                                     && reg.IsWaitingList != true
                                                                      && reg.State != RegistrationState.Cancelled)
                                                           .Select(reg => new
                                                           {
@@ -53,7 +54,9 @@ namespace EventRegistrar.Backend.Payments
                                                           })
                                                           .ToListAsync(cancellationToken);
 
-            var registrables = await _registrables.Where(rbl => (rbl.MaximumDoubleSeats.HasValue || rbl.MaximumSingleSeats.HasValue) && rbl.Price.HasValue)
+            var registrables = await _registrables.Where(rbl => rbl.EventId == eventId
+                                                             && (rbl.MaximumDoubleSeats.HasValue || rbl.MaximumSingleSeats.HasValue)
+                                                             && rbl.Price.HasValue)
                                                   .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
                                                   .Select(rbl => new
                                                   {
@@ -68,7 +71,7 @@ namespace EventRegistrar.Backend.Payments
 
             return new PaymentOverview
             {
-                Balance = new BalanceDto
+                Balance = balance == null ? null : new BalanceDto
                 {
                     Balance = balance.Balance,
                     Currency = balance.Currency,
