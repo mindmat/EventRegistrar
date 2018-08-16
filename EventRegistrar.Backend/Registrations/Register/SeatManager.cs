@@ -179,6 +179,41 @@ namespace EventRegistrar.Backend.Registrations.Register
             return seat;
         }
 
+        public Seat ReserveSingleSpot(Guid? eventId,
+                                      Registrable registrable,
+                                      Guid registrationId)
+        {
+            var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();
+            if (registrable.MaximumDoubleSeats.HasValue)
+            {
+                throw new InvalidOperationException("Unexpected: Attempt to reserve single spot as partner spot");
+            }
+
+            var seat = new Seat
+            {
+                Id = Guid.NewGuid(),
+                RegistrationId = registrationId,
+                RegistrableId = registrable.Id,
+                FirstPartnerJoined = DateTime.UtcNow,
+            };
+            if (registrable.MaximumSingleSeats.HasValue)
+            {
+                var waitingList = seats.Any(st => st.IsWaitingList);
+                var seatAvailable = !waitingList && seats.Count < registrable.MaximumSingleSeats.Value;
+                if (!seatAvailable && !registrable.HasWaitingList)
+                {
+                    // no spot available, no waiting list
+                    return null;
+                }
+
+                seat.IsWaitingList = !seatAvailable;
+            }
+
+            _seats.InsertOrUpdateEntity(seat);
+
+            return seat;
+        }
+
         private static void ComplementExistingSeat(Guid registrationId, Role ownRole, Seat existingSeat)
         {
             if (ownRole == Role.Leader && !existingSeat.RegistrationId.HasValue)

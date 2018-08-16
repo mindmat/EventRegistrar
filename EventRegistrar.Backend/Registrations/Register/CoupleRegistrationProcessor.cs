@@ -74,9 +74,11 @@ namespace EventRegistrar.Backend.Registrations.Register
             var spots = new List<Seat>();
 
             var questionOptionIds = new HashSet<Guid>(registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue).Select(rsp => rsp.QuestionOptionId.Value));
+            var roleSpecificRegistrableIds = config.RoleSpecificMappings?.Select(rsm => rsm.RegistrableId).ToHashSet();
             var registrables = await _optionToRegistrableMappings
                                             .Where(map => map.Registrable.EventId == registration.EventId
-                                                       && questionOptionIds.Contains(map.QuestionOptionId))
+                                                       && (questionOptionIds.Contains(map.QuestionOptionId)
+                                                        || roleSpecificRegistrableIds != null && roleSpecificRegistrableIds.Contains(map.RegistrableId)))
                                             .Include(map => map.Registrable)
                                             .Include(map => map.Registrable.Seats)
                                             .ToListAsync();
@@ -85,6 +87,31 @@ namespace EventRegistrar.Backend.Registrations.Register
                 foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
                 {
                     var seat = _seatManager.ReservePartnerSpot(registration.EventId, registrable.Registrable, registration.Id, followerRegistration.Id);
+                    if (seat == null)
+                    {
+                        registration.SoldOutMessage = (registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +
+                                                      string.Format(Resources.RegistrableSoldOut, registrable.Registrable.Name);
+                    }
+                    else
+                    {
+                        spots.Add(seat);
+                    }
+                }
+            }
+            if (config.RoleSpecificMappings != null)
+            {
+                foreach (var roleSpecificMapping in config.RoleSpecificMappings)
+                {
+                    if (registration.Responses.Any(rsp => rsp.QuestionOptionId == roleSpecificMapping.QuestionOptionId) == false)
+                    {
+                        continue;
+                    }
+
+                    var registrable = registrables.First(rbl => rbl.RegistrableId == roleSpecificMapping.RegistrableId);
+                    var registrationId = roleSpecificMapping.Role == Role.Leader
+                        ? registration.Id
+                        : followerRegistration.Id;
+                    var seat = _seatManager.ReserveSingleSpot(registration.EventId, registrable.Registrable, registrationId);
                     if (seat == null)
                     {
                         registration.SoldOutMessage = (registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +

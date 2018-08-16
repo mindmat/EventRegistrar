@@ -76,6 +76,13 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_Follower_LastName = Guid.Parse("7E59DF8A-CC44-46C9-81C8-6A43DCF09E4D"),
                     QuestionId_Follower_Email = Guid.Parse("8E93164B-6403-4055-B966-1B14EC5297F3"),
                     QuestionId_Follower_Phone = Guid.Parse("C2D0D7E6-FFBE-49F1-9E83-1C155B92F95C"),
+                    RoleSpecificMappings = new[]
+                    {
+                        (new Guid("E314353F-82BD-4D49-82CC-0ECC8D5B52CD"), Role.Leader,   new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
+                        (new Guid("30C6D9DD-9189-47D4-86E9-3E8675A2D212"), Role.Follower, new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
+                        (new Guid("07E66114-5D11-460D-B981-5779183442C2"), Role.Leader,   new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
+                        (new Guid("07E66114-5D11-460D-B981-5779183442C2"), Role.Follower, new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" ))
+                    }
                 };
             }
         }
