@@ -4,6 +4,7 @@ using System.Linq;
 
 //using System.Linq;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Seats;
 using Newtonsoft.Json;
@@ -82,6 +83,13 @@ namespace EventRegistrar.Backend.Registrations.Register
                         (new Guid("30C6D9DD-9189-47D4-86E9-3E8675A2D212"), Role.Follower, new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
                         (new Guid("07E66114-5D11-460D-B981-5779183442C2"), Role.Leader,   new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
                         (new Guid("07E66114-5D11-460D-B981-5779183442C2"), Role.Follower, new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" ))
+                    },
+                    LanguageMappings = new[]
+                    {
+                        (new Guid("46AD095F-A014-4321-BC5F-5C98F9060F1D"), Language.Deutsch ),
+                        (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
+                        (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
+                        (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
                     }
                 };
             }

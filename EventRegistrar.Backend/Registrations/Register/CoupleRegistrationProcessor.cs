@@ -43,6 +43,11 @@ namespace EventRegistrar.Backend.Registrations.Register
             registration.RespondentFirstName = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_FirstName)?.ResponseString;
             registration.RespondentLastName = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_LastName)?.ResponseString;
             registration.RespondentEmail = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_Email)?.ResponseString;
+            if (config.LanguageMappings != null)
+            {
+                registration.Language = config.LanguageMappings.FirstOrDefault(map => registration.Responses.Any(rsp => rsp.QuestionOptionId == map.QuestionOptionId)).Language;
+            }
+
             if (config.QuestionId_Leader_Phone.HasValue)
             {
                 registration.Phone = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_Phone.Value)?.ResponseString;
@@ -61,6 +66,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 ReceivedAt = registration.ReceivedAt,
                 RegistrationFormId = registration.RegistrationFormId,
                 RegistrationId_Partner = registration.Id,
+                Language = registration.Language,
                 State = RegistrationState.Received
             };
             if (config.QuestionId_Follower_Phone.HasValue)
@@ -100,13 +106,8 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
             if (config.RoleSpecificMappings != null)
             {
-                foreach (var roleSpecificMapping in config.RoleSpecificMappings)
+                foreach (var roleSpecificMapping in config.RoleSpecificMappings.Where(rsm => registration.Responses.Any(rsp => rsp.QuestionOptionId == rsm.QuestionOptionId) == false))
                 {
-                    if (registration.Responses.Any(rsp => rsp.QuestionOptionId == roleSpecificMapping.QuestionOptionId) == false)
-                    {
-                        continue;
-                    }
-
                     var registrable = registrables.First(rbl => rbl.RegistrableId == roleSpecificMapping.RegistrableId);
                     var registrationId = roleSpecificMapping.Role == Role.Leader
                         ? registration.Id
