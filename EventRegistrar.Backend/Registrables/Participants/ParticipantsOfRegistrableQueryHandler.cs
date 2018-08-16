@@ -33,7 +33,10 @@ namespace EventRegistrar.Backend.Registrables.Participants
             {
                 throw new ArgumentOutOfRangeException($"No registrable found with id {query.RegistrableId}");
             }
-
+            if (registrable.EventId != eventId)
+            {
+                throw new ArgumentException($"Registrable {registrable.Name}({registrable.Id}) is not part of requested event {eventId}");
+            }
             var participants = await _seats.Where(seat => seat.RegistrableId == query.RegistrableId
                                                        && !seat.IsCancelled)
                                            .OrderBy(seat => seat.IsWaitingList)

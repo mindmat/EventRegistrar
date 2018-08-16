@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
+using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
@@ -22,30 +23,30 @@ namespace EventRegistrar.Backend.Registrations.Register
     {
         private readonly IQueryable<RegistrationForm> _forms;
         private readonly ILogger _logger;
-        private readonly IQueryable<QuestionOptionToRegistrableMapping> _optionToRegistrableMappings;
         private readonly PriceCalculator _priceCalculator;
         private readonly IRepository<RawRegistration> _rawRegistrations;
         private readonly RegistrationProcessorDelegator _registrationProcessorDelegator;
         private readonly IRepository<Registration> _registrations;
         private readonly IRepository<Response> _responses;
+        private readonly ServiceBusClient _serviceBusClient;
 
         public ProcessRawRegistrationCommandHandler(ILogger logger,
                                                     IRepository<RawRegistration> rawRegistrations,
                                                     IRepository<Registration> registrations,
                                                     IRepository<Response> responses,
-                                                    IQueryable<QuestionOptionToRegistrableMapping> optionToRegistrableMappings,
                                                     IQueryable<RegistrationForm> forms,
                                                     PriceCalculator priceCalculator,
-                                                    RegistrationProcessorDelegator registrationProcessorDelegator)
+                                                    RegistrationProcessorDelegator registrationProcessorDelegator,
+                                                    ServiceBusClient serviceBusClient)
         {
             _logger = logger;
             _rawRegistrations = rawRegistrations;
             _registrations = registrations;
             _responses = responses;
-            _optionToRegistrableMappings = optionToRegistrableMappings;
             _forms = forms;
             _priceCalculator = priceCalculator;
             _registrationProcessorDelegator = registrationProcessorDelegator;
+            _serviceBusClient = serviceBusClient;
         }
 
         public async Task<Unit> Handle(ProcessRawRegistrationCommand command, CancellationToken cancellationToken)
@@ -68,8 +69,8 @@ namespace EventRegistrar.Backend.Registrations.Register
             //RegistrationRegistered registrationRegistered;
 
             var form = await _forms.Where(frm => frm.ExternalIdentifier == rawRegistration.FormExternalIdentifier)
-                                    .Include(frm => frm.Questions).ThenInclude(qst => qst.QuestionOptions)
-                                    .FirstOrDefaultAsync(cancellationToken);
+                                   .Include(frm => frm.Questions).ThenInclude(qst => qst.QuestionOptions)
+                                   .FirstOrDefaultAsync(cancellationToken);
             if (form == null)
             {
                 throw new KeyNotFoundException($"No form found with id '{rawRegistration.FormExternalIdentifier}'");
@@ -216,17 +217,6 @@ namespace EventRegistrar.Backend.Registrations.Register
             //    }
             //}
 
-            registration.IsWaitingList = spots.Any(seat => seat.IsWaitingList);
-            if (registration.IsWaitingList == false && !registration.AdmittedAt.HasValue)
-            {
-                registration.AdmittedAt = DateTime.UtcNow;
-            }
-
-            registration.Price = await _priceCalculator.CalculatePrice(registration.Id, registration.Responses, spots);
-
-            await _registrations.InsertOrUpdateEntity(registration, cancellationToken);
-
-            // ToDo: send mail
             //await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registration.Id }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
             //if (registrableIds_CheckWaitingList.Any() && @event.EventId.HasValue)
             //{

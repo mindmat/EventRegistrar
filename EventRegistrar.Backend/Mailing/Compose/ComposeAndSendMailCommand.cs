@@ -1,7 +1,7 @@
 ﻿using System;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
-namespace EventRegistrar.Backend.Mailing
+namespace EventRegistrar.Backend.Mailing.Compose
 {
     public class ComposeAndSendMailCommand : IQueueBoundCommand
     {

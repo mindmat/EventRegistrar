@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
-using EventRegistrar.Backend.Registrations.Register;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -64,20 +63,13 @@ namespace EventRegistrar.Backend
                 container.Register(configItemType.BaseType, configItemType);
             }
 
-            var serviceBusConsumers = container.GetTypesToRegister<IRequest>(assembly)
-                .Select(type => new
-                {
-                    RequestType = type,
-                    Attribute = type.GetCustomAttribute<ProcessQueueMessageAttribute>()
-                })
-                .Where(tmp => tmp.Attribute != null)
-                .Select(tmp => new ServiceBusConsumer
-                {
-                    RequestType = tmp.RequestType,
-                    QueueName = tmp.Attribute.QueueName
-                })
-                .ToList();
-
+            var serviceBusConsumers = container.GetTypesToRegister<IQueueBoundCommand>(assembly)
+                                               .Select(type => new ServiceBusConsumer
+                                               {
+                                                   QueueName = ((IQueueBoundCommand)Activator.CreateInstance(type)).QueueName,
+                                                   RequestType = type
+                                               })
+                                               .ToList();
             container.RegisterInstance<IEnumerable<ServiceBusConsumer>>(serviceBusConsumers);
             container.RegisterSingleton<MessageQueueReceiver>();
 

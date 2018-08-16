@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using EventRegistrar.Backend.Mailing;
+using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Properties;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations.Price;
@@ -18,18 +21,21 @@ namespace EventRegistrar.Backend.Registrations.Register
         private readonly PriceCalculator _priceCalculator;
         private readonly IRepository<Registration> _registrations;
         private readonly SeatManager _seatManager;
+        private readonly ServiceBusClient _serviceBusClient;
 
         public CoupleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                            IQueryable<QuestionOptionToRegistrableMapping> optionToRegistrableMappings,
                                            SeatManager seatManager,
                                            IRepository<Registration> registrations,
-                                           PriceCalculator priceCalculator)
+                                           PriceCalculator priceCalculator,
+                                           ServiceBusClient serviceBusClient)
         {
             _phoneNormalizer = phoneNormalizer;
             _optionToRegistrableMappings = optionToRegistrableMappings;
             _seatManager = seatManager;
             _registrations = registrations;
             _priceCalculator = priceCalculator;
+            _serviceBusClient = serviceBusClient;
         }
 
         public async Task<IEnumerable<Seat>> Process(Registration registration, CoupleRegistrationProcessConfiguration config)
@@ -55,7 +61,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 ReceivedAt = registration.ReceivedAt,
                 RegistrationFormId = registration.RegistrationFormId,
                 RegistrationId_Partner = registration.Id,
-                State = RegistrationState.Received,
+                State = RegistrationState.Received
             };
             if (config.QuestionId_Follower_Phone.HasValue)
             {
@@ -91,7 +97,10 @@ namespace EventRegistrar.Backend.Registrations.Register
                 }
             }
 
-            followerRegistration.IsWaitingList = spots.Any(seat => seat.IsWaitingList);
+            var isOnWaitingList = spots.Any(seat => seat.IsWaitingList);
+
+            // finalize follower registration
+            followerRegistration.IsWaitingList = isOnWaitingList;
             if (followerRegistration.IsWaitingList == false && !followerRegistration.AdmittedAt.HasValue)
             {
                 followerRegistration.AdmittedAt = DateTime.UtcNow;
@@ -100,6 +109,29 @@ namespace EventRegistrar.Backend.Registrations.Register
             followerRegistration.Price = await _priceCalculator.CalculatePrice(followerRegistration.Id, registration.Responses, spots);
 
             await _registrations.InsertOrUpdateEntity(followerRegistration);
+
+            // finalize leader registration
+            registration.IsWaitingList = isOnWaitingList;
+            if (registration.IsWaitingList == false && !registration.AdmittedAt.HasValue)
+            {
+                registration.AdmittedAt = DateTime.UtcNow;
+            }
+
+            registration.Price = await _priceCalculator.CalculatePrice(registration.Id, registration.Responses, spots);
+
+            await _registrations.InsertOrUpdateEntity(registration);
+
+            // send mail
+            var mailType = isOnWaitingList
+                ? MailType.DoubleRegistrationMatchedOnWaitingList
+                : MailType.DoubleRegistrationMatchedAndAccepted;
+            await _serviceBusClient.SendCommand(new ComposeAndSendMailCommand
+            {
+                MailType = mailType,
+                RegistrationId = registration.Id,
+                Withhold = false,
+                AllowDuplicate = false
+            });
 
             return spots;
         }

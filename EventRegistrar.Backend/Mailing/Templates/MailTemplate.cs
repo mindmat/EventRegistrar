@@ -1,10 +1,12 @@
 ﻿using System;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Mailing.Compose;
 
 namespace EventRegistrar.Backend.Mailing.Templates
 {
     public class MailTemplate : Entity
     {
+        public MailContentType ContentType { get; set; }
         public Guid EventId { get; set; }
         public string Language { get; set; }
         public MailingAudience? MailingAudience { get; set; }

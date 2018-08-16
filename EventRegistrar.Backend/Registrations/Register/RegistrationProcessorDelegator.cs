@@ -31,13 +31,15 @@ namespace EventRegistrar.Backend.Registrations.Register
             foreach (var registrationProcessConfiguration in processConfiguration)
             {
                 if (registrationProcessConfiguration is SingleRegistrationProcessConfiguration singleConfig
-                 && registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue && rsp.QuestionOptionId.Value == singleConfig.QuestionOptionId_Trigger))
+                 && registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue &&
+                                                      rsp.QuestionOptionId.Value == singleConfig.QuestionOptionId_Trigger))
                 {
                     var newSpots = await _singleRegistrationProcessor.Process(registration, singleConfig);
                     spots.AddRange(newSpots);
                 }
                 else if (registrationProcessConfiguration is CoupleRegistrationProcessConfiguration coupleConfig
-                      && registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue && rsp.QuestionOptionId.Value == coupleConfig.QuestionOptionId_Trigger))
+                      && registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue &&
+                                                           rsp.QuestionOptionId.Value == coupleConfig.QuestionOptionId_Trigger))
                 {
                     var newSpots = await _coupleRegistrationProcessor.Process(registration, coupleConfig);
                     spots.AddRange(newSpots);

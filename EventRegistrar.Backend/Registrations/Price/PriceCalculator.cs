@@ -25,33 +25,33 @@ namespace EventRegistrar.Backend.Registrations.Price
             _reductions = reductions;
         }
 
-        public async Task<decimal> CalculatePrice(Registration registration)
-        {
-            var seats = await _seats.Where(seat => (seat.RegistrationId == registration.Id
-                                                    || seat.RegistrationId_Follower == registration.Id)
-                                                   && !seat.IsCancelled)
-                .Include(seat => seat.Registrable)
-                //.Include(seat => seat.Registrable.Reductions)
-                .ToListAsync();
-            var responses = registration.Responses
-                .Where(rsp => rsp.RegistrationId == registration.Id);
+        //public async Task<decimal> CalculatePrice(Registration registration)
+        //{
+        //    var seats = await _seats.Where(seat => (seat.RegistrationId == registration.Id
+        //                                            || seat.RegistrationId_Follower == registration.Id)
+        //                                           && !seat.IsCancelled)
+        //        .Include(seat => seat.Registrable)
+        //        //.Include(seat => seat.Registrable.Reductions)
+        //        .ToListAsync();
+        //    var responses = registration.Responses
+        //        .Where(rsp => rsp.RegistrationId == registration.Id);
 
-            var price = await CalculatePrice(registration.Id, responses, seats);
+        //    var price = await CalculatePrice(registration.Id, responses, seats);
 
-            //if (savePrice)
-            //{
-            //    registration.Price = price;
-            //    if (registration.State != RegistrationState.Cancelled)
-            //    {
-            //        var paidAmount = (decimal?)registration.Payments.Sum(ass => ass.Amount);
-            //        registration.State = (paidAmount ?? 0m) >= price && price > 0m && registration.State != RegistrationState.Paid
-            //            ? RegistrationState.Paid
-            //            : RegistrationState.Received;
-            //    }
-            //    await dbContext.SaveChangesAsync();
-            //}
-            return price;
-        }
+        //    //if (savePrice)
+        //    //{
+        //    //    registration.Price = price;
+        //    //    if (registration.State != RegistrationState.Cancelled)
+        //    //    {
+        //    //        var paidAmount = (decimal?)registration.Payments.Sum(ass => ass.Amount);
+        //    //        registration.State = (paidAmount ?? 0m) >= price && price > 0m && registration.State != RegistrationState.Paid
+        //    //            ? RegistrationState.Paid
+        //    //            : RegistrationState.Received;
+        //    //    }
+        //    //    await dbContext.SaveChangesAsync();
+        //    //}
+        //    return price;
+        //}
 
         public async Task<decimal> CalculatePrice(Guid registrationId, IEnumerable<Response> responses, IEnumerable<Seat> seats)
         {
