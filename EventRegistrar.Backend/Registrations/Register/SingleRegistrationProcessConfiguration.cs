@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace EventRegistrar.Backend.Registrations.Register
 {
     public class SingleRegistrationProcessConfiguration : IRegistrationProcessConfiguration
     {
         public string Description { get; set; }
+        public IEnumerable<(Guid QuestionOptionId, string Language)> LanguageMappings { get; set; }
         public Guid QuestionId_Email { get; set; }
         public Guid QuestionId_FirstName { get; set; }
         public Guid QuestionId_LastName { get; set; }

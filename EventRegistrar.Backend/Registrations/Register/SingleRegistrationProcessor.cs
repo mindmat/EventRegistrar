@@ -48,7 +48,10 @@ namespace EventRegistrar.Backend.Registrations.Register
                 registration.Phone = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Phone.Value)?.ResponseString;
                 registration.PhoneNormalized = _phoneNormalizer.NormalizePhone(registration.Phone);
             }
-
+            if (config.LanguageMappings != null)
+            {
+                registration.Language = config.LanguageMappings.FirstOrDefault(map => registration.Responses.Any(rsp => rsp.QuestionOptionId == map.QuestionOptionId)).Language;
+            }
             var ownSeats = new List<Seat>();
 
             var questionOptionIds = new HashSet<Guid>(registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue).Select(rsp => rsp.QuestionOptionId.Value));

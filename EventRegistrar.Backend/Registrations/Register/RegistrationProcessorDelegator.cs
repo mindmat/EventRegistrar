@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-//using System.Linq;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.RegistrationForms;
@@ -63,7 +62,14 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_Email = Guid.Parse("8CB73EA6-F663-4CDF-B6F0-77F560F2DDF6"),
                     QuestionId_Phone = Guid.Parse("3AFD336A-3C57-4A6A-A1BB-A0824B14431C"),
                     QuestionOptionId_Leader = Guid.Parse("F5DEF570-730B-4411-82DC-42959FF2E088"),
-                    QuestionOptionId_Follower = Guid.Parse("AB8363D9-F816-4927-BFED-078E04201C50")
+                    QuestionOptionId_Follower = Guid.Parse("AB8363D9-F816-4927-BFED-078E04201C50"),
+                    LanguageMappings = new[]
+                    {
+                    (new Guid("46AD095F-A014-4321-BC5F-5C98F9060F1D"), Language.Deutsch ),
+                    (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
+                    (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
+                    (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
+                }
                 };
                 yield return new CoupleRegistrationProcessConfiguration
                 {
