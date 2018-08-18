@@ -1,0 +1,39 @@
+<h1>Mailing</h1>
+
+<table class="table table-hover" *ngIf="mails">
+  <thead class="thead-dark">
+    <tr>
+      <th>Empfänger</th>
+      <th>Betreff</th>
+      <th>Erstellt</th>
+      <th>Absender</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let mail of mails" (click)="showMail(mail)">
+      <td>{{ mail.recipients }}</td>
+      <td>{{ mail.subject }}</td>
+      <td>{{ mail.created | date: 'dd.MM.yy HH:mm:ss' }}</td>
+      <td>{{ mail.senderName }} ({{ mail.senderMail }})</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p *ngIf="!mails"><em>Loading...</em></p>
+
+<!--<table class="table" *ngIf="mail">
+  <tbody>
+    <tr>
+      <td>Template (HTML)</td>
+      <td><textarea [(ngModel)]="mail.contentHtml" type="" class="form-control" (keyup)="renderMail()"></textarea></td>
+    </tr>
+  </tbody>
+</table>-->
+
+<br /><br />
+
+<div id="mailRenderSpace" class="table-bordered">
+</div>
+<button class="btn btn-primary" (click)="saveTemplate()">Freigeben</button>

@@ -45,6 +45,12 @@ namespace EventRegistrar.Backend.Infrastructure.ServiceBus
         public void RegisterMessageHandlers()
         {
             var serviceBusEndpoint = Environment.GetEnvironmentVariable("ServiceBusEndpoint");
+            if (string.IsNullOrEmpty(serviceBusEndpoint))
+            {
+                _logger.LogWarning("No ServiceBusEndpoint configured");
+                return;
+            }
+
             foreach (var serviceBusConsumer in _serviceBusConsumers)
             {
                 var queueName = serviceBusConsumer.Value.QueueName;

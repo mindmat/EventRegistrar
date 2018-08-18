@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'mailTemplates',
@@ -12,7 +12,7 @@ export class MailTemplatesComponent {
   searching: boolean;
   saving: boolean;
 
-  constructor(private http: HttpClient, private router: Router, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private route: ActivatedRoute) {
     this.searching = false;
   }
 

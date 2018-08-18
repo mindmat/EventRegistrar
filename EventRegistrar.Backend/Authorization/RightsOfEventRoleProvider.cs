@@ -44,6 +44,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(MailTemplatesQuery).Name;
                 yield return typeof(ParticipantsOfRegistrableQuery).Name;
                 yield return typeof(QuestionToRegistrablesQuery).Name;
+                yield return typeof(GetPendingMailsQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))

@@ -23,6 +23,7 @@ import { SmsConversationComponent } from './smsConversation/smsConversation.comp
 import { CheckinViewComponent } from "./checkinView/checkinView.component";
 import { PartyOverviewComponent } from "./partyOverview/partyOverview.component";
 import { MailTemplatesComponent } from "./mailTemplates/mailTemplates.component";
+import { MailsComponent } from "./mails/mails.component";
 import { EventSelectionComponent } from "./events/eventSelection.component";
 import { EventAuthorizationComponent } from "./eventAuthorization/eventAuthorization.component";
 import { RegistrationFormsComponent } from "./registrationForms/registrationForms.component";
@@ -46,6 +47,7 @@ import { EventService } from "./events/eventService.service";
     CheckinViewComponent,
     PartyOverviewComponent,
     MailTemplatesComponent,
+    MailsComponent,
     EventSelectionComponent,
     EventAuthorizationComponent,
     RegistrationFormsComponent,
@@ -73,6 +75,7 @@ import { EventService } from "./events/eventService.service";
       { path: ':eventAcronym/registrations/:id/sms', component: SmsConversationComponent },
       { path: ':eventAcronym/partyOverview', component: PartyOverviewComponent },
       { path: ':eventAcronym/mailTemplates', component: MailTemplatesComponent },
+      { path: ':eventAcronym/mails', component: MailsComponent },
       { path: ':eventAcronym/registrationForms', component: RegistrationFormsComponent },
       { path: ':eventAcronym/questionMapping', component: QuestionMappingComponent }
       //{ path: '**', redirectTo: 'll18/registrables' }

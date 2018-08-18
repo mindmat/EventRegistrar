@@ -20,5 +20,11 @@ namespace EventRegistrar.Backend.Mailing
         {
             return _mediator.Send(new MailsOfRegistrationQuery { EventAcronym = eventAcronym, RegistrationId = registrationId });
         }
+
+        [HttpGet("api/events/{eventAcronym}/mails/pending")]
+        public Task<IEnumerable<Mail>> GetPendingMails(string eventAcronym)
+        {
+            return _mediator.Send(new GetPendingMailsQuery { EventAcronym = eventAcronym });
+        }
     }
 }
