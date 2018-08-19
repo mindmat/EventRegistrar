@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Mailing
 {
-    public class SpotsController : Controller
+    public class MailsController : Controller
     {
         private readonly IMediator _mediator;
 
-        public SpotsController(IMediator mediator)
+        public MailsController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -25,6 +25,12 @@ namespace EventRegistrar.Backend.Mailing
         public Task<IEnumerable<Mail>> GetPendingMails(string eventAcronym)
         {
             return _mediator.Send(new GetPendingMailsQuery { EventAcronym = eventAcronym });
+        }
+
+        [HttpPost("api/events/{eventAcronym}/mails/{mailId:guid}/release")]
+        public Task ReleaseMail(string eventAcronym, Guid mailId)
+        {
+            return _mediator.Send(new ReleaseMailCommand { EventAcronym = eventAcronym, MailId = mailId });
         }
     }
 }

@@ -15,6 +15,10 @@ export class MailsComponent {
   }
 
   ngOnInit() {
+    this.refresh();
+  }
+
+  refresh() {
     this.http.get<Mail[]>(`api/events/${this.getEventAcronym()}/mails/pending`)
       .subscribe(result => {
         this.mails = result;
@@ -36,6 +40,12 @@ export class MailsComponent {
   renderMail(template: string) {
     var mailContainer = document.getElementById("mailRenderSpace") as HTMLDivElement;
     mailContainer.innerHTML = template;
+  }
+
+  releaseMail(mailId: string) {
+    this.http.post(`api/events/${this.getEventAcronym()}/mails/${mailId}/release`, null).subscribe(result => {
+      this.refresh();
+    });
   }
 }
 

@@ -51,6 +51,7 @@ namespace EventRegistrar.Backend.Authorization
             {
                 yield return typeof(UnrecognizedPaymentsQuery).Name;
                 yield return typeof(SetRecognizedEmailCommand).Name;
+                yield return typeof(ReleaseMailCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

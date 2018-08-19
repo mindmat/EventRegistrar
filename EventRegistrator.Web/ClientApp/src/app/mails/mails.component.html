@@ -7,6 +7,7 @@
       <th>Betreff</th>
       <th>Erstellt</th>
       <th>Absender</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -15,6 +16,7 @@
       <td>{{ mail.subject }}</td>
       <td>{{ mail.created | date: 'dd.MM.yy HH:mm:ss' }}</td>
       <td>{{ mail.senderName }} ({{ mail.senderMail }})</td>
+      <td><button class="btn btn-primary" (click)="releaseMail(mail.id)">Freigeben</button></td>
     </tr>
   </tbody>
 </table>
@@ -36,4 +38,4 @@
 
 <div id="mailRenderSpace" class="table-bordered">
 </div>
-<button class="btn btn-primary" (click)="saveTemplate()">Freigeben</button>
+<button class="btn btn-primary" (click)="releaseMail(mail.id)">Freigeben</button>
