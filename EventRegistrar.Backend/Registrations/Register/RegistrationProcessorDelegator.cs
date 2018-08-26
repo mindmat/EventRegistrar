@@ -65,11 +65,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionOptionId_Follower = Guid.Parse("AB8363D9-F816-4927-BFED-078E04201C50"),
                     LanguageMappings = new[]
                     {
-                    (new Guid("46AD095F-A014-4321-BC5F-5C98F9060F1D"), Language.Deutsch ),
-                    (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
-                    (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
-                    (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
-                }
+                        (new Guid("46AD095F-A014-4321-BC5F-5C98F9060F1D"), Language.Deutsch ),
+                        (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
+                        (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
+                        (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
+                    }
                 };
                 yield return new CoupleRegistrationProcessConfiguration
                 {
@@ -96,6 +96,20 @@ namespace EventRegistrar.Backend.Registrations.Register
                         (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
                         (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
                         (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
+                    }
+                };
+                yield return new SingleRegistrationProcessConfiguration
+                {
+                    Description = "Partypass",
+                    QuestionOptionId_Trigger = Guid.Parse("6FC5F608-E3EF-4961-A2FC-A07A85F9BEB5"),
+                    QuestionId_FirstName = Guid.Parse("94D91BD9-560D-4B3F-9AC8-9CEB24F64ABD"),
+                    QuestionId_LastName = Guid.Parse("809AC411-A99C-40F1-96BE-356316918724"),
+                    QuestionId_Email = Guid.Parse("C97B62D1-F883-4D67-830D-6355311EFDC9"),
+                    QuestionId_Phone = Guid.Parse("FA6734EA-19EE-4E44-8F9E-5DB3BC286BD9"),
+                    LanguageMappings = new[]
+                    {
+                        (new Guid("B1AB2D25-FEBE-431F-B1D1-F6574341C0B2"), Language.Deutsch ),
+                        (new Guid("C8BFCFF1-CE38-4A37-AC54-B06489CB0484"), Language.English ),
                     }
                 };
             }

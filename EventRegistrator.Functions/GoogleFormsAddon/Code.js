@@ -28,7 +28,7 @@
  * A global constant String holding the title of the add-on. This is
  * used to identify the add-on in the notification emails.
  */
-var ADDON_TITLE = 'Event Registrator';
+var ADDON_TITLE = 'Event Registrar';
 var eventAcronym = 'rb18';
 
 /**
@@ -62,20 +62,20 @@ function postAnswerToBackend(response) {
       stringAnswer = itemResponse.getResponse();
     }
     var responseItem =
-      {
-        questionExternalId: itemResponse.getItem().getId(),
-        response: stringAnswer,
-        responses: stringArrayAnswer
-      };
+    {
+      questionExternalId: itemResponse.getItem().getId(),
+      response: stringAnswer,
+      responses: stringArrayAnswer
+    };
     responsesData.push(responseItem);
   }
 
   var responseData =
-    {
-      //email: response.getRespondentEmail(),
-      timestamp: response.getTimestamp(),
-      responses: responsesData
-    };
+  {
+    //email: response.getRespondentEmail(),
+    timestamp: response.getTimestamp(),
+    responses: responsesData
+  };
 
   var options = {
     'method': 'post',
@@ -125,15 +125,23 @@ function updateFormDefinitionInEventRegistrator() {
   for (var i = 0; i < formItems.length; i++) {
     var formItem = formItems[i];
     var question =
-      {
-        id: formItem.getId(),
-        type: formItem.getType().toString(),
-        title: formItem.getTitle(),
-        index: formItem.getIndex()
-      }
+    {
+      id: formItem.getId(),
+      type: formItem.getType().toString(),
+      title: formItem.getTitle(),
+      index: formItem.getIndex()
+    }
     if (formItem.getType() == FormApp.ItemType.MULTIPLE_CHOICE) {
       var multipleChoiceItem = formItem.asMultipleChoiceItem();
       var choices = multipleChoiceItem.getChoices();
+      question.choices = [];
+      for (var j = 0; j < choices.length; j++) {
+        question.choices.push(choices[j].getValue());
+      }
+    }
+    else if (formItem.getType() == FormApp.ItemType.LIST) {
+      var listItem = formItem.asListItem();
+      var choices = listItem.getChoices();
       question.choices = [];
       for (var j = 0; j < choices.length; j++) {
         question.choices.push(choices[j].getValue());
@@ -151,10 +159,10 @@ function updateFormDefinitionInEventRegistrator() {
   }
 
   var registrationForm =
-    {
-      title: form.getTitle(),
-      'questions': questions
-    }
+  {
+    title: form.getTitle(),
+    'questions': questions
+  }
 
   var options = {
     'method': 'post',

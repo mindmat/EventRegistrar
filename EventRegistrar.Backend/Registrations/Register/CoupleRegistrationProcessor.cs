@@ -157,7 +157,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             {
                 MailType = mailType,
                 RegistrationId = registration.Id,
-                Withhold = false,
+                Withhold = true,
                 AllowDuplicate = false
             });
 

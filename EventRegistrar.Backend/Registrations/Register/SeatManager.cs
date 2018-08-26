@@ -64,12 +64,12 @@ namespace EventRegistrar.Backend.Registrations.Register
             return seat;
         }
 
-        public Seat ReserveSeat(Guid? eventId,
-                                Registrable registrable,
-                                Guid registrationId,
-                                string ownEmail,
-                                string partnerEmail,
-                                Role? role)
+        public Seat ReserveSinglePartOfPartnerSpot(Guid? eventId,
+                                                   Registrable registrable,
+                                                   Guid registrationId,
+                                                   string ownEmail,
+                                                   string partnerEmail,
+                                                   Role? role)
         {
             Seat seat;
             var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();

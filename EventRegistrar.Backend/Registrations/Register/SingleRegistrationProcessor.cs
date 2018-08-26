@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
@@ -61,26 +62,36 @@ namespace EventRegistrar.Backend.Registrations.Register
                                             .Include(map => map.Registrable.Seats)
                                             .ToListAsync();
             //var registrableIds_CheckWaitingList = new List<Guid>();
+            var soldOutMessages = new StringBuilder();
             foreach (var response in registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue))
             {
                 foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
                 {
-                    //var partnerEmail = registrable.QuestionId_PartnerEmail.HasValue
-                    //    ? registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == registrable.QuestionId_PartnerEmail.Value)?.ResponseString
-                    //    : null;
-                    string partnerEmail = null;
-                    var isLeader = registration.Responses.Any(rsp => rsp.QuestionOptionId == config.QuestionOptionId_Leader);
-                    var isFollower = registration.Responses.Any(rsp => rsp.QuestionOptionId == config.QuestionOptionId_Follower);
-                    var role = isLeader ? Role.Leader : (isFollower ? Role.Follower : (Role?)null);
-                    var seat = _seatManager.ReserveSeat(registration.EventId, registrable.Registrable, registration.Id, registration.RespondentEmail, partnerEmail, role);
+                    var isDoubleRegistrable = registrable.Registrable.MaximumDoubleSeats.HasValue;
+                    Seat seat;
+                    if (isDoubleRegistrable)
+                    {
+                        //var partnerEmail = registrable.QuestionId_PartnerEmail.HasValue
+                        //    ? registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == registrable.QuestionId_PartnerEmail.Value)?.ResponseString
+                        //    : null;
+                        string partnerEmail = null;
+                        var isLeader = registration.Responses.Any(rsp => rsp.QuestionOptionId == config.QuestionOptionId_Leader);
+                        var isFollower = registration.Responses.Any(rsp => rsp.QuestionOptionId == config.QuestionOptionId_Follower);
+                        var role = isLeader ? Role.Leader : (isFollower ? Role.Follower : (Role?)null);
+                        seat = _seatManager.ReserveSinglePartOfPartnerSpot(registration.EventId, registrable.Registrable, registration.Id, registration.RespondentEmail, partnerEmail, role);
+                    }
+                    else
+                    {
+                        seat = _seatManager.ReserveSingleSpot(registration.EventId, registrable.Registrable, registration.Id);
+                    }
                     //if (registrableId_CheckWaitingList != null)
                     //{
                     //    registrableIds_CheckWaitingList.Add(registrableId_CheckWaitingList.Value);
                     //}
                     if (seat == null)
                     {
-                        registration.SoldOutMessage = (registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +
-                                                      string.Format(Resources.RegistrableSoldOut, registrable.Registrable.Name);
+                        soldOutMessages.AppendLine((registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +
+                                                    string.Format(Resources.RegistrableSoldOut, registrable.Registrable.Name));
                     }
                     else
                     {
@@ -89,6 +100,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 }
             }
 
+            registration.SoldOutMessage = soldOutMessages.ToString();
             var isOnWaitingList = ownSeats.Any(seat => seat.IsWaitingList);
             registration.IsWaitingList = isOnWaitingList;
             if (registration.IsWaitingList == false && !registration.AdmittedAt.HasValue)
@@ -108,7 +120,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             {
                 MailType = mailType,
                 RegistrationId = registration.Id,
-                Withhold = false,
+                Withhold = true,
                 AllowDuplicate = false
             });
 
