@@ -24,6 +24,7 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
         {
             var eventId = await _acronymResolver.GetEventIdFromAcronym(query.EventAcronym);
             return await _questionOptionsToRegistrables.Where(map => map.Registrable.EventId == eventId)
+                                                       .OrderBy(map => map.QuestionOption.Question.Index)
                                                        .Select(map => new QuestionToRegistrablesDisplayItem
                                                        {
                                                            RegistrableId = map.RegistrableId,
