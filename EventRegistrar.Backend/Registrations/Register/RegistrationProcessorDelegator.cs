@@ -85,10 +85,16 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_Follower_Phone = Guid.Parse("C2D0D7E6-FFBE-49F1-9E83-1C155B92F95C"),
                     RoleSpecificMappings = new[]
                     {
-                        (new Guid("E314353F-82BD-4D49-82CC-0ECC8D5B52CD"), Role.Leader,   new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
-                        (new Guid("30C6D9DD-9189-47D4-86E9-3E8675A2D212"), Role.Follower, new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
-                        (new Guid("07E66114-5D11-460D-B981-5779183442C2"), Role.Leader,   new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
-                        (new Guid("07E66114-5D11-460D-B981-5779183442C2"), Role.Follower, new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" ))
+                        // Helfer kurz
+                        (new Guid("4C7951D1-3914-42F3-9A79-722E7F7EDD16"), Role.Leader,   new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
+                        (new Guid("6CF2BFD2-04F5-42B9-8C56-D1242E1D0883"), Role.Follower, new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
+                        (new Guid("929201E9-D012-4DE1-A53A-20D4407B4DC5"), Role.Leader,   new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
+                        (new Guid("929201E9-D012-4DE1-A53A-20D4407B4DC5"), Role.Follower, new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
+                        // Helfer lang
+                        (new Guid("80648E55-BE44-40D9-86EF-1E91E247C05B"), Role.Leader,   new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
+                        (new Guid("6B95705D-1ECF-4434-B569-6138283FC594"), Role.Follower, new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
+                        (new Guid("44975F3A-9AEF-4C25-83FB-C934A942D4E4"), Role.Leader,   new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
+                        (new Guid("44975F3A-9AEF-4C25-83FB-C934A942D4E4"), Role.Follower, new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
                     },
                     LanguageMappings = new[]
                     {
