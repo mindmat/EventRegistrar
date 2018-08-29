@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -42,7 +43,8 @@ namespace EventRegistrator.Web
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error");
+                app.UseHsts();
             }
 
             app.UseCors(builder => builder.AllowAnyOrigin()
@@ -51,6 +53,7 @@ namespace EventRegistrator.Web
                                           .AllowCredentials());
 
             app.UseAuthentication();
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
@@ -78,20 +81,7 @@ namespace EventRegistrator.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //var azureServiceTokenProvider = new AzureServiceTokenProvider();
-            //var kvClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(azureServiceTokenProvider.KeyVaultTokenCallback));
-
-            //var keyVaultUrl = Configuration["KeyVaultUri"];
-            //var googleClientId = kvClient.GetSecretAsync(keyVaultUrl, "Google-ClientId").Result.Value;
-            //var googleClientSecret = kvClient.GetSecretAsync(keyVaultUrl, "Google-ClientSecret").Result.Value;
-
-            //services.AddAuthentication().AddGoogle(o =>
-            //{
-            //    //o.SignInScheme = IdentityServerConstants.ExternalCookieAuthenticationScheme;
-            //    o.ClientId = googleClientId;
-            //    o.ClientSecret = googleClientSecret;
-            //});
-            services.AddMvc();
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
@@ -108,9 +98,9 @@ namespace EventRegistrator.Web
             var optionsBuilder = new DbContextOptionsBuilder<EventRegistratorDbContext>();
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             optionsBuilder.UseSqlServer(connectionString, builder =>
-             {
-                 builder.EnableRetryOnFailure();
-             });
+            {
+                builder.EnableRetryOnFailure();
+            });
             optionsBuilder.EnableSensitiveDataLogging();
 
             return optionsBuilder.Options;

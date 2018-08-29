@@ -16,7 +16,7 @@ export class NavMenuComponent implements OnInit {
   ngOnInit() {
   }
 
-  isExpanded = false;
+  isExpanded = true;
 
   collapse() {
     console.info(this.eventService.acronym);
