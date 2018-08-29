@@ -1,6 +1,6 @@
 <h1>Mailing</h1>
 
-<table class="table table-hover">
+<table class="table table-hover" *ngIf="mailTemplates">
   <thead class="thead-dark">
     <tr>
       <th>Typ</th>
@@ -13,7 +13,7 @@
     <tr *ngFor="let template of mailTemplates" (click)="showTemplate(template)">
       <td>
         <select [(ngModel)]="template.type" disabled="disabled" style="border: none; outline: none">
-           <option *ngFor="let mailType of mailTypes" value={{mailType.type}}>{{ mailType.userText }}</option>
+          <option *ngFor="let mailType of mailTypes" value={{mailType.type}}>{{ mailType.userText }}</option>
         </select>
       </td>
       <td>{{ template.language }}</td>
@@ -25,14 +25,14 @@
 
 <hr />
 
-<p *ngIf="searching"><em>Loading...</em></p>
+<p *ngIf="!mailTemplates"><em>Loading...</em></p>
 
 <table class="table" *ngIf="mailTemplate">
   <tbody>
     <tr *ngIf="mailTemplate.type">
       <td>Typ</td>
       <td>
-        <select [(ngModel)]="mailTemplate.type" class="custom-select form-control" disabled="disabled" >
+        <select [(ngModel)]="mailTemplate.type" class="custom-select form-control" disabled="disabled">
           <option value="0">----</option>
           <option *ngFor="let mailType of mailTypes" value={{mailType.type}}>{{ mailType.userText }}</option>
         </select>
