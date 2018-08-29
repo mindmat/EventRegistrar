@@ -9,5 +9,6 @@
         public string SenderName { get; set; }
         public string Subject { get; set; }
         public string Template { get; set; }
+        public MailType? Type { get; set; }
     }
 }

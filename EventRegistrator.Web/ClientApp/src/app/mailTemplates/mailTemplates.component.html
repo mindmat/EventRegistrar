@@ -3,18 +3,22 @@
 <table class="table table-hover">
   <thead class="thead-dark">
     <tr>
-      <th>ID</th>
+      <th>Typ</th>
       <th>Sprache</th>
       <th>Betreff</th>
-      <th>Absender</th>
+      <!--<th>Absender</th>-->
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let template of mailTemplates" (click)="showTemplate(template)">
-      <td>{{ template.key }}</td>
+      <td>
+        <select [(ngModel)]="template.type" disabled="disabled" style="border: none; outline: none">
+           <option *ngFor="let mailType of mailTypes" value={{mailType.type}}>{{ mailType.userText }}</option>
+        </select>
+      </td>
       <td>{{ template.language }}</td>
       <td>{{ template.subject }}</td>
-      <td>{{ template.senderName }} ({{ template.senderMail }})</td>
+      <!--<td>{{ template.senderName }} ({{ template.senderMail }})</td>-->
     </tr>
   </tbody>
 </table>
@@ -25,13 +29,22 @@
 
 <table class="table" *ngIf="mailTemplate">
   <tbody>
-    <tr>
-      <td>Template ID</td>
-      <td><input [(ngModel)]="mailTemplate.key" type="text" class="form-control" /></td>
+    <tr *ngIf="mailTemplate.type">
+      <td>Typ</td>
+      <td>
+        <select [(ngModel)]="mailTemplate.type" class="custom-select form-control" disabled="disabled" >
+          <option value="0">----</option>
+          <option *ngFor="let mailType of mailTypes" value={{mailType.type}}>{{ mailType.userText }}</option>
+        </select>
+      </td>
     </tr>
     <tr>
       <td>Sprache</td>
-      <td><input [(ngModel)]="mailTemplate.language" type="text" class="form-control" /></td>
+      <td>
+        <select [(ngModel)]="mailTemplate.language" class="custom-select form-control" disabled="disabled">
+          <option *ngFor="let language of languages" value={{language.acronym}}>{{ language.userText }}</option>
+        </select>
+      </td>
     </tr>
     <tr>
       <td>Betreff</td>
@@ -45,7 +58,11 @@
       <td>Absender Alias</td>
       <td><input [(ngModel)]="mailTemplate.senderName" type="text" class="form-control" /></td>
     </tr>
-    <tr>
+    <tr *ngIf="!mailTemplate.type">
+      <td>Template Key</td>
+      <td><input [(ngModel)]="mailTemplate.key" type="text" class="form-control" /></td>
+    </tr>
+    <tr *ngIf="!mailTemplate.type">
       <td>Adressaten</td>
       <td><input [(ngModel)]="mailTemplate.audience" type="number" class="form-control" /></td>
     </tr>

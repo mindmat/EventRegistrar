@@ -24,19 +24,18 @@ namespace EventRegistrar.Backend.Mailing.Templates
         {
             var eventId = await _acronymResolver.GetEventIdFromAcronym(query.EventAcronym);
             var templates = await _mailTemplates
-                .Where(mtp => mtp.Type == 0
-                              && mtp.MailingKey != null
-                              && mtp.EventId == eventId)
-                .Select(mtp => new MailTemplateItem
-                {
-                    Key = mtp.MailingKey,
-                    Language = mtp.Language,
-                    Template = mtp.Template,
-                    SenderMail = mtp.SenderMail,
-                    SenderName = mtp.SenderName,
-                    Subject = mtp.Subject
-                })
-                .ToListAsync(cancellationToken);
+                                  .Where(mtp => mtp.EventId == eventId)
+                                  .Select(mtp => new MailTemplateItem
+                                  {
+                                      Key = mtp.MailingKey,
+                                      Language = mtp.Language,
+                                      Template = mtp.Template,
+                                      SenderMail = mtp.SenderMail,
+                                      SenderName = mtp.SenderName,
+                                      Subject = mtp.Subject,
+                                      Type = mtp.Type
+                                  })
+                                  .ToListAsync(cancellationToken);
 
             return templates;
         }

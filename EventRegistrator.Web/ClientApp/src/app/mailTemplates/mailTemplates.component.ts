@@ -9,18 +9,26 @@ import { ActivatedRoute } from '@angular/router';
 export class MailTemplatesComponent {
   mailTemplates: MailTemplate[];
   mailTemplate: MailTemplate;
-  searching: boolean;
+  mailTypes: MailType[];
+  languages: Language[];
   saving: boolean;
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
-    this.searching = false;
   }
 
   ngOnInit() {
     this.http.get<MailTemplate[]>(`api/events/${this.getEventAcronym()}/mailTemplates`)
-      .subscribe(result => {
-        this.mailTemplates = result;
-      },
+      .subscribe(result => this.mailTemplates = result,
+        error => {
+          console.error(error);
+        });
+    this.http.get<MailType[]>(`api/events/${this.getEventAcronym()}/mails/types`)
+      .subscribe(result => this.mailTypes = result,
+        error => {
+          console.error(error);
+        });
+    this.http.get<Language[]>(`api/events/${this.getEventAcronym()}/mails/languages`)
+      .subscribe(result => this.languages = result,
         error => {
           console.error(error);
         });
@@ -34,7 +42,7 @@ export class MailTemplatesComponent {
   saveTemplate() {
     this.saving = true;
 
-    this.http.post<MailTemplate>(`api/events/${this.getEventAcronym()}/mailTemplates/${this.mailTemplate.key}`, this.mailTemplate)
+    this.http.post<MailTemplate>(`api/events/${this.getEventAcronym()}/mailTemplates`, this.mailTemplate)
       .subscribe(result => {
         this.mailTemplate = result;
         this.saving = false;
@@ -57,10 +65,21 @@ export class MailTemplatesComponent {
 
 class MailTemplate {
   key: string;
+  type: string;
   language: string;
   template: string;
   senderMail: string;
   senderName: string;
   subject: string;
   audience: number;
+}
+
+class MailType {
+  type: string;
+  userText: string;
+}
+
+class Language {
+  acronym: string;
+  userText: string;
 }

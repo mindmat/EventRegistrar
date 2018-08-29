@@ -45,6 +45,8 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(ParticipantsOfRegistrableQuery).Name;
                 yield return typeof(QuestionToRegistrablesQuery).Name;
                 yield return typeof(GetPendingMailsQuery).Name;
+                yield return typeof(MailTypesQuery).Name;
+                yield return typeof(LanguagesQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
@@ -52,6 +54,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(UnrecognizedPaymentsQuery).Name;
                 yield return typeof(SetRecognizedEmailCommand).Name;
                 yield return typeof(ReleaseMailCommand).Name;
+                yield return typeof(SaveMailTemplateCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))
