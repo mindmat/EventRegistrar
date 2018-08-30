@@ -12,7 +12,7 @@ export class MailTemplatesComponent {
   mailTypes: MailType[];
   languages: Language[];
   saving: boolean;
-
+  
   constructor(private http: HttpClient, private route: ActivatedRoute) {
   }
 
@@ -36,7 +36,6 @@ export class MailTemplatesComponent {
 
   showTemplate(mailTemplate: MailTemplate) {
     this.mailTemplate = mailTemplate;
-    this.renderMail(this.mailTemplate.template);
   }
 
   saveTemplate() {
@@ -55,11 +54,6 @@ export class MailTemplatesComponent {
 
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
-  }
-
-  renderMail(template: string) {
-    var mailContainer = document.getElementById("templateRenderSpace") as HTMLDivElement;
-    mailContainer.innerHTML = template;
   }
 }
 

@@ -29,6 +29,7 @@ import { EventAuthorizationComponent } from "./eventAuthorization/eventAuthoriza
 import { RegistrationFormsComponent } from "./registrationForms/registrationForms.component";
 import { QuestionMappingComponent } from "./questionMapping/questionMapping.component";
 import { EventService } from "./events/eventService.service";
+import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,8 @@ import { EventService } from "./events/eventService.service";
     HttpModule,
     HttpClientModule,
     FormsModule,
+    FroalaEditorModule.forRoot(),
+    FroalaViewModule.forRoot(),
     RouterModule.forRoot([
       //{ path: '', redirectTo: 'eventSelection', pathMatch: 'full' },
       //{ path: 'home', component: HomeComponent },
