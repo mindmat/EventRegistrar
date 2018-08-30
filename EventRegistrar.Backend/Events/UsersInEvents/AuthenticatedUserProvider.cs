@@ -35,7 +35,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
                                                             && usr.IdentityProviderUserIdentifier == identifier);
             if (user == null)
             {
-                return new Guid("73B167CE-61CC-46AC-BC7D-F72A1EA5D7C9");
+                //return new Guid("73B167CE-61CC-46AC-BC7D-F72A1EA5D7C9");
                 return null;
             }
 
