@@ -31,8 +31,8 @@
               "./node_modules/font-awesome/css/font-awesome.css"
             ],
             "scripts": [
-              "./node_modules/jquery/dist/jquery.min.js",
-              "./node_modules/froala-editor/js/froala_editor.pkgd.min.js"
+              "../node_modules/jquery/dist/jquery.min.js",
+              "../node_modules/froala-editor/js/froala_editor.pkgd.min.js"
             ]
           },
           "configurations": {
