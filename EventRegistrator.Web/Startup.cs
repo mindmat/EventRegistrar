@@ -47,6 +47,8 @@ namespace EventRegistrator.Web
                 app.UseHsts();
             }
 
+            app.UseRequestLocalization();
+
             app.UseCors(builder => builder.AllowAnyOrigin()
                                           .AllowAnyHeader()
                                           .AllowAnyMethod()

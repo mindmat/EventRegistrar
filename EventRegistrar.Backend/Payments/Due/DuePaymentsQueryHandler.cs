@@ -15,9 +15,9 @@ namespace EventRegistrar.Backend.Payments.Due
     public class DuePaymentsQueryHandler : IRequestHandler<DuePaymentsQuery, IEnumerable<DuePaymentItem>>
     {
         public const int DefaultPaymentGracePeriod = 6;
-        public static readonly HashSet<MailType?> MailTypes_Accepted = new HashSet<MailType?> { MailType.DoubleRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted };
-        public static readonly HashSet<MailType?> MailTypes_Reminder1 = new HashSet<MailType?> { MailType.DoubleRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder };
-        public static readonly HashSet<MailType?> MailTypes_Reminder2 = new HashSet<MailType?> { MailType.DoubleRegistrationSecondReminder, MailType.SingleRegistrationSecondReminder };
+        public static readonly HashSet<MailType?> MailTypes_Accepted = new HashSet<MailType?> { MailType.PartnerRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted };
+        public static readonly HashSet<MailType?> MailTypes_Reminder1 = new HashSet<MailType?> { MailType.PartnerRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder };
+        public static readonly HashSet<MailType?> MailTypes_Reminder2 = new HashSet<MailType?> { MailType.PartnerRegistrationSecondReminder, MailType.SingleRegistrationSecondReminder };
         private readonly IEventAcronymResolver _eventAcronymResolver;
         private readonly IQueryable<Registration> _registrations;
 
