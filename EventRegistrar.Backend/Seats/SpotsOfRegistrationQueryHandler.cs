@@ -38,7 +38,7 @@ namespace EventRegistrar.Backend.Seats
                                         RegistrableId = seat.RegistrableId,
                                         Registrable = seat.Registrable.Name,
                                         SortKey = seat.Registrable.ShowInMailListOrder,
-                                        PartnerRegistrationId = seat.PartnerEmail != null ?
+                                        PartnerRegistrationId = seat.IsPartnerSpot ?
                                             seat.RegistrationId == query.RegistrationId ?
                                                 seat.RegistrationId_Follower :
                                                 seat.RegistrationId :
