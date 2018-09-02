@@ -1,4 +1,4 @@
-import { Component, } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 
@@ -7,11 +7,12 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './registration.component.html'
 })
 export class RegistrationComponent {
-  public registration: Registration;
-  public mails: Mail[];
-  public spots: Spot[];
+  registration: Registration;
+  mails: Mail[];
+  mail: Mail;
+  spots: Spot[];
+  allRegistrables: Registrable[];
   private registrationId: string;
-  public allRegistrables: Registrable[];
   private bookedRegistrableIds: string[];
 
   constructor(private readonly http: HttpClient, private route: ActivatedRoute) {
@@ -76,9 +77,8 @@ export class RegistrationComponent {
       .subscribe(result => { this.reloadRegistration(); }, error => console.error(error));
   }
 
-  showMail(content: string) {
-    var mailContainer = document.getElementById("mailContainer") as HTMLDivElement;
-    mailContainer.innerHTML = content;
+  showMail(mail: Mail) {
+    this.mail = mail;
   }
 
   releaseMail(mailId: string) {
