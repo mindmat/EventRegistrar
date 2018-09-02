@@ -6,7 +6,6 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
-using EventRegistrar.Backend.Properties;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Seats;
@@ -96,7 +95,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     if (seat == null)
                     {
                         registration.SoldOutMessage = (registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +
-                                                      string.Format(Resources.RegistrableSoldOut, registrable.Registrable.Name);
+                                                      string.Format(Properties.Resources.RegistrableSoldOut, registrable.Registrable.Name);
                     }
                     else
                     {
@@ -116,7 +115,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     if (seat == null)
                     {
                         registration.SoldOutMessage = (registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +
-                                                      string.Format(Resources.RegistrableSoldOut, registrable.Registrable.Name);
+                                                      string.Format(Properties.Resources.RegistrableSoldOut, registrable.Registrable.Name);
                     }
                     else
                     {
@@ -151,8 +150,8 @@ namespace EventRegistrar.Backend.Registrations.Register
 
             // send mail
             var mailType = isOnWaitingList
-                ? MailType.DoubleRegistrationMatchedOnWaitingList
-                : MailType.DoubleRegistrationMatchedAndAccepted;
+                ? MailType.PartnerRegistrationMatchedOnWaitingList
+                : MailType.PartnerRegistrationMatchedAndAccepted;
             await _serviceBusClient.SendCommand(new ComposeAndSendMailCommand
             {
                 MailType = mailType,

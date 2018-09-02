@@ -1,21 +1,15 @@
-<div class='main-nav'>
-  <div class='navbar navbar-inverse'>
-    <div class='navbar-header'>
-      <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='.navbar-collapse' [attr.aria-expanded]='isExpanded' (click)='toggle()'>
-        <span class='sr-only'>Toggle navigation</span>
-        <span class='icon-bar'></span>
-        <span class='icon-bar'></span>
-        <span class='icon-bar'></span>
-      </button>
+<header class='main-nav'>
+  <nav class='navbar'>
+    <!--<div class='navbar-header'>
       <a class='navbar-brand'>Hallo {{ authService.user }}</a>
       <button class="btn btn-primary btn-xs"><a href="/.auth/logout">Logout</a></button>
       <a class='navbar-brand'>{{ eventService.name }}</a>
-    </div>
-    <div class='clearfix'></div>
-    <div class='navbar-collapse collapse' [ngClass]='{ "in": isExpanded }'>
+    </div>-->
+    <!--<div class='clearfix'></div>-->
+    <!--<div class='navbar-collapse'>-->
       <ul class='nav navbar-nav'>
         <li [routerLinkActive]='["link-active"]' [routerLinkActiveOptions]='{ exact: true }'>
-          <a [routerLink]='["/"]' (click)='collapse()'>
+          <a [routerLink]='["/"]'>
             <span class='glyphicon glyphicon-home'></span> Home
           </a>
         </li>
@@ -66,7 +60,7 @@
         </li>
         <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
           <a [routerLink]="[eventService.acronym, 'mailTemplates']">
-            <span class='glyphicon glyphicon-envelope'></span> Mailtemplates
+            <span class='glyphicon glyphicon-envelope'></span> Mailvorlagen
           </a>
         </li>
         <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
@@ -85,6 +79,6 @@
           </a>
         </li>
       </ul>
-    </div>
-  </div>
-</div>
+    <!--</div>-->
+  </nav>
+</header>

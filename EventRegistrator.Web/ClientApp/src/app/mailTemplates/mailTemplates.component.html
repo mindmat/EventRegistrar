@@ -1,4 +1,4 @@
-<h1>Mailing</h1>
+<h1>Mailvorlagen</h1>
 
 <table class="table table-hover" *ngIf="mailTemplates">
   <thead class="thead-dark">
@@ -6,7 +6,6 @@
       <th>Typ</th>
       <th>Sprache</th>
       <th>Betreff</th>
-      <!--<th>Absender</th>-->
     </tr>
   </thead>
   <tbody>
@@ -18,7 +17,6 @@
       </td>
       <td>{{ template.language }}</td>
       <td>{{ template.subject }}</td>
-      <!--<td>{{ template.senderName }} ({{ template.senderMail }})</td>-->
     </tr>
   </tbody>
 </table>
@@ -68,14 +66,17 @@
     </tr>
     <tr>
       <td>Template (HTML)</td>
-      <td><textarea [(ngModel)]="mailTemplate.template" type="" class="form-control" (keyup)="renderMail()"></textarea></td>
-    </tr>
+      <!--<td><textarea [(ngModel)]="mailTemplate.template" type="" class="form-control" (keyup)="renderMail()"></textarea></td>-->
+      <td><div [froalaEditor] [(ngModel)]="mailTemplate.template"></div></td>
+      </tr>
   </tbody>
 </table>
 
-<button class="btn btn-primary" (click)="saveTemplate()">Speichern</button>
+<button class="btn btn-primary" (click)="saveTemplate()" *ngIf="mailTemplate">Speichern</button>
 
 <br /><br />
 
-<div id="templateRenderSpace" class="table-bordered">
-</div>
+<!--<div id="templateRenderSpace" class="table-bordered">
+</div>-->
+
+

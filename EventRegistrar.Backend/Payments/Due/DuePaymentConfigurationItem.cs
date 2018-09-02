@@ -8,9 +8,9 @@ namespace EventRegistrar.Backend.Payments.Due
         public DefaultDuePaymentConfigurationItem()
         {
             PaymentGracePeriod = 6;
-            MailTypes_Accepted = new[] { MailType.DoubleRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted };
-            MailTypes_Reminder1 = new[] { MailType.DoubleRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder };
-            MailTypes_Reminder2 = new[] { MailType.DoubleRegistrationSecondReminder, MailType.SingleRegistrationSecondReminder };
+            MailTypes_Accepted = new[] { MailType.PartnerRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted };
+            MailTypes_Reminder1 = new[] { MailType.PartnerRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder };
+            MailTypes_Reminder2 = new[] { MailType.PartnerRegistrationSecondReminder, MailType.SingleRegistrationSecondReminder };
         }
     }
 

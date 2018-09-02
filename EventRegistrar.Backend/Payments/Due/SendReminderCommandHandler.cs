@@ -97,14 +97,14 @@ namespace EventRegistrar.Backend.Payments.Due
                     if (newLevel == 1)
                     {
                         mailType = registration.RegistrationId_Partner.HasValue
-                            ? MailType.DoubleRegistrationFirstReminder
+                            ? MailType.PartnerRegistrationFirstReminder
                             : MailType.SingleRegistrationFirstReminder;
                         registration.ReminderLevel = newLevel;
                     }
                     else if (newLevel == 2)
                     {
                         mailType = registration.RegistrationId_Partner.HasValue
-                          ? MailType.DoubleRegistrationSecondReminder
+                          ? MailType.PartnerRegistrationSecondReminder
                           : MailType.SingleRegistrationSecondReminder;
                         registration.ReminderLevel = newLevel;
                     }

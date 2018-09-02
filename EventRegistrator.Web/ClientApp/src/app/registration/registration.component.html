@@ -1,11 +1,14 @@
-<h1>Anmeldung {{ registration.firstName }} {{registration.lastName}} <span class="badge badge-primary" *ngIf="registration.isWaitingList">Warteliste</span></h1>
+<h1 style="display: inline">Anmeldung</h1>
+<h1 style="display: inline" *ngIf="registration"> {{ registration.firstName }} {{registration.lastName}} <span class="badge badge-primary" *ngIf="registration.isWaitingList">Warteliste</span></h1>
+<br />
+<br />
 
 <p *ngIf="!registration"><em>Loading...</em></p>
 
 <table class="table" *ngIf="registration">
   <tbody>
     <tr>
-      <td>Mail:</td>
+      <td>E-Mail:</td>
       <td>{{ registration.email }}</td>
     </tr>
     <tr>
@@ -39,7 +42,7 @@
   </tbody>
 </table>
 
-<h3 *ngIf="mails">Mails   <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#composeAndSendMailModal">Mail auslösen</button></h3>
+<h3 *ngIf="mails">Mails   <!--<button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#composeAndSendMailModal">Mail auslösen</button>--></h3>
 
 <table class="table table-hover" *ngIf="mails">
   <thead class="thead-dark">
@@ -52,8 +55,8 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let mail of mails" (click)="showMail(mail.ContentHtml)">
-      <td data-toggle="modal" data-target="#mailModal">{{ mail.subject }}</td>
+    <tr *ngFor="let mail of mails" (click)="showMail(mail)" data-toggle="modal" data-target="#mailModal">
+      <td>{{ mail.subject }}</td>
       <td>{{ mail.recipients }}</td>
       <td>{{ mail.created | date: 'dd.MM.yy HH:mm' }}</td>
       <td>{{ mail.senderName }} ({{ mail.senderMail }})</td>
@@ -82,10 +85,28 @@
 </table>
 
 <!-- mail modal -->
-<div class="modal fade" id="mailModal" tabindex="-1" role="dialog" aria-labelledby="mailModalLabel" aria-hidden="true">
+<div class="modal fade" id="mailModal" tabindex="-1" role="dialog" aria-labelledby="mailModalLabel" aria-hidden="true" *ngIf="mail">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
-      <div class="modal-body" id="mailContainer">
+      <div class="modal-header">
+        <h5 class="modal-title" id="mailModalLabel">Versendetes Mail (am {{ mail.created | date: 'dd.MM.yy HH:mm' }})</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <table class="table" *ngIf="registration">
+        <tbody>
+          <tr>
+            <td>Empfänger:</td>
+            <td>{{ mail.recipients }}</td>
+          </tr>
+          <tr>
+            <td>Betreff:</td>
+            <td>{{ mail.subject }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="modal-body border" id="mailContainer" [innerHtml]="mail.contentHtml">
       </div>
     </div>
   </div>
@@ -127,7 +148,7 @@
   </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal cancellation -->
 <div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
