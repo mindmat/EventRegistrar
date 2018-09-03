@@ -91,7 +91,10 @@ namespace EventRegistrar.Backend.Registrations.Register
             {
                 foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
                 {
-                    var seat = _seatManager.ReservePartnerSpot(registration.EventId, registrable.Registrable, registration.Id, followerRegistration.Id);
+                    var seat = registrable.Registrable.MaximumDoubleSeats.HasValue
+                        ? _seatManager.ReservePartnerSpot(registration.EventId, registrable.Registrable, registration.Id, followerRegistration.Id)
+                        : _seatManager.ReserveSingleSpot(registration.EventId, registrable.Registrable, registration.Id);
+
                     if (seat == null)
                     {
                         registration.SoldOutMessage = (registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +
