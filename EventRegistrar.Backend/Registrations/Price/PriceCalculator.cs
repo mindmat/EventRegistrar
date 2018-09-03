@@ -55,7 +55,9 @@ namespace EventRegistrar.Backend.Registrations.Price
 
         public async Task<decimal> CalculatePrice(Guid registrationId, IEnumerable<Response> responses, IEnumerable<Seat> seats)
         {
-            var notCancelledSeats = seats.Where(seat => !seat.IsCancelled).ToList();
+            var notCancelledSeats = seats.Where(seat => !seat.IsCancelled &&
+                                                        (seat.RegistrationId == registrationId || seat.RegistrationId_Follower == registrationId))
+                                         .ToList();
             var registrationQuestionOptionIds = responses.Where(rsp => rsp.QuestionOptionId.HasValue)
                                                          .Select(rsp => rsp.QuestionOptionId.Value)
                                                          .ToList();
