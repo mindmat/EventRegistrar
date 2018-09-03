@@ -127,7 +127,11 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 }
                 else if (parts.key == "PRICE")
                 {
-                    templateFiller[key] = (registrationForPrefix?.Price ?? 0m).ToString("F2"); // HACK: format hardcoded
+                    var price = parts.prefix == null
+                                ? (registration?.Price ?? 0m) + (partnerRegistration?.Price ?? 0m)
+                                : registrationForPrefix?.Price;
+
+                    templateFiller[key] = (price ?? 0m).ToString("F2"); // HACK: format hardcoded
                 }
                 //else if (parts.key == "PAIDAMOUNT")
                 //{
