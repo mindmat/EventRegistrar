@@ -65,6 +65,7 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
       //{ path: '', redirectTo: 'eventSelection', pathMatch: 'full' },
       //{ path: 'home', component: HomeComponent },
       { path: '', component: EventSelectionComponent },
+      { path: ':eventAcronym', redirectTo: ':eventAcronym/registrables' },
       { path: ':eventAcronym/authorization', component: EventAuthorizationComponent },
       { path: ':eventAcronym/registrables', component: RegistrablesComponent },
       { path: ':eventAcronym/registrables/:id/participants', component: ParticipantsComponent },
@@ -85,7 +86,6 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     ])
   ],
   providers: [
-    { provide: 'BASE_URL', useFactory: getBaseUrl },
     AuthService,
     EventService
   ],
@@ -93,6 +93,3 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 })
 export class AppModule { }
 
-export function getBaseUrl() {
-  return 'https://eventregistrator.azurewebsites.net/'; //  document.getElementsByTagName('base')[0].href;
-}
