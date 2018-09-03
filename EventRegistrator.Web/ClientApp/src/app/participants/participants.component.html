@@ -24,11 +24,11 @@
   </tbody>
 </table>
 <br />
-<h2 *ngIf="registrable && registrable.waitingList">Warteliste</h2>
+<h2 *ngIf="registrable && registrable.waitingList.length > 0">Warteliste</h2>
 
-<button class="btn btn-primary" *ngIf="registrable.hasWaitingList" (click)="promote()">Nachrücken auslösen</button>
+<button class="btn btn-primary" *ngIf="registrable && registrable.waitingList.length > 0" (click)="promote()">Nachrücken auslösen</button>
 
-<table class='table' *ngIf="registrable && registrable.waitingList">
+<table class='table' *ngIf="registrable && registrable.waitingList.length > 0">
   <thead>
     <tr>
       <th *ngIf="!registrable.maximumDoubleSeats">Name</th>
@@ -38,10 +38,10 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let participant of registrable.WaitingList">
-      <td><a *ngIf="participant.leader" [routerLink]="['/registration', participant.leader?.Id]">{{ participant.leader?.firstName }} {{ participant.leader?.lastName }}</a></td>
+    <tr *ngFor="let participant of registrable.waitingList">
+      <td><a *ngIf="participant.leader" [routerLink]="['/', getEventAcronym(), 'registration', participant.leader?.id]">{{ participant.leader?.firstName }} {{ participant.leader?.lastName }}</a></td>
       <td *ngIf="registrable.maximumDoubleSeats">
-        <a *ngIf="participant.follower" [routerLink]="['/registration', participant.follower?.Id]">{{ participant.follower?.firstName }} {{ participant.follower?.lastName }}</a>
+        <a *ngIf="participant.follower" [routerLink]="['/', getEventAcronym(), 'registration', participant.follower?.id]">{{ participant.follower?.firstName }} {{ participant.follower?.lastName }}</a>
       </td>
       <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">x</p></td>
     </tr>
