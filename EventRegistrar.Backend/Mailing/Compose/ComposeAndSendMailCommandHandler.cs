@@ -287,29 +287,33 @@ namespace EventRegistrar.Backend.Mailing.Compose
             //    .Include(seat => seat.Registrable)
             //    .ToListAsync();
             //_logger.LogInformation($"Seat count: {seats.Count}");
-            var seatLines = new List<string>();
+            var seatLines = new List<(int sortKey, string seatLine)>();
             if (registration.Seats_AsLeader != null)
             {
                 seatLines.AddRange(registration.Seats_AsLeader
                                                .Where(seat => seat.Registrable.ShowInMailListOrder.HasValue
-                                                           && !seat.IsCancelled)
-                                               .Select(seat => GetSeatText(seat, Role.Leader, language)));
+                                                          && !seat.IsCancelled)
+                                               .Select(seat => (seat.Registrable.ShowInMailListOrder ?? int.MaxValue,
+                                                                GetSeatText(seat, Role.Leader, language))));
             }
 
             if (registration.Seats_AsFollower != null)
             {
                 seatLines.AddRange(registration.Seats_AsFollower
                                                .Where(seat => seat.Registrable.ShowInMailListOrder.HasValue
-                                                              && !seat.IsCancelled)
-                                               .Select(seat => GetSeatText(seat, Role.Follower, language)));
+                                                          && !seat.IsCancelled)
+                                               .Select(seat => (seat.Registrable.ShowInMailListOrder ?? int.MaxValue,
+                                                                GetSeatText(seat, Role.Follower, language))));
             }
 
-            var seatList = string.Join("<br />", seatLines);
+            var seatList = string.Join("<br />", seatLines.OrderBy(tmp => tmp.sortKey)
+                                                          .Select(tmp => tmp.seatLine));
 
             if (registration.SoldOutMessage != null)
             {
                 seatList += $"<br /><br />{registration.SoldOutMessage.Replace(Environment.NewLine, "<br />")}";
             }
+
             _logger.LogInformation($"seat list {seatList}");
             return seatList;
         }
