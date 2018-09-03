@@ -105,12 +105,12 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
             if (config.RoleSpecificMappings != null)
             {
-                foreach (var roleSpecificMapping in config.RoleSpecificMappings.Where(rsm => registration.Responses.Any(rsp => rsp.QuestionOptionId == rsm.QuestionOptionId) == false))
+                foreach (var roleSpecificMapping in config.RoleSpecificMappings.Where(rsm => registration.Responses.Any(rsp => rsp.QuestionOptionId == rsm.QuestionOptionId)))
                 {
                     var registrable = registrables.First(rbl => rbl.RegistrableId == roleSpecificMapping.RegistrableId);
                     var registrationId = roleSpecificMapping.Role == Role.Leader
-                        ? registration.Id
-                        : followerRegistration.Id;
+                                         ? registration.Id
+                                         : followerRegistration.Id;
                     var seat = _seatManager.ReserveSingleSpot(registration.EventId, registrable.Registrable, registrationId);
                     if (seat == null)
                     {
