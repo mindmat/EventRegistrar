@@ -15,6 +15,12 @@ namespace EventRegistrar.Backend.Mailing
             _mediator = mediator;
         }
 
+        [HttpDelete("api/events/{eventAcronym}/mails/{mailId:guid}")]
+        public Task DeleteMail(string eventAcronym, Guid mailId)
+        {
+            return _mediator.Send(new DeleteMailCommand { EventAcronym = eventAcronym, MailId = mailId });
+        }
+
         [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails")]
         public Task<IEnumerable<Mail>> GetMailsOfRegistration(string eventAcronym, Guid registrationId)
         {
