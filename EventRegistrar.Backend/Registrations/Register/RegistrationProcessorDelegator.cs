@@ -95,6 +95,13 @@ namespace EventRegistrar.Backend.Registrations.Register
                         (new Guid("6B95705D-1ECF-4434-B569-6138283FC594"), Role.Follower, new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
                         (new Guid("44975F3A-9AEF-4C25-83FB-C934A942D4E4"), Role.Leader,   new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
                         (new Guid("44975F3A-9AEF-4C25-83FB-C934A942D4E4"), Role.Follower, new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
+                        // T-Shirt Follower
+                        (new Guid("A3EC7651-293A-40B3-9844-738AEF10D931"), Role.Follower, new Guid("747C0FE9-1575-4E0B-80CB-DB229D3E00C2" )),  // Damenmodell Grösse L
+                        (new Guid("1C257D0D-3808-4A19-B3D5-D2D58A9DAC00"), Role.Follower, new Guid("AC8D4748-F196-44F6-9807-E1CA1EFE29C7" )),  // Damenmodell Grösse M
+                        (new Guid("B5556D7A-8188-4CF9-94F8-364993AEA89E"), Role.Follower, new Guid("3BAAE211-9B27-47B4-835F-4C9B9052DACF" )),  // Damenmodell Grösse S
+                        (new Guid("9BFBDC41-9B8D-43D6-8647-CA496969CB8A"), Role.Follower, new Guid("0F185525-FF38-4CB7-8B15-0F81ACF0069F" )),  // Herrenmodell Grösse L
+                        (new Guid("82C51368-BF74-43C2-80C1-F85D0A996359"), Role.Follower, new Guid("2148016C-BB24-4055-B5C2-14F0E2333ABA" )),  // Herrenmodell Grösse M
+                        (new Guid("C21720AF-94A9-4B45-917D-306934F00868"), Role.Follower, new Guid("F9F46BE4-4E57-4748-897A-3708D312A8EC" )),  // Herrenmodell Grösse S
                     },
                     LanguageMappings = new[]
                     {
