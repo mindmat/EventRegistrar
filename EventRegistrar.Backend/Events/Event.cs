@@ -11,6 +11,7 @@ namespace EventRegistrar.Backend.Events
         public ICollection<AccessToEventRequest> AccessRequests { get; set; }
         public string AccountIban { get; set; }
         public string Acronym { get; set; }
+        public string Configuration { get; set; }
         public string Currency { get; set; }
         public string Name { get; set; }
         public State State { get; set; }
