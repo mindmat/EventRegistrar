@@ -12,8 +12,9 @@ using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Search;
-using EventRegistrar.Backend.Seats;
+using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Authorization
 {
@@ -47,14 +48,18 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(GetPendingMailsQuery).Name;
                 yield return typeof(MailTypesQuery).Name;
                 yield return typeof(LanguagesQuery).Name;
+                yield return typeof(AllExternalRegistrationIdentifiersQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
             {
                 yield return typeof(UnrecognizedPaymentsQuery).Name;
                 yield return typeof(SetRecognizedEmailCommand).Name;
-                yield return typeof(ReleaseMailCommand).Name;
                 yield return typeof(SaveMailTemplateCommand).Name;
+                yield return typeof(ReleaseMailCommand).Name;
+                yield return typeof(DeleteMailCommand).Name;
+                yield return typeof(SendReminderCommand).Name;
+                yield return typeof(AddSpotCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))
