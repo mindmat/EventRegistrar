@@ -2,7 +2,7 @@
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrations;
 
-namespace EventRegistrar.Backend.Sms
+namespace EventRegistrar.Backend.PhoneMessages
 {
     public class Sms : Entity
     {

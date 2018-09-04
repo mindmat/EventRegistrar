@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.RegistrationForms.Questions;
-using EventRegistrar.Backend.Seats;
+using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrables
 {

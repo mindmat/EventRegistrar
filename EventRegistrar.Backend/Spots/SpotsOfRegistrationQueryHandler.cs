@@ -7,7 +7,7 @@ using EventRegistrar.Backend.Registrations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace EventRegistrar.Backend.Seats
+namespace EventRegistrar.Backend.Spots
 {
     public class SpotsOfRegistrationQueryHandler : IRequestHandler<SpotsOfRegistrationQuery, IEnumerable<Spot>>
     {

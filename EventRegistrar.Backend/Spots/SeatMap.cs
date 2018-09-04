@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EventRegistrar.Backend.Seats
+namespace EventRegistrar.Backend.Spots
 {
     public class SeatMap : EntityTypeConfiguration<Seat>
     {

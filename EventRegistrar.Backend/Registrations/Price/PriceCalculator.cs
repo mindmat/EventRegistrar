@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.Registrations.Responses;
-using EventRegistrar.Backend.Seats;
+using EventRegistrar.Backend.Spots;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

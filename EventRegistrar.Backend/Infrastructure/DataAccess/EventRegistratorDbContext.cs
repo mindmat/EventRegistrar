@@ -5,6 +5,7 @@ using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
+using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.RegistrationForms;
@@ -13,8 +14,7 @@ using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Responses;
-using EventRegistrar.Backend.Seats;
-using EventRegistrar.Backend.Sms;
+using EventRegistrar.Backend.Spots;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess

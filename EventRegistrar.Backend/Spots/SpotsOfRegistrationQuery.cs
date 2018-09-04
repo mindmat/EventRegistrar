@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using EventRegistrar.Backend.Authorization;
 using MediatR;
 
-namespace EventRegistrar.Backend.Seats
+namespace EventRegistrar.Backend.Spots
 {
     public class SpotsOfRegistrationQuery : IRequest<IEnumerable<Spot>>, IEventBoundRequest
     {

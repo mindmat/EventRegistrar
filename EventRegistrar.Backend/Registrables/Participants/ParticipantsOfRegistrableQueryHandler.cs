@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Seats;
+using EventRegistrar.Backend.Spots;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.RegistrationForms;
-using EventRegistrar.Backend.Seats;
+using EventRegistrar.Backend.Spots;
 using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.Registrations.Register

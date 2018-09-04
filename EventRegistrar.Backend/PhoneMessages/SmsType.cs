@@ -1,4 +1,4 @@
-﻿namespace EventRegistrar.Backend.Sms
+﻿namespace EventRegistrar.Backend.PhoneMessages
 {
     public enum SmsType
     {

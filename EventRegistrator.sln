@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistrar.Backend.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistrar.Functions", "EventRegistrar.Functions\EventRegistrar.Functions.csproj", "{809D26C5-03FD-435D-85E7-83A584DE2C0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistrator.Web", "EventRegistrator.Web\EventRegistrator.Web.csproj", "{8F15B22E-EF33-4703-9265-59816B8F7DD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistrator.Web", "EventRegistrator.Web\EventRegistrator.Web.csproj", "{8F15B22E-EF33-4703-9265-59816B8F7DD8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

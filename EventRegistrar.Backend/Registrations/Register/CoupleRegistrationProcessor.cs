@@ -8,7 +8,7 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations.Price;
-using EventRegistrar.Backend.Seats;
+using EventRegistrar.Backend.Spots;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrations.Register

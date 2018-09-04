@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Payments;
+using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations.Responses;
-using EventRegistrar.Backend.Seats;
+using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations
 {
@@ -37,7 +38,7 @@ namespace EventRegistrar.Backend.Registrations
         public ICollection<Response> Responses { get; set; }
         public ICollection<Seat> Seats_AsFollower { get; set; }
         public ICollection<Seat> Seats_AsLeader { get; set; }
-        public ICollection<Sms.Sms> Sms { get; set; }
+        public ICollection<Sms> Sms { get; set; }
         public string SoldOutMessage { get; set; }
         public RegistrationState State { get; set; }
     }

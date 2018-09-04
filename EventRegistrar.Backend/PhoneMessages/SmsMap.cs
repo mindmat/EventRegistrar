@@ -1,7 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EventRegistrar.Backend.Sms
+namespace EventRegistrar.Backend.PhoneMessages
 {
     public class SmsMap : EntityTypeConfiguration<Sms>
     {

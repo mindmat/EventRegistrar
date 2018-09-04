@@ -5,8 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing;
+using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrations;
-using EventRegistrar.Backend.Sms;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 

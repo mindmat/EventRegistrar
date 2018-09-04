@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EventRegistrar.Backend.Seats
+namespace EventRegistrar.Backend.Spots
 {
     public class Spot
     {

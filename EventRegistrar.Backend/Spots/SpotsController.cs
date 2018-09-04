@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EventRegistrar.Backend.Seats
+namespace EventRegistrar.Backend.Spots
 {
     public class SpotsController : Controller
     {

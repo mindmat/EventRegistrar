@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrables;
-using EventRegistrar.Backend.Seats;
+using EventRegistrar.Backend.Spots;
 using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Backend.Registrations.Register

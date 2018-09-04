@@ -3,7 +3,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 
-namespace EventRegistrar.Backend.Seats
+namespace EventRegistrar.Backend.Spots
 {
     public class Seat : Entity
     {
