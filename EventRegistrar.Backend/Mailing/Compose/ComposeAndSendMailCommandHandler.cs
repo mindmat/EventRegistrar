@@ -77,7 +77,10 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 //_logger.LogInformation($"mainRegistrationRole {mainRegistrationRole}");
 
                 //var partnerResponses = await GetResponses(registrationId_Partner, context.Responses);
-                partnerRegistration = await _registrations.FirstOrDefaultAsync(reg => reg.Id == registration.RegistrationId_Partner, cancellationToken);
+                partnerRegistration = await _registrations.Where(reg => reg.Id == registration.RegistrationId_Partner)
+                                                          .Include(reg => reg.Seats_AsLeader).ThenInclude(seat => seat.Registrable)
+                                                          .Include(reg => reg.Seats_AsFollower).ThenInclude(seat => seat.Registrable)
+                                                          .FirstOrDefaultAsync(cancellationToken);
                 if (mainRegistrationRole == Role.Leader)
                 {
                     //leaderResponses = responses;
