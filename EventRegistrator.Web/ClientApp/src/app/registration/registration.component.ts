@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 
 @Component({
   selector: 'registration',
@@ -23,8 +23,6 @@ export class RegistrationComponent {
   }
 
   ngOnInit() {
-    this.registrationId = this.route.snapshot.params['id'];
-
     this.http.get<Registrable[]>(`api/events/${this.getEventAcronym()}/registrables`).subscribe(result => {
       this.allRegistrables = result;
       if (this.spots != null) {
@@ -32,9 +30,11 @@ export class RegistrationComponent {
       }
     }, error => console.error(error));
 
-    this.reloadRegistration();
-    this.reloadMails();
-    this.reloadSpots();
+    this.loadRegistration(this.route.snapshot.params['id']);
+
+    this.route.params.forEach((params: Params) => {
+      this.loadRegistration(params["id"]);
+    });
   }
 
   reloadRegistration() {
@@ -134,6 +134,13 @@ export class RegistrationComponent {
 
     this.http.post(url, null)
       .subscribe(result => { this.reloadMails(); }, error => console.error(error));
+  }
+
+  loadRegistration(registrationId: string) {
+    this.registrationId = registrationId;
+    this.reloadRegistration();
+    this.reloadMails();
+    this.reloadSpots();
   }
 }
 
