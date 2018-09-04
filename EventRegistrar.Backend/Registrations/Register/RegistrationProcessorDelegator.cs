@@ -82,7 +82,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_Follower_FirstName = Guid.Parse("2F67DF2D-0027-4ABE-A291-68AAD32BD572"),
                     QuestionId_Follower_LastName = Guid.Parse("7E59DF8A-CC44-46C9-81C8-6A43DCF09E4D"),
                     QuestionId_Follower_Email = Guid.Parse("8E93164B-6403-4055-B966-1B14EC5297F3"),
-                    QuestionId_Follower_Phone = Guid.Parse("C2D0D7E6-FFBE-49F1-9E83-1C155B92F95C"),
+                    QuestionId_Follower_Phone = Guid.Parse("0D95253E-782A-416D-B5F0-52BFFFC2E7C9"),
                     RoleSpecificMappings = new[]
                     {
                         // Helfer kurz

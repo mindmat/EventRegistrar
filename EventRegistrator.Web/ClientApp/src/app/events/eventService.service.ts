@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { UserInEventDisplayItem } from '../events/eventSelection.component';
-import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Injectable()
 export class EventService {
   public acronym: string;
   public name: string;
 
-  constructor(private router: Router, private readonly route: ActivatedRoute) {
+  constructor(private router: Router) {
     this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
+      if (event instanceof NavigationEnd && this.acronym == null) {
         var eventAcronym = event.url.split("/").filter(split => split !== "")[0];
         this.setAcronymIfNotSetYet(eventAcronym);
       }
