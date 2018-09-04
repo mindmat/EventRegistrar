@@ -35,7 +35,7 @@ namespace EventRegistrar.Backend.Payments
             return _mediator.Send(new UnrecognizedPaymentsQuery { EventAcronym = eventAcronym });
         }
 
-        [HttpPost("api/events/{eventAcronym}/registrations/${registrationId:guid}/sendReminder")]
+        [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/sendReminder")]
         public Task SendReminder(string eventAcronym, Guid registrationId, bool withholdMail)
         {
             return _mediator.Send(new SendReminderCommand { EventAcronym = eventAcronym, RegistrationId = registrationId });
