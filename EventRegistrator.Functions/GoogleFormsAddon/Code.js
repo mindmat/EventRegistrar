@@ -198,7 +198,7 @@ function resyncMissingAnswers() {
   var options = {
     'method': 'get'
   };
-  var url = 'https://eventregistratorweb.azurewebsites.net/api/registrationform/' + form.getId() + '/ExternalIdentifiers';
+  var url = 'https://eventregistrarfunctions.azurewebsites.net/api/registrationforms/' + form.getId() + '/RegistrationExternalIdentifiers';
   var httpResult = UrlFetchApp.fetch(url, options);
 
   if (httpResult.getResponseCode() != 200) {
@@ -209,14 +209,14 @@ function resyncMissingAnswers() {
   submittedResponseIds = JSON.parse(httpResult.getContentText());
 
   var responses = form.getResponses();
-
+  var submitsLeft = 5;
   //  for (var i = 0; i < responses.length; i++) {
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < responses.length; i++) {
     var response = responses[i];
     var responseId = response.getId();
     var matchFound = false;
-    for (i in submittedResponseIds) {
-      if (submittedResponseIds[i] == responseId) {
+    for (j in submittedResponseIds) {
+      if (submittedResponseIds[j] == responseId) {
         matchFound = true;
         break;
       }
@@ -227,10 +227,14 @@ function resyncMissingAnswers() {
     }
 
     try {
-      //postAnswerToBackend(response);
-      FormApp.getUi().alert('missing response ' + responseId);
+      postAnswerToBackend(response);
+      submitsLeft--;
+      //FormApp.getUi().alert('missing response ' + responseId);
     }
     catch (err) {
+    }
+    if (submitsLeft <= 0) {
+      break;
     }
   }
 }
