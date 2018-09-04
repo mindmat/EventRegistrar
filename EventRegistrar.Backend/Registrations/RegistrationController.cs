@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Search;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,12 @@ namespace EventRegistrar.Backend.Registrations
         public RegistrationController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet("api/registrationforms/{formExternalIdentifier}/RegistrationExternalIdentifiers")]
+        public Task<IEnumerable<string>> GetAllExternalRegistrationIdentifiers(string formExternalIdentifier)
+        {
+            return _mediator.Send(new AllExternalRegistrationIdentifiersQuery { RegistrationFormExternalIdentifier = formExternalIdentifier });
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations")]
