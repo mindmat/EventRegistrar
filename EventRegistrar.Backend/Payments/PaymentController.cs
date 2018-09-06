@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Payments.Due;
+using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unrecognized;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -30,7 +31,13 @@ namespace EventRegistrar.Backend.Payments
         }
 
         [HttpGet("api/events/{eventAcronym}/payments")]
-        public Task<IEnumerable<UnrecognizedPaymentDisplayItem>> GetUnrecognizedPaymentsPaymentOverview(string eventAcronym, bool unrecognized)
+        public Task<IEnumerable<PaymentDisplayItem>> GetPayments(string eventAcronym, bool unrecognized)
+        {
+            return _mediator.Send(new PaymentStatementsQuery { EventAcronym = eventAcronym });
+        }
+
+        [HttpGet("api/events/{eventAcronym}/payments/unrecognized")]
+        public Task<IEnumerable<PaymentDisplayItem>> GetUnrecognizedPaymentsPaymentOverview(string eventAcronym)
         {
             return _mediator.Send(new UnrecognizedPaymentsQuery { EventAcronym = eventAcronym });
         }

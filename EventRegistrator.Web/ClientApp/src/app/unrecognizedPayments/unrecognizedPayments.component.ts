@@ -11,13 +11,12 @@ export class UnrecognizedPaymentsComponent {
   public payments: Payment[];
   registrations: Registration[];
   isSearching: boolean;
-  eventId: string = '762A93A4-56E0-402C-B700-1CFB3362B39D';
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
   }
 
   ngOnInit() {
-    this.http.get<Payment[]>(`api/events/${this.getEventAcronym()}/payments?unrecognized=true`)
+    this.http.get<Payment[]>(`api/events/${this.getEventAcronym()}/payments/unrecognized`)
       .subscribe(result => { this.payments = result; },
         error => console.error(error));
   }

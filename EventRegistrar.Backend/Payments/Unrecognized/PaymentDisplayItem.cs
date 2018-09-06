@@ -2,7 +2,7 @@
 
 namespace EventRegistrar.Backend.Payments.Unrecognized
 {
-    public class UnrecognizedPaymentDisplayItem
+    public class PaymentDisplayItem
     {
         public decimal Amount { get; set; }
         public decimal? Assigned { get; set; }

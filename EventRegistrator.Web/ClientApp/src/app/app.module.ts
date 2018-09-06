@@ -28,8 +28,10 @@ import { EventSelectionComponent } from "./events/eventSelection.component";
 import { EventAuthorizationComponent } from "./eventAuthorization/eventAuthorization.component";
 import { RegistrationFormsComponent } from "./registrationForms/registrationForms.component";
 import { QuestionMappingComponent } from "./questionMapping/questionMapping.component";
+import { PaymentsComponent } from "./payments/payments.component";
 import { EventService } from "./events/eventService.service";
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { FileUploadModule } from 'ng2-file-upload';
 
 @NgModule({
   declarations: [
@@ -52,13 +54,15 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
     EventSelectionComponent,
     EventAuthorizationComponent,
     RegistrationFormsComponent,
-    QuestionMappingComponent
+    QuestionMappingComponent,
+    PaymentsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpModule,
     HttpClientModule,
     FormsModule,
+    FileUploadModule,
     FroalaEditorModule.forRoot(),
     FroalaViewModule.forRoot(),
     RouterModule.forRoot([
@@ -75,6 +79,7 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
       { path: ':eventAcronym/unrecognizedPayments', component: UnrecognizedPaymentsComponent },
       { path: ':eventAcronym/paymentOverview', component: PaymentOverviewComponent },
       { path: ':eventAcronym/paymentReminders', component: PaymentRemindersComponent },
+      { path: ':eventAcronym/payments', component: PaymentsComponent },
       { path: ':eventAcronym/checkinView', component: CheckinViewComponent },
       { path: ':eventAcronym/registrations/:id/sms', component: SmsConversationComponent },
       { path: ':eventAcronym/partyOverview', component: PartyOverviewComponent },
@@ -92,4 +97,3 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
   bootstrap: [AppComponent]
 })
 export class AppModule { }
-

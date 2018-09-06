@@ -1,0 +1,38 @@
+<h1>Kontoauszug</h1>
+
+<!--<div ng2FileDrop
+     [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+     (fileOver)="fileOverBase($event)"
+     [uploader]="uploader"
+     class="well my-drop-zone">
+  camt hochladen
+</div>-->
+
+<p *ngIf="!payments"><em>Loading...</em></p>
+
+<div ng2FileDrop
+     [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
+     (fileOver)="fileOverBase($event)"
+     [uploader]="uploader">
+  <table class='table' *ngIf="payments">
+    <thead>
+      <tr>
+        <th>Mitteilungstext</th>
+        <th>Datum</th>
+        <th>Betrag</th>
+        <th>Zugeordnet</th>
+        <th>Zurückbezahlt</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let payment of payments">
+        <td class="col-lg-5"><textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;">{{ payment.info }}</textarea></td>
+        <td>{{ payment.bookingDate | date: 'dd.MM.yy' }}</td>
+        <td>{{ payment.amount }}{{ payment.currency}}</td>
+        <td>{{ payment.assigned }}</td>
+        <td>{{ payment.repaid }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

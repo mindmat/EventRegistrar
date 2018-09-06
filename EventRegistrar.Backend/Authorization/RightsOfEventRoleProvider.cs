@@ -6,6 +6,8 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Due;
+using EventRegistrar.Backend.Payments.Files;
+using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unrecognized;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Participants;
@@ -49,6 +51,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(MailTypesQuery).Name;
                 yield return typeof(LanguagesQuery).Name;
                 yield return typeof(AllExternalRegistrationIdentifiersQuery).Name;
+                yield return typeof(PaymentStatementsQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
@@ -60,6 +63,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(DeleteMailCommand).Name;
                 yield return typeof(SendReminderCommand).Name;
                 yield return typeof(AddSpotCommand).Name;
+                yield return typeof(SavePaymentFileCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))
