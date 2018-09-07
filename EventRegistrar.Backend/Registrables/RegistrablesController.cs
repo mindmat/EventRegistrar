@@ -40,15 +40,26 @@ namespace EventRegistrar.Backend.Registrables
             return _mediator.Send(new SingleRegistrablesOverviewQuery { EventAcronym = eventAcronym });
         }
 
-        [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/limits")]
-        public Task SetCoupleLimits(string eventAcronym, Guid registrableId, [FromBody]SetDoubleRegistrationLimitsCommand limits)
+        [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/coupleLimits")]
+        public Task SetCoupleLimits(string eventAcronym, Guid registrableId, [FromBody]SetDoubleRegistrableLimitsCommand limits)
         {
-            return _mediator.Send(new SetDoubleRegistrationLimitsCommand
+            return _mediator.Send(new SetDoubleRegistrableLimitsCommand
             {
                 EventAcronym = eventAcronym,
                 MaximumCouples = limits.MaximumCouples,
                 RegistrableId = registrableId,
                 MaximumImbalance = limits.MaximumImbalance
+            });
+        }
+
+        [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/singleLimits")]
+        public Task SetSingleLimits(string eventAcronym, Guid registrableId, [FromBody]SetSingleRegistrableLimitsCommand limits)
+        {
+            return _mediator.Send(new SetSingleRegistrableLimitsCommand
+            {
+                EventAcronym = eventAcronym,
+                MaximumParticipants = limits.MaximumParticipants,
+                RegistrableId = registrableId
             });
         }
     }

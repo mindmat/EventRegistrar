@@ -64,7 +64,8 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(SendReminderCommand).Name;
                 yield return typeof(AddSpotCommand).Name;
                 yield return typeof(SavePaymentFileCommand).Name;
-                yield return typeof(SetDoubleRegistrationLimitsCommand).Name;
+                yield return typeof(SetDoubleRegistrableLimitsCommand).Name;
+                yield return typeof(SetSingleRegistrableLimitsCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

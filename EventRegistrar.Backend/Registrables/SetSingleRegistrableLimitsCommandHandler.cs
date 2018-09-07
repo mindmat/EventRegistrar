@@ -6,22 +6,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrables
 {
-    public class SetDoubleRegistrationLimitsCommandHandler : IRequestHandler<SetDoubleRegistrationLimitsCommand>
+    public class SetSingleRegistrableLimitsCommandHandler : IRequestHandler<SetSingleRegistrableLimitsCommand>
     {
         private readonly IRepository<Registrable> _registrables;
 
-        public SetDoubleRegistrationLimitsCommandHandler(IRepository<Registrable> registrables)
+        public SetSingleRegistrableLimitsCommandHandler(IRepository<Registrable> registrables)
         {
             _registrables = registrables;
         }
 
-        public async Task<Unit> Handle(SetDoubleRegistrationLimitsCommand command, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(SetSingleRegistrableLimitsCommand command, CancellationToken cancellationToken)
         {
             var registrable = await _registrables.FirstOrDefaultAsync(rbl => rbl.Id == command.RegistrableId, cancellationToken);
             if (registrable != null)
             {
-                registrable.MaximumDoubleSeats = command.MaximumCouples;
-                registrable.MaximumAllowedImbalance = command.MaximumImbalance;
+                registrable.MaximumSingleSeats = command.MaximumParticipants;
             }
 
             return Unit.Value;

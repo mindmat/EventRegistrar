@@ -4,11 +4,10 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Registrables
 {
-    public class SetDoubleRegistrationLimitsCommand : IRequest, IEventBoundRequest
+    public class SetSingleRegistrableLimitsCommand : IRequest, IEventBoundRequest
     {
         public string EventAcronym { get; set; }
-        public int MaximumCouples { get; set; }
-        public int MaximumImbalance { get; set; }
+        public int MaximumParticipants { get; set; }
         public Guid RegistrableId { get; set; }
     }
 }

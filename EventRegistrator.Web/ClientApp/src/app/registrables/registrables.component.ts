@@ -16,24 +16,41 @@ export class RegistrablesComponent implements OnInit {
     }, error => console.error(error));
   }
 
-  editLimits(registrable: DoubleRegistrable) {
+  editCoupleLimits(registrable: DoubleRegistrable) {
     this.doubleRegistrableLimits.id = registrable.id;
     this.doubleRegistrableLimits.name = registrable.name;
     this.doubleRegistrableLimits.spotsAvailable = registrable.spotsAvailable;
     this.doubleRegistrableLimits.maximumAllowedImbalance = registrable.maximumAllowedImbalance;
   }
 
+  editSingleLimits(registrable: SingleRegistrable) {
+    this.singleRegistrableLimits.id = registrable.id;
+    this.singleRegistrableLimits.name = registrable.name;
+    this.singleRegistrableLimits.maximumParticipants = registrable.spotsAvailable;
+  }
+
   changeCoupleRegistrableLimits() {
-    var payload = { maximumCouples: this.doubleRegistrableLimits.spotsAvailable, maximumImbalance: this.doubleRegistrableLimits.maximumAllowedImbalance };
-    console.info(payload);
-    this.http.put(`api/events/${this.getEventAcronym()}/registrables/${this.doubleRegistrableLimits.id}/limits`, payload).subscribe(result => {
+    var payload = {
+      maximumCouples: this.doubleRegistrableLimits.spotsAvailable,
+      maximumImbalance: this.doubleRegistrableLimits.maximumAllowedImbalance
+    };
+    this.http.put(`api/events/${this.getEventAcronym()}/registrables/${this.doubleRegistrableLimits.id}/coupleLimits`, payload).subscribe(result => {
       //this.doubleRegistrables = result;
     }, error => console.error(error));;
   }
 
+  changeSingleRegistrableLimits() {
+    var payload = {
+      maximumParticipants: this.singleRegistrableLimits.maximumParticipants
+    };
+    this.http.put(`api/events/${this.getEventAcronym()}/registrables/${this.singleRegistrableLimits.id}/singleLimits`, payload).subscribe(result => {
+      //this.doubleRegistrables = result;
+    }, error => console.error(error));;
+  }
   doubleRegistrables: DoubleRegistrable[];
   singleRegistrables: SingleRegistrable[];
-  doubleRegistrableLimits: DoubleRegistrableLimits = new DoubleRegistrableLimits();
+  doubleRegistrableLimits = new DoubleRegistrableLimits();
+  singleRegistrableLimits = new SingleRegistrableLimits();
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
   }
@@ -67,4 +84,10 @@ class DoubleRegistrableLimits {
   name: string;
   spotsAvailable: number;
   maximumAllowedImbalance: number;
+}
+
+class SingleRegistrableLimits {
+  id: string;
+  name: string;
+  maximumParticipants: number;
 }
