@@ -86,15 +86,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                     RoleSpecificMappings = new[]
                     {
                         // Helfer kurz
-                        (new Guid("4C7951D1-3914-42F3-9A79-722E7F7EDD16"), Role.Leader,   new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
-                        (new Guid("6CF2BFD2-04F5-42B9-8C56-D1242E1D0883"), Role.Follower, new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
-                        (new Guid("929201E9-D012-4DE1-A53A-20D4407B4DC5"), Role.Leader,   new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
-                        (new Guid("929201E9-D012-4DE1-A53A-20D4407B4DC5"), Role.Follower, new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
+                        (new Guid("B7ACEA87-ED95-468A-8760-8439FE541496"), Role.Leader,   new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
+                        (new Guid("907E3564-E89D-4F7C-9223-EE1BB23013A4"), Role.Follower, new Guid("2303AC02-480D-4EA4-B861-F01DEB7A2A5F" )),
                         // Helfer lang
-                        (new Guid("80648E55-BE44-40D9-86EF-1E91E247C05B"), Role.Leader,   new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
-                        (new Guid("6B95705D-1ECF-4434-B569-6138283FC594"), Role.Follower, new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
-                        (new Guid("44975F3A-9AEF-4C25-83FB-C934A942D4E4"), Role.Leader,   new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
-                        (new Guid("44975F3A-9AEF-4C25-83FB-C934A942D4E4"), Role.Follower, new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
+                        (new Guid("D23C4941-49EE-48E3-8FBC-5E6BCCE119C8"), Role.Leader,   new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
+                        (new Guid("81291E5A-CB01-4453-8DF1-4F5B88724BA1"), Role.Follower, new Guid("6BFCCC2A-5C03-42EB-8642-81921701CD48" )),
                         // T-Shirt Follower
                         (new Guid("A3EC7651-293A-40B3-9844-738AEF10D931"), Role.Follower, new Guid("747C0FE9-1575-4E0B-80CB-DB229D3E00C2" )),  // Damenmodell Grösse L
                         (new Guid("1C257D0D-3808-4A19-B3D5-D2D58A9DAC00"), Role.Follower, new Guid("AC8D4748-F196-44F6-9807-E1CA1EFE29C7" )),  // Damenmodell Grösse M
