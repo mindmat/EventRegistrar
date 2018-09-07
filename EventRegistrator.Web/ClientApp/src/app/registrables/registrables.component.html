@@ -18,13 +18,13 @@
   <tbody>
     <tr *ngFor="let registrable of doubleRegistrables">
       <td><a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a></td>
-      <td>{{ registrable.spotsAvailable }}</td>
+      <td><span class="badge badge-light" (click)="editLimits(registrable)" data-toggle="modal" data-target="#coupleRegistrableModal" style="cursor: pointer">{{ registrable.spotsAvailable }}</span></td>
       <td>{{ registrable.leadersAccepted }}</td>
       <td>{{ registrable.followersAccepted }}</td>
       <td>{{ registrable.leadersOnWaitingList }}</td>
       <td>{{ registrable.followersOnWaitingList }}</td>
       <td>{{ registrable.couplesOnWaitingList }}</td>
-      <td>{{ registrable.maximumAllowedImbalance }}</td>
+      <td><span class="badge badge-light" (click)="editLimits(registrable)" data-toggle="modal" data-target="#coupleRegistrableModal" style="cursor: pointer">{{ registrable.maximumAllowedImbalance }}</span></td>
     </tr>
   </tbody>
 </table>
@@ -50,3 +50,30 @@
     </tr>
   </tbody>
 </table>
+
+<div class="modal fade" id="coupleRegistrableModal" tabindex="-1" role="dialog" aria-labelledby="coupleRegistrableModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="coupleRegistrableModalLabel">{{ doubleRegistrableLimits.name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="maximumCouples">Maximale Anzahl Paare</label>
+          <input type="number" class="form-control" id="maximumCouples" [(ngModel)]="doubleRegistrableLimits.spotsAvailable">
+        </div>
+        <div class="form-group">
+          <label for="maximumCouples">Maximales Ungleichgewicht</label>
+          <input type="number" class="form-control" id="maximumImbalance" [(ngModel)]="doubleRegistrableLimits.maximumAllowedImbalance">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="changeCoupleRegistrableLimits()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

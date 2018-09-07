@@ -14,7 +14,7 @@ export class CheckinViewComponent {
 
   ngOnInit() {
     var eventId = '762A93A4-56E0-402C-B700-1CFB3362B39D';
-    this.http.get<Registration[]>(`${this.baseUrl}api/events/${eventId}/checkinView`)
+    this.http.get<Registration[]>(`api/events/${eventId}/checkinView`)
       .subscribe(result => { this.registrations = result; },
         error => console.error(error));
   }

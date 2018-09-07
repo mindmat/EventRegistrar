@@ -16,8 +16,24 @@ export class RegistrablesComponent implements OnInit {
     }, error => console.error(error));
   }
 
+  editLimits(registrable: DoubleRegistrable) {
+    this.doubleRegistrableLimits.id = registrable.id;
+    this.doubleRegistrableLimits.name = registrable.name;
+    this.doubleRegistrableLimits.spotsAvailable = registrable.spotsAvailable;
+    this.doubleRegistrableLimits.maximumAllowedImbalance = registrable.maximumAllowedImbalance;
+  }
+
+  changeCoupleRegistrableLimits() {
+    var payload = { maximumCouples: this.doubleRegistrableLimits.spotsAvailable, maximumImbalance: this.doubleRegistrableLimits.maximumAllowedImbalance };
+    console.info(payload);
+    this.http.put(`api/events/${this.getEventAcronym()}/registrables/${this.doubleRegistrableLimits.id}/limits`, payload).subscribe(result => {
+      //this.doubleRegistrables = result;
+    }, error => console.error(error));;
+  }
+
   doubleRegistrables: DoubleRegistrable[];
   singleRegistrables: SingleRegistrable[];
+  doubleRegistrableLimits: DoubleRegistrableLimits = new DoubleRegistrableLimits();
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
   }
@@ -44,4 +60,11 @@ class SingleRegistrable {
   spotsAvailable: number;
   accepted: number;
   onWaitingList: number;
+}
+
+class DoubleRegistrableLimits {
+  id: string;
+  name: string;
+  spotsAvailable: number;
+  maximumAllowedImbalance: number;
 }
