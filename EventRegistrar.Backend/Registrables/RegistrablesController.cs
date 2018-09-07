@@ -41,7 +41,7 @@ namespace EventRegistrar.Backend.Registrables
         }
 
         [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/limits")]
-        public Task SetCoupleLimits(string eventAcronym, Guid registrableId, SetDoubleRegistrationLimitsCommand limits)
+        public Task SetCoupleLimits(string eventAcronym, Guid registrableId, [FromBody]SetDoubleRegistrationLimitsCommand limits)
         {
             return _mediator.Send(new SetDoubleRegistrationLimitsCommand
             {
