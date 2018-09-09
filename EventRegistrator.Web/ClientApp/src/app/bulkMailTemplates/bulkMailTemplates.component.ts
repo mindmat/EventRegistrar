@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { Guid } from "../infrastructure/guid";
 
 @Component({
-  selector: 'mailTemplates',
-  templateUrl: './mailTemplates.component.html'
+  selector: 'bulkMailTemplates',
+  templateUrl: './bulkMailTemplates.component.html'
 })
-export class MailTemplatesComponent {
-  mailTemplates: MailTemplate[];
-  mailTemplate: MailTemplate;
-  mailTypes: MailType[];
+export class BulkMailTemplatesComponent {
+  mailingTemplates: BulkMailTemplate[];
+  mailingTemplate: BulkMailTemplate;
   languages: Language[];
   saving: boolean;
 
@@ -17,13 +17,8 @@ export class MailTemplatesComponent {
   }
 
   ngOnInit() {
-    this.http.get<MailTemplate[]>(`api/events/${this.getEventAcronym()}/mailTemplates`)
-      .subscribe(result => this.mailTemplates = result,
-        error => {
-          console.error(error);
-        });
-    this.http.get<MailType[]>(`api/events/${this.getEventAcronym()}/mails/types`)
-      .subscribe(result => this.mailTypes = result,
+    this.http.get<BulkMailTemplate[]>(`api/events/${this.getEventAcronym()}/bulkMailTemplates`)
+      .subscribe(result => this.mailingTemplates = result,
         error => {
           console.error(error);
         });
@@ -34,16 +29,16 @@ export class MailTemplatesComponent {
         });
   }
 
-  showTemplate(mailTemplate: MailTemplate) {
-    this.mailTemplate = mailTemplate;
+  showTemplate(mailTemplate: BulkMailTemplate) {
+    this.mailingTemplate = mailTemplate;
   }
 
   saveTemplate() {
     this.saving = true;
 
-    this.http.post<MailTemplate>(`api/events/${this.getEventAcronym()}/mailTemplates`, this.mailTemplate)
+    this.http.post<BulkMailTemplate>(`api/events/${this.getEventAcronym()}/bulkMailTemplates/${this.mailingTemplate.id}`, this.mailingTemplate)
       .subscribe(result => {
-        this.mailTemplate = result;
+        this.mailingTemplate = result;
         this.saving = false;
       },
         error => {
@@ -52,24 +47,25 @@ export class MailTemplatesComponent {
         });
   }
 
+  createNew() {
+    this.mailingTemplate = new BulkMailTemplate();
+    this.mailingTemplate.id = Guid.newGuid();
+  }
+
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
   }
 }
 
-class MailTemplate {
-  type: string;
+class BulkMailTemplate {
+  id: string;
+  key: string;
   language: string;
   template: string;
   senderMail: string;
   senderName: string;
   subject: string;
   audience: number;
-}
-
-class MailType {
-  type: string;
-  userText: string;
 }
 
 class Language {

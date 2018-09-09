@@ -32,6 +32,7 @@ import { PaymentsComponent } from "./payments/payments.component";
 import { EventService } from "./events/eventService.service";
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { FileUploadModule } from 'ng2-file-upload';
+import { BulkMailTemplatesComponent } from "./bulkMailTemplates/bulkMailTemplates.component";
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { FileUploadModule } from 'ng2-file-upload';
     EventAuthorizationComponent,
     RegistrationFormsComponent,
     QuestionMappingComponent,
-    PaymentsComponent
+    PaymentsComponent,
+    BulkMailTemplatesComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -84,6 +86,7 @@ import { FileUploadModule } from 'ng2-file-upload';
       { path: ':eventAcronym/registrations/:id/sms', component: SmsConversationComponent },
       { path: ':eventAcronym/partyOverview', component: PartyOverviewComponent },
       { path: ':eventAcronym/mailTemplates', component: MailTemplatesComponent },
+      { path: ':eventAcronym/bulkMailTemplates', component: BulkMailTemplatesComponent },
       { path: ':eventAcronym/mails', component: MailsComponent },
       { path: ':eventAcronym/registrationForms', component: RegistrationFormsComponent },
       { path: ':eventAcronym/questionMapping', component: QuestionMappingComponent }

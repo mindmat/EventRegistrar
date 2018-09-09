@@ -69,6 +69,11 @@
         </a>
       </li>
       <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
+        <a [routerLink]="[eventService.acronym, 'bulkMailTemplates']">
+          <span class='glyphicon glyphicon-envelope'></span> Massenmails
+        </a>
+      </li>
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
         <a [routerLink]="[eventService.acronym, 'authorization']">
           <span class='glyphicon glyphicon-envelope'></span> Berechtigungen
         </a>

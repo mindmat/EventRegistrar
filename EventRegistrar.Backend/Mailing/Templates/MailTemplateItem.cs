@@ -1,8 +1,11 @@
-﻿namespace EventRegistrar.Backend.Mailing.Templates
+﻿using System;
+
+namespace EventRegistrar.Backend.Mailing.Templates
 {
     public class MailTemplateItem
     {
         public MailingAudience? Audience { get; set; }
+        public Guid Id { get; set; }
         public string Key { get; set; }
         public string Language { get; set; }
         public string SenderMail { get; set; }

@@ -15,7 +15,7 @@ namespace EventRegistrar.Backend.Mailing.Templates
         private readonly IRepository<MailTemplate> _mailTemplates;
 
         public SaveMailTemplateCommandHandler(IRepository<MailTemplate> mailTemplates,
-            IEventAcronymResolver acronymResolver)
+                                              IEventAcronymResolver acronymResolver)
         {
             _mailTemplates = mailTemplates;
             _acronymResolver = acronymResolver;
@@ -24,7 +24,6 @@ namespace EventRegistrar.Backend.Mailing.Templates
         public async Task<Unit> Handle(SaveMailTemplateCommand command, CancellationToken cancellationToken)
         {
             var eventId = await _acronymResolver.GetEventIdFromAcronym(command.EventAcronym);
-            var mailingKey = NormalizeKey(command.Template.Key);
 
             if (command.Template.Language == null)
             {
@@ -45,27 +44,29 @@ namespace EventRegistrar.Backend.Mailing.Templates
 
             command.Template.Language = command.Template.Language.ToLowerInvariant();
             MailTemplate template;
-            if (mailingKey != null)
-            {
-                template = await _mailTemplates.FirstOrDefaultAsync(mtp => mtp.EventId == eventId
-                                                                        && mtp.Type == 0
-                                                                        && mtp.Language == command.Template.Language
-                                                                        && mtp.MailingKey == mailingKey
-                                                                        && mtp.EventId == eventId,
-                                                                    cancellationToken);
-            }
-            else if (command.Template.Type.HasValue)
+            if (command.Template.Type.HasValue && command.Template.Type != 0 && !string.IsNullOrEmpty(command.Template.Language))
             {
                 template = await _mailTemplates.FirstOrDefaultAsync(mtp => mtp.EventId == eventId
                                                                         && mtp.Type == command.Template.Type.Value
                                                                         && mtp.Language == command.Template.Language
-                                                                        && mtp.MailingKey == null
-                                                                        && mtp.EventId == eventId,
+                                                                        && mtp.BulkMailKey == null,
                                                                     cancellationToken);
+            }
+            else if (command.TemplateId.HasValue)
+            {
+                template = await _mailTemplates.FirstOrDefaultAsync(mtp => mtp.EventId == eventId
+                                                                        && mtp.Type == 0
+                                                                        && mtp.Id == command.TemplateId.Value,
+                                                                    cancellationToken);
+                if (template != null)
+                {
+                    template.BulkMailKey = command.Template.Key;
+                    template.Language = command.Template.Language;
+                }
             }
             else
             {
-                throw new ArgumentException("Either mailing key or type have to be provided");
+                throw new ArgumentException("Either id or type/language have to be provided");
             }
 
             if (template == null)
@@ -77,7 +78,7 @@ namespace EventRegistrar.Backend.Mailing.Templates
                     ContentType = MailContentType.Html,
                     EventId = eventId,
                     Type = command.Template.Type ?? 0,
-                    MailingKey = mailingKey
+                    BulkMailKey = command.Template.Key
                 };
             }
             template.Template = command.Template.Template;
@@ -88,11 +89,6 @@ namespace EventRegistrar.Backend.Mailing.Templates
             await _mailTemplates.InsertOrUpdateEntity(template, cancellationToken);
 
             return Unit.Value;
-        }
-
-        private static string NormalizeKey(string key)
-        {
-            return key?.ToLowerInvariant()?.Replace(" ", "");
         }
     }
 }

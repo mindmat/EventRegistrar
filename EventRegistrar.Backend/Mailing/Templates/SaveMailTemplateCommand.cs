@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Authorization;
+﻿using System;
+using EventRegistrar.Backend.Authorization;
 using MediatR;
 
 namespace EventRegistrar.Backend.Mailing.Templates
@@ -7,5 +8,6 @@ namespace EventRegistrar.Backend.Mailing.Templates
     {
         public string EventAcronym { get; set; }
         public MailTemplateItem Template { get; set; }
+        public Guid? TemplateId { get; set; }
     }
 }
