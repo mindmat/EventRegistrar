@@ -22,8 +22,7 @@
 </table>
 
 <hr />
-<button class="btn btn-primary" (click)="createNew()">Neu</button>
-<button class="btn btn-primary" (click)="createMails()">Mails erzeugen</button>
+<button class="btn btn-primary" (click)="createNew()" *ngIf="!mailingTemplate">Neu</button>
 
 <p *ngIf="!mailingTemplates"><em>Loading...</em></p>
 
@@ -68,5 +67,10 @@
 </table>
 
 <button class="btn btn-primary" (click)="saveTemplate()" *ngIf="mailingTemplate">Speichern</button>
+
+<button class="btn btn-primary" (click)="createMails()" *ngIf="mailingTemplate">Mails erzeugen</button>
+<p *ngIf="mailingTemplate">Mails bereit: {{ mailingTemplate.mailsReadyCount }}</p>
+<button class="btn btn-primary" (click)="releaseMails()" *ngIf="mailingTemplate && mailingTemplate.mailsReadyCount > 0">Mails freigeben</button>
+<p *ngIf="mailingTemplate">Mails versendet: {{ mailingTemplate.mailsSentCount }}</p>
 
 <br /><br />

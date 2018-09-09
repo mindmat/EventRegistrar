@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class AuthService {
   constructor(private http: HttpClient) {
-    this.http.get<Ticket[]>("https://eventregistratorweb.azurewebsites.net/.auth/me").subscribe(ticket => {
+    this.http.get<Ticket[]>("https://eventregistrar.azurewebsites.net/.auth/me").subscribe(ticket => {
       try {
         var firstName = ticket[0].user_claims.find(c => c.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname").val;
         var lastName = ticket[0].user_claims.find(c => c.typ === "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname").val;

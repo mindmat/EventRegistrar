@@ -38,7 +38,9 @@ namespace EventRegistrar.Backend.Mailing.Templates
                                       SenderName = mtp.SenderName,
                                       Subject = mtp.Subject,
                                       Audience = mtp.MailingAudience,
-                                      Type = mtp.Type
+                                      Type = mtp.Type,
+                                      MailsReadyCount = mtp.Mails.Count(mail => mail.Sent == null),
+                                      MailsSentCount = mtp.Mails.Count(mail => mail.Sent != null)
                                   })
                                   .ToListAsync(cancellationToken);
 

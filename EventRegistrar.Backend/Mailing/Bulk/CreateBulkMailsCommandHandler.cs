@@ -44,46 +44,40 @@ namespace EventRegistrar.Backend.Mailing.Bulk
         {
             var eventId = await _acronymResolver.GetEventIdFromAcronym(command.EventAcronym);
             var templates = await _mailTemplates.Where(mtp => mtp.EventId == eventId
-                                                              && mtp.BulkMailKey == command.TemplateKey
-                                                              && mtp.Type == 0)
-                .ToListAsync(cancellationToken);
+                                                           && mtp.BulkMailKey == command.BulkMailKey
+                                                           && mtp.Type == 0)
+                                                .ToListAsync(cancellationToken);
 
+            var registrationsOfEvent = await _registrations.Where(reg => reg.EventId == eventId
+                                                                      && !reg.Mails.Any(mail => mail.Mail.BulkMailKey == command.BulkMailKey))
+                                                    .ToListAsync(cancellationToken);
             foreach (var mailTemplate in templates)
             {
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.Paid) == true)
                 {
-                    var registrations = await _registrations.Where(reg => reg.State == RegistrationState.Paid
-                                                                          && reg.RegistrationForm.Language == mailTemplate.Language
-                                                                          && !reg.Mails.Any(mail => mail.Mail.BulkMailKey == mailTemplate.BulkMailKey))
-                                                            .ToListAsync(cancellationToken);
-                    _log.LogInformation($"paid {registrations.Count}");
-                    foreach (var registration in registrations)
+                    var receivers = registrationsOfEvent.Where(reg => reg.State == RegistrationState.Paid
+                                                                   && reg.Language == mailTemplate.Language);
+                    foreach (var registration in receivers)
                     {
                         await CreateMail(mailTemplate, registration, cancellationToken);
                     }
                 }
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.Unpaid) == true)
                 {
-                    var registrations = await _registrations.Where(reg => reg.State == RegistrationState.Received
-                                                                          && reg.IsWaitingList != true
-                                                                          && reg.RegistrationForm.Language == mailTemplate.Language
-                                                                          && !reg.Mails.Any(mail => mail.Mail.BulkMailKey == mailTemplate.BulkMailKey))
-                                                            .ToListAsync(cancellationToken);
-                    _log.LogInformation($"unpaid {registrations.Count}");
-                    foreach (var registration in registrations)
+                    var receivers = registrationsOfEvent.Where(reg => reg.State == RegistrationState.Received
+                                                                   && reg.Language == mailTemplate.Language
+                                                                   && reg.IsWaitingList != true);
+                    foreach (var registration in receivers)
                     {
                         await CreateMail(mailTemplate, registration, cancellationToken);
                     }
                 }
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.WaitingList) == true)
                 {
-                    var registrations = await _registrations.Where(reg => reg.State == RegistrationState.Received
-                                                                          && reg.IsWaitingList == true
-                                                                          && reg.RegistrationForm.Language == mailTemplate.Language
-                                                                          && !reg.Mails.Any(mail => mail.Mail.BulkMailKey == mailTemplate.BulkMailKey))
-                                                            .ToListAsync(cancellationToken);
-                    _log.LogInformation($"waiting list {registrations.Count}");
-                    foreach (var registration in registrations)
+                    var receivers = registrationsOfEvent.Where(reg => reg.State == RegistrationState.Received
+                                                                   && reg.Language == mailTemplate.Language
+                                                                   && reg.IsWaitingList == true);
+                    foreach (var registration in receivers)
                     {
                         await CreateMail(mailTemplate, registration, cancellationToken);
                     }

@@ -8,6 +8,8 @@ namespace EventRegistrar.Backend.Mailing.Templates
         public Guid Id { get; set; }
         public string Key { get; set; }
         public string Language { get; set; }
+        public int MailsReadyCount { get; set; }
+        public int MailsSentCount { get; set; }
         public string SenderMail { get; set; }
         public string SenderName { get; set; }
         public string Subject { get; set; }

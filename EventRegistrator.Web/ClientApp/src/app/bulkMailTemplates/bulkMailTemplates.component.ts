@@ -56,11 +56,24 @@ export class BulkMailTemplatesComponent {
         error => {
           console.error(error);
           this.saving = false;
-        });  }
+        });
+  }
 
   createNew() {
     this.mailingTemplate = new BulkMailTemplate();
     this.mailingTemplate.id = Guid.newGuid();
+  }
+
+  releaseMails() {
+    this.saving = true;
+    this.http.post<BulkMailTemplate>(`api/events/${this.getEventAcronym()}/bulkMailTemplates/${this.mailingTemplate.key}/releaseMails`, this.mailingTemplate)
+      .subscribe(result => {
+          this.saving = false;
+        },
+        error => {
+          console.error(error);
+          this.saving = false;
+        });
   }
 
   getEventAcronym() {
@@ -77,6 +90,8 @@ class BulkMailTemplate {
   senderName: string;
   subject: string;
   audience: number;
+  mailsReadyCount: number;
+  mailsSentCount: number;
 }
 
 class Language {

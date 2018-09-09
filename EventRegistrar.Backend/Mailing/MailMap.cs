@@ -10,6 +10,10 @@ namespace EventRegistrar.Backend.Mailing
         {
             base.Configure(builder);
             builder.ToTable("Mails");
+
+            builder.HasOne(map => map.MailTemplate)
+                   .WithMany(mail => mail.Mails)
+                   .HasForeignKey(map => map.MailTemplateId);
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Mailing;
+using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Due;
@@ -65,7 +66,8 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(AddSpotCommand).Name;
                 yield return typeof(SavePaymentFileCommand).Name;
                 yield return typeof(SetDoubleRegistrableLimitsCommand).Name;
-                yield return typeof(SetSingleRegistrableLimitsCommand).Name;
+                yield return typeof(CreateBulkMailsCommand).Name;
+                yield return typeof(ReleaseBulkMailsCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))
