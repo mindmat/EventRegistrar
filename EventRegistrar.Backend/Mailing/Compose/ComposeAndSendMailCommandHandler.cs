@@ -109,6 +109,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
 
             if (!command.Withhold)
             {
+                mail.Sent = DateTime.UtcNow;
                 await _serviceBusClient.SendCommand(sendMailCommand);
             }
             // ToDo

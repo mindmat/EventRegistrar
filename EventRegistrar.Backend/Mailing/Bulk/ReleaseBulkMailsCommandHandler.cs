@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
@@ -52,6 +53,7 @@ namespace EventRegistrar.Backend.Mailing.Bulk
                 };
 
                 withheldMail.Withhold = false;
+                withheldMail.Sent = DateTime.UtcNow;
 
                 await _serviceBusClient.SendCommand(sendMailCommand);
             }
