@@ -6,11 +6,11 @@ namespace EventRegistrar.Backend.Mailing
 {
     public class Mail : Entity
     {
+        public string BulkMailKey { get; set; }
         public string ContentHtml { get; set; }
         public string ContentPlainText { get; set; }
         public DateTime Created { get; set; }
         public Guid? EventId { get; set; }
-        public string MailingKey { get; set; }
         public Guid? MailTemplateId { get; set; }
         public string Recipients { get; set; }
         public ICollection<MailToRegistration> Registrations { get; set; }

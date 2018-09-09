@@ -47,6 +47,17 @@ export class BulkMailTemplatesComponent {
         });
   }
 
+  createMails() {
+    this.saving = true;
+    this.http.post<BulkMailTemplate>(`api/events/${this.getEventAcronym()}/bulkMailTemplates/${this.mailingTemplate.key}/createMails`, this.mailingTemplate)
+      .subscribe(result => {
+        this.saving = false;
+      },
+        error => {
+          console.error(error);
+          this.saving = false;
+        });  }
+
   createNew() {
     this.mailingTemplate = new BulkMailTemplate();
     this.mailingTemplate.id = Guid.newGuid();

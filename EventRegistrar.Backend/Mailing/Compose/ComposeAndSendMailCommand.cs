@@ -6,6 +6,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
     public class ComposeAndSendMailCommand : IQueueBoundCommand
     {
         public bool AllowDuplicate { get; set; }
+        public string BulkMailKey { get; set; }
         public MailType MailType { get; set; }
         public string QueueName => "ComposeAndSendMailCommandQueue";
         public Guid RegistrationId { get; set; }
