@@ -88,8 +88,8 @@ export class RegistrationComponent {
   }
 
   deleteMail(mailId: string) {
-    var url = `api/events/${this.getEventAcronym()}/mails/${mailId}/delete`;
-    this.http.post(url, null)
+    var url = `api/events/${this.getEventAcronym()}/mails/${mailId}`;
+    this.http.delete(url)
       .subscribe(result => { this.reloadMails(); }, error => console.error(error));
   }
 
@@ -100,14 +100,14 @@ export class RegistrationComponent {
   }
 
   addRegistrable(registrableId: string) {
-    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/addSpot?registrableId=${registrableId}`;
-    this.http.post(url, null)
+    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/spots/${registrableId}`;
+    this.http.put(url, null)
       .subscribe(result => { this.reloadSpots(); this.reloadRegistration(); }, error => console.error(error));
   }
 
   removeRegistrable(registrableId: string) {
-    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/removeSpot?registrableId=${registrableId}`;
-    this.http.post(url, null)
+    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/spots/${registrableId}`;
+    this.http.delete(url)
       .subscribe(result => { this.reloadSpots(); this.reloadRegistration(); }, error => console.error(error));
   }
 

@@ -14,14 +14,20 @@ namespace EventRegistrar.Backend.Registrations.Price
     {
         private readonly ILogger _logger;
         private readonly IQueryable<Reduction> _reductions;
+        private readonly IQueryable<Registration> _registrations;
+        private readonly IQueryable<Response> _responses;
         private readonly IQueryable<Seat> _seats;
 
         public PriceCalculator(ILogger logger,
                                IQueryable<Seat> seats,
+                               IQueryable<Response> responses,
+                               IQueryable<Registration> registrations,
                                IQueryable<Reduction> reductions)
         {
             _logger = logger;
             _seats = seats;
+            _responses = responses;
+            _registrations = registrations;
             _reductions = reductions;
         }
 
@@ -52,6 +58,26 @@ namespace EventRegistrar.Backend.Registrations.Price
         //    //}
         //    return price;
         //}
+        public async Task<decimal> CalculatePrice(Guid registrationId)
+        {
+            var seats = await _seats.Where(seat => seat.RegistrationId == registrationId
+                                                || seat.RegistrationId_Follower == registrationId)
+                                    .Include(seat=>seat.Registrable)
+                                    .ToListAsync();
+            var responses = await _responses.Where(rsp => rsp.RegistrationId == registrationId)
+                                            .ToListAsync();
+            if (!responses.Any())
+            {
+                var registration = await _registrations.FirstAsync(reg => reg.Id == registrationId);
+                if (registration.RegistrationId_Partner.HasValue)
+                {
+                    responses = await _responses.Where(rsp => rsp.RegistrationId == registration.RegistrationId_Partner.Value)
+                                                .ToListAsync();
+                }
+            }
+
+            return await CalculatePrice(registrationId, responses, seats);
+        }
 
         public async Task<decimal> CalculatePrice(Guid registrationId, IEnumerable<Response> responses, IEnumerable<Seat> seats)
         {

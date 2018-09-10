@@ -64,6 +64,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(DeleteMailCommand).Name;
                 yield return typeof(SendReminderCommand).Name;
                 yield return typeof(AddSpotCommand).Name;
+                yield return typeof(RemoveSpotCommand).Name;
                 yield return typeof(SavePaymentFileCommand).Name;
                 yield return typeof(SetDoubleRegistrableLimitsCommand).Name;
                 yield return typeof(CreateBulkMailsCommand).Name;
