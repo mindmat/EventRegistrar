@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Registrables.Participants;
+using EventRegistrar.Backend.Registrables.WaitingList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -59,6 +60,16 @@ namespace EventRegistrar.Backend.Registrables
             {
                 EventAcronym = eventAcronym,
                 MaximumParticipants = limits.MaximumParticipants,
+                RegistrableId = registrableId
+            });
+        }
+
+        [HttpPost("api/events/{eventAcronym}/registrables/{registrableId:guid}/tryPromoteFromWaitingList")]
+        public Task TryPromoteFromWaitingList(string eventAcronym, Guid registrableId)
+        {
+            return _mediator.Send(new TryPromoteFromWaitingListCommand
+            {
+                EventAcronym = eventAcronym,
                 RegistrableId = registrableId
             });
         }

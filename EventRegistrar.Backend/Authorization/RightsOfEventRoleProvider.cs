@@ -12,6 +12,7 @@ using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unrecognized;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Participants;
+using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations;
@@ -69,6 +70,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(SetDoubleRegistrableLimitsCommand).Name;
                 yield return typeof(CreateBulkMailsCommand).Name;
                 yield return typeof(ReleaseBulkMailsCommand).Name;
+                yield return typeof(TryPromoteFromWaitingListCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))
