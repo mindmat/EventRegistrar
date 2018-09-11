@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Payments.Files.Camt;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;

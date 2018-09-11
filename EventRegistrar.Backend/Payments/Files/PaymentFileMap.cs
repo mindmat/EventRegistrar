@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EventRegistrar.Backend.Payments
+namespace EventRegistrar.Backend.Payments.Files
 {
     public class PaymentFileMap : EntityTypeConfiguration<PaymentFile>
     {

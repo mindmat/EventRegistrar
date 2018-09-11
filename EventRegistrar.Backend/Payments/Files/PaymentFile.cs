@@ -1,7 +1,7 @@
 ﻿using System;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 
-namespace EventRegistrar.Backend.Payments
+namespace EventRegistrar.Backend.Payments.Files
 {
     public class PaymentFile : Entity
     {

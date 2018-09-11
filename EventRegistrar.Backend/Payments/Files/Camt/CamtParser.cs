@@ -4,9 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
-using EventRegistrar.Backend.Payments.Files.Camt;
 
-namespace EventRegistrar.Backend.Payments.Files
+namespace EventRegistrar.Backend.Payments.Files.Camt
 {
     public class CamtParser
     {

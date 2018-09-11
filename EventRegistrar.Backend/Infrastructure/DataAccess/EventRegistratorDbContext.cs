@@ -5,6 +5,7 @@ using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Reductions;

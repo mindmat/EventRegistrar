@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Payments.Files;
 
 namespace EventRegistrar.Backend.Payments
 {

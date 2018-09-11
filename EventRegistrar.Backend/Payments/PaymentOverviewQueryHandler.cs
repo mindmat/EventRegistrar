@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 using MediatR;
