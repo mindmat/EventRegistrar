@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unrecognized;
@@ -34,6 +35,12 @@ namespace EventRegistrar.Backend.Payments
         public Task<IEnumerable<PaymentDisplayItem>> GetPayments(string eventAcronym, bool unrecognized)
         {
             return _mediator.Send(new PaymentStatementsQuery { EventAcronym = eventAcronym });
+        }
+
+        [HttpGet("api/events/{eventAcronym}/payments/{paymentId:guid}/possibleAssignments")]
+        public Task<IEnumerable<PossibleAssignment>> GetPossibleAssignments(string eventAcronym, Guid paymentId)
+        {
+            return _mediator.Send(new PossibleAssignmentsQuery { EventAcronym = eventAcronym, PaymentId = paymentId });
         }
 
         [HttpGet("api/events/{eventAcronym}/payments/unrecognized")]

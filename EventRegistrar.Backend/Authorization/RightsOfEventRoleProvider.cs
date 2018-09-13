@@ -6,6 +6,7 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
+using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Statements;
@@ -54,6 +55,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(LanguagesQuery).Name;
                 yield return typeof(AllExternalRegistrationIdentifiersQuery).Name;
                 yield return typeof(PaymentStatementsQuery).Name;
+                yield return typeof(PossibleAssignmentsQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))

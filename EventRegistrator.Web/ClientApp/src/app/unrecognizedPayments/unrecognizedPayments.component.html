@@ -2,54 +2,87 @@
 
 <p *ngIf="!payments"><em>Loading...</em></p>
 
-<table class='table' *ngIf="payments">
-    <thead>
-        <tr>
-            <th>Mitteilungstext</th>
-            <th>Email</th>
-            <th></th>
-            <th>Datum</th>
-            <th>Betrag</th>
-            <th>Zugeordnet</th>
-            <th>Zurückbezahlt</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let payment of payments">
-            <td class="col-lg-5"><textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected()">{{ payment.Info }}</textarea></td>
-            <td>
-                <input [(ngModel)]="payment.RecognizedEmail" type="text" *ngIf="!payment.Locked">
-            </td>
-            <td>
-                <button class="btn btn-primary btn-sm" (click)="saveMail(payment)" *ngIf="!payment.Locked"><span class="glyphicon glyphicon-ok"></span></button>
-            </td>
-            <td>{{ payment.BookingDate | date: 'dd.MM.yy' }}</td>
-            <td>{{ payment.Amount }}{{ payment.Currency}}</td>
-            <td>{{ payment.Assigned }}</td>
-            <td>{{ payment.Repaid }}</td>
-        </tr>
-    </tbody>
-</table>
+<!--<div id="paymentsCarousel" #paymentsCarousel class="carousel slide" data-ride="carousel" *ngIf="payments" (slid.bs.carousel)="slid(e)" interval="false">
+  <div class="carousel-inner" style="padding-left: 40px; padding-right: 40px">
+    <div *ngFor="let payment of payments ; let k = index" [ngClass]="k == 0 ? 'carousel-item active' : 'carousel-item'">
+      <textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected(payment)">{{ payment.info }}</textarea>
+      <p>Betrag: {{ payment.amount }}</p>
+      <p>Zahlungseingang: {{ payment.bookingDate | date: 'dd.MM.yy' }}</p>
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#paymentsCarousel" role="button" data-slide="prev" style="width: 30px; background: darkgray" (click)="gotoPreviousPayment()">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" href="#paymentsCarousel" role="button" data-slide="next" style="width: 30px; background: dimgray" (click)="gotoNextPayment()">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>-->
+
+<div *ngIf="payment" class="carousel slide">
+  <div class="carousel-inner" style="padding-left: 40px; padding-right: 40px">
+    <textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected(payment)">{{ payment.info }}</textarea>
+    <p>Betrag: {{ payment.amount }} {{ payment.currency}}</p>
+    <p>Zahlungseingang: {{ payment.bookingDate | date: 'dd.MM.yyyy' }}</p>
+  </div>
+  <a class="carousel-control-prev" role="button" data-slide="prev" style="width: 30px; background: darkgray" (click)="gotoPreviousPayment()" *ngIf="paymentPointer > 0">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" role="button" data-slide="next" style="width: 30px; background: darkgray" (click)="gotoNextPayment()" *ngIf="paymentPointer < payments.length - 1">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+<!--<table class='table' *ngIf="payments">
+  <thead>
+    <tr>
+      <th>Mitteilungstext</th>
+      <th>Email</th>
+      <th></th>
+      <th>Datum</th>
+      <th>Betrag</th>
+      <th>Zugeordnet</th>
+      <th>Zurückbezahlt</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let payment of payments">
+      <td class="col-lg-5"><textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected()">{{ payment.info }}</textarea></td>
+      <td>
+        <input [(ngModel)]="payment.recognizedEmail" type="text" *ngIf="!payment.locked">
+      </td>
+      <td>
+        <button class="btn btn-primary btn-sm" (click)="saveMail(payment)" *ngIf="!payment.locked"><span class="glyphicon glyphicon-ok"></span></button>
+      </td>
+      <td>{{ payment.bookingDate | date: 'dd.MM.yy' }}</td>
+      <td>{{ payment.amount }}{{ payment.currency}}</td>
+      <td>{{ payment.assigned }}</td>
+      <td>{{ payment.repaid }}</td>
+    </tr>
+  </tbody>
+</table>-->
 
 <br />
 
 <h3>Suchtreffer</h3>
 
-<table class="table table-hover" *ngIf="registrations">
-    <thead class="thead-dark">
-        <tr>
-            <th>Name</th>
-            <th>Mail</th>
-            <th>Preis</th>
-            <th>Treffer in Antworten</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let registration of registrations">
-            <td><a [routerLink]="['/registration', registration.Id]">{{ registration.FirstName }} {{ registration.LastName }}</a></td>
-            <td>{{ registration.Email }}</td>
-            <td>{{ registration.Price }}</td>
-            <td>{{ registration.ResponsesJoined }}</td>
-        </tr>
-    </tbody>
+<table class="table table-hover" *ngIf="possibleAssignments">
+  <thead class="thead-dark">
+    <tr>
+      <th>Name</th>
+      <!--<th>Mail</th>
+      <th>Preis</th>
+      <th>Treffer in Antworten</th>-->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let possibleAssignment of possibleAssignments">
+      <td><a [routerLink]="['/', getEventAcronym(), 'registration', possibleAssignment.registrationId]">{{ possibleAssignment.firstName }} {{ possibleAssignment.lastName }}</a></td>
+      <!--<td>{{ registration.email }}</td>
+      <td>{{ registration.price }}</td>
+      <td>{{ registration.responsesJoined }}</td>-->
+    </tr>
+  </tbody>
 </table>
