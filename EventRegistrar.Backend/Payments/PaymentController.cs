@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Statements;
-using EventRegistrar.Backend.Payments.Unrecognized;
+using EventRegistrar.Backend.Payments.Unassigned;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +17,12 @@ namespace EventRegistrar.Backend.Payments
         public PaymentController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpPost("api/events/{eventAcronym}/payments/{paymentId:guid}/assign/{registrationId:guid}")]
+        public Task AssignPayment(string eventAcronym, Guid paymentId, Guid registrationId, decimal amount)
+        {
+            return _mediator.Send(new AssignPaymentCommand { EventAcronym = eventAcronym, PaymentId = paymentId, RegistratrionId = registrationId, Amount = amount });
         }
 
         [HttpGet("api/events/{eventAcronym}/duepayments")]
@@ -32,7 +38,7 @@ namespace EventRegistrar.Backend.Payments
         }
 
         [HttpGet("api/events/{eventAcronym}/payments")]
-        public Task<IEnumerable<PaymentDisplayItem>> GetPayments(string eventAcronym, bool unrecognized)
+        public Task<IEnumerable<PaymentDisplayItem>> GetPayments(string eventAcronym)
         {
             return _mediator.Send(new PaymentStatementsQuery { EventAcronym = eventAcronym });
         }
@@ -43,28 +49,16 @@ namespace EventRegistrar.Backend.Payments
             return _mediator.Send(new PossibleAssignmentsQuery { EventAcronym = eventAcronym, PaymentId = paymentId });
         }
 
-        [HttpGet("api/events/{eventAcronym}/payments/unrecognized")]
-        public Task<IEnumerable<PaymentDisplayItem>> GetUnrecognizedPaymentsPaymentOverview(string eventAcronym)
+        [HttpGet("api/events/{eventAcronym}/payments/unassigned")]
+        public Task<IEnumerable<PaymentDisplayItem>> GetUnassignedPaymentsPaymentOverview(string eventAcronym)
         {
-            return _mediator.Send(new UnrecognizedPaymentsQuery { EventAcronym = eventAcronym });
+            return _mediator.Send(new UnassignedPaymentsQuery { EventAcronym = eventAcronym });
         }
 
         [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/sendReminder")]
         public Task SendReminder(string eventAcronym, Guid registrationId, bool withholdMail)
         {
             return _mediator.Send(new SendReminderCommand { EventAcronym = eventAcronym, RegistrationId = registrationId });
-        }
-
-        //[HttpPost("api/events/{eventAcronym}/registrations/${registrationId:guid}/sendReminderSms")]
-        //public Task SendReminderSms(string eventAcronym, Guid registrationId)
-        //{
-        //    //return _mediator.Send(new DuePaymentsQuery { EventAcronym = eventAcronym });
-        //}
-
-        [HttpPost("api/events/{eventAcronym}/payments/{paymentId:guid}/RecognizedEmail")]
-        public Task SetRecognizedEmail(string eventAcronym, Guid paymentId, string email)
-        {
-            return _mediator.Send(new SetRecognizedEmailCommand { EventAcronym = eventAcronym, PaymentId = paymentId, Email = email });
         }
     }
 }

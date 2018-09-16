@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Payments.Unrecognized;
+using EventRegistrar.Backend.Payments.Unassigned;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,13 +25,13 @@ namespace EventRegistrar.Backend.Payments.Statements
         {
             var eventId = await _acronymResolver.GetEventIdFromAcronym(request.EventAcronym);
             var payments = await _payments
-                                 .Where(rpy => rpy.PaymentFile.EventId == eventId &&
-                                               rpy.RecognizedEmail == null && rpy.Amount - (rpy.Repaid ?? 0m) > 0)
+                                 .Where(rpy => rpy.PaymentFile.EventId == eventId
+                                            && !rpy.Settled)
                                  .Select(rpy => new PaymentDisplayItem
                                  {
                                      Id = rpy.Id,
                                      Amount = rpy.Amount,
-                                     Assigned = rpy.Assignments.Sum(ass => ass.Amount),
+                                     AmountAssigned = rpy.Assignments.Sum(ass => ass.Amount),
                                      BookingDate = rpy.BookingDate,
                                      Currency = rpy.Currency,
                                      Info = rpy.Info,

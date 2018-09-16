@@ -10,7 +10,7 @@ using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Statements;
-using EventRegistrar.Backend.Payments.Unrecognized;
+using EventRegistrar.Backend.Payments.Unassigned;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.Registrables.WaitingList;
@@ -60,8 +60,7 @@ namespace EventRegistrar.Backend.Authorization
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
             {
-                yield return typeof(UnrecognizedPaymentsQuery).Name;
-                yield return typeof(SetRecognizedEmailCommand).Name;
+                yield return typeof(UnassignedPaymentsQuery).Name;
                 yield return typeof(SaveMailTemplateCommand).Name;
                 yield return typeof(ReleaseMailCommand).Name;
                 yield return typeof(DeleteMailCommand).Name;
@@ -73,6 +72,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(CreateBulkMailsCommand).Name;
                 yield return typeof(ReleaseBulkMailsCommand).Name;
                 yield return typeof(TryPromoteFromWaitingListCommand).Name;
+                yield return typeof(AssignPaymentCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

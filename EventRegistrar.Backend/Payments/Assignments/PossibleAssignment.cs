@@ -5,6 +5,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
     public class PossibleAssignment
     {
         public decimal Amount { get; set; }
+        public decimal AmountPaid { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Guid PaymentId { get; set; }

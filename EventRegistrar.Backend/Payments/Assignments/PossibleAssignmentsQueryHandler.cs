@@ -44,15 +44,16 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                                                   && (words.Contains(reg.RespondentFirstName)
                                                                       || words.Contains(reg.RespondentLastName))
                                                                   && reg.State == RegistrationState.Received)
-                .Select(reg => new PossibleAssignment
-                {
-                    PaymentId = payment.Id,
-                    RegistrationId = reg.Id,
-                    FirstName = reg.RespondentFirstName,
-                    LastName = reg.RespondentLastName,
-                    Amount = reg.Price ?? 0m
-                })
-                .ToListAsync(cancellationToken);
+                                                    .Select(reg => new PossibleAssignment
+                                                    {
+                                                        PaymentId = payment.Id,
+                                                        RegistrationId = reg.Id,
+                                                        FirstName = reg.RespondentFirstName,
+                                                        LastName = reg.RespondentLastName,
+                                                        Amount = reg.Price ?? 0m,
+                                                        AmountPaid = reg.Payments.Sum(pmt => pmt.Amount)
+                                                    })
+                                                    .ToListAsync(cancellationToken);
             return registrations;
         }
     }

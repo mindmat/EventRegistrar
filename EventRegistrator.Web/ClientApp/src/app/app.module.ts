@@ -14,7 +14,7 @@ import { AuthService } from './authentication/authService.service';
 import { RegistrablesComponent } from './registrables/registrables.component';
 import { ParticipantsComponent } from './participants/participants.component';
 import { HostingComponent } from './hosting/hosting.component';
-import { UnrecognizedPaymentsComponent } from './unrecognizedPayments/unrecognizedPayments.component';
+import { UnassignedPaymentsComponent } from './unassignedPayments/unassignedPayments.component';
 import { PaymentOverviewComponent } from './paymentOverview/paymentOverview.component';
 import { RegistrationComponent } from './registration/registration.component';
 import { SearchRegistrationComponent } from './registration/searchRegistration.component';
@@ -42,7 +42,7 @@ import { BulkMailTemplatesComponent } from "./bulkMailTemplates/bulkMailTemplate
     ParticipantsComponent,
     HostingComponent,
     //HomeComponent,
-    UnrecognizedPaymentsComponent,
+    UnassignedPaymentsComponent,
     PaymentOverviewComponent,
     RegistrationComponent,
     SearchRegistrationComponent,
@@ -78,7 +78,7 @@ import { BulkMailTemplatesComponent } from "./bulkMailTemplates/bulkMailTemplate
       { path: ':eventAcronym/registration/:id', component: RegistrationComponent },
       { path: ':eventAcronym/searchRegistration', component: SearchRegistrationComponent },
       { path: ':eventAcronym/hosting', component: HostingComponent },
-      { path: ':eventAcronym/unrecognizedPayments', component: UnrecognizedPaymentsComponent },
+      { path: ':eventAcronym/unassignedPayments', component: UnassignedPaymentsComponent },
       { path: ':eventAcronym/paymentOverview', component: PaymentOverviewComponent },
       { path: ':eventAcronym/paymentReminders', component: PaymentRemindersComponent },
       { path: ':eventAcronym/payments', component: PaymentsComponent },

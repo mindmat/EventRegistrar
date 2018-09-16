@@ -1,4 +1,4 @@
-<h1>Nicht erkannte Zahlungen</h1>
+<h1>Nicht ausgeglichene Zahlungen</h1>
 
 <p *ngIf="!payments"><em>Loading...</em></p>
 
@@ -23,7 +23,7 @@
 <div *ngIf="payment" class="carousel slide">
   <div class="carousel-inner" style="padding-left: 40px; padding-right: 40px">
     <textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected(payment)">{{ payment.info }}</textarea>
-    <p>Betrag: {{ payment.amount }} {{ payment.currency}}</p>
+    <p>Offener Betrag: {{ payment.amount - payment.amountAssigned }} {{ payment.currency }}</p>
     <p>Zahlungseingang: {{ payment.bookingDate | date: 'dd.MM.yyyy' }}</p>
   </div>
   <a class="carousel-control-prev" role="button" data-slide="prev" style="width: 30px; background: darkgray" (click)="gotoPreviousPayment()" *ngIf="paymentPointer > 0">
@@ -35,54 +35,30 @@
     <span class="sr-only">Next</span>
   </a>
 </div>
-<!--<table class='table' *ngIf="payments">
-  <thead>
-    <tr>
-      <th>Mitteilungstext</th>
-      <th>Email</th>
-      <th></th>
-      <th>Datum</th>
-      <th>Betrag</th>
-      <th>Zugeordnet</th>
-      <th>Zurückbezahlt</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let payment of payments">
-      <td class="col-lg-5"><textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected()">{{ payment.info }}</textarea></td>
-      <td>
-        <input [(ngModel)]="payment.recognizedEmail" type="text" *ngIf="!payment.locked">
-      </td>
-      <td>
-        <button class="btn btn-primary btn-sm" (click)="saveMail(payment)" *ngIf="!payment.locked"><span class="glyphicon glyphicon-ok"></span></button>
-      </td>
-      <td>{{ payment.bookingDate | date: 'dd.MM.yy' }}</td>
-      <td>{{ payment.amount }}{{ payment.currency}}</td>
-      <td>{{ payment.assigned }}</td>
-      <td>{{ payment.repaid }}</td>
-    </tr>
-  </tbody>
-</table>-->
 
 <br />
 
 <h3>Suchtreffer</h3>
 
-<table class="table table-hover" *ngIf="possibleAssignments">
+<table class="table table-hover">
   <thead class="thead-dark">
     <tr>
       <th>Name</th>
-      <!--<th>Mail</th>
       <th>Preis</th>
-      <th>Treffer in Antworten</th>-->
+      <th>offen</th>
+      <th>ausgleichen</th>
+      <th ></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let possibleAssignment of possibleAssignments">
       <td><a [routerLink]="['/', getEventAcronym(), 'registration', possibleAssignment.registrationId]">{{ possibleAssignment.firstName }} {{ possibleAssignment.lastName }}</a></td>
-      <!--<td>{{ registration.email }}</td>
-      <td>{{ registration.price }}</td>
-      <td>{{ registration.responsesJoined }}</td>-->
+      <td>{{ possibleAssignment.amount }}</td>
+      <td>{{ possibleAssignment.amount - possibleAssignment.amountPaid }}</td>
+      <td><input [(ngModel)]="possibleAssignment.amountToAssign" type="number" *ngIf="!possibleAssignment.locked"></td>
+      <td>
+        <button class="btn btn-primary btn-sm" (click)="savePayment(possibleAssignment)" *ngIf="!possibleAssignment.locked"><span class="glyphicon glyphicon-ok">Ausgleichen</span></button>
+      </td>
     </tr>
   </tbody>
 </table>

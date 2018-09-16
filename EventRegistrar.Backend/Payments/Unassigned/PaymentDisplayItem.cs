@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace EventRegistrar.Backend.Payments.Unrecognized
+namespace EventRegistrar.Backend.Payments.Unassigned
 {
     public class PaymentDisplayItem
     {
         public decimal Amount { get; set; }
-        public decimal? Assigned { get; set; }
+        public decimal AmountAssigned { get; set; }
         public DateTime BookingDate { get; set; }
         public string Currency { get; set; }
         public Guid Id { get; set; }

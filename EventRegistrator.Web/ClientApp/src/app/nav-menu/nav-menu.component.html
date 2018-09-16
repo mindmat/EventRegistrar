@@ -34,8 +34,8 @@
         </a>
       </li>
       <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'unrecognizedPayments']">
-          <span class='glyphicon glyphicon-usd'></span> Nicht erkannte Zahlungen
+        <a [routerLink]="[eventService.acronym, 'unassignedPayments']">
+          <span class='glyphicon glyphicon-usd'></span> Nicht ausgeglichene Zahlungen
         </a>
       </li>
       <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">

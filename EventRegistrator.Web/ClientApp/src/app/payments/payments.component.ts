@@ -26,7 +26,7 @@ export class PaymentsComponent implements OnInit {
     this.uploader = new FileUploader({
       url: `api/events/${this.getEventAcronym()}/paymentfiles/upload`,
       autoUpload: true,
-      //filters: 
+      //filters:
     });
     this.uploader.onErrorItem = (item, response, status, headers) => console.error(`error uploading file ${item}: ${response}, status ${status}`);
     this.uploader.onSuccessItem = (item, response, status, headers) => console.info('success ' + item, response, status, headers);
@@ -51,6 +51,5 @@ class Payment {
   reference: string;
   repaid: number;
   settled: boolean;
-  recognizedEmail: string;
   locked: boolean;
 }

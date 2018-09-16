@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Payments.Unrecognized;
+using EventRegistrar.Backend.Payments.Unassigned;
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Statements
