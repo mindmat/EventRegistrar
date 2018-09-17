@@ -60,11 +60,11 @@
       <td>
         <input [(ngModel)]="possibleAssignment.acceptDifference" type="checkbox" *ngIf="!possibleAssignment.locked && (possibleAssignment.amount - possibleAssignment.amountPaid - possibleAssignment.amountToAssign) > 0" /><span *ngIf="!possibleAssignment.locked && (possibleAssignment.amount - possibleAssignment.amountPaid - possibleAssignment.amountToAssign) > 0">Differenz akzeptieren</span>
         <div *ngIf="!possibleAssignment.locked && possibleAssignment.acceptDifference">
-          Grund: <input [(ngModel)]="possibleAssignment.acceptDifferenceReason" type="text"  />
+          Grund: <input [(ngModel)]="possibleAssignment.acceptDifferenceReason" type="text" />
         </div>
       </td>
       <td>
-        <button class="btn btn-primary btn-sm" (click)="savePayment(possibleAssignment)" *ngIf="!possibleAssignment.locked"><span class="glyphicon glyphicon-ok">Ausgleichen</span></button>
+        <button class="btn btn-primary btn-sm" (click)="savePayment(possibleAssignment)" *ngIf="!possibleAssignment.locked && possibleAssignment.amountToAssign > 0"><span class="glyphicon glyphicon-ok">Ausgleichen</span></button>
       </td>
     </tr>
   </tbody>
