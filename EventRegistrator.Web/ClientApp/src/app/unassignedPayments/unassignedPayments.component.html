@@ -47,7 +47,8 @@
       <th>Preis</th>
       <th>offen</th>
       <th>ausgleichen</th>
-      <th ></th>
+      <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -55,7 +56,13 @@
       <td><a [routerLink]="['/', getEventAcronym(), 'registration', possibleAssignment.registrationId]">{{ possibleAssignment.firstName }} {{ possibleAssignment.lastName }}</a></td>
       <td>{{ possibleAssignment.amount }}</td>
       <td>{{ possibleAssignment.amount - possibleAssignment.amountPaid }}</td>
-      <td><input [(ngModel)]="possibleAssignment.amountToAssign" type="number" *ngIf="!possibleAssignment.locked"></td>
+      <td><input [(ngModel)]="possibleAssignment.amountToAssign" type="number" *ngIf="!possibleAssignment.locked" /></td>
+      <td>
+        <input [(ngModel)]="possibleAssignment.acceptDifference" type="checkbox" *ngIf="!possibleAssignment.locked && (possibleAssignment.amount - possibleAssignment.amountPaid - possibleAssignment.amountToAssign) > 0" /><span *ngIf="!possibleAssignment.locked && (possibleAssignment.amount - possibleAssignment.amountPaid - possibleAssignment.amountToAssign) > 0">Differenz akzeptieren</span>
+        <div *ngIf="!possibleAssignment.locked && possibleAssignment.acceptDifference">
+          Grund: <input [(ngModel)]="possibleAssignment.acceptDifferenceReason" type="text"  />
+        </div>
+      </td>
       <td>
         <button class="btn btn-primary btn-sm" (click)="savePayment(possibleAssignment)" *ngIf="!possibleAssignment.locked"><span class="glyphicon glyphicon-ok">Ausgleichen</span></button>
       </td>

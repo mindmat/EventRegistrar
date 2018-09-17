@@ -44,7 +44,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                 var mailType = registration.RegistrationId_Partner.HasValue
                     ? MailType.PartnerRegistrationMatchedAndAccepted
                     : MailType.SingleRegistrationAccepted;
-                await _serviceBusClient.SendCommand(new ComposeAndSendMailCommand { MailType = mailType, Withhold = true, RegistrationId = registration.Id });
+                _serviceBusClient.SendMessage(new ComposeAndSendMailCommand { MailType = mailType, Withhold = true, RegistrationId = registration.Id });
             }
 
             return Unit.Value;

@@ -21,7 +21,7 @@
   <tbody>
     <tr *ngFor="let dueRegistration of dueRegistrations">
       <td>
-        <a [routerLink]="['/events', getEventAcronym(), 'registration', dueRegistration.id]">{{ dueRegistration.firstName }} {{ dueRegistration.lastName}}</a>
+        <a [routerLink]="[ '/', getEventAcronym(), 'registration', dueRegistration.id]">{{ dueRegistration.firstName }} {{ dueRegistration.lastName }}</a>
       </td>
       <td class="text-right">{{ dueRegistration.price | currency : 'CHF' }}</td>
       <td class="text-right">{{ dueRegistration.paid | currency : 'CHF' }}</td>

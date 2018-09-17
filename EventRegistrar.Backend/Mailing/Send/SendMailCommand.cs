@@ -4,7 +4,7 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Mailing.Send
 {
-    public class SendMailCommand : IQueueBoundCommand
+    public class SendMailCommand : IQueueBoundMessage
     {
         public string ContentHtml { get; set; }
         public string ContentPlainText { get; set; }

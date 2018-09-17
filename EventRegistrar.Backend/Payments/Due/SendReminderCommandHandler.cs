@@ -113,7 +113,7 @@ namespace EventRegistrar.Backend.Payments.Due
 
                     if (mailType != null)
                     {
-                        await _serviceBusClient.SendCommand(new ComposeAndSendMailCommand
+                        _serviceBusClient.SendMessage(new ComposeAndSendMailCommand
                         {
                             MailType = mailType.Value,
                             RegistrationId = registration.Id,

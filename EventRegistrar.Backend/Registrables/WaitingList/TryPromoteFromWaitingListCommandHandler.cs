@@ -53,7 +53,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
 
             foreach (var registrationId in registrationIdsToCheck.Where(id => id.HasValue).Select(id => id.Value))
             {
-                await _serviceBusClient.SendCommand(new CheckIfRegistrationIsPromotedCommand { RegistrationId = registrationId });
+                _serviceBusClient.SendMessage(new CheckIfRegistrationIsPromotedCommand { RegistrationId = registrationId });
             }
 
             return Unit.Value;

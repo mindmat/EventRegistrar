@@ -155,7 +155,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             var mailType = isOnWaitingList
                 ? MailType.PartnerRegistrationMatchedOnWaitingList
                 : MailType.PartnerRegistrationMatchedAndAccepted;
-            await _serviceBusClient.SendCommand(new ComposeAndSendMailCommand
+            _serviceBusClient.SendMessage(new ComposeAndSendMailCommand
             {
                 MailType = mailType,
                 RegistrationId = registration.Id,

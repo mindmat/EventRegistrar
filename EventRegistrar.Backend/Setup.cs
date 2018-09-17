@@ -6,6 +6,7 @@ using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.Events;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +23,7 @@ namespace EventRegistrar.Backend
 
             container.Register(typeof(IRequestHandler<>), assemblies);
             container.Register(typeof(IRequestHandler<,>), assemblies);
+            container.Collection.Register(typeof(IEventToCommandTranslation<>), assemblies);
 
             container.RegisterSingleton<IMediator, Mediator>();
             container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
@@ -63,15 +65,17 @@ namespace EventRegistrar.Backend
                 container.Register(configItemType.BaseType, configItemType);
             }
 
-            var serviceBusConsumers = container.GetTypesToRegister<IQueueBoundCommand>(assembly)
+            var serviceBusConsumers = container.GetTypesToRegister<IQueueBoundMessage>(assembly)
                                                .Select(type => new ServiceBusConsumer
                                                {
-                                                   QueueName = ((IQueueBoundCommand)Activator.CreateInstance(type)).QueueName,
+                                                   QueueName = ((IQueueBoundMessage)Activator.CreateInstance(type)).QueueName,
                                                    RequestType = type
                                                })
                                                .ToList();
             container.RegisterInstance<IEnumerable<ServiceBusConsumer>>(serviceBusConsumers);
             container.RegisterSingleton<MessageQueueReceiver>();
+            container.Register<ServiceBusClient>();
+            container.Register<EventBus>();
 
             container.Verify();
 

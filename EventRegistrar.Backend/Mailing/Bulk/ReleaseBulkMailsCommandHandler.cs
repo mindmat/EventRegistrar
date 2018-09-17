@@ -55,7 +55,7 @@ namespace EventRegistrar.Backend.Mailing.Bulk
                 withheldMail.Withhold = false;
                 withheldMail.Sent = DateTime.UtcNow;
 
-                await _serviceBusClient.SendCommand(sendMailCommand);
+                _serviceBusClient.SendMessage(sendMailCommand);
             }
 
             return Unit.Value;

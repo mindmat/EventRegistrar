@@ -110,7 +110,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
             if (!command.Withhold)
             {
                 mail.Sent = DateTime.UtcNow;
-                await _serviceBusClient.SendCommand(sendMailCommand);
+                _serviceBusClient.SendMessage(sendMailCommand);
             }
             // ToDo
             //foreach (var registrable in registrablesToCheckWaitingList)

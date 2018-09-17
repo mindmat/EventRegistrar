@@ -5,6 +5,7 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.RegistrationForms;
+using EventRegistrar.Backend.Registrations.IndividualReductions;
 using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Spots;
 
@@ -17,6 +18,7 @@ namespace EventRegistrar.Backend.Registrations
         public string ExternalIdentifier { get; set; }
         public DateTime ExternalTimestamp { get; set; }
         public bool FallbackToPartyPass { get; set; }
+        public ICollection<IndividualReduction> IndividualReductions { get; set; }
         public bool? IsWaitingList { get; set; }
         public string Language { get; set; }
         public ICollection<MailToRegistration> Mails { get; set; }

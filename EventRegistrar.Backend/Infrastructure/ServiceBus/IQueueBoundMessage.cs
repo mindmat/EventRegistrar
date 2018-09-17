@@ -2,7 +2,7 @@
 
 namespace EventRegistrar.Backend.Infrastructure.ServiceBus
 {
-    public interface IQueueBoundCommand : IRequest
+    public interface IQueueBoundMessage : IRequest
     {
         string QueueName { get; }
     }

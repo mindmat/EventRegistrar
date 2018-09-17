@@ -60,7 +60,14 @@ export class UnassignedPaymentsComponent implements OnInit {
 
   savePayment(assignment: PossibleAssignment) {
     assignment.locked = true;
-    this.http.post(`api/events/${this.getEventAcronym()}/payments/${assignment.paymentId}/assign/${assignment.registrationId}?amount=${assignment.amountToAssign}`, null)
+    var url = `api/events/${this.getEventAcronym()}/payments/${assignment.paymentId}/assign/${assignment.registrationId}?amount=${assignment.amountToAssign}`;
+    if (assignment.acceptDifference) {
+      url += `&acceptDifference=${assignment.acceptDifference}`;
+      if (assignment.acceptDifferenceReason != null) {
+        url += `&acceptDifferenceReason=${assignment.acceptDifferenceReason}`;
+      }
+    }
+    this.http.post(url, null)
       .subscribe(result => { },
         error => {
           console.error(error);
@@ -86,7 +93,6 @@ export class UnassignedPaymentsComponent implements OnInit {
         for (let possibleAssignment of this.possibleAssignments) {
           possibleAssignment.amountToAssign = Math.min(possibleAssignment.amount - possibleAssignment.amountPaid, payment.amount - payment.amountAssigned);
         }
-
       },
         error => console.error(error));
   }
@@ -136,5 +142,7 @@ class PossibleAssignment {
   amount: number;
   amountPaid: number;
   amountToAssign: number;
+  acceptDifference: boolean;
+  acceptDifferenceReason: string;
   locked: boolean;
 }

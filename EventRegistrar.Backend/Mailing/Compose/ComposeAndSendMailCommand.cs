@@ -3,7 +3,7 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Mailing.Compose
 {
-    public class ComposeAndSendMailCommand : IQueueBoundCommand
+    public class ComposeAndSendMailCommand : IQueueBoundMessage
     {
         public bool AllowDuplicate { get; set; }
         public string BulkMailKey { get; set; }

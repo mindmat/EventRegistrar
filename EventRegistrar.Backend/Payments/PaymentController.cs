@@ -20,9 +20,17 @@ namespace EventRegistrar.Backend.Payments
         }
 
         [HttpPost("api/events/{eventAcronym}/payments/{paymentId:guid}/assign/{registrationId:guid}")]
-        public Task AssignPayment(string eventAcronym, Guid paymentId, Guid registrationId, decimal amount)
+        public Task AssignPayment(string eventAcronym, Guid paymentId, Guid registrationId, decimal amount, bool acceptDifference, string acceptDifferenceReason)
         {
-            return _mediator.Send(new AssignPaymentCommand { EventAcronym = eventAcronym, PaymentId = paymentId, RegistratrionId = registrationId, Amount = amount });
+            return _mediator.Send(new AssignPaymentCommand
+            {
+                EventAcronym = eventAcronym,
+                PaymentId = paymentId,
+                RegistrationId = registrationId,
+                Amount = amount,
+                AcceptDifference = acceptDifference,
+                AcceptDifferenceReason = acceptDifferenceReason
+            });
         }
 
         [HttpGet("api/events/{eventAcronym}/duepayments")]

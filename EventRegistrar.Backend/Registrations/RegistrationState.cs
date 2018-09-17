@@ -4,7 +4,6 @@
     {
         Received = 1,
         Paid = 2,
-        PaymentOverdue = 3,
         Cancelled = 4
     }
 }

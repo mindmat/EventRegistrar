@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,10 +9,13 @@ namespace EventRegistrar.Backend.Infrastructure
     public class CommitUnitOfWorkDecorator<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
         private readonly DbContext _dbContext;
+        private readonly ServiceBusClient _serviceBusClient;
 
-        public CommitUnitOfWorkDecorator(DbContext dbContext)
+        public CommitUnitOfWorkDecorator(DbContext dbContext,
+                                         ServiceBusClient serviceBusClient)
         {
             _dbContext = dbContext;
+            _serviceBusClient = serviceBusClient;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
@@ -21,6 +25,8 @@ namespace EventRegistrar.Backend.Infrastructure
             {
                 await _dbContext.SaveChangesAsync(cancellationToken);
             }
+            // "transaction": only release messages to event bus if db commit succeeds
+            await _serviceBusClient.Release();
 
             return response;
         }
