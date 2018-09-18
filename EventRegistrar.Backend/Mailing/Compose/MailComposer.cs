@@ -17,13 +17,19 @@ namespace EventRegistrar.Backend.Mailing.Compose
         private const string PrefixFollower = "FOLLOWER";
         private const string PrefixLeader = "LEADER";
         private readonly ILogger _log;
+        private readonly PaidAmountSummarizer _paidAmountSummarizer;
+        private readonly PriceReader _priceReader;
         private readonly IQueryable<Registration> _registrations;
 
         public MailComposer(IQueryable<Registration> registrations,
-                            ILogger log)
+                            ILogger log,
+                            PaidAmountSummarizer paidAmountSummarizer,
+                            PriceReader priceReader)
         {
             _registrations = registrations;
             _log = log;
+            _paidAmountSummarizer = paidAmountSummarizer;
+            _priceReader = priceReader;
         }
 
         public async Task<string> Compose(Guid registrationId, string template, string language, CancellationToken cancellationToken)
@@ -89,15 +95,15 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 else if (parts.key == "PRICE")
                 {
                     var price = parts.prefix == null
-                                ? (registration?.Price ?? 0m) + (partnerRegistration?.Price ?? 0m)
-                                : registrationForPrefix?.Price;
+                                ? await _priceReader.GetPrice(registration.Id) + await _priceReader.GetPrice(partnerRegistration.Id)
+                                : await _priceReader.GetPrice((registrationForPrefix ?? registration).Id);
 
-                    templateFiller[key] = (price ?? 0m).ToString("F2"); // HACK: format hardcoded
+                    templateFiller[key] = price.ToString("F2"); // HACK: format hardcoded
                 }
-                //else if (parts.key == "PAIDAMOUNT")
-                //{
-                //    templateFiller[key] = (await GetPaidAmount(context, registrationForPrefix.Id)).ToString("F2"); // HACK: format hardcoded
-                //}
+                else if (parts.key == "PAIDAMOUNT")
+                {
+                    templateFiller[key] = (await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id)).ToString("F2"); // HACK: format hardcoded
+                }
                 // ToDo: cancellation mail
                 //else if (parts.key == "CANCELLATIONREASON")
                 //{

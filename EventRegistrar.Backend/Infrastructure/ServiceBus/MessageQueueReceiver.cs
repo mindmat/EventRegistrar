@@ -90,7 +90,7 @@ namespace EventRegistrar.Backend.Infrastructure.ServiceBus
             if (_serviceBusConsumers.TryGetValue(queueName, out var consumer))
             {
                 var typedMethod = _typedProcessMethod.MakeGenericMethod(consumer.RequestType);
-                await (Task)typedMethod.Invoke(this, new object[] { message, cancellationToken });
+                await (Task)typedMethod.Invoke(this, new object[] { message, cancellationToken, queueName });
             }
             else
             {
@@ -98,13 +98,15 @@ namespace EventRegistrar.Backend.Infrastructure.ServiceBus
             }
         }
 
-        private async Task ProcessTypedMessage<TRequest>(Message message, CancellationToken cancellationToken)
+        private async Task ProcessTypedMessage<TRequest>(Message message, CancellationToken cancellationToken,
+                                                         string queueName)
             where TRequest : IRequest
         {
             var messageDecoded = Encoding.UTF8.GetString(message.Body);
             var request = JsonConvert.DeserializeObject<TRequest>(messageDecoded);
             using (new EnsureExecutionScope(_container))
             {
+                _container.GetInstance<SourceQueueProvider>().SourceQueueName = queueName;
                 await _mediator.Send(request, cancellationToken);
             }
         }

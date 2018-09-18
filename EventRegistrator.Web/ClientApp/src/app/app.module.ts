@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -95,7 +95,8 @@ import { BulkMailTemplatesComponent } from "./bulkMailTemplates/bulkMailTemplate
   ],
   providers: [
     AuthService,
-    EventService
+    EventService,
+    Title
   ],
   bootstrap: [AppComponent]
 })

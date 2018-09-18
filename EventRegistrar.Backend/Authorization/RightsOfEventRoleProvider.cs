@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Bulk;
+using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Assignments;
@@ -73,6 +74,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(ReleaseBulkMailsCommand).Name;
                 yield return typeof(TryPromoteFromWaitingListCommand).Name;
                 yield return typeof(AssignPaymentCommand).Name;
+                yield return typeof(ComposeAndSendMailCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

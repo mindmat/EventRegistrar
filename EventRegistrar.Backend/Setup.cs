@@ -76,6 +76,7 @@ namespace EventRegistrar.Backend
             container.RegisterSingleton<MessageQueueReceiver>();
             container.Register<ServiceBusClient>();
             container.Register<EventBus>();
+            container.Register<SourceQueueProvider>();
 
             container.Verify();
 

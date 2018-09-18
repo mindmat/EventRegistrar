@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Mailing.Compose;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,6 +14,12 @@ namespace EventRegistrar.Backend.Mailing
         public MailsController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails/create")]
+        public Task CreateMailForRegistration(string eventAcronym, Guid registrationId, MailType mailType)
+        {
+            return _mediator.Send(new ComposeAndSendMailCommand { EventAcronym = eventAcronym, RegistrationId = registrationId, MailType = mailType, Withhold = true });
         }
 
         [HttpDelete("api/events/{eventAcronym}/mails/{mailId:guid}")]
