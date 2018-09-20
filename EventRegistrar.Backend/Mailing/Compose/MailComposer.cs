@@ -37,6 +37,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
             var registration = await _registrations.Where(reg => reg.Id == registrationId)
                                                    .Include(reg => reg.Seats_AsLeader).ThenInclude(seat => seat.Registrable)
                                                    .Include(reg => reg.Seats_AsFollower).ThenInclude(seat => seat.Registrable)
+                                                   .Include(reg => reg.Cancellations)
                                                    .FirstAsync(cancellationToken);
 
             var mainRegistrationRole = registration.Seats_AsFollower.Any() ? Role.Follower : Role.Leader;
@@ -105,25 +106,23 @@ namespace EventRegistrar.Backend.Mailing.Compose
                     templateFiller[key] = (await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id)).ToString("F2"); // HACK: format hardcoded
                 }
                 // ToDo: cancellation mail
-                //else if (parts.key == "CANCELLATIONREASON")
-                //{
-                //    var cancellation = (await context
-                //                              .RegistrationCancellations
-                //                              .FirstOrDefaultAsync(rcl => rcl.RegistrationId == command.RegistrationId));
+                else if (parts.key == "CANCELLATIONREASON")
+                {
+                    var cancellation = registration.Cancellations.FirstOrDefault();
 
-                //    if (cancellation != null)
-                //    {
-                //        var reason = cancellation.Reason;
-                //        if (cancellation.Refund > 0m)
-                //        {
-                //            // HACK: hardcoded addition to template
-                //            reason += language == "de"
-                //                ? ". Bitte sende und deine Kontoinformationen (IBAN, Kontoinhaber, PLZ/Ort) für die Rückzahlung"
-                //                : ". Please give us your bank details (IBAN, account holder name, ZIP/town) for a refund";
-                //        }
-                //        templateFiller[key] = reason;
-                //    }
-                //}
+                    if (cancellation != null)
+                    {
+                        var reason = cancellation.Reason;
+                        //if (cancellation.Refund > 0m)
+                        //{
+                        //    // HACK: hardcoded addition to template
+                        //    reason += language == "de"
+                        //        ? ". Bitte sende und deine Kontoinformationen (IBAN, Kontoinhaber, PLZ/Ort) für die Rückzahlung"
+                        //        : ". Please give us your bank details (IBAN, account holder name, ZIP/town) for a refund";
+                        //}
+                        templateFiller[key] = reason;
+                    }
+                }
                 else if (parts.key == "ACCEPTEDDATE" && registration.AdmittedAt.HasValue)
                 {
                     templateFiller[key] = registration.AdmittedAt.Value.ToString(DateFormat);

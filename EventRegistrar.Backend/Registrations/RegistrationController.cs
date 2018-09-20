@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Search;
 using MediatR;
@@ -15,6 +16,12 @@ namespace EventRegistrar.Backend.Registrations
         public RegistrationController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpDelete("api/events/{eventAcronym}/registrations/{registrationId:guid}")]
+        public Task CancelRegistration(string eventAcronym, Guid registrationId, string reason, bool ignorePayments, decimal refundPercentage)
+        {
+            return _mediator.Send(new CancelRegistrationCommand { EventAcronym = eventAcronym, RegistrationId = registrationId, Reason = reason, IgnorePayments = ignorePayments, RefundPercentage = refundPercentage });
         }
 
         [HttpGet("api/registrationforms/{formExternalIdentifier}/RegistrationExternalIdentifiers")]

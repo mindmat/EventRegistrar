@@ -18,6 +18,7 @@ using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Search;
 using EventRegistrar.Backend.Spots;
@@ -75,6 +76,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(TryPromoteFromWaitingListCommand).Name;
                 yield return typeof(AssignPaymentCommand).Name;
                 yield return typeof(ComposeAndSendMailCommand).Name;
+                yield return typeof(CancelRegistrationCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

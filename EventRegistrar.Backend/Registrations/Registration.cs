@@ -5,6 +5,7 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.RegistrationForms;
+using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
 using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Spots;
@@ -14,6 +15,7 @@ namespace EventRegistrar.Backend.Registrations
     public class Registration : Entity
     {
         public DateTime? AdmittedAt { get; set; }
+        public ICollection<RegistrationCancellation> Cancellations { get; set; }
         public Guid EventId { get; set; }
         public string ExternalIdentifier { get; set; }
         public DateTime ExternalTimestamp { get; set; }

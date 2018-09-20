@@ -63,7 +63,7 @@ export class RegistrationComponent {
   cancelRegistration(reason: string, ignorePayments: boolean, refundPercentage: number, preventPromotion: boolean) {
     console.log(`cancel registration ${this.registration.id}, reason ${reason}, ignorePayments ${ignorePayments}, refundPercentage ${refundPercentage}, preventPromotion ${preventPromotion}`);
     this.registration.status = 4; // cancelled
-    let url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/Cancel?reason=${reason}`;
+    let url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/?reason=${reason}`;
     if (ignorePayments) {
       url += "&ignorePayments=true";
     }
@@ -73,7 +73,7 @@ export class RegistrationComponent {
     if (preventPromotion) {
       url += `&preventPromotion=true`;
     }
-    this.http.post(url, null)
+    this.http.delete(url)
       .subscribe(result => { this.reloadRegistration(); }, error => console.error(error));
   }
 

@@ -1,39 +1,48 @@
 ﻿using System;
+using EventRegistrar.Backend.Infrastructure.Events;
 
 namespace EventRegistrar.Backend.Spots
 {
     public class SpotRemover
     {
-        public void RemoveSpot(Seat place, Guid registrationId)
+        private readonly EventBus _eventBus;
+
+        public SpotRemover(EventBus eventBus)
         {
-            if (place.RegistrationId == registrationId)
+            _eventBus = eventBus;
+        }
+
+        public void RemoveSpot(Seat spot, Guid registrationId)
+        {
+            if (spot.RegistrationId == registrationId)
             {
-                if (place.RegistrationId_Follower.HasValue)
+                if (spot.RegistrationId_Follower.HasValue)
                 {
                     // double place, leave the partner in
-                    place.RegistrationId = null;
-                    place.PartnerEmail = null;
+                    spot.RegistrationId = null;
+                    spot.PartnerEmail = null;
                 }
                 else
                 {
                     // single place, cancel the place
-                    place.IsCancelled = true;
+                    spot.IsCancelled = true;
                 }
             }
-            else if (place.RegistrationId_Follower == registrationId)
+            else if (spot.RegistrationId_Follower == registrationId)
             {
-                if (place.RegistrationId.HasValue)
+                if (spot.RegistrationId.HasValue)
                 {
                     // double place, leave the partner in
-                    place.RegistrationId_Follower = null;
-                    place.PartnerEmail = null;
+                    spot.RegistrationId_Follower = null;
+                    spot.PartnerEmail = null;
                 }
                 else
                 {
                     // single place, cancel the place
-                    place.IsCancelled = true;
+                    spot.IsCancelled = true;
                 }
             }
+            _eventBus.Publish(new SpotRemoved { RegistrableId = spot.RegistrableId });
         }
     }
 }

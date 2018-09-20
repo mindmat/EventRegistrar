@@ -13,6 +13,7 @@ using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Responses;
@@ -45,6 +46,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new SeatMap());
             builder.ApplyConfiguration(new AccessToEventRequestMap());
             builder.ApplyConfiguration(new IndividualReductionMap());
+            builder.ApplyConfiguration(new RegistrationCancellationMap());
 
             builder.ApplyConfiguration(new ReceivedPaymentMap());
             builder.ApplyConfiguration(new PaymentAssignmentMap());

@@ -117,7 +117,7 @@ namespace EventRegistrar.Backend.Payments.Due
                         {
                             MailType = mailType.Value,
                             RegistrationId = registration.Id,
-                            Withhold = command.Withhold,
+                            Withhold = true,
                             AllowDuplicate = false
                         });
                     }
