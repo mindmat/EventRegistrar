@@ -96,7 +96,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 else if (parts.key == "PRICE")
                 {
                     var price = parts.prefix == null
-                                ? await _priceReader.GetPrice(registration.Id) + await _priceReader.GetPrice(partnerRegistration.Id)
+                                ? await _priceReader.GetPrice(registration.Id) + (partnerRegistration == null ? 0m : await _priceReader.GetPrice(partnerRegistration.Id))
                                 : await _priceReader.GetPrice((registrationForPrefix ?? registration).Id);
 
                     templateFiller[key] = price.ToString("F2"); // HACK: format hardcoded
