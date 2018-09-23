@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Mailing;
 
 namespace EventRegistrar.Backend.Payments.Due

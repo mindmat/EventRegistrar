@@ -3,8 +3,4 @@
     public interface IConfigurationItem
     {
     }
-
-    public interface IDefaultConfigurationItem
-    {
-    }
 }

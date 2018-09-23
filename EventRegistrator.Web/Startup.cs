@@ -34,7 +34,7 @@ namespace EventRegistrator.Web
             _container.CrossWire<IMemoryCache>(app);
             _container.CrossWire<ILoggerFactory>(app);
             SetIdentityProvider(_container);
-            Setup.RegisterTypes(_container);
+            CompositionRoot.RegisterTypes(_container);
             _container.Verify();
 
             if (env.IsDevelopment())

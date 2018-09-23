@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
+using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.RegistrationForms;
 
@@ -12,6 +13,7 @@ namespace EventRegistrar.Backend.Events
         public string AccountIban { get; set; }
         public string Acronym { get; set; }
         public string Configuration { get; set; }
+        public ICollection<EventConfiguration> Configurations { get; set; }
         public string Currency { get; set; }
         public string Name { get; set; }
         public State State { get; set; }
