@@ -38,6 +38,7 @@ namespace EventRegistrar.Backend.Payments.Statements
                                      Repaid = rpy.Repaid,
                                      Settled = rpy.Settled
                                  })
+                                 .OrderByDescending(rpy => rpy.BookingDate)
                                  .ToListAsync(cancellationToken);
             return payments;
         }
