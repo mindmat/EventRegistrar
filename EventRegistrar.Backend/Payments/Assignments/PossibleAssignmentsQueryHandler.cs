@@ -17,8 +17,8 @@ namespace EventRegistrar.Backend.Payments.Assignments
         private readonly IQueryable<Registration> _registrations;
 
         public PossibleAssignmentsQueryHandler(IQueryable<ReceivedPayment> payments,
-            IQueryable<Registration> registrations,
-            IEventAcronymResolver acronymResolver)
+                                               IQueryable<Registration> registrations,
+                                               IEventAcronymResolver acronymResolver)
         {
             _payments = payments;
             _registrations = registrations;
@@ -38,11 +38,10 @@ namespace EventRegistrar.Backend.Payments.Assignments
             //    info = info.Substring(infoIndex + infoPrefix.Length);
             //}
 
-            var words = info.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
+            var wordsInPayment = info.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             var registrations = await _registrations.Where(reg => reg.EventId == eventId
-                                                                  && (words.Contains(reg.RespondentFirstName)
-                                                                      || words.Contains(reg.RespondentLastName))
+                                                                  && (wordsInPayment.Contains(reg.RespondentFirstName)
+                                                                   || wordsInPayment.Contains(reg.RespondentLastName))
                                                                   && reg.State == RegistrationState.Received)
                                                     .Select(reg => new PossibleAssignment
                                                     {

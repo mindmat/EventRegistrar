@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
+using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
@@ -59,6 +60,8 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
 
             builder.ApplyConfiguration(new RawRegistrationFormMap());
             builder.ApplyConfiguration(new RawRegistrationMap());
+
+            builder.ApplyConfiguration(new EventConfigurationMap());
         }
 
         /*

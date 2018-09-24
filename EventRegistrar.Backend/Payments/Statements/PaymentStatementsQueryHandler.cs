@@ -25,8 +25,7 @@ namespace EventRegistrar.Backend.Payments.Statements
         {
             var eventId = await _acronymResolver.GetEventIdFromAcronym(request.EventAcronym);
             var payments = await _payments
-                                 .Where(rpy => rpy.PaymentFile.EventId == eventId
-                                            && !rpy.Settled)
+                                 .Where(rpy => rpy.PaymentFile.EventId == eventId)
                                  .Select(rpy => new PaymentDisplayItem
                                  {
                                      Id = rpy.Id,

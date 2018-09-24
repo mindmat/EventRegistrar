@@ -19,8 +19,6 @@ export class SearchRegistrationComponent {
     this.http.get<Registration[]>(`api/events/${this.getEventAcronym()}/registrations?searchstring=${searchString}`)
       .subscribe(result => {
         this.registrations = result;
-        this.registrations.map(reg => reg.responsesJoined = reg.responses.map(rsp => `${rsp.question} = ${rsp.response}`)
-          .reduce((agg, line) => `${agg} / ${line}`));
         this.isSearching = false;
       },
         error => console.error(error));
@@ -37,11 +35,7 @@ class Registration {
   firstName: string;
   lastName: string;
   language: string;
-  responses: Response[];
-  responsesJoined: string;
-}
-
-class Response {
-  response: string;
-  question: string;
+  price: number;
+  amountPaid: number;
+  state: string;
 }

@@ -12,6 +12,7 @@ export class UnassignedPaymentsComponent implements OnInit {
   payment: Payment;
 
   possibleAssignments: PossibleAssignment[];
+  registrationMatches: PossibleAssignment[];
   isSearching: boolean;
 
   constructor(private readonly http: HttpClient, private readonly route: ActivatedRoute) {
@@ -75,32 +76,48 @@ export class UnassignedPaymentsComponent implements OnInit {
         });
   }
 
-  textSelected(payment: Payment) {
+  textSelected() {
     var selection = document.getSelection().toString();
     console.log(`selection: ${selection}`);
 
     if (selection.length > 3) {
-      this.searchRegistration(selection, payment);
+      this.searchRegistrationManually(selection);
+    } else {
+      this.searchRegistration(this.payment);
     }
   }
 
-  searchRegistration(searchString: string, payment: Payment) {
+  searchRegistration(payment: Payment) {
     this.isSearching = true;
     this.http.get<PossibleAssignment[]>(`api/events/${this.getEventAcronym()}/payments/${payment.id}/possibleAssignments`) //?searchstring=${searchString}`)
       .subscribe(result => {
         this.possibleAssignments = result;
         this.isSearching = false;
-        for (let possibleAssignment of this.possibleAssignments) {
-          possibleAssignment.amountToAssign = Math.min(possibleAssignment.amount - possibleAssignment.amountPaid, payment.amount - payment.amountAssigned);
-        }
+        this.calculateAmountToAssign(this.possibleAssignments, this.payment);
       },
         error => console.error(error));
   }
 
+  searchRegistrationManually(searchString: string) {
+    this.isSearching = true;
+    this.http.get<PossibleAssignment[]>(`api/events/${this.getEventAcronym()}/registrations?searchstring=${searchString}`)
+      .subscribe(result => {
+        this.possibleAssignments = result;
+        this.isSearching = false;
+        this.calculateAmountToAssign(this.possibleAssignments, this.payment);
+      },
+        error => console.error(error));
+  }
+
+  calculateAmountToAssign(possibleAssignments: PossibleAssignment[], payment: Payment) {
+    for (let possibleAssignment of possibleAssignments) {
+      possibleAssignment.amountToAssign = Math.min(possibleAssignment.amount - possibleAssignment.amountPaid, payment.amount - payment.amountAssigned);
+    }
+  }
   setPayment(payment: Payment) {
     this.payment = payment;
     this.possibleAssignments = null;
-    this.searchRegistration("", this.payment);
+    this.searchRegistration(this.payment);
   }
 }
 
@@ -116,22 +133,6 @@ class Payment {
   repaid: number;
   settled: boolean;
   locked: boolean;
-}
-
-class Registration {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  language: string;
-  responses: Response[];
-  responsesJoined: string;
-  price: number;
-}
-
-class Response {
-  response: string;
-  question: string;
 }
 
 class PossibleAssignment {
