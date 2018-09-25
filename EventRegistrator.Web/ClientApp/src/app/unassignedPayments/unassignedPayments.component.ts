@@ -61,7 +61,7 @@ export class UnassignedPaymentsComponent implements OnInit {
 
   savePayment(assignment: PossibleAssignment) {
     assignment.locked = true;
-    var url = `api/events/${this.getEventAcronym()}/payments/${assignment.paymentId}/assign/${assignment.registrationId}?amount=${assignment.amountToAssign}`;
+    var url = `api/events/${this.getEventAcronym()}/payments/${assignment.paymentId != null ? assignment.paymentId : this.payment.id}/assign/${assignment.registrationId}?amount=${assignment.amountToAssign}`;
     if (assignment.acceptDifference) {
       url += `&acceptDifference=${assignment.acceptDifference}`;
       if (assignment.acceptDifferenceReason != null) {
