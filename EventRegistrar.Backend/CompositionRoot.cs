@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
@@ -10,6 +11,8 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.Events;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SimpleInjector;
@@ -31,6 +34,7 @@ namespace EventRegistrar.Backend
 
             container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
             {
+                typeof(ExtractEventIdDecorator<,>),
                 typeof(AuthorizationDecorator<,>),
                 typeof(CommitUnitOfWorkDecorator<,>)
             });
@@ -57,10 +61,12 @@ namespace EventRegistrar.Backend
             container.Register<IAuthenticatedUserProvider, AuthenticatedUserProvider>();
             container.Register<IRightsOfEventRoleProvider, RightsOfEventRoleProvider>();
 
+            container.Register(() => container.GetInstance<IHttpContextAccessor>().HttpContext?.Request ?? new DefaultHttpRequest(new DefaultHttpContext()));
+
             var assembly = typeof(CompositionRoot).Assembly;
 
             // Configuration
-            container.RegisterSingleton<ConfigurationResolver>();
+            container.Register<ConfigurationResolver>();
             var defaultConfigItemTypes = container.GetTypesToRegister<IDefaultConfigurationItem>(assembly).ToList();
             container.Collection.Register<IDefaultConfigurationItem>(defaultConfigItemTypes);
 
@@ -70,12 +76,6 @@ namespace EventRegistrar.Backend
             {
                 container.Register(configType, () => container.GetInstance<ConfigurationResolver>().GetConfigurationTypeless(configType));
             }
-
-            // first version: only use default config
-            //foreach (var configItemType in configItemTypes)
-            //{
-            //    container.Register(configItemType.BaseType, configItemType);
-            //}
 
             var serviceBusConsumers = container.GetTypesToRegister<IQueueBoundMessage>(assembly)
                                                .Select(type => new ServiceBusConsumer

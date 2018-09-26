@@ -21,7 +21,7 @@
     </tr>
     <tr>
       <td>Status:</td>
-      <td><span class="badge badge-primary">{{ registration.statusText }}</span>   <button *ngIf="registration.Status != 4" type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#cancelModal">Stornieren</button></td>
+      <td><span class="badge badge-primary">{{ registration.statusText }}</span>   <button *ngIf="registration.status != 4" type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#cancelModal">Stornieren</button></td>
     </tr>
     <tr>
       <td>Anmeldezeitpunkt:</td>
@@ -33,7 +33,7 @@
     </tr>
     <tr>
       <td>SMS ({{ registration.phoneNormalized }}):</td>
-      <td><button type="button" *ngIf="registration.phoneNormalized != null" class="btn btn-primary btn-xs" [routerLink]="['/', getEventAcronym(), 'registrations', registration.Id, 'sms']">Anzeigen ({{ registration.smsCount }})</button></td>
+      <td><button type="button" *ngIf="registration.phoneNormalized != null" class="btn btn-primary btn-xs" [routerLink]="['/', getEventAcronym(), 'registrations', registration.id, 'sms']">Anzeigen ({{ registration.smsCount }})</button></td>
     </tr>
     <tr>
       <td>Bemerkung:</td>

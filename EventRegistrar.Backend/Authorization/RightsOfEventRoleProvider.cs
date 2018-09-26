@@ -12,6 +12,7 @@ using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unassigned;
+using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.Registrables.WaitingList;
@@ -58,6 +59,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(AllExternalRegistrationIdentifiersQuery).Name;
                 yield return typeof(PaymentStatementsQuery).Name;
                 yield return typeof(PossibleAssignmentsQuery).Name;
+                yield return typeof(SmsConversationQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
@@ -77,6 +79,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(AssignPaymentCommand).Name;
                 yield return typeof(ComposeAndSendMailCommand).Name;
                 yield return typeof(CancelRegistrationCommand).Name;
+                yield return typeof(SendSmsCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

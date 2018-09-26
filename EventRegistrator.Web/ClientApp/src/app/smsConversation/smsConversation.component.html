@@ -3,18 +3,18 @@
 <p *ngIf="!conversation"><em>Loading...</em></p>
 
 <div *ngFor="let message of conversation">
-    <div *ngIf="message.Sent" class="talk-bubble-sent">
-        <small>{{ message.Date | date: 'dd.MM.yy HH:mm' }}</small>
-        <div class="talktext">
-            <p>{{ message.Body }}</p>
-        </div>
+  <div *ngIf="message.sent" class="talk-bubble-sent">
+    <small>{{ message.date | date: 'dd.MM.yy HH:mm' }}</small>
+    <div class="talktext">
+      <p>{{ message.body }}</p>
     </div>
-    <div *ngIf="!message.Sent" class="talk-bubble-received">
-        <small class="right">{{ message.Date | date: 'dd.MM.yy HH:mm' }}</small>
-        <div class="talktext">
-            <p>{{ message.Body }}</p>
-        </div>
+  </div>
+  <div *ngIf="!message.sent" class="talk-bubble-received">
+    <small class="right">{{ message.date | date: 'dd.MM.yy HH:mm' }}</small>
+    <div class="talktext">
+      <p>{{ message.body }}</p>
     </div>
+  </div>
 </div>
 <textarea type="text" #sendText class="talk-bubble-sent"></textarea>
 <button type="button" class="btn btn-primary btn-xs" (click)="send(sendText.value); sendText.value=''">Senden</button>
