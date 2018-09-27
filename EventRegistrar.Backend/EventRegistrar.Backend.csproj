@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Google.Apis.Gmail.v1" Version="1.35.1.1328" />
     <PackageReference Include="MediatR" Version="5.0.1" />
     <PackageReference Include="Microsoft.ApplicationInsights.TraceListener" Version="2.6.4" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.1.0" />
@@ -21,6 +22,13 @@
     <PackageReference Include="SimpleInjector" Version="4.3.0" />
     <PackageReference Include="SimpleInjector.Integration.AspNetCore" Version="4.3.0" />
     <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc" Version="4.3.0" />
+    <PackageReference Include="Twilio" Version="5.17.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.TestPlatform.CoreUtilities">
+      <HintPath>..\..\..\..\.nuget\packages\microsoft.testplatform.objectmodel\15.7.2\lib\netstandard1.5\Microsoft.TestPlatform.CoreUtilities.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>
