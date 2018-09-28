@@ -3,6 +3,7 @@
   "functions": [
     "Register",
     "SaveRegistrationForm",
-    "GetRegistrationExternalIdentifiersOfForm"
+    "GetRegistrationExternalIdentifiersOfForm",
+    "SetSmsStatus"
   ]
 }

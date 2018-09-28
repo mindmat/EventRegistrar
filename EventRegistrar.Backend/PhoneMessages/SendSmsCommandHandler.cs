@@ -2,12 +2,11 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrations;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
@@ -16,8 +15,7 @@ namespace EventRegistrar.Backend.PhoneMessages
 {
     public class SendSmsCommandHandler : IRequestHandler<SendSmsCommand>
     {
-        private readonly HttpRequest _httpRequest;
-        private readonly ILogger _logger;
+        private readonly EventContext _eventContext;
         private readonly IQueryable<Registration> _registrations;
         private readonly IRepository<Sms> _sms;
         private readonly TwilioConfiguration _twilioConfiguration;
@@ -25,14 +23,12 @@ namespace EventRegistrar.Backend.PhoneMessages
         public SendSmsCommandHandler(IQueryable<Registration> registrations,
                                      IRepository<Sms> sms,
                                      TwilioConfiguration twilioConfiguration,
-                                     ILogger logger,
-                                     HttpRequest httpRequest)
+                                     EventContext eventContext)
         {
             _registrations = registrations;
             _sms = sms;
             _twilioConfiguration = twilioConfiguration;
-            _logger = logger;
-            _httpRequest = httpRequest;
+            _eventContext = eventContext;
         }
 
         public async Task<Unit> Handle(SendSmsCommand command, CancellationToken cancellationToken)
@@ -42,7 +38,8 @@ namespace EventRegistrar.Backend.PhoneMessages
                 throw new Exception("No Twilio SID/Token found");
             }
 
-            var phone = await _registrations.Where(reg => reg.Id == command.RegistrationId)
+            var phone = await _registrations.Where(reg => reg.Id == command.RegistrationId
+                                                       && reg.EventId == _eventContext.EventId)
                                             .Select(reg => reg.PhoneNormalized)
                                             .FirstOrDefaultAsync(cancellationToken);
 
@@ -53,7 +50,7 @@ namespace EventRegistrar.Backend.PhoneMessages
 
             TwilioClient.Init(_twilioConfiguration.Sid, _twilioConfiguration.Token);
 
-            var callbackUrl = new Uri($"{_httpRequest.Scheme}://{_httpRequest.Host.Value}/api/sms/status");
+            var callbackUrl = new Uri($"https://eventregistrarfunctions.azurewebsites.net/api/events/{_eventContext.EventId}/sms/setStatus");
 
             var message = await MessageResource.CreateAsync(phone,
                                                             from: _twilioConfiguration.Number,
