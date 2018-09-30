@@ -8,11 +8,14 @@ namespace EventRegistrar.Functions
         public static T Deserialize<T>(this IFormCollection form)
             where T : new()
         {
-            var properties = typeof(T).GetProperties();
+            var targetProperties = typeof(T).GetProperties();
             var deserialized = new T();
-            foreach (var property in properties.Where(prp => form.ContainsKey(prp.Name)))
+            foreach (var property in targetProperties.Where(prp => form.ContainsKey(prp.Name)))
             {
-                property.SetValue(deserialized, form[property.Name]);
+                if (property.PropertyType == typeof(string))
+                {
+                    property.SetValue(deserialized, form[property.Name].ToString());
+                }
             }
             return deserialized;
         }
