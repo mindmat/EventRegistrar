@@ -21,12 +21,13 @@ namespace EventRegistrar.Backend.Infrastructure.Configuration
             _eventContext = eventContext;
         }
 
-        public T GetConfiguration<T>()
+        public T GetConfiguration<T>(Guid? eventId = null)
            where T : class, IConfigurationItem
         {
-            if (_eventContext.EventId != null)
+            eventId = eventId ?? _eventContext.EventId;
+            if (eventId != null)
             {
-                var dbConfig = _configurations.FirstOrDefault(cfg => cfg.EventId == _eventContext.EventId
+                var dbConfig = _configurations.FirstOrDefault(cfg => cfg.EventId == eventId.Value
                                                                      && cfg.Type == typeof(T).FullName);
                 if (dbConfig != null)
                 {
