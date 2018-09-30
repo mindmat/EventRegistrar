@@ -4,6 +4,7 @@
     "Register",
     "SaveRegistrationForm",
     "GetRegistrationExternalIdentifiersOfForm",
-    "SetSmsStatus"
+    "SetSmsStatus",
+    "ReceiveSms"
   ]
 }
