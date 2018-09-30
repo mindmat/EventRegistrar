@@ -14,33 +14,36 @@ namespace EventRegistrar.Backend.PhoneMessages
     public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedSmsCommand>
     {
         private readonly ConfigurationResolver _configurationResolver;
+        private readonly PhoneNormalizer _phoneNormalizer;
         private readonly IQueryable<Registration> _registrations;
         private readonly IRepository<Sms> _sms;
 
         public ProcessReceivedSmsCommandHandler(IQueryable<Registration> registrations,
-            IRepository<Sms> sms,
-            ConfigurationResolver configurationResolver)
+                                                IRepository<Sms> sms,
+                                                ConfigurationResolver configurationResolver,
+                                                PhoneNormalizer phoneNormalizer)
         {
             _registrations = registrations;
             _sms = sms;
             _configurationResolver = configurationResolver;
+            _phoneNormalizer = phoneNormalizer;
         }
 
         public async Task<Unit> Handle(ProcessReceivedSmsCommand command, CancellationToken cancellationToken)
         {
             var registrations = await _registrations
-                .Where(reg => reg.PhoneNormalized == command.Sms.From)
-                .ToListAsync(cancellationToken);
+                                      .Where(reg => reg.PhoneNormalized == command.Sms.From)
+                                      .ToListAsync(cancellationToken);
 
             // filter to registrations of events that have this number/Twilio account sid configured
             var eventIds = registrations.Select(reg => reg.EventId)
-                .Distinct()
-                .Where(eid => IsSmsAddressedToEvent(eid, command.Sms))
-                .ToHashSet();
+                                        .Distinct()
+                                        .Where(eid => IsSmsAddressedToEvent(eid, command.Sms))
+                                        .ToHashSet();
             registrations = registrations.Where(reg => eventIds.Contains(reg.EventId))
-                .OrderBy(reg => reg.State == RegistrationState.Cancelled)
-                .ThenByDescending(reg => reg.ReceivedAt)
-                .ToList();
+                                         .OrderBy(reg => reg.State == RegistrationState.Cancelled)
+                                         .ThenByDescending(reg => reg.ReceivedAt)
+                                         .ToList();
 
             var registrationId = registrations.FirstOrDefault()?.Id;
 
@@ -66,7 +69,7 @@ namespace EventRegistrar.Backend.PhoneMessages
         {
             var config = _configurationResolver.GetConfiguration<TwilioConfiguration>(eventId);
             return config.Sid == sms.AccountSid
-                   && config.Number == sms.To;
+                && _phoneNormalizer.NormalizePhone(config.Number) == sms.To;
         }
     }
 }
