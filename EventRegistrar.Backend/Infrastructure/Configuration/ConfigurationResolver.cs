@@ -44,7 +44,7 @@ namespace EventRegistrar.Backend.Infrastructure.Configuration
         {
             return typeof(ConfigurationResolver).GetMethod(nameof(GetConfiguration))
                                                 .MakeGenericMethod(type)
-                                                .Invoke(this, new object[] { }) as IConfigurationItem;
+                                                .Invoke(this, new object[] { null }) as IConfigurationItem;
         }
     }
 }
