@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Events.Context;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Registrations;
@@ -16,7 +17,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
 {
     public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromoteFromWaitingListCommand>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
+        private readonly EventContext _eventContext;
         private readonly ImbalanceManager _imbalanceManager;
         private readonly ILogger _log;
         private readonly IQueryable<Registrable> _registrables;
@@ -27,26 +28,26 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
         public TryPromoteFromWaitingListCommandHandler(IQueryable<Registrable> registrables,
                                                        IRepository<Seat> seats,
                                                        IRepository<Registration> registrations,
-                                                       IEventAcronymResolver acronymResolver,
                                                        ImbalanceManager imbalanceManager,
                                                        ServiceBusClient serviceBusClient,
-                                                       ILogger log)
+                                                       ILogger log,
+                                                       EventContext eventContext)
         {
             _registrables = registrables;
             _seats = seats;
             _registrations = registrations;
-            _acronymResolver = acronymResolver;
             _imbalanceManager = imbalanceManager;
             _serviceBusClient = serviceBusClient;
             _log = log;
+            _eventContext = eventContext;
         }
 
         public async Task<Unit> Handle(TryPromoteFromWaitingListCommand command, CancellationToken cancellationToken)
         {
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(command.EventAcronym);
+            var eventId = _eventContext.EventId;
             var registrationIdsToCheck = new List<Guid?>();
-            var registrableToCheck = await _registrables.Where(rbl => rbl.Id == command.RegistrableId
-                                                                   && rbl.EventId == eventId)
+            var registrableToCheck = await _registrables.Where(rbl => rbl.Id == command.RegistrableId)
+                                                        .WhereIf(eventId.HasValue, rbl => rbl.EventId == eventId.Value)
                                                         .Include(rbl => rbl.Seats)
                                                         .FirstOrDefaultAsync(cancellationToken);
             registrationIdsToCheck.AddRange(await TryPromoteFromRegistrableWaitingList(registrableToCheck));
