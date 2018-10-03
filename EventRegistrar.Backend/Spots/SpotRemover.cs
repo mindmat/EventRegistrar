@@ -18,13 +18,13 @@ namespace EventRegistrar.Backend.Spots
             {
                 if (spot.RegistrationId_Follower.HasValue)
                 {
-                    // double place, leave the partner in
+                    // double spot, leave the partner in
                     spot.RegistrationId = null;
                     spot.PartnerEmail = null;
                 }
                 else
                 {
-                    // single place, cancel the place
+                    // single spot, cancel the place
                     spot.IsCancelled = true;
                 }
             }
@@ -32,17 +32,17 @@ namespace EventRegistrar.Backend.Spots
             {
                 if (spot.RegistrationId.HasValue)
                 {
-                    // double place, leave the partner in
+                    // double spot, leave the partner in
                     spot.RegistrationId_Follower = null;
                     spot.PartnerEmail = null;
                 }
                 else
                 {
-                    // single place, cancel the place
+                    // single spot, cancel the place
                     spot.IsCancelled = true;
                 }
             }
-            _eventBus.Publish(new SpotRemoved { RegistrableId = spot.RegistrableId });
+            _eventBus.Publish(new SpotRemoved { RegistrableId = spot.RegistrableId, RegistrationId = registrationId });
         }
     }
 }

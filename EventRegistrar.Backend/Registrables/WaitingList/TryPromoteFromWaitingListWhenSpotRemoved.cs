@@ -4,7 +4,7 @@ using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList
 {
-    public class TryPromoteFromWaitingListAfterSpotRemoval : IEventToCommandTranslation<SpotRemoved>
+    public class TryPromoteFromWaitingListWhenSpotRemoved : IEventToCommandTranslation<SpotRemoved>
     {
         public IQueueBoundMessage Translate(SpotRemoved @event)
         {

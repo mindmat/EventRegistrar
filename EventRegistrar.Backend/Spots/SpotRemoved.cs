@@ -6,5 +6,6 @@ namespace EventRegistrar.Backend.Spots
     public class SpotRemoved : Event
     {
         public Guid RegistrableId { get; set; }
+        public Guid RegistrationId { get; set; }
     }
 }
