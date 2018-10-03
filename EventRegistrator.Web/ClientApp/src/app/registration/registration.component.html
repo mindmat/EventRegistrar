@@ -216,12 +216,14 @@
               <th>Name</th>
               <th></th>
               <th></th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let registrable of allRegistrables">
               <td>{{ registrable.name }}</td>
-              <td><button class="btn btn-primary btn-xs" *ngIf="registrable.addAvailable" (click)="addRegistrable(registrable.id)">+</button></td>
+              <td><button class="btn btn-primary btn-xs" *ngIf="registrable.addAvailable" (click)="addRegistrable(registrable.id, false)">+ <a *ngIf="registrable.isDoubleRegistrable">(L)</a></button></td>
+              <td><button class="btn btn-primary btn-xs" *ngIf="registrable.addAvailable && registrable.isDoubleRegistrable" (click)="addRegistrable(registrable.id, true)">+ (F)</button></td>
               <td><button class="btn btn-primary btn-xs" *ngIf="registrable.removeAvailable" (click)="removeRegistrable(registrable.id)">-</button></td>
             </tr>
           </tbody>

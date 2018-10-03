@@ -100,7 +100,7 @@ export class UnassignedPaymentsComponent implements OnInit {
 
   searchRegistrationManually(searchString: string) {
     this.isSearching = true;
-    this.http.get<PossibleAssignment[]>(`api/events/${this.getEventAcronym()}/registrations?searchstring=${searchString}`)
+    this.http.get<PossibleAssignment[]>(`api/events/${this.getEventAcronym()}/registrations?searchstring=${searchString}&states=received`)
       .subscribe(result => {
         this.possibleAssignments = result;
         this.isSearching = false;

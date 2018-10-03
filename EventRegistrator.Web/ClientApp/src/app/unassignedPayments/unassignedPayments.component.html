@@ -23,7 +23,8 @@
 <div *ngIf="payment" class="carousel slide">
   <div class="carousel-inner" style="padding-left: 40px; padding-right: 40px">
     Mitteilungstext: <textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected()">{{ payment.info }}</textarea>
-    <p>Zahlungseingang: {{ payment.amount }} {{ payment.currency }}<a *ngIf="payment.amountAssigned > 0"> noch offen: {{ payment.amount - payment.amountAssigned }}</a>, Valuta: {{ payment.bookingDate | date: 'dd.MM.yyyy' }}</p>
+    <p>Zahlungseingang: {{ payment.amount }} {{ payment.currency }}<a *ngIf="payment.amountAssigned > 0">, noch offen: {{ payment.amount - payment.amountAssigned }}</a></p>
+    <p>Valuta: {{ payment.bookingDate | date: 'dd.MM.yyyy' }}</p>
   </div>
   <a class="carousel-control-prev" role="button" data-slide="prev" style="width: 30px; background: darkgray" (click)="gotoPreviousPayment()" *ngIf="paymentPointer > 0">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>

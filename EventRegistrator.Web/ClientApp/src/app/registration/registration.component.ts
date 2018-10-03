@@ -99,8 +99,11 @@ export class RegistrationComponent {
       .subscribe(result => { this.reloadRegistration(); }, error => console.error(error));
   }
 
-  addRegistrable(registrableId: string) {
+  addRegistrable(registrableId: string, asFollower: true) {
     var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/spots/${registrableId}`;
+    if (asFollower) {
+      url += '?asFollower=true';
+    }
     this.http.put(url, null)
       .subscribe(result => { this.reloadSpots(); this.reloadRegistration(); }, error => console.error(error));
   }

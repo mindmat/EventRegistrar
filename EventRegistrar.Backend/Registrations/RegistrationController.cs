@@ -31,9 +31,9 @@ namespace EventRegistrar.Backend.Registrations
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations")]
-        public Task<IEnumerable<RegistrationMatch>> SearchRegistration(string eventAcronym, string searchString)
+        public Task<IEnumerable<RegistrationMatch>> SearchRegistration(string eventAcronym, string searchString, IEnumerable<RegistrationState> states)
         {
-            return _mediator.Send(new SearchRegistrationQuery { EventAcronym = eventAcronym, SearchString = searchString });
+            return _mediator.Send(new SearchRegistrationQuery { EventAcronym = eventAcronym, SearchString = searchString, States = states });
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}")]

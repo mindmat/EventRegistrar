@@ -8,5 +8,6 @@ namespace EventRegistrar.Backend.Registrations.Search
     {
         public string EventAcronym { get; set; }
         public string SearchString { get; set; }
+        public IEnumerable<RegistrationState> States { get; set; }
     }
 }

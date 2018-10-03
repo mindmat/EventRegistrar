@@ -16,9 +16,9 @@ namespace EventRegistrar.Backend.Spots
         }
 
         [HttpPut("api/events/{eventAcronym}/registrations/{registrationId:guid}/spots/{registrableId:guid}")]
-        public Task AddSpot(string eventAcronym, Guid registrationId, Guid registrableId)
+        public Task AddSpot(string eventAcronym, Guid registrationId, Guid registrableId, bool asFollower)
         {
-            return _mediator.Send(new AddSpotCommand { EventAcronym = eventAcronym, RegistrationId = registrationId, RegistrableId = registrableId });
+            return _mediator.Send(new AddSpotCommand { EventAcronym = eventAcronym, RegistrationId = registrationId, RegistrableId = registrableId, AsFollower = asFollower });
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/spots")]

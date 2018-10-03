@@ -16,7 +16,7 @@ export class SearchRegistrationComponent {
 
   search(searchString: string) {
     this.isSearching = true;
-    this.http.get<Registration[]>(`api/events/${this.getEventAcronym()}/registrations?searchstring=${searchString}`)
+    this.http.get<Registration[]>(`api/events/${this.getEventAcronym()}/registrations?searchstring=${searchString}&states=received&states=paid&states=cancelled`)
       .subscribe(result => {
         this.registrations = result;
         this.isSearching = false;
@@ -37,5 +37,6 @@ class Registration {
   language: string;
   price: number;
   amountPaid: number;
-  state: string;
+  state: number;
+  stateText: string;
 }
