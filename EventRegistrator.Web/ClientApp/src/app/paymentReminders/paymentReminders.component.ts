@@ -79,5 +79,5 @@ class Registration {
 
 class Mail {
   id: string;
-  created: Date;
+  sent: Date;
 }

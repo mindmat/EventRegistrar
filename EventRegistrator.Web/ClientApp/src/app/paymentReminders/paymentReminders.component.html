@@ -25,9 +25,9 @@
       </td>
       <td class="text-right">{{ dueRegistration.price | currency : 'CHF' }}</td>
       <td class="text-right">{{ dueRegistration.paid | currency : 'CHF' }}</td>
-      <td>{{ dueRegistration.acceptedMail?.created | date: 'dd.MM.yy HH:mm' }}</td>
-      <td>{{ dueRegistration.reminder1Mail?.created | date: 'dd.MM.yy HH:mm' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.reminder1Due" (click)="sendReminder(dueRegistration?.id, 1)">erinnern</button></td>
-      <td>{{ dueRegistration.reminder2Mail?.created | date: 'dd.MM.yy HH:mm' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.reminder2Due" (click)="sendReminder(dueRegistration?.id, 2)">erinnern</button></td>
+      <td>{{ dueRegistration.acceptedMail?.sent | date: 'dd.MM.yy HH:mm' }}</td>
+      <td>{{ dueRegistration.reminder1Mail?.sent | date: 'dd.MM.yy HH:mm' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.reminder1Due" (click)="sendReminder(dueRegistration?.id, 1)">erinnern</button></td>
+      <td>{{ dueRegistration.reminder2Mail?.sent | date: 'dd.MM.yy HH:mm' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.reminder2Due" (click)="sendReminder(dueRegistration?.id, 2)">erinnern</button></td>
       <td>{{ dueRegistration.email }}</td>
       <td>{{ dueRegistration.reminderSmsSent | date: 'dd.MM.yy HH:mm' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.reminderSmsPossible" (click)="sendSmsReminder(dueRegistration?.id)">SMS schicken</button></td>
       <td>{{ dueRegistration.phoneNormalized }}</td>
