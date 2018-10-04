@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.Events;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Spots;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ namespace EventRegistrar.Backend.Registrations.Register
 {
     public class SeatManager
     {
+        private readonly EventBus _eventBus;
         private readonly ImbalanceManager _imbalanceManager;
         private readonly ILogger _logger;
         private readonly IQueryable<Registration> _registrations;
@@ -18,12 +20,14 @@ namespace EventRegistrar.Backend.Registrations.Register
         public SeatManager(IRepository<Seat> seats,
                            ImbalanceManager imbalanceManager,
                            ILogger logger,
-                           IQueryable<Registration> registrations)
+                           IQueryable<Registration> registrations,
+                           EventBus eventBus)
         {
             _seats = seats;
             _imbalanceManager = imbalanceManager;
             _logger = logger;
             _registrations = registrations;
+            _eventBus = eventBus;
         }
 
         public Seat ReservePartnerSpot(Guid? eventId,
@@ -60,7 +64,8 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
 
             _seats.InsertOrUpdateEntity(seat);
-
+            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId_Leader });
+            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId_Follower });
             return seat;
         }
 
@@ -175,6 +180,7 @@ namespace EventRegistrar.Backend.Registrations.Register
 
             seat.Id = Guid.NewGuid();
             _seats.InsertOrUpdateEntity(seat);
+            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId });
 
             return seat;
         }
@@ -210,6 +216,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
 
             _seats.InsertOrUpdateEntity(seat);
+            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId });
 
             return seat;
         }

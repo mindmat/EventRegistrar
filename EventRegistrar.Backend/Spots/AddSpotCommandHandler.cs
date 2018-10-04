@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events.Context;
@@ -55,17 +54,7 @@ namespace EventRegistrar.Backend.Spots
             {
                 _seatManager.ReserveSingleSpot(_eventContext.EventId, registrable, registration.Id);
             }
-            var spot = new Seat
-            {
-                Id = Guid.NewGuid(),
-                FirstPartnerJoined = DateTime.UtcNow,
-                RegistrableId = registrable.Id,
-                RegistrationId = registration.Id
-            };
-            await _seats.InsertOrUpdateEntity(spot, cancellationToken);
-            //registration.Price = await _priceCalculator.CalculatePrice(registration.Id);
-            //await PriceCalculator.CalculatePrice(registrationId, true, log);
-            //await ServiceBusClient.SendEvent(new CheckIsWaitingListCommand { RegistrationId = registrationId }, CheckIsWaitingListCommandHandler.CheckIsWaitingListCommandsQueueName);
+
             return Unit.Value;
         }
     }
