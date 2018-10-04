@@ -6,9 +6,9 @@ namespace EventRegistrar.Backend.Registrations.Price
 {
     public class RecalculatePriceWhenSpotRemoved : IEventToCommandTranslation<SpotRemoved>
     {
-        public IQueueBoundMessage Translate(SpotRemoved @event)
+        public IQueueBoundMessage Translate(SpotRemoved e)
         {
-            return new RecalculatePriceCommand { RegistrationId = @event.RegistrableId };
+            return new RecalculatePriceCommand { RegistrationId = e.RegistrationId };
         }
     }
 }

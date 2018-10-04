@@ -7,7 +7,7 @@ namespace EventRegistrar.Backend.Infrastructure.Events
     {
         //Type EventType { get; }
 
-        IQueueBoundMessage Translate(TEvent @event);
+        IQueueBoundMessage Translate(TEvent e);
     }
 
     //public abstract class EventToCommandTranslation<TEvent, TCommand> : IEventToCommandTranslation<TEvent>

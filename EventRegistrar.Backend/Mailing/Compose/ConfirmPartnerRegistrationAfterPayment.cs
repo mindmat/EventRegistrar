@@ -6,9 +6,9 @@ namespace EventRegistrar.Backend.Mailing.Compose
 {
     public class ConfirmPartnerRegistrationAfterPayment : IEventToCommandTranslation<PartnerRegistrationPaid>
     {
-        public IQueueBoundMessage Translate(PartnerRegistrationPaid @event)
+        public IQueueBoundMessage Translate(PartnerRegistrationPaid e)
         {
-            return new ComposeAndSendMailCommand { MailType = MailType.PartnerRegistrationFullyPaid, RegistrationId = @event.RegistrationId1, Withhold = true };
+            return new ComposeAndSendMailCommand { MailType = MailType.PartnerRegistrationFullyPaid, RegistrationId = e.RegistrationId1, Withhold = true };
         }
     }
 }

@@ -6,9 +6,9 @@ namespace EventRegistrar.Backend.Mailing.Compose
 {
     public class ConfirmSingleRegistrationAfterPayment : IEventToCommandTranslation<SingleRegistrationPaid>
     {
-        public IQueueBoundMessage Translate(SingleRegistrationPaid @event)
+        public IQueueBoundMessage Translate(SingleRegistrationPaid e)
         {
-            return new ComposeAndSendMailCommand { MailType = MailType.SingleRegistrationFullyPaid, RegistrationId = @event.RegistrationId, Withhold = true };
+            return new ComposeAndSendMailCommand { MailType = MailType.SingleRegistrationFullyPaid, RegistrationId = e.RegistrationId, Withhold = true };
         }
     }
 }

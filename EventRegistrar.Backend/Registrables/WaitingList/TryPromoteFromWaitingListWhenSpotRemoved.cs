@@ -6,9 +6,9 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
 {
     public class TryPromoteFromWaitingListWhenSpotRemoved : IEventToCommandTranslation<SpotRemoved>
     {
-        public IQueueBoundMessage Translate(SpotRemoved @event)
+        public IQueueBoundMessage Translate(SpotRemoved e)
         {
-            return new TryPromoteFromWaitingListCommand { RegistrableId = @event.RegistrableId };
+            return new TryPromoteFromWaitingListCommand { RegistrableId = e.RegistrableId };
         }
     }
 }
