@@ -20,6 +20,7 @@ namespace EventRegistrar.Backend.Mailing
         public string SenderName { get; set; }
         public string SendGridMessageId { get; set; }
         public DateTime? Sent { get; set; }
+        public MailState? State { get; set; }
         public string Subject { get; set; }
         public MailType? Type { get; set; }
         public bool Withhold { get; set; }

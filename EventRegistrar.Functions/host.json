@@ -5,6 +5,7 @@
     "SaveRegistrationForm",
     "GetRegistrationExternalIdentifiersOfForm",
     "SetSmsStatus",
-    "ReceiveSms"
+    "ReceiveSms",
+    "ReceiveSendGridMailNotification"
   ]
 }
