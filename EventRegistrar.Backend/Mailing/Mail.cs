@@ -18,6 +18,7 @@ namespace EventRegistrar.Backend.Mailing
         public ICollection<MailToRegistration> Registrations { get; set; }
         public string SenderMail { get; set; }
         public string SenderName { get; set; }
+        public string SendGridMessageId { get; set; }
         public DateTime? Sent { get; set; }
         public string Subject { get; set; }
         public MailType? Type { get; set; }
