@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Mailing.Feedback;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -34,6 +36,7 @@ namespace EventRegistrar.Backend.Mailing.Send
                 Subject = command.Subject,
                 PlainTextContent = command.ContentPlainText,
                 HtmlContent = command.ContentHtml,
+                CustomArgs = new Dictionary<string, string> { { nameof(SendGridEvent.MailId), mail.Id.ToString() } }
             };
 
             msg.AddTos(command.To.Select(to => new SendGrid.Helpers.Mail.EmailAddress(to.Email, to.Name)).ToList());
