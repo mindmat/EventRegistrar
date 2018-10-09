@@ -7,6 +7,6 @@ namespace EventRegistrar.Backend.Mailing.Feedback
     {
         public string Body { get; set; }
         public DateTime Created { get; set; }
-        public bool Processed { get; set; }
+        public DateTime? Processed { get; set; }
     }
 }

@@ -31,7 +31,7 @@ namespace EventRegistrar.Backend.Mailing.Feedback
         public async Task<Unit> Handle(ProcessMailEventsCommand command, CancellationToken cancellationToken)
         {
             var rawMailEvents = await _rawMailEvents.FirstAsync(mev => mev.Id == command.RawMailEventsId, cancellationToken);
-            if (rawMailEvents.Processed)
+            if (rawMailEvents.Processed.HasValue)
             {
                 _log.LogWarning("RawMailEvents with id {0} have already been processed", rawMailEvents.Id);
                 return Unit.Value;
@@ -56,7 +56,7 @@ namespace EventRegistrar.Backend.Mailing.Feedback
                     }
                 }
 
-                if (!Enum.TryParse(sendGridEvent.Event, out MailState state))
+                if (!Enum.TryParse(sendGridEvent.Event, true, out MailState state))
                 {
                     state = MailState.Unknown;
                 }
@@ -77,7 +77,7 @@ namespace EventRegistrar.Backend.Mailing.Feedback
                 await _mailEvents.InsertOrUpdateEntity(mailEvent, cancellationToken);
             }
 
-            rawMailEvents.Processed = true;
+            rawMailEvents.Processed = DateTime.UtcNow;
             return Unit.Value;
         }
 
