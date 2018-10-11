@@ -64,6 +64,11 @@ namespace EventRegistrar.Backend.Mailing.Feedback
                 else
                 {
                     mail.State = state;
+                    // if addresed to multiple emails, save which receiver is concerned
+                    foreach (var mailToRegistration in mail.Registrations.Where(mil => mil.Registration.RespondentEmail == sendGridEvent.Email))
+                    {
+                        mailToRegistration.State = state;
+                    }
                 }
 
                 var mailEvent = new MailEvent
@@ -105,6 +110,7 @@ namespace EventRegistrar.Backend.Mailing.Feedback
             {
                 var mail = await _mails.Where(mil => mil.Id == mailId)
                                        .Include(mil => mil.Registrations)
+                                       .ThenInclude(reg => reg.Registration)
                                        .FirstOrDefaultAsync();
                 if (mail != null)
                 {
@@ -113,7 +119,10 @@ namespace EventRegistrar.Backend.Mailing.Feedback
             }
             // fallback to smtp-id
             var messageId = ExtractMessageId(sendGridEvent.Smtp_id);
-            return await _mails.FirstOrDefaultAsync(mil => mil.SendGridMessageId == messageId);
+            return await _mails.Where(mil => mil.SendGridMessageId == messageId)
+                               .Include(mil => mil.Registrations)
+                               .ThenInclude(reg => reg.Registration)
+                               .FirstOrDefaultAsync();
         }
     }
 }

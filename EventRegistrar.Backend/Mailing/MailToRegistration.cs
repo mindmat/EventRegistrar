@@ -10,5 +10,6 @@ namespace EventRegistrar.Backend.Mailing
         public Guid MailId { get; set; }
         public Registration Registration { get; set; }
         public Guid RegistrationId { get; set; }
+        public MailState? State { get; set; }
     }
 }
