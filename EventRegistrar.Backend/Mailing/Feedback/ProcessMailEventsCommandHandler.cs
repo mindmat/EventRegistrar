@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
@@ -71,6 +72,7 @@ namespace EventRegistrar.Backend.Mailing.Feedback
                     Created = DateTime.UtcNow,
                     ExternalIdentifier = sendGridEvent.Sg_event_id,
                     MailId = mail.Id,
+                    EMail = sendGridEvent.Email,
                     RawEvent = JsonConvert.SerializeObject(sendGridEvent),
                     State = state
                 };
@@ -101,7 +103,9 @@ namespace EventRegistrar.Backend.Mailing.Feedback
         {
             if (Guid.TryParse(sendGridEvent.MailId, out var mailId))
             {
-                var mail = await _mails.FirstOrDefaultAsync(mil => mil.Id == mailId);
+                var mail = await _mails.Where(mil => mil.Id == mailId)
+                                       .Include(mil => mil.Registrations)
+                                       .FirstOrDefaultAsync();
                 if (mail != null)
                 {
                     return mail;
