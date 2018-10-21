@@ -40,6 +40,15 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                                                                                    && !seat.IsCancelled);
             if (isWaitingListBefore && registration.IsWaitingList == false)
             {
+                // non-core seats are also not on waiting list anymore
+                foreach (var seat in registration.Seats_AsLeader.Where(st => !st.IsCancelled && st.IsWaitingList))
+                {
+                    seat.IsWaitingList = false;
+                }
+                foreach (var seat in registration.Seats_AsFollower.Where(st => !st.IsCancelled && st.IsWaitingList))
+                {
+                    seat.IsWaitingList = false;
+                }
                 // registration is now accepted, send Mail
                 var mailType = registration.RegistrationId_Partner.HasValue
                     ? MailType.PartnerRegistrationMatchedAndAccepted
