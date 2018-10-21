@@ -41,5 +41,11 @@ namespace EventRegistrar.Backend.Registrations
         {
             return _mediator.Send(new RegistrationQuery { EventAcronym = eventAcronym, RegistrationId = registrationId });
         }
+
+        [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/swapFirstLastName")]
+        public Task SwapFirstLastName(string eventAcronym, Guid registrationId)
+        {
+            return _mediator.Send(new SwapFirstLastNameCommand { EventAcronym = eventAcronym, RegistrationId = registrationId });
+        }
     }
 }

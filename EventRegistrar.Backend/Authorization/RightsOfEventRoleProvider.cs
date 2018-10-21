@@ -80,6 +80,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(ComposeAndSendMailCommand).Name;
                 yield return typeof(CancelRegistrationCommand).Name;
                 yield return typeof(SendSmsCommand).Name;
+                yield return typeof(SwapFirstLastNameCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))
