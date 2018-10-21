@@ -12,7 +12,7 @@
     <tr>
       <td>Ausstehende Zahlungen:</td>
       <td class="text-right">{{ paymentOverview.outstandingAmount | currency : paymentOverview.balance.currency }}</td>
-      <td><a [routerLink]="['/paymentReminders']">aus {{ paymentOverview.notFullyPaidRegistrations }} Anmeldungen</a></td>
+      <td><a [routerLink]="[eventService.acronym, 'paymentReminders']">aus {{ paymentOverview.notFullyPaidRegistrations }} Anmeldungen</a></td>
     </tr>
     <tr>
       <td>Kontostand:</td>
@@ -37,7 +37,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let potential of paymentOverview.potentialOfOpenSpots">
-      <td><a [routerLink]="['/registrables', potential.RegistrableId, 'participants']">{{ potential.name }}</a></td>
+      <td><a [routerLink]="[eventService.acronym, 'registrables', potential.RegistrableId, 'participants']">{{ potential.name }}</a></td>
       <td class="text-right">{{ potential.spotsAvailable }}</td>
       <td class="text-right">{{ potential.potentialIncome | currency : paymentOverview.balance.currency }}</td>
     </tr>

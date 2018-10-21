@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { EventService } from '../events/eventService.service';
 
 @Component({
   selector: 'paymentOverview',
@@ -10,7 +11,7 @@ export class PaymentOverviewComponent {
   public paymentOverview: PaymentOverview;
   public showPotentialDetails: boolean;
 
-  constructor(http: HttpClient, private route: ActivatedRoute) {
+  constructor(http: HttpClient, private route: ActivatedRoute, private eventService: EventService) {
     http.get<PaymentOverview>(`api/events/${this.getEventAcronym()}/payments/overview`).subscribe(result => {
       this.paymentOverview = result;
       this.paymentOverview.potentialOfOpenSpotsSum = this.addOpenSpots(this.paymentOverview.potentialOfOpenSpots);
