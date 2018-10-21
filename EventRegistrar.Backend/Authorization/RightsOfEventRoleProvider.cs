@@ -20,6 +20,7 @@ using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Cancel;
+using EventRegistrar.Backend.Registrations.Overview;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Search;
 using EventRegistrar.Backend.Spots;
@@ -60,6 +61,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(PaymentStatementsQuery).Name;
                 yield return typeof(PossibleAssignmentsQuery).Name;
                 yield return typeof(SmsConversationQuery).Name;
+                yield return typeof(CheckinQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
