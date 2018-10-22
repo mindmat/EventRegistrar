@@ -43,7 +43,7 @@ namespace EventRegistrar.Backend.Registrations.Overview
                                           reg.State,
                                           reg.AdmittedAt,
                                           Price = reg.Price ?? 0m,
-                                          Paid = reg.Payments.Select(ass => ass.Amount).DefaultIfEmpty(0m).Sum(),
+                                          Payments = reg.Payments.Select(ass => ass.Amount).ToList(),
                                           SeatsAsLeader = reg.Seats_AsLeader.Where(seat => !seat.IsCancelled).ToList(),
                                           SeatsAsFollower = reg.Seats_AsFollower.Where(seat => !seat.IsCancelled).ToList()
                                       })
@@ -57,7 +57,7 @@ namespace EventRegistrar.Backend.Registrations.Overview
                             LastName = reg.LastName,
                             Status = reg.State.ToString(),
                             AdmittedAt = reg.AdmittedAt,
-                            UnsettledAmount = reg.Price - reg.Paid,
+                            UnsettledAmount = reg.Price - reg.Payments.DefaultIfEmpty(0m).Sum(),
                             Columns = columns
                                       .ToDictionary(col => col.Key,
                                                     col => col.Value.Where(rbl => reg.SeatsAsLeader.Any(seat => seat.RegistrableId == rbl.Id)
