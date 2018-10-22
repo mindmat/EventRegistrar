@@ -44,8 +44,8 @@ namespace EventRegistrar.Backend.Registrations.Overview
                                           reg.AdmittedAt,
                                           Price = reg.Price ?? 0m,
                                           Paid = reg.Payments.Select(ass => ass.Amount).DefaultIfEmpty(0m).Sum(),
-                                          SeatsAsLeader = reg.Seats_AsLeader.Where(seat => !seat.IsCancelled),
-                                          SeatsAsFollower = reg.Seats_AsFollower.Where(seat => !seat.IsCancelled)
+                                          SeatsAsLeader = reg.Seats_AsLeader.Where(seat => !seat.IsCancelled).ToList(),
+                                          SeatsAsFollower = reg.Seats_AsFollower.Where(seat => !seat.IsCancelled).ToList()
                                       })
                                       .ToListAsync(cancellationToken);
             var items = registrations
@@ -65,7 +65,7 @@ namespace EventRegistrar.Backend.Registrations.Overview
                                                                     .Select(rbl => rbl.Name)
                                                                     .StringJoin()),
                         })
-                        .OrderBy(reg => reg.AdmittedAt)
+                        .OrderBy(reg => reg.LastName).ThenBy(reg => reg.FirstName)
                         .ToList();
 
             return new CheckinView

@@ -2,30 +2,25 @@
 
 <p *ngIf="!checkinView"><em>Loading...</em></p>
 
-<!--<button *ngIf="registrations" (click)="downloadXlsx()" class="btn btn-primary">Download</button>-->
+<button *ngIf="checkinView" (click)="downloadXlsx()" class="btn btn-primary">Download</button>
 <!--<a href="https://eventregistrator.azurewebsites.net/api/events/762A93A4-56E0-402C-B700-1CFB3362B39D/checkin.xlsx">Download</a>-->
 
 <table class="table" *ngIf="checkinView">
   <thead>
     <tr>
       <th>Name</th>
-      <th>Mail</th>
-      <th>Status</th>
-      <th>Zugelassen</th>
-      <th>Betrag ausstehend</th>
       <th *ngFor="let header of checkinView.dynamicHeaders">{{ header }}</th>
+      <th>Betrag ausstehend</th>
+      <th>Status</th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let registration of checkinView.items">
       <td><a [routerLink]="['/', getEventAcronym(), 'registration', registration.registrationId]">{{ registration.firstName }} {{ registration.lastName }}</a></td>
-      <td>{{ registration.email }}</td>
-      <td>{{ registration.status }}</td>
-      <td>{{ registration.admittedAt | date: 'dd.MM.yy HH:mm' }}</td>
-      <td><span *ngIf="registration.unsettledAmount != 0">{{ registration.unsettledAmount | currency : 'CHF' }}</span></td>
       <td *ngFor="let header of checkinView.dynamicHeaders">{{ registration.columns[header] }}</td>
+      <!--      <td>{{ registration.admittedAt | date: 'dd.MM.yy HH:mm' }}</td>-->
+      <td><span *ngIf="registration.unsettledAmount != 0">{{ registration.unsettledAmount | currency : 'CHF' }}</span></td>
+      <td>{{ registration.status }}</td>
     </tr>
   </tbody>
 </table>
-
-<br />
