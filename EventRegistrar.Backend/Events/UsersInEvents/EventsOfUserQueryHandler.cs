@@ -32,6 +32,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
             var authorizedEvents = await _usersInEvents.Where(uie => uie.UserId == _authenticatedUserId.UserId)
                                                        .Select(uie => new UserInEventDisplayItem
                                                        {
+                                                           EventId = uie.EventId,
                                                            EventName = uie.Event.Name,
                                                            EventAcronym = uie.Event.Acronym,
                                                            EventState = uie.Event.State,
@@ -53,6 +54,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
                                                                             && req.Identifier == _authenticatedUser.IdentityProviderUserIdentifier)
                                                                .Select(req => new UserInEventDisplayItem
                                                                {
+                                                                   EventId = req.EventId,
                                                                    EventName = req.Event.Name,
                                                                    EventAcronym = req.Event.Acronym,
                                                                    EventState = req.Event.State,

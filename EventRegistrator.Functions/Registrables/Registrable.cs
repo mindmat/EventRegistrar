@@ -1,7 +1,7 @@
-﻿using EventRegistrator.Functions.Infrastructure.DataAccess;
-using EventRegistrator.Functions.Seats;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using EventRegistrator.Functions.Infrastructure.DataAccess;
+using EventRegistrator.Functions.Seats;
 
 namespace EventRegistrator.Functions.Registrables
 {

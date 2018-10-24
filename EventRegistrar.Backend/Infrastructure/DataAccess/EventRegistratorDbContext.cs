@@ -10,6 +10,7 @@ using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrables.Compositions;
 using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
@@ -40,6 +41,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
 
             builder.ApplyConfiguration(new EventMap());
             builder.ApplyConfiguration(new RegistrableMap());
+            builder.ApplyConfiguration(new RegistrableCompositionMap());
             builder.ApplyConfiguration(new ReductionMap());
             builder.ApplyConfiguration(new RegistrationFormMap());
             builder.ApplyConfiguration(new RegistrationMap());
@@ -66,20 +68,5 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
 
             builder.ApplyConfiguration(new EventConfigurationMap());
         }
-
-        /*
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<RegistrableComposition>()
-                .HasRequired(cmp => cmp.Registrable_Contains)
-                .WithMany()
-                .HasForeignKey(cmp => cmp.RegistrableId_Contains);
-
-            modelBuilder.Entity<RegistrableComposition>()
-                .HasRequired(cmp => cmp.Registrable)
-                .WithMany(rbl => rbl.Compositions)
-                .HasForeignKey(cmp => cmp.RegistrableId_Contains);
-        }
-         */
     }
 }

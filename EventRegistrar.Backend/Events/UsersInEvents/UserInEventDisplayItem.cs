@@ -6,6 +6,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
     public class UserInEventDisplayItem
     {
         public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
         public string EventName { get; set; }
         public State EventState { get; set; }
         public bool RequestSent { get; set; }

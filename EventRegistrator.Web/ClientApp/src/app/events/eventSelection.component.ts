@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { EventService } from '../events/eventService.service';
+import { Guid } from '../infrastructure/guid';
 
 @Component({
   selector: 'eventSelection',
@@ -10,8 +11,13 @@ export class EventSelectionComponent {
   events: UserInEventDisplayItem[];
   furtherEvents: Event[];
   isSearching: boolean;
+  newEvent: Event;
+  newEventCopyOfEventId: string;
+  newEventCopyOfEventName: string;
 
   constructor(private http: HttpClient, private eventService: EventService) {
+    this.newEvent = new Event();
+    this.newEvent.id = Guid.newGuid();
   }
 
   search(searchString: string) {
@@ -25,6 +31,13 @@ export class EventSelectionComponent {
           console.error(error);
           this.isSearching = false;
         });
+  }
+
+  showEvent(event: UserInEventDisplayItem) {
+    this.newEvent.name = event.eventName;
+    this.newEvent.acronym = event.eventAcronym;
+    this.newEventCopyOfEventName = `${event.eventName} (${event.eventAcronym})`;
+    this.newEventCopyOfEventId = event.eventId;
   }
 
   requestAccess(event: Event) {
@@ -42,6 +55,16 @@ export class EventSelectionComponent {
     this.eventService.setEvent(event);
   }
 
+  createEvent() {
+    var url = `api/events/${this.newEvent.acronym}?name=${this.newEvent.name}&id=${this.newEvent.id}`;
+    if (this.newEventCopyOfEventId != null) {
+      url += `&eventId_CopyFrom=${this.newEventCopyOfEventId}`;
+    }
+    this.http.put(url, null).subscribe(result => {
+    },
+      error => console.error(error));
+  }
+
   ngOnInit() {
     this.http.get<UserInEventDisplayItem[]>("api/me/events?includeRequestedEvents=true").subscribe(result => {
       this.events = result;
@@ -51,10 +74,11 @@ export class EventSelectionComponent {
 }
 
 export class UserInEventDisplayItem {
+  eventId: string;
   eventAcronym: string;
   eventName: string;
-  eventState: string;
-  role: string;
+  eventState: number;
+  role: number;
   userFirstName: string;
   userIdentifier: string;
   userLastName: string;

@@ -24,7 +24,7 @@ export class CheckinViewComponent {
 
   downloadXlsx() {
     var link = document.createElement('a');
-    link.href = `api/events/${this.getEventAcronym()}/checkinView.xlsx`; // "https://eventregistrator.azurewebsites.net/api/events/762A93A4-56E0-402C-B700-1CFB3362B39D/checkin.xlsx";
+    link.href = `api/events/${this.getEventAcronym()}/checkinView.xlsx`;
     link.download = "Checkin.xlsx";
     link.click();
   }

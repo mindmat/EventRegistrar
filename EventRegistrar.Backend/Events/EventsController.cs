@@ -17,6 +17,18 @@ namespace EventRegistrar.Backend.Events
             _mediator = mediator;
         }
 
+        [HttpPut("api/events/{eventAcronym}")]
+        public Task CreateEvent(string eventAcronym, string name, Guid id, Guid? eventId_CopyFrom)
+        {
+            return _mediator.Send(new CreateEventCommand
+            {
+                Acronym = eventAcronym,
+                Id = id,
+                EventId_CopyFrom = eventId_CopyFrom,
+                Name = name
+            });
+        }
+
         [HttpGet("api/events/{eventAcronym}/requests")]
         public Task<IEnumerable<AccessRequestOfEvent>> GetRequestsOfEvent(string eventAcronym, bool includeDeniedRequests = false)
         {
