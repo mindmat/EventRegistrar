@@ -112,6 +112,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     if (existingPartnerSeat != null)
                     {
                         ComplementExistingSeat(registrationId, ownRole, existingPartnerSeat);
+                        _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId });
                         return existingPartnerSeat;
                     }
 
@@ -155,6 +156,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     if (!waitingListForOwnRole && matchingSingleSeat != null)
                     {
                         ComplementExistingSeat(registrationId, ownRole, matchingSingleSeat);
+                        _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId });
                         return matchingSingleSeat;
                     }
                     seat = new Seat
