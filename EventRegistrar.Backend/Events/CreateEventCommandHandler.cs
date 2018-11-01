@@ -126,6 +126,7 @@ namespace EventRegistrar.Backend.Events
                 }
 
                 // copy registrables
+                // ToDo: map RegistrableId1_ReductionActivatedIfCombinedWith etc to new ids
                 var registrablesOfSourceEvent = await _registrables.Where(mtp => mtp.EventId == sourceEventId)
                                                                    .Include(mtp => mtp.Reductions)
                                                                    .Include(mtp => mtp.Compositions)
