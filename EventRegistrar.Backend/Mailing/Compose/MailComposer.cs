@@ -37,6 +37,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
             var registration = await _registrations.Where(reg => reg.Id == registrationId)
                                                    .Include(reg => reg.Seats_AsLeader).ThenInclude(seat => seat.Registrable)
                                                    .Include(reg => reg.Seats_AsFollower).ThenInclude(seat => seat.Registrable)
+                                                   .Include(reg => reg.Responses).ThenInclude(rsp => rsp.Question)
                                                    .Include(reg => reg.Cancellations)
                                                    .FirstAsync(cancellationToken);
 
@@ -51,6 +52,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 partnerRegistration = await _registrations.Where(reg => reg.Id == registration.RegistrationId_Partner)
                                                           .Include(reg => reg.Seats_AsLeader).ThenInclude(seat => seat.Registrable)
                                                           .Include(reg => reg.Seats_AsFollower).ThenInclude(seat => seat.Registrable)
+                                                          .Include(reg => reg.Responses)
                                                           .FirstOrDefaultAsync(cancellationToken);
                 if (mainRegistrationRole == Role.Leader)
                 {
@@ -88,6 +90,10 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 else if (parts.key == "LASTNAME")
                 {
                     templateFiller[key] = registrationForPrefix?.RespondentLastName;
+                }
+                else if (parts.key == "PHONE")
+                {
+                    templateFiller[key] = registrationForPrefix?.Phone;
                 }
                 else if (parts.key == "SEATLIST")
                 {
@@ -139,10 +145,11 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 //        templateFiller[key] = reminder1Date.Value.ToString(DateFormat);
                 //    }
                 //}
-                //else
-                //{
-                //    templateFiller[key] = responsesForPrefix.Lookup(parts.key);
-                //}
+                else
+                {
+                    // check responses with Question.TemplateKey
+                    templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp => rsp.Question.TemplateKey == parts.key)?.ResponseString;
+                }
             }
 
             var content = templateFiller.Fill();
