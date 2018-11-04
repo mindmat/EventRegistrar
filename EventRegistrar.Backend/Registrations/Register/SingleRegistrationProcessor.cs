@@ -52,45 +52,46 @@ namespace EventRegistrar.Backend.Registrations.Register
             {
                 registration.Language = config.LanguageMappings.FirstOrDefault(map => registration.Responses.Any(rsp => rsp.QuestionOptionId == map.QuestionOptionId)).Language;
             }
+
             var ownSeats = new List<Seat>();
 
             var questionOptionIds = new HashSet<Guid>(registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue).Select(rsp => rsp.QuestionOptionId.Value));
-            var registrables = await _optionToRegistrableMappings
+            var mappings = await _optionToRegistrableMappings
                                             .Where(map => questionOptionIds.Contains(map.QuestionOptionId))
                                             .Include(map => map.Registrable)
                                             .Include(map => map.Registrable.Seats)
                                             .ToListAsync();
-            //var registrableIds_CheckWaitingList = new List<Guid>();
+
             var soldOutMessages = new StringBuilder();
             foreach (var response in registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue))
             {
-                foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
+                foreach (var mapping in mappings.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
                 {
-                    var isDoubleRegistrable = registrable.Registrable.MaximumDoubleSeats.HasValue;
+                    var isDoubleRegistrable = mapping.Registrable.MaximumDoubleSeats.HasValue;
                     Seat seat;
                     if (isDoubleRegistrable)
                     {
-                        //var partnerEmail = registrable.QuestionId_PartnerEmail.HasValue
-                        //    ? registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == registrable.QuestionId_PartnerEmail.Value)?.ResponseString
-                        //    : null;
-                        string partnerEmail = null;
-                        var isLeader = registration.Responses.Any(rsp => rsp.QuestionOptionId == config.QuestionOptionId_Leader);
-                        var isFollower = registration.Responses.Any(rsp => rsp.QuestionOptionId == config.QuestionOptionId_Follower);
+                        var partner = mapping.QuestionId_Partner.HasValue
+                                      ? registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == mapping.QuestionId_Partner)?.ResponseString
+                                      : null;
+                        var questionOptionId_Leader = mapping.QuestionOptionId_Leader ?? config.QuestionOptionId_Leader;
+                        var questionOptionId_Follower = mapping.QuestionOptionId_Follower ?? config.QuestionOptionId_Follower;
+                        var isLeader = questionOptionId_Leader.HasValue && registration.Responses.Any(rsp => rsp.QuestionOptionId == questionOptionId_Leader.Value);
+                        var isFollower = questionOptionId_Follower.HasValue && registration.Responses.Any(rsp => rsp.QuestionOptionId == questionOptionId_Follower.Value);
                         var role = isLeader ? Role.Leader : (isFollower ? Role.Follower : (Role?)null);
-                        seat = _seatManager.ReserveSinglePartOfPartnerSpot(registration.EventId, registrable.Registrable, registration.Id, registration.RespondentEmail, partnerEmail, role);
+                        var ownIdentification = new RegistrationIdentification(registration);
+                        seat = _seatManager.ReserveSinglePartOfPartnerSpot(registration.EventId, mapping.Registrable, registration.Id, ownIdentification, partner, role);
+
+                        registration.Partner = partner ?? registration.Partner;
                     }
                     else
                     {
-                        seat = _seatManager.ReserveSingleSpot(registration.EventId, registrable.Registrable, registration.Id);
+                        seat = _seatManager.ReserveSingleSpot(registration.EventId, mapping.Registrable, registration.Id);
                     }
-                    //if (registrableId_CheckWaitingList != null)
-                    //{
-                    //    registrableIds_CheckWaitingList.Add(registrableId_CheckWaitingList.Value);
-                    //}
                     if (seat == null)
                     {
                         soldOutMessages.AppendLine((registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +
-                                                    string.Format(Properties.Resources.RegistrableSoldOut, registrable.Registrable.Name));
+                                                    string.Format(Properties.Resources.RegistrableSoldOut, mapping.Registrable.Name));
                     }
                     else
                     {

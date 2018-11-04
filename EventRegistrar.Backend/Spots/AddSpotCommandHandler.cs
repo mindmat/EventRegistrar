@@ -46,7 +46,7 @@ namespace EventRegistrar.Backend.Spots
                 _seatManager.ReserveSinglePartOfPartnerSpot(_eventContext.EventId,
                                                             registrable,
                                                             registration.Id,
-                                                            registration.RespondentEmail,
+                                                            new RegistrationIdentification(registration),
                                                             null,
                                                             command.AsFollower ? Role.Follower : Role.Leader);
             }

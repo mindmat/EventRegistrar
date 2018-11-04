@@ -192,8 +192,8 @@ namespace EventRegistrar.Backend.Registrations.Register
             //{
             //    foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
             //    {
-            //        var partnerEmail = registrable.QuestionId_PartnerEmail.HasValue
-            //            ? registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == registrable.QuestionId_PartnerEmail.Value)?.ResponseString
+            //        var partnerEmail = registrable.QuestionId_Partner.HasValue
+            //            ? registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == registrable.QuestionId_Partner.Value)?.ResponseString
             //            : null;
             //        var isLeader = registrable.QuestionOptionId_Leader.HasValue &&
             //                       registration.Responses.Any(rsp => rsp.QuestionOptionId == registrable.QuestionOptionId_Leader.Value);

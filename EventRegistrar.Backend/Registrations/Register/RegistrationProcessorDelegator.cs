@@ -31,8 +31,9 @@ namespace EventRegistrar.Backend.Registrations.Register
             foreach (var registrationProcessConfiguration in processConfiguration)
             {
                 if (registrationProcessConfiguration is SingleRegistrationProcessConfiguration singleConfig
-                 && registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue &&
-                                                      rsp.QuestionOptionId.Value == singleConfig.QuestionOptionId_Trigger))
+                 && (!singleConfig.QuestionOptionId_Trigger.HasValue // no trigger -> process all registrations
+                  || registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue &&
+                                                       rsp.QuestionOptionId.Value == singleConfig.QuestionOptionId_Trigger)))
                 {
                     var newSpots = await _singleRegistrationProcessor.Process(registration, singleConfig);
                     spots.AddRange(newSpots);
@@ -51,7 +52,7 @@ namespace EventRegistrar.Backend.Registrations.Register
 
         private IEnumerable<IRegistrationProcessConfiguration> GetHardcodedConfiguration(Guid formId)
         {
-            if (formId == Guid.Parse("954BE8A3-3FAB-4C9C-9C0B-4B9FFDD1FF3F"))
+            if (formId == Guid.Parse("954BE8A3-3FAB-4C9C-9C0B-4B9FFDD1FF3F")) //rb18
             {
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -120,6 +121,20 @@ namespace EventRegistrar.Backend.Registrations.Register
                         (new Guid("B1AB2D25-FEBE-431F-B1D1-F6574341C0B2"), Language.Deutsch ),
                         (new Guid("C8BFCFF1-CE38-4A37-AC54-B06489CB0484"), Language.English ),
                     }
+                };
+            }
+            else if (formId == Guid.Parse("BD14FB5C-EC31-48F0-9DDA-E7D1BB2781C0")) //ll19
+            {
+                yield return new SingleRegistrationProcessConfiguration
+                {
+                    Description = "Leapin'",
+                    QuestionOptionId_Trigger = null,
+                    QuestionId_FirstName = Guid.Parse("6067B9FC-9421-40F8-BDBE-372E172B7A16"),
+                    QuestionId_LastName = Guid.Parse("36C46DCB-178A-4300-ADAE-5890A8B2C733"),
+                    QuestionId_Email = Guid.Parse("C1291FB3-61AB-4C09-8E62-2841603C10AC"),
+                    QuestionId_Phone = Guid.Parse("EB488435-4313-4E51-9F7C-B4AED78F7ABC"),
+                    QuestionOptionId_Leader = Guid.Parse("F5DEF570-730B-4411-82DC-42959FF2E088"),
+                    QuestionOptionId_Follower = Guid.Parse("AB8363D9-F816-4927-BFED-078E04201C50"),
                 };
             }
         }
