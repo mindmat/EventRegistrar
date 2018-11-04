@@ -148,7 +148,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 else
                 {
                     // check responses with Question.TemplateKey
-                    templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp => rsp.Question.TemplateKey == parts.key)?.ResponseString;
+                    templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp => string.Equals(rsp.Question.TemplateKey, parts.key, StringComparison.InvariantCultureIgnoreCase))?.ResponseString;
                 }
             }
 

@@ -131,7 +131,8 @@ namespace EventRegistrar.Backend.Registrations.Register
                         RegistrationId = ownRole == Role.Leader ? registrationId : (Guid?)null,
                         RegistrationId_Follower = ownRole == Role.Follower ? registrationId : (Guid?)null,
                         RegistrableId = registrable.Id,
-                        IsWaitingList = !seatAvailable
+                        IsWaitingList = !seatAvailable,
+                        IsPartnerSpot = true
                     };
                 }
                 else
