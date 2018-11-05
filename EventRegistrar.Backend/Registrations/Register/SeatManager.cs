@@ -126,7 +126,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     seat = new Seat
                     {
                         FirstPartnerJoined = DateTime.UtcNow,
-                        PartnerEmail = partner,
+                        PartnerEmail = partner?.ToLowerInvariant(),
                         RegistrationId = ownRole == Role.Leader ? registrationId : (Guid?)null,
                         RegistrationId_Follower = ownRole == Role.Follower ? registrationId : (Guid?)null,
                         RegistrableId = registrable.Id,

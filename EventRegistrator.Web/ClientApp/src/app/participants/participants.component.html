@@ -15,11 +15,11 @@
     <tr *ngFor="let participant of registrable.participants">
       <td [style.font-weight]="participant.leader?.state == 1 ? 'bold' : 'normal'">
         <a *ngIf="participant.leader" [routerLink]="['/', getEventAcronym(), 'registration', participant.leader.id]">{{ participant.leader?.firstName }} {{ participant.leader?.lastName }}</a>
-        <a *ngIf="!participant.leader && participant.isPartnerRegistration" class="font-italic">{{ participant.placeholderPartner }}</a>
+        <a *ngIf="!participant.leader && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
       </td>
       <td [style.font-weight]="participant.follower?.state == 1 ? 'bold' : 'normal'" *ngIf="registrable.maximumDoubleSeats">
         <a *ngIf="participant.follower" [routerLink]="['/', getEventAcronym(), 'registration', participant.follower?.id]">{{ participant.follower?.firstName }} {{ participant.follower?.lastName }}</a>
-        <a *ngIf="!participant.follower && participant.isPartnerRegistration" class="font-italic">{{ participant.placeholderPartner }}</a>
+        <a *ngIf="!participant.follower && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
       </td>
       <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">x</p></td>
     </tr>
@@ -43,11 +43,11 @@
     <tr *ngFor="let participant of registrable.waitingList">
       <td>
         <a *ngIf="participant.leader" [routerLink]="['/', getEventAcronym(), 'registration', participant.leader?.id]">{{ participant.leader?.firstName }} {{ participant.leader?.lastName }}</a>
-        <a *ngIf="!participant.leader && participant.isPartnerRegistration" class="font-italic">{{ participant.placeholderPartner }}</a>
+        <a *ngIf="!participant.leader && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
       </td>
       <td *ngIf="registrable.maximumDoubleSeats">
         <a *ngIf="participant.follower" [routerLink]="['/', getEventAcronym(), 'registration', participant.follower?.id]">{{ participant.follower?.firstName }} {{ participant.follower?.lastName }}</a>
-        <a *ngIf="!participant.follower && participant.isPartnerRegistration" class="font-italic">{{ participant.placeholderPartner }}</a>
+        <a *ngIf="!participant.follower && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
       </td>
       <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">x</p></td>
     </tr>
