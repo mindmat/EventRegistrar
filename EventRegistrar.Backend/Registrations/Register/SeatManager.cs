@@ -5,7 +5,6 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.Events;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Spots;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Backend.Registrations.Register
@@ -249,26 +248,45 @@ namespace EventRegistrar.Backend.Registrations.Register
                                                   ownRole == Role.Follower && !seat.RegistrationId_Follower.HasValue));
         }
 
-        private Seat FindPartnerSeat(Guid? eventId, RegistrationIdentification ownIdentification, string partnerEmail, Role ownRole, ICollection<Seat> existingSeats)
+        private Seat FindPartnerSeat(Guid? eventId,
+                                     RegistrationIdentification ownIdentification,
+                                     string partner,
+                                     Role ownRole,
+                                     ICollection<Seat> existingSeats)
         {
-            var partnerSeats = existingSeats.Where(seat => seat.PartnerEmail == ownIdentification.Email).ToList();
+            var potentialPartnerSeats = existingSeats.Where(seat => seat.IsPartnerSpot
+                                                                 // own part still available
+                                                                 && (ownRole == Role.Leader && seat.RegistrationId == null
+                                                                  || ownRole == Role.Follower && seat.RegistrationId_Follower == null))
+                                                     .ToList();
+            var partnerSeats = potentialPartnerSeats.Where(seat => seat.PartnerEmail == ownIdentification.Email)
+                                                    .ToList();
             if (!partnerSeats.Any())
             {
-                partnerSeats = existingSeats.Where(seat => EF.Functions.Like($" {seat.PartnerEmail} ", $"% {ownIdentification.FirstName} %")
-                                                        && EF.Functions.Like($" {seat.PartnerEmail} ", $"% {ownIdentification.LastName} %"))
-                                            .ToList();
+                partnerSeats = potentialPartnerSeats.Where(seat => $" {seat.PartnerEmail} ".Contains($"% {ownIdentification.FirstName} %")
+                                                                && $" {seat.PartnerEmail} ".Contains($"% {ownIdentification.LastName} %"))
+                                                    .ToList();
                 if (!partnerSeats.Any())
                 {
                     return null;
                 }
             }
+            _logger.LogInformation($"partner seats ids: {string.Join(", ", partnerSeats.Select(seat => seat.Id))}");
+
             var otherRole = ownRole == Role.Leader ? Role.Follower : Role.Leader;
-            var partnerRegistrationIds = partnerSeats.Select(seat => otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower).ToList();
-            var partnerRegistrationThatReferenceThisEmail = _registrations.Where(reg => (!eventId.HasValue || reg.RegistrationForm.EventId == eventId.Value) &&
-                                                                                       partnerRegistrationIds.Contains(reg.Id))
+            var partnerRegistrationIds = partnerSeats.Select(seat => otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower)
+                                                     .ToList();
+            var registrationsThatReferenceOwnRegistration = _registrations.Where(reg => (!eventId.HasValue || reg.RegistrationForm.EventId == eventId.Value)
+                                                                                     && partnerRegistrationIds.Contains(reg.Id))
                                                                           .ToList();
-            _logger.LogInformation($"Partner registrations with this partner mail: {string.Join(", ", partnerRegistrationThatReferenceThisEmail.Select(reg => reg.Id))}");
-            var partnerRegistrationId = partnerRegistrationThatReferenceThisEmail.FirstOrDefault(reg => reg.RespondentEmail == partnerEmail)?.Id;
+            _logger.LogInformation($"Partner registrations with this partner mail: {string.Join(", ", registrationsThatReferenceOwnRegistration.Select(reg => $"{reg.Id} ({reg.RespondentFirstName} {reg.RespondentLastName} - {reg.RespondentEmail})"))}");
+            var partnerRegistrationId = registrationsThatReferenceOwnRegistration.FirstOrDefault(reg => reg.RespondentEmail == partner)?.Id;
+            if (partnerRegistrationId != null)
+            {
+                partnerRegistrationId = registrationsThatReferenceOwnRegistration.FirstOrDefault(reg => partner.Contains(reg.RespondentFirstName)
+                                                                                                     && partner.Contains(reg.RespondentLastName))?.Id;
+            }
+
             return partnerSeats.FirstOrDefault(seat => partnerRegistrationId == (otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower));
         }
     }
