@@ -72,7 +72,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     if (isDoubleRegistrable)
                     {
                         var partner = mapping.QuestionId_Partner.HasValue
-                                      ? registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == mapping.QuestionId_Partner)?.ResponseString
+                                      ? registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == mapping.QuestionId_Partner)?.ResponseString?.ToLowerInvariant()
                                       : null;
                         var questionOptionId_Leader = mapping.QuestionOptionId_Leader ?? config.QuestionOptionId_Leader;
                         var questionOptionId_Follower = mapping.QuestionOptionId_Follower ?? config.QuestionOptionId_Follower;

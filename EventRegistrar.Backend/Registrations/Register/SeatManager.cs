@@ -263,8 +263,8 @@ namespace EventRegistrar.Backend.Registrations.Register
                                                     .ToList();
             if (!partnerSeats.Any())
             {
-                partnerSeats = potentialPartnerSeats.Where(seat => $" {seat.PartnerEmail} ".Contains($"% {ownIdentification.FirstName} %")
-                                                                && $" {seat.PartnerEmail} ".Contains($"% {ownIdentification.LastName} %"))
+                partnerSeats = potentialPartnerSeats.Where(seat => $" {seat.PartnerEmail} ".Contains($" {ownIdentification.FirstName} ")
+                                                                && $" {seat.PartnerEmail} ".Contains($" {ownIdentification.LastName} "))
                                                     .ToList();
                 if (!partnerSeats.Any())
                 {
@@ -280,11 +280,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                                                                                      && partnerRegistrationIds.Contains(reg.Id))
                                                                           .ToList();
             _logger.LogInformation($"Partner registrations with this partner mail: {string.Join(", ", registrationsThatReferenceOwnRegistration.Select(reg => $"{reg.Id} ({reg.RespondentFirstName} {reg.RespondentLastName} - {reg.RespondentEmail})"))}");
-            var partnerRegistrationId = registrationsThatReferenceOwnRegistration.FirstOrDefault(reg => reg.RespondentEmail == partner)?.Id;
-            if (partnerRegistrationId != null)
+            var partnerRegistrationId = registrationsThatReferenceOwnRegistration.FirstOrDefault(reg => string.Equals(reg.RespondentEmail, partner, StringComparison.InvariantCultureIgnoreCase))?.Id;
+            if (partnerRegistrationId == null)
             {
-                partnerRegistrationId = registrationsThatReferenceOwnRegistration.FirstOrDefault(reg => partner.Contains(reg.RespondentFirstName)
-                                                                                                     && partner.Contains(reg.RespondentLastName))?.Id;
+                partnerRegistrationId = registrationsThatReferenceOwnRegistration.FirstOrDefault(reg => $" {partner} ".Contains($" {reg.RespondentFirstName} ", StringComparison.InvariantCultureIgnoreCase)
+                                                                                                     && $" {partner} ".Contains($" {reg.RespondentLastName} ", StringComparison.InvariantCultureIgnoreCase))?.Id;
             }
 
             return partnerSeats.FirstOrDefault(seat => partnerRegistrationId == (otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower));
