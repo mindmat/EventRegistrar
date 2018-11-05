@@ -59,6 +59,9 @@ namespace EventRegistrar.Backend.Registrables.Participants
                                                    FirstName = seat.Registration_Follower.RespondentFirstName,
                                                    LastName = seat.Registration_Follower.RespondentLastName
                                                },
+                                               PlaceholderPartner = seat.IsPartnerSpot && (seat.RegistrationId == null || seat.RegistrationId_Follower == null)
+                                                                    ? seat.PartnerEmail
+                                                                    : null,
                                                IsOnWaitingList = seat.IsWaitingList || seat.Registration != null && seat.Registration.IsWaitingList == true,
                                                IsPartnerRegistration = seat.IsPartnerSpot || seat.PartnerEmail != null
                                            })

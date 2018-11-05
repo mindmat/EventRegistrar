@@ -52,6 +52,7 @@ class Place {
   follower: Registration;
   isOnWaitingList: boolean;
   isPartnerRegistration: boolean;
+  placeholderPartner: string;
 }
 
 class Registration {

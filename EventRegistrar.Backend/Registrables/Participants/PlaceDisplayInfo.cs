@@ -6,5 +6,6 @@
         public bool IsOnWaitingList { get; set; }
         public bool IsPartnerRegistration { get; set; }
         public RegistrationDisplayInfo Leader { get; set; }
+        public string PlaceholderPartner { get; set; }
     }
 }

@@ -44,7 +44,8 @@ namespace EventRegistrar.Backend.Spots
                                                 seat.RegistrationId :
                                             null,
                                         FirstPartnerJoined = seat.FirstPartnerJoined,
-                                        IsCore = seat.Registrable.IsCore
+                                        IsCore = seat.Registrable.IsCore,
+                                        Partner = seat.IsPartnerSpot ? seat.PartnerEmail : null
                                     })
                                     .OrderBy(seat => seat.SortKey)
                                     .ToListAsync(cancellationToken);
