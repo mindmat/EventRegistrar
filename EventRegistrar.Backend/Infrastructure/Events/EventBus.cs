@@ -1,29 +1,36 @@
 ﻿using System.Linq;
+using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using Newtonsoft.Json;
 using SimpleInjector;
 
 namespace EventRegistrar.Backend.Infrastructure.Events
 {
     public class EventBus
     {
-        //private readonly IEnumerable<IEventToCommandTranslation> _eventToCommandTranslations;
         private readonly Container _container;
-
+        private readonly EventContext _eventContext;
         private readonly ServiceBusClient _serviceBusClient;
 
         public EventBus(Container container,
-                        ServiceBusClient serviceBusClient)
+                        ServiceBusClient serviceBusClient,
+                        EventContext eventContext)
         {
-            //_eventToCommandTranslations = eventToCommandTranslations;
             _container = container;
             _serviceBusClient = serviceBusClient;
+            _eventContext = eventContext;
         }
 
         public void Publish<TEvent>(TEvent @event)
            where TEvent : Event
         {
+            _serviceBusClient.SendMessage(new SaveDomainEventCommand
+            {
+                EventId = _eventContext.EventId,
+                EventType = @event.GetType().FullName,
+                EventData = JsonConvert.SerializeObject(@event),
+            });
             var translations = _container.GetAllInstances<IEventToCommandTranslation<TEvent>>().ToList();
-            //var translations = _eventToCommandTranslations.Where(tlt => tlt.EventType == typeof(TEvent));
             foreach (var translation in translations)
             {
                 var command = translation.Translate(@event);

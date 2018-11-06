@@ -3,6 +3,7 @@ using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Infrastructure.Configuration;
+using EventRegistrar.Backend.Infrastructure.Events;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Feedback;
 using EventRegistrar.Backend.Mailing.Templates;
@@ -67,6 +68,8 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new RawRegistrationMap());
 
             builder.ApplyConfiguration(new EventConfigurationMap());
+
+            builder.ApplyConfiguration(new DomainEventMap());
         }
     }
 }

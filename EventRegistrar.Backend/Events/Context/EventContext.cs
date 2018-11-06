@@ -6,9 +6,9 @@ namespace EventRegistrar.Backend.Events.Context
     {
         public Guid? EventId { get; set; }
 
-        public static implicit operator Guid? (EventContext connectionString)
+        public static implicit operator Guid? (EventContext eventContext)
         {
-            return connectionString.EventId;
+            return eventContext.EventId;
         }
     }
 }
