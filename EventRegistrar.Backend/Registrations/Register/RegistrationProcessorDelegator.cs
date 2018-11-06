@@ -25,8 +25,8 @@ namespace EventRegistrar.Backend.Registrations.Register
         public async Task<IEnumerable<Seat>> Process(Registration registration, RegistrationForm form)
         {
             var processConfiguration = form.ProcessConfigurationJson != null
-                ? JsonConvert.DeserializeObject<IEnumerable<IRegistrationProcessConfiguration>>(form.ProcessConfigurationJson)
-                : GetHardcodedConfiguration(form.Id);
+                                       ? JsonConvert.DeserializeObject<IEnumerable<IRegistrationProcessConfiguration>>(form.ProcessConfigurationJson)
+                                       : GetHardcodedConfiguration(form.Id);
             var spots = new List<Seat>();
             foreach (var registrationProcessConfiguration in processConfiguration)
             {

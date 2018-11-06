@@ -99,6 +99,10 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 {
                     templateFiller[key] = await GetSeatList(registrationForPrefix, language);
                 }
+                else if (parts.key == "PARTNER")
+                {
+                    templateFiller[key] = registrationForPrefix?.Partner;
+                }
                 else if (parts.key == "PRICE")
                 {
                     var price = parts.prefix == null

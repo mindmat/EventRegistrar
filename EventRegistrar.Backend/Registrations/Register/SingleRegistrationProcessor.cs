@@ -57,10 +57,10 @@ namespace EventRegistrar.Backend.Registrations.Register
 
             var questionOptionIds = new HashSet<Guid>(registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue).Select(rsp => rsp.QuestionOptionId.Value));
             var mappings = await _optionToRegistrableMappings
-                                            .Where(map => questionOptionIds.Contains(map.QuestionOptionId))
-                                            .Include(map => map.Registrable)
-                                            .Include(map => map.Registrable.Seats)
-                                            .ToListAsync();
+                                 .Where(map => questionOptionIds.Contains(map.QuestionOptionId))
+                                 .Include(map => map.Registrable)
+                                 .Include(map => map.Registrable.Seats)
+                                 .ToListAsync();
 
             var soldOutMessages = new StringBuilder();
             foreach (var response in registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue))
