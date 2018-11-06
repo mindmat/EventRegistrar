@@ -113,12 +113,33 @@ namespace EventRegistrar.Backend.Registrations.Register
             await _registrations.InsertOrUpdateEntity(registration);
 
             // send mail
-            var mailType = isOnWaitingList
-                ? MailType.SingleRegistrationOnWaitingList
-                : MailType.SingleRegistrationAccepted;
+            var isPartnerRegistration = registration.Partner != null;
+            var isUnmatchedPartnerRegistration = isPartnerRegistration
+                                              && ownSeats.Any(seat => seat.PartnerEmail != null
+                                                                   && (!seat.RegistrationId.HasValue || !seat.RegistrationId_Follower.HasValue));
+            MailType mailToSend;
+            if (!isPartnerRegistration)
+            {
+                mailToSend = isOnWaitingList
+                    ? MailType.SingleRegistrationOnWaitingList
+                    : MailType.SingleRegistrationAccepted;
+            }
+            else if (isUnmatchedPartnerRegistration)
+            {
+                mailToSend = isOnWaitingList
+                    ? MailType.PartnerRegistrationFirstPartnerOnWaitingList
+                    : MailType.PartnerRegistrationFirstPartnerAccepted;
+            }
+            else
+            {
+                mailToSend = isOnWaitingList
+                    ? MailType.PartnerRegistrationMatchedOnWaitingList
+                    : MailType.PartnerRegistrationMatchedAndAccepted;
+            }
+
             _serviceBusClient.SendMessage(new ComposeAndSendMailCommand
             {
-                MailType = mailType,
+                MailType = mailToSend,
                 RegistrationId = registration.Id,
                 Withhold = true,
                 AllowDuplicate = false
