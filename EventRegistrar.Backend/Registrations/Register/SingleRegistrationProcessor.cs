@@ -74,6 +74,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                         var partner = mapping.QuestionId_Partner.HasValue
                                       ? registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == mapping.QuestionId_Partner)?.ResponseString?.ToLowerInvariant()
                                       : null;
+                        if (string.IsNullOrWhiteSpace(partner))
+                        {
+                            partner = null;
+                        }
+
                         var questionOptionId_Leader = mapping.QuestionOptionId_Leader ?? config.QuestionOptionId_Leader;
                         var questionOptionId_Follower = mapping.QuestionOptionId_Follower ?? config.QuestionOptionId_Follower;
                         var isLeader = questionOptionId_Leader.HasValue && registration.Responses.Any(rsp => rsp.QuestionOptionId == questionOptionId_Leader.Value);
