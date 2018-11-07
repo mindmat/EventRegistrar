@@ -149,7 +149,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 //        templateFiller[key] = reminder1Date.Value.ToString(DateFormat);
                 //    }
                 //}
-                else
+                else if (parts.key != null && key != null)
                 {
                     // check responses with Question.TemplateKey
                     templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp => string.Equals(rsp.Question.TemplateKey, parts.key, StringComparison.InvariantCultureIgnoreCase))?.ResponseString;
