@@ -95,9 +95,9 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 {
                     templateFiller[key] = registrationForPrefix?.Phone;
                 }
-                else if (parts.key == "SEATLIST")
+                else if (parts.key == "SEATLIST" && registrationForPrefix != null)
                 {
-                    templateFiller[key] = await GetSeatList(registrationForPrefix, language);
+                    templateFiller[key] = GetSeatList(registrationForPrefix, language);
                 }
                 else if (parts.key == "PARTNER")
                 {
@@ -149,7 +149,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 //        templateFiller[key] = reminder1Date.Value.ToString(DateFormat);
                 //    }
                 //}
-                else if (parts.key != null && key != null)
+                else if (parts.key != null && key != null && registrationForPrefix != null)
                 {
                     // check responses with Question.TemplateKey
                     templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp => string.Equals(rsp.Question.TemplateKey, parts.key, StringComparison.InvariantCultureIgnoreCase))?.ResponseString;
@@ -204,7 +204,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
             return text;
         }
 
-        private async Task<string> GetSeatList(Registration registration, string language)
+        private string GetSeatList(Registration registration, string language)
         {
             var seatLines = new List<(int sortKey, string seatLine)>();
             if (registration.Seats_AsLeader != null)
