@@ -87,7 +87,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                         var ownIdentification = new RegistrationIdentification(registration);
                         seat = _seatManager.ReserveSinglePartOfPartnerSpot(registration.EventId, mapping.Registrable, registration.Id, ownIdentification, partner, role);
 
-                        registration.Partner = partner ?? registration.Partner.ToLowerInvariant();
+                        registration.Partner = partner ?? registration.Partner?.ToLowerInvariant();
                     }
                     else
                     {
