@@ -1,4 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.Events;
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Registrations.Confirmation;
 

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace EventRegistrar.Backend.Infrastructure.Events
+namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 {
-    public class DomainEvent
+    public class PersistedDomainEvent
     {
         public string Data { get; set; }
         public Guid? EventId { get; set; }

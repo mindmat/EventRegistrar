@@ -1,7 +1,7 @@
 ﻿using System;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
-namespace EventRegistrar.Backend.Infrastructure.Events
+namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 {
     public class SaveDomainEventCommand : IQueueBoundMessage
     {

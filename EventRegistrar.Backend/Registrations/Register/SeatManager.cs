@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.Events;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Spots;
 using Microsoft.Extensions.Logging;

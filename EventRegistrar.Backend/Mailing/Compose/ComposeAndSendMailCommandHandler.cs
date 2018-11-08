@@ -16,7 +16,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
 {
     public class ComposeAndSendMailCommandHandler : IRequestHandler<ComposeAndSendMailCommand>
     {
-        public const string FallbackLanguage = Language.Deutsch;
+        public const string FallbackLanguage = Language.English;
 
         private readonly MailComposer _mailComposer;
         private readonly IRepository<Mail> _mails;

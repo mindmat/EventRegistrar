@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EventRegistrar.Backend.Infrastructure.Events
+namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 {
-    public class DomainEventMap : IEntityTypeConfiguration<DomainEvent>
+    public class PersistedDomainEventMap : IEntityTypeConfiguration<PersistedDomainEvent>
     {
-        public void Configure(EntityTypeBuilder<DomainEvent> builder)
+        public void Configure(EntityTypeBuilder<PersistedDomainEvent> builder)
         {
             builder.ToTable("DomainEvents");
             builder.HasKey(ent => ent.Id);

@@ -4,7 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.Events;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
 using MediatR;

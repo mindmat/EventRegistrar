@@ -1,5 +1,5 @@
 ﻿using System;
-using EventRegistrar.Backend.Infrastructure.Events;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Spots
 {

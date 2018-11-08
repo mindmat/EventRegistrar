@@ -1,6 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
-namespace EventRegistrar.Backend.Infrastructure.Events
+namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 {
     public interface IEventToCommandTranslation<TEvent>
       where TEvent : Event

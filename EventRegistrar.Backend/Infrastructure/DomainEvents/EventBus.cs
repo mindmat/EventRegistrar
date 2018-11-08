@@ -4,7 +4,7 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using Newtonsoft.Json;
 using SimpleInjector;
 
-namespace EventRegistrar.Backend.Infrastructure.Events
+namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 {
     public class EventBus
     {
