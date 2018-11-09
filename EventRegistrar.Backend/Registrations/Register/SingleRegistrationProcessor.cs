@@ -90,7 +90,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                         seat = _seatManager.ReserveSinglePartOfPartnerSpot(registration.EventId, mapping.Registrable, registration.Id, ownIdentification, partnerNormalized, role);
 
                         registration.PartnerNormalized = (partnerNormalized ?? registration.PartnerNormalized)?.ToLowerInvariant();
-                        registration.PartnerOriginal = (partnerOriginal ?? registration.PartnerOriginal)?.ToLowerInvariant();
+                        registration.PartnerOriginal = partnerOriginal ?? registration.PartnerOriginal;
                     }
                     else
                     {
