@@ -17,10 +17,12 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 
         public async Task<Unit> Handle(SaveDomainEventCommand command, CancellationToken cancellationToken)
         {
+            var id = command.DomainEventId == Guid.Empty ? Guid.NewGuid() : command.DomainEventId;
             await _domainEvents.AddAsync(new PersistedDomainEvent
             {
-                Id = Guid.NewGuid(),
-                EventId = null,
+                Id = id,
+                EventId = command.EventId,
+                DomainEventId_Parent = command.DomainEventId_Parent,
                 Timestamp = DateTime.UtcNow,
                 Type = command.EventType,
                 Data = command.EventData

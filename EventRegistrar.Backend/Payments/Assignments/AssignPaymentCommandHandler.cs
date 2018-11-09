@@ -68,8 +68,9 @@ namespace EventRegistrar.Backend.Payments.Assignments
                 }, cancellationToken);
             }
 
-            _eventBus.Publish(new PaymentAssignedEvent
+            _eventBus.Publish(new PaymentAssigned
             {
+                Id = Guid.NewGuid(),
                 RegistrationId = assignment.RegistrationId,
                 PaymentId = assignment.ReceivedPaymentId
             });

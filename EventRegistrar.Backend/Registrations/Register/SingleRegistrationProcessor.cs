@@ -71,13 +71,15 @@ namespace EventRegistrar.Backend.Registrations.Register
                     Seat seat;
                     if (isDoubleRegistrable)
                     {
-                        var partner = mapping.QuestionId_Partner.HasValue
-                                      ? registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == mapping.QuestionId_Partner)?.ResponseString?.ToLowerInvariant()
-                                      : null;
-                        if (string.IsNullOrWhiteSpace(partner))
+                        var partnerOriginal = mapping.QuestionId_Partner.HasValue
+                                              ? registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == mapping.QuestionId_Partner)?.ResponseString
+                                              : null;
+                        if (string.IsNullOrWhiteSpace(partnerOriginal))
                         {
-                            partner = null;
+                            partnerOriginal = null;
                         }
+
+                        var partnerNormalized = partnerOriginal?.ToLowerInvariant();
 
                         var questionOptionId_Leader = mapping.QuestionOptionId_Leader ?? config.QuestionOptionId_Leader;
                         var questionOptionId_Follower = mapping.QuestionOptionId_Follower ?? config.QuestionOptionId_Follower;
@@ -85,9 +87,10 @@ namespace EventRegistrar.Backend.Registrations.Register
                         var isFollower = questionOptionId_Follower.HasValue && registration.Responses.Any(rsp => rsp.QuestionOptionId == questionOptionId_Follower.Value);
                         var role = isLeader ? Role.Leader : (isFollower ? Role.Follower : (Role?)null);
                         var ownIdentification = new RegistrationIdentification(registration);
-                        seat = _seatManager.ReserveSinglePartOfPartnerSpot(registration.EventId, mapping.Registrable, registration.Id, ownIdentification, partner, role);
+                        seat = _seatManager.ReserveSinglePartOfPartnerSpot(registration.EventId, mapping.Registrable, registration.Id, ownIdentification, partnerNormalized, role);
 
-                        registration.Partner = partner ?? registration.Partner?.ToLowerInvariant();
+                        registration.PartnerNormalized = (partnerNormalized ?? registration.PartnerNormalized)?.ToLowerInvariant();
+                        registration.PartnerOriginal = (partnerOriginal ?? registration.PartnerOriginal)?.ToLowerInvariant();
                     }
                     else
                     {
@@ -118,7 +121,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             await _registrations.InsertOrUpdateEntity(registration);
 
             // send mail
-            var isPartnerRegistration = registration.Partner != null;
+            var isPartnerRegistration = registration.PartnerNormalized != null;
             var isUnmatchedPartnerRegistration = isPartnerRegistration
                                               && ownSeats.Any(seat => seat.PartnerEmail != null
                                                                    && (!seat.RegistrationId.HasValue || !seat.RegistrationId_Follower.HasValue));

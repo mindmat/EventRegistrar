@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using Newtonsoft.Json;
@@ -22,10 +23,12 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents
         }
 
         public void Publish<TEvent>(TEvent @event)
-           where TEvent : Event
+           where TEvent : DomainEvent
         {
             _serviceBusClient.SendMessage(new SaveDomainEventCommand
             {
+                DomainEventId = @event.Id == Guid.Empty ? Guid.NewGuid() : @event.Id,
+                DomainEventId_Parent = @event.DomainEventId_Parent,
                 EventId = _eventContext.EventId,
                 EventType = @event.GetType().FullName,
                 EventData = JsonConvert.SerializeObject(@event),

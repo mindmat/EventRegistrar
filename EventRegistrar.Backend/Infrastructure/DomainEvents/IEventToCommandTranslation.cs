@@ -3,7 +3,7 @@
 namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 {
     public interface IEventToCommandTranslation<TEvent>
-      where TEvent : Event
+      where TEvent : DomainEvent
     {
         //Type EventType { get; }
 

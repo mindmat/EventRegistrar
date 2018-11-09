@@ -3,7 +3,7 @@ using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Spots
 {
-    public class SpotRemoved : Event
+    public class SpotRemoved : DomainEvent
     {
         public Guid RegistrableId { get; set; }
         public Guid RegistrationId { get; set; }

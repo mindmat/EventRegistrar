@@ -5,6 +5,7 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents
     public class PersistedDomainEvent
     {
         public string Data { get; set; }
+        public Guid? DomainEventId_Parent { get; set; }
         public Guid? EventId { get; set; }
         public Guid Id { get; set; }
 

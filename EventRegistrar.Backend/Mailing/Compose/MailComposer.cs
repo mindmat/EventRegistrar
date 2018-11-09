@@ -101,7 +101,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 }
                 else if (parts.key == "PARTNER")
                 {
-                    templateFiller[key] = registrationForPrefix?.Partner;
+                    templateFiller[key] = registrationForPrefix?.PartnerOriginal;
                 }
                 else if (parts.key == "PRICE")
                 {

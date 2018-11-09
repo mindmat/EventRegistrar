@@ -4,9 +4,9 @@ using EventRegistrar.Backend.Payments.Assignments;
 
 namespace EventRegistrar.Backend.Payments.Statements
 {
-    public class CheckIfPaymentIsSettledAfterAssignment : IEventToCommandTranslation<PaymentAssignedEvent>
+    public class CheckIfPaymentIsSettledAfterAssignment : IEventToCommandTranslation<PaymentAssigned>
     {
-        public IQueueBoundMessage Translate(PaymentAssignedEvent e)
+        public IQueueBoundMessage Translate(PaymentAssigned e)
         {
             return new CheckIfPaymentIsSettledCommand { PaymentId = e.PaymentId };
         }

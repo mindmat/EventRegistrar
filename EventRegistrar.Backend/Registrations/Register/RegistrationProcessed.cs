@@ -2,7 +2,7 @@
 
 namespace EventRegistrar.Backend.Registrations.Register
 {
-    public class RegistrationProcessed : Event
+    public class RegistrationProcessed : DomainEvent
     {
     }
 }
