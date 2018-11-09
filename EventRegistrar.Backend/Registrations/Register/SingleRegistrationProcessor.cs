@@ -91,6 +91,16 @@ namespace EventRegistrar.Backend.Registrations.Register
 
                         registration.PartnerNormalized = (partnerNormalized ?? registration.PartnerNormalized)?.ToLowerInvariant();
                         registration.PartnerOriginal = partnerOriginal ?? registration.PartnerOriginal;
+                        if (seat.IsPartnerSpot && registration.RegistrationId_Partner == null)
+                        {
+                            registration.RegistrationId_Partner = seat.GetOtherRegistrationId(registration.Id);
+                            // set own id as partner id of partner registration
+                            var partnerRegistration = await _registrations.FirstOrDefaultAsync(reg => reg.Id == registration.RegistrationId_Partner);
+                            if (partnerRegistration != null)
+                            {
+                                partnerRegistration.RegistrationId_Partner = registration.Id;
+                            }
+                        }
                     }
                     else
                     {
