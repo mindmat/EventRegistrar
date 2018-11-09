@@ -69,7 +69,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             return seat;
         }
 
-        public Seat ReserveSinglePartOfPartnerSpot(Guid? eventId,
+        public Seat ReserveSinglePartOfPartnerSpot(Guid eventId,
                                                    Registrable registrable,
                                                    Guid registrationId,
                                                    RegistrationIdentification ownIdentification,
@@ -248,7 +248,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                                                   ownRole == Role.Follower && !seat.RegistrationId_Follower.HasValue));
         }
 
-        private Seat FindPartnerSeat(Guid? eventId,
+        private Seat FindPartnerSeat(Guid eventId,
                                      RegistrationIdentification ownIdentification,
                                      string partner,
                                      Role ownRole,
@@ -276,7 +276,8 @@ namespace EventRegistrar.Backend.Registrations.Register
             var otherRole = ownRole == Role.Leader ? Role.Follower : Role.Leader;
             var partnerRegistrationIds = partnerSeats.Select(seat => otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower)
                                                      .ToList();
-            var registrationsThatReferenceOwnRegistration = _registrations.Where(reg => (!eventId.HasValue || reg.RegistrationForm.EventId == eventId.Value)
+            var registrationsThatReferenceOwnRegistration = _registrations.Where(reg => reg.RegistrationForm.EventId == eventId
+                                                                                     && (reg.RegistrationId_Partner == null || reg.RegistrationId_Partner == ownIdentification.Id)
                                                                                      && partnerRegistrationIds.Contains(reg.Id))
                                                                           .ToList();
             _logger.LogInformation($"Partner registrations with this partner mail: {string.Join(", ", registrationsThatReferenceOwnRegistration.Select(reg => $"{reg.Id} ({reg.RespondentFirstName} {reg.RespondentLastName} - {reg.RespondentEmail})"))}");

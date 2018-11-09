@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events.Context;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Register;
@@ -17,17 +16,14 @@ namespace EventRegistrar.Backend.Spots
         private readonly IQueryable<Registrable> _registrables;
         private readonly IQueryable<Registration> _registrations;
         private readonly SeatManager _seatManager;
-        private readonly IRepository<Seat> _seats;
 
         public AddSpotCommandHandler(IQueryable<Registration> registrations,
                                      IQueryable<Registrable> registrables,
-                                     IRepository<Seat> seats,
                                      SeatManager seatManager,
                                      EventContext eventContext)
         {
             _registrations = registrations;
             _registrables = registrables;
-            _seats = seats;
             _seatManager = seatManager;
             _eventContext = eventContext;
         }
@@ -41,9 +37,9 @@ namespace EventRegistrar.Backend.Spots
                                                             && rbl.EventId == _eventContext.EventId)
                                                  .Include(rbl => rbl.Seats)
                                                  .FirstAsync(cancellationToken);
-            if (registrable.MaximumDoubleSeats.HasValue)
+            if (registrable.MaximumDoubleSeats.HasValue && _eventContext.EventId.HasValue)
             {
-                _seatManager.ReserveSinglePartOfPartnerSpot(_eventContext.EventId,
+                _seatManager.ReserveSinglePartOfPartnerSpot(_eventContext.EventId.Value,
                                                             registrable,
                                                             registration.Id,
                                                             new RegistrationIdentification(registration),
