@@ -8,7 +8,12 @@ namespace EventRegistrar.Backend.Registrations.Price
     {
         public IQueueBoundMessage Translate(SpotAdded e)
         {
-            return new RecalculatePriceCommand { RegistrationId = e.RegistrationId };
+            if (!e.IsInitialProcessing)
+            {
+                return new RecalculatePriceCommand { RegistrationId = e.RegistrationId };
+            }
+
+            return null;
         }
     }
 }

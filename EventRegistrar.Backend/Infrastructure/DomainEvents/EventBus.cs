@@ -37,7 +37,10 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents
             foreach (var translation in translations)
             {
                 var command = translation.Translate(@event);
-                _serviceBusClient.SendMessage(command);
+                if (command != null)
+                {
+                    _serviceBusClient.SendMessage(command);
+                }
             }
         }
     }

@@ -40,11 +40,12 @@ namespace EventRegistrar.Backend.Spots
                                                             registration.Id,
                                                             new RegistrationIdentification(registration),
                                                             null,
-                                                            command.AsFollower ? Role.Follower : Role.Leader);
+                                                            command.AsFollower ? Role.Follower : Role.Leader,
+                                                            false);
             }
             else
             {
-                _seatManager.ReserveSingleSpot(command.EventId, registrable, registration.Id);
+                _seatManager.ReserveSingleSpot(command.EventId, registrable, registration.Id, false);
             }
 
             return Unit.Value;

@@ -8,7 +8,12 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
     {
         public IQueueBoundMessage Translate(SpotAdded e)
         {
-            return new CheckIfRegistrationIsPromotedCommand { RegistrationId = e.RegistrationId };
+            if (!e.IsInitialProcessing)
+            {
+                return new CheckIfRegistrationIsPromotedCommand { RegistrationId = e.RegistrationId };
+            }
+
+            return null;
         }
     }
 }

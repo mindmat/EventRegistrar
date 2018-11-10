@@ -33,7 +33,8 @@ namespace EventRegistrar.Backend.Registrations.Register
         public Seat ReservePartnerSpot(Guid? eventId,
                                        Registrable registrable,
                                        Guid registrationId_Leader,
-                                       Guid registrationId_Follower)
+                                       Guid registrationId_Follower,
+                                       bool initialProcessing)
         {
             var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();
             if (registrable.MaximumSingleSeats.HasValue)
@@ -64,8 +65,8 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
 
             _seats.InsertOrUpdateEntity(seat);
-            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId_Leader });
-            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId_Follower });
+            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId_Leader, IsInitialProcessing = initialProcessing });
+            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId_Follower, IsInitialProcessing = initialProcessing });
             return seat;
         }
 
@@ -74,7 +75,8 @@ namespace EventRegistrar.Backend.Registrations.Register
                                                    Guid registrationId,
                                                    RegistrationIdentification ownIdentification,
                                                    string partner,
-                                                   Role? role)
+                                                   Role? role,
+                                                   bool initialProcessing)
         {
             Seat seat;
             var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();
@@ -112,7 +114,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     if (existingPartnerSeat != null)
                     {
                         ComplementExistingSeat(registrationId, ownRole, existingPartnerSeat);
-                        _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId });
+                        _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
                         return existingPartnerSeat;
                     }
 
@@ -157,7 +159,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     if (!waitingListForOwnRole && matchingSingleSeat != null)
                     {
                         ComplementExistingSeat(registrationId, ownRole, matchingSingleSeat);
-                        _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId });
+                        _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
                         return matchingSingleSeat;
                     }
                     seat = new Seat
@@ -183,14 +185,15 @@ namespace EventRegistrar.Backend.Registrations.Register
 
             seat.Id = Guid.NewGuid();
             _seats.InsertOrUpdateEntity(seat);
-            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId });
+            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
 
             return seat;
         }
 
         public Seat ReserveSingleSpot(Guid? eventId,
                                       Registrable registrable,
-                                      Guid registrationId)
+                                      Guid registrationId,
+                                      bool initialProcessing)
         {
             var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();
             if (registrable.MaximumDoubleSeats.HasValue)
@@ -219,7 +222,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
 
             _seats.InsertOrUpdateEntity(seat);
-            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId });
+            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
 
             return seat;
         }
