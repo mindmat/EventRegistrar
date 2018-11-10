@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Payments;
@@ -16,6 +17,7 @@ namespace EventRegistrar.Backend.Registrations
     {
         public DateTime? AdmittedAt { get; set; }
         public ICollection<RegistrationCancellation> Cancellations { get; set; }
+        public Event Event { get; set; }
         public Guid EventId { get; set; }
         public string ExternalIdentifier { get; set; }
         public DateTime ExternalTimestamp { get; set; }

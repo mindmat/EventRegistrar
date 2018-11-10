@@ -14,6 +14,10 @@ namespace EventRegistrar.Backend.Registrations
                    .WithMany()
                    .HasForeignKey(reg => reg.RegistrationFormId);
 
+            builder.HasOne(reg => reg.Event)
+                   .WithMany()
+                   .HasForeignKey(reg => reg.EventId);
+
             builder.Property(reg => reg.PartnerNormalized)
                    .HasMaxLength(200);
 

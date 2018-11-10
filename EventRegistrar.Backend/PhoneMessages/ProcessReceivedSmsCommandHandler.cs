@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -32,16 +33,29 @@ namespace EventRegistrar.Backend.PhoneMessages
         public async Task<Unit> Handle(ProcessReceivedSmsCommand command, CancellationToken cancellationToken)
         {
             var registrations = await _registrations
-                                      .Where(reg => reg.PhoneNormalized == command.Sms.From)
+                                      .Where(reg => reg.PhoneNormalized == command.Sms.From
+                                                 && reg.Event.State != State.Finished)
+                                      .Select(reg => new
+                                      {
+                                          reg.Id,
+                                          reg.EventId,
+                                          EventState = reg.Event.State,
+                                          LastSmsSent = reg.Sms.Select(msg => msg.Sent)
+                                                               .OrderByDescending(snt => snt)
+                                                               .FirstOrDefault(),
+                                          RegistrationState = reg.State,
+                                          reg.ReceivedAt
+                                      })
                                       .ToListAsync(cancellationToken);
 
             // filter to registrations of events that have this number/Twilio account sid configured
-            var eventIds = registrations.Select(reg => reg.EventId)
-                                        .Distinct()
-                                        .Where(eid => IsSmsAddressedToEvent(eid, command.Sms))
-                                        .ToHashSet();
-            registrations = registrations.Where(reg => eventIds.Contains(reg.EventId))
-                                         .OrderBy(reg => reg.State == RegistrationState.Cancelled)
+            var eventIdsWithThisNumber = registrations.Select(reg => reg.EventId)
+                                                      .Distinct()
+                                                      .Where(eid => IsSmsAddressedToEvent(eid, command.Sms))
+                                                      .ToHashSet();
+            registrations = registrations.Where(reg => eventIdsWithThisNumber.Contains(reg.EventId))
+                                         .OrderBy(reg => reg.RegistrationState == RegistrationState.Cancelled)
+                                         .ThenByDescending(reg => reg.LastSmsSent ?? DateTime.MinValue)
                                          .ThenByDescending(reg => reg.ReceivedAt)
                                          .ToList();
 
