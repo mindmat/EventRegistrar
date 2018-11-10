@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
-using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Responses;
 using MediatR;
@@ -21,32 +20,29 @@ namespace EventRegistrar.Backend.Registrations.Register
 {
     public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRegistrationCommand>
     {
+        private readonly EventBus _eventBus;
         private readonly IQueryable<RegistrationForm> _forms;
         private readonly ILogger _logger;
-        private readonly PriceCalculator _priceCalculator;
         private readonly IRepository<RawRegistration> _rawRegistrations;
         private readonly RegistrationProcessorDelegator _registrationProcessorDelegator;
         private readonly IRepository<Registration> _registrations;
         private readonly IRepository<Response> _responses;
-        private readonly ServiceBusClient _serviceBusClient;
 
         public ProcessRawRegistrationCommandHandler(ILogger logger,
                                                     IRepository<RawRegistration> rawRegistrations,
                                                     IRepository<Registration> registrations,
                                                     IRepository<Response> responses,
                                                     IQueryable<RegistrationForm> forms,
-                                                    PriceCalculator priceCalculator,
                                                     RegistrationProcessorDelegator registrationProcessorDelegator,
-                                                    ServiceBusClient serviceBusClient)
+                                                    EventBus eventBus)
         {
             _logger = logger;
             _rawRegistrations = rawRegistrations;
             _registrations = registrations;
             _responses = responses;
             _forms = forms;
-            _priceCalculator = priceCalculator;
             _registrationProcessorDelegator = registrationProcessorDelegator;
-            _serviceBusClient = serviceBusClient;
+            _eventBus = eventBus;
         }
 
         public async Task<Unit> Handle(ProcessRawRegistrationCommand command, CancellationToken cancellationToken)
@@ -93,29 +89,6 @@ namespace EventRegistrar.Backend.Registrations.Register
                 throw new ApplicationException("Registration with id '{id}' already exists");
             }
 
-            // ToDo: check for duplicates
-            //var registrationWithSameEmail = await _registrations
-            //                                             .FirstOrDefaultAsync(reg => reg.RegistrationForm.EventId == form.EventId &&
-            //                                                                         reg.RespondentEmail == googleRegistration.Email &&
-            //                                                                         reg.State != RegistrationState.Cancelled);
-            //if (registrationWithSameEmail != null)
-            //{
-            //    // HACK: hardcoded
-            //    var sendMailCommand = new SendMailCommand
-            //    {
-            //        MailId = Guid.NewGuid(),
-            //        Subject = "Duplicate registration",
-            //        ContentPlainText = $"Hello, you can only register once so we have to discard your later registration. Your first registration we received at {registrationWithSameEmail.ReceivedAt.ToLocalTime()} is still valid",
-            //        Sender = new EmailAddress { Email = "noreply@leapinlindy.ch" },
-            //        To = new[] { new EmailAddress { Email = googleRegistration.Email } }
-            //    };
-            //    await ServiceBusClient.SendEvent(sendMailCommand, SendMailCommandHandler.SendMailQueueName);
-            //    return new HttpResponseMessage(HttpStatusCode.BadRequest)
-            //    {
-            //        Content = new StringContent($"Registration with mail '{googleRegistration.Email}' already exists")
-            //    };
-            //}
-
             registration = new Registration
             {
                 Id = Guid.NewGuid(),
@@ -129,7 +102,6 @@ namespace EventRegistrar.Backend.Registrations.Register
                 State = RegistrationState.Received,
                 Responses = new List<Response>()
             };
-            //var responses = new List<Response>();
 
             foreach (var rawResponse in googleRegistration.Responses)
             {
@@ -166,7 +138,15 @@ namespace EventRegistrar.Backend.Registrations.Register
                 }
             }
             var spots = await _registrationProcessorDelegator.Process(registration, form);
-
+            _eventBus.Publish(new RegistrationProcessed
+            {
+                Id = Guid.NewGuid(),
+                EventId = form.EventId.Value,
+                RegistrationId = registration.Id,
+                FirstName = registration.RespondentFirstName,
+                LastName = registration.RespondentLastName,
+                Registrables = spots.Select(spt => spt.Registrable?.Name).ToArray()
+            });
             //await context.SaveChangesAsync();
 
             //registrationRegistered = new RegistrationRegistered
