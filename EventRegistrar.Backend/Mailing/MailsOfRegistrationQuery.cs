@@ -7,7 +7,7 @@ namespace EventRegistrar.Backend.Mailing
 {
     public class MailsOfRegistrationQuery : IRequest<IEnumerable<Mail>>, IEventBoundRequest
     {
-        public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
         public Guid RegistrationId { get; set; }
     }
 }

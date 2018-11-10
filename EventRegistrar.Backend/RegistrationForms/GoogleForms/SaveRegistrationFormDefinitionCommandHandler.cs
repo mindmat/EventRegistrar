@@ -13,7 +13,7 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
 {
     public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<SaveRegistrationFormDefinitionCommand>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
+        private readonly IQueryable<Event> _events;
         private readonly IRepository<RegistrationForm> _forms;
         private readonly IRepository<QuestionOption> _questionOptions;
         private readonly IRepository<Question> _questions;
@@ -23,18 +23,19 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                                                             IRepository<RawRegistrationForm> rawForms,
                                                             IRepository<Question> questions,
                                                             IRepository<QuestionOption> questionOptions,
-                                                            IEventAcronymResolver acronymResolver)
+                                                            IQueryable<Event> events)
         {
             _forms = forms;
             _rawForms = rawForms;
             _questions = questions;
             _questionOptions = questionOptions;
-            _acronymResolver = acronymResolver;
+            _events = events;
         }
 
         public async Task<Unit> Handle(SaveRegistrationFormDefinitionCommand command, CancellationToken cancellationToken)
         {
-            var rawForm = await _rawForms.Where(frm => frm.EventAcronym == command.EventAcronym
+            var acronym = await _events.FirstAsync(evt => evt.Id == command.EventId, cancellationToken);
+            var rawForm = await _rawForms.Where(frm => frm.EventAcronym == acronym.Acronym
                                                     && frm.FormExternalIdentifier == command.FormId
                                                     && !frm.Processed)
                                          .OrderByDescending(frm => frm.Created)
@@ -43,8 +44,6 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
             {
                 throw new ArgumentException("No unprocessed form found");
             }
-
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(command.EventAcronym);
 
             var formDescription = JsonConvert.DeserializeObject<FormDescription>(rawForm.ReceivedMessage);
             var form = await _forms.FirstOrDefaultAsync(frm => frm.ExternalIdentifier == command.FormId, cancellationToken);
@@ -64,7 +63,7 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                 form = new RegistrationForm
                 {
                     Id = Guid.NewGuid(),
-                    EventId = eventId,
+                    EventId = command.EventId,
                     ExternalIdentifier = command.FormId,
                     Title = formDescription.Title,
                     State = State.Setup

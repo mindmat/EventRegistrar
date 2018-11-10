@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrables;
 using MediatR;
@@ -11,27 +10,24 @@ namespace EventRegistrar.Backend.Registrations.Overview
 {
     public class CheckinQueryHandler : IRequestHandler<CheckinQuery, CheckinView>
     {
-        private readonly EventContext _eventContext;
         private readonly IQueryable<Registrable> _registrables;
         private readonly IQueryable<Registration> _registrations;
 
         public CheckinQueryHandler(IQueryable<Registration> registrations,
-                                   IQueryable<Registrable> registrables,
-                                   EventContext eventContext)
+                                   IQueryable<Registrable> registrables)
         {
             _registrations = registrations;
             _registrables = registrables;
-            _eventContext = eventContext;
         }
 
         public async Task<CheckinView> Handle(CheckinQuery query, CancellationToken cancellationToken)
         {
-            var columns = await _registrables.Where(rbl => rbl.EventId == _eventContext.EventId
+            var columns = await _registrables.Where(rbl => rbl.EventId == query.EventId
                                                         && rbl.CheckinListColumn != null)
                                              .GroupBy(rbl => rbl.CheckinListColumn)
                                              .ToDictionaryAsync(grp => grp.Key, grp => grp.Select(rbl => new { rbl.Id, rbl.Name }), cancellationToken);
             var registrations = await _registrations
-                                      .Where(reg => reg.RegistrationForm.EventId == _eventContext.EventId
+                                      .Where(reg => reg.RegistrationForm.EventId == query.EventId
                                                  && reg.IsWaitingList == false
                                                  && reg.State != RegistrationState.Cancelled)
                                       .Select(reg => new

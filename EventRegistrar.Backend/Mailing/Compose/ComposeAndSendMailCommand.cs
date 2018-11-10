@@ -8,7 +8,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
     {
         public bool AllowDuplicate { get; set; }
         public string BulkMailKey { get; set; }
-        public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
         public MailType MailType { get; set; }
         public string QueueName => "ComposeAndSendMailCommandQueue";
         public Guid RegistrationId { get; set; }

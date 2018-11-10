@@ -6,7 +6,7 @@ namespace EventRegistrar.Backend.Payments.Due
 {
     public class SendReminderCommand : IRequest, IEventBoundRequest
     {
-        public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
         public Guid RegistrationId { get; set; }
         public bool Withhold { get; set; }
     }

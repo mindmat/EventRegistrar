@@ -9,21 +9,16 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
 {
     public class AddUserToRoleInEventCommandHandler : IRequestHandler<AddUserToRoleInEventCommand, Guid>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
         private readonly IRepository<UserInEvent> _usersInEvents;
 
-        public AddUserToRoleInEventCommandHandler(IRepository<UserInEvent> usersInEvents,
-                                                  IEventAcronymResolver acronymResolver)
+        public AddUserToRoleInEventCommandHandler(IRepository<UserInEvent> usersInEvents)
         {
             _usersInEvents = usersInEvents;
-            _acronymResolver = acronymResolver;
         }
 
         public async Task<Guid> Handle(AddUserToRoleInEventCommand command, CancellationToken cancellationToken)
         {
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(command.EventAcronym);
-
-            var userInEvent = await _usersInEvents.FirstOrDefaultAsync(uie => uie.EventId == eventId
+            var userInEvent = await _usersInEvents.FirstOrDefaultAsync(uie => uie.EventId == command.EventId
                                                                            && uie.UserId == command.UserId
                                                                            && uie.Role == command.Role, cancellationToken);
             if (userInEvent == null)
@@ -31,7 +26,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
                 userInEvent = new UserInEvent
                 {
                     Id = Guid.NewGuid(),
-                    EventId = eventId,
+                    EventId = command.EventId,
                     UserId = command.UserId,
                     Role = command.Role
                 };

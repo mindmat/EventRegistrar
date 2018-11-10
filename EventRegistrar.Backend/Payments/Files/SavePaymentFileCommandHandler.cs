@@ -14,7 +14,6 @@ namespace EventRegistrar.Backend.Payments.Files
 {
     public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileCommand>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
         private readonly CamtParser _camtParser;
         private readonly IQueryable<Event> _events;
         private readonly ILogger _log;
@@ -25,27 +24,24 @@ namespace EventRegistrar.Backend.Payments.Files
                                              IRepository<ReceivedPayment> payments,
                                              IQueryable<Event> events,
                                              CamtParser camtParser,
-                                             IEventAcronymResolver acronymResolver,
                                              ILogger log)
         {
             _paymentFiles = paymentFiles;
             _payments = payments;
             _events = events;
             _camtParser = camtParser;
-            _acronymResolver = acronymResolver;
             _log = log;
         }
 
         public async Task<Unit> Handle(SavePaymentFileCommand command, CancellationToken cancellationToken)
         {
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(command.EventAcronym);
             command.FileStream.Position = 0;
             var xml = XDocument.Load(command.FileStream);
             var content = xml.ToString();
 
             var camt = _camtParser.Parse(xml);
 
-            var existingFile = await _paymentFiles.FirstOrDefaultAsync(fil => fil.EventId == eventId && fil.FileId == camt.FileId, cancellationToken);
+            var existingFile = await _paymentFiles.FirstOrDefaultAsync(fil => fil.EventId == command.EventId && fil.FileId == camt.FileId, cancellationToken);
             if (existingFile != null)
             {
                 _log.LogInformation($"File with Id {camt.FileId} already exists (PaymentFile.Id = {existingFile.Id})");
@@ -57,7 +53,7 @@ namespace EventRegistrar.Backend.Payments.Files
             var paymentFile = new PaymentFile
             {
                 Id = Guid.NewGuid(),
-                EventId = eventId,
+                EventId = command.EventId,
                 Content = content,
                 FileId = camt.FileId,
                 AccountIban = camt.Account,

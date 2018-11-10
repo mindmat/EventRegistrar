@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events.Context;
-using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Registrations;
@@ -17,7 +15,6 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
 {
     public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromoteFromWaitingListCommand>
     {
-        private readonly EventContext _eventContext;
         private readonly ImbalanceManager _imbalanceManager;
         private readonly ILogger _log;
         private readonly IQueryable<Registrable> _registrables;
@@ -30,8 +27,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                                                        IRepository<Registration> registrations,
                                                        ImbalanceManager imbalanceManager,
                                                        ServiceBusClient serviceBusClient,
-                                                       ILogger log,
-                                                       EventContext eventContext)
+                                                       ILogger log)
         {
             _registrables = registrables;
             _seats = seats;
@@ -39,15 +35,13 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
             _imbalanceManager = imbalanceManager;
             _serviceBusClient = serviceBusClient;
             _log = log;
-            _eventContext = eventContext;
         }
 
         public async Task<Unit> Handle(TryPromoteFromWaitingListCommand command, CancellationToken cancellationToken)
         {
-            var eventId = _eventContext.EventId;
             var registrationIdsToCheck = new List<Guid?>();
-            var registrableToCheck = await _registrables.Where(rbl => rbl.Id == command.RegistrableId)
-                                                        .WhereIf(eventId.HasValue, rbl => rbl.EventId == eventId.Value)
+            var registrableToCheck = await _registrables.Where(rbl => rbl.Id == command.RegistrableId
+                                                                   && rbl.EventId == command.EventId)
                                                         .Include(rbl => rbl.Seats)
                                                         .FirstOrDefaultAsync(cancellationToken);
             registrationIdsToCheck.AddRange(await TryPromoteFromRegistrableWaitingList(registrableToCheck));

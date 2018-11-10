@@ -7,22 +7,18 @@ namespace EventRegistrar.Backend.Events.Context
 {
     public class ExtractEventIdDecorator<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
         private readonly EventContext _eventContext;
 
-        public ExtractEventIdDecorator(EventContext eventContext,
-                                       IEventAcronymResolver acronymResolver)
+        public ExtractEventIdDecorator(EventContext eventContext)
         {
             _eventContext = eventContext;
-            _acronymResolver = acronymResolver;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            if (request is IEventBoundRequest eventBoundRequest &&
-                !string.IsNullOrEmpty(eventBoundRequest.EventAcronym))
+            if (request is IEventBoundRequest eventBoundRequest)
             {
-                _eventContext.EventId = await _acronymResolver.GetEventIdFromAcronym(eventBoundRequest.EventAcronym);
+                _eventContext.EventId = eventBoundRequest.EventId;
             }
 
             return await next();

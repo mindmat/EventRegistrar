@@ -5,7 +5,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
 {
     public class RequestAccessCommand : IRequest<Guid>
     {
-        public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
         public string RequestText { get; set; }
     }
 }

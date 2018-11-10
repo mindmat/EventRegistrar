@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Registrations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,29 +11,25 @@ namespace EventRegistrar.Backend.Registrables
 {
     public class SingleRegistrablesOverviewQueryHandler : IRequestHandler<SingleRegistrablesOverviewQuery, IEnumerable<SingleRegistrableDisplayItem>>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
         private readonly IQueryable<Registrable> _registrables;
         private readonly IQueryable<Registration> _registrations;
 
         public SingleRegistrablesOverviewQueryHandler(IQueryable<Registrable> registrables,
-                                                      IQueryable<Registration> registrations,
-                                                      IEventAcronymResolver acronymResolver)
+                                                      IQueryable<Registration> registrations)
         {
             _registrables = registrables;
             _registrations = registrations;
-            _acronymResolver = acronymResolver;
         }
 
-        public async Task<IEnumerable<SingleRegistrableDisplayItem>> Handle(SingleRegistrablesOverviewQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SingleRegistrableDisplayItem>> Handle(SingleRegistrablesOverviewQuery query, CancellationToken cancellationToken)
         {
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(request.EventAcronym);
-            var registrables = await _registrables.Where(rbl => rbl.EventId == eventId
+            var registrables = await _registrables.Where(rbl => rbl.EventId == query.EventId
                                                              && !rbl.MaximumDoubleSeats.HasValue)
                                                   .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
                                                   .Include(rbl => rbl.Seats)
                                                   .ToListAsync(cancellationToken);
 
-            var registrationsOnWaitingList = new HashSet<Guid>(_registrations.Where(reg => reg.EventId == eventId
+            var registrationsOnWaitingList = new HashSet<Guid>(_registrations.Where(reg => reg.EventId == query.EventId
                                                                                         && (reg.IsWaitingList ?? false))
                                                                              .Select(reg => reg.Id));
 

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using EventRegistrar.Backend.Authorization;
 using MediatR;
 
@@ -6,7 +7,7 @@ namespace EventRegistrar.Backend.Payments.Files
 {
     public class SavePaymentFileCommand : IRequest, IEventBoundRequest
     {
-        public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
         public MemoryStream FileStream { get; set; }
     }
 }

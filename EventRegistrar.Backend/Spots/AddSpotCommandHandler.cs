@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Register;
@@ -12,34 +11,31 @@ namespace EventRegistrar.Backend.Spots
 {
     public class AddSpotCommandHandler : IRequestHandler<AddSpotCommand>
     {
-        private readonly EventContext _eventContext;
         private readonly IQueryable<Registrable> _registrables;
         private readonly IQueryable<Registration> _registrations;
         private readonly SeatManager _seatManager;
 
         public AddSpotCommandHandler(IQueryable<Registration> registrations,
                                      IQueryable<Registrable> registrables,
-                                     SeatManager seatManager,
-                                     EventContext eventContext)
+                                     SeatManager seatManager)
         {
             _registrations = registrations;
             _registrables = registrables;
             _seatManager = seatManager;
-            _eventContext = eventContext;
         }
 
         public async Task<Unit> Handle(AddSpotCommand command, CancellationToken cancellationToken)
         {
             var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId
-                                                                   && reg.EventId == _eventContext.EventId,
+                                                                   && reg.EventId == command.EventId,
                                                                cancellationToken);
             var registrable = await _registrables.Where(rbl => rbl.Id == command.RegistrableId
-                                                            && rbl.EventId == _eventContext.EventId)
+                                                            && rbl.EventId == command.EventId)
                                                  .Include(rbl => rbl.Seats)
                                                  .FirstAsync(cancellationToken);
-            if (registrable.MaximumDoubleSeats.HasValue && _eventContext.EventId.HasValue)
+            if (registrable.MaximumDoubleSeats.HasValue)
             {
-                _seatManager.ReserveSinglePartOfPartnerSpot(_eventContext.EventId.Value,
+                _seatManager.ReserveSinglePartOfPartnerSpot(command.EventId,
                                                             registrable,
                                                             registration.Id,
                                                             new RegistrationIdentification(registration),
@@ -48,7 +44,7 @@ namespace EventRegistrar.Backend.Spots
             }
             else
             {
-                _seatManager.ReserveSingleSpot(_eventContext.EventId, registrable, registration.Id);
+                _seatManager.ReserveSingleSpot(command.EventId, registrable, registration.Id);
             }
 
             return Unit.Value;

@@ -7,7 +7,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
 {
     public class TryPromoteFromWaitingListCommand : IRequest, IEventBoundRequest, IQueueBoundMessage
     {
-        public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
         public string QueueName => "TryPromoteFromWaitingListCommandQueue";
         public Guid RegistrableId { get; set; }
     }

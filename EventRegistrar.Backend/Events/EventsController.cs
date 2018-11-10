@@ -10,11 +10,14 @@ namespace EventRegistrar.Backend.Events
 {
     public class EventsController : Controller
     {
+        private readonly IEventAcronymResolver _eventAcronymResolver;
         private readonly IMediator _mediator;
 
-        public EventsController(IMediator mediator)
+        public EventsController(IMediator mediator,
+                                IEventAcronymResolver eventAcronymResolver)
         {
             _mediator = mediator;
+            _eventAcronymResolver = eventAcronymResolver;
         }
 
         [HttpPut("api/events/{eventAcronym}")]
@@ -30,42 +33,42 @@ namespace EventRegistrar.Backend.Events
         }
 
         [HttpGet("api/events/{eventAcronym}/requests")]
-        public Task<IEnumerable<AccessRequestOfEvent>> GetRequestsOfEvent(string eventAcronym, bool includeDeniedRequests = false)
+        public async Task<IEnumerable<AccessRequestOfEvent>> GetRequestsOfEvent(string eventAcronym, bool includeDeniedRequests = false)
         {
-            return _mediator.Send(new AccessRequestsOfEventQuery
+            return await _mediator.Send(new AccessRequestsOfEventQuery
             {
-                EventAcronym = eventAcronym,
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 IncludeDeniedRequests = includeDeniedRequests
             });
         }
 
         [HttpGet("api/events/{eventAcronym}/users")]
-        public Task<IEnumerable<UserInEventDisplayItem>> GetUsersOfEvent(string eventAcronym)
+        public async Task<IEnumerable<UserInEventDisplayItem>> GetUsersOfEvent(string eventAcronym)
         {
-            return _mediator.Send(new UsersOfEventQuery
+            return await _mediator.Send(new UsersOfEventQuery
             {
-                EventAcronym = eventAcronym
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
             });
         }
 
         [HttpPost("api/events/{eventAcronym}/requestAccess")]
-        public Task<Guid> RequestAccess(string eventAcronym)
+        public async Task<Guid> RequestAccess(string eventAcronym)
         {
-            return _mediator.Send(new RequestAccessCommand
+            return await _mediator.Send(new RequestAccessCommand
             {
-                EventAcronym = eventAcronym,
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 RequestText = null
             });
         }
 
         [HttpPost("api/events/{eventAcronym}/accessrequests/{accessRequestId:guid}/respond")]
-        public Task RespondToAccessRequest(string eventAcronym,
+        public async Task RespondToAccessRequest(string eventAcronym,
                                            Guid accessRequestId,
                                            [FromBody]RequestResponseDto response)
         {
-            return _mediator.Send(new RespondToRequestCommand
+            await _mediator.Send(new RespondToRequestCommand
             {
-                EventAcronym = eventAcronym,
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 AccessToEventRequestId = accessRequestId,
                 Response = response.Response,
                 Role = response.Role,

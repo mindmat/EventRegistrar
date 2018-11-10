@@ -7,7 +7,7 @@ namespace EventRegistrar.Backend.Spots
 {
     public class SpotsOfRegistrationQuery : IRequest<IEnumerable<Spot>>, IEventBoundRequest
     {
-        public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
         public Guid RegistrationId { get; set; }
     }
 }

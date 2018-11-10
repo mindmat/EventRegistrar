@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Search;
@@ -11,17 +12,27 @@ namespace EventRegistrar.Backend.Registrations
 {
     public class RegistrationController : Controller
     {
+        private readonly IEventAcronymResolver _eventAcronymResolver;
         private readonly IMediator _mediator;
 
-        public RegistrationController(IMediator mediator)
+        public RegistrationController(IMediator mediator,
+                                      IEventAcronymResolver eventAcronymResolver)
         {
             _mediator = mediator;
+            _eventAcronymResolver = eventAcronymResolver;
         }
 
         [HttpDelete("api/events/{eventAcronym}/registrations/{registrationId:guid}")]
-        public Task CancelRegistration(string eventAcronym, Guid registrationId, string reason, bool ignorePayments, decimal refundPercentage)
+        public async Task CancelRegistration(string eventAcronym, Guid registrationId, string reason, bool ignorePayments, decimal refundPercentage)
         {
-            return _mediator.Send(new CancelRegistrationCommand { EventAcronym = eventAcronym, RegistrationId = registrationId, Reason = reason, IgnorePayments = ignorePayments, RefundPercentage = refundPercentage });
+            await _mediator.Send(new CancelRegistrationCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId,
+                Reason = reason,
+                IgnorePayments = ignorePayments,
+                RefundPercentage = refundPercentage
+            });
         }
 
         [HttpGet("api/registrationforms/{formExternalIdentifier}/RegistrationExternalIdentifiers")]
@@ -31,21 +42,34 @@ namespace EventRegistrar.Backend.Registrations
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations")]
-        public Task<IEnumerable<RegistrationMatch>> SearchRegistration(string eventAcronym, string searchString, IEnumerable<RegistrationState> states)
+        public async Task<IEnumerable<RegistrationMatch>> SearchRegistration(string eventAcronym, string searchString, IEnumerable<RegistrationState> states)
         {
-            return _mediator.Send(new SearchRegistrationQuery { EventAcronym = eventAcronym, SearchString = searchString, States = states });
+            return await _mediator.Send(new SearchRegistrationQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                SearchString = searchString,
+                States = states
+            });
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}")]
-        public Task<RegistrationDisplayItem> SearchRegistration(string eventAcronym, Guid registrationId)
+        public async Task<RegistrationDisplayItem> SearchRegistration(string eventAcronym, Guid registrationId)
         {
-            return _mediator.Send(new RegistrationQuery { EventAcronym = eventAcronym, RegistrationId = registrationId });
+            return await _mediator.Send(new RegistrationQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId
+            });
         }
 
         [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/swapFirstLastName")]
-        public Task SwapFirstLastName(string eventAcronym, Guid registrationId)
+        public async Task SwapFirstLastName(string eventAcronym, Guid registrationId)
         {
-            return _mediator.Send(new SwapFirstLastNameCommand { EventAcronym = eventAcronym, RegistrationId = registrationId });
+            await _mediator.Send(new SwapFirstLastNameCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId
+            });
         }
     }
 }

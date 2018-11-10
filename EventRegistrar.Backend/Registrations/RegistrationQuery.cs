@@ -6,7 +6,7 @@ namespace EventRegistrar.Backend.Registrations
 {
     public class RegistrationQuery : IRequest<RegistrationDisplayItem>, IEventBoundRequest
     {
-        public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
         public Guid RegistrationId { get; set; }
     }
 }

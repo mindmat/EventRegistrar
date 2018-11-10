@@ -9,7 +9,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
         public bool AcceptDifference { get; set; }
         public string AcceptDifferenceReason { get; set; }
         public decimal Amount { get; set; }
-        public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
         public Guid PaymentId { get; set; }
         public Guid RegistrationId { get; set; }
     }

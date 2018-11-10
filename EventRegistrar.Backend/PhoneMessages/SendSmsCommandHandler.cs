@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrations;
 using MediatR;
@@ -15,20 +14,17 @@ namespace EventRegistrar.Backend.PhoneMessages
 {
     public class SendSmsCommandHandler : IRequestHandler<SendSmsCommand>
     {
-        private readonly EventContext _eventContext;
         private readonly IQueryable<Registration> _registrations;
         private readonly IRepository<Sms> _sms;
         private readonly TwilioConfiguration _twilioConfiguration;
 
         public SendSmsCommandHandler(IQueryable<Registration> registrations,
                                      IRepository<Sms> sms,
-                                     TwilioConfiguration twilioConfiguration,
-                                     EventContext eventContext)
+                                     TwilioConfiguration twilioConfiguration)
         {
             _registrations = registrations;
             _sms = sms;
             _twilioConfiguration = twilioConfiguration;
-            _eventContext = eventContext;
         }
 
         public async Task<Unit> Handle(SendSmsCommand command, CancellationToken cancellationToken)
@@ -39,7 +35,7 @@ namespace EventRegistrar.Backend.PhoneMessages
             }
 
             var phone = await _registrations.Where(reg => reg.Id == command.RegistrationId
-                                                       && reg.EventId == _eventContext.EventId)
+                                                       && reg.EventId == command.EventId)
                                             .Select(reg => reg.PhoneNormalized)
                                             .FirstOrDefaultAsync(cancellationToken);
 
@@ -50,7 +46,7 @@ namespace EventRegistrar.Backend.PhoneMessages
 
             TwilioClient.Init(_twilioConfiguration.Sid, _twilioConfiguration.Token);
 
-            var callbackUrl = new Uri($"https://eventregistrarfunctions.azurewebsites.net/api/events/{_eventContext.EventId}/sms/setStatus");
+            var callbackUrl = new Uri($"https://eventregistrarfunctions.azurewebsites.net/api/events/{command.EventId}/sms/setStatus");
 
             var message = await MessageResource.CreateAsync(phone,
                                                             from: _twilioConfiguration.Number,

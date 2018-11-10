@@ -2,21 +2,17 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Backend.Mailing.Bulk
 {
     public class CreateBulkMailsCommandHandler : IRequestHandler<CreateBulkMailsCommand>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
-        private readonly ILogger _log;
         private readonly MailComposer _mailComposer;
         private readonly IRepository<Mail> _mails;
         private readonly IRepository<MailToRegistration> _mailsToRegistrations;
@@ -24,31 +20,26 @@ namespace EventRegistrar.Backend.Mailing.Bulk
         private readonly IQueryable<Registration> _registrations;
 
         public CreateBulkMailsCommandHandler(IQueryable<MailTemplate> mailTemplates,
-            IQueryable<Registration> registrations,
-            IRepository<Mail> mails,
-            IRepository<MailToRegistration> mailsToRegistrations,
-            IEventAcronymResolver acronymResolver,
-            MailComposer mailComposer,
-            ILogger log)
+                                             IQueryable<Registration> registrations,
+                                             IRepository<Mail> mails,
+                                             IRepository<MailToRegistration> mailsToRegistrations,
+                                             MailComposer mailComposer)
         {
             _mailTemplates = mailTemplates;
             _registrations = registrations;
             _mails = mails;
             _mailsToRegistrations = mailsToRegistrations;
-            _acronymResolver = acronymResolver;
             _mailComposer = mailComposer;
-            _log = log;
         }
 
         public async Task<Unit> Handle(CreateBulkMailsCommand command, CancellationToken cancellationToken)
         {
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(command.EventAcronym);
-            var templates = await _mailTemplates.Where(mtp => mtp.EventId == eventId
+            var templates = await _mailTemplates.Where(mtp => mtp.EventId == command.EventId
                                                            && mtp.BulkMailKey == command.BulkMailKey
                                                            && mtp.Type == 0)
                                                 .ToListAsync(cancellationToken);
 
-            var registrationsOfEvent = await _registrations.Where(reg => reg.EventId == eventId
+            var registrationsOfEvent = await _registrations.Where(reg => reg.EventId == command.EventId
                                                                       && !reg.Mails.Any(mail => mail.Mail.BulkMailKey == command.BulkMailKey))
                                                     .ToListAsync(cancellationToken);
             foreach (var mailTemplate in templates)

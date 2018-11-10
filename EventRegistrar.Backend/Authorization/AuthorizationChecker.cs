@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +11,6 @@ namespace EventRegistrar.Backend.Authorization
 {
     internal class AuthorizationChecker : IAuthorizationChecker
     {
-        private readonly IEventAcronymResolver _acronymResolver;
         private readonly IMemoryCache _memoryCache;
         private readonly IRightsOfEventRoleProvider _rightsOfEventRoleProvider;
         private readonly TimeSpan _slidingExpiration = new TimeSpan(1, 0, 0, 0);
@@ -24,18 +22,16 @@ namespace EventRegistrar.Backend.Authorization
                                     IQueryable<UserInEvent> usersInEventsInEvents,
                                     IMemoryCache memoryCache,
                                     IRightsOfEventRoleProvider rightsOfEventRoleProvider,
-                                    IEventAcronymResolver acronymResolver,
                                     SourceQueueProvider sourceQueueProvider)
         {
             _user = user;
             _usersInEvents = usersInEventsInEvents;
             _memoryCache = memoryCache;
             _rightsOfEventRoleProvider = rightsOfEventRoleProvider;
-            _acronymResolver = acronymResolver;
             _sourceQueueProvider = sourceQueueProvider;
         }
 
-        public async Task ThrowIfUserHasNotRight(string eventAcronym, string requestTypeName)
+        public async Task ThrowIfUserHasNotRight(Guid eventId, string requestTypeName)
         {
             if (_sourceQueueProvider.SourceQueueName != null)
             {
@@ -45,10 +41,9 @@ namespace EventRegistrar.Backend.Authorization
 
             if (!_user.UserId.HasValue)
             {
-                throw new UnauthorizedAccessException("You are not authorized");
+                throw new UnauthorizedAccessException("You are not authenticated");
             }
 
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(eventAcronym);
             var key = new UserInEventCacheKey(_user.UserId.Value, eventId);
             var rightsOfUserInEvent = await _memoryCache.GetOrCreateAsync(key, entry => GetRightsOfUserInEvent(entry, eventId));
 

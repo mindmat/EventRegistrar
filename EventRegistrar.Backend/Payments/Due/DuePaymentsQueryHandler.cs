@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrations;
@@ -18,24 +17,20 @@ namespace EventRegistrar.Backend.Payments.Due
         public static readonly HashSet<MailType?> MailTypes_Accepted = new HashSet<MailType?> { MailType.PartnerRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted };
         public static readonly HashSet<MailType?> MailTypes_Reminder1 = new HashSet<MailType?> { MailType.PartnerRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder };
         public static readonly HashSet<MailType?> MailTypes_Reminder2 = new HashSet<MailType?> { MailType.PartnerRegistrationSecondReminder, MailType.SingleRegistrationSecondReminder };
-        private readonly IEventAcronymResolver _eventAcronymResolver;
         private readonly IQueryable<Registration> _registrations;
 
-        public DuePaymentsQueryHandler(IQueryable<Registration> registrations,
-                                       IEventAcronymResolver eventAcronymResolver)
+        public DuePaymentsQueryHandler(IQueryable<Registration> registrations)
         {
             _registrations = registrations;
-            _eventAcronymResolver = eventAcronymResolver;
         }
 
         public async Task<IEnumerable<DuePaymentItem>> Handle(DuePaymentsQuery query, CancellationToken cancellationToken)
         {
-            var eventId = await _eventAcronymResolver.GetEventIdFromAcronym(query.EventAcronym);
             var reminderDueFrom = DateTime.UtcNow.AddDays(-DefaultPaymentGracePeriod);
             var data = await _registrations
-                                         .Where(reg => reg.RegistrationForm.EventId == eventId &&
-                                                       reg.State == RegistrationState.Received &&
-                                                       reg.IsWaitingList != true)
+                                         .Where(reg => reg.RegistrationForm.EventId == query.EventId
+                                                    && reg.State == RegistrationState.Received
+                                                    && reg.IsWaitingList != true)
                                          .Select(reg => new
                                          {
                                              reg.Id,

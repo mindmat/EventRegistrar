@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,20 +9,16 @@ namespace EventRegistrar.Backend.Registrables
 {
     public class RegistrablesQueryHandler : IRequestHandler<RegistrablesQuery, IEnumerable<RegistrableDisplayItem>>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
         private readonly IQueryable<Registrable> _registrables;
 
-        public RegistrablesQueryHandler(IQueryable<Registrable> registrables,
-                                        IEventAcronymResolver acronymResolver)
+        public RegistrablesQueryHandler(IQueryable<Registrable> registrables)
         {
             _registrables = registrables;
-            _acronymResolver = acronymResolver;
         }
 
         public async Task<IEnumerable<RegistrableDisplayItem>> Handle(RegistrablesQuery query, CancellationToken cancellationToken)
         {
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(query.EventAcronym);
-            var registrables = await _registrables.Where(rbl => rbl.EventId == eventId)
+            var registrables = await _registrables.Where(rbl => rbl.EventId == query.EventId)
                                                   .Select(rbl => new RegistrableDisplayItem
                                                   {
                                                       Id = rbl.Id,

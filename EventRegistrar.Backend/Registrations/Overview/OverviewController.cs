@@ -4,6 +4,7 @@ using System.Data;
 using System.IO;
 using System.Threading.Tasks;
 using ClosedXML.Excel;
+using EventRegistrar.Backend.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,23 +12,32 @@ namespace EventRegistrar.Backend.Registrations.Overview
 {
     public class OverviewController : Controller
     {
+        private readonly IEventAcronymResolver _eventAcronymResolver;
         private readonly IMediator _mediator;
 
-        public OverviewController(IMediator mediator)
+        public OverviewController(IMediator mediator,
+                                  IEventAcronymResolver eventAcronymResolver)
         {
             _mediator = mediator;
+            _eventAcronymResolver = eventAcronymResolver;
         }
 
         [HttpGet("api/events/{eventAcronym}/checkinView")]
-        public Task<CheckinView> GetCheckinView(string eventAcronym)
+        public async Task<CheckinView> GetCheckinView(string eventAcronym)
         {
-            return _mediator.Send(new CheckinQuery { EventAcronym = eventAcronym });
+            return await _mediator.Send(new CheckinQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
         }
 
         [HttpGet("api/events/{eventAcronym}/checkinView.xlsx")]
         public async Task<IActionResult> GetCheckinViewXlsx(string eventAcronym)
         {
-            var data = await _mediator.Send(new CheckinQuery { EventAcronym = eventAcronym });
+            var data = await _mediator.Send(new CheckinQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+            });
 
             var mappings = new List<(string Title, Func<CheckinViewItem, object> GetValue)>
             {

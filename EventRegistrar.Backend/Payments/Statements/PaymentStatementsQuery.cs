@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Payments.Unassigned;
 using MediatR;
@@ -7,6 +8,6 @@ namespace EventRegistrar.Backend.Payments.Statements
 {
     public class PaymentStatementsQuery : IRequest<IEnumerable<PaymentDisplayItem>>, IEventBoundRequest
     {
-        public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,29 +9,32 @@ namespace EventRegistrar.Backend.PhoneMessages
 {
     public class SmsController
     {
+        private readonly IEventAcronymResolver _eventAcronymResolver;
         private readonly IMediator _mediator;
 
-        public SmsController(IMediator mediator)
+        public SmsController(IMediator mediator,
+                             IEventAcronymResolver eventAcronymResolver)
         {
             _mediator = mediator;
+            _eventAcronymResolver = eventAcronymResolver;
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations/{registrationid:guid}/sms")]
-        public Task<IEnumerable<SmsDisplayItem>> GetSmsConversation(string eventAcronym, Guid registrationId)
+        public async Task<IEnumerable<SmsDisplayItem>> GetSmsConversation(string eventAcronym, Guid registrationId)
         {
-            return _mediator.Send(new SmsConversationQuery
+            return await _mediator.Send(new SmsConversationQuery
             {
-                EventAcronym = eventAcronym,
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 RegistrationId = registrationId,
             });
         }
 
         [HttpPost("api/events/{eventAcronym}/registrations/{registrationid:guid}/sms/send")]
-        public Task SendSms(string eventAcronym, Guid registrationId, [FromBody]SmsContent message)
+        public async Task SendSms(string eventAcronym, Guid registrationId, [FromBody]SmsContent message)
         {
-            return _mediator.Send(new SendSmsCommand
+            await _mediator.Send(new SendSmsCommand
             {
-                EventAcronym = eventAcronym,
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 RegistrationId = registrationId,
                 Message = message?.Body
             });

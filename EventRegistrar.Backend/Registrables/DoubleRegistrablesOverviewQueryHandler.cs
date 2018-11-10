@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,20 +9,16 @@ namespace EventRegistrar.Backend.Registrables
 {
     public class DoubleRegistrablesOverviewQueryHandler : IRequestHandler<DoubleRegistrablesOverviewQuery, IEnumerable<DoubleRegistrableDisplayItem>>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
         private readonly IQueryable<Registrable> _registrables;
 
-        public DoubleRegistrablesOverviewQueryHandler(IQueryable<Registrable> registrables,
-                                                      IEventAcronymResolver acronymResolver)
+        public DoubleRegistrablesOverviewQueryHandler(IQueryable<Registrable> registrables)
         {
             _registrables = registrables;
-            _acronymResolver = acronymResolver;
         }
 
-        public async Task<IEnumerable<DoubleRegistrableDisplayItem>> Handle(DoubleRegistrablesOverviewQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<DoubleRegistrableDisplayItem>> Handle(DoubleRegistrablesOverviewQuery query, CancellationToken cancellationToken)
         {
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(request.EventAcronym);
-            var registrables = await _registrables.Where(rbl => rbl.EventId == eventId
+            var registrables = await _registrables.Where(rbl => rbl.EventId == query.EventId
                                                              && rbl.MaximumDoubleSeats.HasValue)
                                                   .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
                                                   .Include(rbl => rbl.Seats)

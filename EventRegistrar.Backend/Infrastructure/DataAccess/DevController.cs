@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SimpleInjector;
@@ -20,9 +19,10 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
         [HttpPost("api/dev/migratedb")]
         public async Task MigrateDb()
         {
-            await _dbContext.Database.MigrateAsync();
-            var scenario = new TestScenario();
-            await scenario.Create(_container);
+            //await _dbContext.Database.MigrateAsync();
+            //var scenario = new TestScenario();
+            //await scenario.Create(_container);
+            await Task.CompletedTask;
         }
     }
 }

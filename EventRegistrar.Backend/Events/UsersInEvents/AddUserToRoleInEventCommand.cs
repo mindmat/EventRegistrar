@@ -6,7 +6,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
 {
     public class AddUserToRoleInEventCommand : IRequest<Guid>, IEventBoundRequest
     {
-        public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
         public UserInEventRole Role { get; set; }
         public Guid UserId { get; set; }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing.Compose;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,41 +10,65 @@ namespace EventRegistrar.Backend.Mailing
 {
     public class MailsController : Controller
     {
+        private readonly IEventAcronymResolver _eventAcronymResolver;
         private readonly IMediator _mediator;
 
-        public MailsController(IMediator mediator)
+        public MailsController(IMediator mediator,
+                               IEventAcronymResolver eventAcronymResolver)
         {
             _mediator = mediator;
+            _eventAcronymResolver = eventAcronymResolver;
         }
 
         [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails/create")]
-        public Task CreateMailForRegistration(string eventAcronym, Guid registrationId, MailType mailType)
+        public async Task CreateMailForRegistration(string eventAcronym, Guid registrationId, MailType mailType)
         {
-            return _mediator.Send(new ComposeAndSendMailCommand { EventAcronym = eventAcronym, RegistrationId = registrationId, MailType = mailType, Withhold = true });
+            await _mediator.Send(new ComposeAndSendMailCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId,
+                MailType = mailType,
+                Withhold = true
+            });
         }
 
         [HttpDelete("api/events/{eventAcronym}/mails/{mailId:guid}")]
-        public Task DeleteMail(string eventAcronym, Guid mailId)
+        public async Task DeleteMail(string eventAcronym, Guid mailId)
         {
-            return _mediator.Send(new DeleteMailCommand { EventAcronym = eventAcronym, MailId = mailId });
+            await _mediator.Send(new DeleteMailCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                MailId = mailId
+            });
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails")]
-        public Task<IEnumerable<Mail>> GetMailsOfRegistration(string eventAcronym, Guid registrationId)
+        public async Task<IEnumerable<Mail>> GetMailsOfRegistration(string eventAcronym, Guid registrationId)
         {
-            return _mediator.Send(new MailsOfRegistrationQuery { EventAcronym = eventAcronym, RegistrationId = registrationId });
+            return await _mediator.Send(new MailsOfRegistrationQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId
+            });
         }
 
         [HttpGet("api/events/{eventAcronym}/mails/pending")]
-        public Task<IEnumerable<Mail>> GetPendingMails(string eventAcronym)
+        public async Task<IEnumerable<Mail>> GetPendingMails(string eventAcronym)
         {
-            return _mediator.Send(new GetPendingMailsQuery { EventAcronym = eventAcronym });
+            return await _mediator.Send(new GetPendingMailsQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
         }
 
         [HttpPost("api/events/{eventAcronym}/mails/{mailId:guid}/release")]
-        public Task ReleaseMail(string eventAcronym, Guid mailId)
+        public async Task ReleaseMail(string eventAcronym, Guid mailId)
         {
-            return _mediator.Send(new ReleaseMailCommand { EventAcronym = eventAcronym, MailId = mailId });
+            await _mediator.Send(new ReleaseMailCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                MailId = mailId
+            });
         }
     }
 }

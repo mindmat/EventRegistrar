@@ -7,7 +7,7 @@ namespace EventRegistrar.Backend.PhoneMessages
 {
     public class SmsConversationQuery : IRequest<IEnumerable<SmsDisplayItem>>, IEventBoundRequest
     {
-        public string EventAcronym { get; set; }
+        public Guid EventId { get; set; }
         public Guid RegistrationId { get; set; }
     }
 }

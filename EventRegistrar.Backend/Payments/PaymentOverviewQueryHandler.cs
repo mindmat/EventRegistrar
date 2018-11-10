@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
@@ -13,26 +12,22 @@ namespace EventRegistrar.Backend.Payments
 {
     public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery, PaymentOverview>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
         private readonly IQueryable<PaymentFile> _paymentFiles;
         private readonly IQueryable<Registrable> _registrables;
         private readonly IQueryable<Registration> _registrations;
 
-        public PaymentOverviewQueryHandler(IEventAcronymResolver acronymResolver,
-                                           IQueryable<PaymentFile> paymentFiles,
+        public PaymentOverviewQueryHandler(IQueryable<PaymentFile> paymentFiles,
                                            IQueryable<Registration> registrations,
                                            IQueryable<Registrable> registrables)
         {
-            _acronymResolver = acronymResolver;
             _paymentFiles = paymentFiles;
             _registrations = registrations;
             _registrables = registrables;
         }
 
-        public async Task<PaymentOverview> Handle(PaymentOverviewQuery request, CancellationToken cancellationToken)
+        public async Task<PaymentOverview> Handle(PaymentOverviewQuery query, CancellationToken cancellationToken)
         {
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(request.EventAcronym);
-            var balance = await _paymentFiles.Where(pmf => pmf.EventId == eventId)
+            var balance = await _paymentFiles.Where(pmf => pmf.EventId == query.EventId)
                                              .OrderByDescending(pmf => pmf.BookingsTo ?? DateTime.MinValue)
                                              .Select(pmf => new
                                              {
@@ -43,7 +38,7 @@ namespace EventRegistrar.Backend.Payments
                                              })
                                              .FirstOrDefaultAsync(cancellationToken);
 
-            var activeRegistrations = await _registrations.Where(reg => reg.EventId == eventId
+            var activeRegistrations = await _registrations.Where(reg => reg.EventId == query.EventId
                                                                      && reg.IsWaitingList != true
                                                                      && reg.State != RegistrationState.Cancelled)
                                                           .Select(reg => new
@@ -55,7 +50,7 @@ namespace EventRegistrar.Backend.Payments
                                                           })
                                                           .ToListAsync(cancellationToken);
 
-            var registrables = await _registrables.Where(rbl => rbl.EventId == eventId
+            var registrables = await _registrables.Where(rbl => rbl.EventId == query.EventId
                                                              && (rbl.MaximumDoubleSeats.HasValue || rbl.MaximumSingleSeats.HasValue)
                                                              && rbl.Price.HasValue)
                                                   .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)

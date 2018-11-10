@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing.Compose;
 using MediatR;
@@ -11,20 +10,15 @@ namespace EventRegistrar.Backend.Mailing.Templates
 {
     public class SaveMailTemplateCommandHandler : IRequestHandler<SaveMailTemplateCommand>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
         private readonly IRepository<MailTemplate> _mailTemplates;
 
-        public SaveMailTemplateCommandHandler(IRepository<MailTemplate> mailTemplates,
-                                              IEventAcronymResolver acronymResolver)
+        public SaveMailTemplateCommandHandler(IRepository<MailTemplate> mailTemplates)
         {
             _mailTemplates = mailTemplates;
-            _acronymResolver = acronymResolver;
         }
 
         public async Task<Unit> Handle(SaveMailTemplateCommand command, CancellationToken cancellationToken)
         {
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(command.EventAcronym);
-
             if (command.Template.Language == null)
             {
                 throw new ArgumentException("no language provided");
@@ -46,7 +40,7 @@ namespace EventRegistrar.Backend.Mailing.Templates
             MailTemplate template;
             if (command.Template.Type.HasValue && command.Template.Type != 0 && !string.IsNullOrEmpty(command.Template.Language))
             {
-                template = await _mailTemplates.FirstOrDefaultAsync(mtp => mtp.EventId == eventId
+                template = await _mailTemplates.FirstOrDefaultAsync(mtp => mtp.EventId == command.EventId
                                                                         && mtp.Type == command.Template.Type.Value
                                                                         && mtp.Language == command.Template.Language
                                                                         && mtp.BulkMailKey == null,
@@ -54,7 +48,7 @@ namespace EventRegistrar.Backend.Mailing.Templates
             }
             else if (command.TemplateId.HasValue)
             {
-                template = await _mailTemplates.FirstOrDefaultAsync(mtp => mtp.EventId == eventId
+                template = await _mailTemplates.FirstOrDefaultAsync(mtp => mtp.EventId == command.EventId
                                                                         && mtp.Type == 0
                                                                         && mtp.Id == command.TemplateId.Value,
                                                                     cancellationToken);
@@ -76,7 +70,7 @@ namespace EventRegistrar.Backend.Mailing.Templates
                     Id = Guid.NewGuid(),
                     Language = command.Template.Language,
                     ContentType = MailContentType.Html,
-                    EventId = eventId,
+                    EventId = command.EventId,
                     Type = command.Template.Type ?? 0,
                     BulkMailKey = command.Template.Key
                 };

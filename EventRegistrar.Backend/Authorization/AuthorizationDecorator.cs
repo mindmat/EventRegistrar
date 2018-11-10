@@ -19,7 +19,7 @@ namespace EventRegistrar.Backend.Authorization
             var requestType = request.GetType().Name;
             if (request is IEventBoundRequest eventBoundRequest)
             {
-                await _authorizationChecker.ThrowIfUserHasNotRight(eventBoundRequest.EventAcronym, requestType);
+                await _authorizationChecker.ThrowIfUserHasNotRight(eventBoundRequest.EventId, requestType);
             }
 
             return await next();

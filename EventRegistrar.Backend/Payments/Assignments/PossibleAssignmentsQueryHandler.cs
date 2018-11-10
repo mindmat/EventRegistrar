@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Registrations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,24 +11,20 @@ namespace EventRegistrar.Backend.Payments.Assignments
 {
     public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmentsQuery, IEnumerable<PossibleAssignment>>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
         private readonly IQueryable<ReceivedPayment> _payments;
         private readonly IQueryable<Registration> _registrations;
 
         public PossibleAssignmentsQueryHandler(IQueryable<ReceivedPayment> payments,
-                                               IQueryable<Registration> registrations,
-                                               IEventAcronymResolver acronymResolver)
+                                               IQueryable<Registration> registrations)
         {
             _payments = payments;
             _registrations = registrations;
-            _acronymResolver = acronymResolver;
         }
 
         public async Task<IEnumerable<PossibleAssignment>> Handle(PossibleAssignmentsQuery query, CancellationToken cancellationToken)
         {
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(query.EventAcronym);
             var payment = await _payments.FirstAsync(pmt => pmt.Id == query.PaymentId
-                                                            && pmt.PaymentFile.EventId == eventId, cancellationToken);
+                                                            && pmt.PaymentFile.EventId == query.EventId, cancellationToken);
             var info = payment.Info;
             //var infoPrefix = "MITTEILUNGEN:";
             //var infoIndex = payment.Info.IndexOf(infoPrefix, StringComparison.InvariantCultureIgnoreCase);
@@ -39,7 +34,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
             //}
 
             var wordsInPayment = info.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            var registrations = await _registrations.Where(reg => reg.EventId == eventId
+            var registrations = await _registrations.Where(reg => reg.EventId == query.EventId
                                                                   && (wordsInPayment.Contains(reg.RespondentFirstName)
                                                                    || wordsInPayment.Contains(reg.RespondentLastName))
                                                                   && reg.State == RegistrationState.Received)

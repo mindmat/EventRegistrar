@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,29 +9,47 @@ namespace EventRegistrar.Backend.Spots
 {
     public class SpotsController : Controller
     {
+        private readonly IEventAcronymResolver _eventAcronymResolver;
         private readonly IMediator _mediator;
 
-        public SpotsController(IMediator mediator)
+        public SpotsController(IMediator mediator,
+                               IEventAcronymResolver eventAcronymResolver)
         {
             _mediator = mediator;
+            _eventAcronymResolver = eventAcronymResolver;
         }
 
         [HttpPut("api/events/{eventAcronym}/registrations/{registrationId:guid}/spots/{registrableId:guid}")]
-        public Task AddSpot(string eventAcronym, Guid registrationId, Guid registrableId, bool asFollower)
+        public async Task AddSpot(string eventAcronym, Guid registrationId, Guid registrableId, bool asFollower)
         {
-            return _mediator.Send(new AddSpotCommand { EventAcronym = eventAcronym, RegistrationId = registrationId, RegistrableId = registrableId, AsFollower = asFollower });
+            await _mediator.Send(new AddSpotCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId,
+                RegistrableId = registrableId,
+                AsFollower = asFollower
+            });
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/spots")]
-        public Task<IEnumerable<Spot>> GetSpotsOfRegistration(string eventAcronym, Guid registrationId)
+        public async Task<IEnumerable<Spot>> GetSpotsOfRegistration(string eventAcronym, Guid registrationId)
         {
-            return _mediator.Send(new SpotsOfRegistrationQuery { EventAcronym = eventAcronym, RegistrationId = registrationId });
+            return await _mediator.Send(new SpotsOfRegistrationQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId
+            });
         }
 
         [HttpDelete("api/events/{eventAcronym}/registrations/{registrationId:guid}/spots/{registrableId:guid}")]
-        public Task RemoveSpot(string eventAcronym, Guid registrationId, Guid registrableId)
+        public async Task RemoveSpot(string eventAcronym, Guid registrationId, Guid registrableId)
         {
-            return _mediator.Send(new RemoveSpotCommand { EventAcronym = eventAcronym, RegistrationId = registrationId, RegistrableId = registrableId });
+            await _mediator.Send(new RemoveSpotCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId,
+                RegistrableId = registrableId
+            });
         }
     }
 }

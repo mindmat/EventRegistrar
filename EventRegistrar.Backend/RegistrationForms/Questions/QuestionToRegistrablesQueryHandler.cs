@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using EventRegistrar.Backend.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,20 +9,16 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
 {
     public class QuestionToRegistrablesQueryHandler : IRequestHandler<QuestionToRegistrablesQuery, IEnumerable<QuestionToRegistrablesDisplayItem>>
     {
-        private readonly IEventAcronymResolver _acronymResolver;
         private readonly IQueryable<QuestionOptionToRegistrableMapping> _questionOptionsToRegistrables;
 
-        public QuestionToRegistrablesQueryHandler(IQueryable<QuestionOptionToRegistrableMapping> questionOptionsToRegistrables,
-                                                  IEventAcronymResolver acronymResolver)
+        public QuestionToRegistrablesQueryHandler(IQueryable<QuestionOptionToRegistrableMapping> questionOptionsToRegistrables)
         {
             _questionOptionsToRegistrables = questionOptionsToRegistrables;
-            _acronymResolver = acronymResolver;
         }
 
         public async Task<IEnumerable<QuestionToRegistrablesDisplayItem>> Handle(QuestionToRegistrablesQuery query, CancellationToken cancellationToken)
         {
-            var eventId = await _acronymResolver.GetEventIdFromAcronym(query.EventAcronym);
-            return await _questionOptionsToRegistrables.Where(map => map.Registrable.EventId == eventId)
+            return await _questionOptionsToRegistrables.Where(map => map.Registrable.EventId == query.EventId)
                                                        .OrderBy(map => map.QuestionOption.Question.Index)
                                                        .Select(map => new QuestionToRegistrablesDisplayItem
                                                        {
