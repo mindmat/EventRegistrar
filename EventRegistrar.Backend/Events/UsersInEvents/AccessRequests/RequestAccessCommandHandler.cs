@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
@@ -24,9 +25,25 @@ namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
 
         public async Task<Guid> Handle(RequestAccessCommand command, CancellationToken cancellationToken)
         {
-            var request = await _accessRequests.FirstOrDefaultAsync(req => req.EventId == command.EventId
-                                                                        && req.UserId_Requestor == _user.UserId
-                                                                        && (!req.Response.HasValue || req.Response == RequestResponse.Granted), cancellationToken);
+            var requestExpression = _accessRequests.Where(req => req.EventId == command.EventId
+                                                              && (!req.Response.HasValue || req.Response == RequestResponse.Granted));
+            var existingUserId = await _authenticatedUserProvider.GetAuthenticatedUserId();
+            if (existingUserId.HasValue)
+            {
+                requestExpression = requestExpression.Where(req => req.UserId_Requestor == existingUserId.Value);
+            }
+            else
+            {
+                var authenticatedUser = _authenticatedUserProvider.GetAuthenticatedUser();
+                if (authenticatedUser?.IdentityProviderUserIdentifier == null)
+                {
+                    throw new ArgumentException("You are not authenticated");
+                }
+                requestExpression = requestExpression.Where(req => req.IdentityProvider == authenticatedUser.IdentityProvider
+                                                                 && req.Identifier == authenticatedUser.IdentityProviderUserIdentifier);
+            }
+
+            var request = await requestExpression.FirstOrDefaultAsync(cancellationToken);
 
             if (request == null)
             {

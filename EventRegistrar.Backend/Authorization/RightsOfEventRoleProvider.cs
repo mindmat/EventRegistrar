@@ -76,6 +76,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(RemoveSpotCommand).Name;
                 yield return typeof(SavePaymentFileCommand).Name;
                 yield return typeof(SetDoubleRegistrableLimitsCommand).Name;
+                yield return typeof(SetSingleRegistrableLimitsCommand).Name;
                 yield return typeof(CreateBulkMailsCommand).Name;
                 yield return typeof(ReleaseBulkMailsCommand).Name;
                 yield return typeof(TryPromoteFromWaitingListCommand).Name;

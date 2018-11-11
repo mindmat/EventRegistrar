@@ -55,15 +55,6 @@ namespace EventRegistrar.Backend.Registrations.Register
 
             var googleRegistration = JsonConvert.DeserializeObject<RegistrationForms.GoogleForms.Registration>(rawRegistration.ReceivedMessage);
 
-            //var saveEventTask = DomainEventPersistor.Log(new RegistrationReceived
-            //{
-            //    FormExternalIdentifier = formId,
-            //    RegistrationExternalIdentifier = id,
-            //    Registration = await req.Content.ReadAsStringAsync()
-            //});
-
-            //RegistrationRegistered registrationRegistered;
-
             var form = await _forms.Where(frm => frm.ExternalIdentifier == rawRegistration.FormExternalIdentifier)
                                    .Include(frm => frm.Questions).ThenInclude(qst => qst.QuestionOptions)
                                    .FirstOrDefaultAsync(cancellationToken);
@@ -86,7 +77,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             var registration = await _registrations.FirstOrDefaultAsync(reg => reg.ExternalIdentifier == rawRegistration.RegistrationExternalIdentifier, cancellationToken);
             if (registration != null)
             {
-                throw new ApplicationException("Registration with id '{id}' already exists");
+                throw new ApplicationException($"Registration with external identifier '{rawRegistration.RegistrationExternalIdentifier}' already exists");
             }
 
             registration = new Registration
@@ -147,64 +138,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 LastName = registration.RespondentLastName,
                 Registrables = spots.Select(spt => spt.Registrable?.Name).ToArray()
             });
-            //await context.SaveChangesAsync();
 
-            //registrationRegistered = new RegistrationRegistered
-            //{
-            //    EventId = form.EventId,
-            //    RegistrationId = registration.Id,
-            //    Registration = registration
-            //};
-            //context.DomainEvents.Save(registrationRegistered, form.Id);
-
-            //var registration = await context.Registrations.FirstOrDefaultAsync(reg => reg.Id == @event.RegistrationId);
-            //var responses = await _responses.Where(rsp => rsp.RegistrationId == @event.RegistrationId).ToListAsync();
-            //var ownSeats = new List<Seat>();
-
-            //var questionOptionIds = new HashSet<Guid>(registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue).Select(rsp => rsp.QuestionOptionId.Value));
-            //var registrables = await _optionToRegistrableMappings
-            //                                .Where(map => questionOptionIds.Contains(map.QuestionOptionId))
-            //                                .Include(map => map.Registrable)
-            //                                .Include(map => map.Registrable.Seats)
-            //                                .ToListAsync(cancellationToken);
-            //var registrableIds_CheckWaitingList = new List<Guid>();
-            //foreach (var response in registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue))
-            //{
-            //    foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
-            //    {
-            //        var partnerEmail = registrable.QuestionId_Partner.HasValue
-            //            ? registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == registrable.QuestionId_Partner.Value)?.ResponseString
-            //            : null;
-            //        var isLeader = registrable.QuestionOptionId_Leader.HasValue &&
-            //                       registration.Responses.Any(rsp => rsp.QuestionOptionId == registrable.QuestionOptionId_Leader.Value);
-            //        var isFollower = registrable.QuestionOptionId_Follower.HasValue &&
-            //                         registration.Responses.Any(rsp => rsp.QuestionOptionId == registrable.QuestionOptionId_Follower.Value);
-            //        var role = isLeader ? Role.Leader : (isFollower ? Role.Follower : (Role?)null);
-            //        var seat = ReserveSeat(registration.EventId, registrable.Registrable, response, registration.RespondentEmail, partnerEmail, role, out Guid? registrableId_CheckWaitingList);
-            //        if (registrableId_CheckWaitingList != null)
-            //        {
-            //            registrableIds_CheckWaitingList.Add(registrableId_CheckWaitingList.Value);
-            //        }
-            //        if (seat == null)
-            //        {
-            //            registration.SoldOutMessage = (registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +
-            //                                          string.Format(Resources.RegistrableSoldOut, registrable.Registrable.Name);
-            //        }
-            //        else
-            //        {
-            //            ownSeats.Add(seat);
-            //        }
-            //    }
-            //}
-
-            //await ServiceBusClient.SendEvent(new ComposeAndSendMailCommand { RegistrationId = registration.Id }, ComposeAndSendMailCommandHandler.ComposeAndSendMailCommandsQueueName);
-            //if (registrableIds_CheckWaitingList.Any() && @event.EventId.HasValue)
-            //{
-            //    foreach (var registrableId in registrableIds_CheckWaitingList)
-            //    {
-            //        await ServiceBusClient.SendEvent(new TryPromoteFromWaitingListCommand { RegistrableId = registrableId }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
-            //    }
-            //}
             return Unit.Value;
         }
 
