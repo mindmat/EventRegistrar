@@ -117,28 +117,19 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="MailType_SingleRegistrationAccepted" xml:space="preserve">
-    <value>Single registration accepted</value>
+  <data name="LastName" xml:space="preserve">
+    <value>Last Name</value>
   </data>
-  <data name="MailType_SingleRegistrationOnWaitingList" xml:space="preserve">
-    <value>Single registration on waiting list</value>
+  <data name="FirstName" xml:space="preserve">
+    <value>First Name</value>
   </data>
-  <data name="MailType_SingleRegistrationFullyPaid" xml:space="preserve">
-    <value>Single registration paid</value>
+  <data name="EMail" xml:space="preserve">
+    <value>Email address</value>
   </data>
-  <data name="MailType_SingleRegistrationFirstReminder" xml:space="preserve">
-    <value>Single registration: First reminder</value>
+  <data name="Phone" xml:space="preserve">
+    <value>Phone</value>
   </data>
-  <data name="MailType_PartnerRegistrationFirstReminder" xml:space="preserve">
-    <value>Couple registration: First Reminder</value>
-  </data>
-  <data name="MailType_PartnerRegistrationFullyPaid" xml:space="preserve">
-    <value>Couple registration paid</value>
-  </data>
-  <data name="MailType_PartnerRegistrationMatchedAndAccepted" xml:space="preserve">
-    <value>Couple registration accepted</value>
-  </data>
-  <data name="MailType_PartnerRegistrationMatchedOnWaitingList" xml:space="preserve">
-    <value>Couple registration on waiting list</value>
+  <data name="RegistrableSoldOut" xml:space="preserve">
+    <value>{0} is sold out</value>
   </data>
 </root>

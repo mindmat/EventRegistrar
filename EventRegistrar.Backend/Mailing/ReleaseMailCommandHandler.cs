@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
@@ -35,11 +36,13 @@ namespace EventRegistrar.Backend.Mailing
                 ContentPlainText = withheldMail.ContentPlainText,
                 Subject = withheldMail.Subject,
                 Sender = new EmailAddress { Email = withheldMail.SenderMail, Name = withheldMail.SenderName },
-                To = withheldMail.Registrations.Select(reg => new EmailAddress
-                {
-                    Email = reg.Registration.RespondentEmail,
-                    Name = reg.Registration.RespondentFirstName
-                }).ToList()
+                To = withheldMail.Registrations
+                                 .GroupBy(reg => reg.Registration.RespondentEmail?.ToLowerInvariant())
+                                 .Select(grp => new EmailAddress
+                                 {
+                                     Email = grp.Key,
+                                     Name = grp.Select(reg => reg.Registration.RespondentFirstName).StringJoin()
+                                 }).ToList()
             };
 
             withheldMail.Withhold = false;

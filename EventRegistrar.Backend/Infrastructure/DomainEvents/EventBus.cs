@@ -29,7 +29,7 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents
             {
                 DomainEventId = @event.Id == Guid.Empty ? Guid.NewGuid() : @event.Id,
                 DomainEventId_Parent = @event.DomainEventId_Parent,
-                EventId = _eventContext.EventId,
+                EventId = @event.EventId ?? _eventContext.EventId,
                 EventType = @event.GetType().FullName,
                 EventData = JsonConvert.SerializeObject(@event),
             });
