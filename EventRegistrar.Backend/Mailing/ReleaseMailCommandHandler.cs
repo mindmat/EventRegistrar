@@ -41,7 +41,7 @@ namespace EventRegistrar.Backend.Mailing
                                  .Select(grp => new EmailAddress
                                  {
                                      Email = grp.Key,
-                                     Name = grp.Select(reg => reg.Registration.RespondentFirstName).StringJoin()
+                                     Name = grp.Select(reg => reg.Registration.RespondentFirstName).StringJoin(" & ") // avoid ',' obviously SendGrid interprets commas
                                  }).ToList()
             };
 
