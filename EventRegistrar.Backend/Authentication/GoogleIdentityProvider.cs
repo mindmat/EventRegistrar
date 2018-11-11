@@ -23,8 +23,7 @@ namespace EventRegistrar.Backend.Authentication
             if (idTokenString != null)
             {
                 var token = new JwtSecurityToken(idTokenString);
-                var issuer = token.Issuer;
-                _logger.Log(LogLevel.Information, "token {0}, subject {1}, issuer {2}", idTokenString, token.Subject, issuer);
+                //_logger.Log(LogLevel.Information, "token {0}, subject {1}, issuer {2}", idTokenString, token.Subject, token.Issuer);
                 return token.Subject;
             }
 
