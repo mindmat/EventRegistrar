@@ -52,7 +52,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 partnerRegistration = await _registrations.Where(reg => reg.Id == registration.RegistrationId_Partner)
                                                           .Include(reg => reg.Seats_AsLeader).ThenInclude(seat => seat.Registrable)
                                                           .Include(reg => reg.Seats_AsFollower).ThenInclude(seat => seat.Registrable)
-                                                          .Include(reg => reg.Responses)
+                                                          .Include(reg => reg.Responses).ThenInclude(rsp => rsp.Question)
                                                           .FirstOrDefaultAsync(cancellationToken);
                 if (mainRegistrationRole == Role.Leader)
                 {
