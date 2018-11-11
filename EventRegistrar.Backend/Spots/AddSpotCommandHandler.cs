@@ -35,17 +35,17 @@ namespace EventRegistrar.Backend.Spots
                                                  .FirstAsync(cancellationToken);
             if (registrable.MaximumDoubleSeats.HasValue)
             {
-                _seatManager.ReserveSinglePartOfPartnerSpot(command.EventId,
-                                                            registrable,
-                                                            registration.Id,
-                                                            new RegistrationIdentification(registration),
-                                                            null,
-                                                            command.AsFollower ? Role.Follower : Role.Leader,
-                                                            false);
+                await _seatManager.ReserveSinglePartOfPartnerSpot(command.EventId,
+                                                                  registrable,
+                                                                  registration.Id,
+                                                                  new RegistrationIdentification(registration),
+                                                                  null,
+                                                                  command.AsFollower ? Role.Follower : Role.Leader,
+                                                                  false);
             }
             else
             {
-                _seatManager.ReserveSingleSpot(command.EventId, registrable, registration.Id, false);
+                await _seatManager.ReserveSingleSpot(command.EventId, registrable, registration.Id, false);
             }
 
             return Unit.Value;

@@ -92,8 +92,8 @@ namespace EventRegistrar.Backend.Registrations.Register
                 foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
                 {
                     var seat = registrable.Registrable.MaximumDoubleSeats.HasValue
-                        ? _seatManager.ReservePartnerSpot(registration.EventId, registrable.Registrable, registration.Id, followerRegistration.Id, true)
-                        : _seatManager.ReserveSingleSpot(registration.EventId, registrable.Registrable, registration.Id, true);
+                        ? await _seatManager.ReservePartnerSpot(registration.EventId, registrable.Registrable, registration.Id, followerRegistration.Id, true)
+                        : await _seatManager.ReserveSingleSpot(registration.EventId, registrable.Registrable, registration.Id, true);
 
                     if (seat == null)
                     {
@@ -114,7 +114,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     var registrationId = roleSpecificMapping.Role == Role.Leader
                                          ? registration.Id
                                          : followerRegistration.Id;
-                    var seat = _seatManager.ReserveSingleSpot(registration.EventId, registrable.Registrable, registrationId, false);
+                    var seat = await _seatManager.ReserveSingleSpot(registration.EventId, registrable.Registrable, registrationId, false);
                     if (seat == null)
                     {
                         registration.SoldOutMessage = (registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +

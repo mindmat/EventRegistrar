@@ -87,7 +87,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                         var isFollower = questionOptionId_Follower.HasValue && registration.Responses.Any(rsp => rsp.QuestionOptionId == questionOptionId_Follower.Value);
                         var role = isLeader ? Role.Leader : (isFollower ? Role.Follower : (Role?)null);
                         var ownIdentification = new RegistrationIdentification(registration);
-                        seat = _seatManager.ReserveSinglePartOfPartnerSpot(registration.EventId, mapping.Registrable, registration.Id, ownIdentification, partnerNormalized, role, true);
+                        seat = await _seatManager.ReserveSinglePartOfPartnerSpot(registration.EventId, mapping.Registrable, registration.Id, ownIdentification, partnerNormalized, role, true);
 
                         registration.PartnerNormalized = (partnerNormalized ?? registration.PartnerNormalized)?.ToLowerInvariant();
                         registration.PartnerOriginal = partnerOriginal ?? registration.PartnerOriginal;
@@ -104,7 +104,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     }
                     else
                     {
-                        seat = _seatManager.ReserveSingleSpot(registration.EventId, mapping.Registrable, registration.Id, true);
+                        seat = await _seatManager.ReserveSingleSpot(registration.EventId, mapping.Registrable, registration.Id, true);
                     }
                     if (seat == null)
                     {

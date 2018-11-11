@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Spots;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Backend.Registrations.Register
@@ -30,11 +32,11 @@ namespace EventRegistrar.Backend.Registrations.Register
             _eventBus = eventBus;
         }
 
-        public Seat ReservePartnerSpot(Guid? eventId,
-                                       Registrable registrable,
-                                       Guid registrationId_Leader,
-                                       Guid registrationId_Follower,
-                                       bool initialProcessing)
+        public async Task<Seat> ReservePartnerSpot(Guid? eventId,
+                                                   Registrable registrable,
+                                                   Guid registrationId_Leader,
+                                                   Guid registrationId_Follower,
+                                                   bool initialProcessing)
         {
             var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();
             if (registrable.MaximumSingleSeats.HasValue)
@@ -64,19 +66,19 @@ namespace EventRegistrar.Backend.Registrations.Register
                 seat.IsWaitingList = !seatAvailable;
             }
 
-            _seats.InsertOrUpdateEntity(seat);
+            await _seats.InsertOrUpdateEntity(seat);
             _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), RegistrableId = registrable.Id, RegistrationId = registrationId_Leader, IsInitialProcessing = initialProcessing });
             _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), RegistrableId = registrable.Id, RegistrationId = registrationId_Follower, IsInitialProcessing = initialProcessing });
             return seat;
         }
 
-        public Seat ReserveSinglePartOfPartnerSpot(Guid eventId,
-                                                   Registrable registrable,
-                                                   Guid registrationId,
-                                                   RegistrationIdentification ownIdentification,
-                                                   string partner,
-                                                   Role? role,
-                                                   bool initialProcessing)
+        public async Task<Seat> ReserveSinglePartOfPartnerSpot(Guid eventId,
+                                                               Registrable registrable,
+                                                               Guid registrationId,
+                                                               RegistrationIdentification ownIdentification,
+                                                               string partner,
+                                                               Role? role,
+                                                               bool initialProcessing)
         {
             Seat seat;
             var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();
@@ -109,7 +111,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 if (isPartnerRegistration)
                 {
                     // complement existing partner seat
-                    var existingPartnerSeat = FindPartnerSeat(eventId, ownIdentification, partner, ownRole, seats);
+                    var existingPartnerSeat = await FindPartnerSeat(eventId, ownIdentification, partner, ownRole, seats);
 
                     if (existingPartnerSeat != null)
                     {
@@ -190,10 +192,10 @@ namespace EventRegistrar.Backend.Registrations.Register
             return seat;
         }
 
-        public Seat ReserveSingleSpot(Guid? eventId,
-                                      Registrable registrable,
-                                      Guid registrationId,
-                                      bool initialProcessing)
+        public async Task<Seat> ReserveSingleSpot(Guid? eventId,
+                                                  Registrable registrable,
+                                                  Guid registrationId,
+                                                  bool initialProcessing)
         {
             var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();
             if (registrable.MaximumDoubleSeats.HasValue)
@@ -221,7 +223,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 seat.IsWaitingList = !seatAvailable;
             }
 
-            _seats.InsertOrUpdateEntity(seat);
+            await _seats.InsertOrUpdateEntity(seat);
             _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
 
             return seat;
@@ -251,7 +253,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                                                   ownRole == Role.Follower && !seat.RegistrationId_Follower.HasValue));
         }
 
-        private Seat FindPartnerSeat(Guid eventId,
+        private async Task<Seat> FindPartnerSeat(Guid eventId,
                                      RegistrationIdentification ownIdentification,
                                      string partner,
                                      Role ownRole,
@@ -279,10 +281,10 @@ namespace EventRegistrar.Backend.Registrations.Register
             var otherRole = ownRole == Role.Leader ? Role.Follower : Role.Leader;
             var partnerRegistrationIds = partnerSeats.Select(seat => otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower)
                                                      .ToList();
-            var registrationsThatReferenceOwnRegistration = _registrations.Where(reg => reg.RegistrationForm.EventId == eventId
-                                                                                     && (reg.RegistrationId_Partner == null || reg.RegistrationId_Partner == ownIdentification.Id)
-                                                                                     && partnerRegistrationIds.Contains(reg.Id))
-                                                                          .ToList();
+            var registrationsThatReferenceOwnRegistration = await _registrations.Where(reg => reg.RegistrationForm.EventId == eventId
+                                                                                           && (reg.RegistrationId_Partner == null || reg.RegistrationId_Partner == ownIdentification.Id)
+                                                                                           && partnerRegistrationIds.Contains(reg.Id))
+                                                                                .ToListAsync();
             _logger.LogInformation($"Partner registrations with this partner mail: {string.Join(", ", registrationsThatReferenceOwnRegistration.Select(reg => $"{reg.Id} ({reg.RespondentFirstName} {reg.RespondentLastName} - {reg.RespondentEmail})"))}");
             var partnerRegistrationId = registrationsThatReferenceOwnRegistration.FirstOrDefault(reg => string.Equals(reg.RespondentEmail, partner, StringComparison.InvariantCultureIgnoreCase))?.Id;
             if (partnerRegistrationId == null)
