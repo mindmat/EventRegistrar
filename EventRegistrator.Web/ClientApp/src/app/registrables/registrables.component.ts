@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
+import { EventService } from "../events/eventService.service";
 
 @Component({
   selector: 'registrables',
   templateUrl: './registrables.component.html'
 })
 export class RegistrablesComponent implements OnInit {
+  constructor(private http: HttpClient, private route: ActivatedRoute, private eventService: EventService) {
+  }
+
   ngOnInit() {
     this.http.get<DoubleRegistrable[]>(`api/events/${this.getEventAcronym()}/DoubleRegistrableOverview`).subscribe(result => {
       this.doubleRegistrables = result;
@@ -51,9 +55,6 @@ export class RegistrablesComponent implements OnInit {
   singleRegistrables: SingleRegistrable[];
   doubleRegistrableLimits = new DoubleRegistrableLimits();
   singleRegistrableLimits = new SingleRegistrableLimits();
-
-  constructor(private http: HttpClient, private route: ActivatedRoute) {
-  }
 
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];

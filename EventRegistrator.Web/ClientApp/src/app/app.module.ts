@@ -33,6 +33,7 @@ import { EventService } from "./events/eventService.service";
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { FileUploadModule } from 'ng2-file-upload';
 import { BulkMailTemplatesComponent } from "./bulkMailTemplates/bulkMailTemplates.component";
+import 'bootstrap';
 
 @NgModule({
   declarations: [

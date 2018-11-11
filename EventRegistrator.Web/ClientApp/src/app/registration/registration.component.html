@@ -1,5 +1,16 @@
 <h1 style="display: inline">Anmeldung</h1>
-<h1 style="display: inline" *ngIf="registration"> {{ registration.firstName }} {{registration.lastName}} <span class="badge badge-primary" *ngIf="registration.isWaitingList">Warteliste</span></h1>
+<h1 style="display: inline" *ngIf="registration">
+  {{ registration.firstName }} {{registration.lastName}} <span class="badge badge-primary" *ngIf="registration.isWaitingList">Warteliste</span>
+</h1>
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    ...
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <!--<button class="dropdown-item" type="button" *ngIf="registration && registration.status != 4" data-toggle="modal" data-target="#cancelModal">Stornieren</button>-->
+    <button class="dropdown-item" type="button" (click)="swapFirstLastName()">Name/Vorname tauschen</button>
+  </div>
+</div>
 <br />
 <br />
 
@@ -21,7 +32,7 @@
     </tr>
     <tr>
       <td>Status:</td>
-      <td><span class="badge badge-primary">{{ registration.statusText }}</span>   <button *ngIf="registration.status != 4" type="button" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#cancelModal">Stornieren</button></td>
+      <td><span class="badge badge-primary">{{ registration.statusText }}</span></td>
     </tr>
     <tr>
       <td>Anmeldezeitpunkt:</td>
@@ -79,7 +90,10 @@
     <tr *ngFor="let spot of spots">
       <td><a [routerLink]="['/', getEventAcronym(), 'registrables', spot.registrableId, 'participants']">{{ spot.registrable }}</a></td>
       <td>{{ spot.firstPartnerJoined | date: 'dd.MM.yy HH:mm' }}</td>
-      <td><a *ngIf="spot.partnerRegistrationId" [routerLink]="['/', getEventAcronym(), 'registration', spot.partnerRegistrationId]">{{ spot.partner }}</a></td>
+      <td>
+        <a *ngIf="spot.partnerRegistrationId" [routerLink]="['/', getEventAcronym(), 'registration', spot.partnerRegistrationId]">{{ spot.partner }}</a>
+        <a *ngIf="!spot.partnerRegistrationId" class="font-italic">{{ spot.partner }}</a>
+      </td>
     </tr>
   </tbody>
 </table>

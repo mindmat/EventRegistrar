@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
+import 'bootstrap/js/dist/dropdown'
+
 
 @Component({
   selector: 'registration',
@@ -79,6 +81,11 @@ export class RegistrationComponent {
 
   showMail(mail: Mail) {
     this.mail = mail;
+  }
+
+  swapFirstLastName() {
+    this.http.post(`api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/swapFirstLastName`, null)
+      .subscribe(result => { this.reloadRegistration(); }, error => console.error(error));
   }
 
   releaseMail(mailId: string) {
