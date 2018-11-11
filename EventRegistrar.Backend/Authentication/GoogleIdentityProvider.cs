@@ -1,5 +1,7 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -23,10 +25,10 @@ namespace EventRegistrar.Backend.Authentication
             if (idTokenString != null)
             {
                 var token = new JwtSecurityToken(idTokenString);
-                //_logger.Log(LogLevel.Information, "token {0}, subject {1}, issuer {2}", idTokenString, token.Subject, token.Issuer);
+                _logger.LogInformation("token {0}, subject {1}, issuer {2}", idTokenString, token.Subject, token.Issuer);
                 return token.Subject;
             }
-
+            _logger.LogInformation("no token found in request. headers present: {0}", contextAccessor.HttpContext?.Request?.Headers?.Select(hdr => $"{hdr.Key}: {hdr.Value}")?.StringJoin());
             return null;
         }
 

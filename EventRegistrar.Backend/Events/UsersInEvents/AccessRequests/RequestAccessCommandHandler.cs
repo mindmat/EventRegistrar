@@ -40,7 +40,7 @@ namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
                     throw new ArgumentException("You are not authenticated");
                 }
                 requestExpression = requestExpression.Where(req => req.IdentityProvider == authenticatedUser.IdentityProvider
-                                                                 && req.Identifier == authenticatedUser.IdentityProviderUserIdentifier);
+                                                                && req.Identifier == authenticatedUser.IdentityProviderUserIdentifier);
             }
 
             var request = await requestExpression.FirstOrDefaultAsync(cancellationToken);
