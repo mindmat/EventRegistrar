@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Mailing;
@@ -93,6 +94,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(RemoveUserFromRoleInEventCommand).Name;
                 yield return typeof(RespondToRequestCommand).Name;
                 yield return typeof(SaveRegistrationFormDefinitionCommand).Name;
+                yield return typeof(OpenRegistrationCommand).Name;
             }
         }
     }

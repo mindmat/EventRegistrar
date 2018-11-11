@@ -51,6 +51,16 @@ namespace EventRegistrar.Backend.Events
             });
         }
 
+        [HttpPost("api/events/{eventAcronym}/openRegistration")]
+        public async Task OpenRegistration(string eventAcronym)
+        {
+            await _mediator.Send(new OpenRegistrationCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                DeleteData = true
+            });
+        }
+
         [HttpPost("api/events/{eventAcronym}/requestAccess")]
         public async Task<Guid> RequestAccess(string eventAcronym)
         {

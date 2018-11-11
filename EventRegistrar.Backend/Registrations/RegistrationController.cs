@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.Raw;
+using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Registrations.Search;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -39,6 +40,15 @@ namespace EventRegistrar.Backend.Registrations
         public Task<IEnumerable<string>> GetAllExternalRegistrationIdentifiers(string formExternalIdentifier)
         {
             return _mediator.Send(new AllExternalRegistrationIdentifiersQuery { RegistrationFormExternalIdentifier = formExternalIdentifier });
+        }
+
+        [HttpPost("api/rawregistrations/{rawRegistrationId:guid}/process")]
+        public async Task ProcessRawRegistration(Guid rawRegistrationId)
+        {
+            await _mediator.Send(new ProcessRawRegistrationCommand
+            {
+                RawRegistrationId = rawRegistrationId
+            });
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations")]
