@@ -42,7 +42,7 @@ namespace EventRegistrar.Backend.Spots
                     spot.IsCancelled = true;
                 }
             }
-            _eventBus.Publish(new SpotRemoved { RegistrableId = spot.RegistrableId, RegistrationId = registrationId });
+            _eventBus.Publish(new SpotRemoved { Id = Guid.NewGuid(), RegistrableId = spot.RegistrableId, RegistrationId = registrationId });
         }
     }
 }

@@ -65,8 +65,8 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
 
             _seats.InsertOrUpdateEntity(seat);
-            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId_Leader, IsInitialProcessing = initialProcessing });
-            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId_Follower, IsInitialProcessing = initialProcessing });
+            _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), RegistrableId = registrable.Id, RegistrationId = registrationId_Leader, IsInitialProcessing = initialProcessing });
+            _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), RegistrableId = registrable.Id, RegistrationId = registrationId_Follower, IsInitialProcessing = initialProcessing });
             return seat;
         }
 
@@ -114,7 +114,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     if (existingPartnerSeat != null)
                     {
                         ComplementExistingSeat(registrationId, ownRole, existingPartnerSeat);
-                        _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
+                        _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
                         return existingPartnerSeat;
                     }
 
@@ -159,7 +159,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     if (!waitingListForOwnRole && matchingSingleSeat != null)
                     {
                         ComplementExistingSeat(registrationId, ownRole, matchingSingleSeat);
-                        _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
+                        _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
                         return matchingSingleSeat;
                     }
                     seat = new Seat
@@ -185,7 +185,7 @@ namespace EventRegistrar.Backend.Registrations.Register
 
             seat.Id = Guid.NewGuid();
             _seats.InsertOrUpdateEntity(seat);
-            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
+            _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
 
             return seat;
         }
@@ -222,7 +222,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
 
             _seats.InsertOrUpdateEntity(seat);
-            _eventBus.Publish(new SpotAdded { RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
+            _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
 
             return seat;
         }

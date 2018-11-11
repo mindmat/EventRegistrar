@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
@@ -39,7 +40,7 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
                 // fully paid
                 if (!registration.RegistrationId_Partner.HasValue)
                 {
-                    _eventBus.Publish(new SingleRegistrationPaid { RegistrationId = registration.Id });
+                    _eventBus.Publish(new SingleRegistrationPaid { Id = Guid.NewGuid(), RegistrationId = registration.Id });
                 }
                 else
                 {
@@ -53,6 +54,7 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
                     {
                         _eventBus.Publish(new PartnerRegistrationPaid
                         {
+                            Id = Guid.NewGuid(),
                             RegistrationId1 = registration.Id,
                             RegistrationId2 = partnerRegistration.Id
                         });
@@ -61,6 +63,7 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
                     {
                         _eventBus.Publish(new PartnerRegistrationPartiallyPaid
                         {
+                            Id = Guid.NewGuid(),
                             RegistrationId1 = registration.Id,
                             RegistrationId2 = partnerRegistration.Id
                         });

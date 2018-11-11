@@ -71,7 +71,7 @@ namespace EventRegistrar.Backend.Registrations.Cancel
             };
             await _cancellations.InsertOrUpdateEntity(cancellation, cancellationToken);
 
-            _eventBus.Publish(new RegistrationCancelled { RegistrationId = command.RegistrationId });
+            _eventBus.Publish(new RegistrationCancelled { Id = Guid.NewGuid(), RegistrationId = command.RegistrationId });
 
             return Unit.Value;
         }

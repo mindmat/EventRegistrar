@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
@@ -30,7 +31,7 @@ namespace EventRegistrar.Backend.Registrations.Price
             if (oldPrice != newPrice)
             {
                 registration.Price = newPrice;
-                _eventBus.Publish(new PriceChanged { RegistrationId = registration.Id, OldPrice = oldPrice, NewPrice = newPrice });
+                _eventBus.Publish(new PriceChanged { Id = Guid.NewGuid(), RegistrationId = registration.Id, OldPrice = oldPrice, NewPrice = newPrice });
             }
 
             return Unit.Value;
