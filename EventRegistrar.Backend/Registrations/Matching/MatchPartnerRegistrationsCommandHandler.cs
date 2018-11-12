@@ -116,9 +116,9 @@ namespace EventRegistrar.Backend.Registrations.Matching
 
             // update waiting list
             registration1.IsWaitingList = registration1.Seats_AsFollower.Any(spt => !spt.IsCancelled && spt.IsWaitingList)
-                                       && registration1.Seats_AsLeader.Any(spt => !spt.IsCancelled && spt.IsWaitingList);
+                                       || registration1.Seats_AsLeader.Any(spt => !spt.IsCancelled && spt.IsWaitingList);
             registration2.IsWaitingList = registration2.Seats_AsFollower.Any(spt => !spt.IsCancelled && spt.IsWaitingList)
-                                       && registration2.Seats_AsLeader.Any(spt => !spt.IsCancelled && spt.IsWaitingList);
+                                       || registration2.Seats_AsLeader.Any(spt => !spt.IsCancelled && spt.IsWaitingList);
 
             var mailType = isWaitingList
                 ? MailType.PartnerRegistrationMatchedOnWaitingList

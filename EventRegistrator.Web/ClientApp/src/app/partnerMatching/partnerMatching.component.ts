@@ -29,14 +29,12 @@ export class PartnerMatchingComponent implements OnInit {
 
   gotoPrevious() {
     if (this.unassignedPartnerPointer > 0) {
-      console.log(this.unassignedPartnerPointer);
       this.setRegistration(this.unassignedPartnerRegistrations[--this.unassignedPartnerPointer]);
     }
   }
 
   gotoNext() {
     if (this.unassignedPartnerPointer < this.unassignedPartnerRegistrations.length - 1) {
-      console.log(this.unassignedPartnerPointer);
       this.setRegistration(this.unassignedPartnerRegistrations[++this.unassignedPartnerPointer]);
     }
   }

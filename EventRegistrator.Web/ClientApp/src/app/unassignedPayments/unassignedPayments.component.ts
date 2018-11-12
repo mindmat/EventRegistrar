@@ -33,14 +33,12 @@ export class UnassignedPaymentsComponent implements OnInit {
 
   gotoPreviousPayment() {
     if (this.paymentPointer > 0) {
-      console.log(this.paymentPointer);
       this.setPayment(this.payments[--this.paymentPointer]);
     }
   }
 
   gotoNextPayment() {
     if (this.paymentPointer < this.payments.length - 1) {
-      console.log(this.paymentPointer);
       this.setPayment(this.payments[++this.paymentPointer]);
     }
   }
