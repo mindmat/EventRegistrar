@@ -8,7 +8,12 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
     {
         public IQueueBoundMessage Translate(SpotRemoved e)
         {
-            return new TryPromoteFromWaitingListCommand { RegistrableId = e.RegistrableId };
+            if (e.WasSpotOnWaitingList)
+            {
+                return new TryPromoteFromWaitingListCommand { RegistrableId = e.RegistrableId };
+            }
+
+            return null;
         }
     }
 }

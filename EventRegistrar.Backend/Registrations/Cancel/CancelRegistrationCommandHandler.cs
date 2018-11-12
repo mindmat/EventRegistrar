@@ -57,7 +57,7 @@ namespace EventRegistrar.Backend.Registrations.Cancel
                                     .ToListAsync(cancellationToken);
             foreach (var spot in spots)
             {
-                _spotRemover.RemoveSpot(spot, command.RegistrationId);
+                _spotRemover.RemoveSpot(spot, command.RegistrationId, RemoveSpotReason.CancellationOfRegistration);
             }
 
             var cancellation = new RegistrationCancellation

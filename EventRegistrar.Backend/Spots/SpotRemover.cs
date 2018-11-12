@@ -12,7 +12,7 @@ namespace EventRegistrar.Backend.Spots
             _eventBus = eventBus;
         }
 
-        public void RemoveSpot(Seat spot, Guid registrationId)
+        public void RemoveSpot(Seat spot, Guid registrationId, RemoveSpotReason reason)
         {
             if (spot.RegistrationId == registrationId)
             {
@@ -42,7 +42,14 @@ namespace EventRegistrar.Backend.Spots
                     spot.IsCancelled = true;
                 }
             }
-            _eventBus.Publish(new SpotRemoved { Id = Guid.NewGuid(), RegistrableId = spot.RegistrableId, RegistrationId = registrationId });
+            _eventBus.Publish(new SpotRemoved
+            {
+                Id = Guid.NewGuid(),
+                RegistrableId = spot.RegistrableId,
+                RegistrationId = registrationId,
+                Reason = reason,
+                WasSpotOnWaitingList = spot.IsWaitingList
+            });
         }
     }
 }

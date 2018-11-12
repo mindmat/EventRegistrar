@@ -41,7 +41,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                                    .Include(reg => reg.Cancellations)
                                                    .FirstAsync(cancellationToken);
 
-            var mainRegistrationRole = registration.Seats_AsFollower.Any() ? Role.Follower : Role.Leader;
+            var mainRegistrationRole = registration.Seats_AsFollower.Any(spt => !spt.IsCancelled) ? Role.Follower : Role.Leader;
             Registration leaderRegistration = null;
             Registration followerRegistration = null;
             var templateFiller = new TemplateFiller(template);

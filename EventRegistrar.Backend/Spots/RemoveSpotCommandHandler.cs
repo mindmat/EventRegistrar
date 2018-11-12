@@ -33,7 +33,7 @@ namespace EventRegistrar.Backend.Spots
                                                                       || seat.RegistrationId_Follower == registration.Id),
                                                                 cancellationToken);
 
-            _spotRemover.RemoveSpot(spotToRemove, registration.Id);
+            _spotRemover.RemoveSpot(spotToRemove, registration.Id, RemoveSpotReason.Modification);
 
             return Unit.Value;
         }

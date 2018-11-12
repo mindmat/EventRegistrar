@@ -64,7 +64,7 @@ namespace EventRegistrar.Backend.Registrations.Matching
                                        .Where(mat => mat.EmailMatch || mat.FirstNameMatch || mat.LastNameMatch)
                                        .OrderByDescending(mat => (mat.EmailMatch ? 5 : 0) +
                                                                  (mat.FirstNameMatch ? 1 : 0) +
-                                                                 (mat.FirstNameMatch ? 1 : 0))
+                                                                 (mat.LastNameMatch ? 1 : 0))
                                        .Select(mat => new PotentialPartnerMatch
                                        {
                                            RegistrationId = mat.RegistrationId,
