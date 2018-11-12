@@ -21,6 +21,7 @@ using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Cancel;
+using EventRegistrar.Backend.Registrations.Matching;
 using EventRegistrar.Backend.Registrations.Overview;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Search;
@@ -63,6 +64,8 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(PossibleAssignmentsQuery).Name;
                 yield return typeof(SmsConversationQuery).Name;
                 yield return typeof(CheckinQuery).Name;
+                yield return typeof(RegistrationsWithUnmatchedPartnerQuery).Name;
+                yield return typeof(PotentialPartnersQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
@@ -85,6 +88,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(CancelRegistrationCommand).Name;
                 yield return typeof(SendSmsCommand).Name;
                 yield return typeof(SwapFirstLastNameCommand).Name;
+                yield return typeof(MatchPartnerRegistrationsCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

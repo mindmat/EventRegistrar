@@ -1,0 +1,106 @@
+<h1>Nicht ausgeglichene Zahlungen</h1>
+
+<p *ngIf="!unassignedPartnerRegistrations"><em>Loading...</em></p>
+
+<div *ngIf="unassignedPartnerRegistrations" class="carousel slide">
+  <div class="carousel-inner" style="padding-left: 40px; padding-right: 40px">
+    <table class="table" *ngIf="unassignedPartnerRegistration">
+      <tbody>
+
+        <tr>
+          <td>Name</td>
+          <td>{{ unassignedPartnerRegistration.firstName }} {{ unassignedPartnerRegistration.lastName }}<span class="badge badge-primary" *ngIf="unassignedPartnerRegistration.isWaitingList">Warteliste</span></td>
+        </tr>
+        <tr>
+          <td>E-Mail:</td>
+          <td>{{ unassignedPartnerRegistration.email }}</td>
+        </tr>
+        <tr>
+          <td>Status:</td>
+          <td><span class="badge badge-primary">{{ unassignedPartnerRegistration.state }}</span></td>
+        </tr>
+        <tr>
+          <td>Partner:</td>
+          <td>{{ unassignedPartnerRegistration.partner }}</td>
+        </tr>
+        <tr>
+          <td>Angemeldet für:</td>
+          <td>{{ unassignedPartnerRegistration.registrables.join(', ') }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <a class="carousel-control-prev" role="button" data-slide="prev" style="width: 30px; background: darkgray" (click)="gotoPrevious()" *ngIf="unassignedPartnerPointer > 0">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" role="button" data-slide="next" style="width: 30px; background: darkgray" (click)="gotoNext()" *ngIf="unassignedPartnerPointer < unassignedPartnerRegistrations.length - 1">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+<br />
+
+<h3>Suchtreffer</h3>
+
+<table class="table table-hover">
+  <thead class="thead-dark">
+    <tr>
+      <th>Name</th>
+      <th>E-Mail</th>
+      <th>Status</th>
+      <th>Partner</th>
+      <th>Angemeldet für</th>
+      <th>Zugeordnet</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let potentialMatch of potentialMatches">
+      <td>{{ potentialMatch.firstName }} {{ potentialMatch.lastName }}<span class="badge badge-primary" *ngIf="potentialMatch.isWaitingList">Warteliste</span></td>
+      <td>{{ potentialMatch.email }}</td>
+      <td><span class="badge badge-primary">{{ potentialMatch.state }}</span></td>
+      <td>{{ potentialMatch.partner }}</td>
+      <td>{{ potentialMatch.registrables.join(', ') }}</td>
+      <td><p *ngIf="potentialMatch.isPartnerRegistration">x</p></td>
+      <td>
+        <button class="btn btn-primary btn-sm" (click)="match(potentialMatch)" *ngIf="!potentialMatch.locked"><span class="glyphicon glyphicon-ok">Zuordnen</span></button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!--<br />
+
+<h3>Manuelle Suche</h3>
+<input #searchString type="text" (keyup.enter)="searchRegistrationManually(searchString.value)">
+<table class="table table-hover">
+  <thead class="thead-dark">
+    <tr>
+      <th>Name</th>
+      <th>Preis</th>
+      <th>offen</th>
+      <th>ausgleichen</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let match of registrationMatches">
+      <td><a [routerLink]="['/', getEventAcronym(), 'registration', match.Id]">{{ match.firstName }} {{ match.lastName }}</a></td>
+      <td>{{ match.amount }}</td>
+      <td>{{ match.amount - match.amountPaid }}</td>
+      <td><input [(ngModel)]="match.amountToAssign" type="number" *ngIf="!match.locked" /></td>
+      <td>
+        <input [(ngModel)]="match.acceptDifference" type="checkbox" *ngIf="!match.locked && (match.amount - match.amountPaid - match.amountToAssign) > 0" /><span *ngIf="!match.locked && (match.amount - match.amountPaid - match.amountToAssign) > 0">Differenz akzeptieren</span>
+        <div *ngIf="!match.locked && match.acceptDifference">
+          Grund: <input [(ngModel)]="match.acceptDifferenceReason" type="text" />
+        </div>
+      </td>
+      <td>
+        <button class="btn btn-primary btn-sm" (click)="savePayment(match)" *ngIf="!match.locked && match.amountToAssign > 0"><span class="glyphicon glyphicon-ok">Ausgleichen</span></button>
+      </td>
+    </tr>
+  </tbody>
+</table>-->

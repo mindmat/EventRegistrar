@@ -33,6 +33,7 @@ import { EventService } from "./events/eventService.service";
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { FileUploadModule } from 'ng2-file-upload';
 import { BulkMailTemplatesComponent } from "./bulkMailTemplates/bulkMailTemplates.component";
+import { PartnerMatchingComponent } from "./partnerMatching/partnerMatching.component";
 import 'bootstrap';
 
 @NgModule({
@@ -58,7 +59,8 @@ import 'bootstrap';
     RegistrationFormsComponent,
     QuestionMappingComponent,
     PaymentsComponent,
-    BulkMailTemplatesComponent
+    BulkMailTemplatesComponent,
+    PartnerMatchingComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -90,7 +92,8 @@ import 'bootstrap';
       { path: ':eventAcronym/bulkMailTemplates', component: BulkMailTemplatesComponent },
       { path: ':eventAcronym/mails', component: MailsComponent },
       { path: ':eventAcronym/registrationForms', component: RegistrationFormsComponent },
-      { path: ':eventAcronym/questionMapping', component: QuestionMappingComponent }
+      { path: ':eventAcronym/questionMapping', component: QuestionMappingComponent },
+      { path: ':eventAcronym/partnerMatching', component: PartnerMatchingComponent }
       //{ path: '**', redirectTo: 'll18/registrables' }
     ])
   ],

@@ -186,7 +186,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
 
             seat.Id = Guid.NewGuid();
-            _seats.InsertOrUpdateEntity(seat);
+            await _seats.InsertOrUpdateEntity(seat);
             _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
 
             return seat;
@@ -254,10 +254,10 @@ namespace EventRegistrar.Backend.Registrations.Register
         }
 
         private async Task<Seat> FindPartnerSeat(Guid eventId,
-                                     RegistrationIdentification ownIdentification,
-                                     string partner,
-                                     Role ownRole,
-                                     ICollection<Seat> existingSeats)
+                                                 RegistrationIdentification ownIdentification,
+                                                 string partner,
+                                                 Role ownRole,
+                                                 ICollection<Seat> existingSeats)
         {
             var potentialPartnerSeats = existingSeats.Where(seat => seat.IsPartnerSpot
                                                                  // own part still available

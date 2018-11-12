@@ -18,6 +18,11 @@
           <span class='glyphicon glyphicon-th-list'></span> Übersicht Anmeldungen
         </a>
       </li>
+      <li [routerLinkActive]='["link-active"]' *ngIf="eventService.acronym">
+        <a [routerLink]="[eventService.acronym, 'partnerMatching']">
+          <span class='glyphicon glyphicon-th-list'></span> Partneranmeldungen zuordnen
+        </a>
+      </li>
       <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
         <a [routerLink]="[eventService.acronym, 'mails']">
           <span class='glyphicon glyphicon-envelope'></span> Mails
