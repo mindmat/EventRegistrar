@@ -59,6 +59,7 @@ namespace EventRegistrar.Backend.Registrations.Matching
                                            LastNameMatch = searchParts.Any(prt => prt == reg.RespondentLastName),
                                            reg.IsWaitingList,
                                            reg.RegistrationId_Partner,
+                                           MatchedPartner = (reg.Registration_Partner.RespondentFirstName ?? string.Empty) + " " + (reg.Registration_Partner.RespondentLastName ?? string.Empty),
                                            Registrables = reg.Seats_AsLeader.Select(spt => spt.Registrable.Name).Union(reg.Seats_AsFollower.Select(spt => spt.Registrable.Name))
                                        })
                                        .Where(mat => mat.EmailMatch || mat.FirstNameMatch || mat.LastNameMatch)
@@ -75,6 +76,7 @@ namespace EventRegistrar.Backend.Registrations.Matching
                                            Partner = mat.Partner,
                                            Registrables = mat.Registrables.ToArray(),
                                            IsWaitingList = mat.IsWaitingList == true,
+                                           MatchedPartner = mat.MatchedPartner,
                                            RegistrationId_Partner = mat.RegistrationId_Partner
                                        })
                                        .ToListAsync(cancellationToken);

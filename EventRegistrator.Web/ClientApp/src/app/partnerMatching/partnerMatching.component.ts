@@ -116,4 +116,5 @@ class PotentialPartner {
   registrables: string[];
   locked: boolean;
   registrationId_Partner: string;
+  matchedPartner: string;
 }

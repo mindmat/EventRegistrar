@@ -33,6 +33,7 @@ namespace EventRegistrar.Backend.Registrations
         public string PhoneNormalized { get; set; }
         public decimal? Price { get; set; }
         public DateTime ReceivedAt { get; set; }
+        public Registration Registration_Partner { get; set; }
         public RegistrationForm RegistrationForm { get; set; }
         public Guid RegistrationFormId { get; set; }
         public Guid? RegistrationId_Partner { get; set; }

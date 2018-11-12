@@ -9,7 +9,7 @@
 
         <tr>
           <td>Name</td>
-          <td>{{ unassignedPartnerRegistration.firstName }} {{ unassignedPartnerRegistration.lastName }}<span class="badge badge-primary" *ngIf="unassignedPartnerRegistration.isWaitingList">Warteliste</span></td>
+          <td><a [routerLink]="['/', getEventAcronym(), 'registration', unassignedPartnerRegistration.registrationId]">{{ unassignedPartnerRegistration.firstName }} {{ unassignedPartnerRegistration.lastName }}</a><span class="badge badge-primary" *ngIf="unassignedPartnerRegistration.isWaitingList">Warteliste</span></td>
         </tr>
         <tr>
           <td>E-Mail:</td>
@@ -63,7 +63,7 @@
       <td><span class="badge badge-primary">{{ potentialMatch.state }}</span></td>
       <td>{{ potentialMatch.partner }}</td>
       <td>{{ potentialMatch.registrables.join(', ') }}</td>
-      <td><p *ngIf="potentialMatch.isPartnerRegistration">x</p></td>
+      <td><a *ngIf="potentialMatch.registrationId_Partner" [routerLink]="['/', getEventAcronym(), 'registration', potentialMatch.registrationId_Partner]">{{ potentialMatch.matchedPartner }}</a></td>
       <td>
         <button class="btn btn-primary btn-sm" (click)="match(potentialMatch)" *ngIf="!potentialMatch.locked"><span class="glyphicon glyphicon-ok">Zuordnen</span></button>
       </td>

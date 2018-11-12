@@ -13,6 +13,9 @@ namespace EventRegistrar.Backend.Registrations
             builder.HasOne(reg => reg.RegistrationForm)
                    .WithMany()
                    .HasForeignKey(reg => reg.RegistrationFormId);
+            builder.HasOne(reg => reg.Registration_Partner)
+                   .WithMany()
+                   .HasForeignKey(reg => reg.RegistrationId_Partner);
 
             builder.HasOne(reg => reg.Event)
                    .WithMany()
