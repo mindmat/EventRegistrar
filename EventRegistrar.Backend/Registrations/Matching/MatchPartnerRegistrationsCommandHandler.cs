@@ -103,7 +103,7 @@ namespace EventRegistrar.Backend.Registrations.Matching
                 else
                 {
                     mergedSpot = followerSpot;
-                    mergedSpot.RegistrationId = registrationFollower.Id;
+                    mergedSpot.RegistrationId = registrationLeader.Id;
                     spotToCancel = leaderSpot;
                 }
 
