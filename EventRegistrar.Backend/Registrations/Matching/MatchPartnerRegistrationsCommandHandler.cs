@@ -69,11 +69,11 @@ namespace EventRegistrar.Backend.Registrations.Matching
             var partnerSpotsOfLeader = registrationLeader.Seats_AsLeader.Where(seat => !seat.IsCancelled && seat.Registrable.MaximumDoubleSeats.HasValue).ToList();
             var partnerSpotsOfFollower = registrationFollower.Seats_AsFollower.Where(seat => !seat.IsCancelled && seat.Registrable.MaximumDoubleSeats.HasValue).ToList();
 
-            if (partnerSpotsOfLeader.Any(spt => !spt.IsPartnerSpot || spt.RegistrationId_Follower.HasValue))
+            if (partnerSpotsOfLeader.Any(spt => spt.RegistrationId_Follower.HasValue))
             {
                 throw new ArgumentException($"Unexpected situation: leader registration {registrationLeader.Id} has partner with a follower set");
             }
-            if (partnerSpotsOfFollower.Any(spt => !spt.IsPartnerSpot || spt.RegistrationId.HasValue))
+            if (partnerSpotsOfFollower.Any(spt => spt.RegistrationId.HasValue))
             {
                 throw new ArgumentException($"Unexpected situation: follower registration {registrationFollower.Id} has partner with a leader set");
             }
@@ -113,6 +113,12 @@ namespace EventRegistrar.Backend.Registrations.Matching
                 await _seats.InsertOrUpdateEntity(spotToCancel, cancellationToken);
                 isWaitingList |= mergedSpot.IsWaitingList;
             }
+
+            // update waiting list
+            registration1.IsWaitingList = registration1.Seats_AsFollower.Any(spt => !spt.IsCancelled && spt.IsWaitingList)
+                                       && registration1.Seats_AsLeader.Any(spt => !spt.IsCancelled && spt.IsWaitingList);
+            registration2.IsWaitingList = registration2.Seats_AsFollower.Any(spt => !spt.IsCancelled && spt.IsWaitingList)
+                                       && registration2.Seats_AsLeader.Any(spt => !spt.IsCancelled && spt.IsWaitingList);
 
             var mailType = isWaitingList
                 ? MailType.PartnerRegistrationMatchedOnWaitingList
