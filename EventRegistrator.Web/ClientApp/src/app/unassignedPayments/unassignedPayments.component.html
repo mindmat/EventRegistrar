@@ -2,24 +2,6 @@
 
 <p *ngIf="!payments"><em>Loading...</em></p>
 
-<!--<div id="paymentsCarousel" #paymentsCarousel class="carousel slide" data-ride="carousel" *ngIf="payments" (slid.bs.carousel)="slid(e)" interval="false">
-  <div class="carousel-inner" style="padding-left: 40px; padding-right: 40px">
-    <div *ngFor="let payment of payments ; let k = index" [ngClass]="k == 0 ? 'carousel-item active' : 'carousel-item'">
-      <textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected(payment)">{{ payment.info }}</textarea>
-      <p>Betrag: {{ payment.amount }}</p>
-      <p>Zahlungseingang: {{ payment.bookingDate | date: 'dd.MM.yy' }}</p>
-    </div>
-  </div>
-  <a class="carousel-control-prev" href="#paymentsCarousel" role="button" data-slide="prev" style="width: 30px; background: darkgray" (click)="gotoPreviousPayment()">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" href="#paymentsCarousel" role="button" data-slide="next" style="width: 30px; background: dimgray" (click)="gotoNextPayment()">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
-</div>-->
-
 <div *ngIf="payment" class="carousel slide">
   <div class="carousel-inner" style="padding-left: 40px; padding-right: 40px">
     Mitteilungstext: <textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected()">{{ payment.info }}</textarea>

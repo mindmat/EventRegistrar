@@ -23,7 +23,7 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents
         }
 
         public void Publish<TEvent>(TEvent @event)
-           where TEvent : DomainEvent
+            where TEvent : DomainEvent
         {
             _serviceBusClient.SendMessage(new SaveDomainEventCommand
             {
@@ -34,13 +34,9 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents
                 EventData = JsonConvert.SerializeObject(@event),
             });
             var translations = _container.GetAllInstances<IEventToCommandTranslation<TEvent>>().ToList();
-            foreach (var translation in translations)
+            foreach (var command in translations.SelectMany(trn => trn.Translate(@event)).Where(cmd => cmd != null))
             {
-                var command = translation.Translate(@event);
-                if (command != null)
-                {
-                    _serviceBusClient.SendMessage(command);
-                }
+                _serviceBusClient.SendMessage(command);
             }
         }
     }
