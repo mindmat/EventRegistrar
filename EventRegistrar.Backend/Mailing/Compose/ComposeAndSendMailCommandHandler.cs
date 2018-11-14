@@ -11,6 +11,7 @@ using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Backend.Mailing.Compose
 {
@@ -18,6 +19,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
     {
         public const string FallbackLanguage = Language.English;
 
+        private readonly ILogger _log;
         private readonly MailComposer _mailComposer;
         private readonly IRepository<Mail> _mails;
         private readonly IRepository<MailToRegistration> _mailsToRegistrations;
@@ -30,7 +32,8 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                                 IRepository<Mail> mails,
                                                 IRepository<MailToRegistration> mailsToRegistrations,
                                                 MailComposer mailComposer,
-                                                ServiceBusClient serviceBusClient)
+                                                ServiceBusClient serviceBusClient,
+                                                ILogger log)
         {
             _templates = templates;
             _registrations = registrations;
@@ -38,10 +41,23 @@ namespace EventRegistrar.Backend.Mailing.Compose
             _mailsToRegistrations = mailsToRegistrations;
             _mailComposer = mailComposer;
             _serviceBusClient = serviceBusClient;
+            _log = log;
         }
 
         public async Task<Unit> Handle(ComposeAndSendMailCommand command, CancellationToken cancellationToken)
         {
+            if (!command.AllowDuplicate)
+            {
+                var duplicate = await _mails.FirstOrDefaultAsync(ml => ml.Type == command.MailType
+                                                                    && ml.Registrations.Any(map => map.RegistrationId == command.RegistrationId),
+                                                                 cancellationToken);
+                if (duplicate != null)
+                {
+                    _log.LogWarning("No mail created because Mail with type {0} found (Id {1})", command.MailType, duplicate.Id);
+                    return Unit.Value;
+                }
+            }
+
             var registration = await _registrations.FirstOrDefaultAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
             var templates = await _templates.Where(mtp => mtp.EventId == registration.EventId &&
                                                           mtp.Type == command.MailType)

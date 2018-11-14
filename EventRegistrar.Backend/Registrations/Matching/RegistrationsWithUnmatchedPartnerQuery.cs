@@ -29,7 +29,7 @@ namespace EventRegistrar.Backend.Registrations.Matching
                                                   && reg.State != RegistrationState.Cancelled
                                                   && reg.PartnerNormalized != null
                                                   && reg.RegistrationId_Partner == null)
-                                       .OrderBy(reg => reg.ReceivedAt)
+                                       .OrderByDescending(reg => reg.ReceivedAt)
                                        .Select(reg => new PotentialPartnerMatch
                                        {
                                            RegistrationId = reg.Id,

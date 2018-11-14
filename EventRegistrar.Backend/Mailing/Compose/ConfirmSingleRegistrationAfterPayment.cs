@@ -13,7 +13,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
             {
                 MailType = MailType.SingleRegistrationFullyPaid,
                 RegistrationId = e.RegistrationId,
-                Withhold = true
+                Withhold = false
             };
         }
     }

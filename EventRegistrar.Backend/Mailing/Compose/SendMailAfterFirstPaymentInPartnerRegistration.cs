@@ -13,7 +13,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
             {
                 MailType = MailType.PartnerRegistrationFirstPaid,
                 RegistrationId = e.RegistrationId1,
-                Withhold = true
+                Withhold = false
             };
         }
     }
