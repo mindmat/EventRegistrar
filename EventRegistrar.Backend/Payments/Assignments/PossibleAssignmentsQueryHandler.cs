@@ -43,7 +43,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                                         AmountPaid = reg.Payments.Sum(pmt => pmt.Amount),
                                                         MatchScore = (wordsInPayment.Contains(reg.RespondentFirstName) ? 1 : 0) +
                                                                      (wordsInPayment.Contains(reg.RespondentFirstName) ? 1 : 0) +
-                                                                     (wordsInPayment.Contains(reg.RespondentEmail) ? 5 : 0
+                                                                     (wordsInPayment.Contains(reg.RespondentEmail) ? 5 : 0)
                                                     })
                                                     .OrderByDescending(mtc => mtc.MatchScore)
                                                     .ToListAsync(cancellationToken);
