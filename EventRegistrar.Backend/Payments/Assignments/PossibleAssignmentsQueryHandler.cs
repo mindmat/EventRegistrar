@@ -26,17 +26,12 @@ namespace EventRegistrar.Backend.Payments.Assignments
             var payment = await _payments.FirstAsync(pmt => pmt.Id == query.PaymentId
                                                             && pmt.PaymentFile.EventId == query.EventId, cancellationToken);
             var info = payment.Info;
-            //var infoPrefix = "MITTEILUNGEN:";
-            //var infoIndex = payment.Info.IndexOf(infoPrefix, StringComparison.InvariantCultureIgnoreCase);
-            //if (infoIndex >= 0)
-            //{
-            //    info = info.Substring(infoIndex + infoPrefix.Length);
-            //}
 
             var wordsInPayment = info.Split(' ', StringSplitOptions.RemoveEmptyEntries);
             var registrations = await _registrations.Where(reg => reg.EventId == query.EventId
                                                                   && (wordsInPayment.Contains(reg.RespondentFirstName)
-                                                                   || wordsInPayment.Contains(reg.RespondentLastName))
+                                                                   || wordsInPayment.Contains(reg.RespondentLastName)
+                                                                   || wordsInPayment.Contains(reg.RespondentEmail))
                                                                   && reg.State == RegistrationState.Received)
                                                     .Select(reg => new PossibleAssignment
                                                     {
@@ -45,8 +40,12 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                                         FirstName = reg.RespondentFirstName,
                                                         LastName = reg.RespondentLastName,
                                                         Amount = reg.Price ?? 0m,
-                                                        AmountPaid = reg.Payments.Sum(pmt => pmt.Amount)
+                                                        AmountPaid = reg.Payments.Sum(pmt => pmt.Amount),
+                                                        MatchScore = (wordsInPayment.Contains(reg.RespondentFirstName) ? 1 : 0) +
+                                                                     (wordsInPayment.Contains(reg.RespondentFirstName) ? 1 : 0) +
+                                                                     (wordsInPayment.Contains(reg.RespondentEmail) ? 5 : 0
                                                     })
+                                                    .OrderByDescending(mtc => mtc.MatchScore)
                                                     .ToListAsync(cancellationToken);
             return registrations;
         }
