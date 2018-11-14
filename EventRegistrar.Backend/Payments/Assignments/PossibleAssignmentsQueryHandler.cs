@@ -42,7 +42,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                                         Amount = reg.Price ?? 0m,
                                                         AmountPaid = reg.Payments.Sum(pmt => pmt.Amount),
                                                         MatchScore = (wordsInPayment.Contains(reg.RespondentFirstName) ? 1 : 0) +
-                                                                     (wordsInPayment.Contains(reg.RespondentFirstName) ? 1 : 0) +
+                                                                     (wordsInPayment.Contains(reg.RespondentLastName) ? 1 : 0) +
                                                                      (wordsInPayment.Contains(reg.RespondentEmail) ? 5 : 0)
                                                     })
                                                     .OrderByDescending(mtc => mtc.MatchScore)
