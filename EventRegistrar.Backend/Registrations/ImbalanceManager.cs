@@ -1,32 +1,38 @@
-﻿using System.Linq;
-using EventRegistrar.Backend.Registrables;
+﻿using System.Collections.Generic;
+using System.Linq;
+using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations
 {
     public class ImbalanceManager
     {
-        public bool CanAddNewDoubleSeatForSingleRegistration(Registrable registrable, Role ownRole)
+        public bool CanAddNewDoubleSeatForSingleRegistration(int maximumDoubleSeat,
+                                                             int maximumAllowedImbalance,
+                                                             IList<Seat> spots,
+                                                             Role ownRole)
         {
             // check overall
-            if (registrable.Seats.Count(seat => !seat.IsWaitingList && !seat.IsCancelled) >= (registrable.MaximumDoubleSeats ?? int.MaxValue))
+            if (spots.Count(seat => !seat.IsWaitingList && !seat.IsCancelled) >= maximumDoubleSeat)
             {
                 return false;
             }
-            // check imbalance
-            if (!registrable.MaximumAllowedImbalance.HasValue)
-            {
-                return true;
-            }
 
+            // check imbalance
             if (ownRole == Role.Leader)
             {
-                var acceptedSingleLeaderCount = registrable.Seats.Count(seat => !seat.IsWaitingList && !seat.IsCancelled && string.IsNullOrEmpty(seat.PartnerEmail) && seat.RegistrationId_Follower == null);
-                return acceptedSingleLeaderCount < registrable.MaximumAllowedImbalance.Value;
+                var acceptedSingleLeaderCount = spots.Count(spt => !spt.IsWaitingList
+                                                                && !spt.IsCancelled
+                                                                && string.IsNullOrEmpty(spt.PartnerEmail)
+                                                                && spt.RegistrationId_Follower == null);
+                return acceptedSingleLeaderCount < maximumAllowedImbalance;
             }
             if (ownRole == Role.Follower)
             {
-                var acceptedSingleFollowerCount = registrable.Seats.Count(seat => !seat.IsWaitingList && !seat.IsCancelled && string.IsNullOrEmpty(seat.PartnerEmail) && seat.RegistrationId == null);
-                return acceptedSingleFollowerCount < registrable.MaximumAllowedImbalance.Value;
+                var acceptedSingleFollowerCount = spots.Count(spt => !spt.IsWaitingList
+                                                                  && !spt.IsCancelled
+                                                                  && string.IsNullOrEmpty(spt.PartnerEmail)
+                                                                  && spt.RegistrationId == null);
+                return acceptedSingleFollowerCount < maximumAllowedImbalance;
             }
             return false;
         }

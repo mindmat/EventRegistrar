@@ -147,7 +147,12 @@ namespace EventRegistrar.Backend.Registrations.Register
                     var waitingListForOwnRole = ownRole == Role.Leader && waitingListForSingleLeaders ||
                                                 ownRole == Role.Follower && waitingListForSingleFollowers;
                     var matchingSingleSeat = FindMatchingSingleSeat(seats, ownRole);
-                    var seatAvailable = !waitingListForOwnRole && (_imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(registrable, ownRole) || matchingSingleSeat != null);
+                    var seatAvailable = !waitingListForOwnRole
+                                     && (_imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(registrable.MaximumDoubleSeats.Value,
+                                                                                                    registrable.MaximumAllowedImbalance ?? 0,
+                                                                                                    seats,
+                                                                                                    ownRole)
+                                         || matchingSingleSeat != null);
                     if (!seatAvailable && !registrable.HasWaitingList)
                     {
                         return null;
@@ -161,7 +166,13 @@ namespace EventRegistrar.Backend.Registrations.Register
                     if (!waitingListForOwnRole && matchingSingleSeat != null)
                     {
                         ComplementExistingSeat(registrationId, ownRole, matchingSingleSeat);
-                        _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
+                        _eventBus.Publish(new SpotAdded
+                        {
+                            Id = Guid.NewGuid(),
+                            RegistrableId = registrable.Id,
+                            RegistrationId = registrationId,
+                            IsInitialProcessing = initialProcessing
+                        });
                         return matchingSingleSeat;
                     }
                     seat = new Seat

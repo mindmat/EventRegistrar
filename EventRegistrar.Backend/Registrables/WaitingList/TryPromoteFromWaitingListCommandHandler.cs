@@ -58,103 +58,74 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
             }
             else if (registrableToCheck.MaximumDoubleSeats.HasValue)
             {
-                // try match single leaders and followers (fill the gaps)
-                var singleSpots = spots.Where(spt => !spt.IsPartnerSpot).ToList();
-                var acceptedSingleLeaders = singleSpots.Where(spt => !spt.IsWaitingList
-                                                                  && spt.RegistrationId != null
-                                                                  && spt.RegistrationId_Follower == null)
-                                                       .ToList();
-                var acceptedSingleFollowers = singleSpots.Where(spt => !spt.IsWaitingList
-                                                                    && spt.RegistrationId == null
-                                                                    && spt.RegistrationId_Follower != null)
-                                                         .ToList();
+                var singleSpotsAccepted = new Queue<Seat>(spots.Where(spt => !spt.IsWaitingList
+                                                          && !spt.IsPartnerSpot && (spt.RegistrationId == null || spt.RegistrationId_Follower == null)));
 
-                var waitingFollowers = new Queue<Seat>(singleSpots.Where(spt => spt.IsWaitingList
-                                                                             && spt.RegistrationId == null
-                                                                             && spt.RegistrationId_Follower != null)
-                                                                  .OrderBy(spt => spt.FirstPartnerJoined)
-                                                                  .ToList());
-                var waitingLeaders = new Queue<Seat>(singleSpots.Where(spt => spt.IsWaitingList
-                                                                           && spt.RegistrationId != null
-                                                                           && spt.RegistrationId_Follower == null)
-                                                                .OrderBy(spt => spt.FirstPartnerJoined)
-                                                                .ToList());
-                _log.LogInformation($"Registrable {registrableToCheck.Name}, single leaders in {acceptedSingleLeaders.Count}, single followers in {acceptedSingleFollowers.Count}, single leaders waiting {waitingLeaders.Count}, single followers waiting {waitingFollowers.Count}");
-                var singleRegistrationsPromoted = false;
-                if (acceptedSingleLeaders.Any() && waitingFollowers.Any())
+                var waitinglist = spots.Where(spt => spt.IsWaitingList)
+                                       .OrderBy(spt => spt.FirstPartnerJoined)
+                                       .ToList();
+                // fill the gaps
+                while (singleSpotsAccepted.Any())
                 {
-                    foreach (var acceptedSingleLeader in acceptedSingleLeaders)
+                    var spotToComplement = singleSpotsAccepted.Dequeue();
+                    await ComplementSeatFromWaitingList(spotToComplement, waitinglist);
+                }
+
+                while (registrableToCheck.MaximumDoubleSeats.Value - spots.Count(spt => !spt.IsWaitingList) > 0)
+                {
+                    var nextSpotOnWaitingList = waitinglist.FirstOrDefault();
+                    if (nextSpotOnWaitingList == null)
                     {
-                        if (!waitingFollowers.Any())
+                        break;
+                    }
+
+                    if (nextSpotOnWaitingList.IsPartnerSpot)
+                    {
+                        await PromoteSpotFromWaitingList(nextSpotOnWaitingList, waitinglist);
+                        continue;
+                    }
+
+                    // next spot is single spot. decide: match with other role or take next partner spot?
+                    var firstSingleRole = nextSpotOnWaitingList.GetSingleRole();
+                    var otherRole = firstSingleRole.GetOtherRole();
+                    var nextSingleInOtherRole = waitinglist.FirstOrDefault(spt => otherRole == Role.Leader
+                                                ? spt.IsSingleLeaderSpot()
+                                                : spt.IsSingleFollowerSpot());
+                    if (nextSingleInOtherRole == null)
+                    {
+                        if (!_imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(registrableToCheck.MaximumDoubleSeats.Value,
+                                                                                        registrableToCheck.MaximumAllowedImbalance ?? 0,
+                                                                                        spots,
+                                                                                        firstSingleRole))
                         {
-                            // no more waiting single followers
-                            break;
-                        }
-                        var waitingFollower = waitingFollowers.Dequeue();
-                        var promotedRegistrationId = waitingFollower.RegistrationId_Follower;
-                        if (promotedRegistrationId == null)
-                        {
+                            // no promotion due to imbalance
+                            waitinglist.Remove(nextSpotOnWaitingList);
                             continue;
                         }
 
-                        acceptedSingleLeader.RegistrationId_Follower = promotedRegistrationId;
-                        waitingFollower.IsCancelled = true;
-                        await _spots.InsertOrUpdateEntity(acceptedSingleLeader, cancellationToken);
-                        await _spots.InsertOrUpdateEntity(waitingFollower, cancellationToken);
-
-                        _eventBus.Publish(new SingleSpotPromotedFromWaitingList
-                        {
-                            Id = Guid.NewGuid(),
-                            RegistrableId = acceptedSingleLeader.RegistrableId,
-                            RegistrationId = promotedRegistrationId.Value
-                        });
-
-                        singleRegistrationsPromoted = true;
+                        await PromoteSpotFromWaitingList(nextSpotOnWaitingList, waitinglist);
                     }
-                }
-
-                if (acceptedSingleFollowers.Any() && waitingLeaders.Any())
-                {
-                    foreach (var acceptedSingleFollower in acceptedSingleFollowers)
+                    else
                     {
-                        if (!waitingLeaders.Any())
+                        var nextPartnerRegistration = waitinglist.FirstOrDefault(spt => spt.IsPartnerSpot);
+                        if (nextPartnerRegistration != null)
                         {
-                            // no more waiting single leaders
-                            break;
-                        }
-                        var waitingLeader = waitingLeaders.Dequeue();
-                        var promotedRegistrationId = waitingLeader.RegistrationId;
-                        if (promotedRegistrationId == null)
-                        {
-                            continue;
+                            // who should be first: the two singles or partner?
+                            var averageOfSingles = GetAverage(nextSpotOnWaitingList.FirstPartnerJoined,
+                                                              nextSingleInOtherRole.FirstPartnerJoined);
+                            if (averageOfSingles > nextPartnerRegistration.FirstPartnerJoined)
+                            {
+                                // partner registration wins
+                                await PromoteSpotFromWaitingList(nextPartnerRegistration, waitinglist);
+                                continue;
+                            }
                         }
 
-                        acceptedSingleFollower.RegistrationId = promotedRegistrationId;
-                        waitingLeader.IsCancelled = true;
-                        await _spots.InsertOrUpdateEntity(acceptedSingleFollower, cancellationToken);
-                        await _spots.InsertOrUpdateEntity(waitingLeader, cancellationToken);
-
-                        _eventBus.Publish(new SingleSpotPromotedFromWaitingList
-                        {
-                            Id = Guid.NewGuid(),
-                            RegistrableId = acceptedSingleFollower.RegistrableId,
-                            RegistrationId = promotedRegistrationId.Value
-                        });
-
-                        singleRegistrationsPromoted = true;
-                    }
-                }
-
-                // be defensive - registrable.Seats might be different than the actual seats on the db
-                if (!singleRegistrationsPromoted)
-                {
-                    // try promote partner registration
-                    // ToDo: precedence partner vs. single registrations
-                    var acceptedSpotCount = spots.Count(spt => !spt.IsWaitingList);
-                    var spotsAvailable = registrableToCheck.MaximumDoubleSeats.Value - acceptedSpotCount;
-                    if (spotsAvailable > 0)
-                    {
-                        await AcceptSpotsFromPartnerWaitingList(registrableToCheck, spotsAvailable);
+                        nextSpotOnWaitingList.MergeSingleSpots(nextSingleInOtherRole);
+                        await PromoteSpotFromWaitingList(nextSpotOnWaitingList);
+                        await _spots.InsertOrUpdateEntity(nextSingleInOtherRole, cancellationToken);
+                        waitinglist.Remove(nextSpotOnWaitingList);
+                        waitinglist.Remove(nextSingleInOtherRole);
                     }
                 }
             }
@@ -162,39 +133,72 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
             return Unit.Value;
         }
 
-        private async Task AcceptSpotsFromPartnerWaitingList(Registrable registrable, int spotsAvailable)
+        private static DateTime GetAverage(DateTime dateTime1, DateTime dateTime2)
         {
-            var spotsToAccept = registrable.Seats
-                                           .Where(spt => spt.IsWaitingList
-                                                      && !spt.IsCancelled)
-                                           .OrderByDescending(spt => spt.RegistrationId.HasValue
-                                                                  && spt.RegistrationId_Follower.HasValue)
-                                           .ThenBy(spt => spt.FirstPartnerJoined);
-            foreach (var spt in spotsToAccept)
-            {
-                if (spt.IsPartnerSpot)
-                {
-                    await PromoteSpotFromWaitingList(spt);
-                }
-                else
-                {
-                    // single registration, check imbalance
-                    var ownRole = spt.RegistrationId.HasValue ? Role.Leader : Role.Follower;
-                    if (!_imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(registrable, ownRole))
-                    {
-                        // no promotion due to imbalance
-                        continue;
-                    }
-                    await PromoteSpotFromWaitingList(spt);
-                }
-                if (--spotsAvailable <= 0)
-                {
-                    break;
-                }
-            }
+            return new DateTime((dateTime1.Ticks + dateTime2.Ticks) / 2);
         }
 
-        private async Task PromoteSpotFromWaitingList(Seat spot)
+        private async Task<bool> ComplementSeatFromWaitingList(Seat seatToComplement, List<Seat> waitinglist)
+        {
+            if (seatToComplement.IsSingleLeaderSpot())
+            {
+                // follower spot available, find follower on waiting list
+                var nextFollowerOnWaitingList = waitinglist.FirstOrDefault(spt => spt.IsSingleFollowerSpot());
+                if (nextFollowerOnWaitingList?.RegistrationId_Follower == null)
+                {
+                    return false;
+                }
+                if (nextFollowerOnWaitingList.RegistrationId != null)
+                {
+                    throw new Exception("Unexpected situation: single spot on waiting list has both leader and follower set");
+                }
+
+                seatToComplement.RegistrationId_Follower = nextFollowerOnWaitingList.RegistrationId_Follower;
+                nextFollowerOnWaitingList.IsCancelled = true;
+                waitinglist.Remove(nextFollowerOnWaitingList);
+
+                await _spots.InsertOrUpdateEntity(seatToComplement);
+                await _spots.InsertOrUpdateEntity(nextFollowerOnWaitingList);
+                _eventBus.Publish(new SingleSpotPromotedFromWaitingList
+                {
+                    Id = Guid.NewGuid(),
+                    RegistrableId = seatToComplement.RegistrableId,
+                    RegistrationId = nextFollowerOnWaitingList.RegistrationId_Follower.Value
+                });
+                return true;
+            }
+            if (seatToComplement.IsSingleFollowerSpot())
+            {
+                // follower spot available, find follower on waiting list
+                var nextLeaderOnWaitingList = waitinglist.FirstOrDefault(spt => spt.IsSingleLeaderSpot());
+                if (nextLeaderOnWaitingList?.RegistrationId == null)
+                {
+                    return false;
+                }
+                if (nextLeaderOnWaitingList.RegistrationId_Follower != null)
+                {
+                    throw new Exception("Unexpected situation: single spot on waiting list has both leader and follower set");
+                }
+
+                seatToComplement.RegistrationId = nextLeaderOnWaitingList.RegistrationId;
+                nextLeaderOnWaitingList.IsCancelled = true;
+                waitinglist.Remove(nextLeaderOnWaitingList);
+
+                await _spots.InsertOrUpdateEntity(seatToComplement);
+                await _spots.InsertOrUpdateEntity(nextLeaderOnWaitingList);
+                _eventBus.Publish(new SingleSpotPromotedFromWaitingList
+                {
+                    Id = Guid.NewGuid(),
+                    RegistrableId = seatToComplement.RegistrableId,
+                    RegistrationId = nextLeaderOnWaitingList.RegistrationId.Value
+                });
+                return true;
+            }
+
+            return false;
+        }
+
+        private async Task PromoteSpotFromWaitingList(Seat spot, List<Seat> waitinglist = null)
         {
             var registrationId = spot.RegistrationId ?? spot.RegistrationId_Follower;
             if (registrationId == null)
@@ -205,6 +209,9 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
 
             spot.IsWaitingList = false;
             await _spots.InsertOrUpdateEntity(spot);
+
+            waitinglist?.Remove(spot);
+
             if (spot.IsPartnerSpot)
             {
                 _eventBus.Publish(new PartnerSpotPromotedFromWaitingList
