@@ -32,7 +32,8 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                                                   && (wordsInPayment.Contains(reg.RespondentFirstName)
                                                                    || wordsInPayment.Contains(reg.RespondentLastName)
                                                                    || wordsInPayment.Contains(reg.RespondentEmail))
-                                                                  && reg.State == RegistrationState.Received)
+                                                                  && reg.State == RegistrationState.Received
+                                                                  && reg.IsWaitingList == false)
                                                     .Select(reg => new PossibleAssignment
                                                     {
                                                         PaymentId = payment.Id,
