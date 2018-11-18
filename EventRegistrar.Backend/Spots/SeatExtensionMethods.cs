@@ -39,6 +39,13 @@ namespace EventRegistrar.Backend.Spots
                    : Role.Follower;
         }
 
+        public static bool IsMatchedPartnerSpot(this Seat spot)
+        {
+            return spot.IsPartnerSpot
+                   && spot.PartnerEmail != null
+                   && spot.RegistrationId != null && spot.RegistrationId_Follower != null; // both set
+        }
+
         public static bool IsSingleFollowerSpot(this Seat spot)
         {
             return spot.RegistrationId == null
@@ -53,6 +60,13 @@ namespace EventRegistrar.Backend.Spots
                 && spot.RegistrationId_Follower == null
                 && !spot.IsPartnerSpot
                 && spot.PartnerEmail == null;
+        }
+
+        public static bool IsUnmatchedPartnerSpot(this Seat spot)
+        {
+            return spot.IsPartnerSpot
+                && spot.PartnerEmail != null
+                && spot.RegistrationId != null ^ spot.RegistrationId_Follower != null; // only one set
         }
 
         public static void MergeSingleSpots(this Seat spotTarget, Seat spotSource)

@@ -19,6 +19,16 @@ namespace EventRegistrar.Backend.Registrations.Matching
             _eventAcronymResolver = eventAcronymResolver;
         }
 
+        [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/changeToSingleRegistration")]
+        public async Task ChangeOpenPartnerRegistrationToSingleRegistration(string eventAcronym, Guid registrationId)
+        {
+            await _mediator.Send(new ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId
+            });
+        }
+
         [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/potentialMatches")]
         public async Task<IEnumerable<PotentialPartnerMatch>> GetPotentialPartnerMatches(string eventAcronym, Guid registrationId, string searchString)
         {

@@ -43,6 +43,17 @@ export class PartnerMatchingComponent implements OnInit {
     return this.route.snapshot.params['eventAcronym'];
   }
 
+  convertToSingleRegistration(unassignedPartnerRegistration: PotentialPartner) {
+    unassignedPartnerRegistration.locked = true;
+    var url = `api/events/${this.getEventAcronym()}/registrations/${this.unassignedPartnerRegistration.registrationId}/changeToSingleRegistration`;
+    this.http.post(url, null)
+      .subscribe(result => { },
+        error => {
+          console.error(error);
+          unassignedPartnerRegistration.locked = false;
+        });
+  }
+
   //saveMail(payment: Payment) {
   //  payment.locked = true;
   //  this.http.post(`api/events/${this.getEventAcronym()}/payments/${payment.id}/RecognizedEmail`, payment.recognizedEmail)

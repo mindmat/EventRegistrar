@@ -89,6 +89,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(SendSmsCommand).Name;
                 yield return typeof(SwapFirstLastNameCommand).Name;
                 yield return typeof(MatchPartnerRegistrationsCommand).Name;
+                yield return typeof(ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

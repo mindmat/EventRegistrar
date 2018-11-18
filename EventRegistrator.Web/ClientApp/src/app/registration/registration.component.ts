@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
 import 'bootstrap/js/dist/dropdown'
 
-
 @Component({
   selector: 'registration',
   templateUrl: './registration.component.html'
@@ -172,6 +171,8 @@ class Registration {
   smsCount: number;
   remarks: string;
   phoneNormalized: string;
+  partnerOriginal: string;
+  partnerId: string;
 }
 
 class Spot {

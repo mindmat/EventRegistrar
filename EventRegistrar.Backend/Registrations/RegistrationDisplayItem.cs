@@ -12,6 +12,8 @@ namespace EventRegistrar.Backend.Registrations
         public string Language { get; set; }
         public string LastName { get; set; }
         public decimal Paid { get; set; }
+        public Guid? PartnerId { get; set; }
+        public string PartnerOriginal { get; set; }
         public string PhoneNormalized { get; set; }
         public decimal? Price { get; set; }
         public DateTime ReceivedAt { get; set; }

@@ -27,6 +27,10 @@
           <td>Angemeldet für:</td>
           <td>{{ unassignedPartnerRegistration.registrables.join(', ') }}</td>
         </tr>
+        <tr>
+          <td></td>
+          <td><button class="btn btn-primary btn-sm" (click)="convertToSingleRegistration(unassignedPartnerRegistration)"><span class="glyphicon glyphicon-ok">Zu Einzelanmeldung umwandeln</span></button></td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -77,9 +81,9 @@
 <input #searchString type="text" (keyup.enter)="searchRegistrationManually(searchString.value)">
 <table class="table table-hover">
   <thead class="thead-dark">
-    <tr>
-      <th>Name</th>
-      <th>Preis</th>
+  <tr>
+    <th>Name</th>
+    <th>Preis</th>
       <th>offen</th>
       <th>ausgleichen</th>
       <th></th>

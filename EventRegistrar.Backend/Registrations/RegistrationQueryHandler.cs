@@ -37,7 +37,9 @@ namespace EventRegistrar.Backend.Registrations
                                                        SoldOutMessage = reg.SoldOutMessage,
                                                        FallbackToPartyPass = reg.FallbackToPartyPass,
                                                        SmsCount = reg.Sms.Count,
-                                                       PhoneNormalized = reg.PhoneNormalized
+                                                       PhoneNormalized = reg.PhoneNormalized,
+                                                       PartnerOriginal = reg.PartnerNormalized == null ? null : reg.PartnerOriginal,
+                                                       PartnerId = reg.RegistrationId_Partner
                                                    })
                                                    .FirstOrDefaultAsync(cancellationToken);
             return registration;

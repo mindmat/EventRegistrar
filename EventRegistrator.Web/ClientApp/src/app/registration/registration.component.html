@@ -47,6 +47,13 @@
       <td><button type="button" *ngIf="registration.phoneNormalized != null" class="btn btn-primary btn-xs" [routerLink]="['/', getEventAcronym(), 'registrations', registration.id, 'sms']">Anzeigen ({{ registration.smsCount }})</button></td>
     </tr>
     <tr>
+      <td>Partner:</td>
+      <td>
+        <a *ngIf="registration.partnerId" [routerLink]="['/', getEventAcronym(), 'registration', spot.partnerId]">{{ registration.partnerOriginal }}</a>
+        <a *ngIf="!registration.partnerId" class="font-italic">{{ registration.partnerOriginal }}</a>
+      </td>
+    </tr>
+    <tr>
       <td>Bemerkung:</td>
       <td>{{ registration.remarks }}</td>
     </tr>
