@@ -18,6 +18,9 @@
   </a>
 </div>
 
+Manuelle Suche: <input #searchString type="text" (keyup.enter)="searchRegistrationManually(searchString.value)">
+
+<br />
 <br />
 
 <h3>Suchtreffer</h3>
@@ -35,7 +38,10 @@
   </thead>
   <tbody>
     <tr *ngFor="let possibleAssignment of possibleAssignments">
-      <td><a [routerLink]="['/', getEventAcronym(), 'registration', possibleAssignment.registrationId]">{{ possibleAssignment.firstName }} {{ possibleAssignment.lastName }}</a></td>
+      <td>
+        <a [routerLink]="['/', getEventAcronym(), 'registration', possibleAssignment.registrationId]">{{ possibleAssignment.firstName }} {{ possibleAssignment.lastName }}</a>
+        <span class="badge badge-primary" *ngIf="possibleAssignment.isWaitingList">Warteliste</span>
+      </td>
       <td>{{ possibleAssignment.amount }}</td>
       <td>{{ possibleAssignment.amount - possibleAssignment.amountPaid }}</td>
       <td><input [(ngModel)]="possibleAssignment.amountToAssign" type="number" *ngIf="!possibleAssignment.locked" /></td>
@@ -55,7 +61,6 @@
 <!--<br />
 
 <h3>Manuelle Suche</h3>
-<input #searchString type="text" (keyup.enter)="searchRegistrationManually(searchString.value)">
 <table class="table table-hover">
   <thead class="thead-dark">
     <tr>

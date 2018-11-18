@@ -34,7 +34,8 @@ namespace EventRegistrar.Backend.Registrations.Search
                                                         Amount = reg.Price ?? 0m,
                                                         AmountPaid = reg.Payments.Sum(pmt => pmt.Amount),
                                                         State = reg.State,
-                                                        StateText = reg.State.ToString()
+                                                        StateText = reg.State.ToString(),
+                                                        IsWaitingList = reg.IsWaitingList == true
                                                     })
                                                     .ToListAsync(cancellationToken);
             return registrations;

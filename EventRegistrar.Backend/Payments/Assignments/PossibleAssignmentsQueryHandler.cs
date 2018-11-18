@@ -42,9 +42,10 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                                         LastName = reg.RespondentLastName,
                                                         Amount = reg.Price ?? 0m,
                                                         AmountPaid = reg.Payments.Sum(pmt => pmt.Amount),
-                                                        MatchScore = (wordsInPayment.Contains(reg.RespondentFirstName) ? 1 : 0) +
-                                                                     (wordsInPayment.Contains(reg.RespondentLastName) ? 1 : 0) +
-                                                                     (wordsInPayment.Contains(reg.RespondentEmail) ? 5 : 0)
+                                                        MatchScore = (wordsInPayment.Count(wrd => wrd == reg.RespondentFirstName)) +
+                                                                     (wordsInPayment.Count(wrd => wrd == reg.RespondentLastName)) +
+                                                                     (wordsInPayment.Count(wrd => wrd == reg.RespondentEmail) * 5),
+                                                        IsWaitingList = reg.IsWaitingList == true
                                                     })
                                                     .OrderByDescending(mtc => mtc.MatchScore)
                                                     .ToListAsync(cancellationToken);

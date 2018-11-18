@@ -8,6 +8,7 @@ namespace EventRegistrar.Backend.Registrations.Search
         public decimal AmountPaid { get; set; }
         public string Email { get; set; }
         public string FirstName { get; set; }
+        public bool IsWaitingList { get; set; }
         public string LastName { get; set; }
         public Guid RegistrationId { get; set; }
         public RegistrationState State { get; set; }
