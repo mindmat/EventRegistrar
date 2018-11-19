@@ -59,7 +59,9 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
             else if (registrableToCheck.MaximumDoubleSeats.HasValue)
             {
                 var singleSpotsAccepted = new Queue<Seat>(spots.Where(spt => !spt.IsWaitingList
-                                                          && !spt.IsPartnerSpot && (spt.RegistrationId == null || spt.RegistrationId_Follower == null)));
+                                                                          && !spt.IsPartnerSpot
+                                                                          && (spt.RegistrationId == null
+                                                                           || spt.RegistrationId_Follower == null)));
 
                 var waitinglist = spots.Where(spt => spt.IsWaitingList)
                                        .OrderBy(spt => spt.FirstPartnerJoined)
@@ -89,25 +91,32 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                     var firstSingleRole = nextSpotOnWaitingList.GetSingleRole();
                     var otherRole = firstSingleRole.GetOtherRole();
                     var nextSingleInOtherRole = waitinglist.FirstOrDefault(spt => otherRole == Role.Leader
-                                                ? spt.IsSingleLeaderSpot()
-                                                : spt.IsSingleFollowerSpot());
+                                                                                  ? spt.IsSingleLeaderSpot()
+                                                                                  : spt.IsSingleFollowerSpot());
+                    var nextPartnerRegistration = waitinglist.FirstOrDefault(spt => spt.IsPartnerSpot);
                     if (nextSingleInOtherRole == null)
                     {
-                        if (!_imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(registrableToCheck.MaximumDoubleSeats.Value,
-                                                                                        registrableToCheck.MaximumAllowedImbalance ?? 0,
-                                                                                        spots,
-                                                                                        firstSingleRole))
+                        if (nextPartnerRegistration == null)
                         {
-                            // no promotion due to imbalance
-                            waitinglist.Remove(nextSpotOnWaitingList);
-                            continue;
-                        }
+                            if (!_imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(registrableToCheck.MaximumDoubleSeats.Value,
+                                                                                            registrableToCheck.MaximumAllowedImbalance ?? 0,
+                                                                                            spots,
+                                                                                            firstSingleRole))
+                            {
+                                // no promotion due to imbalance
+                                waitinglist.Remove(nextSpotOnWaitingList);
+                                continue;
+                            }
 
-                        await PromoteSpotFromWaitingList(nextSpotOnWaitingList, waitinglist);
+                            await PromoteSpotFromWaitingList(nextSpotOnWaitingList, waitinglist);
+                        }
+                        else
+                        {
+                            await PromoteSpotFromWaitingList(nextPartnerRegistration, waitinglist);
+                        }
                     }
                     else
                     {
-                        var nextPartnerRegistration = waitinglist.FirstOrDefault(spt => spt.IsPartnerSpot);
                         if (nextPartnerRegistration != null)
                         {
                             // who should be first: the two singles or partner?
