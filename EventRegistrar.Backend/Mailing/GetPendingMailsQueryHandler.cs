@@ -20,7 +20,8 @@ namespace EventRegistrar.Backend.Mailing
         {
             var mails = await _mails
                               .Where(mail => mail.Registrations.Any(map => map.Registration.EventId == query.EventId)
-                                          && mail.Withhold)
+                                          && mail.Withhold
+                                          && !mail.Discarded)
                               .OrderByDescending(mail => mail.Created)
                               .ToListAsync(cancellationToken);
             return mails;

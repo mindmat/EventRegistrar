@@ -27,7 +27,8 @@ namespace EventRegistrar.Backend.Mailing.Bulk
             var withheldMails = await _mails
                                       .Where(mail => mail.MailTemplate.BulkMailKey == command.BulkMailKey
                                                   && mail.EventId == command.EventId
-                                                  && mail.Withhold)
+                                                  && mail.Withhold
+                                                  && !mail.Discarded)
                                       .Include(mail => mail.Registrations).ThenInclude(map => map.Registration)
                                       .ToListAsync(cancellationToken);
             foreach (var withheldMail in withheldMails)

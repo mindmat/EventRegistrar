@@ -42,7 +42,7 @@ namespace EventRegistrar.Backend.Payments.Due
                                              reg.PhoneNormalized,
                                              reg.ReminderLevel,
                                              Paid = (decimal?)reg.Payments.Sum(ass => ass.Amount),
-                                             Mails = reg.Mails.Select(rml => new { rml.Mail.Id, Sent = rml.Mail.Created, rml.Mail.Type, rml.Mail.Withhold }),
+                                             Mails = reg.Mails.Select(rml => new { rml.Mail.Id, Sent = rml.Mail.Created, rml.Mail.Type, rml.Mail.Withhold, rml.Mail.Discarded }),
                                              ReminderSms = reg.Sms.Where(sms => sms.Type == SmsType.Reminder)
                                          })
                                          .ToListAsync(cancellationToken);
@@ -57,7 +57,9 @@ namespace EventRegistrar.Backend.Payments.Due
                 tmp.PhoneNormalized,
                 tmp.ReminderLevel,
                 tmp.Paid,
-                AcceptedMail = tmp.Mails.Where(mail => !mail.Withhold && MailTypes_Accepted.Contains(mail.Type))
+                AcceptedMail = tmp.Mails.Where(mail => !mail.Withhold
+                                                    && !mail.Discarded
+                                                    && MailTypes_Accepted.Contains(mail.Type))
                                         .Select(mail => new SentMailDto
                                         {
                                             Id = mail.Id,
@@ -65,7 +67,9 @@ namespace EventRegistrar.Backend.Payments.Due
                                         })
                                         .OrderByDescending(mail => mail.Sent)
                                         .FirstOrDefault(),
-                Reminder1Mail = tmp.Mails.Where(mail => !mail.Withhold && MailTypes_Reminder1.Contains(mail.Type))
+                Reminder1Mail = tmp.Mails.Where(mail => !mail.Withhold
+                                                     && !mail.Discarded
+                                                     && MailTypes_Reminder1.Contains(mail.Type))
                                          .Select(mail => new SentMailDto
                                          {
                                              Id = mail.Id,
@@ -73,7 +77,9 @@ namespace EventRegistrar.Backend.Payments.Due
                                          })
                                          .OrderByDescending(mail => mail.Sent)
                                          .FirstOrDefault(),
-                Reminder2Mail = tmp.Mails.Where(mail => !mail.Withhold && MailTypes_Reminder2.Contains(mail.Type))
+                Reminder2Mail = tmp.Mails.Where(mail => !mail.Withhold
+                                                     && !mail.Discarded
+                                                     && MailTypes_Reminder2.Contains(mail.Type))
                                          .Select(mail => new SentMailDto
                                          {
                                              Id = mail.Id,

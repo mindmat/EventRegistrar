@@ -20,11 +20,12 @@ namespace EventRegistrar.Backend.Registrations.Search
         public async Task<IEnumerable<RegistrationMatch>> Handle(SearchRegistrationQuery query, CancellationToken cancellationToken)
         {
             var allowedStates = query.States.Any() ? query.States : new[] { RegistrationState.Received };
+            var searchString = query.SearchString?.Trim();
             var registrations = await _registrations.Where(reg => reg.EventId == query.EventId
-                                                                  && (reg.RespondentFirstName.Contains(query.SearchString, StringComparison.InvariantCultureIgnoreCase)
-                                                                   || reg.RespondentLastName.Contains(query.SearchString, StringComparison.InvariantCultureIgnoreCase)
-                                                                   || reg.RespondentEmail.Contains(query.SearchString, StringComparison.InvariantCultureIgnoreCase)
-                                                                   || reg.PhoneNormalized.Contains(query.SearchString, StringComparison.InvariantCultureIgnoreCase))
+                                                                  && (reg.RespondentFirstName.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)
+                                                                   || reg.RespondentLastName.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)
+                                                                   || reg.RespondentEmail.Contains(searchString, StringComparison.InvariantCultureIgnoreCase)
+                                                                   || reg.PhoneNormalized.Contains(searchString, StringComparison.InvariantCultureIgnoreCase))
                                                                   && allowedStates.Contains(reg.State))
                                                     .Select(reg => new RegistrationMatch
                                                     {

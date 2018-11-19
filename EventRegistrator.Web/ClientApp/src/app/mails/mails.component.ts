@@ -47,6 +47,12 @@ export class MailsComponent {
       this.refresh();
     });
   }
+
+  discardMail(mailId: string) {
+    this.http.delete(`api/events/${this.getEventAcronym()}/mails/${mailId}`).subscribe(result => {
+      this.refresh();
+    });
+  }
 }
 
 class Mail {

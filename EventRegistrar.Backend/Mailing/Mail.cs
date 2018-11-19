@@ -11,6 +11,7 @@ namespace EventRegistrar.Backend.Mailing
         public string ContentHtml { get; set; }
         public string ContentPlainText { get; set; }
         public DateTime Created { get; set; }
+        public bool Discarded { get; set; }
         public Guid? EventId { get; set; }
         public MailTemplate MailTemplate { get; set; }
         public Guid? MailTemplateId { get; set; }

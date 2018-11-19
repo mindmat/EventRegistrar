@@ -28,7 +28,12 @@ namespace EventRegistrar.Backend.Mailing
             var withheldMail = await _mails
                                      .Where(mail => mail.Id == command.MailId)
                                      .Include(mail => mail.Registrations).ThenInclude(map => map.Registration)
-                                     .FirstOrDefaultAsync(cancellationToken);
+                                     .FirstAsync(cancellationToken);
+            if (withheldMail.Discarded)
+            {
+                throw new ArgumentException($"Mail {withheldMail.Id} is discarded and thus cannot be sent");
+            }
+
             var sendMailCommand = new SendMailCommand
             {
                 MailId = withheldMail.Id,

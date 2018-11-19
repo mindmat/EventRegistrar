@@ -17,11 +17,8 @@ namespace EventRegistrar.Backend.Mailing
 
         public async Task<Unit> Handle(DeleteMailCommand command, CancellationToken cancellationToken)
         {
-            var mailToDelete = await _mails.FirstOrDefaultAsync(mail => mail.Id == command.MailId, cancellationToken);
-            if (mailToDelete != null)
-            {
-                _mails.Remove(mailToDelete);
-            }
+            var mailToDelete = await _mails.FirstAsync(mail => mail.Id == command.MailId, cancellationToken);
+            mailToDelete.Discarded = true;
 
             return Unit.Value;
         }

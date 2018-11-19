@@ -8,6 +8,7 @@
       <th>Erstellt</th>
       <th>Absender</th>
       <th></th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -17,6 +18,7 @@
       <td>{{ mail.created | date: 'dd.MM.yy HH:mm:ss' }}</td>
       <td>{{ mail.senderName }} ({{ mail.senderMail }})</td>
       <td><button class="btn btn-primary" (click)="releaseMail(mail.id)">Freigeben</button></td>
+      <td><button class="btn btn-primary" (click)="discardMail(mail.id)">Löschen</button></td>
     </tr>
   </tbody>
 </table>
