@@ -37,6 +37,16 @@ namespace EventRegistrar.Backend.Payments
             });
         }
 
+        [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/assignedPayments")]
+        public async Task<IEnumerable<AssignedPaymentDisplayItem>> GetAssignedPaymentsOfRegistration(string eventAcronym, Guid registrationId)
+        {
+            return await _mediator.Send(new AssignedPaymentsOfRegistrationQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId
+            });
+        }
+
         [HttpGet("api/events/{eventAcronym}/duepayments")]
         public async Task<IEnumerable<DuePaymentItem>> GetDuePayments(string eventAcronym)
         {

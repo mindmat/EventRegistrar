@@ -105,6 +105,23 @@
   </tbody>
 </table>
 
+<h3 *ngIf="payments">Zahlungen</h3>
+
+<table class="table table-hover" *ngIf="payments">
+  <thead class="thead-dark">
+    <tr>
+      <th>Datum</th>
+      <th>Betrag</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let payment of payments">
+      <td>{{ payment.bookingDate | date: 'dd.MM.yy'  }}</td>
+      <td>{{ payment.amount }}{{ payment.currency }}</td>
+    </tr>
+  </tbody>
+</table>
+
 <!-- mail modal -->
 <div class="modal fade" id="mailModal" tabindex="-1" role="dialog" aria-labelledby="mailModalLabel" aria-hidden="true" *ngIf="mail">
   <div class="modal-dialog modal-lg" role="document">

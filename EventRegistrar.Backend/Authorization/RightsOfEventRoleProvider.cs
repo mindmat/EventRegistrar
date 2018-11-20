@@ -66,6 +66,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(CheckinQuery).Name;
                 yield return typeof(RegistrationsWithUnmatchedPartnerQuery).Name;
                 yield return typeof(PotentialPartnersQuery).Name;
+                yield return typeof(AssignedPaymentsOfRegistrationQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))

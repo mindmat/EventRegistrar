@@ -12,6 +12,7 @@ export class RegistrationComponent {
   mails: Mail[];
   mail: Mail;
   spots: Spot[];
+  payments: AssignedPayments[];
   allRegistrables: Registrable[];
   private registrationId: string;
   private bookedRegistrableIds: string[];
@@ -47,6 +48,12 @@ export class RegistrationComponent {
   reloadMails() {
     this.http.get<Mail[]>(`api/events/${this.getEventAcronym()}/registrations/${this.registrationId}/mails`).subscribe(result => {
       this.mails = result;
+    }, error => console.error(error));
+  }
+
+  reloadPayments() {
+    this.http.get<AssignedPayments[]>(`api/events/${this.getEventAcronym()}/registrations/${this.registrationId}/AssignedPayments`).subscribe(result => {
+      this.payments = result;
     }, error => console.error(error));
   }
 
@@ -150,6 +157,7 @@ export class RegistrationComponent {
     this.reloadRegistration();
     this.reloadMails();
     this.reloadSpots();
+    this.reloadPayments();
   }
 }
 
@@ -204,4 +212,10 @@ class Registrable {
   showInMailListOrder: number;
   addAvailable: boolean;
   removeAvailable: boolean;
+}
+
+class AssignedPayments {
+  amount: number;
+  bookingDate: Date;
+  currency: string;
 }

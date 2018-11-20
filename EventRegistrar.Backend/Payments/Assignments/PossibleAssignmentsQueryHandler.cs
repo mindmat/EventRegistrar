@@ -24,7 +24,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
         public async Task<IEnumerable<PossibleAssignment>> Handle(PossibleAssignmentsQuery query, CancellationToken cancellationToken)
         {
             var payment = await _payments.FirstAsync(pmt => pmt.Id == query.PaymentId
-                                                            && pmt.PaymentFile.EventId == query.EventId, cancellationToken);
+                                                         && pmt.PaymentFile.EventId == query.EventId, cancellationToken);
             var info = payment.Info;
 
             var wordsInPayment = info.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -42,9 +42,9 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                                         LastName = reg.RespondentLastName,
                                                         Amount = reg.Price ?? 0m,
                                                         AmountPaid = reg.Payments.Sum(pmt => pmt.Amount),
-                                                        MatchScore = (wordsInPayment.Count(wrd => wrd.Contains(reg.RespondentFirstName))) +
-                                                                     (wordsInPayment.Count(wrd => wrd.Contains(reg.RespondentLastName))) +
-                                                                     (wordsInPayment.Count(wrd => wrd.Contains(reg.RespondentEmail)) * 5),
+                                                        MatchScore = wordsInPayment.Count(wrd => wrd.Contains(reg.RespondentFirstName)) +
+                                                                     wordsInPayment.Count(wrd => wrd.Contains(reg.RespondentLastName)) +
+                                                                     wordsInPayment.Count(wrd => wrd.Contains(reg.RespondentEmail)) * 5,
                                                         IsWaitingList = reg.IsWaitingList == true
                                                     })
                                                     .OrderByDescending(mtc => mtc.MatchScore)
