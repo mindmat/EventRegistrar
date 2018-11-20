@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Spots;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,24 +31,21 @@ namespace EventRegistrar.Backend.Registrables
                 Name = rbl.Name,
                 SpotsAvailable = rbl.MaximumDoubleSeats,
                 MaximumAllowedImbalance = rbl.MaximumAllowedImbalance,
-                LeadersAccepted = rbl.Seats.Count(seat => !seat.IsCancelled &&
-                                                          seat.RegistrationId.HasValue &&
-                                                          !seat.IsWaitingList),
-                FollowersAccepted = rbl.Seats.Count(seat => !seat.IsCancelled &&
-                                                            seat.RegistrationId_Follower.HasValue &&
-                                                            !seat.IsWaitingList),
-                LeadersOnWaitingList = rbl.Seats.Count(seat => !seat.IsCancelled &&
-                                                               seat.RegistrationId.HasValue &&
-                                                               seat.IsWaitingList &&
-                                                               seat.PartnerEmail == null),
-                FollowersOnWaitingList = rbl.Seats.Count(seat => !seat.IsCancelled &&
-                                                                 seat.RegistrationId_Follower.HasValue &&
-                                                                 seat.IsWaitingList &&
-                                                                 seat.PartnerEmail == null),
-                CouplesOnWaitingList = rbl.Seats.Count(seat => !seat.IsCancelled &&
-                                                               seat.RegistrationId_Follower.HasValue &&
-                                                               seat.IsWaitingList &&
-                                                               seat.PartnerEmail != null)
+                LeadersAccepted = rbl.Seats.Count(spt => !spt.IsCancelled
+                                                      && !spt.IsWaitingList
+                                                      && spt.RegistrationId != null),
+                FollowersAccepted = rbl.Seats.Count(spt => !spt.IsCancelled
+                                                        && !spt.IsWaitingList
+                                                        && spt.RegistrationId_Follower != null),
+                LeadersOnWaitingList = rbl.Seats.Count(spt => !spt.IsCancelled
+                                                           && spt.IsWaitingList
+                                                           && spt.IsSingleLeaderSpot()),
+                FollowersOnWaitingList = rbl.Seats.Count(spt => !spt.IsCancelled
+                                                             && spt.IsWaitingList
+                                                             && spt.IsSingleFollowerSpot()),
+                CouplesOnWaitingList = rbl.Seats.Count(spt => !spt.IsCancelled
+                                                           && spt.IsWaitingList
+                                                           && (spt.IsUnmatchedPartnerSpot() || spt.IsMatchedPartnerSpot()))
             });
         }
     }

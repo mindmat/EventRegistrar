@@ -39,8 +39,11 @@ namespace EventRegistrar.Backend.Registrables
                                    Id = rbl.Id,
                                    Name = rbl.Name,
                                    SpotsAvailable = rbl.MaximumSingleSeats,
-                                   Accepted = rbl.Seats.Count(seat => !seat.IsCancelled && !seat.IsWaitingList && !registrationsOnWaitingList.Contains(seat.RegistrationId ?? Guid.Empty)),
-                                   OnWaitingList = rbl.Seats.Count(seat => !seat.IsCancelled && (seat.IsWaitingList || registrationsOnWaitingList.Contains(seat.RegistrationId ?? Guid.Empty)))
+                                   Accepted = rbl.Seats.Count(spt => !spt.IsCancelled
+                                                                  && !spt.IsWaitingList
+                                                                  && !registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty)),
+                                   OnWaitingList = rbl.Seats.Count(spt => !spt.IsCancelled
+                                                                       && (spt.IsWaitingList || registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty)))
                                });
         }
     }
