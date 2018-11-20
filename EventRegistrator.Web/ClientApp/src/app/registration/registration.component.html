@@ -49,7 +49,7 @@
     <tr>
       <td>Partner:</td>
       <td>
-        <a *ngIf="registration.partnerId" [routerLink]="['/', getEventAcronym(), 'registration', spot.partnerId]">{{ registration.partnerOriginal }}</a>
+        <a *ngIf="registration.partnerId" [routerLink]="['/', getEventAcronym(), 'registration', registration.partnerId]">{{ registration.partnerOriginal }}</a>
         <a *ngIf="!registration.partnerId" class="font-italic">{{ registration.partnerOriginal }}</a>
       </td>
     </tr>
