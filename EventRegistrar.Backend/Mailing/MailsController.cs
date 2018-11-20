@@ -21,14 +21,15 @@ namespace EventRegistrar.Backend.Mailing
         }
 
         [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails/create")]
-        public async Task CreateMailForRegistration(string eventAcronym, Guid registrationId, MailType mailType)
+        public async Task CreateMailForRegistration(string eventAcronym, Guid registrationId, MailType mailType, bool allowDuplicate)
         {
             await _mediator.Send(new ComposeAndSendMailCommand
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 RegistrationId = registrationId,
                 MailType = mailType,
-                Withhold = true
+                Withhold = true,
+                AllowDuplicate = allowDuplicate
             });
         }
 
