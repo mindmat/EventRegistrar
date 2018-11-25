@@ -27,7 +27,9 @@ namespace EventRegistrar.Backend.Payments.Files
             await _mediator.Send(new SavePaymentFileCommand
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                FileStream = stream
+                FileStream = stream,
+                Filename = file.FileName,
+                ContentType = file.ContentType
             });
         }
     }

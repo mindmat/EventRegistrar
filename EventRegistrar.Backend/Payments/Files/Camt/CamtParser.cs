@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+using EventRegistrar.Backend.Infrastructure;
 
 namespace EventRegistrar.Backend.Payments.Files.Camt
 {
@@ -33,6 +34,11 @@ namespace EventRegistrar.Backend.Payments.Files.Camt
                 Type = (CreditDebit)Enum.Parse(typeof(CreditDebit), ntry.Descendants(ns + "CdtDbtInd").First().Value),
                 BookingDate = DateTime.Parse(ntry.Descendants(ns + "BookgDt").Descendants(ns + "Dt").First().Value),
                 Reference = ntry.Descendants(ns + "AcctSvcrRef").FirstOrDefault()?.Value,
+                Charges = ntry.Descendants("Chrgs").Descendants("TtlChrgsAndTaxAmt").FirstOrDefault()?.Value.TryToDecimal(),
+                InstructionIdentification = ntry.Descendants("NtryDtls").Descendants("TxDtls").Descendants("Refs").Descendants("InstrId").FirstOrDefault()?.Value,
+                DebitorName = ntry.Descendants("NtryDtls").Descendants("TxDtls").Descendants("RltdPties").Descendants("Dbtr").Descendants("Nm").FirstOrDefault()?.Value,
+                DebitorIban = ntry.Descendants("NtryDtls").Descendants("TxDtls").Descendants("RltdPties").Descendants("DbtrAcct").Descendants("Id").Descendants("IBAN").FirstOrDefault()?.Value,
+                Xml = ntry.ToString()
             });
 
             var camt = new CamtFile

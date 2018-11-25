@@ -56,6 +56,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new ReceivedPaymentMap());
             builder.ApplyConfiguration(new PaymentAssignmentMap());
             builder.ApplyConfiguration(new PaymentFileMap());
+            builder.ApplyConfiguration(new PaymentSlipMap());
 
             builder.ApplyConfiguration(new MailMap());
             builder.ApplyConfiguration(new MailToRegistrationMap());

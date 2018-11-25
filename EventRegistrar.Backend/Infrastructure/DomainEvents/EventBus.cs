@@ -8,7 +8,7 @@ using SimpleInjector;
 
 namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 {
-    public class EventBus
+    public class EventBus : IEventBus
     {
         private readonly Container _container;
         private readonly EventContext _eventContext;
