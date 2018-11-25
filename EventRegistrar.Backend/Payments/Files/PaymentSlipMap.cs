@@ -9,7 +9,7 @@ namespace EventRegistrar.Backend.Payments.Files
         public override void Configure(EntityTypeBuilder<PaymentSlip> builder)
         {
             base.Configure(builder);
-            builder.ToTable("RawPaymentSlips");
+            builder.ToTable("PaymentSlips");
 
             builder.Property(psl => psl.Filename)
                    .HasMaxLength(1000);
