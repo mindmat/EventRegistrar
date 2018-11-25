@@ -89,7 +89,7 @@ export class UnassignedPaymentsComponent implements OnInit {
     this.isSearching = true;
     this.http.get<PossibleAssignment[]>(`api/events/${this.getEventAcronym()}/payments/${payment.id}/possibleAssignments`) //?searchstring=${searchString}`)
       .subscribe(result => {
-        this.possibleAssignments = result;
+        this.setAssignments(result);
         this.isSearching = false;
         this.calculateAmountToAssign(this.possibleAssignments, this.payment);
       },
@@ -100,7 +100,7 @@ export class UnassignedPaymentsComponent implements OnInit {
     this.isSearching = true;
     this.http.get<PossibleAssignment[]>(`api/events/${this.getEventAcronym()}/registrations?searchstring=${searchString}&states=received`)
       .subscribe(result => {
-        this.possibleAssignments = result;
+        this.setAssignments(result);
         this.isSearching = false;
         this.calculateAmountToAssign(this.possibleAssignments, this.payment);
       },
@@ -116,6 +116,18 @@ export class UnassignedPaymentsComponent implements OnInit {
     this.payment = payment;
     this.possibleAssignments = null;
     this.searchRegistration(this.payment);
+  }
+
+  setAssignments(assignments: PossibleAssignment[]) {
+    this.possibleAssignments = assignments.sort((a, b) => {
+      if (a.isWaitingList === b.isWaitingList) {
+        return a.matchScore - b.matchScore;
+      }
+      if (a.isWaitingList) {
+        return 1;
+      }
+      return -1;
+    });
   }
 }
 
@@ -144,4 +156,7 @@ class PossibleAssignment {
   acceptDifference: boolean;
   acceptDifferenceReason: string;
   locked: boolean;
+  isWaitingList: boolean;
+  matchScore: number;
+  amountMatch: boolean;
 }

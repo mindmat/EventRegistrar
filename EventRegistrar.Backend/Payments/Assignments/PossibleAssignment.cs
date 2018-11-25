@@ -4,8 +4,10 @@ namespace EventRegistrar.Backend.Payments.Assignments
 {
     public class PossibleAssignment
     {
+        public bool AmountMatch { get; set; }
         public decimal Amount { get; set; }
         public decimal AmountPaid { get; set; }
+        public string Email { get; set; }
         public string FirstName { get; set; }
         public bool IsWaitingList { get; set; }
         public string LastName { get; set; }

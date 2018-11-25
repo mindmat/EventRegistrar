@@ -43,16 +43,25 @@ Manuelle Suche: <input #searchString type="text" (keyup.enter)="searchRegistrati
         <span class="badge badge-primary" *ngIf="possibleAssignment.isWaitingList">Warteliste</span>
       </td>
       <td>{{ possibleAssignment.amount }}</td>
-      <td>{{ possibleAssignment.amount - possibleAssignment.amountPaid }}</td>
-      <td><input [(ngModel)]="possibleAssignment.amountToAssign" type="number" *ngIf="!possibleAssignment.locked" /></td>
+      <td [class.alert-success]="possibleAssignment.amountMatch" *ngIf="!possibleAssignment.isWaitingList">{{ possibleAssignment.amount - possibleAssignment.amountPaid }}</td>
+      <td><input [(ngModel)]="possibleAssignment.amountToAssign"
+                 type="number"
+                 *ngIf="!possibleAssignment.locked && !possibleAssignment.isWaitingList" /></td>
       <td>
-        <input [(ngModel)]="possibleAssignment.acceptDifference" type="checkbox" *ngIf="!possibleAssignment.locked && (possibleAssignment.amount - possibleAssignment.amountPaid - possibleAssignment.amountToAssign) > 0" /><span *ngIf="!possibleAssignment.locked && (possibleAssignment.amount - possibleAssignment.amountPaid - possibleAssignment.amountToAssign) > 0">Differenz akzeptieren</span>
-        <div *ngIf="!possibleAssignment.locked && possibleAssignment.acceptDifference">
+        <input [(ngModel)]="possibleAssignment.acceptDifference"
+               type="checkbox"
+               *ngIf="!possibleAssignment.locked && (possibleAssignment.amount - possibleAssignment.amountPaid - possibleAssignment.amountToAssign) > 0 && !possibleAssignment.isWaitingList" />
+        <span *ngIf="!possibleAssignment.locked && (possibleAssignment.amount - possibleAssignment.amountPaid - possibleAssignment.amountToAssign) > 0 && !possibleAssignment.isWaitingList">Differenz akzeptieren</span>
+        <div *ngIf="!possibleAssignment.locked && possibleAssignment.acceptDifference && !possibleAssignment.isWaitingList">
           Grund: <input [(ngModel)]="possibleAssignment.acceptDifferenceReason" type="text" />
         </div>
       </td>
       <td>
-        <button class="btn btn-primary btn-sm" (click)="savePayment(possibleAssignment)" *ngIf="!possibleAssignment.locked && possibleAssignment.amountToAssign > 0"><span class="glyphicon glyphicon-ok">Ausgleichen</span></button>
+        <button class="btn btn-primary btn-sm"
+                (click)="savePayment(possibleAssignment)"
+                *ngIf="!possibleAssignment.locked && possibleAssignment.amountToAssign > 0 && !possibleAssignment.isWaitingList">
+          <span class="glyphicon glyphicon-ok">Ausgleichen</span>
+        </button>
       </td>
     </tr>
   </tbody>
