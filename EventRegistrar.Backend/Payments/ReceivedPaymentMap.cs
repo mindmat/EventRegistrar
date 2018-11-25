@@ -11,6 +11,24 @@ namespace EventRegistrar.Backend.Payments
             base.Configure(builder);
             builder.ToTable("ReceivedPayments");
 
+            builder.Property(pmt => pmt.Info)
+                   .HasMaxLength(400);
+
+            builder.Property(pmt => pmt.Reference)
+                   .HasMaxLength(100);
+
+            builder.Property(pmt => pmt.RecognizedEmail)
+                   .HasMaxLength(100);
+
+            builder.Property(pmt => pmt.DebitorName)
+                   .HasMaxLength(200);
+
+            builder.Property(pmt => pmt.DebitorIban)
+                   .HasMaxLength(200);
+
+            builder.Property(pmt => pmt.InstructionIdentification)
+                   .HasMaxLength(200);
+
             builder.HasOne(pmt => pmt.PaymentFile)
                    .WithMany()
                    .HasForeignKey(pmt => pmt.PaymentFileId);
