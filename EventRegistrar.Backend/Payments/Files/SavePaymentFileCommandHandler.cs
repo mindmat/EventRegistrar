@@ -45,6 +45,7 @@ namespace EventRegistrar.Backend.Payments.Files
         {
             switch (command.ContentType)
             {
+                case "text/xml":
                 case "application/xml":
                     await SaveCamt(command.EventId, command.FileStream, cancellationToken);
                     break;
