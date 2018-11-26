@@ -1,7 +1,7 @@
 ﻿using System;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
-namespace EventRegistrar.Backend.Payments.Files
+namespace EventRegistrar.Backend.Payments.Files.Slips
 {
     public class PaymentSlipReceived : DomainEvent
     {

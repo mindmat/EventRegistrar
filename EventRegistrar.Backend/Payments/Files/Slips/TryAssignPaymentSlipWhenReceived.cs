@@ -2,7 +2,7 @@
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
-namespace EventRegistrar.Backend.Payments.Files
+namespace EventRegistrar.Backend.Payments.Files.Slips
 {
     public class TryAssignPaymentSlipWhenReceived : IEventToCommandTranslation<PaymentSlipReceived>
     {

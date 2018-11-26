@@ -2,7 +2,7 @@
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 
-namespace EventRegistrar.Backend.Payments.Files
+namespace EventRegistrar.Backend.Payments.Files.Slips
 {
     public class PaymentSlip : Entity
     {

@@ -5,7 +5,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace EventRegistrar.Backend.Payments.Files
+namespace EventRegistrar.Backend.Payments.Files.Slips
 {
     public class TryAssignPaymentSlipCommandHandler : IRequestHandler<TryAssignPaymentSlipCommand>
     {

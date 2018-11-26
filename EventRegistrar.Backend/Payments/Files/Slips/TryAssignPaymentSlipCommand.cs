@@ -2,7 +2,7 @@
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using MediatR;
 
-namespace EventRegistrar.Backend.Payments.Files
+namespace EventRegistrar.Backend.Payments.Files.Slips
 {
     public class TryAssignPaymentSlipCommand : IRequest, IQueueBoundMessage
     {

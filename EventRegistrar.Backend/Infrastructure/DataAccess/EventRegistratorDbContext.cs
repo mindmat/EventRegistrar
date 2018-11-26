@@ -9,6 +9,7 @@ using EventRegistrar.Backend.Mailing.Feedback;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Files;
+using EventRegistrar.Backend.Payments.Files.Slips;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Compositions;
