@@ -32,6 +32,10 @@ namespace EventRegistrar.Backend.Payments
             builder.HasOne(pmt => pmt.PaymentFile)
                    .WithMany()
                    .HasForeignKey(pmt => pmt.PaymentFileId);
+
+            builder.HasOne(psl => psl.PaymentSlip)
+                   .WithMany()
+                   .HasForeignKey(psl => psl.PaymentSlipId);
         }
     }
 }

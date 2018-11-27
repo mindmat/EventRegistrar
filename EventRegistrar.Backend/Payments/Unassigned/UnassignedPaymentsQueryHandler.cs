@@ -31,7 +31,8 @@ namespace EventRegistrar.Backend.Payments.Unassigned
                                      Info = rpy.Info,
                                      Reference = rpy.Reference,
                                      Repaid = rpy.Repaid,
-                                     Settled = rpy.Settled
+                                     Settled = rpy.Settled,
+                                     PaymentSlipId = rpy.PaymentSlipId
                                  })
                                  .ToListAsync(cancellationToken);
             return payments;

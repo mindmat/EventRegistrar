@@ -10,6 +10,7 @@ export class UnassignedPaymentsComponent implements OnInit {
   payments: Payment[];
   paymentPointer: number;
   payment: Payment;
+  paymentSlipUrl: string;
 
   possibleAssignments: PossibleAssignment[];
   registrationMatches: PossibleAssignment[];
@@ -116,6 +117,11 @@ export class UnassignedPaymentsComponent implements OnInit {
     this.payment = payment;
     this.possibleAssignments = null;
     this.searchRegistration(this.payment);
+    if (payment != null) {
+      this.paymentSlipUrl = `api/events/${this.getEventAcronym()}/paymentslips/${payment.paymentSlipId}`;
+    } else {
+      this.paymentSlipUrl = null;
+    }
   }
 
   setAssignments(assignments: PossibleAssignment[]) {
@@ -143,6 +149,7 @@ class Payment {
   repaid: number;
   settled: boolean;
   locked: boolean;
+  paymentSlipId: string;
 }
 
 class PossibleAssignment {

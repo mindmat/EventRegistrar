@@ -18,6 +18,12 @@
   </a>
 </div>
 
+<br />
+
+<img *ngIf="payment && payment.paymentSlipId" src="{{ paymentSlipUrl }}" />
+
+<br />
+
 Manuelle Suche: <input #searchString type="text" (keyup.enter)="searchRegistrationManually(searchString.value)">
 
 <br />
@@ -44,9 +50,11 @@ Manuelle Suche: <input #searchString type="text" (keyup.enter)="searchRegistrati
       </td>
       <td>{{ possibleAssignment.amount }}</td>
       <td [class.alert-success]="possibleAssignment.amountMatch" *ngIf="!possibleAssignment.isWaitingList">{{ possibleAssignment.amount - possibleAssignment.amountPaid }}</td>
-      <td><input [(ngModel)]="possibleAssignment.amountToAssign"
-                 type="number"
-                 *ngIf="!possibleAssignment.locked && !possibleAssignment.isWaitingList" /></td>
+      <td>
+        <input [(ngModel)]="possibleAssignment.amountToAssign"
+               type="number"
+               *ngIf="!possibleAssignment.locked && !possibleAssignment.isWaitingList" />
+      </td>
       <td>
         <input [(ngModel)]="possibleAssignment.acceptDifference"
                type="checkbox"

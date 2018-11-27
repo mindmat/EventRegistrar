@@ -23,10 +23,6 @@ namespace EventRegistrar.Backend.Payments.Files.Slips
             builder.HasOne(psl => psl.Event)
                    .WithMany()
                    .HasForeignKey(psl => psl.EventId);
-
-            builder.HasOne(psl => psl.ReceivedPayment)
-                   .WithMany()
-                   .HasForeignKey(psl => psl.ReceivedPaymentId);
         }
     }
 }

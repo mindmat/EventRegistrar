@@ -11,6 +11,7 @@ using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Files;
+using EventRegistrar.Backend.Payments.Files.Slips;
 using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unassigned;
 using EventRegistrar.Backend.PhoneMessages;
@@ -67,6 +68,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(RegistrationsWithUnmatchedPartnerQuery).Name;
                 yield return typeof(PotentialPartnersQuery).Name;
                 yield return typeof(AssignedPaymentsOfRegistrationQuery).Name;
+                yield return typeof(PaymentSlipImageQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
