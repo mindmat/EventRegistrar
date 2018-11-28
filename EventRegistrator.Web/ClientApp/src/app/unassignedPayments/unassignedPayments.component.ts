@@ -127,7 +127,7 @@ export class UnassignedPaymentsComponent implements OnInit {
   setAssignments(assignments: PossibleAssignment[]) {
     this.possibleAssignments = assignments.sort((a, b) => {
       if (a.isWaitingList === b.isWaitingList) {
-        return a.matchScore - b.matchScore;
+        return b.matchScore - a.matchScore;
       }
       if (a.isWaitingList) {
         return 1;
