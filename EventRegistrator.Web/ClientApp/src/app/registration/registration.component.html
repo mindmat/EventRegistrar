@@ -95,7 +95,10 @@
   </thead>
   <tbody>
     <tr *ngFor="let spot of spots">
-      <td><a [routerLink]="['/', getEventAcronym(), 'registrables', spot.registrableId, 'participants']">{{ spot.registrable }}</a></td>
+      <td>
+        <a [routerLink]="['/', getEventAcronym(), 'registrables', spot.registrableId, 'participants']">{{ spot.registrable }}</a>
+        <span class="badge badge-primary" *ngIf="spot.isWaitingList">Warteliste</span>
+      </td>
       <td>{{ spot.firstPartnerJoined | date: 'dd.MM.yy HH:mm' }}</td>
       <td>
         <a *ngIf="spot.partnerRegistrationId" [routerLink]="['/', getEventAcronym(), 'registration', spot.partnerRegistrationId]">{{ spot.partner }}</a>

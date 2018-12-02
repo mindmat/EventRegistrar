@@ -5,7 +5,7 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Spots
 {
-    public class SpotsOfRegistrationQuery : IRequest<IEnumerable<Spot>>, IEventBoundRequest
+    public class SpotsOfRegistrationQuery : IRequest<IEnumerable<SpotDisplayItem>>, IEventBoundRequest
     {
         public Guid EventId { get; set; }
         public Guid RegistrationId { get; set; }

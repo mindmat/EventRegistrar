@@ -32,7 +32,7 @@ namespace EventRegistrar.Backend.Spots
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/spots")]
-        public async Task<IEnumerable<Spot>> GetSpotsOfRegistration(string eventAcronym, Guid registrationId)
+        public async Task<IEnumerable<SpotDisplayItem>> GetSpotsOfRegistration(string eventAcronym, Guid registrationId)
         {
             return await _mediator.Send(new SpotsOfRegistrationQuery
             {

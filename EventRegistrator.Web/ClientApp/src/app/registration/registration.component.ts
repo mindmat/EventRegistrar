@@ -191,6 +191,7 @@ class Spot {
   firstPartnerJoined: Date;
   partner: string;
   isCore: boolean;
+  isWaitingList: boolean;
 }
 
 class Mail {

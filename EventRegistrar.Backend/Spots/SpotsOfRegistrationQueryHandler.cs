@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Spots
 {
-    public class SpotsOfRegistrationQueryHandler : IRequestHandler<SpotsOfRegistrationQuery, IEnumerable<Spot>>
+    public class SpotsOfRegistrationQueryHandler : IRequestHandler<SpotsOfRegistrationQuery, IEnumerable<SpotDisplayItem>>
     {
         private readonly IQueryable<Registration> _registrations;
         private readonly IQueryable<Seat> _seats;
@@ -20,14 +20,14 @@ namespace EventRegistrar.Backend.Spots
             _registrations = registrations;
         }
 
-        public async Task<IEnumerable<Spot>> Handle(SpotsOfRegistrationQuery query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<SpotDisplayItem>> Handle(SpotsOfRegistrationQuery query, CancellationToken cancellationToken)
         {
             var spots = await _seats.Where(seat => (seat.Registration.EventId == query.EventId ||
                                                     seat.Registration_Follower.EventId == query.EventId)
                                                 && (seat.RegistrationId == query.RegistrationId
                                                  || seat.RegistrationId_Follower == query.RegistrationId))
                                     .Where(seat => !seat.IsCancelled)
-                                    .Select(seat => new Spot
+                                    .Select(seat => new SpotDisplayItem
                                     {
                                         Id = seat.Id,
                                         RegistrableId = seat.RegistrableId,
@@ -40,7 +40,8 @@ namespace EventRegistrar.Backend.Spots
                                             null,
                                         FirstPartnerJoined = seat.FirstPartnerJoined,
                                         IsCore = seat.Registrable.IsCore,
-                                        Partner = seat.IsPartnerSpot ? seat.PartnerEmail : null
+                                        Partner = seat.IsPartnerSpot ? seat.PartnerEmail : null,
+                                        IsWaitingList = seat.IsWaitingList
                                     })
                                     .OrderBy(seat => seat.SortKey)
                                     .ToListAsync(cancellationToken);
