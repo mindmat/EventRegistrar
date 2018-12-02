@@ -7,5 +7,6 @@ namespace EventRegistrar.Backend.Payments.Assignments
         public decimal Amount { get; set; }
         public DateTime BookingDate { get; set; }
         public string Currency { get; set; }
+        public Guid PaymentAssignmentId { get; set; }
     }
 }

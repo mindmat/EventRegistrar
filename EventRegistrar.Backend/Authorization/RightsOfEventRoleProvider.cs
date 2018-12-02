@@ -93,6 +93,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(SwapFirstLastNameCommand).Name;
                 yield return typeof(MatchPartnerRegistrationsCommand).Name;
                 yield return typeof(ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand).Name;
+                yield return typeof(UnassignPaymentCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

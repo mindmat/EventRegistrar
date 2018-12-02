@@ -62,7 +62,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let potentialMatch of potentialMatches">
-      <td>{{ potentialMatch.firstName }} {{ potentialMatch.lastName }}<span class="badge badge-primary" *ngIf="potentialMatch.isWaitingList">Warteliste</span></td>
+      <td><a [routerLink]="['/', getEventAcronym(), 'registration', potentialMatch.registrationId]">{{ potentialMatch.firstName }} {{ potentialMatch.lastName }}</a><span class="badge badge-primary" *ngIf="potentialMatch.isWaitingList">Warteliste</span></td>
       <td>{{ potentialMatch.email }}</td>
       <td><span class="badge badge-primary">{{ potentialMatch.state }}</span></td>
       <td>{{ potentialMatch.partner }}</td>

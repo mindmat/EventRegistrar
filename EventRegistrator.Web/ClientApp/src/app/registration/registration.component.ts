@@ -127,6 +127,12 @@ export class RegistrationComponent {
       .subscribe(result => { this.reloadSpots(); this.reloadRegistration(); }, error => console.error(error));
   }
 
+  unassignPayment(paymentAssignmentId: string) {
+    var url = `api/events/${this.getEventAcronym()}/paymentAssignments/${paymentAssignmentId}`;
+    this.http.delete(url)
+      .subscribe(result => { this.reloadSpots(); this.reloadRegistration(); }, error => console.error(error));
+  }
+
   changeAvailability() {
     for (let registrable of this.allRegistrables) {
       if (this.bookedRegistrableIds.indexOf(registrable.id) >= 0) {
@@ -216,6 +222,7 @@ class Registrable {
 }
 
 class AssignedPayments {
+  paymentAssignmentId: string;
   amount: number;
   bookingDate: Date;
   currency: string;

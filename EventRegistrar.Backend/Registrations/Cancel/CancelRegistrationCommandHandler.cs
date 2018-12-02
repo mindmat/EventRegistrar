@@ -13,7 +13,7 @@ namespace EventRegistrar.Backend.Registrations.Cancel
     public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrationCommand>
     {
         private readonly IRepository<RegistrationCancellation> _cancellations;
-        private readonly EventBus _eventBus;
+        private readonly IEventBus _eventBus;
         private readonly IQueryable<Registration> _registrations;
         private readonly SpotRemover _spotRemover;
         private readonly IQueryable<Seat> _spots;
@@ -22,7 +22,7 @@ namespace EventRegistrar.Backend.Registrations.Cancel
                                                 IQueryable<Seat> spots,
                                                 IRepository<RegistrationCancellation> cancellations,
                                                 SpotRemover spotRemover,
-                                                EventBus eventBus)
+                                                IEventBus eventBus)
         {
             _registrations = registrations;
             _spots = spots;

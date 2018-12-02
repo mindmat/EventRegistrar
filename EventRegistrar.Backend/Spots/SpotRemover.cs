@@ -5,9 +5,9 @@ namespace EventRegistrar.Backend.Spots
 {
     public class SpotRemover
     {
-        private readonly EventBus _eventBus;
+        private readonly IEventBus _eventBus;
 
-        public SpotRemover(EventBus eventBus)
+        public SpotRemover(IEventBus eventBus)
         {
             _eventBus = eventBus;
         }

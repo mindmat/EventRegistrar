@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -10,11 +11,11 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
 {
     public class CheckRegistrationAfterPaymentCommandHandler : IRequestHandler<CheckRegistrationAfterPaymentCommand>
     {
-        private readonly EventBus _eventBus;
+        private readonly IEventBus _eventBus;
         private readonly IQueryable<Registration> _registrations;
 
-        public CheckRegistrationAfterPaymentCommandHandler(IQueryable<Registration> registrations,
-                                                           EventBus eventBus)
+        public CheckRegistrationAfterPaymentCommandHandler(IRepository<Registration> registrations,
+                                                           IEventBus eventBus)
         {
             _registrations = registrations;
             _eventBus = eventBus;
@@ -26,7 +27,7 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
                                                    .Include(reg => reg.Payments)
                                                    .Include(reg => reg.IndividualReductions)
                                                    .FirstAsync(reg => reg.Id == request.RegistrationId, cancellationToken);
-            if (registration.State != RegistrationState.Received || registration.IsWaitingList == true)
+            if (registration.IsWaitingList == true)
             {
                 return Unit.Value;
             }
@@ -34,7 +35,7 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
             var difference = registration.Price
                              - registration.Payments.Sum(pmt => pmt.Amount)
                              - registration.IndividualReductions.Sum(idr => idr.Amount);
-            if (difference <= 0m)
+            if (difference <= 0m && registration.State != RegistrationState.Received)
             {
                 registration.State = RegistrationState.Paid;
                 // fully paid
@@ -69,6 +70,10 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
                         });
                     }
                 }
+            }
+            else if (difference > 0 && registration.State == RegistrationState.Paid)
+            {
+                registration.State = RegistrationState.Received;
             }
 
             return Unit.Value;

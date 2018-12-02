@@ -115,12 +115,14 @@
     <tr>
       <th>Datum</th>
       <th>Betrag</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let payment of payments">
       <td>{{ payment.bookingDate | date: 'dd.MM.yy'  }}</td>
       <td>{{ payment.amount }}{{ payment.currency }}</td>
+      <td><button class="btn btn-primary btn-xs" (click)="unassignPayment(payment.paymentAssignmentId)">Zurücknehmen</button></td>
     </tr>
   </tbody>
 </table>

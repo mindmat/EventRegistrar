@@ -13,7 +13,7 @@ namespace EventRegistrar.Backend.Registrations.Register
 {
     public class SeatManager
     {
-        private readonly EventBus _eventBus;
+        private readonly IEventBus _eventBus;
         private readonly ImbalanceManager _imbalanceManager;
         private readonly ILogger _logger;
         private readonly IQueryable<Registration> _registrations;
@@ -23,7 +23,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                            ImbalanceManager imbalanceManager,
                            ILogger logger,
                            IQueryable<Registration> registrations,
-                           EventBus eventBus)
+                           IEventBus eventBus)
         {
             _seats = seats;
             _imbalanceManager = imbalanceManager;

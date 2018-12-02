@@ -18,7 +18,7 @@ namespace EventRegistrar.Backend.Payments.Files
     public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileCommand>
     {
         private readonly CamtParser _camtParser;
-        private readonly EventBus _eventBus;
+        private readonly IEventBus _eventBus;
         private readonly IQueryable<Event> _events;
         private readonly ILogger _log;
         private readonly IRepository<PaymentFile> _paymentFiles;
@@ -31,7 +31,7 @@ namespace EventRegistrar.Backend.Payments.Files
                                              IQueryable<Event> events,
                                              CamtParser camtParser,
                                              ILogger log,
-                                             EventBus eventBus)
+                                             IEventBus eventBus)
         {
             _paymentFiles = paymentFiles;
             _payments = payments;

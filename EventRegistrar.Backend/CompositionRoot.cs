@@ -87,7 +87,7 @@ namespace EventRegistrar.Backend
             container.RegisterInstance<IEnumerable<ServiceBusConsumer>>(serviceBusConsumers);
             container.RegisterSingleton<MessageQueueReceiver>();
             container.Register<ServiceBusClient>();
-            container.Register<EventBus>();
+            container.Register<IEventBus, EventBus>();
             container.Register<SourceQueueProvider>();
 
             container.Verify();

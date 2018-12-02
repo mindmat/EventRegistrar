@@ -15,7 +15,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
 {
     public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromoteFromWaitingListCommand>
     {
-        private readonly EventBus _eventBus;
+        private readonly IEventBus _eventBus;
         private readonly ImbalanceManager _imbalanceManager;
         private readonly ILogger _log;
         private readonly IQueryable<Registrable> _registrables;
@@ -24,7 +24,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
         public TryPromoteFromWaitingListCommandHandler(IQueryable<Registrable> registrables,
                                                        IRepository<Seat> spots,
                                                        ImbalanceManager imbalanceManager,
-                                                       EventBus eventBus,
+                                                       IEventBus eventBus,
                                                        ILogger log)
         {
             _registrables = registrables;

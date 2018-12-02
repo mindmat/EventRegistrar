@@ -15,7 +15,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
     public class AssignPaymentCommandHandler : IRequestHandler<AssignPaymentCommand>
     {
         private readonly IRepository<PaymentAssignment> _assignments;
-        private readonly EventBus _eventBus;
+        private readonly IEventBus _eventBus;
         private readonly IRepository<IndividualReduction> _individualReductions;
         private readonly IQueryable<ReceivedPayment> _payments;
         private readonly IQueryable<Registration> _registrations;
@@ -25,7 +25,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                            IQueryable<ReceivedPayment> payments,
                                            IRepository<PaymentAssignment> assignments,
                                            IRepository<IndividualReduction> individualReductions,
-                                           EventBus eventBus,
+                                           IEventBus eventBus,
                                            AuthenticatedUserId userId)
         {
             _registrations = registrations;
@@ -49,7 +49,8 @@ namespace EventRegistrar.Backend.Payments.Assignments
                 Id = Guid.NewGuid(),
                 RegistrationId = registration.Id,
                 ReceivedPaymentId = payment.Id,
-                Amount = command.Amount
+                Amount = command.Amount,
+                Created = DateTime.UtcNow
             };
             await _assignments.InsertOrUpdateEntity(assignment, cancellationToken);
 

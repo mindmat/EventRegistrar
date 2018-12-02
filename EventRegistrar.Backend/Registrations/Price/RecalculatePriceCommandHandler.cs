@@ -10,13 +10,13 @@ namespace EventRegistrar.Backend.Registrations.Price
 {
     public class RecalculatePriceCommandHandler : IRequestHandler<RecalculatePriceCommand>
     {
-        private readonly EventBus _eventBus;
+        private readonly IEventBus _eventBus;
         private readonly PriceCalculator _priceCalculator;
         private readonly IRepository<Registration> _registrations;
 
         public RecalculatePriceCommandHandler(PriceCalculator priceCalculator,
                                               IRepository<Registration> registrations,
-                                              EventBus eventBus)
+                                              IEventBus eventBus)
         {
             _priceCalculator = priceCalculator;
             _registrations = registrations;

@@ -22,6 +22,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                                         && pya.RegistrationId == query.RegistrationId)
                                              .Select(pya => new AssignedPaymentDisplayItem
                                              {
+                                                 PaymentAssignmentId = pya.Id,
                                                  Amount = pya.Amount,
                                                  Currency = pya.ReceivedPayment.Currency,
                                                  BookingDate = pya.ReceivedPayment.BookingDate

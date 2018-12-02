@@ -20,7 +20,7 @@ namespace EventRegistrar.Backend.Registrations.Register
 {
     public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRegistrationCommand>
     {
-        private readonly EventBus _eventBus;
+        private readonly IEventBus _eventBus;
         private readonly IQueryable<RegistrationForm> _forms;
         private readonly ILogger _logger;
         private readonly IRepository<RawRegistration> _rawRegistrations;
@@ -34,7 +34,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                                                     IRepository<Response> responses,
                                                     IQueryable<RegistrationForm> forms,
                                                     RegistrationProcessorDelegator registrationProcessorDelegator,
-                                                    EventBus eventBus)
+                                                    IEventBus eventBus)
         {
             _logger = logger;
             _rawRegistrations = rawRegistrations;
