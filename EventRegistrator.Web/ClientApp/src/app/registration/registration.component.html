@@ -122,7 +122,7 @@
     <tr *ngFor="let payment of payments">
       <td>{{ payment.bookingDate | date: 'dd.MM.yy'  }}</td>
       <td>{{ payment.amount }}{{ payment.currency }}</td>
-      <td><button class="btn btn-primary btn-xs" (click)="unassignPayment(payment.paymentAssignmentId)">Zurücknehmen</button></td>
+      <td><button *ngIf="!payment.paymentAssignmentId_Counter && payment.amount > 0" class="btn btn-primary btn-xs" (click)="unassignPayment(payment.paymentAssignmentId)">Zurücknehmen</button></td>
     </tr>
   </tbody>
 </table>

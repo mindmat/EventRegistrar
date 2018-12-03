@@ -226,4 +226,5 @@ class AssignedPayments {
   amount: number;
   bookingDate: Date;
   currency: string;
+  paymentAssignmentId_Counter: string;
 }

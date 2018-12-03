@@ -25,7 +25,8 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                                  PaymentAssignmentId = pya.Id,
                                                  Amount = pya.Amount,
                                                  Currency = pya.ReceivedPayment.Currency,
-                                                 BookingDate = pya.ReceivedPayment.BookingDate
+                                                 BookingDate = pya.ReceivedPayment.BookingDate,
+                                                 PaymentAssignmentId_Counter = pya.PaymentAssignmentId_Counter
                                              })
                                              .ToListAsync(cancellationToken);
         }
