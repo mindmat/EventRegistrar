@@ -27,31 +27,27 @@
 
 <h1>Suche Hosting</h1>
 
-<p *ngIf="!seekers"><em>Loading...</em></p>
+<p *ngIf="!requests"><em>Loading...</em></p>
 
-<table class='table' *ngIf="seekers">
+<table class='table' *ngIf="requests">
   <thead>
     <tr>
       <th>Name</th>
       <th>Mail</th>
       <th>Telefon</th>
-      <th>Sprache</th>
-      <th>Zusammen mit</th>
-      <th>Anreise</th>
-      <th>Kommentar</th>
+      <!--<th>Sprache</th>-->
+      <th *ngFor="let header of requests.dynamicColumns">{{ header }}</th>
       <th>Zugelassen</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let seeker of seekers">
-      <td>{{ seeker.FirstName }} {{ seeker.LastName }}</td>
-      <td>{{ seeker.Mail }}</td>
-      <td>{{ seeker.Phone }}</td>
-      <td>{{ seeker.Language }}</td>
-      <td>{{ seeker.Partners }}</td>
-      <td>{{ seeker.Travel }}</td>
-      <td>{{ seeker.Comment }}</td>
-      <td>{{ seeker.AdmittedAt | date: 'dd.MM.yy HH:mm' }}</td>
+    <tr *ngFor="let request of requests.requests">
+      <td><a [routerLink]="['/', getEventAcronym(), 'registration', request.registrationId]">{{ request.firstName }} {{ request.lastName }}</a></td>
+      <td>{{ request.email }}</td>
+      <td>{{ request.phone }}</td>
+      <!--<td>{{ request.language }}</td>-->
+      <td *ngFor="let header of requests.dynamicColumns">{{ request.columns[header] }}</td>
+      <td>{{ request.admittedAt | date: 'dd.MM.yy HH:mm' }}</td>
     </tr>
   </tbody>
 </table>

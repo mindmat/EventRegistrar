@@ -8,15 +8,15 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class HostingComponent {
   offers: HostingOffers;
-  seekers: HostingSeeker[];
+  requests: HostingRequests;
 
   constructor(http: HttpClient, private readonly route: ActivatedRoute) {
     http.get<HostingOffers>(`api/events/${this.getEventAcronym()}/hosting/offers`).subscribe(result => {
       this.offers = result;
     },
       error => console.error(error));
-    http.get<HostingSeeker[]>(`api/events/${this.getEventAcronym()}/hosting/requests`).subscribe(result => {
-      this.seekers = result;
+    http.get<HostingRequests>(`api/events/${this.getEventAcronym()}/hosting/requests`).subscribe(result => {
+      this.requests = result;
     },
       error => console.error(error));
   }
@@ -47,7 +47,12 @@ interface IDictionary {
   [index: string]: string;
 }
 
-class HostingSeeker {
+class HostingRequests {
+  dynamicColumns: string[];
+  offers: HostingRequest[];
+}
+
+class HostingRequest {
   id: number;
   firstName: string;
   lastName: string;

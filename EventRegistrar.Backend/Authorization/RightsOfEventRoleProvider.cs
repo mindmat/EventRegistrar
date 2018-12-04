@@ -71,6 +71,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(AssignedPaymentsOfRegistrationQuery).Name;
                 yield return typeof(PaymentSlipImageQuery).Name;
                 yield return typeof(HostingOffersQuery).Name;
+                yield return typeof(HostingRequestsQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))

@@ -9,7 +9,7 @@ namespace EventRegistrar.Backend.Hosting
         public HardcodedLL19HostingConfiguration()
         {
             RegistrableId_HostingOffer = new Guid("46F2F019-BA6E-4480-8C06-82F8528E7ED5");
-            RegistrableId_HostingSeeker = new Guid("0A90D0B1-0935-4237-B9FA-64C02DB687E5");
+            RegistrableId_HostingRequest = new Guid("0A90D0B1-0935-4237-B9FA-64C02DB687E5");
             ColumnsOffers = new Dictionary<string, Guid>
             {
                 { "Location",    new Guid("A159C44B-06DF-400C-BD35-306A140AD265") },
@@ -33,6 +33,6 @@ namespace EventRegistrar.Backend.Hosting
         public IDictionary<string, Guid> ColumnsOffers { get; set; }
         public IDictionary<string, Guid> ColumnsRequests { get; set; }
         public Guid RegistrableId_HostingOffer { get; set; }
-        public Guid RegistrableId_HostingSeeker { get; set; }
+        public Guid RegistrableId_HostingRequest { get; set; }
     }
 }
