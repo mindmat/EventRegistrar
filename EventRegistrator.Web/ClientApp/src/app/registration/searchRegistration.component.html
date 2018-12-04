@@ -22,7 +22,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let registration of registrations">
-      <td><a a [routerLink]="[ '/', getEventAcronym(), 'registration', registration.registrationId ]">{{ registration.firstName }} {{ registration.lastName }}</a></td>
+      <td><a [routerLink]="[ '/', getEventAcronym(), 'registration', registration.registrationId ]">{{ registration.firstName }} {{ registration.lastName }}</a></td>
       <td>{{ registration.email }}</td>
       <td><span class="badge badge-primary">{{ registration.stateText }}</span></td>
       <td>{{ registration.responsesJoined }}</td>

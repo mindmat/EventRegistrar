@@ -28,7 +28,7 @@ namespace EventRegistrar.Backend.Infrastructure.Configuration
             if (eventId != null)
             {
                 var dbConfig = _configurations.FirstOrDefault(cfg => cfg.EventId == eventId.Value
-                                                                     && cfg.Type == typeof(T).FullName);
+                                                                  && cfg.Type == typeof(T).FullName);
                 if (dbConfig != null)
                 {
                     return JsonConvert.DeserializeObject<T>(dbConfig.ValueJson);

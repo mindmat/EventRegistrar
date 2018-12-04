@@ -1,4 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure;
+﻿using EventRegistrar.Backend.Infrastructure.Configuration;
 
 namespace EventRegistrar.Backend.PhoneMessages
 {

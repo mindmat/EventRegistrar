@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
+using EventRegistrar.Backend.Hosting;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Compose;
@@ -69,6 +70,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(PotentialPartnersQuery).Name;
                 yield return typeof(AssignedPaymentsOfRegistrationQuery).Name;
                 yield return typeof(PaymentSlipImageQuery).Name;
+                yield return typeof(HostingOffersQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))

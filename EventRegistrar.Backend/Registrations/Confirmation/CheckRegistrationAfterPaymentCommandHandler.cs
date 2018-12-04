@@ -21,12 +21,12 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
             _eventBus = eventBus;
         }
 
-        public async Task<Unit> Handle(CheckRegistrationAfterPaymentCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(CheckRegistrationAfterPaymentCommand command, CancellationToken cancellationToken)
         {
-            var registration = await _registrations.Where(reg => reg.Id == request.RegistrationId)
+            var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
                                                    .Include(reg => reg.Payments)
                                                    .Include(reg => reg.IndividualReductions)
-                                                   .FirstAsync(reg => reg.Id == request.RegistrationId, cancellationToken);
+                                                   .FirstAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
             if (registration.IsWaitingList == true)
             {
                 return Unit.Value;

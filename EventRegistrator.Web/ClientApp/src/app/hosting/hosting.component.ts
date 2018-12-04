@@ -1,48 +1,60 @@
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'hosting',
   templateUrl: './hosting.component.html'
 })
 export class HostingComponent {
-  public offers: HostingOffer[];
-  public seekers: HostingSeeker[];
+  offers: HostingOffers;
+  seekers: HostingSeeker[];
 
-  constructor(http: HttpClient, @Inject('BASE_URL') baseUrl: string) {
-    http.get<HostingOffer[]>(baseUrl + 'api/hostingoffers').subscribe(result => {
+  constructor(http: HttpClient, private readonly route: ActivatedRoute) {
+    http.get<HostingOffers>(`api/events/${this.getEventAcronym()}/hosting/offers`).subscribe(result => {
       this.offers = result;
-    }, error => console.error(error));
-    http.get<HostingSeeker[]>(baseUrl + 'api/hostingseekers').subscribe(result => {
+    },
+      error => console.error(error));
+    http.get<HostingSeeker[]>(`api/events/${this.getEventAcronym()}/hosting/requests`).subscribe(result => {
       this.seekers = result;
-    }, error => console.error(error));
+    },
+      error => console.error(error));
+  }
+
+  getEventAcronym() {
+    return this.route.snapshot.params['eventAcronym'];
   }
 }
 
-interface HostingOffer {
-  Id: number;
-  FirstName: string;
-  LastName: string;
-  Mail: string;
-  Phone: string;
-  Language: string;
-  State: number;
-  Address: string;
-  PlaceCount: number;
-  Comment: string;
-  AdmittedAt: Date;
+class HostingOffers {
+  dynamicColumns: string[];
+  offers: HostingOffer[];
 }
 
-interface HostingSeeker {
-  Id: number;
-  FirstName: string;
-  LastName: string;
-  Mail: string;
-  Phone: string;
-  Language: string;
-  State: number;
-  Partners: string;
-  Travel: string;
-  Comment: string;
-  AdmittedAt: Date;
+class HostingOffer {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  language: string;
+  state: number;
+  admittedAt: Date;
+  columns: IDictionary;
+}
+
+interface IDictionary {
+  [index: string]: string;
+}
+
+class HostingSeeker {
+  id: number;
+  firstName: string;
+  lastName: string;
+  mail: string;
+  phone: string;
+  language: string;
+  state: number;
+  admittedAt: Date;
+  columns: IDictionary;
 }

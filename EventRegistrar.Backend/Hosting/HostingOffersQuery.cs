@@ -1,6 +1,11 @@
-﻿namespace EventRegistrar.Backend.Hosting
+﻿using System;
+using EventRegistrar.Backend.Authorization;
+using MediatR;
+
+namespace EventRegistrar.Backend.Hosting
 {
-    public class HostingOffersQuery //: IRequest<IEnumerable<HostingOffer>>, IEventBoundRequest
+    public class HostingOffersQuery : IRequest<HostingOffers>, IEventBoundRequest
     {
+        public Guid EventId { get; set; }
     }
 }

@@ -11,7 +11,7 @@ export class MailsComponent {
   mail: Mail;
   saving: boolean;
 
-  constructor(private http: HttpClient, private route: ActivatedRoute) {
+  constructor(private readonly http: HttpClient, private readonly route: ActivatedRoute) {
   }
 
   ngOnInit() {

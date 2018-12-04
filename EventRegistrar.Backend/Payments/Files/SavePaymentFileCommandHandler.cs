@@ -52,6 +52,7 @@ namespace EventRegistrar.Backend.Payments.Files
                     break;
 
                 case "image/jpeg":
+                case "image/png":
                     await TrySavePaymentSlipImage(command.EventId, command.FileStream, command.Filename, command.ContentType);
                     break;
             }
