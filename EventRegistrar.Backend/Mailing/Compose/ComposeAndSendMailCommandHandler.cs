@@ -49,6 +49,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
             if (!command.AllowDuplicate)
             {
                 var duplicate = await _mails.FirstOrDefaultAsync(ml => ml.Type == command.MailType
+                                                                    && !ml.Discarded
                                                                     && ml.Registrations.Any(map => map.RegistrationId == command.RegistrationId),
                                                                  cancellationToken);
                 if (duplicate != null)
