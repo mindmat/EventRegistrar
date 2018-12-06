@@ -45,12 +45,7 @@ namespace EventRegistrar.Backend.Payments.Due
                                                                                 .OrderByDescending(mail => mail.Created)
                                                                                 .FirstOrDefault()
                                           })
-                                          .FirstOrDefaultAsync(cancellationToken);
-            if (tmp == null)
-            {
-                _logger.LogInformation($"No registration found with Id {command.RegistrationId}");
-                return Unit.Value;
-            }
+                                          .FirstAsync(cancellationToken);
 
             var registration = tmp.Registration;
 

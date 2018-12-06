@@ -35,10 +35,10 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
             var difference = registration.Price
                              - registration.Payments.Sum(pmt => pmt.Amount)
                              - registration.IndividualReductions.Sum(idr => idr.Amount);
-            if (difference <= 0m && registration.State != RegistrationState.Received)
+            if (difference <= 0m && registration.State == RegistrationState.Received)
             {
-                registration.State = RegistrationState.Paid;
                 // fully paid
+                registration.State = RegistrationState.Paid;
                 if (!registration.RegistrationId_Partner.HasValue)
                 {
                     _eventBus.Publish(new SingleRegistrationPaid { Id = Guid.NewGuid(), RegistrationId = registration.Id });
@@ -73,6 +73,7 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
             }
             else if (difference > 0 && registration.State == RegistrationState.Paid)
             {
+                // payment has been revoked
                 registration.State = RegistrationState.Received;
             }
 
