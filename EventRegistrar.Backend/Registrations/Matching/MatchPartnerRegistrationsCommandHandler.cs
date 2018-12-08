@@ -108,6 +108,7 @@ namespace EventRegistrar.Backend.Registrations.Matching
                 }
 
                 spotToCancel.IsCancelled = true;
+                mergedSpot.IsPartnerSpot = true;
 
                 await _seats.InsertOrUpdateEntity(mergedSpot, cancellationToken);
                 await _seats.InsertOrUpdateEntity(spotToCancel, cancellationToken);
