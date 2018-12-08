@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Registrations.Cancel;
+using EventRegistrar.Backend.Registrations.Confirmation;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Registrations.Search;
@@ -33,6 +34,15 @@ namespace EventRegistrar.Backend.Registrations
                 Reason = reason,
                 IgnorePayments = ignorePayments,
                 RefundPercentage = refundPercentage
+            });
+        }
+
+        [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/checkAfterPayment")]
+        public async Task CheckRegistrationAfterPayment(string eventAcronym, Guid registrationId)
+        {
+            await _mediator.Send(new CheckRegistrationAfterPaymentCommand
+            {
+                RegistrationId = registrationId
             });
         }
 
