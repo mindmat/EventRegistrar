@@ -72,11 +72,12 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(PaymentSlipImageQuery).Name;
                 yield return typeof(HostingOffersQuery).Name;
                 yield return typeof(HostingRequestsQuery).Name;
+                yield return typeof(PossibleRepaymentAssignmentQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
             {
-                yield return typeof(UnassignedPaymentsQuery).Name;
+                yield return typeof(UnassignedIncomingPaymentsQuery).Name;
                 yield return typeof(SaveMailTemplateCommand).Name;
                 yield return typeof(ReleaseMailCommand).Name;
                 yield return typeof(DeleteMailCommand).Name;
@@ -97,6 +98,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(MatchPartnerRegistrationsCommand).Name;
                 yield return typeof(ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand).Name;
                 yield return typeof(UnassignPaymentCommand).Name;
+                yield return typeof(AssignRepaymentCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

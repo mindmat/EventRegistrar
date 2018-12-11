@@ -8,16 +8,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Payments.Unassigned
 {
-    public class UnassignedPaymentsQueryHandler : IRequestHandler<UnassignedPaymentsQuery, IEnumerable<PaymentDisplayItem>>
+    public class UnassignedIncomingPaymentsQueryHandler : IRequestHandler<UnassignedIncomingPaymentsQuery, IEnumerable<PaymentDisplayItem>>
     {
         private readonly IQueryable<ReceivedPayment> _payments;
 
-        public UnassignedPaymentsQueryHandler(IQueryable<ReceivedPayment> payments)
+        public UnassignedIncomingPaymentsQueryHandler(IQueryable<ReceivedPayment> payments)
         {
             _payments = payments;
         }
 
-        public async Task<IEnumerable<PaymentDisplayItem>> Handle(UnassignedPaymentsQuery query, CancellationToken cancellationToken)
+        public async Task<IEnumerable<PaymentDisplayItem>> Handle(UnassignedIncomingPaymentsQuery query, CancellationToken cancellationToken)
         {
             var payments = await _payments
                                  .Where(rpy => rpy.PaymentFile.EventId == query.EventId

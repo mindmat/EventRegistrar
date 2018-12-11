@@ -9,7 +9,10 @@ namespace EventRegistrar.Backend.Payments.Assignments
     {
         public IEnumerable<IQueueBoundMessage> Translate(PaymentAssigned e)
         {
-            yield return new CheckRegistrationAfterPaymentCommand { RegistrationId = e.RegistrationId };
+            if (e.RegistrationId != null)
+            {
+                yield return new CheckRegistrationAfterPaymentCommand { RegistrationId = e.RegistrationId.Value };
+            }
         }
     }
 }

@@ -14,6 +14,7 @@ export class UnassignedPaymentsComponent implements OnInit {
 
   possibleAssignments: PossibleAssignment[];
   registrationMatches: PossibleAssignment[];
+  possibleRepaymentAssignment: PossibleRepaymentAssignment[];
   isSearching: boolean;
 
   constructor(private readonly http: HttpClient, private readonly route: ActivatedRoute) {
@@ -47,18 +48,8 @@ export class UnassignedPaymentsComponent implements OnInit {
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
   }
-
-  //saveMail(payment: Payment) {
-  //  payment.locked = true;
-  //  this.http.post(`api/events/${this.getEventAcronym()}/payments/${payment.id}/RecognizedEmail`, payment.recognizedEmail)
-  //    .subscribe(result => { },
-  //      error => {
-  //        console.error(error);
-  //        payment.locked = false;
-  //      });
-  //}
-
-  savePayment(assignment: PossibleAssignment) {
+  
+  assignPayment(assignment: PossibleAssignment) {
     assignment.locked = true;
     var url = `api/events/${this.getEventAcronym()}/payments/${assignment.paymentId != null ? assignment.paymentId : this.payment.id}/assign/${assignment.registrationId}?amount=${assignment.amountToAssign}`;
     if (assignment.acceptDifference) {
@@ -67,6 +58,17 @@ export class UnassignedPaymentsComponent implements OnInit {
         url += `&acceptDifferenceReason=${assignment.acceptDifferenceReason}`;
       }
     }
+    this.http.post(url, null)
+      .subscribe(result => { },
+        error => {
+          console.error(error);
+          assignment.locked = false;
+        });
+  }
+
+  assignToRepayment(assignment: PossibleRepaymentAssignment) {
+    assignment.locked = true;
+    var url = `api/events/${this.getEventAcronym()}/payments/${assignment.paymentId_OpenPosition != null ? assignment.paymentId_OpenPosition : this.payment.id}/assignToRepayment/${assignment.paymentId_Counter}?amount=${assignment.amountToAssign}`;
     this.http.post(url, null)
       .subscribe(result => { },
         error => {
@@ -95,6 +97,13 @@ export class UnassignedPaymentsComponent implements OnInit {
         this.calculateAmountToAssign(this.possibleAssignments, this.payment);
       },
         error => console.error(error));
+
+    this.http.get<PossibleRepaymentAssignment[]>(`api/events/${this.getEventAcronym()}/payments/${payment.id}/possibleOutgoingAssignments`) //?searchstring=${searchString}`)
+      .subscribe(result => {
+        this.setPossibleRepaymentAssignments(result);
+        this.calculateAmountToAssignToRepayment(this.possibleRepaymentAssignment, this.payment);
+      },
+        error => console.error(error));
   }
 
   searchRegistrationManually(searchString: string) {
@@ -113,6 +122,13 @@ export class UnassignedPaymentsComponent implements OnInit {
       possibleAssignment.amountToAssign = Math.min(possibleAssignment.amount - possibleAssignment.amountPaid, payment.amount - payment.amountAssigned);
     }
   }
+
+  calculateAmountToAssignToRepayment(possibleAssignments: PossibleRepaymentAssignment[], payment: Payment) {
+    for (let possibleAssignment of possibleAssignments) {
+      possibleAssignment.amountToAssign = Math.min(possibleAssignment.amountUnsettled, payment.amount - payment.amountAssigned);
+    }
+  }
+
   setPayment(payment: Payment) {
     this.payment = payment;
     this.possibleAssignments = null;
@@ -133,6 +149,12 @@ export class UnassignedPaymentsComponent implements OnInit {
         return 1;
       }
       return -1;
+    });
+  }
+
+  setPossibleRepaymentAssignments(assignments: PossibleRepaymentAssignment[]) {
+    this.possibleRepaymentAssignment = assignments.sort((a, b) => {
+      return b.matchScore - a.matchScore;
     });
   }
 }
@@ -166,4 +188,19 @@ class PossibleAssignment {
   isWaitingList: boolean;
   matchScore: number;
   amountMatch: boolean;
+}
+
+class PossibleRepaymentAssignment {
+  amount: number;
+  amountUnsettled: number;
+  amountToAssign: number;
+  bookingDate: Date;
+  currency: string;
+  debitorName: string;
+  info: string;
+  matchScore: number;
+  paymentId_Counter: string;
+  paymentId_OpenPosition: string;
+  settled: boolean;
+  locked: boolean;
 }

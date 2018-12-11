@@ -8,10 +8,12 @@ namespace EventRegistrar.Backend.Payments
     {
         public decimal Amount { get; set; }
         public DateTime? Created { get; set; }
+        public ReceivedPayment Payment { get; set; }
         public Guid? PaymentAssignmentId_Counter { get; set; }
-        public ReceivedPayment ReceivedPayment { get; set; }
+        public Guid? PaymentId_Repayment { get; set; }
         public Guid ReceivedPaymentId { get; set; }
         public Registration Registration { get; set; }
-        public Guid RegistrationId { get; set; }
+        public Guid? RegistrationId { get; set; }
+        public ReceivedPayment Repayment { get; set; }
     }
 }

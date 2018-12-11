@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Payments.Files.Camt;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,8 +21,12 @@ namespace EventRegistrar.Backend.Payments.Statements
         {
             var payment = await _payments.Where(pmt => pmt.Id == command.PaymentId)
                                          .Include(pmt => pmt.Assignments)
+                                         .Include(pmt => pmt.RepaymentAssignments)
                                          .FirstAsync(cancellationToken);
-            payment.Settled = payment.Amount == payment.Assignments.Sum(ass => ass.Amount);
+            var balance = (payment.CreditDebitType == CreditDebit.DBIT ? -payment.Amount : payment.Amount)
+                          - payment.Assignments.Sum(ass => ass.Amount)
+                          + payment.RepaymentAssignments.Sum(ass => ass.Amount);
+            payment.Settled = balance == 0m;
             return Unit.Value;
         }
     }

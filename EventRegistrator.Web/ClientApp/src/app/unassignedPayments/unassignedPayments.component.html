@@ -29,7 +29,7 @@ Manuelle Suche: <input #searchString type="text" (keyup.enter)="searchRegistrati
 <br />
 <br />
 
-<h3>Suchtreffer</h3>
+<h3>Anmeldungen</h3>
 
 <table class="table table-hover">
   <thead class="thead-dark">
@@ -66,8 +66,47 @@ Manuelle Suche: <input #searchString type="text" (keyup.enter)="searchRegistrati
       </td>
       <td>
         <button class="btn btn-primary btn-sm"
-                (click)="savePayment(possibleAssignment)"
+                (click)="assignPayment(possibleAssignment)"
                 *ngIf="!possibleAssignment.locked && possibleAssignment.amountToAssign > 0 && !possibleAssignment.isWaitingList">
+          <span class="glyphicon glyphicon-ok">Ausgleichen</span>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<br />
+<br />
+
+<h3>Auszahlungen</h3>
+
+<table class="table table-hover">
+  <thead class="thead-dark">
+    <tr>
+      <th>Info</th>
+      <th>Betrag</th>
+      <th>offen</th>
+      <th>Zahlungsdatum</th>
+      <th>ausgleichen</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let possibleAssignment of possibleRepaymentAssignment">
+      <td>{{ possibleAssignment.info }}</td>
+      <td>{{ possibleAssignment.amount }}{{ possibleAssignment.currency }}</td>
+      <td>{{ possibleAssignment.amountUnsettled }}{{ possibleAssignment.currency }}</td>
+      <td>{{ possibleAssignment.bookingDate | date: 'dd.MM.yyyy' }}</td>
+      <!--<td [class.alert-success]="possibleAssignment.amountMatch" *ngIf="!possibleAssignment.isWaitingList">{{ possibleAssignment.amount - possibleAssignment.amountPaid }}</td>-->
+      <td>
+        <input [(ngModel)]="possibleAssignment.amountToAssign"
+               type="number"
+               *ngIf="!possibleAssignment.locked && !possibleAssignment.isWaitingList" />
+      </td>
+      <td>
+        <button class="btn btn-primary btn-sm"
+                (click)="assignToRepayment(possibleAssignment)"
+                *ngIf="!possibleAssignment.locked && possibleAssignment.amountToAssign> 0">
           <span class="glyphicon glyphicon-ok">Ausgleichen</span>
         </button>
       </td>

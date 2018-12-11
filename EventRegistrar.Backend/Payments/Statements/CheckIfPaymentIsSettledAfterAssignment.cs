@@ -10,6 +10,10 @@ namespace EventRegistrar.Backend.Payments.Statements
         public IEnumerable<IQueueBoundMessage> Translate(PaymentAssigned e)
         {
             yield return new CheckIfPaymentIsSettledCommand { PaymentId = e.PaymentId };
+            if (e.PaymentId_Counter != null)
+            {
+                yield return new CheckIfPaymentIsSettledCommand { PaymentId = e.PaymentId_Counter.Value };
+            }
         }
     }
 }

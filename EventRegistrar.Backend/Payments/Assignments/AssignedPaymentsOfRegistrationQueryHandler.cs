@@ -18,15 +18,16 @@ namespace EventRegistrar.Backend.Payments.Assignments
 
         public async Task<IEnumerable<AssignedPaymentDisplayItem>> Handle(AssignedPaymentsOfRegistrationQuery query, CancellationToken cancellationToken)
         {
-            return await _paymentsAssignments.Where(pya => pya.ReceivedPayment.PaymentFile.EventId == query.EventId
+            return await _paymentsAssignments.Where(pya => pya.Payment.PaymentFile.EventId == query.EventId
                                                         && pya.RegistrationId == query.RegistrationId)
                                              .Select(pya => new AssignedPaymentDisplayItem
                                              {
                                                  PaymentAssignmentId = pya.Id,
                                                  Amount = pya.Amount,
-                                                 Currency = pya.ReceivedPayment.Currency,
-                                                 BookingDate = pya.ReceivedPayment.BookingDate,
-                                                 PaymentAssignmentId_Counter = pya.PaymentAssignmentId_Counter
+                                                 Currency = pya.Payment.Currency,
+                                                 BookingDate = pya.Payment.BookingDate,
+                                                 PaymentAssignmentId_Counter = pya.PaymentAssignmentId_Counter,
+                                                 PaymentId_Repayment = pya.PaymentId_Repayment
                                              })
                                              .ToListAsync(cancellationToken);
         }

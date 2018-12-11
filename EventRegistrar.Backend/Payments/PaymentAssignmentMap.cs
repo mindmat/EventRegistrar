@@ -11,9 +11,13 @@ namespace EventRegistrar.Backend.Payments
             base.Configure(builder);
             builder.ToTable("PaymentAssignments");
 
-            builder.HasOne(pas => pas.ReceivedPayment)
+            builder.HasOne(pas => pas.Payment)
                    .WithMany(pmt => pmt.Assignments)
                    .HasForeignKey(pas => pas.ReceivedPaymentId);
+
+            builder.HasOne(pas => pas.Repayment)
+                   .WithMany(pmt => pmt.RepaymentAssignments)
+                   .HasForeignKey(pas => pas.PaymentId_Repayment);
 
             builder.HasOne(pas => pas.Registration)
                    .WithMany(pmt => pmt.Payments)

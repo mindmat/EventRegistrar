@@ -72,7 +72,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
             _eventBus.Publish(new PaymentAssigned
             {
                 Id = Guid.NewGuid(),
-                RegistrationId = assignment.RegistrationId,
+                RegistrationId = registration.Id,
                 PaymentId = assignment.ReceivedPaymentId
             });
 

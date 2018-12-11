@@ -8,6 +8,6 @@ namespace EventRegistrar.Backend.Payments.Assignments
         public Guid PaymentAssignmentId { get; set; }
         public Guid PaymentAssignmentId_Counter { get; set; }
         public Guid PaymentId { get; set; }
-        public Guid RegistrationId { get; set; }
+        public Guid? RegistrationId { get; set; }
     }
 }
