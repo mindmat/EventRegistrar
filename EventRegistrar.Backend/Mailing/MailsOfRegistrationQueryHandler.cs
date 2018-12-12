@@ -33,7 +33,7 @@ namespace EventRegistrar.Backend.Mailing
                                   Created = mtr.Mail.Created,
                                   ContentHtml = mtr.Mail.ContentHtml,
                                   State = mtr.Mail.State,
-                                  Events = mtr.Mail.Events.Select(mev => new MailEventDisplayItem
+                                  Events = mtr.Mail.Events.OrderByDescending(mev => mev.Created).Select(mev => new MailEventDisplayItem
                                   {
                                       When = mev.Created,
                                       Email = mev.EMail,

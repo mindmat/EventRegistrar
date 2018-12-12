@@ -48,7 +48,7 @@ export class RegistrationComponent {
   reloadMails() {
     this.http.get<Mail[]>(`api/events/${this.getEventAcronym()}/registrations/${this.registrationId}/mails`).subscribe(result => {
       this.mails = result;
-      this.mails.forEach(mail => mail.eventsText = mail.events.sort((a, b) => { return (a.when < b.when) - (a.when > b.when); }).map(mev => `${mev.when}: ${mev.stateText} (${mev.email})`).reduce((sum, currrent) => sum + "\r" + currrent));
+      this.mails.forEach(mail => mail.eventsText = mail.events.map(mev => `${mev.when}: ${mev.stateText} (${mev.email})`).reduce((sum, currrent) => sum + "\r" + currrent));
     }, error => console.error(error));
   }
 
