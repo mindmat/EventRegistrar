@@ -44,7 +44,7 @@ namespace EventRegistrar.Backend.Mailing
         }
 
         [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails")]
-        public async Task<IEnumerable<Mail>> GetMailsOfRegistration(string eventAcronym, Guid registrationId)
+        public async Task<IEnumerable<MailDisplayItem>> GetMailsOfRegistration(string eventAcronym, Guid registrationId)
         {
             return await _mediator.Send(new MailsOfRegistrationQuery
             {

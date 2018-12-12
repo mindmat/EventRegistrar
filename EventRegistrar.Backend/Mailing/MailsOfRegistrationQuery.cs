@@ -5,7 +5,7 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Mailing
 {
-    public class MailsOfRegistrationQuery : IRequest<IEnumerable<Mail>>, IEventBoundRequest
+    public class MailsOfRegistrationQuery : IRequest<IEnumerable<MailDisplayItem>>, IEventBoundRequest
     {
         public Guid EventId { get; set; }
         public Guid RegistrationId { get; set; }

@@ -65,20 +65,24 @@
 <table class="table table-hover" *ngIf="mails">
   <thead class="thead-dark">
     <tr>
+      <th></th>
       <th>Betreff</th>
       <th>Empfänger</th>
       <th>Gesendet</th>
       <th>Absender</th>
       <th>Zurückbehalten</th>
+      <th>Status</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let mail of mails" (click)="showMail(mail)" data-toggle="modal" data-target="#mailModal">
+    <tr *ngFor="let mail of mails" data-toggle="modal" data-target="#mailModal">
+      <td><button type="button" class="btn btn-primary btn-xs" (click)="showMail(mail)">Anzeigen</button> </td>
       <td>{{ mail.subject }}</td>
       <td>{{ mail.recipients }}</td>
       <td>{{ mail.created | date: 'dd.MM.yy HH:mm' }}</td>
       <td>{{ mail.senderName }} ({{ mail.senderMail }})</td>
       <td><p *ngIf="mail.withhold">x</p>  <button *ngIf="mail.withhold" class="btn btn-primary btn-xs" (click)="releaseMail(mail.id)">Freigeben</button><button *ngIf="mail.withhold" class="btn btn-primary btn-xs" (click)="deleteMail(mail.id)">Löschen</button></td>
+      <td><button type="button" class="btn btn-primary btn-xs" data-toggle="popover" title="{{ mail.eventsText }}">{{ mail.state }}</button> </td>
     </tr>
   </tbody>
 </table>

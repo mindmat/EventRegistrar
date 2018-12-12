@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Mailing.Feedback;
 using EventRegistrar.Backend.Mailing.Templates;
 
 namespace EventRegistrar.Backend.Mailing
@@ -13,6 +14,7 @@ namespace EventRegistrar.Backend.Mailing
         public DateTime Created { get; set; }
         public bool Discarded { get; set; }
         public Guid? EventId { get; set; }
+        public ICollection<MailEvent> Events { get; set; }
         public MailTemplate MailTemplate { get; set; }
         public Guid? MailTemplateId { get; set; }
         public string Recipients { get; set; }
