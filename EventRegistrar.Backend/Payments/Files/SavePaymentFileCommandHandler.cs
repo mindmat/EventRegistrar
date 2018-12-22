@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -9,6 +12,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Files.Camt;
 using EventRegistrar.Backend.Payments.Files.Slips;
+using ICSharpCode.SharpZipLib.Tar;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -17,6 +21,8 @@ namespace EventRegistrar.Backend.Payments.Files
 {
     public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileCommand>
     {
+        private const string PostfinancePaymentSlipFilenameRegex = @"^camt\.053_._(?<IBAN>CH[0-9]{19})_\d+_\d+_\d+-(?<ID>\d+)\.(?<Extension>[a-z]+)";
+
         private readonly CamtParser _camtParser;
         private readonly IEventBus _eventBus;
         private readonly IQueryable<Event> _events;
@@ -44,6 +50,7 @@ namespace EventRegistrar.Backend.Payments.Files
 
         public async Task<Unit> Handle(SavePaymentFileCommand command, CancellationToken cancellationToken)
         {
+            command.FileStream.Position = 0;
             switch (command.ContentType)
             {
                 case "text/xml":
@@ -55,13 +62,18 @@ namespace EventRegistrar.Backend.Payments.Files
                 case "image/png":
                     await TrySavePaymentSlipImage(command.EventId, command.FileStream, command.Filename, command.ContentType);
                     break;
+
+                case "application/x-gzip":
+                    await SaveCamtWithPaymentSlips(command.EventId, command.FileStream, cancellationToken);
+                    break;
             }
 
             return Unit.Value;
         }
 
-        private async Task SaveCamt(Guid eventId, Stream stream, CancellationToken cancellationToken)
+        private async Task<IEnumerable<ReceivedPayment>> SaveCamt(Guid eventId, Stream stream, CancellationToken cancellationToken)
         {
+            var newPayments = new List<ReceivedPayment>();
             stream.Position = 0;
             var xml = XDocument.Load(stream);
 
@@ -72,7 +84,7 @@ namespace EventRegistrar.Backend.Payments.Files
             if (existingFile != null)
             {
                 _log.LogInformation($"File with Id {camt.FileId} already exists (PaymentFile.Id = {existingFile.Id})");
-                return;
+                return newPayments;
             }
 
             var @event = await _events.FirstOrDefaultAsync(evt => evt.AccountIban == camt.Account, cancellationToken);
@@ -93,7 +105,7 @@ namespace EventRegistrar.Backend.Payments.Files
             await _paymentFiles.InsertOrUpdateEntity(paymentFile, cancellationToken);
             foreach (var camtEntry in camt.Entries)
             {
-                await _payments.InsertOrUpdateEntity(new ReceivedPayment
+                var newPayment = new ReceivedPayment
                 {
                     Id = Guid.NewGuid(),
                     PaymentFileId = paymentFile.Id,
@@ -108,12 +120,64 @@ namespace EventRegistrar.Backend.Payments.Files
                     DebitorIban = camtEntry.DebitorIban,
                     InstructionIdentification = camtEntry.InstructionIdentification,
                     RawXml = camtEntry.Xml
-                }, cancellationToken);
+                };
+                await _payments.InsertOrUpdateEntity(newPayment, cancellationToken);
+                newPayments.Add(newPayment);
             }
 
             if (@event != null)
             {
                 //await ServiceBusClient.SendEvent(new ProcessPaymentFilesCommand { EventId = @event.Id }, ProcessPaymentFiles.ProcessPaymentFilesQueueName);
+            }
+
+            return newPayments;
+        }
+
+        private async Task SaveCamtWithPaymentSlips(Guid eventId, MemoryStream stream, CancellationToken cancellationToken)
+        {
+            using (var zipStream = new GZipStream(stream, CompressionMode.Decompress))
+            {
+                using (var tarStream = new TarInputStream(zipStream))
+                {
+                    TarEntry entry;
+                    var newLines = new List<ReceivedPayment>();
+
+                    while ((entry = tarStream.GetNextEntry()) != null)
+                    {
+                        var outStream = new MemoryStream();
+
+                        if (entry.Name.EndsWith(".xml"))
+                        {
+                            tarStream.CopyEntryContents(outStream);
+                            outStream.Position = 0;
+                            newLines.AddRange(await SaveCamt(eventId, outStream, cancellationToken));
+                        }
+                        else if (entry.Name.EndsWith(".tiff"))
+                        {
+                            var fileInfo = new FileInfo(entry.Name);
+                            var matches = Regex.Match(entry.Name, PostfinancePaymentSlipFilenameRegex);
+                            tarStream.CopyEntryContents(outStream);
+                            var reference = matches.Groups["ID"].Value;
+                            var iban = matches.Groups["IBAN"].Value;
+                            var paymentSlip = new PaymentSlip
+                            {
+                                EventId = eventId,
+                                ContentType = fileInfo.Extension,
+                                FileBinary = outStream.ToArray(),
+                                Filename = entry.Name,
+                                Reference = reference
+                            };
+                            await _paymentSlips.InsertOrUpdateEntity(paymentSlip, cancellationToken);
+
+                            _eventBus.Publish(new PaymentSlipReceived
+                            {
+                                EventId = eventId,
+                                Reference = reference,
+                                PaymentSlipId = paymentSlip.Id
+                            });
+                        }
+                    }
+                }
             }
         }
 

@@ -19,7 +19,7 @@ namespace EventRegistrar.Backend.Payments.Files.Slips
         public async Task<Unit> Handle(TryAssignPaymentSlipCommand command, CancellationToken cancellationToken)
         {
             var payment = await _payments.Where(pmt => pmt.PaymentFile.EventId == command.EventId
-                                                    && pmt.Reference == command.Reference)
+                                                    && pmt.InstructionIdentification == command.Reference)
                                          .ToListAsync(cancellationToken);
 
             if (payment.Count == 1)
