@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -177,13 +179,30 @@ namespace EventRegistrar.Backend.Payments.Files
                             var fileInfo = new FileInfo(entry.Name);
                             var matches = Regex.Match(entry.Name, PostfinancePaymentSlipFilenameRegex);
                             tarStream.CopyEntryContents(outStream);
+                            outStream.Position = 0;
                             var reference = matches.Groups["ID"].Value;
                             var iban = matches.Groups["IBAN"].Value;
+                            byte[] binary;
+                            string extension;
+                            if (fileInfo.Extension == ".tiff" || fileInfo.Extension == ".tif")
+                            {
+                                // chrome doesn't support tiff, so convert it to png
+                                extension = "image/png";
+                                var pngStream = new MemoryStream();
+                                new Bitmap(outStream).Save(pngStream, ImageFormat.Png);
+                                binary = pngStream.ToArray();
+                            }
+                            else
+                            {
+                                extension = ConvertExtensionToContentType(fileInfo.Extension);
+                                binary = outStream.ToArray();
+                            }
+
                             var paymentSlip = new PaymentSlip
                             {
                                 EventId = eventId,
-                                ContentType = ConvertExtensionToContentType(fileInfo.Extension),
-                                FileBinary = outStream.ToArray(),
+                                ContentType = extension,
+                                FileBinary = binary,
                                 Filename = entry.Name,
                                 Reference = reference
                             };
