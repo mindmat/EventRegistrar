@@ -71,6 +71,26 @@ namespace EventRegistrar.Backend.Payments.Files
             return Unit.Value;
         }
 
+        private static string ConvertExtensionToContentType(string extension)
+        {
+            switch (extension)
+            {
+                case ".tiff":
+                case ".tif":
+                    return "image/tiff";
+
+                case ".jpg":
+                case ".jpeg":
+                    return "image/jpeg";
+
+                case ".png":
+                    return "image/png";
+
+                default:
+                    return extension;
+            }
+        }
+
         private async Task<IEnumerable<ReceivedPayment>> SaveCamt(Guid eventId, Stream stream, CancellationToken cancellationToken)
         {
             var newPayments = new List<ReceivedPayment>();
@@ -162,7 +182,7 @@ namespace EventRegistrar.Backend.Payments.Files
                             var paymentSlip = new PaymentSlip
                             {
                                 EventId = eventId,
-                                ContentType = fileInfo.Extension,
+                                ContentType = ConvertExtensionToContentType(fileInfo.Extension),
                                 FileBinary = outStream.ToArray(),
                                 Filename = entry.Name,
                                 Reference = reference
