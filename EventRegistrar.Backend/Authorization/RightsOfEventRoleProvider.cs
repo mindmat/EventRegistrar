@@ -7,6 +7,7 @@ using EventRegistrar.Backend.Hosting;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Compose;
+using EventRegistrar.Backend.Mailing.InvalidAddresses;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Assignments;
@@ -73,6 +74,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(HostingOffersQuery).Name;
                 yield return typeof(HostingRequestsQuery).Name;
                 yield return typeof(PossibleRepaymentAssignmentQuery).Name;
+                yield return typeof(InvalidAddressesQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
@@ -99,6 +101,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand).Name;
                 yield return typeof(UnassignPaymentCommand).Name;
                 yield return typeof(AssignRepaymentCommand).Name;
+                yield return typeof(FixInvalidAddressCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

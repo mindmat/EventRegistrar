@@ -1,0 +1,37 @@
+<h1>Ungültige Mailadressen</h1>
+<table class="table table-hover" *ngIf="addresses">
+  <thead class="thead-dark">
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Letzte Mail</th>
+      <th>Status Mail</th>
+      <th>Vorschläge</th>
+      <th>Korrektur</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let address of addresses">
+      <td>
+        <a [routerLink]="['/', getEventAcronym(), 'registration', address.registrationId]">{{ address.firstName }} {{ address.lastName }}</a>
+        <span class="badge badge-primary">{{ address.registrationState }}</span>
+      </td>
+      <td>{{ address.email }}</td>
+      <td>{{ address.lastMailSent | date: 'dd.MM.yy HH:mm:ss' }}</td>
+      <td>{{ address.lastMailState }}</td>
+      <td>{{ address.proposals }}</td>
+      <td>
+        <input [(ngModel)]="address.correction"
+               type="text" />
+      </td>
+      <td>
+        <button class="btn btn-primary btn-sm"
+                (click)="correctMailAddress(address)">
+          <!--<span class="glyphicon glyphicon-ok">Ausgleichen</span>-->
+          Korrigieren
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

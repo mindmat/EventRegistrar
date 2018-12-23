@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing.Compose;
+using EventRegistrar.Backend.Mailing.InvalidAddresses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,6 +41,15 @@ namespace EventRegistrar.Backend.Mailing
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 MailId = mailId
+            });
+        }
+
+        [HttpGet("api/events/{eventAcronym}/invalidMailAddresses")]
+        public async Task<IEnumerable<InvalidAddress>> GetInvalidMailAddresses(string eventAcronym)
+        {
+            return await _mediator.Send(new InvalidAddressesQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
             });
         }
 

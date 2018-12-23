@@ -35,6 +35,7 @@ import { FileUploadModule } from 'ng2-file-upload';
 import { BulkMailTemplatesComponent } from "./bulkMailTemplates/bulkMailTemplates.component";
 import { PartnerMatchingComponent } from "./partnerMatching/partnerMatching.component";
 import 'bootstrap';
+import { InvalidEmailAddressesComponent } from './invalid-email-addresses/invalid-email-addresses.component';
 
 @NgModule({
   declarations: [
@@ -60,7 +61,8 @@ import 'bootstrap';
     QuestionMappingComponent,
     PaymentsComponent,
     BulkMailTemplatesComponent,
-    PartnerMatchingComponent
+    PartnerMatchingComponent,
+    InvalidEmailAddressesComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -93,7 +95,8 @@ import 'bootstrap';
       { path: ':eventAcronym/mails', component: MailsComponent },
       { path: ':eventAcronym/registrationForms', component: RegistrationFormsComponent },
       { path: ':eventAcronym/questionMapping', component: QuestionMappingComponent },
-      { path: ':eventAcronym/partnerMatching', component: PartnerMatchingComponent }
+      { path: ':eventAcronym/partnerMatching', component: PartnerMatchingComponent },
+      { path: ':eventAcronym/invalid-email-addresses', component: InvalidEmailAddressesComponent }
       //{ path: '**', redirectTo: 'll18/registrables' }
     ])
   ],
