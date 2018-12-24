@@ -50,10 +50,11 @@ namespace EventRegistrar.Backend.Mailing
                                  }).ToList()
             };
 
-            withheldMail.Withhold = command.Withhold;
+            withheldMail.Withhold = false;
             withheldMail.Sent = DateTime.UtcNow;
 
             _serviceBusClient.SendMessage(sendMailCommand);
+
             return Unit.Value;
         }
     }

@@ -2,12 +2,13 @@
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Spots;
+using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Price
 {
     public class RecalculatePriceWhenSpotAdded : IEventToCommandTranslation<SpotAdded>
     {
-        public IEnumerable<IQueueBoundMessage> Translate(SpotAdded e)
+        public IEnumerable<IRequest> Translate(SpotAdded e)
         {
             if (!e.IsInitialProcessing)
             {

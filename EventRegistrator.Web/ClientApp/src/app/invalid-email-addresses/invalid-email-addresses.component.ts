@@ -24,7 +24,15 @@ export class InvalidEmailAddressesComponent implements OnInit {
   }
 
   correctMailAddress(address: InvalidEmailAddress) {
-    console.log(address.correction);
+    address.locked = true;
+
+    this.http.post(`api/events/${this.getEventAcronym()}/registrations/${address.registrationId}/fixEmailAddress?oldEmailAddress=${address.email}&newEmailAddress=${address.correction}`, null)
+      .subscribe(result => {
+      },
+        error => {
+          console.error(error);
+          address.locked = false;
+        });
   }
 }
 
@@ -38,4 +46,5 @@ class InvalidEmailAddress {
   lastMailState: string;
   proposals: string;
   correction: string;
+  locked: boolean;
 }

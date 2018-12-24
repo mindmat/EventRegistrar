@@ -44,6 +44,18 @@ namespace EventRegistrar.Backend.Mailing
             });
         }
 
+        [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/fixEmailAddress")]
+        public async Task FixInvalidMailAddress(string eventAcronym, Guid registrationId, string oldEmailAddress, string newEmailAddress)
+        {
+            await _mediator.Send(new FixInvalidAddressCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId,
+                OldEmailAddress = oldEmailAddress,
+                NewEmailAddress = newEmailAddress
+            });
+        }
+
         [HttpGet("api/events/{eventAcronym}/invalidMailAddresses")]
         public async Task<IEnumerable<InvalidAddress>> GetInvalidMailAddresses(string eventAcronym)
         {

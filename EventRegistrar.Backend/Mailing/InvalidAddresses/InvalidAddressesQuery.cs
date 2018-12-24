@@ -67,7 +67,8 @@ namespace EventRegistrar.Backend.Mailing.InvalidAddresses
             {
                 var otherRegistrations = await _registrations.Where(reg => reg.Id != invalidMail.RegistrationId
                                                                         && reg.RespondentFirstName == invalidMail.FirstName
-                                                                        && reg.RespondentLastName == invalidMail.LastName)
+                                                                        && reg.RespondentLastName == invalidMail.LastName
+                                                                        && reg.Mails.Any(mail => mail.State == null || DeliveredMailStates.Contains(mail.State.Value)))
                                                              .Select(reg => reg.RespondentEmail)
                                                              .ToListAsync(cancellationToken);
                 invalidMail.Proposals = otherRegistrations.Distinct().StringJoin(";");

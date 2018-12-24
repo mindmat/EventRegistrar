@@ -2,12 +2,13 @@
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Registrations.Confirmation;
+using MediatR;
 
 namespace EventRegistrar.Backend.Mailing.Compose
 {
     public class SendMailAfterFirstPaymentInPartnerRegistration : IEventToCommandTranslation<PartnerRegistrationPartiallyPaid>
     {
-        public IEnumerable<IQueueBoundMessage> Translate(PartnerRegistrationPartiallyPaid e)
+        public IEnumerable<IRequest> Translate(PartnerRegistrationPartiallyPaid e)
         {
             yield return new ComposeAndSendMailCommand
             {

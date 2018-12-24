@@ -51,22 +51,40 @@ namespace EventRegistrar.Backend.Infrastructure.ServiceBus
                 return;
             }
 
+            var genericQueueClient = new QueueClient(serviceBusEndpoint, ServiceBusClient.CommandQueueName);
+
+            // Configure the MessageHandler Options in terms of exception handling, number of concurrent messages to deliver etc.
+            var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+            {
+                // Maximum number of Concurrent calls to the callback `ProcessMessagesAsync`, set to 1 for simplicity.
+                // Set it according to how many messages the application wants to process in parallel.
+                MaxConcurrentCalls = 1,
+
+                // Indicates whether MessagePump should automatically complete the messages after returning from User Callback.
+                // False value below indicates the Complete will be handled by the User Callback as seen in `ProcessMessagesAsync`.
+                AutoComplete = true
+            };
+
+            // Register the function that will process messages
+            genericQueueClient.RegisterMessageHandler(ProcessGenericMessage, messageHandlerOptions);
+            _queueClients.Add(genericQueueClient);
+
             foreach (var serviceBusConsumer in _serviceBusConsumers)
             {
                 var queueName = serviceBusConsumer.Value.QueueName;
                 var queueClient = new QueueClient(serviceBusEndpoint, queueName);
 
-                // Configure the MessageHandler Options in terms of exception handling, number of concurrent messages to deliver etc.
-                var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
-                {
-                    // Maximum number of Concurrent calls to the callback `ProcessMessagesAsync`, set to 1 for simplicity.
-                    // Set it according to how many messages the application wants to process in parallel.
-                    MaxConcurrentCalls = 1,
+                //// Configure the MessageHandler Options in terms of exception handling, number of concurrent messages to deliver etc.
+                //var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
+                //{
+                //    // Maximum number of Concurrent calls to the callback `ProcessMessagesAsync`, set to 1 for simplicity.
+                //    // Set it according to how many messages the application wants to process in parallel.
+                //    MaxConcurrentCalls = 1,
 
-                    // Indicates whether MessagePump should automatically complete the messages after returning from User Callback.
-                    // False value below indicates the Complete will be handled by the User Callback as seen in `ProcessMessagesAsync`.
-                    AutoComplete = true
-                };
+                //    // Indicates whether MessagePump should automatically complete the messages after returning from User Callback.
+                //    // False value below indicates the Complete will be handled by the User Callback as seen in `ProcessMessagesAsync`.
+                //    AutoComplete = true
+                //};
 
                 // Register the function that will process messages
                 queueClient.RegisterMessageHandler((message, token) => ProcessMessage(queueName, message, token), messageHandlerOptions);
@@ -85,12 +103,23 @@ namespace EventRegistrar.Backend.Infrastructure.ServiceBus
             return Task.CompletedTask;
         }
 
+        private async Task ProcessGenericMessage(Message message, CancellationToken cancellationToken)
+        {
+            var messageDecoded = Encoding.UTF8.GetString(message.Body);
+            var commandMessage = JsonConvert.DeserializeObject<CommandMessage>(messageDecoded);
+            var commandType = Type.GetType(commandMessage.CommandType);
+
+            var typedMethod = _typedProcessMethod.MakeGenericMethod(commandType);
+            await (Task)typedMethod.Invoke(this, new object[] { commandMessage.CommandSerialized, cancellationToken, ServiceBusClient.CommandQueueName });
+        }
+
         private async Task ProcessMessage(string queueName, Message message, CancellationToken cancellationToken)
         {
             if (_serviceBusConsumers.TryGetValue(queueName, out var consumer))
             {
                 var typedMethod = _typedProcessMethod.MakeGenericMethod(consumer.RequestType);
-                await (Task)typedMethod.Invoke(this, new object[] { message, cancellationToken, queueName });
+                var messageDecoded = Encoding.UTF8.GetString(message.Body);
+                await (Task)typedMethod.Invoke(this, new object[] { messageDecoded, cancellationToken, queueName });
             }
             else
             {
@@ -98,12 +127,10 @@ namespace EventRegistrar.Backend.Infrastructure.ServiceBus
             }
         }
 
-        private async Task ProcessTypedMessage<TRequest>(Message message, CancellationToken cancellationToken,
-                                                         string queueName)
+        private async Task ProcessTypedMessage<TRequest>(string commandSerialized, CancellationToken cancellationToken, string queueName)
             where TRequest : IRequest
         {
-            var messageDecoded = Encoding.UTF8.GetString(message.Body);
-            var request = JsonConvert.DeserializeObject<TRequest>(messageDecoded);
+            var request = JsonConvert.DeserializeObject<TRequest>(commandSerialized);
             using (new EnsureExecutionScope(_container))
             {
                 _container.GetInstance<SourceQueueProvider>().SourceQueueName = queueName;

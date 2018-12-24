@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using MediatR;
 
 namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 {
     public interface IEventToCommandTranslation<in TEvent>
         where TEvent : DomainEvent
     {
-        IEnumerable<IQueueBoundMessage> Translate(TEvent e);
+        IEnumerable<IRequest> Translate(TEvent e);
     }
 }

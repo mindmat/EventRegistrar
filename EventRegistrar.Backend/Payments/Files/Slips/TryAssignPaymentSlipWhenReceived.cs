@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Files.Slips
 {
     public class TryAssignPaymentSlipWhenReceived : IEventToCommandTranslation<PaymentSlipReceived>
     {
-        public IEnumerable<IQueueBoundMessage> Translate(PaymentSlipReceived e)
+        public IEnumerable<IRequest> Translate(PaymentSlipReceived e)
         {
             if (e.EventId.HasValue)
             {

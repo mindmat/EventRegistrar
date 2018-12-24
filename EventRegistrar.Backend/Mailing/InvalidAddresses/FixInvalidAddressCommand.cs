@@ -52,7 +52,13 @@ namespace EventRegistrar.Backend.Mailing.InvalidAddresses
 
             registration.RespondentEmail = command.NewEmailAddress;
 
-            _eventBus.Publish(new InvalidEmailAddressFixed { EventId = command.EventId, OldEmailAddress = command.OldEmailAddress, NewEmailAddress = command.NewEmailAddress });
+            _eventBus.Publish(new InvalidEmailAddressFixed
+            {
+                EventId = command.EventId,
+                RegistrationId = command.RegistrationId,
+                OldEmailAddress = command.OldEmailAddress,
+                NewEmailAddress = command.NewEmailAddress
+            });
 
             return Unit.Value;
         }

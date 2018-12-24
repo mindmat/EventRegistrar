@@ -27,7 +27,8 @@
       </td>
       <td>
         <button class="btn btn-primary btn-sm"
-                (click)="correctMailAddress(address)">
+                (click)="correctMailAddress(address)"
+                *ngIf="!address.locked">
           <!--<span class="glyphicon glyphicon-ok">Ausgleichen</span>-->
           Korrigieren
         </button>

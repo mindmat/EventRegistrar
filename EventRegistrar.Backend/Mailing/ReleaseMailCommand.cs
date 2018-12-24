@@ -10,6 +10,5 @@ namespace EventRegistrar.Backend.Mailing
         public Guid EventId { get; set; }
         public Guid MailId { get; set; }
         public string QueueName => "ReleaseMail";
-        public bool Withhold { get; set; }
     }
 }

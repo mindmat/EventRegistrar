@@ -2,12 +2,13 @@
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Registrations.Confirmation;
+using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Assignments
 {
     public class CheckRegistrationAfterPaymentAssigned : IEventToCommandTranslation<PaymentAssigned>
     {
-        public IEnumerable<IQueueBoundMessage> Translate(PaymentAssigned e)
+        public IEnumerable<IRequest> Translate(PaymentAssigned e)
         {
             if (e.RegistrationId != null)
             {

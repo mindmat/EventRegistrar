@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using EventRegistrar.Backend.Mailing.Compose;
+using MediatR;
 
 namespace EventRegistrar.Backend.Mailing.InvalidAddresses
 {
@@ -14,18 +15,27 @@ namespace EventRegistrar.Backend.Mailing.InvalidAddresses
             _mails = mails;
         }
 
-        public IEnumerable<IQueueBoundMessage> Translate(InvalidEmailAddressFixed e)
+        public IEnumerable<IRequest> Translate(InvalidEmailAddressFixed e)
         {
             if (e.EventId.HasValue)
             {
-                var lastMail = _mails.Where(mail => mail.RegistrationId == e.RegistrationId)
+                var lastMail = _mails.Where(mail => mail.RegistrationId == e.RegistrationId
+                                                 && mail.Mail.Type.HasValue)
                                      .OrderByDescending(mail => mail.Mail.Sent)
                                      .First();
 
-                //yield return new ReleaseMailCommand { EventId = e.EventId.Value, MailId = lastMail.MailId, Withhold = true };
+                if (lastMail.Mail.Type != null)
+                {
+                    yield return new ComposeAndSendMailCommand
+                    {
+                        EventId = e.EventId.Value,
+                        AllowDuplicate = true,
+                        Withhold = true,
+                        RegistrationId = e.RegistrationId,
+                        MailType = lastMail.Mail.Type.Value
+                    };
+                }
             }
-
-            yield break;
         }
     }
 }
