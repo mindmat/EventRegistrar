@@ -76,6 +76,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(HostingRequestsQuery).Name;
                 yield return typeof(PossibleRepaymentAssignmentQuery).Name;
                 yield return typeof(InvalidAddressesQuery).Name;
+                yield return typeof(PartyOverviewQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))

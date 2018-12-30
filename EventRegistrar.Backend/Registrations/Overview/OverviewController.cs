@@ -79,5 +79,14 @@ namespace EventRegistrar.Backend.Registrations.Overview
 
             return File(stream, "application/octet-stream");
         }
+
+        [HttpGet("api/events/{eventAcronym}/partyOverview")]
+        public async Task<IEnumerable<PartyItem>> GetPartyOverview(string eventAcronym)
+        {
+            return await _mediator.Send(new PartyOverviewQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
+        }
     }
 }
