@@ -57,8 +57,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
             if (command.AcceptDifference)
             {
                 var difference = (registration.Price ?? 0m)
-                                 - registration.Payments.Sum(pmt => pmt.Amount)
-                                 - registration.IndividualReductions.Sum(pmt => pmt.Amount);
+                                 - registration.Payments.Sum(pmt => pmt.Amount);
                 await _individualReductions.InsertOrUpdateEntity(new IndividualReduction
                 {
                     Id = Guid.NewGuid(),
@@ -67,6 +66,12 @@ namespace EventRegistrar.Backend.Payments.Assignments
                     Reason = command.AcceptDifferenceReason,
                     UserId = _userId.UserId ?? Guid.Empty
                 }, cancellationToken);
+
+                _eventBus.Publish(new IndividualReductionAdded
+                {
+                    RegistrationId = registration.Id,
+                    Amount = difference
+                });
             }
 
             _eventBus.Publish(new PaymentAssigned

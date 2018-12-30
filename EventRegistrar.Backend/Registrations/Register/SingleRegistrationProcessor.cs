@@ -126,7 +126,8 @@ namespace EventRegistrar.Backend.Registrations.Register
                 registration.AdmittedAt = DateTime.UtcNow;
             }
 
-            registration.Price = await _priceCalculator.CalculatePrice(registration.Id, registration.Responses, ownSeats);
+            registration.OriginalPrice = await _priceCalculator.CalculatePrice(registration.Id, registration.Responses, ownSeats);
+            registration.Price = registration.OriginalPrice;
 
             await _registrations.InsertOrUpdateEntity(registration);
 

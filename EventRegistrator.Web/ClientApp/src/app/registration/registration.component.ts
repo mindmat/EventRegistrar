@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute, Params } from '@angular/router';
+import { Guid } from "../infrastructure/guid";
 import 'bootstrap/js/dist/dropdown'
 
 @Component({
@@ -159,6 +160,21 @@ export class RegistrationComponent {
       .subscribe(result => { this.reloadMails(); }, error => console.error(error));
   }
 
+  initNewReduction() {
+    this.newReductionId = Guid.newGuid();
+  }
+
+  addReduction(amount: number, reason: string) {
+    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/reductions/${this.newReductionId}?amount=${amount}`;
+    if (reason != null && reason !== "") {
+      url += `&reason=${reason}`;
+    }
+
+    this.http.post(url, null)
+      .subscribe(result => { this.reloadRegistration(); },
+        error => console.error(error));
+  }
+
   loadRegistration(registrationId: string) {
     this.registrationId = registrationId;
     this.reloadRegistration();
@@ -166,6 +182,8 @@ export class RegistrationComponent {
     this.reloadSpots();
     this.reloadPayments();
   }
+
+  newReductionId: string;
 }
 
 class Registration {

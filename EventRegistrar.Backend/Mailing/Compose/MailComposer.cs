@@ -18,18 +18,15 @@ namespace EventRegistrar.Backend.Mailing.Compose
         private const string PrefixLeader = "LEADER";
         private readonly ILogger _log;
         private readonly PaidAmountSummarizer _paidAmountSummarizer;
-        private readonly PriceReader _priceReader;
         private readonly IQueryable<Registration> _registrations;
 
         public MailComposer(IQueryable<Registration> registrations,
                             ILogger log,
-                            PaidAmountSummarizer paidAmountSummarizer,
-                            PriceReader priceReader)
+                            PaidAmountSummarizer paidAmountSummarizer)
         {
             _registrations = registrations;
             _log = log;
             _paidAmountSummarizer = paidAmountSummarizer;
-            _priceReader = priceReader;
         }
 
         public async Task<string> Compose(Guid registrationId, string template, string language, CancellationToken cancellationToken)
@@ -106,10 +103,10 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 else if (parts.key == "PRICE")
                 {
                     var price = parts.prefix == null
-                                ? await _priceReader.GetPrice(registration.Id) + (partnerRegistration == null ? 0m : await _priceReader.GetPrice(partnerRegistration.Id))
-                                : await _priceReader.GetPrice((registrationForPrefix ?? registration).Id);
+                                ? registration.Price + (partnerRegistration == null ? 0m : partnerRegistration.Price)
+                                : (registrationForPrefix ?? registration).Price;
 
-                    templateFiller[key] = price.ToString("F2"); // HACK: format hardcoded
+                    templateFiller[key] = (price ?? 0m).ToString("F2"); // HACK: format hardcoded
                 }
                 else if (parts.key == "PAIDAMOUNT")
                 {

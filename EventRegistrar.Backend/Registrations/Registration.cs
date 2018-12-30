@@ -26,6 +26,7 @@ namespace EventRegistrar.Backend.Registrations
         public bool? IsWaitingList { get; set; }
         public string Language { get; set; }
         public ICollection<MailToRegistration> Mails { get; set; }
+        public decimal? OriginalPrice { get; set; }
         public string PartnerNormalized { get; set; }
         public string PartnerOriginal { get; set; }
         public ICollection<PaymentAssignment> Payments { get; set; }

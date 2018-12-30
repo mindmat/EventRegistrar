@@ -33,8 +33,7 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
             }
 
             var difference = registration.Price
-                             - registration.Payments.Sum(pmt => pmt.Amount)
-                             - registration.IndividualReductions.Sum(idr => idr.Amount);
+                             - registration.Payments.Sum(pmt => pmt.Amount);
             if (difference <= 0m && registration.State == RegistrationState.Received)
             {
                 // fully paid

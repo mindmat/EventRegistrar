@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
@@ -25,13 +25,22 @@ namespace EventRegistrar.Backend.Registrations.Price
 
         public async Task<Unit> Handle(RecalculatePriceCommand command, CancellationToken cancellationToken)
         {
-            var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
+            var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
+                                                   .Include(reg => reg.IndividualReductions)
+                                                   .FirstAsync(cancellationToken);
             var oldPrice = registration.Price ?? 0m;
-            var newPrice = await _priceCalculator.CalculatePrice(command.RegistrationId);
-            if (oldPrice != newPrice)
+            var individualReductions = registration.IndividualReductions
+                                                   .Select(ird => ird.Amount)
+                                                   .DefaultIfEmpty(0m)
+                                                   .Sum();
+            var oldOriginalPrice = registration.OriginalPrice ?? 0m;
+            var newOriginalPrice = await _priceCalculator.CalculatePrice(command.RegistrationId);
+            var newPrice = newOriginalPrice - individualReductions;
+            if (oldOriginalPrice != newOriginalPrice || oldPrice != newPrice)
             {
+                registration.OriginalPrice = newOriginalPrice;
                 registration.Price = newPrice;
-                _eventBus.Publish(new PriceChanged { Id = Guid.NewGuid(), RegistrationId = registration.Id, OldPrice = oldPrice, NewPrice = newPrice });
+                _eventBus.Publish(new PriceChanged { RegistrationId = registration.Id, OldPrice = oldPrice, NewPrice = registration.Price ?? 0m });
             }
 
             return Unit.Value;

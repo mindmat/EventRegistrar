@@ -9,6 +9,7 @@
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
     <button class="dropdown-item" type="button" *ngIf="registration && registration.status != 4" data-toggle="modal" data-target="#cancelModal">Stornieren</button>
     <button class="dropdown-item" type="button" (click)="swapFirstLastName()">Name/Vorname tauschen</button>
+    <button class="dropdown-item" type="button" (click)="initNewReduction()" data-toggle="modal" data-target="#newReductionModal">Neue Reduktion erfassen</button>
   </div>
 </div>
 <br />
@@ -275,6 +276,42 @@
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- modal: new reduction -->
+<div class="modal fade" id="newReductionModal" tabindex="-1" role="dialog" aria-labelledby="newReductionModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newReductionModalLabel">Neue Ermässigung</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-sm-6">
+            <p>Betrag:</p>
+          </div>
+          <div class="col-sm-6">
+            <input type="number" #amount />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <p>Grund:</p>
+          </div>
+          <div class="col-sm-6">
+            <input #reason>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="newReductionModal">Abbrechen</button>
+        <button type="button" class="btn btn-primary" (click)="addReduction(amount.value, reason.value)" data-dismiss="newReductionModal">Erstellen</button>
       </div>
     </div>
   </div>

@@ -24,6 +24,7 @@ using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Cancel;
+using EventRegistrar.Backend.Registrations.IndividualReductions;
 using EventRegistrar.Backend.Registrations.Matching;
 using EventRegistrar.Backend.Registrations.Overview;
 using EventRegistrar.Backend.Registrations.Raw;
@@ -102,6 +103,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(UnassignPaymentCommand).Name;
                 yield return typeof(AssignRepaymentCommand).Name;
                 yield return typeof(FixInvalidAddressCommand).Name;
+                yield return typeof(AddIndividualReductionCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))
