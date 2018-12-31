@@ -12,7 +12,7 @@
     <tr>
       <td>Ausstehende Zahlungen:</td>
       <td class="text-right">{{ paymentOverview.outstandingAmount | currency : paymentOverview.balance.currency }}</td>
-      <td><a [routerLink]="[eventService.acronym, 'paymentReminders']">aus {{ paymentOverview.notFullyPaidRegistrations }} Anmeldungen</a></td>
+      <td><a [routerLink]="['/', eventService.acronym, 'paymentReminders']">aus {{ paymentOverview.notFullyPaidRegistrations }} Anmeldungen</a></td>
     </tr>
     <tr>
       <td>Kontostand:</td>
