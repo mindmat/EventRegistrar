@@ -4,7 +4,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace EventRegistrar.Backend.Test.Infrastructure
+namespace EventRegistrar.Backend.Test.TestInfrastructure
 {
     public class TestGoogleIdentityProvider : IIdentityProvider
     {

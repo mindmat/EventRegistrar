@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace EventRegistrar.Backend.Test.Infrastructure
+namespace EventRegistrar.Backend.Test.TestInfrastructure
 {
     public class CustomWebApplicationFactory : WebApplicationFactory<TestStartup>
     {

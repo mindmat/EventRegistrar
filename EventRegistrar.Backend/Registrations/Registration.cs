@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing;
+using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.RegistrationForms;
@@ -22,6 +23,7 @@ namespace EventRegistrar.Backend.Registrations
         public string ExternalIdentifier { get; set; }
         public DateTime ExternalTimestamp { get; set; }
         public bool FallbackToPartyPass { get; set; }
+        public ICollection<ImportedMailToRegistration> ImportedMails { get; set; }
         public ICollection<IndividualReduction> IndividualReductions { get; set; }
         public bool? IsWaitingList { get; set; }
         public string Language { get; set; }

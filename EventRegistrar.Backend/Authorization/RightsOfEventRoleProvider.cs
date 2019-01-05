@@ -7,6 +7,7 @@ using EventRegistrar.Backend.Hosting;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Compose;
+using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Mailing.InvalidAddresses;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
@@ -105,6 +106,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(AssignRepaymentCommand).Name;
                 yield return typeof(FixInvalidAddressCommand).Name;
                 yield return typeof(AddIndividualReductionCommand).Name;
+                yield return typeof(ImportMailsFromImapCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

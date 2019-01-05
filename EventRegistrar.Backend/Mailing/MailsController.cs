@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing.Compose;
+using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Mailing.InvalidAddresses;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -79,6 +80,15 @@ namespace EventRegistrar.Backend.Mailing
         public async Task<IEnumerable<Mail>> GetPendingMails(string eventAcronym)
         {
             return await _mediator.Send(new GetPendingMailsQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
+        }
+
+        [HttpPost("api/events/{eventAcronym}/mails/import")]
+        public async Task ImportMails(string eventAcronym)
+        {
+            await _mediator.Send(new ImportMailsFromImapCommand
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
             });

@@ -6,6 +6,7 @@ using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Feedback;
+using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Files;
@@ -65,6 +66,8 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new RawMailEventsMap());
             builder.ApplyConfiguration(new MailEventMap());
             builder.ApplyConfiguration(new SmsMap());
+            builder.ApplyConfiguration(new ImportedMailMap());
+            builder.ApplyConfiguration(new ImportedMailToRegistrationMap());
 
             builder.ApplyConfiguration(new RawRegistrationFormMap());
             builder.ApplyConfiguration(new RawRegistrationMap());

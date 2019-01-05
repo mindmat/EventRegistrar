@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Mailing.Import;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,11 +10,14 @@ namespace EventRegistrar.Backend.Mailing
 {
     public class MailsOfRegistrationQueryHandler : IRequestHandler<MailsOfRegistrationQuery, IEnumerable<MailDisplayItem>>
     {
+        private readonly IQueryable<ImportedMailToRegistration> _importedMails;
         private readonly IQueryable<MailToRegistration> _mails;
 
-        public MailsOfRegistrationQueryHandler(IQueryable<MailToRegistration> mails)
+        public MailsOfRegistrationQueryHandler(IQueryable<MailToRegistration> mails,
+                                               IQueryable<ImportedMailToRegistration> importedMails)
         {
             _mails = mails;
+            _importedMails = importedMails;
         }
 
         public async Task<IEnumerable<MailDisplayItem>> Handle(MailsOfRegistrationQuery query, CancellationToken cancellationToken)
@@ -41,9 +45,26 @@ namespace EventRegistrar.Backend.Mailing
                                       StateText = mev.State.ToString()
                                   })
                               })
-                              .OrderByDescending(mail => mail.Created)
                               .ToListAsync(cancellationToken);
-            return mails;
+
+            var importedMails = await _importedMails.Where(mtr => mtr.Registration.EventId == query.EventId
+                                                               && mtr.RegistrationId == query.RegistrationId)
+                                                    .Select(mtr => new MailDisplayItem
+                                                    {
+                                                        Id = mtr.ImportedMailId,
+                                                        Withhold = false,
+                                                        SenderName = mtr.Mail.SenderName,
+                                                        SenderMail = mtr.Mail.SenderMail,
+                                                        Recipients = mtr.Mail.Recipients,
+                                                        Subject = mtr.Mail.Subject,
+                                                        Created = mtr.Mail.Date,
+                                                        ContentHtml = mtr.Mail.ContentHtml ?? mtr.Mail.ContentPlainText,
+                                                        State = null
+                                                    })
+                                                    .ToListAsync(cancellationToken);
+
+            mails.AddRange(importedMails);
+            return mails.OrderByDescending(mail => mail.Created);
         }
     }
 }

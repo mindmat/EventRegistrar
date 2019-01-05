@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using SimpleInjector;
 
-namespace EventRegistrar.Backend.Test.Infrastructure
+namespace EventRegistrar.Backend.Test.TestInfrastructure
 {
     public class TestStartup : Startup
     {

@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using SimpleInjector;
 
-namespace EventRegistrar.Backend.Test.Infrastructure
+namespace EventRegistrar.Backend.Test.TestInfrastructure
 {
     public class IntegrationTestEnvironment
     {
