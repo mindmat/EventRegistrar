@@ -39,6 +39,11 @@ namespace EventRegistrar.Backend.Mailing.Import
 
         public async Task<Unit> Handle(ImportMailsFromImapCommand command, CancellationToken cancellationToken)
         {
+            if (_configuration.ImapHost == null || _configuration.ImapPort == 0)
+            {
+                return Unit.Value;
+            }
+
             using (var client = new ImapClient())
             {
                 await client.ConnectAsync(_configuration.ImapHost, _configuration.ImapPort, true, cancellationToken);

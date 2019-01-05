@@ -9,4 +9,8 @@ namespace EventRegistrar.Backend.Mailing.Import
         public string Password { get; set; }
         public string Username { get; set; }
     }
+
+    internal class NullExternalMailConfiguration : ExternalMailConfiguration, IDefaultConfigurationItem
+    {
+    }
 }
