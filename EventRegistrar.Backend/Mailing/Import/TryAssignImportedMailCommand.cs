@@ -42,7 +42,8 @@ namespace EventRegistrar.Backend.Mailing.Import
             var emailAddresses = new List<string>(mail.Recipients?.Split(";")) { mail.SenderMail };
             foreach (var emailAddress in emailAddresses)
             {
-                var registrations = await _registrations.Where(reg => reg.RespondentEmail == emailAddress
+                var registrations = await _registrations.Where(reg => reg.EventId == mail.EventId
+                                                                   && reg.RespondentEmail == emailAddress
                                                                    && !existingRegistrationMappings.Contains(reg.Id))
                                                         .Select(reg => reg.Id)
                                                         .ToListAsync(cancellationToken);
