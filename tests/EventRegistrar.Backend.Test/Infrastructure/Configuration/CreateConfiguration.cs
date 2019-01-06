@@ -1,25 +1,26 @@
 ﻿using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Mailing.Import;
-using EventRegistrar.Backend.Test.TestInfrastructure;
 using Newtonsoft.Json;
 using Xunit;
 
 namespace EventRegistrar.Backend.Test.Infrastructure.Configuration
 {
-    public class CreateConfigurationTest : IClassFixture<IntegrationTestEnvironment>
+    public class CreateConfigurationTest
     {
-        private readonly IntegrationTestEnvironment _integrationTestEnvironment;
-
-        public CreateConfigurationTest(IntegrationTestEnvironment integrationTestEnvironment)
-        {
-            _integrationTestEnvironment = integrationTestEnvironment;
-        }
-
         [Fact]
         public void GenerateJson()
         {
-            var configuration = new ExternalMailConfiguration
+            var configuration = new ExternalMailConfigurations
             {
+                MailConfigurations = new[]
+                    {
+                        new ExternalMailConfiguration
+                        {
+                        },
+                        new ExternalMailConfiguration
+                        {
+                        }
+                    }
             };
             var eventId = "B546D28C-97E8-4B94-BC07-D32633AF980C";
 

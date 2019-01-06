@@ -28,7 +28,7 @@ namespace EventRegistrar.Backend.Mailing.Import
         public async Task<Unit> Handle(ImportMailsFromImapForAllActiveEventsCommand command, CancellationToken cancellationToken)
         {
             var activeImportConfigurations = await _configurations.Where(cfg => cfg.Event.State != State.Finished
-                                                                             && cfg.Type == typeof(ExternalMailConfiguration).FullName)
+                                                                             && cfg.Type == typeof(ExternalMailConfigurations).FullName)
                                                                   .ToListAsync(cancellationToken);
             foreach (var activeImportConfiguration in activeImportConfigurations)
             {
