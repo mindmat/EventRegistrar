@@ -212,7 +212,7 @@
             <p>Grund:</p>
           </div>
           <div class="col-sm-6">
-            <input #reason value="Abmeldung">
+            <input #reasonCancellation value="Abmeldung">
           </div>
         </div>
         <div class="row">
@@ -242,7 +242,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-        <button type="button" class="btn btn-primary" (click)="cancelRegistration(reason.value, ignorePayments.value, refundPercentage.value, preventPromotion.value)" data-dismiss="modal">Stornieren</button>
+        <button type="button" class="btn btn-primary" (click)="cancelRegistration(reasonCancellation.value, ignorePayments.value, refundPercentage.value, preventPromotion.value)" data-dismiss="modal">Stornieren</button>
       </div>
     </div>
   </div>
@@ -297,7 +297,7 @@
             <p>Betrag:</p>
           </div>
           <div class="col-sm-6">
-            <input type="number" #amount />
+            <input type="number" #amountReduction />
           </div>
         </div>
         <div class="row">
@@ -305,13 +305,13 @@
             <p>Grund:</p>
           </div>
           <div class="col-sm-6">
-            <input #reason>
+            <input #reasonReduction>
           </div>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="newReductionModal">Abbrechen</button>
-        <button type="button" class="btn btn-primary" (click)="addReduction(amount.value, reason.value)" data-dismiss="newReductionModal">Erstellen</button>
+        <button type="button" class="btn btn-primary" (click)="addReduction(amountReduction.value, reasonReduction.value)" data-dismiss="newReductionModal">Erstellen</button>
       </div>
     </div>
   </div>

@@ -8,7 +8,7 @@ namespace EventRegistrar.Functions
     public static class ImportMailTrigger
     {
         [FunctionName("ImportMailTrigger")]
-        public static async Task Run([TimerTrigger("0 */30 * * * *")]TimerInfo myTimer, ILogger log)
+        public static async Task Run([TimerTrigger("0 0 */2 * * *")]TimerInfo myTimer, ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
             var command = new
