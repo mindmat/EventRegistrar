@@ -137,30 +137,39 @@ namespace EventRegistrar.Backend.Registrations.Register
                                               && ownSeats.Any(seat => seat.PartnerEmail != null
                                                                    && (!seat.RegistrationId.HasValue || !seat.RegistrationId_Follower.HasValue));
             MailType mailToSend;
-            if (!isPartnerRegistration)
+            var withhold = false;
+            if (registration.OriginalPrice == 0m && !string.IsNullOrEmpty(registration.SoldOutMessage))
             {
-                mailToSend = isOnWaitingList
-                    ? MailType.SingleRegistrationOnWaitingList
-                    : MailType.SingleRegistrationAccepted;
-            }
-            else if (isUnmatchedPartnerRegistration)
-            {
-                mailToSend = isOnWaitingList
-                    ? MailType.PartnerRegistrationFirstPartnerOnWaitingList
-                    : MailType.PartnerRegistrationFirstPartnerAccepted;
+                mailToSend = MailType.SoldOut;
+                withhold = true;
             }
             else
             {
-                mailToSend = isOnWaitingList
-                    ? MailType.PartnerRegistrationMatchedOnWaitingList
-                    : MailType.PartnerRegistrationMatchedAndAccepted;
+                if (!isPartnerRegistration)
+                {
+                    mailToSend = isOnWaitingList
+                        ? MailType.SingleRegistrationOnWaitingList
+                        : MailType.SingleRegistrationAccepted;
+                }
+                else if (isUnmatchedPartnerRegistration)
+                {
+                    mailToSend = isOnWaitingList
+                        ? MailType.PartnerRegistrationFirstPartnerOnWaitingList
+                        : MailType.PartnerRegistrationFirstPartnerAccepted;
+                }
+                else
+                {
+                    mailToSend = isOnWaitingList
+                        ? MailType.PartnerRegistrationMatchedOnWaitingList
+                        : MailType.PartnerRegistrationMatchedAndAccepted;
+                }
             }
 
             _serviceBusClient.SendMessage(new ComposeAndSendMailCommand
             {
                 MailType = mailToSend,
                 RegistrationId = registration.Id,
-                Withhold = false,
+                Withhold = withhold,
                 AllowDuplicate = false
             });
 
