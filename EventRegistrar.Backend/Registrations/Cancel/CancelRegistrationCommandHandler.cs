@@ -33,7 +33,11 @@ namespace EventRegistrar.Backend.Registrations.Cancel
 
         public async Task<Unit> Handle(CancelRegistrationCommand command, CancellationToken cancellationToken)
         {
-            var refundPercentage = Math.Max(Math.Min(command.RefundPercentage, 1m), 0m);
+            var refundPercentage = command.RefundPercentage > 1m
+                ? command.RefundPercentage / 100m
+                : command.RefundPercentage;
+            refundPercentage = Math.Max(Math.Min(refundPercentage, 1m), 0m);
+
             var registration = await _registrations.Include(reg => reg.Payments)
                                                    .Include(reg => reg.RegistrationForm)
                                                    .FirstAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
