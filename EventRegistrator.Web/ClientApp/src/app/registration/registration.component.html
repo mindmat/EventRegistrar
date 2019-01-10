@@ -61,7 +61,7 @@
   </tbody>
 </table>
 
-<h3 *ngIf="mails">Mails   <!--<button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#composeAndSendMailModal">Mail auslösen</button>--></h3>
+<h3 *ngIf="mails">Mails   <button class="btn btn-primary btn-xs" data-toggle="modal" data-target="#composeAndSendMailModal">Mail erstellen</button></h3>
 
 <table class="table table-hover" *ngIf="mails">
   <thead class="thead-dark">
@@ -173,10 +173,20 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-2">
+            <p>Mail</p>
+          </div>
+          <div class="col-sm-6" *ngIf="mailTypes">
+            <select #mailType class="custom-select form-control" [(ngModel)]="selectedMailType">
+              <option *ngFor="let mailType of mailTypes" value={{mailType.type}}>{{ mailType.userText }}</option>
+            </select>
+          </div>
+        </div>
+        <!--<div class="row">
+          <div class="col-sm-2">
             <p>Zurückbehalten</p>
           </div>
           <div class="col-sm-2">
-            <input type="checkbox" #withhold />
+            <input type="checkbox" #withholdMail />
           </div>
         </div>
         <div class="row">
@@ -184,13 +194,14 @@
             <p>Duplikat zulassen</p>
           </div>
           <div class="col-sm-2">
-            <input type="checkbox" #allowDuplicate />
+            <input type="checkbox" #allowDuplicateMail />
           </div>
-        </div>
+        </div>-->
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="composeAndSendMailModal">Abbrechen</button>
-        <button type="button" class="btn btn-primary" (click)="composeAndSendMail(withhold.value, allowDuplicate.value)" data-dismiss="composeAndSendMailModal">Auslösen</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+        <button type="button" class="btn btn-primary" (click)="createMail(selectedMailType, true, true)" data-dismiss="modal">Erstellen</button>
+        <!--<button type="button" class="btn btn-primary" (click)="createMail(selectedMailType, withholdMail.value, allowDuplicateMail.value)" data-dismiss="composeAndSendMailModal">Erstellen</button>-->
       </div>
     </div>
   </div>

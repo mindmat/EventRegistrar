@@ -10,11 +10,14 @@ import 'bootstrap/js/dist/dropdown'
 })
 export class RegistrationComponent {
   registration: Registration;
+  mailTypes: MailType[];
   mails: Mail[];
   mail: Mail;
   spots: Spot[];
   payments: AssignedPayments[];
   allRegistrables: Registrable[];
+  selectedMailType: number;
+
   private registrationId: string;
   private bookedRegistrableIds: string[];
 
@@ -50,6 +53,13 @@ export class RegistrationComponent {
     this.http.get<Mail[]>(`api/events/${this.getEventAcronym()}/registrations/${this.registrationId}/mails`).subscribe(result => {
       this.mails = result;
       this.mails.forEach(mail => mail.eventsText = mail.events.map(mev => `${mev.when}: ${mev.stateText} (${mev.email})`).reduce((sum, currrent) => sum + "\r" + currrent));
+    }, error => console.error(error));
+
+    this.http.get<MailType[]>(`api/events/${this.getEventAcronym()}/registrations/${this.registrationId}/possibleMailTypes`).subscribe(result => {
+      this.mailTypes = result;
+      if (this.mailTypes.length > 0) {
+        this.selectedMailType = this.mailTypes[0].type;
+      }
     }, error => console.error(error));
   }
 
@@ -147,8 +157,8 @@ export class RegistrationComponent {
     }
   }
 
-  composeAndSendMail(withhold: boolean, allowDuplicate: boolean) {
-    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/ComposeAndSendMail?`;
+  createMail(mailType: number, withhold: boolean, allowDuplicate: boolean) {
+    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/mails/create?mailType=${mailType}`;
     if (withhold) {
       url += "&withhold=true";
     }
@@ -256,4 +266,9 @@ class AssignedPayments {
   bookingDate: Date;
   currency: string;
   paymentAssignmentId_Counter: string;
+}
+
+class MailType {
+  type: number;
+  userText: string;
 }

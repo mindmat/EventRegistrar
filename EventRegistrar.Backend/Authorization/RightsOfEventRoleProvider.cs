@@ -9,6 +9,7 @@ using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Mailing.InvalidAddresses;
+using EventRegistrar.Backend.Mailing.ManualTrigger;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Assignments;
@@ -78,6 +79,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(PossibleRepaymentAssignmentQuery).Name;
                 yield return typeof(InvalidAddressesQuery).Name;
                 yield return typeof(PartyOverviewQuery).Name;
+                yield return typeof(PossibleMailTypesQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))

@@ -5,6 +5,8 @@ using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Mailing.InvalidAddresses;
+using EventRegistrar.Backend.Mailing.ManualTrigger;
+using EventRegistrar.Backend.Mailing.Templates;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +25,7 @@ namespace EventRegistrar.Backend.Mailing
         }
 
         [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails/create")]
-        public async Task CreateMailForRegistration(string eventAcronym, Guid registrationId, MailType mailType, bool allowDuplicate)
+        public async Task CreateMailForRegistration(string eventAcronym, Guid registrationId, MailType mailType, bool withhold, bool allowDuplicate)
         {
             await _mediator.Send(new ComposeAndSendMailCommand
             {
@@ -82,6 +84,16 @@ namespace EventRegistrar.Backend.Mailing
             return await _mediator.Send(new GetPendingMailsQuery
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
+        }
+
+        [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/possibleMailTypes")]
+        public async Task<IEnumerable<MailTypeItem>> GetPossibleMailTypes(string eventAcronym, Guid registrationId)
+        {
+            return await _mediator.Send(new PossibleMailTypesQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId
             });
         }
 
