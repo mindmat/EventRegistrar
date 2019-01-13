@@ -49,6 +49,15 @@ namespace EventRegistrar.Backend.Registrables
             });
         }
 
+        [HttpGet("api/events/{eventAcronym}/registrationsOnWaitingList")]
+        public async Task<IEnumerable<PlaceDisplayInfo>> GetRegistrationsOnWaitingList(string eventAcronym)
+        {
+            return await _mediator.Send(new RegistrationsOnWaitingListQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
+        }
+
         [HttpGet("api/events/{eventAcronym}/SingleRegistrableOverview")]
         public async Task<IEnumerable<SingleRegistrableDisplayItem>> GetSingleRegistrablesOverivew(string eventAcronym)
         {

@@ -81,6 +81,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(PartyOverviewQuery).Name;
                 yield return typeof(PossibleMailTypesQuery).Name;
                 yield return typeof(UnassignedIncomingPaymentsQuery).Name;
+                yield return typeof(RegistrationsOnWaitingListQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
