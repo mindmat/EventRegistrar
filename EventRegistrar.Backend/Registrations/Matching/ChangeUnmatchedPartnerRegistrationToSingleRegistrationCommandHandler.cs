@@ -15,7 +15,7 @@ namespace EventRegistrar.Backend.Registrations.Matching
         private readonly IRepository<Seat> _spots;
 
         public ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommandHandler(IRepository<Registration> registrations,
-                                                                               IRepository<Seat> spots)
+                                                                                    IRepository<Seat> spots)
         {
             _registrations = registrations;
             _spots = spots;

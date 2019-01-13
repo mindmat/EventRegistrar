@@ -59,5 +59,15 @@ namespace EventRegistrar.Backend.Registrations.Matching
                 RegistrationId2 = registrationId2
             });
         }
+
+        [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/unbind")]
+        public async Task UnbindPartnerRegistration(string eventAcronym, Guid registrationId)
+        {
+            await _mediator.Send(new UnbindPartnerRegistrationCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId
+            });
+        }
     }
 }

@@ -21,6 +21,7 @@ namespace EventRegistrar.Backend.Spots
                     // double spot, leave the partner in
                     spot.RegistrationId = null;
                     spot.PartnerEmail = null;
+                    spot.IsPartnerSpot = false;
                 }
                 else
                 {
@@ -35,6 +36,7 @@ namespace EventRegistrar.Backend.Spots
                     // double spot, leave the partner in
                     spot.RegistrationId_Follower = null;
                     spot.PartnerEmail = null;
+                    spot.IsPartnerSpot = false;
                 }
                 else
                 {
