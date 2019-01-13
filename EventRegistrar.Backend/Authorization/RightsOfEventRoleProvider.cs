@@ -80,11 +80,11 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(InvalidAddressesQuery).Name;
                 yield return typeof(PartyOverviewQuery).Name;
                 yield return typeof(PossibleMailTypesQuery).Name;
+                yield return typeof(UnassignedIncomingPaymentsQuery).Name;
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
             {
-                yield return typeof(UnassignedIncomingPaymentsQuery).Name;
                 yield return typeof(SaveMailTemplateCommand).Name;
                 yield return typeof(ReleaseMailCommand).Name;
                 yield return typeof(DeleteMailCommand).Name;
@@ -109,6 +109,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(FixInvalidAddressCommand).Name;
                 yield return typeof(AddIndividualReductionCommand).Name;
                 yield return typeof(ImportMailsFromImapCommand).Name;
+                yield return typeof(UnbindPartnerRegistrationCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))
