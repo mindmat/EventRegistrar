@@ -36,6 +36,7 @@ import { BulkMailTemplatesComponent } from "./bulkMailTemplates/bulkMailTemplate
 import { PartnerMatchingComponent } from "./partnerMatching/partnerMatching.component";
 import 'bootstrap';
 import { InvalidEmailAddressesComponent } from './invalid-email-addresses/invalid-email-addresses.component';
+import { WaitingListComponent } from './waiting-list/waiting-list.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { InvalidEmailAddressesComponent } from './invalid-email-addresses/invali
     PaymentsComponent,
     BulkMailTemplatesComponent,
     PartnerMatchingComponent,
-    InvalidEmailAddressesComponent
+    InvalidEmailAddressesComponent,
+    WaitingListComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -96,7 +98,8 @@ import { InvalidEmailAddressesComponent } from './invalid-email-addresses/invali
       { path: ':eventAcronym/registrationForms', component: RegistrationFormsComponent },
       { path: ':eventAcronym/questionMapping', component: QuestionMappingComponent },
       { path: ':eventAcronym/partnerMatching', component: PartnerMatchingComponent },
-      { path: ':eventAcronym/invalid-email-addresses', component: InvalidEmailAddressesComponent }
+      { path: ':eventAcronym/invalid-email-addresses', component: InvalidEmailAddressesComponent },
+      { path: ':eventAcronym/waiting-list', component: WaitingListComponent }
       //{ path: '**', redirectTo: 'll18/registrables' }
     ])
   ],

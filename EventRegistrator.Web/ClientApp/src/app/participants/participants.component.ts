@@ -47,15 +47,17 @@ class Registrable {
   waitingList: Place[];
 }
 
-class Place {
+export class Place {
   leader: Registration;
   follower: Registration;
   isOnWaitingList: boolean;
   isPartnerRegistration: boolean;
   placeholderPartner: string;
+  registrable: string;
+  joined: Date;
 }
 
-class Registration {
+export class Registration {
   id: string;
   firstName: string;
   lastName: string;

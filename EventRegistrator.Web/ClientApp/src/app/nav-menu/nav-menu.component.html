@@ -84,6 +84,11 @@
         </a>
       </li>
       <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
+        <a [routerLink]="[eventService.acronym, 'waiting-list']">
+          <span class='glyphicon glyphicon-envelope'></span> Wartelisten
+        </a>
+      </li>
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
         <a [routerLink]="[eventService.acronym, 'authorization']">
           <span class='glyphicon glyphicon-envelope'></span> Berechtigungen
         </a>

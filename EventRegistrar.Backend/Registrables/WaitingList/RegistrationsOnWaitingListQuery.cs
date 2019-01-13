@@ -28,7 +28,8 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
         public async Task<IEnumerable<PlaceDisplayInfo>> Handle(RegistrationsOnWaitingListQuery query, CancellationToken cancellationToken)
         {
             return await _seats.Where(spt => spt.Registrable.EventId == query.EventId
-                                          && spt.IsWaitingList)
+                                          && spt.IsWaitingList
+                                          && !spt.IsCancelled)
                                .Select(spt => new PlaceDisplayInfo
                                {
                                    Leader = spt.RegistrationId == null ? null : new RegistrationDisplayInfo
@@ -55,6 +56,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                                    Registrable = spt.Registrable.Name,
                                    Joined = spt.FirstPartnerJoined
                                })
+                               .OrderBy(spt => spt.Joined)
                                .ToListAsync(cancellationToken);
         }
     }
