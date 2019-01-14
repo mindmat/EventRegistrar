@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.Confirmation;
 using EventRegistrar.Backend.Registrations.Raw;
@@ -76,6 +77,16 @@ namespace EventRegistrar.Backend.Registrations
         public async Task<RegistrationDisplayItem> SearchRegistration(string eventAcronym, Guid registrationId)
         {
             return await _mediator.Send(new RegistrationQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId
+            });
+        }
+
+        [HttpPut("api/events/{eventAcronym}/registrations/{registrationId:guid}/setWaitingListFallback")]
+        public async Task SetWaitingListFallback(string eventAcronym, Guid registrationId)
+        {
+            await _mediator.Send(new SetFallbackToPartyPassCommand
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 RegistrationId = registrationId

@@ -111,6 +111,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(AddIndividualReductionCommand).Name;
                 yield return typeof(ImportMailsFromImapCommand).Name;
                 yield return typeof(UnbindPartnerRegistrationCommand).Name;
+                yield return typeof(SetFallbackToPartyPassCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

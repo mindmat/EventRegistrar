@@ -119,8 +119,7 @@ export class RegistrationComponent {
   }
 
   fallbackToPartyPass() {
-    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/setWaitingListFallback`;
-    this.http.post(url, null)
+    this.http.put(`api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/setWaitingListFallback`, null)
       .subscribe(result => { this.reloadRegistration(); }, error => console.error(error));
   }
 
