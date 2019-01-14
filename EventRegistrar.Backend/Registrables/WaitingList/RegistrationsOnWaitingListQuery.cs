@@ -38,7 +38,8 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                                        State = spt.Registration.State,
                                        FirstName = spt.Registration.RespondentFirstName,
                                        LastName = spt.Registration.RespondentLastName,
-                                       OptionsSent = spt.Registration.Mails.Any(map => map.Mail.Type == MailType.OptionsForRegistrationsOnWaitingList)
+                                       OptionsSent = spt.Registration.Mails.Any(map => map.Mail.Type == MailType.OptionsForRegistrationsOnWaitingList
+                                                                                    && !map.Mail.Discarded)
                                    },
                                    Follower = spt.RegistrationId_Follower == null ? null : new WaitingListRegistration
                                    {
@@ -46,7 +47,8 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                                        State = spt.Registration_Follower.State,
                                        FirstName = spt.Registration_Follower.RespondentFirstName,
                                        LastName = spt.Registration_Follower.RespondentLastName,
-                                       OptionsSent = spt.Registration_Follower.Mails.Any(map => map.Mail.Type == MailType.OptionsForRegistrationsOnWaitingList)
+                                       OptionsSent = spt.Registration_Follower.Mails.Any(map => map.Mail.Type == MailType.OptionsForRegistrationsOnWaitingList
+                                                                                             && !map.Mail.Discarded)
                                    },
                                    PlaceholderPartner = spt.IsPartnerSpot && (spt.RegistrationId == null || spt.RegistrationId_Follower == null)
                                                                                    ? spt.PartnerEmail
