@@ -79,7 +79,9 @@ namespace EventRegistrar.Backend.Mailing.Compose
             var content = await _mailComposer.Compose(command.RegistrationId, template.Template, language, cancellationToken);
 
             var mappings = new List<Registration> { registration };
-            if (registration.RegistrationId_Partner.HasValue && partnerRegistration != null)
+            if (registration.RegistrationId_Partner.HasValue
+             && partnerRegistration != null
+             && command.MailType != MailType.OptionsForRegistrationsOnWaitingList)
             {
                 mappings.Add(partnerRegistration);
             }
