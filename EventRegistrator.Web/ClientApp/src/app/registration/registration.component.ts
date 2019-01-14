@@ -21,7 +21,7 @@ export class RegistrationComponent {
   private registrationId: string;
   private bookedRegistrableIds: string[];
 
-  constructor(private readonly http: HttpClient, private route: ActivatedRoute) {
+  constructor(private readonly http: HttpClient, private readonly route: ActivatedRoute) {
   }
 
   getEventAcronym() {

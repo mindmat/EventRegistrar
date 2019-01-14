@@ -50,7 +50,7 @@ namespace EventRegistrar.Backend.Registrables
         }
 
         [HttpGet("api/events/{eventAcronym}/registrationsOnWaitingList")]
-        public async Task<IEnumerable<PlaceDisplayInfo>> GetRegistrationsOnWaitingList(string eventAcronym)
+        public async Task<IEnumerable<WaitingListSpot>> GetRegistrationsOnWaitingList(string eventAcronym)
         {
             return await _mediator.Send(new RegistrationsOnWaitingListQuery
             {

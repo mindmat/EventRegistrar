@@ -10,6 +10,5 @@ namespace EventRegistrar.Backend.Registrables.Participants
         public DateTime? Joined { get; set; }
         public RegistrationDisplayInfo Leader { get; set; }
         public string PlaceholderPartner { get; set; }
-        public string Registrable { get; set; }
     }
 }

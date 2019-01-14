@@ -7,8 +7,8 @@
     <tr>
       <th *ngIf="!registrable.maximumDoubleSeats">Name</th>
       <th *ngIf="registrable.maximumDoubleSeats">Leader</th>
+      <th></th>
       <th *ngIf="registrable.maximumDoubleSeats">Follower</th>
-      <th *ngIf="registrable.maximumDoubleSeats">Partnerregistrierung</th>
     </tr>
   </thead>
   <tbody>
@@ -17,11 +17,11 @@
         <a *ngIf="participant.leader" [routerLink]="['/', getEventAcronym(), 'registration', participant.leader.id]">{{ participant.leader?.firstName }} {{ participant.leader?.lastName }}</a>
         <a *ngIf="!participant.leader && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
       </td>
+      <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">&</p></td>
       <td [style.font-weight]="participant.follower?.state == 1 ? 'bold' : 'normal'" *ngIf="registrable.maximumDoubleSeats">
         <a *ngIf="participant.follower" [routerLink]="['/', getEventAcronym(), 'registration', participant.follower?.id]">{{ participant.follower?.firstName }} {{ participant.follower?.lastName }}</a>
         <a *ngIf="!participant.follower && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
       </td>
-      <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">x</p></td>
     </tr>
   </tbody>
 </table>
@@ -35,8 +35,8 @@
     <tr>
       <th *ngIf="!registrable.maximumDoubleSeats">Name</th>
       <th *ngIf="registrable.maximumDoubleSeats">Leader</th>
+      <th *ngIf="registrable.maximumDoubleSeats"></th>
       <th *ngIf="registrable.maximumDoubleSeats">Follower</th>
-      <th *ngIf="registrable.maximumDoubleSeats">Partnerregistrierung</th>
     </tr>
   </thead>
   <tbody>
@@ -45,11 +45,11 @@
         <a *ngIf="participant.leader" [routerLink]="['/', getEventAcronym(), 'registration', participant.leader?.id]">{{ participant.leader?.firstName }} {{ participant.leader?.lastName }}</a>
         <a *ngIf="!participant.leader && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
       </td>
+      <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">&</p></td>
       <td *ngIf="registrable.maximumDoubleSeats">
         <a *ngIf="participant.follower" [routerLink]="['/', getEventAcronym(), 'registration', participant.follower?.id]">{{ participant.follower?.firstName }} {{ participant.follower?.lastName }}</a>
         <a *ngIf="!participant.follower && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
       </td>
-      <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">x</p></td>
     </tr>
   </tbody>
 </table>
