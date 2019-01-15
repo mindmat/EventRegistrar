@@ -29,4 +29,6 @@ class Party {
   potential: number;
   direct: number;
   id: string;
+  potentialOnWaitingList: number;
+  partyPassFallbacksOnWaitingList: number;
 }

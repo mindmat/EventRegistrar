@@ -76,7 +76,9 @@ namespace EventRegistrar.Backend.Payments.Due
             }
 
             var acceptedMail = await _mailsToRegistrations
-                                     .Where(map => map.RegistrationId == command.RegistrationId && map.Mail.Type.HasValue && _paymentConfiguration.MailTypes_Accepted.Contains(map.Mail.Type.Value))
+                                     .Where(map => map.RegistrationId == command.RegistrationId
+                                                && map.Mail.Type.HasValue
+                                                && _paymentConfiguration.MailTypes_Accepted.Contains(map.Mail.Type.Value))
                                      .OrderByDescending(map => map.Mail.Created)
                                      .Include(map => map.Mail)
                                      .FirstOrDefaultAsync(cancellationToken);

@@ -25,7 +25,9 @@ namespace EventRegistrar.Backend.Registrations.Overview
         public int Direct { get; set; }
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public int PartyPassFallbacksOnWaitingList { get; set; }
         public int Potential { get; set; }
+        public int PotentialOnWaitingList { get; set; }
         public int? SortyKey { get; set; }
         public int Total { get; set; }
     }
@@ -39,12 +41,15 @@ namespace EventRegistrar.Backend.Registrations.Overview
     {
         private readonly IQueryable<RegistrableComposition> _compositions;
         private readonly IQueryable<Registrable> _registrables;
+        private readonly IQueryable<Registration> _registrations;
 
         public PartyOverviewQueryHandler(IQueryable<RegistrableComposition> compositions,
-                                         IQueryable<Registrable> registrables)
+                                         IQueryable<Registrable> registrables,
+                                         IQueryable<Registration> registrations)
         {
             _compositions = compositions;
             _registrables = registrables;
+            _registrations = registrations;
         }
 
         public async Task<IEnumerable<PartyItem>> Handle(PartyOverviewQuery query, CancellationToken cancellationToken)
@@ -58,20 +63,27 @@ namespace EventRegistrar.Backend.Registrations.Overview
                                               })
                                               .ToListAsync(cancellationToken);
 
-            var idsOfInterest = mappings.Select(map => map.PartyId).ToList();
-            idsOfInterest.AddRange(mappings.SelectMany(map => map.DependentRegistrablesIds));
+            var registrableIdsPartyParticipants = mappings.Select(map => map.PartyId).ToList();
+            registrableIdsPartyParticipants.AddRange(mappings.SelectMany(map => map.DependentRegistrablesIds));
+
+            var registrationsOnWaitingList = await _registrations.Where(reg => reg.EventId == query.EventId
+                                                                            && reg.IsWaitingList == true
+                                                                            && reg.State == RegistrationState.Received)
+                                                                 .ToListAsync(cancellationToken);
+            var partyPassFallbacksOnWaitingList = registrationsOnWaitingList.Count(reg => reg.FallbackToPartyPass);
+            var registrationsOnWaitinglist = registrationsOnWaitingList.Count();
 
             //log.Info(string.Join(",", idsOfInterest));
 
-            var participants = await _registrables.Where(rbl => idsOfInterest.Contains(rbl.Id))
+            var participants = await _registrables.Where(rbl => registrableIdsPartyParticipants.Contains(rbl.Id))
                                                   .Select(rbl => new
                                                   {
                                                       rbl.Id,
                                                       rbl.Name,
                                                       rbl.ShowInMailListOrder,
-                                                      Participants = rbl.Seats.Where(seat => !seat.IsCancelled && !seat.IsWaitingList)
-                                                                              .Select(seat => (seat.RegistrationId.HasValue ? 1 : 0) +
-                                                                                              (seat.RegistrationId_Follower.HasValue ? 1 : 0))
+                                                      Participants = rbl.Seats.Where(spt => !spt.IsCancelled && !spt.IsWaitingList)
+                                                                              .Select(spt => (spt.RegistrationId.HasValue ? 1 : 0) +
+                                                                                             (spt.RegistrationId_Follower.HasValue ? 1 : 0))
                                                                               .Sum(),
                                                       Potential = rbl.MaximumSingleSeats ?? (rbl.MaximumDoubleSeats ?? 0) * 2
                                                   })
@@ -83,10 +95,14 @@ namespace EventRegistrar.Backend.Registrations.Overview
                 Name = participants[map.PartyId].Name,
                 SortyKey = participants[map.PartyId].ShowInMailListOrder,
                 Direct = participants[map.PartyId].Participants,
-                Total = participants[map.PartyId].Participants + participants.Values.Where(rbl => map.DependentRegistrablesIds.Contains(rbl.Id))
-                                                                                    .Sum(rbl => rbl.Participants),
+                Total = participants[map.PartyId].Participants
+                      + participants.Values.Where(rbl => map.DependentRegistrablesIds.Contains(rbl.Id))
+                                           .Sum(rbl => rbl.Participants)
+                      + partyPassFallbacksOnWaitingList,
                 Potential = participants.Values.Where(rbl => map.DependentRegistrablesIds.Contains(rbl.Id))
                                                .Sum(rbl => Math.Max(0, rbl.Potential - rbl.Participants)),
+                PartyPassFallbacksOnWaitingList = partyPassFallbacksOnWaitingList,
+                PotentialOnWaitingList = registrationsOnWaitinglist - partyPassFallbacksOnWaitingList,
                 Details = participants.Values.Where(rbl => map.DependentRegistrablesIds.Contains(rbl.Id))
                                              .Select(rbl => new PartyDetailItem
                                              {

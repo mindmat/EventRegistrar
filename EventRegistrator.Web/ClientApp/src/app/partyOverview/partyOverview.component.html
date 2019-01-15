@@ -3,20 +3,24 @@
 <p *ngIf="!parties"><em>Loading...</em></p>
 
 <table class="table" *ngIf="parties">
-    <thead>
-        <tr>
-            <th>Party</th>
-            <th>Total</th>
-            <th>Potential Workshop</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let party of parties">
-            <td>{{ party.name }}</td>
-            <td>{{ party.total }}</td>
-            <td>{{ party.potential }}</td>
-        </tr>
-    </tbody>
+  <thead>
+    <tr>
+      <th>Party</th>
+      <th>Total</th>
+      <th>davon Warteliste</th>
+      <th>weiteres Potential Warteliste</th>
+      <th>Potential Workshop</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let party of parties">
+      <td>{{ party.name }}</td>
+      <td>{{ party.total }}</td>
+      <td>{{ party.partyPassFallbacksOnWaitingList }}</td>
+      <td>{{ party.potentialOnWaitingList }}</td>
+      <td>{{ party.potential }}</td>
+    </tr>
+  </tbody>
 </table>
 
 <br />
