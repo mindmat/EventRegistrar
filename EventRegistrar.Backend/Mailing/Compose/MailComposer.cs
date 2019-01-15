@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
 using Microsoft.EntityFrameworkCore;
@@ -16,17 +17,20 @@ namespace EventRegistrar.Backend.Mailing.Compose
         private const string DateFormat = "dd.MM.yy";
         private const string PrefixFollower = "FOLLOWER";
         private const string PrefixLeader = "LEADER";
+        private readonly DuePaymentConfiguration _duePaymentConfiguration;
         private readonly ILogger _log;
         private readonly PaidAmountSummarizer _paidAmountSummarizer;
         private readonly IQueryable<Registration> _registrations;
 
         public MailComposer(IQueryable<Registration> registrations,
                             ILogger log,
-                            PaidAmountSummarizer paidAmountSummarizer)
+                            PaidAmountSummarizer paidAmountSummarizer,
+                            DuePaymentConfiguration duePaymentConfiguration)
         {
             _registrations = registrations;
             _log = log;
             _paidAmountSummarizer = paidAmountSummarizer;
+            _duePaymentConfiguration = duePaymentConfiguration;
         }
 
         public async Task<string> Compose(Guid registrationId, string template, string language, CancellationToken cancellationToken)
@@ -36,6 +40,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                                    .Include(reg => reg.Seats_AsFollower).ThenInclude(seat => seat.Registrable)
                                                    .Include(reg => reg.Responses).ThenInclude(rsp => rsp.Question)
                                                    .Include(reg => reg.Cancellations)
+                                                   .Include(reg => reg.Mails).ThenInclude(map => map.Mail)
                                                    .FirstAsync(cancellationToken);
 
             var mainRegistrationRole = registration.Seats_AsFollower.Any(spt => !spt.IsCancelled) ? Role.Follower : Role.Leader;
@@ -50,6 +55,8 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                                           .Include(reg => reg.Seats_AsLeader).ThenInclude(seat => seat.Registrable)
                                                           .Include(reg => reg.Seats_AsFollower).ThenInclude(seat => seat.Registrable)
                                                           .Include(reg => reg.Responses).ThenInclude(rsp => rsp.Question)
+                                                          .Include(reg => reg.Cancellations)
+                                                          .Include(reg => reg.Mails).ThenInclude(map => map.Mail)
                                                           .FirstOrDefaultAsync(cancellationToken);
                 if (mainRegistrationRole == Role.Leader)
                 {
@@ -134,18 +141,19 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 {
                     templateFiller[key] = registration.AdmittedAt.Value.ToString(DateFormat);
                 }
-                //else if (parts.key == "REMINDER1DATE")
-                //{
-                //    var reminder1Date = await context.MailToRegistrations
-                //                                     .Where(map => map.RegistrationId == command.RegistrationId &&
-                //                                                   SendReminderCommandHandler.MailTypes_Reminder1.Contains(map.Mail.Type))
-                //                                     .Select(map => (DateTime?)map.Mail.Created)
-                //                                     .FirstOrDefaultAsync();
-                //    if (reminder1Date.HasValue)
-                //    {
-                //        templateFiller[key] = reminder1Date.Value.ToString(DateFormat);
-                //    }
-                //}
+                else if (parts.key == "REMINDER1DATE")
+                {
+                    var reminder1Date = registration.Mails
+                                                    .Where(map => map.Mail.Type != null
+                                                               && _duePaymentConfiguration.MailTypes_Reminder1.Contains(map.Mail.Type.Value)
+                                                               && map.Mail.Sent.HasValue)
+                                                    .Select(map => map.Mail.Sent)
+                                                    .FirstOrDefault();
+                    if (reminder1Date.HasValue)
+                    {
+                        templateFiller[key] = reminder1Date.Value.ToString(DateFormat);
+                    }
+                }
                 else if (parts.key != null && key != null && registrationForPrefix?.Responses != null)
                 {
                     // check responses with Question.TemplateKey
