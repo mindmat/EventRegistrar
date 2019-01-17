@@ -27,25 +27,25 @@ namespace EventRegistrar.Backend.Payments.Due
         public async Task<IEnumerable<DuePaymentItem>> Handle(DuePaymentsQuery query, CancellationToken cancellationToken)
         {
             var reminderDueFrom = DateTime.UtcNow.AddDays(-DefaultPaymentGracePeriod);
-            var data = await _registrations
-                                         .Where(reg => reg.RegistrationForm.EventId == query.EventId
-                                                    && reg.State == RegistrationState.Received
-                                                    && reg.IsWaitingList != true)
-                                         .Select(reg => new
-                                         {
-                                             reg.Id,
-                                             FirstName = reg.RespondentFirstName,
-                                             LastName = reg.RespondentLastName,
-                                             Email = reg.RespondentEmail,
-                                             reg.Price,
-                                             reg.ReceivedAt,
-                                             reg.PhoneNormalized,
-                                             reg.ReminderLevel,
-                                             Paid = (decimal?)reg.Payments.Sum(ass => ass.Amount),
-                                             Mails = reg.Mails.Select(rml => new { rml.Mail.Id, Sent = rml.Mail.Created, rml.Mail.Type, rml.Mail.Withhold, rml.Mail.Discarded }),
-                                             ReminderSms = reg.Sms.Where(sms => sms.Type == SmsType.Reminder)
-                                         })
-                                         .ToListAsync(cancellationToken);
+            var data = await _registrations.Where(reg => reg.RegistrationForm.EventId == query.EventId
+                                                      && reg.State == RegistrationState.Received
+                                                      && reg.IsWaitingList != true
+                                                      && reg.OriginalPrice > 0)
+                                           .Select(reg => new
+                                           {
+                                               reg.Id,
+                                               FirstName = reg.RespondentFirstName,
+                                               LastName = reg.RespondentLastName,
+                                               Email = reg.RespondentEmail,
+                                               reg.Price,
+                                               reg.ReceivedAt,
+                                               reg.PhoneNormalized,
+                                               reg.ReminderLevel,
+                                               Paid = (decimal?)reg.Payments.Sum(ass => ass.Amount),
+                                               Mails = reg.Mails.Select(rml => new { rml.Mail.Id, Sent = rml.Mail.Created, rml.Mail.Type, rml.Mail.Withhold, rml.Mail.Discarded }),
+                                               ReminderSms = reg.Sms.Where(sms => sms.Type == SmsType.Reminder)
+                                           })
+                                           .ToListAsync(cancellationToken);
             var dueRegistrations = data.Select(tmp => new
             {
                 tmp.Id,
