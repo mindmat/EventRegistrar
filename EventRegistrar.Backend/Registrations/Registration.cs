@@ -22,7 +22,7 @@ namespace EventRegistrar.Backend.Registrations
         public Guid EventId { get; set; }
         public string ExternalIdentifier { get; set; }
         public DateTime ExternalTimestamp { get; set; }
-        public bool FallbackToPartyPass { get; set; }
+        public bool? FallbackToPartyPass { get; set; }
         public ICollection<ImportedMailToRegistration> ImportedMails { get; set; }
         public ICollection<IndividualReduction> IndividualReductions { get; set; }
         public bool? IsWaitingList { get; set; }
