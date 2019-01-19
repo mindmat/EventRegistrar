@@ -70,7 +70,7 @@ namespace EventRegistrar.Backend.Registrations.Overview
                                                                             && reg.IsWaitingList == true
                                                                             && reg.State == RegistrationState.Received)
                                                                  .ToListAsync(cancellationToken);
-            var partyPassFallbacksOnWaitingList = registrationsOnWaitingList.Count(reg => reg.FallbackToPartyPass);
+            var partyPassFallbacksOnWaitingList = registrationsOnWaitingList.Count(reg => reg.FallbackToPartyPass == true);
             var registrationsOnWaitinglist = registrationsOnWaitingList.Count();
 
             //log.Info(string.Join(",", idsOfInterest));

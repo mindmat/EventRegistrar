@@ -5,7 +5,7 @@ namespace EventRegistrar.Backend.Registrations
     public class RegistrationDisplayItem
     {
         public string Email { get; set; }
-        public bool FallbackToPartyPass { get; set; }
+        public bool? FallbackToPartyPass { get; set; }
         public string FirstName { get; set; }
         public Guid Id { get; set; }
         public bool? IsWaitingList { get; set; }

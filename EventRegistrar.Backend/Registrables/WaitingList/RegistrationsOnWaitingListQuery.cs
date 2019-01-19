@@ -40,7 +40,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                                        LastName = spt.Registration.RespondentLastName,
                                        OptionsSent = spt.Registration.Mails.Any(map => map.Mail.Type == MailType.OptionsForRegistrationsOnWaitingList
                                                                                     && !map.Mail.Discarded)
-                                                  || spt.Registration.FallbackToPartyPass
+                                                  || spt.Registration.FallbackToPartyPass == true
                                    },
                                    Follower = spt.RegistrationId_Follower == null ? null : new WaitingListRegistration
                                    {
@@ -50,7 +50,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                                        LastName = spt.Registration_Follower.RespondentLastName,
                                        OptionsSent = spt.Registration_Follower.Mails.Any(map => map.Mail.Type == MailType.OptionsForRegistrationsOnWaitingList
                                                                                              && !map.Mail.Discarded)
-                                                  || spt.Registration_Follower.FallbackToPartyPass
+                                                  || spt.Registration_Follower.FallbackToPartyPass == true
                                    },
                                    PlaceholderPartner = spt.IsPartnerSpot && (spt.RegistrationId == null || spt.RegistrationId_Follower == null)
                                                                                    ? spt.PartnerEmail
