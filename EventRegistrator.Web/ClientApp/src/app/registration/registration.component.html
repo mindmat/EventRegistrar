@@ -41,7 +41,7 @@
     </tr>
     <tr *ngIf="registration.isWaitingList">
       <td>Wünscht Partypass:</td>
-      <td><p *ngIf="registration.fallbackToPartyPass">x</p>  <button *ngIf="!registration.fallbackToPartyPass" type="button" class="btn btn-primary btn-xs" (click)="fallbackToPartyPass()">Partypass reservieren</button></td>
+      <td><p *ngIf="registration.fallbackToPartyPass">x</p>  <button *ngIf="!registration.fallbackToPartyPass && registration.isWaitingList && registration.status == 1" type="button" class="btn btn-primary btn-xs" (click)="fallbackToPartyPass()">Partypass reservieren</button></td>
     </tr>
     <tr>
       <td>SMS ({{ registration.phoneNormalized }}):</td>
