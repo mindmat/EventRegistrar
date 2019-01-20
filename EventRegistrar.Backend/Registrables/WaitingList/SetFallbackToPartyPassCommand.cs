@@ -33,7 +33,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
             var registration = await _registrations.FirstAsync(reg => reg.EventId == command.EventId
                                                                    && reg.Id == command.RegistrationId, cancellationToken);
 
-            if (!registration.FallbackToPartyPass == true
+            if (registration.FallbackToPartyPass != true
              && registration.IsWaitingList == true
              && registration.State == RegistrationState.Received)
             {
