@@ -42,8 +42,8 @@ namespace EventRegistrar.Backend.Mailing.InvalidAddresses
         {
             var invalidMails = await _registrations.Where(reg => reg.EventId == query.EventId
                                                        && reg.State != RegistrationState.Cancelled
-                                                       && reg.Mails.Any(mail => mail.State != null)
-                                                       && !reg.Mails.Any(mail => mail.State != null && DeliveredMailStates.Contains(mail.State.Value)))
+                                                       && reg.Mails.Any(map => (map.State ?? map.Mail.State) != null)
+                                                       && !reg.Mails.Any(map => (map.State ?? map.Mail.State) != null && DeliveredMailStates.Contains((map.State ?? map.Mail.State).Value)))
                                             .Select(reg => new InvalidAddress
                                             {
                                                 RegistrationId = reg.Id,
@@ -51,13 +51,13 @@ namespace EventRegistrar.Backend.Mailing.InvalidAddresses
                                                 FirstName = reg.RespondentFirstName,
                                                 LastName = reg.RespondentLastName,
                                                 Email = reg.RespondentEmail,
-                                                LastMailSent = reg.Mails.Where(mail => mail.State != null)
-                                                                        .OrderByDescending(mail => mail.Mail.Sent)
-                                                                        .Select(mail => mail.Mail.Sent)
+                                                LastMailSent = reg.Mails.Where(map => (map.State ?? map.Mail.State) != null)
+                                                                        .OrderByDescending(map => map.Mail.Sent)
+                                                                        .Select(map => map.Mail.Sent)
                                                                         .First(),
-                                                LastMailState = reg.Mails.Where(mail => mail.State != null)
-                                                                         .OrderByDescending(mail => mail.Mail.Sent)
-                                                                         .Select(mail => mail.State)
+                                                LastMailState = reg.Mails.Where(map => (map.State ?? map.Mail.State) != null)
+                                                                         .OrderByDescending(map => map.Mail.Sent)
+                                                                         .Select(map => (map.State ?? map.Mail.State))
                                                                          .First()
                                                                          .ToString(),
                                             })
@@ -68,7 +68,7 @@ namespace EventRegistrar.Backend.Mailing.InvalidAddresses
                 var otherRegistrations = await _registrations.Where(reg => reg.Id != invalidMail.RegistrationId
                                                                         && reg.RespondentFirstName == invalidMail.FirstName
                                                                         && reg.RespondentLastName == invalidMail.LastName
-                                                                        && reg.Mails.Any(mail => mail.State == null || DeliveredMailStates.Contains(mail.State.Value)))
+                                                                        && reg.Mails.Any(map => (map.State ?? map.Mail.State) == null || DeliveredMailStates.Contains((map.State ?? map.Mail.State).Value)))
                                                              .Select(reg => reg.RespondentEmail)
                                                              .ToListAsync(cancellationToken);
                 invalidMail.Proposals = otherRegistrations.Distinct().StringJoin(";");
