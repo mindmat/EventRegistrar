@@ -88,7 +88,7 @@ export class RegistrationComponent {
       url += "&ignorePayments=true";
     }
     if (refundPercentage > 0) {
-      url += `&refundPercentage=${refundPercentage % 100}`;
+      url += `&refundPercentage=${refundPercentage}`;
     }
     if (preventPromotion) {
       url += `&preventPromotion=true`;
