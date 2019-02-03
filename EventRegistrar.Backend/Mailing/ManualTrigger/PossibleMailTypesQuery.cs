@@ -42,7 +42,7 @@ namespace EventRegistrar.Backend.Mailing.ManualTrigger
             return possibleMailTypes.Select(typ => new MailTypeItem { Type = typ, UserText = Resources.ResourceManager.GetString($"MailType_{typ}") ?? typ.ToString() });
         }
 
-        private IEnumerable<MailType> GetPossibleMailTypes(Registration registration, Registration partnerRegistration)
+        private static IEnumerable<MailType> GetPossibleMailTypes(Registration registration, Registration partnerRegistration)
         {
             if (registration.State == RegistrationState.Cancelled)
             {
@@ -62,7 +62,7 @@ namespace EventRegistrar.Backend.Mailing.ManualTrigger
                 }
 
                 var paidCount = registration.State == RegistrationState.Paid ? 1 : 0
-                                                                                   + partnerRegistration.State == RegistrationState.Paid ? 1 : 0;
+                              + partnerRegistration?.State == RegistrationState.Paid ? 1 : 0;
 
                 if (paidCount == 0)
                 {
