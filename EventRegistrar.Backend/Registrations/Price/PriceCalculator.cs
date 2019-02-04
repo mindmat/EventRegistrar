@@ -31,44 +31,17 @@ namespace EventRegistrar.Backend.Registrations.Price
             _reductions = reductions;
         }
 
-        //public async Task<decimal> CalculatePrice(Registration registration)
-        //{
-        //    var seats = await _seats.Where(seat => (seat.RegistrationId == registration.Id
-        //                                            || seat.RegistrationId_Follower == registration.Id)
-        //                                           && !seat.IsCancelled)
-        //        .Include(seat => seat.Registrable)
-        //        //.Include(seat => seat.Registrable.Reductions)
-        //        .ToListAsync();
-        //    var responses = registration.Responses
-        //        .Where(rsp => rsp.RegistrationId == registration.Id);
-
-        //    var price = await CalculatePrice(registration.Id, responses, seats);
-
-        //    //if (savePrice)
-        //    //{
-        //    //    registration.Price = price;
-        //    //    if (registration.State != RegistrationState.Cancelled)
-        //    //    {
-        //    //        var paidAmount = (decimal?)registration.Payments.Sum(ass => ass.Amount);
-        //    //        registration.State = (paidAmount ?? 0m) >= price && price > 0m && registration.State != RegistrationState.Paid
-        //    //            ? RegistrationState.Paid
-        //    //            : RegistrationState.Received;
-        //    //    }
-        //    //    await dbContext.SaveChangesAsync();
-        //    //}
-        //    return price;
-        //}
         public async Task<decimal> CalculatePrice(Guid registrationId)
         {
+            var registration = await _registrations.FirstAsync(reg => reg.Id == registrationId);
             var seats = await _seats.Where(seat => seat.RegistrationId == registrationId
                                                 || seat.RegistrationId_Follower == registrationId)
-                                    .Include(seat=>seat.Registrable)
+                                    .Include(seat => seat.Registrable)
                                     .ToListAsync();
             var responses = await _responses.Where(rsp => rsp.RegistrationId == registrationId)
                                             .ToListAsync();
             if (!responses.Any())
             {
-                var registration = await _registrations.FirstAsync(reg => reg.Id == registrationId);
                 if (registration.RegistrationId_Partner.HasValue)
                 {
                     responses = await _responses.Where(rsp => rsp.RegistrationId == registration.RegistrationId_Partner.Value)
@@ -76,36 +49,33 @@ namespace EventRegistrar.Backend.Registrations.Price
                 }
             }
 
-            return await CalculatePrice(registrationId, responses, seats);
+            return await CalculatePrice(registration, responses, seats);
         }
 
-        public async Task<decimal> CalculatePrice(Guid registrationId, IEnumerable<Response> responses, IEnumerable<Seat> seats)
+        public async Task<decimal> CalculatePrice(Registration registration, IEnumerable<Response> responses, IEnumerable<Seat> seats)
         {
             var notCancelledSeats = seats.Where(seat => !seat.IsCancelled &&
-                                                        (seat.RegistrationId == registrationId || seat.RegistrationId_Follower == registrationId))
+                                                        (seat.RegistrationId == registration.Id || seat.RegistrationId_Follower == registration.Id))
                                          .ToList();
-            var registrationQuestionOptionIds = responses.Where(rsp => rsp.QuestionOptionId.HasValue)
-                                                         .Select(rsp => rsp.QuestionOptionId.Value)
-                                                         .ToList();
 
             var bookedRegistrableIds = new HashSet<Guid>(notCancelledSeats.Select(seat => seat.RegistrableId));
             var price = 0m;
             foreach (var seat in notCancelledSeats)
             {
                 price += seat.Registrable.Price ?? 0m;
-                var roleInThisSpot = seat.RegistrationId_Follower == registrationId ? Role.Follower : Role.Leader;
+                var roleInThisSpot = seat.RegistrationId_Follower == registration.Id ? Role.Follower : Role.Leader;
                 var potentialReductions = await _reductions.Where(red => red.RegistrableId == seat.RegistrableId).ToListAsync();
                 _logger.LogInformation($"potential reductions: {potentialReductions.Count}");
 
-                var applicableReductions = potentialReductions.Where(red => red.QuestionOptionId_ActivatesReduction.HasValue
-                                                                         && registrationQuestionOptionIds.Contains(red.QuestionOptionId_ActivatesReduction.Value)
-                                                                         && !red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue
+                var applicableReductions = potentialReductions.Where(red => red.ActivatedByReduction
+                                                                         && registration.IsReduced
+                                                                         && red.RegistrableId1_ReductionActivatedIfCombinedWith == null
                                                                          && (!red.OnlyForRole.HasValue || red.OnlyForRole == roleInThisSpot))
                                                               .ToList();
 
                 applicableReductions.AddRange(potentialReductions.Where(red => red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue && bookedRegistrableIds.Contains(red.RegistrableId1_ReductionActivatedIfCombinedWith.Value)
                                                                             && (!red.RegistrableId2_ReductionActivatedIfCombinedWith.HasValue || bookedRegistrableIds.Contains(red.RegistrableId2_ReductionActivatedIfCombinedWith.Value))
-                                                                            && (!red.QuestionOptionId_ActivatesReduction.HasValue || registrationQuestionOptionIds.Contains(red.QuestionOptionId_ActivatesReduction.Value))
+                                                                            && (!red.ActivatedByReduction || registration.IsReduced)
                                                                             && (!red.OnlyForRole.HasValue || red.OnlyForRole == roleInThisSpot)));
 
                 price -= applicableReductions.Sum(red => red.Amount);

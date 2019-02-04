@@ -8,6 +8,7 @@ namespace EventRegistrar.Backend.Registrations
         public bool? FallbackToPartyPass { get; set; }
         public string FirstName { get; set; }
         public Guid Id { get; set; }
+        public bool IsReduced { get; set; }
         public bool? IsWaitingList { get; set; }
         public string Language { get; set; }
         public string LastName { get; set; }

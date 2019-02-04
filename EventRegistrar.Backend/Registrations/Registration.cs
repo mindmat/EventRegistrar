@@ -25,6 +25,7 @@ namespace EventRegistrar.Backend.Registrations
         public bool? FallbackToPartyPass { get; set; }
         public ICollection<ImportedMailToRegistration> ImportedMails { get; set; }
         public ICollection<IndividualReduction> IndividualReductions { get; set; }
+        public bool IsReduced { get; set; }
         public bool? IsWaitingList { get; set; }
         public string Language { get; set; }
         public ICollection<MailToRegistration> Mails { get; set; }

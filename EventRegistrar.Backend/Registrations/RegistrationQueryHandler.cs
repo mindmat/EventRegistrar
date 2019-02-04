@@ -39,7 +39,8 @@ namespace EventRegistrar.Backend.Registrations
                                                        SmsCount = reg.Sms.Count,
                                                        PhoneNormalized = reg.PhoneNormalized,
                                                        PartnerOriginal = reg.PartnerNormalized == null ? null : reg.PartnerOriginal,
-                                                       PartnerId = reg.RegistrationId_Partner
+                                                       PartnerId = reg.RegistrationId_Partner,
+                                                       IsReduced = reg.IsReduced
                                                    })
                                                    .FirstOrDefaultAsync(cancellationToken);
             return registration;

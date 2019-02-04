@@ -6,6 +6,7 @@ using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.Confirmation;
 using EventRegistrar.Backend.Registrations.Raw;
+using EventRegistrar.Backend.Registrations.Reductions;
 using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Registrations.Search;
 using MediatR;
@@ -80,6 +81,17 @@ namespace EventRegistrar.Backend.Registrations
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 RegistrationId = registrationId
+            });
+        }
+
+        [HttpPut("api/events/{eventAcronym}/registrations/{registrationId:guid}/setReducedPrice")]
+        public async Task SetReducedPrice(string eventAcronym, Guid registrationId)
+        {
+            await _mediator.Send(new SetReductionCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId,
+                IsReduced = true
             });
         }
 

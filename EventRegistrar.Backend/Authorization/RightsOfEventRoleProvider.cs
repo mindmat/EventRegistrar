@@ -30,6 +30,7 @@ using EventRegistrar.Backend.Registrations.IndividualReductions;
 using EventRegistrar.Backend.Registrations.Matching;
 using EventRegistrar.Backend.Registrations.Overview;
 using EventRegistrar.Backend.Registrations.Raw;
+using EventRegistrar.Backend.Registrations.Reductions;
 using EventRegistrar.Backend.Registrations.Search;
 using EventRegistrar.Backend.Spots;
 
@@ -112,6 +113,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(ImportMailsFromImapCommand).Name;
                 yield return typeof(UnbindPartnerRegistrationCommand).Name;
                 yield return typeof(SetFallbackToPartyPassCommand).Name;
+                yield return typeof(SetReductionCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

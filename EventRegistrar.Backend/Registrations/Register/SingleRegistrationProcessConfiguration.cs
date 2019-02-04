@@ -13,6 +13,7 @@ namespace EventRegistrar.Backend.Registrations.Register
         public Guid? QuestionId_Phone { get; set; }
         public Guid? QuestionOptionId_Follower { get; set; }
         public Guid? QuestionOptionId_Leader { get; set; }
+        public Guid? QuestionOptionId_Reduction { get; set; }
         public Guid? QuestionOptionId_Trigger { get; set; }
     }
 }

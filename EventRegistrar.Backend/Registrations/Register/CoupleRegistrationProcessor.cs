@@ -136,7 +136,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 followerRegistration.AdmittedAt = DateTime.UtcNow;
             }
 
-            followerRegistration.OriginalPrice = await _priceCalculator.CalculatePrice(followerRegistration.Id, registration.Responses, spots);
+            followerRegistration.OriginalPrice = await _priceCalculator.CalculatePrice(followerRegistration, registration.Responses, spots);
             followerRegistration.Price = followerRegistration.OriginalPrice;
 
             await _registrations.InsertOrUpdateEntity(followerRegistration);
@@ -148,7 +148,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 registration.AdmittedAt = DateTime.UtcNow;
             }
 
-            registration.OriginalPrice = await _priceCalculator.CalculatePrice(registration.Id, registration.Responses, spots);
+            registration.OriginalPrice = await _priceCalculator.CalculatePrice(registration, registration.Responses, spots);
             registration.Price = registration.OriginalPrice;
 
             await _registrations.InsertOrUpdateEntity(registration);

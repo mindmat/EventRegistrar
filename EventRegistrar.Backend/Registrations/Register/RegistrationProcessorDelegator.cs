@@ -135,6 +135,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_Phone = Guid.Parse("EB488435-4313-4E51-9F7C-B4AED78F7ABC"),
                     QuestionOptionId_Leader = Guid.Parse("F5DEF570-730B-4411-82DC-42959FF2E088"),
                     QuestionOptionId_Follower = Guid.Parse("AB8363D9-F816-4927-BFED-078E04201C50"),
+                    QuestionOptionId_Reduction = Guid.Parse("25D7532F-8850-4653-B4A9-A0D07D5E9BEE")
                 };
             }
         }
