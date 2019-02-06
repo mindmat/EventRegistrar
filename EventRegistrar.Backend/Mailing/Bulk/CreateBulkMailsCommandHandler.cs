@@ -40,14 +40,22 @@ namespace EventRegistrar.Backend.Mailing.Bulk
                                                 .ToListAsync(cancellationToken);
 
             var registrationsOfEvent = await _registrations.Where(reg => reg.EventId == command.EventId
+                                                                      && reg.State != RegistrationState.Cancelled
                                                                       && !reg.Mails.Any(mail => mail.Mail.BulkMailKey == command.BulkMailKey))
-                                                    .ToListAsync(cancellationToken);
+                                                           .Include(reg => reg.Seats_AsLeader)
+                                                           .Include(reg => reg.Seats_AsFollower)
+                                                           .ToListAsync(cancellationToken);
             foreach (var mailTemplate in templates)
             {
+                var registrationsForTemplate = mailTemplate.RegistrableId == null
+                    ? registrationsOfEvent
+                    : registrationsOfEvent.Where(reg => reg.Seats_AsLeader.Any(spt => !spt.IsCancelled && spt.RegistrableId == mailTemplate.RegistrableId)
+                                                     || reg.Seats_AsFollower.Any(spt => !spt.IsCancelled && spt.RegistrableId == mailTemplate.RegistrableId))
+                                          .ToList();
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.Paid) == true)
                 {
-                    var receivers = registrationsOfEvent.Where(reg => reg.State == RegistrationState.Paid
-                                                                   && reg.Language == mailTemplate.Language);
+                    var receivers = registrationsForTemplate.Where(reg => reg.State == RegistrationState.Paid
+                                                                       && (reg.Language == mailTemplate.Language || reg.Language == null));
                     foreach (var registration in receivers)
                     {
                         await CreateMail(mailTemplate, registration, cancellationToken);
@@ -55,9 +63,9 @@ namespace EventRegistrar.Backend.Mailing.Bulk
                 }
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.Unpaid) == true)
                 {
-                    var receivers = registrationsOfEvent.Where(reg => reg.State == RegistrationState.Received
-                                                                   && reg.Language == mailTemplate.Language
-                                                                   && reg.IsWaitingList != true);
+                    var receivers = registrationsForTemplate.Where(reg => reg.State == RegistrationState.Received
+                                                                       && (reg.Language == mailTemplate.Language || reg.Language == null)
+                                                                       && reg.IsWaitingList != true);
                     foreach (var registration in receivers)
                     {
                         await CreateMail(mailTemplate, registration, cancellationToken);
@@ -65,9 +73,9 @@ namespace EventRegistrar.Backend.Mailing.Bulk
                 }
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.WaitingList) == true)
                 {
-                    var receivers = registrationsOfEvent.Where(reg => reg.State == RegistrationState.Received
-                                                                   && reg.Language == mailTemplate.Language
-                                                                   && reg.IsWaitingList == true);
+                    var receivers = registrationsForTemplate.Where(reg => reg.State == RegistrationState.Received
+                                                                       && (reg.Language == mailTemplate.Language || reg.Language == null)
+                                                                       && reg.IsWaitingList == true);
                     foreach (var registration in receivers)
                     {
                         await CreateMail(mailTemplate, registration, cancellationToken);

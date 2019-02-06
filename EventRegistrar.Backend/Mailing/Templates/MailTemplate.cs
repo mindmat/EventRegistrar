@@ -13,6 +13,7 @@ namespace EventRegistrar.Backend.Mailing.Templates
         public string Language { get; set; }
         public MailingAudience? MailingAudience { get; set; }
         public ICollection<Mail> Mails { get; set; }
+        public Guid? RegistrableId { get; set; }
         public string SenderMail { get; set; }
         public string SenderName { get; set; }
         public string Subject { get; set; }
