@@ -52,7 +52,7 @@ namespace EventRegistrar.Backend.Registrations.Register
 
         private IEnumerable<IRegistrationProcessConfiguration> GetHardcodedConfiguration(Guid formId)
         {
-            if (formId == Guid.Parse("954BE8A3-3FAB-4C9C-9C0B-4B9FFDD1FF3F")) //rb18
+            if (formId == Guid.Parse("954BE8A3-3FAB-4C9C-9C0B-4B9FFDD1FF3F")) // rb18
             {
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -123,7 +123,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     }
                 };
             }
-            else if (formId == Guid.Parse("BD14FB5C-EC31-48F0-9DDA-E7D1BB2781C0")) //ll19
+            else if (formId == Guid.Parse("BD14FB5C-EC31-48F0-9DDA-E7D1BB2781C0")) // ll19
             {
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -136,6 +136,19 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionOptionId_Leader = Guid.Parse("F5DEF570-730B-4411-82DC-42959FF2E088"),
                     QuestionOptionId_Follower = Guid.Parse("AB8363D9-F816-4927-BFED-078E04201C50"),
                     QuestionOptionId_Reduction = Guid.Parse("25D7532F-8850-4653-B4A9-A0D07D5E9BEE")
+                };
+            }
+            else if (formId == Guid.Parse("196B878A-510E-49D9-86D1-9E41665D0544")) // ll19 party passes
+            {
+                yield return new SingleRegistrationProcessConfiguration
+                {
+                    Description = "Leapin'",
+                    QuestionOptionId_Trigger = null,
+                    QuestionId_FirstName = Guid.Parse("FCFF7C75-3016-4A56-8BD0-560F3C6CA6D8"),
+                    QuestionId_LastName = Guid.Parse("3C7268D7-F4BD-4302-AFC3-C09DB53E822A"),
+                    QuestionId_Email = Guid.Parse("4419F2F5-4F02-462D-8CD4-86B3D0008E3B"),
+                    QuestionId_Phone = Guid.Parse("4632EF7D-1D88-48B2-A528-FC21E13F94D6"),
+                    QuestionOptionId_Reduction = Guid.Parse("CD825A86-78A7-45B3-A354-8A14BEAB68A6")
                 };
             }
         }
