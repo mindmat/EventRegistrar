@@ -15,7 +15,7 @@ export class EventSelectionComponent {
   newEventCopyOfEventId: string;
   newEventCopyOfEventName: string;
 
-  constructor(private http: HttpClient, private eventService: EventService) {
+  constructor(private readonly http: HttpClient, private readonly eventService: EventService) {
     this.newEvent = new Event();
     this.newEvent.id = Guid.newGuid();
   }
@@ -70,6 +70,8 @@ export class EventSelectionComponent {
       this.events = result;
     },
       error => console.error(error));
+
+    this.search("");
   }
 }
 

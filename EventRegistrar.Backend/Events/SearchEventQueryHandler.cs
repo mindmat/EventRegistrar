@@ -25,13 +25,15 @@ namespace EventRegistrar.Backend.Events
             _user = user;
         }
 
-        public async Task<IEnumerable<EventSearchResult>> Handle(SearchEventQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<EventSearchResult>> Handle(SearchEventQuery query, CancellationToken cancellationToken)
         {
-            return await _events.Where(evt => evt.Name.Contains(request.SearchString, StringComparison.InvariantCultureIgnoreCase))
-                                .WhereIf(!request.IncludeAuthorizedEvents && _userId.UserId.HasValue, evt => evt.Users.All(usr => usr.UserId != _userId.UserId))
-                                .WhereIf(!request.IncludeRequestedEvents && _userId.UserId.HasValue, evt => evt.AccessRequests.All(usr => usr.UserId_Requestor != _userId.UserId))
-                                .WhereIf(!request.IncludeRequestedEvents && !_userId.UserId.HasValue, evt => !evt.AccessRequests.Any(usr => usr.IdentityProvider == _user.IdentityProvider
-                                                                                                                                         && usr.Identifier == _user.IdentityProviderUserIdentifier))
+            return await _events.WhereIf(!string.IsNullOrEmpty(query.SearchString), evt => evt.Name.Contains(query.SearchString, StringComparison.InvariantCultureIgnoreCase))
+                                .WhereIf(!query.IncludeAuthorizedEvents && _userId.UserId.HasValue, evt => evt.Users.All(usr => usr.UserId != _userId.UserId))
+                                .WhereIf(!query.IncludeRequestedEvents && _userId.UserId.HasValue, evt => evt.AccessRequests.All(usr => usr.UserId_Requestor != _userId.UserId))
+                                .WhereIf(!query.IncludeRequestedEvents && !_userId.UserId.HasValue, evt => !evt.AccessRequests.Any(usr => usr.IdentityProvider == _user.IdentityProvider
+                                                                                                                                       && usr.Identifier == _user.IdentityProviderUserIdentifier))
+                                .OrderBy(evt => evt.State)
+                                .Take(20)
                                 .Select(evt => new EventSearchResult
                                 {
                                     Id = evt.Id,
