@@ -45,7 +45,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             registration.RespondentEmail = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Email)?.ResponseString;
             registration.IsReduced = config.QuestionOptionId_Reduction != null
                                   && registration.Responses.Any(rsp => rsp.QuestionId == config.QuestionOptionId_Reduction.Value);
-            if (config.QuestionId_Phone.HasValue)
+            if (config.QuestionId_Phone != null)
             {
                 registration.Phone = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Phone.Value)?.ResponseString;
                 registration.PhoneNormalized = _phoneNormalizer.NormalizePhone(registration.Phone);
@@ -54,7 +54,10 @@ namespace EventRegistrar.Backend.Registrations.Register
             {
                 registration.Language = config.LanguageMappings.FirstOrDefault(map => registration.Responses.Any(rsp => rsp.QuestionOptionId == map.QuestionOptionId)).Language;
             }
-
+            if (config.QuestionId_Remarks != null)
+            {
+                registration.Remarks = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Remarks.Value)?.ResponseString;
+            }
             var ownSeats = new List<Seat>();
 
             var questionOptionIds = new HashSet<Guid>(registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue).Select(rsp => rsp.QuestionOptionId.Value));
@@ -121,6 +124,11 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
 
             registration.SoldOutMessage = soldOutMessages.ToString();
+            if (string.IsNullOrEmpty(registration.SoldOutMessage))
+            {
+                registration.SoldOutMessage = null;
+            }
+
             var isOnWaitingList = ownSeats.Any(seat => seat.IsWaitingList);
             registration.IsWaitingList = isOnWaitingList;
             if (registration.IsWaitingList == false && !registration.AdmittedAt.HasValue)

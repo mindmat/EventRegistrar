@@ -135,6 +135,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_Phone = Guid.Parse("EB488435-4313-4E51-9F7C-B4AED78F7ABC"),
                     QuestionOptionId_Leader = Guid.Parse("F5DEF570-730B-4411-82DC-42959FF2E088"),
                     QuestionOptionId_Follower = Guid.Parse("AB8363D9-F816-4927-BFED-078E04201C50"),
+                    QuestionId_Remarks = Guid.Parse("59B34ABE-E14A-4E33-B829-E50D365B4C12"),
                     QuestionOptionId_Reduction = Guid.Parse("25D7532F-8850-4653-B4A9-A0D07D5E9BEE")
                 };
             }
@@ -142,12 +143,13 @@ namespace EventRegistrar.Backend.Registrations.Register
             {
                 yield return new SingleRegistrationProcessConfiguration
                 {
-                    Description = "Leapin'",
+                    Description = "Leapin' Partypässe",
                     QuestionOptionId_Trigger = null,
                     QuestionId_FirstName = Guid.Parse("FCFF7C75-3016-4A56-8BD0-560F3C6CA6D8"),
                     QuestionId_LastName = Guid.Parse("3C7268D7-F4BD-4302-AFC3-C09DB53E822A"),
                     QuestionId_Email = Guid.Parse("4419F2F5-4F02-462D-8CD4-86B3D0008E3B"),
                     QuestionId_Phone = Guid.Parse("4632EF7D-1D88-48B2-A528-FC21E13F94D6"),
+                    QuestionId_Remarks = Guid.Parse("DBE4F7E8-CDF7-489B-A853-A8F063B669BA"),
                     QuestionOptionId_Reduction = Guid.Parse("CD825A86-78A7-45B3-A354-8A14BEAB68A6")
                 };
             }
