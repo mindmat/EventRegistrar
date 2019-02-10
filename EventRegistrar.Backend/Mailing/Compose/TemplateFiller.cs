@@ -56,7 +56,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
             {
                 return value;
             }
-            return "~";
+            return string.Empty;
         }
     }
 }

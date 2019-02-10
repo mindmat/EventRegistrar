@@ -44,7 +44,6 @@ namespace EventRegistrar.Backend.Registrations
         public string Remarks { get; set; }
         public bool RemarksProcessed { get; set; }
         public int ReminderLevel { get; set; }
-
         public string RespondentEmail { get; set; }
         public string RespondentFirstName { get; set; }
         public string RespondentLastName { get; set; }
@@ -54,5 +53,6 @@ namespace EventRegistrar.Backend.Registrations
         public ICollection<Sms> Sms { get; set; }
         public string SoldOutMessage { get; set; }
         public RegistrationState State { get; set; }
+        public bool WillPayAtCheckin { get; set; }
     }
 }

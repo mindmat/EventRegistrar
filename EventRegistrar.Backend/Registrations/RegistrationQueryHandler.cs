@@ -40,7 +40,8 @@ namespace EventRegistrar.Backend.Registrations
                                                        PhoneNormalized = reg.PhoneNormalized,
                                                        PartnerOriginal = reg.PartnerNormalized == null ? null : reg.PartnerOriginal,
                                                        PartnerId = reg.RegistrationId_Partner,
-                                                       IsReduced = reg.IsReduced
+                                                       IsReduced = reg.IsReduced,
+                                                       WillPayAtCheckin = reg.WillPayAtCheckin
                                                    })
                                                    .FirstOrDefaultAsync(cancellationToken);
             return registration;

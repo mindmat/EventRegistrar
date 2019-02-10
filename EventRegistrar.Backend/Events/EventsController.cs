@@ -73,8 +73,8 @@ namespace EventRegistrar.Backend.Events
 
         [HttpPost("api/events/{eventAcronym}/accessrequests/{accessRequestId:guid}/respond")]
         public async Task RespondToAccessRequest(string eventAcronym,
-                                           Guid accessRequestId,
-                                           [FromBody]RequestResponseDto response)
+                                                 Guid accessRequestId,
+                                                 [FromBody]RequestResponseDto response)
         {
             await _mediator.Send(new RespondToRequestCommand
             {

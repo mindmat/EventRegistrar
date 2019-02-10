@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Payments.PayAtCheckin;
 using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.Confirmation;
@@ -99,6 +100,16 @@ namespace EventRegistrar.Backend.Registrations
         public async Task SetWaitingListFallback(string eventAcronym, Guid registrationId)
         {
             await _mediator.Send(new SetFallbackToPartyPassCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId
+            });
+        }
+
+        [HttpPut("api/events/{eventAcronym}/registrations/{registrationId:guid}/willPayAtCheckin")]
+        public async Task SetWillPayAtCheckin(string eventAcronym, Guid registrationId)
+        {
+            await _mediator.Send(new WillPayAtCheckinCommand
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 RegistrationId = registrationId

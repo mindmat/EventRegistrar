@@ -11,6 +11,7 @@
     <button class="dropdown-item" type="button" (click)="swapFirstLastName()">Name/Vorname tauschen</button>
     <button class="dropdown-item" type="button" (click)="initNewReduction()" data-toggle="modal" data-target="#newReductionModal">Neue Reduktion erfassen</button>
     <button class="dropdown-item" type="button" *ngIf="!registration.isReduced" (click)="setReducedPrice()">Reduzierten Preis setzen</button>
+    <button class="dropdown-item" type="button" *ngIf="!registration.willPayAtCheckin && registration.status != 4" (click)="setWillPayAtCheckin()">Bezahlt am Checkin</button>
   </div>
 </div>
 <br />
@@ -31,7 +32,10 @@
     <tr>
       <td>Preis:</td>
       <td>
-        {{ registration.price | currency : 'CHF' }}<span class="badge badge-primary" *ngIf="registration.isReduced">Reduziert</span>, bezahlt {{ registration.paid || 0 | currency : 'CHF' }}
+        {{ registration.price | currency : 'CHF' }}
+        <span class="badge badge-primary" *ngIf="registration.isReduced">Reduziert</span>
+        , bezahlt {{ registration.paid || 0 | currency : 'CHF' }}
+        <span class="badge badge-primary" *ngIf="registration.willPayAtCheckin">Bezahlt am Checkin</span>
       </td>
     </tr>
     <tr>

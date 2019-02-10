@@ -34,7 +34,8 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
 
             var difference = registration.Price
                              - registration.Payments.Sum(pmt => pmt.Amount);
-            if (difference <= 0m && registration.State == RegistrationState.Received)
+            if (registration.State == RegistrationState.Received
+             && (difference <= 0m || registration.WillPayAtCheckin))
             {
                 // fully paid
                 registration.State = RegistrationState.Paid;
@@ -70,7 +71,9 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
                     }
                 }
             }
-            else if (difference > 0 && registration.State == RegistrationState.Paid)
+            else if (difference > 0
+                  && registration.State == RegistrationState.Paid
+                  && !registration.WillPayAtCheckin)
             {
                 // payment has been revoked
                 registration.State = RegistrationState.Received;

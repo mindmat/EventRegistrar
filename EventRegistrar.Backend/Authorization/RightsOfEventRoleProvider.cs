@@ -16,6 +16,7 @@ using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Files.Slips;
+using EventRegistrar.Backend.Payments.PayAtCheckin;
 using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unassigned;
 using EventRegistrar.Backend.PhoneMessages;
@@ -114,6 +115,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return typeof(UnbindPartnerRegistrationCommand).Name;
                 yield return typeof(SetFallbackToPartyPassCommand).Name;
                 yield return typeof(SetReductionCommand).Name;
+                yield return typeof(WillPayAtCheckinCommand).Name;
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

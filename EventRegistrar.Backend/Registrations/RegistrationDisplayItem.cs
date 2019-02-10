@@ -24,5 +24,6 @@ namespace EventRegistrar.Backend.Registrations
         public string SoldOutMessage { get; set; }
         public RegistrationState Status { get; set; }
         public string StatusText { get; set; }
+        public bool WillPayAtCheckin { get; set; }
     }
 }

@@ -174,6 +174,11 @@ export class RegistrationComponent {
       .subscribe(result => { }, error => console.error(error));
   }
 
+  setWillPayAtCheckin() {
+    this.http.put(`api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/willPayAtCheckin`, null)
+      .subscribe(result => { }, error => console.error(error));
+  }
+
   initNewReduction() {
     this.newReductionId = Guid.newGuid();
   }
@@ -221,6 +226,7 @@ class Registration {
   partnerOriginal: string;
   partnerId: string;
   isReduced: boolean;
+  willPayAtCheckin: boolean;
 }
 
 class Spot {

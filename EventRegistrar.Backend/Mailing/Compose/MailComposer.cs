@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrations;
@@ -18,16 +19,19 @@ namespace EventRegistrar.Backend.Mailing.Compose
         private const string PrefixFollower = "FOLLOWER";
         private const string PrefixLeader = "LEADER";
         private readonly DuePaymentConfiguration _duePaymentConfiguration;
+        private readonly IQueryable<Event> _events;
         private readonly ILogger _log;
         private readonly PaidAmountSummarizer _paidAmountSummarizer;
         private readonly IQueryable<Registration> _registrations;
 
         public MailComposer(IQueryable<Registration> registrations,
+                            IQueryable<Event> events,
                             ILogger log,
                             PaidAmountSummarizer paidAmountSummarizer,
                             DuePaymentConfiguration duePaymentConfiguration)
         {
             _registrations = registrations;
+            _events = events;
             _log = log;
             _paidAmountSummarizer = paidAmountSummarizer;
             _duePaymentConfiguration = duePaymentConfiguration;
@@ -118,6 +122,16 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 else if (parts.key == "PAIDAMOUNT")
                 {
                     templateFiller[key] = (await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id)).ToString("F2"); // HACK: format hardcoded
+                }
+                else if (parts.key == "UNPAIDAMOUNT")
+                {
+                    var currency = (await _events.FirstAsync(evt => evt.Id == registration.EventId, cancellationToken))?.Currency;
+                    var unpaidAmount = (registration.Price ?? 0m) - await _paidAmountSummarizer.GetPaidAmount(registration.Id)
+                                     + (partnerRegistration == null ? 0m : (partnerRegistration.Price ?? 0m) - await _paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
+                    if (unpaidAmount > 0m)
+                    {
+                        templateFiller[key] = $" Please pay the remaining {unpaidAmount:F2}{currency} at the checkin"; // HACK: format hardcoded
+                    }
                 }
                 // ToDo: cancellation mail
                 else if (parts.key == "CANCELLATIONREASON")
