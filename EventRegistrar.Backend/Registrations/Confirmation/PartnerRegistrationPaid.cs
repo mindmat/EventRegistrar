@@ -7,5 +7,6 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
     {
         public Guid RegistrationId1 { get; set; }
         public Guid RegistrationId2 { get; set; }
+        public bool WillPayAtCheckin { get; set; }
     }
 }

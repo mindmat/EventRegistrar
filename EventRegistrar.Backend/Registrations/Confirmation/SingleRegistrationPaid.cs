@@ -6,5 +6,6 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
     public class SingleRegistrationPaid : DomainEvent
     {
         public Guid RegistrationId { get; set; }
+        public bool WillPayAtCheckin { get; set; }
     }
 }

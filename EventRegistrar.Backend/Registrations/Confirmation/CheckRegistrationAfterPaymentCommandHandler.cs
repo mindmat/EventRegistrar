@@ -41,7 +41,12 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
                 registration.State = RegistrationState.Paid;
                 if (!registration.RegistrationId_Partner.HasValue)
                 {
-                    _eventBus.Publish(new SingleRegistrationPaid { Id = Guid.NewGuid(), RegistrationId = registration.Id });
+                    _eventBus.Publish(new SingleRegistrationPaid
+                    {
+                        Id = Guid.NewGuid(),
+                        RegistrationId = registration.Id,
+                        WillPayAtCheckin = difference > 0m && registration.WillPayAtCheckin
+                    });
                 }
                 else
                 {
@@ -57,7 +62,8 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
                         {
                             Id = Guid.NewGuid(),
                             RegistrationId1 = registration.Id,
-                            RegistrationId2 = partnerRegistration.Id
+                            RegistrationId2 = partnerRegistration.Id,
+                            WillPayAtCheckin = difference > 0m && registration.WillPayAtCheckin
                         });
                     }
                     else
