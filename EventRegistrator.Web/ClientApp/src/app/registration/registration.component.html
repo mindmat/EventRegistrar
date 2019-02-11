@@ -25,7 +25,7 @@
       <td>E-Mail:</td>
       <td>{{ registration.email }}</td>
     </tr>
-    <tr>
+    <tr *ngIf="registration.language">
       <td>Sprache:</td>
       <td><span class="badge badge-primary">{{ registration.language }}</span></td>
     </tr>
@@ -50,18 +50,18 @@
       <td>Wünscht Partypass:</td>
       <td><p *ngIf="registration.fallbackToPartyPass">x</p>  <button *ngIf="!registration.fallbackToPartyPass && registration.isWaitingList && registration.status == 1" type="button" class="btn btn-primary btn-xs" (click)="fallbackToPartyPass()">Partypass reservieren</button></td>
     </tr>
-    <tr>
+    <tr *ngIf="registration.phoneNormalized">
       <td>SMS ({{ registration.phoneNormalized }}):</td>
       <td><button type="button" *ngIf="registration.phoneNormalized != null" class="btn btn-primary btn-xs" [routerLink]="['/', getEventAcronym(), 'registrations', registration.id, 'sms']">Anzeigen ({{ registration.smsCount }})</button></td>
     </tr>
-    <tr>
+    <tr *ngIf="registration.partnerOriginal">
       <td>Partner:</td>
       <td>
         <a *ngIf="registration.partnerId" [routerLink]="['/', getEventAcronym(), 'registration', registration.partnerId]">{{ registration.partnerOriginal }}</a>
         <a *ngIf="!registration.partnerId" class="font-italic">{{ registration.partnerOriginal }}</a>
       </td>
     </tr>
-    <tr>
+    <tr *ngIf="registration.remarks">
       <td>Bemerkung:</td>
       <td>{{ registration.remarks }}</td>
     </tr>
