@@ -61,8 +61,8 @@ namespace EventRegistrar.Backend.Mailing.ManualTrigger
                     yield return registration.IsWaitingList == true ? MailType.PartnerRegistrationFirstPartnerOnWaitingList : MailType.PartnerRegistrationFirstPartnerAccepted;
                 }
 
-                var paidCount = registration.State == RegistrationState.Paid ? 1 : 0
-                              + partnerRegistration?.State == RegistrationState.Paid ? 1 : 0;
+                var paidCount = (registration.State == RegistrationState.Paid ? 1 : 0)
+                              + (partnerRegistration?.State == RegistrationState.Paid ? 1 : 0);
 
                 if (paidCount == 0)
                 {

@@ -96,7 +96,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 SenderMail = template.SenderMail,
                 SenderName = template.SenderName,
                 Subject = template.Subject,
-                Recipients = string.Join(";", mappings.Select(reg => reg.RespondentEmail)),
+                Recipients = string.Join(";", mappings.Select(reg => reg.RespondentEmail?.ToLowerInvariant()).Distinct()),
                 Withhold = command.Withhold,
                 Created = DateTime.UtcNow
             };
