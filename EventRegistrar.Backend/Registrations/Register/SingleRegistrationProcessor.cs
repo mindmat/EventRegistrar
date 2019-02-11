@@ -53,10 +53,18 @@ namespace EventRegistrar.Backend.Registrations.Register
             if (config.LanguageMappings != null)
             {
                 registration.Language = config.LanguageMappings.FirstOrDefault(map => registration.Responses.Any(rsp => rsp.QuestionOptionId == map.QuestionOptionId)).Language;
+                if (string.IsNullOrEmpty(registration.Language))
+                {
+                    registration.Language = null;
+                }
             }
             if (config.QuestionId_Remarks != null)
             {
                 registration.Remarks = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Remarks.Value)?.ResponseString;
+                if (string.IsNullOrEmpty(registration.Remarks))
+                {
+                    registration.Remarks = null;
+                }
             }
             var ownSeats = new List<Seat>();
 
