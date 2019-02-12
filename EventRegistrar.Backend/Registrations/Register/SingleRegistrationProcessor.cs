@@ -44,7 +44,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             registration.RespondentLastName = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_LastName)?.ResponseString;
             registration.RespondentEmail = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Email)?.ResponseString;
             registration.IsReduced = config.QuestionOptionId_Reduction != null
-                                  && registration.Responses.Any(rsp => rsp.QuestionId == config.QuestionOptionId_Reduction.Value);
+                                  && registration.Responses.Any(rsp => rsp.QuestionOptionId == config.QuestionOptionId_Reduction.Value);
             if (config.QuestionId_Phone != null)
             {
                 registration.Phone = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Phone.Value)?.ResponseString;
