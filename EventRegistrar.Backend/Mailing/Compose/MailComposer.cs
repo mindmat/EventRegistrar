@@ -130,7 +130,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                      + (partnerRegistration == null ? 0m : (partnerRegistration.Price ?? 0m) - await _paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
                     if (unpaidAmount > 0m)
                     {
-                        templateFiller[key] = $" Please pay the remaining {unpaidAmount:F2}{currency} at the checkin"; // HACK: format hardcoded
+                        templateFiller[key] = $" Please transfer the remaining {unpaidAmount:F2}{currency} today or pay at the checkin (ignore this message if you already paid)."; // HACK: format hardcoded
                     }
                 }
                 // ToDo: cancellation mail
