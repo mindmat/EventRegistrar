@@ -16,7 +16,7 @@ export class RegistrationComponent {
   spots: Spot[];
   payments: AssignedPayments[];
   allRegistrables: Registrable[];
-  selectedMailType: number;
+  selectedMailType: MailType;
 
   private registrationId: string;
   private bookedRegistrableIds: string[];
@@ -58,7 +58,7 @@ export class RegistrationComponent {
     this.http.get<MailType[]>(`api/events/${this.getEventAcronym()}/registrations/${this.registrationId}/possibleMailTypes`).subscribe(result => {
       this.mailTypes = result;
       if (this.mailTypes.length > 0) {
-        this.selectedMailType = this.mailTypes[0].type;
+        this.selectedMailType = this.mailTypes[0];
       }
     }, error => console.error(error));
   }
@@ -156,13 +156,13 @@ export class RegistrationComponent {
     }
   }
 
-  createMail(mailType: number, bulkMailKey: string, withhold: boolean, allowDuplicate: boolean) {
+  createMail(mailType: MailType, withhold: boolean, allowDuplicate: boolean) {
     var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/mails/create`;
-    if (mailType != null) {
-      url = `mailType=${mailType}`;
+    if (mailType.type != null) {
+      url = `mailType=${mailType.type}`;
     }
-    if (bulkMailKey != null) {
-      url = `bulkMailKey=${bulkMailKey}`;
+    if (mailType.bulkMailKey != null) {
+      url = `bulkMailKey=${mailType.bulkMailKey}`;
     }
     if (withhold) {
       url += "&withhold=true";
