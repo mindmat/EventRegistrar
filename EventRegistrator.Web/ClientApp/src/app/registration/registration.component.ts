@@ -16,7 +16,7 @@ export class RegistrationComponent {
   spots: Spot[];
   payments: AssignedPayments[];
   allRegistrables: Registrable[];
-  selectedMailType: MailType;
+  selectedMailId: number;
 
   private registrationId: string;
   private bookedRegistrableIds: string[];
@@ -57,8 +57,10 @@ export class RegistrationComponent {
 
     this.http.get<MailType[]>(`api/events/${this.getEventAcronym()}/registrations/${this.registrationId}/possibleMailTypes`).subscribe(result => {
       this.mailTypes = result;
+      var i = 0;
+      this.mailTypes.forEach(mtp => mtp.id = ++i);
       if (this.mailTypes.length > 0) {
-        this.selectedMailType = this.mailTypes[0];
+        this.selectedMailId = 1;
       }
     }, error => console.error(error));
   }
@@ -156,13 +158,14 @@ export class RegistrationComponent {
     }
   }
 
-  createMail(mailType: MailType, withhold: boolean, allowDuplicate: boolean) {
+  createMail(mailTypeId: number, withhold: boolean, allowDuplicate: boolean) {
+    var mailType = this.mailTypes.find(mtp => mtp.id == mailTypeId);
     var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/mails/create`;
     if (mailType.type != null) {
-      url = `mailType=${mailType.type}`;
+      url += `?mailType=${mailType.type}`;
     }
-    if (mailType.bulkMailKey != null) {
-      url = `bulkMailKey=${mailType.bulkMailKey}`;
+    else if (mailType.bulkMailKey != null) {
+      url += `?bulkMailKey=${mailType.bulkMailKey}`;
     }
     if (withhold) {
       url += "&withhold=true";
@@ -286,6 +289,7 @@ class AssignedPayments {
 }
 
 class MailType {
+  id: number;
   type: number;
   bulkMailKey: string;
   userText: string;

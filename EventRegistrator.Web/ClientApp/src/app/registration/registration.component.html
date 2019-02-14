@@ -183,8 +183,8 @@
             <p>Mail</p>
           </div>
           <div class="col-sm-6" *ngIf="mailTypes">
-            <select #mailType class="custom-select form-control" [(ngModel)]="selectedMailType">
-              <option *ngFor="let mailType of mailTypes" value={{mailType.type}}>{{ mailType.userText }}</option>
+            <select #mailType class="custom-select form-control" [(ngModel)]="selectedMailId">
+              <option *ngFor="let mailType of mailTypes" value={{mailType.id}}>{{ mailType.userText }}</option>
             </select>
           </div>
         </div>
@@ -207,7 +207,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-        <button type="button" class="btn btn-primary" (click)="createMail(selectedMailType, true, true)" data-dismiss="modal">Erstellen</button>
+        <button type="button" class="btn btn-primary" (click)="createMail(selectedMailId, true, true)" data-dismiss="modal">Erstellen</button>
         <!--<button type="button" class="btn btn-primary" (click)="createMail(selectedMailType, withholdMail.value, allowDuplicateMail.value)" data-dismiss="composeAndSendMailModal">Erstellen</button>-->
       </div>
     </div>
