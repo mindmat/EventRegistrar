@@ -156,8 +156,14 @@ export class RegistrationComponent {
     }
   }
 
-  createMail(mailType: number, withhold: boolean, allowDuplicate: boolean) {
-    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/mails/create?mailType=${mailType}`;
+  createMail(mailType: number, bulkMailKey: string, withhold: boolean, allowDuplicate: boolean) {
+    var url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/mails/create`;
+    if (mailType != null) {
+      url = `mailType=${mailType}`;
+    }
+    if (bulkMailKey != null) {
+      url = `bulkMailKey=${bulkMailKey}`;
+    }
     if (withhold) {
       url += "&withhold=true";
     }
@@ -281,5 +287,6 @@ class AssignedPayments {
 
 class MailType {
   type: number;
+  bulkMailKey: string;
   userText: string;
 }

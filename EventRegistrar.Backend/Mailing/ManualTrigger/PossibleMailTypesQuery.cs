@@ -19,11 +19,14 @@ namespace EventRegistrar.Backend.Mailing.ManualTrigger
 
     public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQuery, IEnumerable<MailTypeItem>>
     {
+        private readonly IQueryable<MailTemplate> _mailTemplates;
         private readonly IQueryable<Registration> _registrations;
 
-        public PossibleMailTypesQueryHandler(IQueryable<Registration> registrations)
+        public PossibleMailTypesQueryHandler(IQueryable<Registration> registrations,
+                                             IQueryable<MailTemplate> mailTemplates)
         {
             _registrations = registrations;
+            _mailTemplates = mailTemplates;
         }
 
         public async Task<IEnumerable<MailTypeItem>> Handle(PossibleMailTypesQuery query, CancellationToken cancellationToken)
@@ -39,7 +42,14 @@ namespace EventRegistrar.Backend.Mailing.ManualTrigger
 
             var possibleMailTypes = GetPossibleMailTypes(registration, partnerRegistration);
 
-            return possibleMailTypes.Select(typ => new MailTypeItem { Type = typ, UserText = Resources.ResourceManager.GetString($"MailType_{typ}") ?? typ.ToString() });
+            var activeBulkMails = await _mailTemplates.Where(tpl => tpl.EventId == query.EventId
+                                                                  && tpl.BulkMailKey != null
+                                                                  && tpl.Mails.Any())
+                                                       .Select(tpl => new MailTypeItem { BulkMailKey = tpl.BulkMailKey, UserText = tpl.Subject })
+                                                       .ToListAsync(cancellationToken);
+
+            return possibleMailTypes.Select(typ => new MailTypeItem { Type = typ, UserText = Resources.ResourceManager.GetString($"MailType_{typ}") ?? typ.ToString() })
+                                    .Union(activeBulkMails);
         }
 
         private static IEnumerable<MailType> GetPossibleMailTypes(Registration registration, Registration partnerRegistration)

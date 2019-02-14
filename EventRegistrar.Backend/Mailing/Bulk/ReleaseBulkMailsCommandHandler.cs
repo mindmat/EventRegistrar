@@ -30,6 +30,7 @@ namespace EventRegistrar.Backend.Mailing.Bulk
                                                   && mail.Withhold
                                                   && !mail.Discarded)
                                       .Include(mail => mail.Registrations).ThenInclude(map => map.Registration)
+                                      .Take(100)
                                       .ToListAsync(cancellationToken);
             foreach (var withheldMail in withheldMails)
             {

@@ -60,8 +60,9 @@ namespace EventRegistrar.Backend.Mailing.Compose
             }
 
             var registration = await _registrations.FirstOrDefaultAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
-            var templates = await _templates.Where(mtp => mtp.EventId == registration.EventId &&
-                                                          mtp.Type == command.MailType)
+            var templates = await _templates.Where(mtp => mtp.EventId == registration.EventId)
+                                            .WhereIf(command.MailType != null, mtp => mtp.Type == command.MailType)
+                                            .WhereIf(command.BulkMailKey != null, mtp => mtp.BulkMailKey == command.BulkMailKey)
                                             .ToListAsync(cancellationToken);
             var language = registration.Language ?? FallbackLanguage;
             var template = templates.FirstOrDefault(mtp => mtp.Language == language) ??
