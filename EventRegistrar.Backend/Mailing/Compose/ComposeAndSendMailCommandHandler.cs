@@ -82,7 +82,9 @@ namespace EventRegistrar.Backend.Mailing.Compose
             var mappings = new List<Registration> { registration };
             if (registration.RegistrationId_Partner.HasValue
              && partnerRegistration != null
-             && command.MailType != MailType.OptionsForRegistrationsOnWaitingList)
+             && command.MailType != MailType.OptionsForRegistrationsOnWaitingList
+             && command.MailType != MailType.RegistrationCancelled
+             && command.BulkMailKey == null)  // bulk mails are personal
             {
                 mappings.Add(partnerRegistration);
             }
