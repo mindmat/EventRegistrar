@@ -1,0 +1,30 @@
+<h1>Nicht empfangene Mails</h1>
+
+<p *ngIf="!mails"><em>Loading...</em></p>
+
+<table class="table table-hover" *ngIf="mails">
+  <thead class="thead-dark">
+    <tr>
+      <th>Empfänger</th>
+      <th>Betreff</th>
+      <th>Erstellt</th>
+      <th>Gesendet</th>
+      <th>Status</th>
+      <th>Alle Status</th>
+      <!--<th></th>
+      <th></th>-->
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let mail of mails" (click)="showMail(mail)">
+      <td><a [routerLink]="['/', getEventAcronym(), 'registration', mail.registrationId]">{{ mail.recipients }}</a></td>
+      <td>{{ mail.subject }}</td>
+      <td>{{ mail.created | date: 'dd.MM.yy HH:mm:ss' }}</td>
+      <td>{{ mail.sent | date: 'dd.MM.yy HH:mm:ss' }}</td>
+      <td>{{ mail.state }}</td>
+      <td>{{ mail.events }}</td>
+      <!--<td><button class="btn btn-primary" (click)="releaseMail(mail.id)">Freigeben</button></td>
+      <td><button class="btn btn-primary" (click)="discardMail(mail.id)">Löschen</button></td>-->
+    </tr>
+  </tbody>
+</table>

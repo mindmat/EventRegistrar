@@ -79,6 +79,15 @@ namespace EventRegistrar.Backend.Mailing
             });
         }
 
+        [HttpGet("api/events/{eventAcronym}/mails/notreceived")]
+        public async Task<IEnumerable<NotReceivedMail>> GetNotReceivedMails(string eventAcronym)
+        {
+            return await _mediator.Send(new NotReceivedMailsQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
+        }
+
         [HttpGet("api/events/{eventAcronym}/mails/pending")]
         public async Task<IEnumerable<Mail>> GetPendingMails(string eventAcronym)
         {

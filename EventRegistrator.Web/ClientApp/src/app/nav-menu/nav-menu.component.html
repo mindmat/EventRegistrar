@@ -34,6 +34,11 @@
         </a>
       </li>
       <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
+        <a [routerLink]="[eventService.acronym, 'not-received-mails']">
+          <span class='glyphicon glyphicon-envelope'></span> Nicht empfangene Mails
+        </a>
+      </li>
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
         <a [routerLink]="[eventService.acronym, 'hosting']">
           <span class='glyphicon glyphicon-home'></span> Hosting
         </a>
