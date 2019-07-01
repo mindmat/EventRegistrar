@@ -7,7 +7,13 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './registrationForms.component.html'
 })
 export class RegistrationFormsComponent implements OnInit {
+  forms: RegistrationForm[];
   ngOnInit() {
+    this.http.get<RegistrationForm[]>(`api/events/${this.getEventAcronym()}/registrationforms/pending`).subscribe(result => {
+      this.forms = result;
+    },
+      error => { console.error(error); }
+    );
   }
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
@@ -15,7 +21,7 @@ export class RegistrationFormsComponent implements OnInit {
 
   import() {
     // ToDo: hardcoded
-    var formId = '1OGXhOqcT2OT6map1tr5omg4bt8_xU3vMraDbxmaH4uI';
+    var formId = '1rIgAL0iDPvGAbDAkKsRfj4huqDwz93qK60-2eqdtM7k';
     this.http.post(`api/events/${this.getEventAcronym()}/registrationforms/${formId}`, null).subscribe(result => { },
       error => { console.error(error); }
     );
@@ -24,4 +30,13 @@ export class RegistrationFormsComponent implements OnInit {
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
   }
+}
+
+
+class RegistrationForm {
+  externalIdentifier: string;
+  created: Date;
+  registrationFormId: string;
+  title: string;
+  language: string;
 }

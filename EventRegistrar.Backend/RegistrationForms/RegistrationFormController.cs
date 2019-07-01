@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using MediatR;
@@ -25,6 +26,15 @@ namespace EventRegistrar.Backend.RegistrationForms
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 FormId = formId
+            });
+        }
+
+        [HttpGet("api/events/{eventAcronym}/registrationforms/pending")]
+        public async Task<IEnumerable<RegistrationFormItem>> GetPendingRegistrationForms(string eventAcronym)
+        {
+            return await _mediator.Send(new PendingRegistrationFormQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
             });
         }
     }
