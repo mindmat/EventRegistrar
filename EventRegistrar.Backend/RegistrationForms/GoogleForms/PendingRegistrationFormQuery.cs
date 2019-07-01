@@ -38,9 +38,12 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                                           .Select(grp => new
                                           {
                                               ExternalIdentifier = grp.Key,
-                                              PendingRawForm = grp.OrderBy(frm => frm.Processed)
-                                                                  .ThenByDescending(frm => frm.Created)
+                                              PendingRawForm = grp.Where(frm => !frm.Processed)
+                                                                  .OrderByDescending(frm => frm.Created)
                                                                   .FirstOrDefault(),
+                                              LastProcessedRawForm = grp.Where(frm => frm.Processed)
+                                                                        .OrderByDescending(frm => frm.Created)
+                                                                        .FirstOrDefault(),
                                           })
                                           .ToListAsync();
             var forms = await _forms.Where(frm => frm.EventId == query.EventId)
@@ -50,40 +53,30 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                                         ExternalIdentifier = frm.ExternalIdentifier,
                                         State = frm.State,
                                         Title = frm.Title,
-                                        Language = frm.Language,
+                                        Language = frm.Language
                                     })
                                     .ToListAsync();
 
-            foreach (var rawForm in rawForms.Where(frm => frm.PendingRawForm != null))
+            foreach (var rawForm in rawForms)
             {
-                var pendingForm = new PendingRegistrationForm
-                {
-                    Created = rawForm.PendingRawForm.Created,
-                    Processed = rawForm.PendingRawForm.Processed,
-                    RawRegistrationFormId = rawForm.PendingRawForm.Id
-                };
-
                 var existingForm = forms.FirstOrDefault(frm => frm.ExternalIdentifier == rawForm.ExternalIdentifier);
                 if (existingForm != null)
                 {
-                    existingForm.PendingRawForm = pendingForm;
+                    existingForm.LastImport = rawForm.LastProcessedRawForm?.Created;
+                    existingForm.PendingRawFormId = rawForm.PendingRawForm?.Id;
+                    existingForm.PendingRawFormCreated = rawForm.PendingRawForm?.Created;
                 }
                 else
                 {
                     forms.Add(new RegistrationFormItem
                     {
-                        ExternalIdentifier = rawForm.PendingRawForm.FormExternalIdentifier,
-                        RegistrationFormId = rawForm.PendingRawForm.Id,
-                        PendingRawForm = pendingForm
+                        ExternalIdentifier = rawForm.PendingRawForm?.FormExternalIdentifier,
+                        PendingRawFormId = rawForm.PendingRawForm?.Id,
+                        PendingRawFormCreated = rawForm.PendingRawForm?.Created
                     });
                 }
             }
             return forms;
-            //.Select(frm => new
-            // {
-            //     Created = frm.Created,
-            //     RawRegistrationFormId = frm.Id
-            // })
         }
     }
 }

@@ -19,12 +19,14 @@ export class RegistrationFormsComponent implements OnInit {
   constructor(private http: HttpClient, private route: ActivatedRoute) {
   }
 
-  import() {
+  import(form: RegistrationForm) {
     // ToDo: hardcoded
     var formId = '1rIgAL0iDPvGAbDAkKsRfj4huqDwz93qK60-2eqdtM7k';
-    this.http.post(`api/events/${this.getEventAcronym()}/registrationforms/${formId}`, null).subscribe(result => { },
-      error => { console.error(error); }
-    );
+    console.log(form.registrationFormId);
+    console.log(form.pendingRawFormCreated);
+    //this.http.post(`api/events/${this.getEventAcronym()}/registrationforms/${formId}`, null).subscribe(result => { },
+    //  error => { console.error(error); }
+    //);
   }
 
   getEventAcronym() {
@@ -34,9 +36,11 @@ export class RegistrationFormsComponent implements OnInit {
 
 
 class RegistrationForm {
-  externalIdentifier: string;
-  created: Date;
   registrationFormId: string;
+  externalIdentifier: string;
   title: string;
   language: string;
+  lastImport: Date;
+  pendingRawFormCreated: Date;
+  pendingRawFormId: string;
 }

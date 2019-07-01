@@ -5,16 +5,20 @@
     <tr>
       <th>Titel</th>
       <th>Sprache</th>
+      <th>Zuletzt importiert</th>
+      <th>Bereit für Import</th>
       <th>ID extern</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
     <tr *ngFor="let form of forms">
       <td>{{ form.title }}</td>
-      <td>{{ form.language}}</td>
+      <td>{{ form.language }}</td>
+      <td>{{ form.lastImport | date: 'dd.MM.yy HH:mm' }}</td>
+      <td>{{ form.pendingRawFormCreated | date: 'dd.MM.yy HH:mm' }}</td>
       <td>{{ form.externalIdentifier }}</td>
+      <td><button class="btn btn-primary btn-xs" (click)="import(form)">Import</button></td>
     </tr>
   </tbody>
 </table>
-
-<button class="btn btn-primary btn-xs" (click)="import()">Formular importieren</button>
