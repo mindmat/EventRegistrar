@@ -9,6 +9,10 @@ import { ActivatedRoute } from '@angular/router';
 export class RegistrationFormsComponent implements OnInit {
   forms: RegistrationForm[];
   ngOnInit() {
+    this.refreshList();
+  }
+
+  private refreshList() {
     this.http.get<RegistrationForm[]>(`api/events/${this.getEventAcronym()}/registrationforms/pending`).subscribe(result => {
       this.forms = result;
     },
@@ -20,13 +24,10 @@ export class RegistrationFormsComponent implements OnInit {
   }
 
   import(form: RegistrationForm) {
-    // ToDo: hardcoded
-    var formId = '1rIgAL0iDPvGAbDAkKsRfj4huqDwz93qK60-2eqdtM7k';
-    console.log(form.registrationFormId);
-    console.log(form.pendingRawFormCreated);
-    //this.http.post(`api/events/${this.getEventAcronym()}/registrationforms/${formId}`, null).subscribe(result => { },
-    //  error => { console.error(error); }
-    //);
+    this.http.post(`api/events/${this.getEventAcronym()}/registrationforms/${form.externalIdentifier}`, null)
+      .subscribe(result => { this.refreshList() },
+        error => { console.error(error); }
+      );
   }
 
   getEventAcronym() {
