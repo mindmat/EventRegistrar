@@ -61,9 +61,13 @@ export class RegistrablesComponent implements OnInit {
   }
 }
 
-class DoubleRegistrable {
+export class Registrable {
   id: string;
   name: string;
+}
+export class DoubleRegistrable extends Registrable{
+  //id: string;
+  //name: string;
   spotsAvailable: number;
   leadersAccepted: number;
   followersAccepted: number;
@@ -72,9 +76,9 @@ class DoubleRegistrable {
   maximumAllowedImbalance: number;
 }
 
-class SingleRegistrable {
-  id: string;
-  name: string;
+export class SingleRegistrable extends Registrable {
+  //id: string;
+  //name: string;
   spotsAvailable: number;
   accepted: number;
   onWaitingList: number;

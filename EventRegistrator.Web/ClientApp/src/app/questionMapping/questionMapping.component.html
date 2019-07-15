@@ -18,3 +18,29 @@
     </tr>
   </tbody>
 </table>
+
+<h2>Nicht zugeordnete Antwortoptionen</h2>
+<table class='table' *ngIf="unassignedQuestionOptions">
+  <thead>
+    <tr>
+      <th>Frage</th>
+      <th>Antwort</th>
+      <th>Zuordnung</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let unassignedQuestionOption of unassignedQuestionOptions">
+      <td>{{ unassignedQuestionOption.question }}</td>
+      <td>{{ unassignedQuestionOption.answer }}</td>
+      <td class="col-md-2">
+        <ng-multiselect-dropdown [placeholder]="'Zuordnung'"
+                                 [data]="registrables"
+                                 [(ngModel)]="unassignedQuestionOption.assignedRegistrableIds"
+                                 [settings]="dropdownSettings"
+                                 (onSelect)="onItemSelect($event, unassignedQuestionOption)"
+                                 (onDeSelect)="onItemDeselect($event, unassignedQuestionOption)">
+        </ng-multiselect-dropdown>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -10,6 +10,10 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
         {
             base.Configure(builder);
             builder.ToTable("Questions");
+
+            builder.HasOne(que => que.RegistrationForm)
+                   .WithMany()
+                   .HasForeignKey(que => que.RegistrationFormId);
         }
     }
 }

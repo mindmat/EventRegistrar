@@ -6,7 +6,7 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
 {
     public class Question : Entity
     {
-        //public RegistrationForm RegistrationForm { get; set; }
+        public RegistrationForm RegistrationForm { get; set; }
         public int ExternalId { get; set; }
 
         public int Index { get; set; }

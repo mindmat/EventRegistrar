@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
@@ -76,6 +77,7 @@ import { NotReceivedMailsComponent } from './mails/notReceivedMails.component';
     FileUploadModule,
     FroalaEditorModule.forRoot(),
     FroalaViewModule.forRoot(),
+    NgMultiSelectDropDownModule.forRoot(),
     RouterModule.forRoot([
       //{ path: '', redirectTo: 'eventSelection', pathMatch: 'full' },
       //{ path: 'home', component: HomeComponent },
