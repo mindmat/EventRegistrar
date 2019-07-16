@@ -52,6 +52,7 @@ namespace EventRegistrar.Backend.Registrations.Register
 
         private IEnumerable<IRegistrationProcessConfiguration> GetHardcodedConfiguration(Guid formId)
         {
+            // HACK: hardcoded
             if (formId == Guid.Parse("954BE8A3-3FAB-4C9C-9C0B-4B9FFDD1FF3F")) // rb18
             {
                 yield return new SingleRegistrationProcessConfiguration
@@ -152,6 +153,58 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_Remarks = Guid.Parse("DBE4F7E8-CDF7-489B-A853-A8F063B669BA"),
                     QuestionOptionId_Reduction = Guid.Parse("CD825A86-78A7-45B3-A354-8A14BEAB68A6")
                 };
+            }
+            else if (formId == Guid.Parse("7A84C480-C587-4476-AE78-53E054CB586D")) // rb19
+            {
+                yield return new SingleRegistrationProcessConfiguration
+                {
+                    Description = "Balboa Einzelanmeldung Basic",
+                    QuestionOptionId_Trigger = Guid.Parse("049062B2-C366-4A4B-86EC-412C0C0F3BE8"),
+                    QuestionId_FirstName = Guid.Parse("8A45197C-8A01-4680-A172-E7B7794A6908"),
+                    QuestionId_LastName = Guid.Parse("DDC31F78-5056-4388-AFBB-2BA61D389A74"),
+                    QuestionId_Email = Guid.Parse("5BF3C34A-30E3-460D-AC75-FEADFC3072D7"),
+                    QuestionId_Phone = Guid.Parse("7EA90B1D-160C-43BB-95B6-065FE82CE988"),
+                    QuestionOptionId_Leader = Guid.Parse("2F9EB3BF-5772-417E-922A-E0CC6706F289"),
+                    QuestionOptionId_Follower = Guid.Parse("C7EC7438-A03E-4EEA-8224-CF9DFF467DE4"),
+                    QuestionOptionId_Reduction = Guid.Parse("BDB67C48-096A-4143-B1C4-4E546368E34F"),
+                    LanguageMappings = new[]
+                    {
+                        (new Guid("09C78885-1414-485D-9B79-9804410020BC"), Language.Deutsch ),
+                        (new Guid("D82315E1-90B3-4D34-AF56-625A57A96D8F"), Language.English )
+                    }
+                };
+                yield return new SingleRegistrationProcessConfiguration
+                {
+                    Description = "Balboa Einzelanmeldung INT/ADV",
+                    QuestionOptionId_Trigger = Guid.Parse("4990F043-DACD-49B3-8C19-D8E7DF6B8053"),
+                    QuestionId_FirstName = Guid.Parse("98859C38-112C-441A-AEFC-38DFDB49841A"),
+                    QuestionId_LastName = Guid.Parse("DAED7E0F-03D0-4928-BC5D-8F042B4E7F16"),
+                    QuestionId_Email = Guid.Parse("CC30792D-4388-4E71-9F31-24B3910314E1"),
+                    QuestionId_Phone = Guid.Parse("D6AA5E29-104D-46A4-BD8B-79351595FE87"),
+                    QuestionOptionId_Leader = Guid.Parse("3E0C3286-2531-4505-BEB2-45EB3807A8D0"),
+                    QuestionOptionId_Follower = Guid.Parse("2DC7461D-7440-4B2E-AE1A-1BBE1255511A"),
+                    QuestionOptionId_Reduction = Guid.Parse("D15EDBAF-24F2-4B09-AF1B-CD02298708B9"),
+                    LanguageMappings = new[]
+                    {
+                        (new Guid("08D1F924-BBC4-4CAD-83E8-92890BB1C39C"), Language.Deutsch ),
+                        (new Guid("A9BA2C11-F67A-4D31-8E4A-323682C706CF"), Language.English )
+                    }
+                };
+                yield return new SingleRegistrationProcessConfiguration
+                {
+                    Description = "Partypass",
+                    QuestionOptionId_Trigger = Guid.Parse("BC74AB4A-9475-467B-9017-987F48E2C7B1"),
+                    QuestionId_FirstName = Guid.Parse("EDAA4003-C85E-44D4-AFDA-DAE2A83FC20D"),
+                    QuestionId_LastName = Guid.Parse("966F1966-A135-40E7-BD7C-C7B1FDC8245F"),
+                    QuestionId_Email = Guid.Parse("490F5556-B79C-4AF3-84AA-1D0B4F820F93"),
+                    QuestionId_Phone = Guid.Parse("735AE310-01E5-4279-8E7A-96325FBA3328"),
+                    LanguageMappings = new[]
+                    {
+                        (new Guid("A3D304E2-7E5C-4B77-B6F0-36EFF6E8192C"), Language.Deutsch ),
+                        (new Guid("73AC9B2F-1109-446A-946E-7AA50F09D649"), Language.English )
+                    }
+                };
+
             }
         }
     }
