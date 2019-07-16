@@ -154,7 +154,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionOptionId_Reduction = Guid.Parse("CD825A86-78A7-45B3-A354-8A14BEAB68A6")
                 };
             }
-            else if (formId == Guid.Parse("7A84C480-C587-4476-AE78-53E054CB586D")) // rb19
+            else if (formId == Guid.Parse("8A39B7CD-D97F-4438-8604-D85E90925DF5")) // rb19
             {
                 yield return new SingleRegistrationProcessConfiguration
                 {
