@@ -12,7 +12,8 @@ namespace EventRegistrar.Backend.Spots
             builder.ToTable("Seats");
             builder.HasOne(seat => seat.Registrable)
                    .WithMany(rbl => rbl.Seats)
-                   .HasForeignKey(rbl => rbl.RegistrableId);
+                   .HasForeignKey(rbl => rbl.RegistrableId)
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(seat => seat.Registration)
                    .WithMany(reg => reg.Seats_AsLeader)
