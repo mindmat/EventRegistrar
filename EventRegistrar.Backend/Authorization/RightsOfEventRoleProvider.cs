@@ -121,6 +121,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(WillPayAtCheckinCommand);
                 yield return nameof(AssignQuestionOptionToRegistrableCommand);
                 yield return nameof(RemoveQuestionOptionFromRegistrableCommand);
+                yield return nameof(DeleteRegistrableCommand);
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

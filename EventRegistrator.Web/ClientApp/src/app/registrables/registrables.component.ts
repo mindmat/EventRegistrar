@@ -12,6 +12,9 @@ export class RegistrablesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.refresh();
+  }
+  private refresh() {
     this.http.get<DoubleRegistrable[]>(`api/events/${this.getEventAcronym()}/DoubleRegistrableOverview`).subscribe(result => {
       this.doubleRegistrables = result;
     }, error => console.error(error));
@@ -39,8 +42,7 @@ export class RegistrablesComponent implements OnInit {
       maximumImbalance: this.doubleRegistrableLimits.maximumAllowedImbalance
     };
     this.http.put(`api/events/${this.getEventAcronym()}/registrables/${this.doubleRegistrableLimits.id}/coupleLimits`, payload).subscribe(result => {
-      //this.doubleRegistrables = result;
-    }, error => console.error(error));;
+    }, error => console.error(error));
   }
 
   changeSingleRegistrableLimits() {
@@ -48,8 +50,7 @@ export class RegistrablesComponent implements OnInit {
       maximumParticipants: this.singleRegistrableLimits.maximumParticipants
     };
     this.http.put(`api/events/${this.getEventAcronym()}/registrables/${this.singleRegistrableLimits.id}/singleLimits`, payload).subscribe(result => {
-      //this.doubleRegistrables = result;
-    }, error => console.error(error));;
+    }, error => console.error(error));
   }
   doubleRegistrables: DoubleRegistrable[];
   singleRegistrables: SingleRegistrable[];
@@ -59,15 +60,20 @@ export class RegistrablesComponent implements OnInit {
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
   }
+
+  private deleteRegistrable(registrableId: string) {
+    this.http.delete(`api/events/${this.getEventAcronym()}/registrables/${registrableId}`).subscribe(result => {
+      this.refresh();
+    }, error => console.error(error));
+  }
 }
 
 export class Registrable {
   id: string;
   name: string;
+  isDeletable: boolean;
 }
 export class DoubleRegistrable extends Registrable{
-  //id: string;
-  //name: string;
   spotsAvailable: number;
   leadersAccepted: number;
   followersAccepted: number;
@@ -77,8 +83,6 @@ export class DoubleRegistrable extends Registrable{
 }
 
 export class SingleRegistrable extends Registrable {
-  //id: string;
-  //name: string;
   spotsAvailable: number;
   accepted: number;
   onWaitingList: number;

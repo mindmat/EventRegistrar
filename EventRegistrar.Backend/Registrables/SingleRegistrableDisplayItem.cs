@@ -9,5 +9,6 @@ namespace EventRegistrar.Backend.Registrables
         public string Name { get; set; }
         public int? OnWaitingList { get; set; }
         public int? SpotsAvailable { get; set; }
+        public bool IsDeletable { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Spots;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,13 @@ namespace EventRegistrar.Backend.Registrables
     public class DoubleRegistrablesOverviewQueryHandler : IRequestHandler<DoubleRegistrablesOverviewQuery, IEnumerable<DoubleRegistrableDisplayItem>>
     {
         private readonly IQueryable<Registrable> _registrables;
+        private readonly IAuthorizationChecker _authorizationChecker;
 
-        public DoubleRegistrablesOverviewQueryHandler(IQueryable<Registrable> registrables)
+        public DoubleRegistrablesOverviewQueryHandler(IQueryable<Registrable> registrables,
+                                                      IAuthorizationChecker authorizationChecker)
         {
             _registrables = registrables;
+            _authorizationChecker = authorizationChecker;
         }
 
         public async Task<IEnumerable<DoubleRegistrableDisplayItem>> Handle(DoubleRegistrablesOverviewQuery query, CancellationToken cancellationToken)
@@ -45,7 +49,8 @@ namespace EventRegistrar.Backend.Registrables
                                                              && spt.IsSingleFollowerSpot()),
                 CouplesOnWaitingList = rbl.Seats.Count(spt => !spt.IsCancelled
                                                            && spt.IsWaitingList
-                                                           && (spt.IsUnmatchedPartnerSpot() || spt.IsMatchedPartnerSpot()))
+                                                           && (spt.IsUnmatchedPartnerSpot() || spt.IsMatchedPartnerSpot())),
+                IsDeletable = !rbl.Seats.Any(spt => !spt.IsCancelled) && _authorizationChecker.UserHasRight(query.EventId, nameof(DeleteRegistrableCommand)).Result
             });
         }
     }

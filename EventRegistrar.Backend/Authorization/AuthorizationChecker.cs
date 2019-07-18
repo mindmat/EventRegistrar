@@ -53,6 +53,25 @@ namespace EventRegistrar.Backend.Authorization
             }
         }
 
+        public async Task<bool> UserHasRight(Guid eventId, string requestTypeName)
+        {
+            if (_sourceQueueProvider.SourceQueueName != null)
+            {
+                // message from a queue, no user is authenticated
+                return true;
+            }
+
+            if (!_user.UserId.HasValue)
+            {
+                return false;
+            }
+
+            var key = new UserInEventCacheKey(_user.UserId.Value, eventId);
+            var rightsOfUserInEvent = await _memoryCache.GetOrCreateAsync(key, entry => GetRightsOfUserInEvent(entry, eventId));
+
+            return rightsOfUserInEvent.Contains(requestTypeName);
+        }
+
         private async Task<HashSet<string>> GetRightsOfUserInEvent(ICacheEntry entry, Guid eventId)
         {
             entry.SlidingExpiration = _slidingExpiration;

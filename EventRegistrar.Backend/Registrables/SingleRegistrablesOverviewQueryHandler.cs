@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Registrations;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -13,12 +14,15 @@ namespace EventRegistrar.Backend.Registrables
     {
         private readonly IQueryable<Registrable> _registrables;
         private readonly IQueryable<Registration> _registrations;
+        private readonly IAuthorizationChecker _authorizationChecker;
 
         public SingleRegistrablesOverviewQueryHandler(IQueryable<Registrable> registrables,
-                                                      IQueryable<Registration> registrations)
+                                                      IQueryable<Registration> registrations,
+                                                      IAuthorizationChecker authorizationChecker)
         {
             _registrables = registrables;
             _registrations = registrations;
+            _authorizationChecker = authorizationChecker;
         }
 
         public async Task<IEnumerable<SingleRegistrableDisplayItem>> Handle(SingleRegistrablesOverviewQuery query, CancellationToken cancellationToken)
@@ -43,7 +47,8 @@ namespace EventRegistrar.Backend.Registrables
                                                                   && !spt.IsWaitingList
                                                                   && !registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty)),
                                    OnWaitingList = rbl.Seats.Count(spt => !spt.IsCancelled
-                                                                       && (spt.IsWaitingList || registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty)))
+                                                                       && (spt.IsWaitingList || registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty))),
+                                   IsDeletable = !rbl.Seats.Any(spt => !spt.IsCancelled) && _authorizationChecker.UserHasRight(query.EventId, nameof(DeleteRegistrableCommand)).Result
                                });
         }
     }

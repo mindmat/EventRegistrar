@@ -99,5 +99,15 @@ namespace EventRegistrar.Backend.Registrables
                 RegistrableId = registrableId
             });
         }
+
+        [HttpDelete("api/events/{eventAcronym}/registrables/{registrableId:guid}")]
+        public async Task DeleteRegistrable(string eventAcronym, Guid registrableId)
+        {
+            await _mediator.Send(new DeleteRegistrableCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrableId = registrableId
+            });
+        }
     }
 }

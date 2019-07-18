@@ -13,5 +13,6 @@ namespace EventRegistrar.Backend.Registrables
         public int? MaximumAllowedImbalance { get; set; }
         public string Name { get; set; }
         public int? SpotsAvailable { get; set; }
+        public bool IsDeletable { get; set; }
     }
 }

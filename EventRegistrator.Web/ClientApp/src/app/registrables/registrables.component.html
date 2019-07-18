@@ -17,7 +17,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let registrable of doubleRegistrables">
-      <td><a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a></td>
+      <td><a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a>  <button class="btn btn-primary btn-sm" *ngIf="registrable.isDeletable" (click)="deleteRegistrable(registrable.id)">Löschen</button></td>
       <td><span class="badge badge-light" (click)="editCoupleLimits(registrable)" data-toggle="modal" data-target="#coupleRegistrableModal" style="cursor: pointer">{{ registrable.spotsAvailable }}</span></td>
       <td>{{ registrable.leadersAccepted }}</td>
       <td>{{ registrable.followersAccepted }}</td>
@@ -43,7 +43,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let registrable of singleRegistrables">
-      <td><a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a></td>
+      <td><a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a>  <button class="btn btn-primary btn-sm" *ngIf="registrable.isDeletable" (click)="deleteRegistrable(registrable.id)">Löschen</button></td>
       <td><span class="badge badge-light" (click)="editSingleLimits(registrable)" data-toggle="modal" data-target="#singleRegistrableModal" style="cursor: pointer">{{ registrable.spotsAvailable }}</span></td>
       <td>{{ registrable.accepted }}</td>
       <td>{{ registrable.onWaitingList }}</td>
