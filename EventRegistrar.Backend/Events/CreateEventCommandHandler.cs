@@ -105,7 +105,8 @@ namespace EventRegistrar.Backend.Events
                 }
 
                 // copy mail templates
-                var mailTemplatesOfSourceEvent = await _mailTemplates.Where(mtp => mtp.EventId == sourceEventId)
+                var mailTemplatesOfSourceEvent = await _mailTemplates.Where(mtp => mtp.EventId == sourceEventId
+                                                                                && !mtp.IsDeleted)
                                                                      .ToListAsync(cancellationToken);
                 foreach (var mailTemplateOfSourceEvent in mailTemplatesOfSourceEvent)
                 {

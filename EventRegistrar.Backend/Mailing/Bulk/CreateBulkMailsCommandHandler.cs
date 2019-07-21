@@ -36,7 +36,8 @@ namespace EventRegistrar.Backend.Mailing.Bulk
         {
             var templates = await _mailTemplates.Where(mtp => mtp.EventId == command.EventId
                                                            && mtp.BulkMailKey == command.BulkMailKey
-                                                           && mtp.Type == 0)
+                                                           && mtp.Type == 0
+                                                           && !mtp.IsDeleted)
                                                 .ToListAsync(cancellationToken);
 
             var registrationsOfEvent = await _registrations.Where(reg => reg.EventId == command.EventId
@@ -51,6 +52,7 @@ namespace EventRegistrar.Backend.Mailing.Bulk
                     ? registrationsOfEvent
                     : registrationsOfEvent.Where(reg => reg.Seats_AsLeader.Any(spt => !spt.IsCancelled && spt.RegistrableId == mailTemplate.RegistrableId)
                                                      || reg.Seats_AsFollower.Any(spt => !spt.IsCancelled && spt.RegistrableId == mailTemplate.RegistrableId))
+                                          .Take(100)
                                           .ToList();
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.Paid) == true)
                 {

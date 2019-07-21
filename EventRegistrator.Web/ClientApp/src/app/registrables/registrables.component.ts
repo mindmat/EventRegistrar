@@ -61,7 +61,7 @@ export class RegistrablesComponent implements OnInit {
     return this.route.snapshot.params['eventAcronym'];
   }
 
-  private deleteRegistrable(registrableId: string) {
+  deleteRegistrable(registrableId: string) {
     this.http.delete(`api/events/${this.getEventAcronym()}/registrables/${registrableId}`).subscribe(result => {
       this.refresh();
     }, error => console.error(error));

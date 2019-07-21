@@ -122,6 +122,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(AssignQuestionOptionToRegistrableCommand);
                 yield return nameof(RemoveQuestionOptionFromRegistrableCommand);
                 yield return nameof(DeleteRegistrableCommand);
+                yield return nameof(DeleteMailTemplateCommand);
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

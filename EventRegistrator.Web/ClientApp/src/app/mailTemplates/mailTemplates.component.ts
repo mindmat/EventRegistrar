@@ -17,11 +17,6 @@ export class MailTemplatesComponent {
   }
 
   ngOnInit() {
-    this.http.get<MailTemplate[]>(`api/events/${this.getEventAcronym()}/mailTemplates`)
-      .subscribe(result => this.mailTemplates = result,
-        error => {
-          console.error(error);
-        });
     this.http.get<MailType[]>(`api/events/${this.getEventAcronym()}/mails/types`)
       .subscribe(result => this.mailTypes = result,
         error => {
@@ -29,6 +24,15 @@ export class MailTemplatesComponent {
         });
     this.http.get<Language[]>(`api/events/${this.getEventAcronym()}/mails/languages`)
       .subscribe(result => this.languages = result,
+        error => {
+          console.error(error);
+        });
+    this.refresh()
+  }
+
+  refresh() {
+    this.http.get<MailTemplate[]>(`api/events/${this.getEventAcronym()}/mailTemplates`)
+      .subscribe(result => this.mailTemplates = result,
         error => {
           console.error(error);
         });
@@ -52,12 +56,20 @@ export class MailTemplatesComponent {
         });
   }
 
+  deleteTemplate(mailTemplateId: string) {
+    console.log(mailTemplateId);
+    this.http.delete(`api/events/${this.getEventAcronym()}/mailTemplates/${mailTemplateId}`).subscribe(result => {
+      this.refresh();
+    }, error => console.error(error));
+  }
+
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
   }
 }
 
 class MailTemplate {
+  id: string;
   type: string;
   language: string;
   template: string;

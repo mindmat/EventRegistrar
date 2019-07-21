@@ -10,6 +10,10 @@ namespace EventRegistrar.Backend.Mailing.Templates
         {
             base.Configure(builder);
             builder.ToTable("MailTemplates");
+
+            builder.HasOne(mtp => mtp.Event)
+                   .WithMany()
+                   .HasForeignKey(mtp => mtp.EventId);
         }
     }
 }

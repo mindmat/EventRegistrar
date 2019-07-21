@@ -1,6 +1,6 @@
 <h1>Mailvorlagen</h1>
 
-<table class="table table-hover" *ngIf="mailTemplates">
+<table class="table table-hover" *ngIf="mailTemplates" style="max-height: 100px">
   <thead class="thead-dark">
     <tr>
       <th>Typ</th>
@@ -68,9 +68,10 @@
       <td>Template (HTML)</td>
       <!--<td><textarea [(ngModel)]="mailTemplate.template" type="" class="form-control" (keyup)="renderMail()"></textarea></td>-->
       <td><div [froalaEditor] [(ngModel)]="mailTemplate.template"></div></td>
-      </tr>
+    </tr>
   </tbody>
 </table>
+<button class="btn btn-outline-primary" (click)="deleteTemplate(mailTemplate.id)" *ngIf="mailTemplate">Löschen</button>
 
 <button class="btn btn-primary" (click)="saveTemplate()" *ngIf="mailTemplate">Speichern</button>
 
@@ -78,5 +79,3 @@
 
 <!--<div id="templateRenderSpace" class="table-bordered">
 </div>-->
-
-

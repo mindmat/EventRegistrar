@@ -44,6 +44,7 @@ namespace EventRegistrar.Backend.Mailing.ManualTrigger
 
             var activeBulkMails = await _mailTemplates.Where(tpl => tpl.EventId == query.EventId
                                                                   && tpl.BulkMailKey != null
+                                                                  && !tpl.IsDeleted
                                                                   && tpl.Mails.Any())
                                                        .Select(tpl => new MailTypeItem { BulkMailKey = tpl.BulkMailKey, UserText = tpl.Subject })
                                                        .ToListAsync(cancellationToken);

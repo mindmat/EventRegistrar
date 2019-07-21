@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
 using MediatR;
@@ -53,6 +54,16 @@ namespace EventRegistrar.Backend.Mailing.Templates
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 Template = template
+            });
+        }
+
+        [HttpDelete("api/events/{eventAcronym}/mailTemplates/{mailTemplateId:guid}")]
+        public async Task DeleteMailTemplate(string eventAcronym, Guid mailTemplateId)
+        {
+            await _mediator.Send(new DeleteMailTemplateCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                MailTemplateId = mailTemplateId
             });
         }
     }
