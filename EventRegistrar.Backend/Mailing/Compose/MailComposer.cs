@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Payments.Due;
+using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Spots;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -20,18 +23,21 @@ namespace EventRegistrar.Backend.Mailing.Compose
         private const string PrefixLeader = "LEADER";
         private readonly DuePaymentConfiguration _duePaymentConfiguration;
         private readonly IQueryable<Event> _events;
+        private readonly IQueryable<SpotMailLine> _spotMailLines;
         private readonly ILogger _log;
         private readonly PaidAmountSummarizer _paidAmountSummarizer;
         private readonly IQueryable<Registration> _registrations;
 
         public MailComposer(IQueryable<Registration> registrations,
                             IQueryable<Event> events,
+                            IQueryable<SpotMailLine> spotMailLines,
                             ILogger log,
                             PaidAmountSummarizer paidAmountSummarizer,
                             DuePaymentConfiguration duePaymentConfiguration)
         {
             _registrations = registrations;
             _events = events;
+            _spotMailLines = spotMailLines;
             _log = log;
             _paidAmountSummarizer = paidAmountSummarizer;
             _duePaymentConfiguration = duePaymentConfiguration;
@@ -189,29 +195,42 @@ namespace EventRegistrar.Backend.Mailing.Compose
             return (null, key);
         }
 
-        private static string GetSeatText(Seat seat, Role role, string language)
+        private string GetSeatText(Seat seat, Role role, string language, ICollection<Response> responses)
         {
             if (seat?.Registrable == null)
             {
                 return "?";
             }
-            var text = $"- {seat.Registrable.Name}";
-            if (seat.Registrable.MaximumDoubleSeats.HasValue)
+            var text = _spotMailLines.FirstOrDefault(sml => sml.RegistrableId == seat.RegistrableId && sml.Language == language)?.Text;
+            if (text != null)
             {
-                // enrich info, e.g. "Lindy Hop Intermediate, Role: {role}, Partner: {email}"
-                // HACK: hardcoded
-                //var role = responses.Lookup("ROLE", "?");
-                //var partner = responses.Lookup("PARTNER", "?");
-                if (language == Language.Deutsch)
+                if (!text.StartsWith("- "))
                 {
-                    text += $", Rolle: {role}"; // + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
+                    text = "- " + text;
                 }
-                else
+                text = text.Replace("{Name}", seat.Registrable.Name, StringComparison.InvariantCultureIgnoreCase)
+                           .Replace("{Role}", role.ToString(), StringComparison.InvariantCultureIgnoreCase);
+                text = Regex.Replace(text, "{.*?}", mtc => FillResponse(mtc, responses));
+            }
+            else
+            {
+                text = $"- {seat.Registrable.Name}";
+                if (seat.Registrable.MaximumDoubleSeats.HasValue)
                 {
-                    text += $", Role: {role}"; // + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
+                    // enrich info, e.g. "Lindy Hop Intermediate, Role: {role}, Partner: {email}"
+                    // HACK: hardcoded
+                    //var role = responses.Lookup("ROLE", "?");
+                    //var partner = responses.Lookup("PARTNER", "?");
+                    if (language == Language.Deutsch)
+                    {
+                        text += $", Rolle: {role}"; // + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
+                    }
+                    else
+                    {
+                        text += $", Role: {role}"; // + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
+                    }
                 }
             }
-
             if (seat.IsCancelled)
             {
                 text += language == Language.Deutsch ? " (storniert)" : " (cancelled)";
@@ -223,6 +242,13 @@ namespace EventRegistrar.Backend.Mailing.Compose
             return text;
         }
 
+        private string FillResponse(Match match, ICollection<Response> responses)
+        {
+            var questionId = Guid.Parse(match.Value);
+            var response = responses.FirstOrDefault(rsp => rsp.QuestionId == questionId)?.ResponseString;
+            return response;
+        }
+
         private string GetSeatList(Registration registration, string language)
         {
             var seatLines = new List<(int sortKey, string seatLine)>();
@@ -232,7 +258,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                                .Where(seat => seat.Registrable.ShowInMailListOrder.HasValue
                                                           && !seat.IsCancelled)
                                                .Select(seat => (seat.Registrable.ShowInMailListOrder ?? int.MaxValue,
-                                                                GetSeatText(seat, Role.Leader, language))));
+                                                                GetSeatText(seat, Role.Leader, language, registration.Responses))));
             }
 
             if (registration.Seats_AsFollower != null)
@@ -241,7 +267,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                                .Where(seat => seat.Registrable.ShowInMailListOrder.HasValue
                                                           && !seat.IsCancelled)
                                                .Select(seat => (seat.Registrable.ShowInMailListOrder ?? int.MaxValue,
-                                                                GetSeatText(seat, Role.Follower, language))));
+                                                                GetSeatText(seat, Role.Follower, language, registration.Responses))));
             }
 
             var seatList = string.Join("<br />", seatLines.OrderBy(tmp => tmp.sortKey)

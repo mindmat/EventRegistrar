@@ -68,6 +68,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new SmsMap());
             builder.ApplyConfiguration(new ImportedMailMap());
             builder.ApplyConfiguration(new ImportedMailToRegistrationMap());
+            builder.ApplyConfiguration(new SpotMailLineMap());
 
             builder.ApplyConfiguration(new RawRegistrationFormMap());
             builder.ApplyConfiguration(new RawRegistrationMap());
