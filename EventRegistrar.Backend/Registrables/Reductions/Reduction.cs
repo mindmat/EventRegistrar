@@ -9,7 +9,7 @@ namespace EventRegistrar.Backend.Registrables.Reductions
         public bool ActivatedByReduction { get; set; }
         public decimal Amount { get; set; }
         public Role? OnlyForRole { get; set; }
-        public Guid? QuestionOptionId_ActivatesReduction { get; set; }
+        //public Guid? QuestionOptionId_ActivatesReduction { get; set; }
         public Registrable Registrable { get; set; }
         public Guid RegistrableId { get; set; }
         public Guid? RegistrableId1_ReductionActivatedIfCombinedWith { get; set; }

@@ -22,6 +22,7 @@ using EventRegistrar.Backend.Payments.Unassigned;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Participants;
+using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
@@ -87,6 +88,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(RegistrationsOnWaitingListQuery);
                 yield return nameof(NotReceivedMailsQuery);
                 yield return nameof(UnassignedQuestionOptionsQuery);
+                yield return nameof(PricingQuery);
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))

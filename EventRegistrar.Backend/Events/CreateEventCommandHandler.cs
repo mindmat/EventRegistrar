@@ -159,7 +159,7 @@ namespace EventRegistrar.Backend.Events
                             RegistrableId = newRegistrableId,
                             Amount = reduction.Amount,
                             OnlyForRole = reduction.OnlyForRole,
-                            QuestionOptionId_ActivatesReduction = reduction.QuestionOptionId_ActivatesReduction,
+                            //QuestionOptionId_ActivatesReduction = reduction.QuestionOptionId_ActivatesReduction,
                             RegistrableId1_ReductionActivatedIfCombinedWith = reduction.RegistrableId1_ReductionActivatedIfCombinedWith,
                             RegistrableId2_ReductionActivatedIfCombinedWith = reduction.RegistrableId2_ReductionActivatedIfCombinedWith
                         }, cancellationToken);

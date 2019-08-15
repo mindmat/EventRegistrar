@@ -1,0 +1,131 @@
+<h1>Preisgestaltung</h1>
+
+<p *ngIf="!pricings"><em>Loading...</em></p>
+
+<table class='table' *ngIf="pricings">
+  <thead>
+    <tr>
+      <th>Bezeichnung</th>
+      <th></th>
+      <th>Preis</th>
+      <th>Preis reduziert</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <ng-template ngFor let-pricing [ngForOf]="pricings">
+      <tr>
+        <td><a [routerLink]="['/', getEventAcronym(), 'registrables', pricing.id, 'participants']">{{ pricing.registrableName }}</a></td>
+        <td></td>
+        <td>
+          <input [(ngModel)]="pricing.price"
+                 type="number" />
+        </td>
+        <td>
+          <input [(ngModel)]="pricing.reducedPrice"
+                 type="number">
+        </td>
+        <td><button *ngIf="pricing.price" class="btn btn-primary btn-xs" (click)="addReduction(pricing)">+</button></td>
+      </tr>
+      <tr *ngFor="let reduction of pricing.reductions">
+        <td>
+          Reduktion wenn zusammen gebucht mit:
+          <ng-multiselect-dropdown [placeholder]="'Reduktion 1'"
+                                   [data]="registrables"
+                                   [(ngModel)]="reduction.registrableId1_ReductionActivatedIfCombinedWith"
+                                   [settings]="dropdownSettings">
+          </ng-multiselect-dropdown>
+          <ng-multiselect-dropdown [placeholder]="'Reduktion 2'"
+                                   [data]="registrables"
+                                   [(ngModel)]="reduction.registrableId2_ReductionActivatedIfCombinedWith"
+                                   [settings]="dropdownSettings"
+                                   *ngIf="reduction.registrableId1_ReductionActivatedIfCombinedWith">
+          </ng-multiselect-dropdown>
+        </td>
+        <td>
+          <input [(ngModel)]="reduction.amount"
+                 type="number" />
+        </td>
+        <td>{{ pricing.price - reduction.amount }}</td>
+        <td>{{ pricing.reducedPrice - reduction.amount }}</td>
+        <td><button class="btn btn-primary btn-xs" (click)="removeReduction(pricing, reduction)">-</button></td>
+      </tr>
+
+      <!--<tr *ngIf="pricing.reductions.length">
+        <td colspan="3">
+          <table>
+            <tr *ngFor="let reduction of pricing.reductions">
+              <td>Reduktion wenn zusammen gebucht mit:</td>
+              <td>
+                <ng-multiselect-dropdown [placeholder]="'Reduktion 1'"
+                                         [data]="registrables"
+                                         [(ngModel)]="reduction.registrableId1_ReductionActivatedIfCombinedWith"
+                                         [settings]="dropdownSettings">
+                </ng-multiselect-dropdown>
+              </td>
+              <td *ngIf="reduction.registrableId1_ReductionActivatedIfCombinedWith">
+                <ng-multiselect-dropdown [placeholder]="'Reduktion 2'"
+                                         [data]="registrables"
+                                         [(ngModel)]="reduction.registrableId2_ReductionActivatedIfCombinedWith"
+                                         [settings]="dropdownSettings">
+                </ng-multiselect-dropdown>
+              </td>
+              <td>{{ reduction.amount }}</td>
+            </tr>
+          </table>
+        </td>
+      </tr>-->
+    </ng-template>
+    <!--      <td><span class="badge badge-light" (click)="editCoupleLimits(registrable)" data-toggle="modal" data-target="#coupleRegistrableModal" style="cursor: pointer">{{ registrable.maximumAllowedImbalance }}</span></td>-->
+  </tbody>
+</table>
+<!--<button class="btn btn-primary" *ngIf="doubleRegistrables" (click)="promote()">Hinzufügen</button>-->
+<!--<div class="modal fade" id="coupleRegistrableModal" tabindex="-1" role="dialog" aria-labelledby="coupleRegistrableModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="coupleRegistrableModalLabel">{{ doubleRegistrableLimits.name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="maximumCouples">Maximale Anzahl Paare</label>
+          <input type="number" class="form-control" id="maximumCouples" [(ngModel)]="doubleRegistrableLimits.spotsAvailable">
+        </div>
+        <div class="form-group">
+          <label for="maximumCouples">Maximales Ungleichgewicht</label>
+          <input type="number" class="form-control" id="maximumImbalance" [(ngModel)]="doubleRegistrableLimits.maximumAllowedImbalance">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="changeCoupleRegistrableLimits()">Speichern</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="singleRegistrableModal" tabindex="-1" role="dialog" aria-labelledby="singleRegistrableModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="singleRegistrableModalLabel">{{ singleRegistrableLimits.name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="maximumCouples">Maximale Anzahl Teilnehmer</label>
+          <input type="number" class="form-control" id="maximumParticipants" [(ngModel)]="singleRegistrableLimits.maximumParticipants">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="changeSingleRegistrableLimits()">Speichern</button>
+      </div>
+    </div>
+  </div>
+</div>-->

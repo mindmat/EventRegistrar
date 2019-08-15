@@ -39,6 +39,7 @@ import 'bootstrap';
 import { InvalidEmailAddressesComponent } from './invalid-email-addresses/invalid-email-addresses.component';
 import { WaitingListComponent } from './waiting-list/waiting-list.component';
 import { NotReceivedMailsComponent } from './mails/notReceivedMails.component';
+import { PricingComponent } from './pricing/pricing.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { NotReceivedMailsComponent } from './mails/notReceivedMails.component';
     PartnerMatchingComponent,
     InvalidEmailAddressesComponent,
     WaitingListComponent,
-    NotReceivedMailsComponent
+    NotReceivedMailsComponent,
+    PricingComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -104,7 +106,8 @@ import { NotReceivedMailsComponent } from './mails/notReceivedMails.component';
       { path: ':eventAcronym/partnerMatching', component: PartnerMatchingComponent },
       { path: ':eventAcronym/invalid-email-addresses', component: InvalidEmailAddressesComponent },
       { path: ':eventAcronym/not-received-mails', component: NotReceivedMailsComponent },
-      { path: ':eventAcronym/waiting-list', component: WaitingListComponent }
+      { path: ':eventAcronym/waiting-list', component: WaitingListComponent },
+      { path: ':eventAcronym/pricing', component: PricingComponent }
       //{ path: '**', redirectTo: 'll18/registrables' }
     ])
   ],

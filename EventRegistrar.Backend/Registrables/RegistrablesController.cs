@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Registrables.Participants;
+using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.Registrables.WaitingList;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -107,6 +108,16 @@ namespace EventRegistrar.Backend.Registrables
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 RegistrableId = registrableId
+            });
+        }
+
+
+        [HttpGet("api/events/{eventAcronym}/registrables/pricing")]
+        public async Task<IEnumerable<RegistrablePricing>> GetPricing(string eventAcronym)
+        {
+            return await _mediator.Send(new PricingQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
             });
         }
     }

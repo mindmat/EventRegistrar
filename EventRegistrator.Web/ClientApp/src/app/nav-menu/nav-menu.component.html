@@ -108,6 +108,11 @@
           <span class='glyphicon glyphicon-envelope'></span> Zuordnung Fragen zu Listen
         </a>
       </li>
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
+        <a [routerLink]="[eventService.acronym, 'pricing']">
+          <span class='glyphicon glyphicon-envelope'></span> Preisgestaltung
+        </a>
+      </li>
     </ul>
     <!--</div>-->
   </nav>
