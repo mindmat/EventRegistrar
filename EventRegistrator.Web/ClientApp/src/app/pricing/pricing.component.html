@@ -19,10 +19,12 @@
         <td></td>
         <td>
           <input [(ngModel)]="pricing.price"
+                 (change)="savePrices(pricing)"
                  type="number" />
         </td>
         <td>
           <input [(ngModel)]="pricing.reducedPrice"
+                 (change)="savePrices(pricing)"
                  type="number">
         </td>
         <td><button *ngIf="pricing.price" class="btn btn-primary btn-xs" (click)="addReduction(pricing)">Neue Reduktion</button></td>
@@ -44,7 +46,7 @@
                  type="number"/>
         </td>
         <td>{{ pricing.price - reduction.amount }}</td>
-        <td>{{ pricing.reducedPrice - reduction.amount }}</td>
+        <td>{{ (pricing.reducedPrice || pricing.price) - reduction.amount }}</td>
         <td><button class="btn btn-primary btn-xs" (click)="removeReduction(pricing, reduction)">-</button></td>
       </tr>
 

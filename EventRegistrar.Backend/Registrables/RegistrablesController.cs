@@ -121,6 +121,18 @@ namespace EventRegistrar.Backend.Registrables
             });
         }
 
+        [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/prices")]
+        public async Task SetRegistrablePrices(string eventAcronym, Guid registrableId, [FromQuery]decimal? price, [FromQuery]decimal? reducedPrice)
+        {
+            await _mediator.Send(new SetRegistrablesPricesCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrableId = registrableId,
+                Price = price,
+                ReducedPrice = reducedPrice
+            });
+        }
+
 
         [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/reductions/{reductionId:guid}")]
         public async Task SaveReduction(string eventAcronym, Guid registrableId, Guid reductionId, [FromBody]Reduction reduction)

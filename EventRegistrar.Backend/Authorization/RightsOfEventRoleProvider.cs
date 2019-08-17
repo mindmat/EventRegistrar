@@ -128,6 +128,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(DeleteMailTemplateCommand);
                 yield return nameof(SaveReductionCommand);
                 yield return nameof(DeleteReductionCommand);
+                yield return nameof(SetRegistrablesPricesCommand);
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

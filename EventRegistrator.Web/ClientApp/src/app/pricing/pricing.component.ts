@@ -65,7 +65,6 @@ export class PricingComponent implements OnInit {
     this.http.put(`api/events/${this.getEventAcronym()}/registrables/${pricing.registrableId}/reductions/${newReduction.id}`, newReduction).subscribe(result => {
       pricing.reductions.push(newReduction);
     }, error => console.error(error));
-
   }
 
   private removeReduction(pricing: RegistrablePricing, reduction: PricingReduction) {
@@ -81,7 +80,18 @@ export class PricingComponent implements OnInit {
     console.log(reduction);
     this.http.put(`api/events/${this.getEventAcronym()}/registrables/${registrableId}/reductions/${reduction.id}`, reduction).subscribe(result => {
     }, error => console.error(error));
+  }
 
+  private savePrices(pricing: RegistrablePricing) {
+    let url = `api/events/${this.getEventAcronym()}/registrables/${pricing.registrableId}/prices`;
+    if (pricing.price != null) {
+      url += `?price=${pricing.price}`;
+      if (pricing.reducedPrice != null) {
+        url += `&reducedPrice=${pricing.reducedPrice}`;
+      }
+    }
+    this.http.put(url, null).subscribe(result => {
+    }, error => console.error(error));
   }
 
   pricings: RegistrablePricing[];
