@@ -6,6 +6,7 @@ namespace EventRegistrar.Backend.Registrables.Reductions
 {
     public class Reduction : Entity
     {
+        [Obsolete("Use Registrable.ReducedPrice instead")]
         public bool ActivatedByReduction { get; set; }
         public decimal Amount { get; set; }
         public Role? OnlyForRole { get; set; }

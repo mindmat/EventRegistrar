@@ -23,6 +23,7 @@ using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.Registrables.Pricing;
+using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
@@ -125,6 +126,8 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(RemoveQuestionOptionFromRegistrableCommand);
                 yield return nameof(DeleteRegistrableCommand);
                 yield return nameof(DeleteMailTemplateCommand);
+                yield return nameof(SaveReductionCommand);
+                yield return nameof(DeleteReductionCommand);
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

@@ -15,7 +15,7 @@
   <tbody>
     <ng-template ngFor let-pricing [ngForOf]="pricings">
       <tr>
-        <td><a [routerLink]="['/', getEventAcronym(), 'registrables', pricing.id, 'participants']">{{ pricing.registrableName }}</a></td>
+        <td><a [routerLink]="['/', getEventAcronym(), 'registrables', pricing.registrableId, 'participants']">{{ pricing.registrableName }}</a></td>
         <td></td>
         <td>
           <input [(ngModel)]="pricing.price"
@@ -25,26 +25,23 @@
           <input [(ngModel)]="pricing.reducedPrice"
                  type="number">
         </td>
-        <td><button *ngIf="pricing.price" class="btn btn-primary btn-xs" (click)="addReduction(pricing)">+</button></td>
+        <td><button *ngIf="pricing.price" class="btn btn-primary btn-xs" (click)="addReduction(pricing)">Neue Reduktion</button></td>
       </tr>
       <tr *ngFor="let reduction of pricing.reductions">
         <td>
           Reduktion wenn zusammen gebucht mit:
-          <ng-multiselect-dropdown [placeholder]="'Reduktion 1'"
+          <ng-multiselect-dropdown [placeholder]="'Reduktion'"
                                    [data]="registrables"
-                                   [(ngModel)]="reduction.registrableId1_ReductionActivatedIfCombinedWith"
-                                   [settings]="dropdownSettings">
-          </ng-multiselect-dropdown>
-          <ng-multiselect-dropdown [placeholder]="'Reduktion 2'"
-                                   [data]="registrables"
-                                   [(ngModel)]="reduction.registrableId2_ReductionActivatedIfCombinedWith"
+                                   [(ngModel)]="reduction.registrables_Combined"
                                    [settings]="dropdownSettings"
-                                   *ngIf="reduction.registrableId1_ReductionActivatedIfCombinedWith">
+                                   (onSelect)="saveReduction(pricing.registrableId, reduction)"
+                                   (onDeSelect)="saveReduction(pricing.registrableId, reduction)">
           </ng-multiselect-dropdown>
         </td>
         <td>
           <input [(ngModel)]="reduction.amount"
-                 type="number" />
+                 (change)="saveReduction(pricing.registrableId, reduction)"
+                 type="number"/>
         </td>
         <td>{{ pricing.price - reduction.amount }}</td>
         <td>{{ pricing.reducedPrice - reduction.amount }}</td>

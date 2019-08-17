@@ -21,10 +21,12 @@ export class PricingComponent implements OnInit {
   ngOnInit() {
     this.dropdownSettings = {
       placeholder: 'Reduktion',
-      singleSelection: true,
+      singleSelection: false,
       idField: 'id',
       textField: 'name',
-      allowSearchFilter: true
+      itemsShowLimit: 2,
+      limitSelection: 2,
+      enableCheckAll: false
     };
 
     this.http.get<DoubleRegistrable[]>(`api/events/${this.getEventAcronym()}/DoubleRegistrableOverview`).subscribe(result => {
@@ -41,6 +43,7 @@ export class PricingComponent implements OnInit {
   private refresh() {
     this.http.get<RegistrablePricing[]>(`api/events/${this.getEventAcronym()}/registrables/pricing`).subscribe(result => {
       this.pricings = result;
+      this.pricings.forEach(prc => prc.reductions.forEach(red => red.registrables_Combined = this.registrables.filter(rbl => rbl.id == red.registrableId1_ReductionActivatedIfCombinedWith || rbl.id == red.registrableId2_ReductionActivatedIfCombinedWith)));
     }, error => console.error(error));
   }
 
@@ -51,13 +54,34 @@ export class PricingComponent implements OnInit {
   }
 
   private addReduction(pricing: RegistrablePricing) {
-    var newReduction: PricingReduction = { id: Guid.newGuid(), amount: 0, registrableId1_ReductionActivatedIfCombinedWith: null, registrableId2_ReductionActivatedIfCombinedWith: null };
-    pricing.reductions.push(newReduction);
+    let newReduction: PricingReduction =
+    {
+      id: Guid.newGuid(),
+      amount: 0,
+      registrableId1_ReductionActivatedIfCombinedWith: null,
+      registrableId2_ReductionActivatedIfCombinedWith: null,
+      registrables_Combined: []
+    };
+    this.http.put(`api/events/${this.getEventAcronym()}/registrables/${pricing.registrableId}/reductions/${newReduction.id}`, newReduction).subscribe(result => {
+      pricing.reductions.push(newReduction);
+    }, error => console.error(error));
+
   }
 
   private removeReduction(pricing: RegistrablePricing, reduction: PricingReduction) {
-    var index = pricing.reductions.indexOf(reduction);
-    pricing.reductions.splice(index,1);
+    this.http.delete(`api/events/${this.getEventAcronym()}/registrables/${pricing.registrableId}/reductions/${reduction.id}`).subscribe(result => {
+      var index = pricing.reductions.indexOf(reduction);
+      pricing.reductions.splice(index, 1);
+    }, error => console.error(error));
+  }
+
+  private saveReduction(registrableId: string, reduction: PricingReduction) {
+    reduction.registrableId1_ReductionActivatedIfCombinedWith = reduction.registrables_Combined.length > 0 ? reduction.registrables_Combined[0].id : null;
+    reduction.registrableId2_ReductionActivatedIfCombinedWith = reduction.registrables_Combined.length > 1 ? reduction.registrables_Combined[1].id : null;
+    console.log(reduction);
+    this.http.put(`api/events/${this.getEventAcronym()}/registrables/${registrableId}/reductions/${reduction.id}`, reduction).subscribe(result => {
+    }, error => console.error(error));
+
   }
 
   pricings: RegistrablePricing[];
@@ -78,6 +102,7 @@ export class RegistrablePricing {
 export class PricingReduction {
   id: string;
   amount: number;
+  registrables_Combined: Registrable[];
   registrableId1_ReductionActivatedIfCombinedWith: string;
   registrableId2_ReductionActivatedIfCombinedWith: string;
 }

@@ -26,8 +26,7 @@ namespace EventRegistrar.Backend.Registrables.Pricing
                                           RegistrableId = rbl.Id,
                                           RegistrableName = rbl.Name,
                                           Price = rbl.Price,
-                                          ReducedPrice = rbl.Price - rbl.Reductions.Where(red => red.ActivatedByReduction)
-                                                                                   .Sum(red => red.Amount),
+                                          ReducedPrice = rbl.ReducedPrice,
                                           Reductions = rbl.Reductions.Where(red => !red.ActivatedByReduction)
                                                                      .Select(red => new PricingReduction
                                                                      {

@@ -22,6 +22,7 @@ namespace EventRegistrar.Backend.Registrables
         public int? MaximumSingleSeats { get; set; }
         public string Name { get; set; }
         public decimal? Price { get; set; }
+        public decimal? ReducedPrice { get; set; }
         public ICollection<QuestionOptionToRegistrableMapping> QuestionOptionMappings { get; set; }
         public ICollection<Reduction> Reductions { get; set; }
         public List<Seat> Seats { get; set; }
