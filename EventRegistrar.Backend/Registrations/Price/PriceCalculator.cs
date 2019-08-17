@@ -62,21 +62,22 @@ namespace EventRegistrar.Backend.Registrations.Price
             var price = 0m;
             foreach (var seat in notCancelledSeats)
             {
-                price += seat.Registrable.Price ?? 0m;
+                price += registration.IsReduced
+                            ? (seat.Registrable.Price ?? 0m)
+                            : (seat.Registrable.ReducedPrice ?? 0m);
                 var roleInThisSpot = seat.RegistrationId_Follower == registration.Id ? Role.Follower : Role.Leader;
-                var potentialReductions = await _reductions.Where(red => red.RegistrableId == seat.RegistrableId).ToListAsync();
+                var potentialReductions = await _reductions.Where(red => red.RegistrableId == seat.RegistrableId && !red.ActivatedByReduction).ToListAsync();
                 _logger.LogInformation($"potential reductions: {potentialReductions.Count}");
 
-                var applicableReductions = potentialReductions.Where(red => red.ActivatedByReduction
-                                                                         && registration.IsReduced
-                                                                         && red.RegistrableId1_ReductionActivatedIfCombinedWith == null
-                                                                         && (!red.OnlyForRole.HasValue || red.OnlyForRole == roleInThisSpot))
-                                                              .ToList();
+                //var applicableReductions = potentialReductions.Where(red => red.ActivatedByReduction
+                //                                                         && registration.IsReduced
+                //                                                         && red.RegistrableId1_ReductionActivatedIfCombinedWith == null
+                //                                                         && (!red.OnlyForRole.HasValue || red.OnlyForRole == roleInThisSpot))
+                //                                              .ToList();
 
-                applicableReductions.AddRange(potentialReductions.Where(red => red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue && bookedRegistrableIds.Contains(red.RegistrableId1_ReductionActivatedIfCombinedWith.Value)
-                                                                            && (!red.RegistrableId2_ReductionActivatedIfCombinedWith.HasValue || bookedRegistrableIds.Contains(red.RegistrableId2_ReductionActivatedIfCombinedWith.Value))
-                                                                            && (!red.ActivatedByReduction || registration.IsReduced)
-                                                                            && (!red.OnlyForRole.HasValue || red.OnlyForRole == roleInThisSpot)));
+                var applicableReductions = potentialReductions.Where(red => red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue && bookedRegistrableIds.Contains(red.RegistrableId1_ReductionActivatedIfCombinedWith.Value)
+                                                                         && (!red.RegistrableId2_ReductionActivatedIfCombinedWith.HasValue || bookedRegistrableIds.Contains(red.RegistrableId2_ReductionActivatedIfCombinedWith.Value))
+                                                                         && (!red.OnlyForRole.HasValue || red.OnlyForRole == roleInThisSpot));
 
                 price -= applicableReductions.Sum(red => red.Amount);
             }
