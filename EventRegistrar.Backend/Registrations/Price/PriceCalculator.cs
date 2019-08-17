@@ -63,8 +63,8 @@ namespace EventRegistrar.Backend.Registrations.Price
             foreach (var seat in notCancelledSeats)
             {
                 price += registration.IsReduced
-                            ? (seat.Registrable.Price ?? 0m)
-                            : (seat.Registrable.ReducedPrice ?? 0m);
+                            ? (seat.Registrable.ReducedPrice ?? seat.Registrable.Price ?? 0m)
+                            : (seat.Registrable.Price ?? 0m);
                 var roleInThisSpot = seat.RegistrationId_Follower == registration.Id ? Role.Follower : Role.Leader;
                 var potentialReductions = await _reductions.Where(red => red.RegistrableId == seat.RegistrableId && !red.ActivatedByReduction).ToListAsync();
                 _logger.LogInformation($"potential reductions: {potentialReductions.Count}");
