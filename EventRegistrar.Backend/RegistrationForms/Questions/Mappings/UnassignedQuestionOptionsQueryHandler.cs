@@ -26,7 +26,7 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
         public async Task<IEnumerable<QuestionToRegistrablesDisplayItem>> Handle(UnassignedQuestionOptionsQuery query, CancellationToken cancellationToken)
         {
             return await _questionOptions.Where(qop => qop.Question.RegistrationForm.EventId == query.EventId
-                                                   && !qop.Registrables.Any())
+                                                   && !qop.Registrables.Any(map => map.Registrable.RowVersion != null))
                                          .OrderBy(qop => qop.Question.Index)
                                          .Select(qop => new QuestionToRegistrablesDisplayItem
                                          {
