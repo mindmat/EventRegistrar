@@ -128,7 +128,7 @@ namespace EventRegistrar.Backend.Registrations.Matching
             {
                 EventId = command.EventId,
                 RegistrationId = registrationLeader.Id,
-                Withhold = true,
+                //Withhold = true,
                 MailType = mailType
             });
 

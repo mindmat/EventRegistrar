@@ -20,6 +20,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
         public const string FallbackLanguage = Language.English;
 
         private readonly ILogger _log;
+        private readonly MailReleaseConfiguration _mailReleaseConfiguration;
         private readonly MailComposer _mailComposer;
         private readonly IRepository<Mail> _mails;
         private readonly IRepository<MailToRegistration> _mailsToRegistrations;
@@ -33,7 +34,8 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                                 IRepository<MailToRegistration> mailsToRegistrations,
                                                 MailComposer mailComposer,
                                                 ServiceBusClient serviceBusClient,
-                                                ILogger log)
+                                                ILogger log,
+                                                MailReleaseConfiguration mailReleaseConfiguration)
         {
             _templates = templates;
             _registrations = registrations;
@@ -42,6 +44,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
             _mailComposer = mailComposer;
             _serviceBusClient = serviceBusClient;
             _log = log;
+            _mailReleaseConfiguration = mailReleaseConfiguration;
         }
 
         public async Task<Unit> Handle(ComposeAndSendMailCommand command, CancellationToken cancellationToken)
@@ -90,6 +93,11 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 mappings.Add(partnerRegistration);
             }
 
+            var releaseAutomatically = command.MailType != null
+                                    && _mailReleaseConfiguration.MailsToReleaseAutomatically != null
+                                    && _mailReleaseConfiguration.MailsToReleaseAutomatically.Contains(command.MailType.Value) == true;
+            var withhold = !releaseAutomatically
+                        || command.Withhold;
             var mail = new Mail
             {
                 Id = Guid.NewGuid(),
@@ -100,8 +108,8 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 SenderMail = template.SenderMail,
                 SenderName = template.SenderName,
                 Subject = template.Subject,
-                Recipients = string.Join(";", mappings.Select(reg => reg.RespondentEmail?.ToLowerInvariant()).Distinct()),
-                Withhold = command.Withhold,
+                Recipients = mappings.Select(reg => reg.RespondentEmail?.ToLowerInvariant()).Distinct().StringJoin(";"),
+                Withhold = withhold,
                 Created = DateTime.UtcNow
             };
 
@@ -130,7 +138,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 To = mappings.Select(reg => new EmailAddress { Email = reg.RespondentEmail, Name = reg.RespondentFirstName }).ToList()
             };
 
-            if (!command.Withhold)
+            if (!withhold)
             {
                 mail.Sent = DateTime.UtcNow;
                 _serviceBusClient.SendMessage(sendMailCommand);

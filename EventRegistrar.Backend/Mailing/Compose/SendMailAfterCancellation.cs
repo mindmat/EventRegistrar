@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Registrations.Cancel;
 using MediatR;
 
@@ -13,7 +12,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
             yield return new ComposeAndSendMailCommand
             {
                 MailType = MailType.RegistrationCancelled,
-                Withhold = true,
+                //Withhold = true,
                 RegistrationId = e.RegistrationId
             };
         }

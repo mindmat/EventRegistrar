@@ -155,11 +155,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                                               && ownSeats.Any(seat => seat.PartnerEmail != null
                                                                    && (!seat.RegistrationId.HasValue || !seat.RegistrationId_Follower.HasValue));
             MailType mailToSend;
-            var withhold = false;
+            //var withhold = false;
             if (registration.OriginalPrice == 0m && !string.IsNullOrEmpty(registration.SoldOutMessage))
             {
                 mailToSend = MailType.SoldOut;
-                withhold = true;
+                //withhold = true;
             }
             else
             {
@@ -187,7 +187,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             {
                 MailType = mailToSend,
                 RegistrationId = registration.Id,
-                Withhold = withhold,
+                //Withhold = withhold,
                 AllowDuplicate = false
             });
 

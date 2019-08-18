@@ -161,7 +161,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             {
                 MailType = mailType,
                 RegistrationId = registration.Id,
-                Withhold = true,
+                //Withhold = true,
                 AllowDuplicate = false
             });
 

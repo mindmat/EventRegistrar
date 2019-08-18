@@ -57,10 +57,15 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                 }
 
                 // registration is now accepted, send Mail
-                var mailType = registration.RegistrationId_Partner.HasValue
-                               ? MailType.PartnerRegistrationMatchedAndAccepted
-                               : MailType.SingleRegistrationAccepted;
-                _serviceBusClient.SendMessage(new ComposeAndSendMailCommand { MailType = mailType, Withhold = true, RegistrationId = registration.Id });
+                var sendMailCommand = new ComposeAndSendMailCommand
+                {
+                    MailType = registration.RegistrationId_Partner.HasValue
+                                 ? MailType.PartnerRegistrationMatchedAndAccepted
+                                 : MailType.SingleRegistrationAccepted,
+                    //Withhold = true,
+                    RegistrationId = registration.Id
+                };
+                _serviceBusClient.SendMessage(sendMailCommand);
             }
 
             return Unit.Value;
