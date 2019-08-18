@@ -9,5 +9,6 @@ namespace EventRegistrar.Backend.Registrations.Register
         public string LastName { get; set; }
         public string[] Registrables { get; set; }
         public Guid RegistrationId { get; set; }
+        public string Email { get; set; }
     }
 }

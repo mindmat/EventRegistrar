@@ -6,6 +6,7 @@ namespace EventRegistrar.Backend.Mailing
     public class MailReleaseConfiguration : IConfigurationItem
     {
         public IEnumerable<MailType> MailsToReleaseAutomatically { get; set; }
+        public bool SendRegistrationReceivedMail { get; set; }
     }
 
     public class DefaultMailReleaseConfiguration : MailReleaseConfiguration, IDefaultConfigurationItem
@@ -16,6 +17,7 @@ namespace EventRegistrar.Backend.Mailing
             {
                 //MailType.SingleRegistrationAccepted ,
                 //MailType.SingleRegistrationOnWaitingList ,
+                MailType.RegistrationReceived,
                 //MailType.PartnerRegistrationFirstPartnerAccepted ,
                 //MailType.PartnerRegistrationMatchedAndAccepted ,
                 //MailType.PartnerRegistrationFirstPartnerOnWaitingList ,
@@ -32,6 +34,7 @@ namespace EventRegistrar.Backend.Mailing
                 //MailType.PartnerRegistrationSecondReminder,
                 //MailType.OptionsForRegistrationsOnWaitingList
             };
+            SendRegistrationReceivedMail = true;
         }
     }
 }

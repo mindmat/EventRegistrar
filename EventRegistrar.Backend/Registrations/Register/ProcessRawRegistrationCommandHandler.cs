@@ -136,6 +136,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 RegistrationId = registration.Id,
                 FirstName = registration.RespondentFirstName,
                 LastName = registration.RespondentLastName,
+                Email = registration.RespondentEmail,
                 Registrables = spots.Select(spt => spt.Registrable?.Name).ToArray()
             });
 
