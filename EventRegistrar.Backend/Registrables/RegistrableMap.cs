@@ -10,6 +10,10 @@ namespace EventRegistrar.Backend.Registrables
         {
             builder.ToTable("Registrables");
             base.Configure(builder);
+
+            builder.HasOne(rbl => rbl.Event)
+                   .WithMany(evt => evt.Registrables)
+                   .HasForeignKey(rbl => rbl.EventId);
         }
     }
 }

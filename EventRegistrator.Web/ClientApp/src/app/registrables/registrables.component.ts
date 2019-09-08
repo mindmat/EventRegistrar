@@ -8,12 +8,13 @@ import { EventService } from "../events/eventService.service";
   templateUrl: './registrables.component.html'
 })
 export class RegistrablesComponent implements OnInit {
-  constructor(private http: HttpClient, private route: ActivatedRoute, private eventService: EventService) {
+  constructor(private http: HttpClient, private route: ActivatedRoute, private readonly eventService: EventService) {
   }
 
   ngOnInit() {
     this.refresh();
   }
+
   private refresh() {
     this.http.get<DoubleRegistrable[]>(`api/events/${this.getEventAcronym()}/DoubleRegistrableOverview`).subscribe(result => {
       this.doubleRegistrables = result;
@@ -56,6 +57,12 @@ export class RegistrablesComponent implements OnInit {
   singleRegistrables: SingleRegistrable[];
   doubleRegistrableLimits = new DoubleRegistrableLimits();
   singleRegistrableLimits = new SingleRegistrableLimits();
+
+  deleteTestDataAndOpen() {
+    this.http.post(`api/events/${this.getEventAcronym()}/openRegistration?deleteTestData=true`, null).subscribe(result => {
+      this.refresh();
+    }, error => console.error(error));
+  }
 
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];

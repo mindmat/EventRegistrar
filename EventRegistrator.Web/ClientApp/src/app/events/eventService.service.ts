@@ -11,7 +11,7 @@ export class EventService {
     private readonly titleService: Title,
     private readonly http: HttpClient) {
     this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd && this.activeEvent == null) {
+      if (event instanceof NavigationEnd) {
         var eventAcronym = event.url.split("/").filter(split => split !== "")[0];
         this.setActiveEvent(eventAcronym);
       }
@@ -19,7 +19,7 @@ export class EventService {
   }
 
   setActiveEvent(eventAcronym: string) {
-    if (eventAcronym != null && this.activeEvent == null) {
+    if (eventAcronym != null && (this.activeEvent == null || this.activeEvent.acronym != eventAcronym)) {
       this.http.get<EventDetails>(`api/events/${eventAcronym}`).subscribe(result => {
         this.activeEvent = result;
         this.titleService.setTitle(result.name);
@@ -28,14 +28,14 @@ export class EventService {
   }
 }
 
-class EventDetails {
+export class EventDetails {
   id: string;
   name: string;
   acronym: string;
   state: EventState;
 }
 
-enum EventState {
+export enum EventState {
   Setup = 1,
   RegistrationOpen = 2,
   RegistrationClosed = 3,

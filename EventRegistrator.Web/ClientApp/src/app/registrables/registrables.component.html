@@ -17,7 +17,10 @@
   </thead>
   <tbody>
     <tr *ngFor="let registrable of doubleRegistrables">
-      <td><a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a>  <button class="btn btn-primary btn-sm" *ngIf="registrable.isDeletable" (click)="deleteRegistrable(registrable.id)">Löschen</button></td>
+      <td>
+        <a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a>
+        <button class="btn btn-primary btn-sm" *ngIf="registrable.isDeletable && eventService.activeEvent?.state === 1" (click)="deleteRegistrable(registrable.id)">Löschen</button>
+      </td>
       <td><span class="badge badge-light" (click)="editCoupleLimits(registrable)" data-toggle="modal" data-target="#coupleRegistrableModal" style="cursor: pointer">{{ registrable.spotsAvailable }}</span></td>
       <td>{{ registrable.leadersAccepted }}</td>
       <td>{{ registrable.followersAccepted }}</td>
@@ -43,13 +46,20 @@
   </thead>
   <tbody>
     <tr *ngFor="let registrable of singleRegistrables">
-      <td><a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a>  <button class="btn btn-primary btn-sm" *ngIf="registrable.isDeletable" (click)="deleteRegistrable(registrable.id)">Löschen</button></td>
+      <td>
+        <a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a>
+        <button class="btn btn-primary btn-sm" *ngIf="registrable.isDeletable && eventService.activeEvent?.state === 1" (click)="deleteRegistrable(registrable.id)">Löschen</button>
+      </td>
       <td><span class="badge badge-light" (click)="editSingleLimits(registrable)" data-toggle="modal" data-target="#singleRegistrableModal" style="cursor: pointer">{{ registrable.spotsAvailable }}</span></td>
       <td>{{ registrable.accepted }}</td>
       <td>{{ registrable.onWaitingList }}</td>
     </tr>
   </tbody>
 </table>
+
+<div *ngIf="eventService.activeEvent?.state === 1">
+  <button class="btn btn-primary btn-xs" (click)="deleteTestDataAndOpen()">Testdaten löschen & Registrierung öffnen</button>
+</div>
 
 <div class="modal fade" id="coupleRegistrableModal" tabindex="-1" role="dialog" aria-labelledby="coupleRegistrableModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">

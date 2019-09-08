@@ -6,7 +6,7 @@ namespace EventRegistrar.Backend.Events
 {
     public class OpenRegistrationCommand : IEventBoundRequest, IRequest
     {
-        public bool DeleteData { get; set; }
+        public bool DeleteTestData { get; set; }
         public Guid EventId { get; set; }
     }
 }

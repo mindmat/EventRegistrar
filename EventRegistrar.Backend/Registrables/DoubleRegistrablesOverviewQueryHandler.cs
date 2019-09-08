@@ -29,6 +29,7 @@ namespace EventRegistrar.Backend.Registrables
                                                   .Include(rbl => rbl.Seats)
                                                   .ToListAsync(cancellationToken);
 
+            var userCanDeleteRegistrable = await _authorizationChecker.UserHasRight(query.EventId, nameof(DeleteRegistrableCommand));
             return registrables.Select(rbl => new DoubleRegistrableDisplayItem
             {
                 Id = rbl.Id,
@@ -50,7 +51,9 @@ namespace EventRegistrar.Backend.Registrables
                 CouplesOnWaitingList = rbl.Seats.Count(spt => !spt.IsCancelled
                                                            && spt.IsWaitingList
                                                            && (spt.IsUnmatchedPartnerSpot() || spt.IsMatchedPartnerSpot())),
-                IsDeletable = !rbl.Seats.Any(spt => !spt.IsCancelled) && _authorizationChecker.UserHasRight(query.EventId, nameof(DeleteRegistrableCommand)).Result
+                IsDeletable = !rbl.Seats.Any(spt => !spt.IsCancelled)
+                                              && userCanDeleteRegistrable
+                                              && rbl.Event.State == RegistrationForms.State.Setup
             });
         }
     }

@@ -52,12 +52,12 @@ namespace EventRegistrar.Backend.Events
         }
 
         [HttpPost("api/events/{eventAcronym}/openRegistration")]
-        public async Task OpenRegistration(string eventAcronym)
+        public async Task OpenRegistration(string eventAcronym, bool deleteTestData = false)
         {
             await _mediator.Send(new OpenRegistrationCommand
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                DeleteData = true
+                DeleteTestData = deleteTestData
             });
         }
 

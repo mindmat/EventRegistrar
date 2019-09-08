@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrables.Compositions;
 using EventRegistrar.Backend.Registrables.Reductions;
@@ -14,6 +15,7 @@ namespace EventRegistrar.Backend.Registrables
 
         public ICollection<RegistrableComposition> Compositions { get; set; }
         public Guid EventId { get; set; }
+        public Event Event { get; set; }
 
         public bool HasWaitingList { get; set; }
         public bool IsCore { get; set; }

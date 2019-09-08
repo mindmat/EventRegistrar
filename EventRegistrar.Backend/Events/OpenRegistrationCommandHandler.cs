@@ -62,16 +62,18 @@ namespace EventRegistrar.Backend.Events
 
             eventToOpen.State = State.RegistrationOpen;
 
-            _individualReductions.Remove(ird => ird.Registration.EventId == command.EventId);
-            _mails.Remove(mev => mev.EventId == command.EventId);
-            _mailsOfRegistrations.Remove(mev => mev.Registration.EventId == command.EventId);
-            _registrationCancellations.Remove(cnc => cnc.Registration.EventId == command.EventId);
-            _registrations.Remove(reg => reg.EventId == command.EventId);
-            _responses.Remove(rsp => rsp.Registration.EventId == command.EventId);
-            _seats.Remove(seat => seat.Registrable.EventId == command.EventId);
-            _sms.Remove(sms => sms.Registration.EventId == command.EventId);
-            _mailEvents.Remove(mev => mev.Mail.EventId == command.EventId);
-
+            if (command.DeleteTestData)
+            {
+                _individualReductions.Remove(ird => ird.Registration.EventId == command.EventId);
+                _mails.Remove(mev => mev.EventId == command.EventId);
+                _mailsOfRegistrations.Remove(mev => mev.Registration.EventId == command.EventId);
+                _registrationCancellations.Remove(cnc => cnc.Registration.EventId == command.EventId);
+                _registrations.Remove(reg => reg.EventId == command.EventId);
+                _responses.Remove(rsp => rsp.Registration.EventId == command.EventId);
+                _seats.Remove(seat => seat.Registrable.EventId == command.EventId);
+                _sms.Remove(sms => sms.Registration.EventId == command.EventId);
+                _mailEvents.Remove(mev => mev.Mail.EventId == command.EventId);
+            }
             return Unit.Value;
         }
     }

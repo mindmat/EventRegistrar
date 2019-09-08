@@ -36,7 +36,7 @@ namespace EventRegistrar.Backend.Registrables
             var registrationsOnWaitingList = new HashSet<Guid>(_registrations.Where(reg => reg.EventId == query.EventId
                                                                                         && (reg.IsWaitingList ?? false))
                                                                              .Select(reg => reg.Id));
-
+            var userCanDeleteRegistrable = await _authorizationChecker.UserHasRight(query.EventId, nameof(DeleteRegistrableCommand));
             return registrables.OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
                                .Select(rbl => new SingleRegistrableDisplayItem
                                {
@@ -48,7 +48,9 @@ namespace EventRegistrar.Backend.Registrables
                                                                   && !registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty)),
                                    OnWaitingList = rbl.Seats.Count(spt => !spt.IsCancelled
                                                                        && (spt.IsWaitingList || registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty))),
-                                   IsDeletable = !rbl.Seats.Any(spt => !spt.IsCancelled) && _authorizationChecker.UserHasRight(query.EventId, nameof(DeleteRegistrableCommand)).Result
+                                   IsDeletable = !rbl.Seats.Any(spt => !spt.IsCancelled)
+                                              && userCanDeleteRegistrable
+                                              && rbl.Event.State == RegistrationForms.State.Setup
                                });
         }
     }
