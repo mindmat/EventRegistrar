@@ -90,6 +90,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(NotReceivedMailsQuery);
                 yield return nameof(UnassignedQuestionOptionsQuery);
                 yield return nameof(PricingQuery);
+                yield return nameof(EventQuery);
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
