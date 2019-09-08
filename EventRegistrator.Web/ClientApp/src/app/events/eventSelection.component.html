@@ -13,7 +13,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let event of events">
-      <td><a [routerLink]="[event.eventAcronym, 'registrables']" (click)="setEvent(event)">{{ event.eventName }}</a></td>
+      <td><a [routerLink]="[event.eventAcronym, 'registrables']">{{ event.eventName }}</a></td>
       <td>{{ event.eventAcronym }}</td>
       <td>{{ event.role }}</td>
       <td><p *ngIf="event.requestSent">x</p></td>

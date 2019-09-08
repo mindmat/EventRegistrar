@@ -13,103 +13,103 @@
           <span class='glyphicon glyphicon-home'></span> Home
         </a>
       </li>
-      <li [routerLinkActive]='["link-active"]' *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'registrables']">
+      <li [routerLinkActive]='["link-active"]' *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'registrables']">
           <span class='glyphicon glyphicon-th-list'></span> Übersicht Anmeldungen
         </a>
       </li>
-      <li [routerLinkActive]='["link-active"]' *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'partnerMatching']">
+      <li [routerLinkActive]='["link-active"]' *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'partnerMatching']">
           <span class='glyphicon glyphicon-th-list'></span> Partneranmeldungen zuordnen
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'mails']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'mails']">
           <span class='glyphicon glyphicon-envelope'></span> Mails
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'invalid-email-addresses']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'invalid-email-addresses']">
           <span class='glyphicon glyphicon-envelope'></span> Ungültige Mailadressen
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'not-received-mails']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'not-received-mails']">
           <span class='glyphicon glyphicon-envelope'></span> Nicht empfangene Mails
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'hosting']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'hosting']">
           <span class='glyphicon glyphicon-home'></span> Hosting
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'payments']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'payments']">
           <span class='glyphicon glyphicon-usd'></span> Kontoauszug
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'unassignedPayments']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'unassignedPayments']">
           <span class='glyphicon glyphicon-usd'></span> Nicht ausgeglichene Zahlungen
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'paymentOverview']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'paymentOverview']">
           <span class='glyphicon glyphicon-usd'></span> Übersicht Einnahmen
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'searchRegistration']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'searchRegistration']">
           <span class='glyphicon glyphicon-search'></span> Anmeldung suchen
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'paymentReminders']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'paymentReminders']">
           <span class='glyphicon glyphicon-calendar'></span> Ausstehende Zahlungen
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'checkinView']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'checkinView']">
           <span class='glyphicon glyphicon-list'></span> Übersicht Checkin
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'partyOverview']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'partyOverview']">
           <span class='glyphicon glyphicon-file'></span> Übersicht Parties
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'mailTemplates']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'mailTemplates']">
           <span class='glyphicon glyphicon-envelope'></span> Mailvorlagen
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'bulkMailTemplates']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'bulkMailTemplates']">
           <span class='glyphicon glyphicon-envelope'></span> Massenmails
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'waiting-list']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'waiting-list']">
           <span class='glyphicon glyphicon-envelope'></span> Wartelisten
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'authorization']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'authorization']">
           <span class='glyphicon glyphicon-envelope'></span> Berechtigungen
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'registrationForms']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'registrationForms']">
           <span class='glyphicon glyphicon-envelope'></span> Anmeldeformulare
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'questionMapping']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'questionMapping']">
           <span class='glyphicon glyphicon-envelope'></span> Zuordnung Fragen zu Listen
         </a>
       </li>
-      <li [routerLinkActive]="['link-active']" *ngIf="eventService.acronym">
-        <a [routerLink]="[eventService.acronym, 'pricing']">
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'pricing']">
           <span class='glyphicon glyphicon-envelope'></span> Preisgestaltung
         </a>
       </li>

@@ -70,6 +70,7 @@ namespace EventRegistrar.Backend.Events
             _responses.Remove(rsp => rsp.Registration.EventId == command.EventId);
             _seats.Remove(seat => seat.Registrable.EventId == command.EventId);
             _sms.Remove(sms => sms.Registration.EventId == command.EventId);
+            _mailEvents.Remove(mev => mev.Mail.EventId == command.EventId);
 
             return Unit.Value;
         }

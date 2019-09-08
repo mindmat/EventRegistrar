@@ -51,10 +51,6 @@ export class EventSelectionComponent {
         });
   }
 
-  setEvent(event: UserInEventDisplayItem) {
-    this.eventService.setEvent(event);
-  }
-
   createEvent() {
     var url = `api/events/${this.newEvent.acronym}?name=${this.newEvent.name}&id=${this.newEvent.id}`;
     if (this.newEventCopyOfEventId != null) {

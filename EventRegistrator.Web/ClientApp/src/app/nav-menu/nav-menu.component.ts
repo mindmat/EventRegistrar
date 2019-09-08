@@ -17,12 +17,10 @@ export class NavMenuComponent {
   isExpanded = true;
 
   collapse() {
-    console.info(this.eventService.acronym);
     this.isExpanded = false;
   }
 
   toggle() {
-    console.info(this.eventService.acronym);
     this.isExpanded = !this.isExpanded;
   }
 }
