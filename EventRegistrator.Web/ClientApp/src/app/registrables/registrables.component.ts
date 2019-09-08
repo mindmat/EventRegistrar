@@ -8,7 +8,7 @@ import { EventService } from "../events/eventService.service";
   templateUrl: './registrables.component.html'
 })
 export class RegistrablesComponent implements OnInit {
-  constructor(private http: HttpClient, private route: ActivatedRoute, private readonly eventService: EventService) {
+  constructor(private http: HttpClient, private route: ActivatedRoute, public readonly eventService: EventService) {
   }
 
   ngOnInit() {
