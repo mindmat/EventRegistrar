@@ -2,12 +2,13 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Authorization;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Events
 {
-    public class EventQuery : IRequest<EventDetails>
+    public class EventQuery : IRequest<EventDetails>, IEventBoundRequest
     {
         public Guid EventId { get; set; }
     }
