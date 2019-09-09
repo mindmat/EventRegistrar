@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
 using MediatR;
@@ -15,12 +16,15 @@ namespace EventRegistrar.Backend.Mailing
     {
         private readonly IRepository<Mail> _mails;
         private readonly ServiceBusClient _serviceBusClient;
+        private readonly IEventBus _eventBus;
 
         public ReleaseMailCommandHandler(IRepository<Mail> mails,
-                                         ServiceBusClient serviceBusClient)
+                                         ServiceBusClient serviceBusClient,
+                                         IEventBus eventBus)
         {
             _mails = mails;
             _serviceBusClient = serviceBusClient;
+            _eventBus = eventBus;
         }
 
         public async Task<Unit> Handle(ReleaseMailCommand command, CancellationToken cancellationToken)
@@ -54,6 +58,12 @@ namespace EventRegistrar.Backend.Mailing
             withheldMail.Sent = DateTime.UtcNow;
 
             _serviceBusClient.SendMessage(sendMailCommand);
+
+            _eventBus.Publish(new MailReleased
+            {
+                MailId = withheldMail.Id,
+                To = sendMailCommand.To.Select(to => $"{to.Name} - {to.Email}").StringJoin()
+            });
 
             return Unit.Value;
         }
