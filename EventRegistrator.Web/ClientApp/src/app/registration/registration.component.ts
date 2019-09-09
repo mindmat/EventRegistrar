@@ -17,6 +17,7 @@ export class RegistrationComponent {
   payments: AssignedPayments[];
   allRegistrables: Registrable[];
   selectedMailId: number;
+  reduction: number = 0;
 
   private registrationId: string;
   private bookedRegistrableIds: string[];

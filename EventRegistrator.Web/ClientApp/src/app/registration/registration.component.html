@@ -266,6 +266,7 @@
   </div>
 </div>
 
+<!-- modal: spots -->
 <div class="modal fade" id="registrablesModal" tabindex="-1" role="dialog" aria-labelledby="registrablesModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -312,10 +313,18 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-6">
-            <p>Betrag:</p>
+            <p>Reduktion:</p>
           </div>
           <div class="col-sm-6">
-            <input type="number" #amountReduction />
+            <input type="number" #amountReduction [(ngModel)]="reduction" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <p>Restlicher Preis:</p>
+          </div>
+          <div class="col-sm-6">
+            <p>{{ registration.price - reduction }}</p>
           </div>
         </div>
         <div class="row">
