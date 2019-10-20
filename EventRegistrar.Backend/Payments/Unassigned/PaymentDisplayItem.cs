@@ -12,7 +12,8 @@ namespace EventRegistrar.Backend.Payments.Unassigned
         public string Info { get; set; }
         public Guid? PaymentSlipId { get; set; }
         public string Reference { get; set; }
-        public decimal? Repaid { get; set; }
+        public decimal? AmountRepaid { get; set; }
         public bool Settled { get; set; }
+        public bool Ignore { get; set; }
     }
 }

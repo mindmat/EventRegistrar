@@ -30,7 +30,8 @@ namespace EventRegistrar.Backend.Payments.Statements
                                      Currency = rpy.Currency,
                                      Info = rpy.Info,
                                      Reference = rpy.Reference,
-                                     Repaid = rpy.Repaid,
+                                     AmountRepaid = rpy.Repaid,
+                                     Ignore = rpy.Ignore,
                                      Settled = rpy.Settled
                                  })
                                  .OrderByDescending(rpy => rpy.BookingDate)

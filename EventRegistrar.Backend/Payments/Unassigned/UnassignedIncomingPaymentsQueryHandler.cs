@@ -33,7 +33,7 @@ namespace EventRegistrar.Backend.Payments.Unassigned
                                      Currency = rpy.Currency,
                                      Info = rpy.Info,
                                      Reference = rpy.Reference,
-                                     Repaid = rpy.Repaid,
+                                     AmountRepaid = rpy.Repaid,
                                      Settled = rpy.Settled,
                                      PaymentSlipId = rpy.PaymentSlipId
                                  })

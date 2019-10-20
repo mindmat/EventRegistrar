@@ -44,12 +44,13 @@ export class PaymentsComponent implements OnInit {
 class Payment {
   id: string;
   amount: number;
-  assigned: number;
+  amountAssigned: number;
   bookingDate: Date;
   currency: string;
   info: string;
   reference: string;
-  repaid: number;
+  amountRepaid: number;
   settled: boolean;
   locked: boolean;
+  ignore: boolean;
 }

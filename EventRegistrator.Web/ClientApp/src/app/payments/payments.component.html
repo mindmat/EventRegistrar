@@ -20,8 +20,7 @@
         <th>Mitteilungstext</th>
         <th>Datum</th>
         <th>Betrag</th>
-        <th>Zugeordnet</th>
-        <th>Zurückbezahlt</th>
+        <th>Zusatzinfos</th>
       </tr>
     </thead>
     <tbody>
@@ -29,8 +28,11 @@
         <td class="col-lg-5"><textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;">{{ payment.info }}</textarea></td>
         <td>{{ payment.bookingDate | date: 'dd.MM.yy' }}</td>
         <td>{{ payment.amount }}{{ payment.currency}}</td>
-        <td>{{ payment.assigned }}</td>
-        <td>{{ payment.repaid }}</td>
+        <td>
+          <span class="badge badge-secondary" *ngIf="payment.amountAssigned> 0">Zugeordnet: {{ payment.amountAssigned }}{{ payment.currency}}</span>
+          <span class="badge badge-secondary" *ngIf="payment.amountRepaid> 0">Zurückbezahlt: {{ payment.amountRepaid }}{{ payment.currency}}</span>
+          <span class="badge badge-secondary" *ngIf="payment.ignore">Ignoriert</span>
+        </td>
       </tr>
     </tbody>
   </table>
