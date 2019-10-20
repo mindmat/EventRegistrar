@@ -69,6 +69,7 @@ namespace EventRegistrar.Backend.Registrables.Participants
                 MaximumSingleSeats = registrable.MaximumSingleSeats,
                 MaximumAllowedImbalance = registrable.MaximumAllowedImbalance,
                 HasWaitingList = registrable.HasWaitingList,
+                AutomaticPromotionFromWaitingList = registrable.AutomaticPromotionFromWaitingList,
                 Participants = participants.Where(prt => !prt.IsOnWaitingList),
                 WaitingList = participants.Where(prt => prt.IsOnWaitingList)
             };

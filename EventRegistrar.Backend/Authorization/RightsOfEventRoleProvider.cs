@@ -25,6 +25,7 @@ using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.Registrables.WaitingList;
+using EventRegistrar.Backend.Registrables.WaitingList.Promotion;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
@@ -130,6 +131,8 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(SaveReductionCommand);
                 yield return nameof(DeleteReductionCommand);
                 yield return nameof(SetRegistrablesPricesCommand);
+                yield return nameof(ActivateAutomaticPromotionCommand);
+                yield return nameof(DeactivateAutomaticPromotionCommand);
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

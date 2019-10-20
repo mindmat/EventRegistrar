@@ -10,5 +10,6 @@ namespace EventRegistrar.Backend.Registrables
         public int? OnWaitingList { get; set; }
         public int? SpotsAvailable { get; set; }
         public bool IsDeletable { get; set; }
+        public bool AutomaticPromotionFromWaitingList { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
@@ -13,6 +14,12 @@ using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList
 {
+    public class TryPromoteFromWaitingListCommand : IRequest, IEventBoundRequest
+    {
+        public Guid EventId { get; set; }
+        public Guid RegistrableId { get; set; }
+    }
+
     public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromoteFromWaitingListCommand>
     {
         private readonly IEventBus _eventBus;

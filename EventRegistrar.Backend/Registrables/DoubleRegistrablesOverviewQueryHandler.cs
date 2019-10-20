@@ -35,6 +35,7 @@ namespace EventRegistrar.Backend.Registrables
                 Id = rbl.Id,
                 Name = rbl.Name,
                 SpotsAvailable = rbl.MaximumDoubleSeats,
+                AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,
                 MaximumAllowedImbalance = rbl.MaximumAllowedImbalance,
                 LeadersAccepted = rbl.Seats.Count(spt => !spt.IsCancelled
                                                       && !spt.IsWaitingList

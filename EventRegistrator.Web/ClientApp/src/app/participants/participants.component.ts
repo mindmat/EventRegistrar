@@ -24,7 +24,27 @@ export class ParticipantsComponent {
 
   promote() {
     this.http.post(`api/events/${this.getEventAcronym()}/registrables/${this.getRegistrableId()}/tryPromoteFromWaitingList`, null)
-      .subscribe(result => { },
+      .subscribe(result => { this.refreshParticipants(); },
+        error => console.error(error));
+  }
+
+  changeAutomaticPromotion(checked: boolean) {
+    if (checked) {
+      this.activateAutomaticPromotion();
+    }
+    else {
+      this.deactivateAutomaticPromotion();
+    }
+  }
+
+  activateAutomaticPromotion() {
+    this.http.post(`api/events/${this.getEventAcronym()}/registrables/${this.getRegistrableId()}/activateAutomaticPromotion`, null)
+      .subscribe(result => { this.refreshParticipants(); },
+        error => console.error(error));
+  }
+  deactivateAutomaticPromotion() {
+    this.http.post(`api/events/${this.getEventAcronym()}/registrables/${this.getRegistrableId()}/deactivateAutomaticPromotion`, null)
+      .subscribe(result => { this.refreshParticipants(); },
         error => console.error(error));
   }
 
@@ -43,6 +63,7 @@ class Registrable {
   maximumDoubleSeats: number;
   maximumAllowedImbalance: number;
   hasWaitingList: boolean;
+  automaticPromotionFromWaitingList: boolean;
   participants: Place[];
   waitingList: Place[];
 }

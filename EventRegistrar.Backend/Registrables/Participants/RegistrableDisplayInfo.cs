@@ -11,5 +11,6 @@ namespace EventRegistrar.Backend.Registrables.Participants
         public string Name { get; set; }
         public IEnumerable<PlaceDisplayInfo> Participants { get; set; }
         public IEnumerable<PlaceDisplayInfo> WaitingList { get; set; }
+        public bool AutomaticPromotionFromWaitingList { get; set; }
     }
 }

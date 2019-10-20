@@ -6,6 +6,7 @@ using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.Registrables.WaitingList;
+using EventRegistrar.Backend.Registrables.WaitingList.Promotion;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -155,6 +156,29 @@ namespace EventRegistrar.Backend.Registrables
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 ReductionId = reductionId,
+                RegistrableId = registrableId
+            });
+        }
+
+
+
+        [HttpPost("api/events/{eventAcronym}/registrables/{registrableId:guid}/activateAutomaticPromotion")]
+        public async Task ActivateAutomaticPromotion(string eventAcronym, Guid registrableId, bool tryPromoteImmediately)
+        {
+            await _mediator.Send(new ActivateAutomaticPromotionCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrableId = registrableId,
+                TryPromoteImmediately = tryPromoteImmediately
+            });
+        }
+
+        [HttpPost("api/events/{eventAcronym}/registrables/{registrableId:guid}/deactivateAutomaticPromotion")]
+        public async Task DeactivateAutomaticPromotion(string eventAcronym, Guid registrableId)
+        {
+            await _mediator.Send(new DeactivateAutomaticPromotionCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 RegistrableId = registrableId
             });
         }

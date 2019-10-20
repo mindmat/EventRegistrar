@@ -1,4 +1,4 @@
-<h1>Teilnehmer {{ registrable.name }} </h1>
+<h1>Teilnehmer {{ registrable?.name }} </h1>
 
 <p *ngIf="!registrable"><em>Loading...</em></p>
 
@@ -26,9 +26,19 @@
   </tbody>
 </table>
 <br />
-<h2 *ngIf="registrable && registrable.waitingList.length > 0">Warteliste</h2>
+<button class="btn btn-primary btn-sm" *ngIf="registrable && registrable?.waitingList?.length > 0" (click)="promote()">Nachrücken auslösen</button>
 
-<button class="btn btn-primary" *ngIf="registrable && registrable.waitingList.length > 0" (click)="promote()">Nachrücken auslösen</button>
+<div class="input-group mb-3">
+  <div class="input-group-prepend">
+    <div class="input-group-text">
+      <input type="checkbox" #automaticPromotion (change)="changeAutomaticPromotion(automaticPromotion.checked)"
+             [checked]="registrable?.automaticPromotionFromWaitingList">
+    </div>
+  </div>
+  <label type="text" class="form-control" aria-label="Text input with checkbox" disabled>Automatisches Nachrücken</label>
+</div>
+
+<h2 *ngIf="registrable && registrable.waitingList.length > 0">Warteliste</h2>
 
 <table class='table' *ngIf="registrable && registrable.waitingList.length > 0">
   <thead>

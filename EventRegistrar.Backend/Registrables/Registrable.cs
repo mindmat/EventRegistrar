@@ -18,6 +18,7 @@ namespace EventRegistrar.Backend.Registrables
         public Event Event { get; set; }
 
         public bool HasWaitingList { get; set; }
+        public bool AutomaticPromotionFromWaitingList { get; set; }
         public bool IsCore { get; set; }
         public int? MaximumAllowedImbalance { get; set; }
         public int? MaximumDoubleSeats { get; set; }
