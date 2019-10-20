@@ -76,5 +76,15 @@ namespace EventRegistrar.Backend.Payments
                 RegistrationId = registrationId
             });
         }
+
+        [HttpPost("api/events/{eventAcronym}/payments/{paymentId:guid}/ignore")]
+        public async Task IgnorePayment(string eventAcronym, Guid paymentId)
+        {
+            await _mediator.Send(new IgnorePaymentCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                PaymentId = paymentId
+            });
+        }
     }
 }

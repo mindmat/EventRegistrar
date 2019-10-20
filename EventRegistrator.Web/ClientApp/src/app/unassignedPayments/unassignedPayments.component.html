@@ -24,7 +24,10 @@
 
 <br />
 
-Manuelle Suche: <input #searchString type="text" (keyup.enter)="searchRegistrationManually(searchString.value)">
+Manuelle Suche:
+<input #searchString type="text" (keyup.enter)="searchRegistrationManually(searchString.value)">
+<br />
+<button class="btn btn-primary btn-sm" *ngIf="payment" (click)="ignoreBooking(payment)">Buchung ignorieren</button>
 
 <br />
 <br />

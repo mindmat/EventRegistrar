@@ -48,7 +48,31 @@ export class UnassignedPaymentsComponent implements OnInit {
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
   }
-  
+
+  ignoreBooking(payment: Payment) {
+    this.http.post(`api/events/${this.getEventAcronym()}/payments/${payment.id}/ignore`, null)
+      .subscribe(result => { this.removePayment(payment); },
+        error => {
+          console.error(error);
+        });
+  }
+  removePayment(payment: Payment) {
+    var index = this.payments.indexOf(payment);
+    if (index >= 0) {
+      var x = this.payments.splice(index, 1);
+      if (this.payment == payment) {
+        this.paymentPointer = Math.min(this.payments.length - 1, Math.max(0, this.paymentPointer));
+        if (this.paymentPointer < 0) {
+          this.setPayment(null);
+        }
+        else {
+          this.setPayment(this.payments[this.paymentPointer]);
+        }
+      }
+    }
+  }
+
+
   assignPayment(assignment: PossibleAssignment) {
     assignment.locked = true;
     var url = `api/events/${this.getEventAcronym()}/payments/${assignment.paymentId != null ? assignment.paymentId : this.payment.id}/assign/${assignment.registrationId}?amount=${assignment.amountToAssign}`;
@@ -79,7 +103,6 @@ export class UnassignedPaymentsComponent implements OnInit {
 
   textSelected() {
     var selection = document.getSelection().toString();
-    console.log(`selection: ${selection}`);
 
     if (selection.length > 3) {
       this.searchRegistrationManually(selection);
@@ -89,6 +112,11 @@ export class UnassignedPaymentsComponent implements OnInit {
   }
 
   searchRegistration(payment: Payment) {
+    if (payment == null) {
+      this.setAssignments(null);
+      this.setPossibleRepaymentAssignments(null);
+      return;
+    }
     this.isSearching = true;
     this.http.get<PossibleAssignment[]>(`api/events/${this.getEventAcronym()}/payments/${payment.id}/possibleAssignments`) //?searchstring=${searchString}`)
       .subscribe(result => {
@@ -141,7 +169,7 @@ export class UnassignedPaymentsComponent implements OnInit {
   }
 
   setAssignments(assignments: PossibleAssignment[]) {
-    this.possibleAssignments = assignments.sort((a, b) => {
+    this.possibleAssignments = assignments == null ? null : assignments.sort((a, b) => {
       if (a.isWaitingList === b.isWaitingList) {
         return b.matchScore - a.matchScore;
       }
@@ -153,7 +181,7 @@ export class UnassignedPaymentsComponent implements OnInit {
   }
 
   setPossibleRepaymentAssignments(assignments: PossibleRepaymentAssignment[]) {
-    this.possibleRepaymentAssignment = assignments.sort((a, b) => {
+    this.possibleRepaymentAssignment = assignments == null ? null :assignments.sort((a, b) => {
       return b.matchScore - a.matchScore;
     });
   }

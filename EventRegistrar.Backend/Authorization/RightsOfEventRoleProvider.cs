@@ -133,6 +133,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(SetRegistrablesPricesCommand);
                 yield return nameof(ActivateAutomaticPromotionCommand);
                 yield return nameof(DeactivateAutomaticPromotionCommand);
+                yield return nameof(IgnorePaymentCommand);
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

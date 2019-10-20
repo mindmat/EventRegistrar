@@ -30,5 +30,6 @@ namespace EventRegistrar.Backend.Payments
         public decimal? Repaid { get; set; }
         public ICollection<PaymentAssignment> RepaymentAssignments { get; set; }
         public bool Settled { get; set; }
+        public bool Ignore { get; set; }
     }
 }

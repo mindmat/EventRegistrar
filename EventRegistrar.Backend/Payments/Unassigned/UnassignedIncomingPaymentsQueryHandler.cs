@@ -22,6 +22,7 @@ namespace EventRegistrar.Backend.Payments.Unassigned
             var payments = await _payments
                                  .Where(rpy => rpy.PaymentFile.EventId == query.EventId
                                             && !rpy.Settled
+                                            && !rpy.Ignore
                                             && rpy.CreditDebitType == CreditDebit.CRDT)
                                  .Select(rpy => new PaymentDisplayItem
                                  {
