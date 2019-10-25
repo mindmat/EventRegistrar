@@ -73,8 +73,15 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
 
             // update questions
             var existingQuestions = await _questions.Where(qst => qst.RegistrationFormId == form.Id).ToListAsync(cancellationToken);
-            foreach (var receivedQuestion in formDescription.Questions)
+            string section = null;
+            foreach (var receivedQuestion in formDescription.Questions.OrderBy(que => que.Index))
             {
+                var type = (Questions.QuestionType)receivedQuestion.Type;
+                if (type == Questions.QuestionType.SectionHeader
+                 || type == Questions.QuestionType.PageBreak)
+                {
+                    section = receivedQuestion.Title;
+                }
                 var existingQuestion = existingQuestions.FirstOrDefault(qst => qst.ExternalId == receivedQuestion.Id);
                 if (existingQuestion == null)
                 {
@@ -86,7 +93,8 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                         ExternalId = receivedQuestion.Id,
                         Index = receivedQuestion.Index,
                         Title = receivedQuestion.Title,
-                        Type = (Questions.QuestionType)receivedQuestion.Type
+                        Type = type,
+                        Section = section
                     };
                     await _questions.InsertOrUpdateEntity(question, cancellationToken);
                     if (receivedQuestion.Choices?.Any() == true)
@@ -105,9 +113,10 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                 else
                 {
                     // update existing question
+                    existingQuestion.Section = section;
                     existingQuestion.Index = receivedQuestion.Index;
                     existingQuestion.Title = receivedQuestion.Title;
-                    existingQuestion.Type = (Questions.QuestionType)receivedQuestion.Type;
+                    existingQuestion.Type = type;
                     existingQuestions.Remove(existingQuestion);
 
                     // update options
