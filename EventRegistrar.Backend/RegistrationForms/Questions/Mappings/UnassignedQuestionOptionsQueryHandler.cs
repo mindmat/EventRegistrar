@@ -34,7 +34,8 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
                                              RegistrableName = null,
                                              QuestionOptionId = qop.Id,
                                              Question = qop.Question.Title,
-                                             Answer = qop.Answer
+                                             Answer = qop.Answer,
+                                             Section = qop.Question.Section
                                          })
                                          .ToListAsync(cancellationToken);
         }

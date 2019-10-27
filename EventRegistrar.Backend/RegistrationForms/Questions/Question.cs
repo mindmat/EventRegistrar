@@ -16,5 +16,6 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
 
         public string Title { get; set; }
         public QuestionType Type { get; set; }
+        public string Section { get; set; }
     }
 }

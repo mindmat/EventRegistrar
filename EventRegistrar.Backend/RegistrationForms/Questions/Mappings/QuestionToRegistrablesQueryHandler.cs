@@ -24,9 +24,14 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
                                                        {
                                                            RegistrableId = map.RegistrableId,
                                                            RegistrableName = map.Registrable.Name,
+                                                           IsPartnerRegistrable = map.Registrable.MaximumDoubleSeats != null,
                                                            QuestionOptionId = map.QuestionOptionId,
+                                                           Section = map.QuestionOption.Question.Section,
                                                            Question = map.QuestionOption.Question.Title,
-                                                           Answer = map.QuestionOption.Answer
+                                                           Answer = map.QuestionOption.Answer,
+                                                           QuestionId_Partner = map.QuestionId_Partner,
+                                                           QuestionOptionId_Leader = map.QuestionOptionId_Leader,
+                                                           QuestionOptionId_Follower = map.QuestionOptionId_Follower
                                                        })
                                                        .ToListAsync(cancellationToken);
         }

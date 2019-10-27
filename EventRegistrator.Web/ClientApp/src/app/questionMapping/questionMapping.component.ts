@@ -23,7 +23,7 @@ export class QuestionMappingComponent implements OnInit {
       textField: 'name',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
+      itemsShowLimit: 5,
       allowSearchFilter: true
     };
 
@@ -71,15 +71,27 @@ export class QuestionMappingComponent implements OnInit {
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
   }
+
+  changeLeaderQuestionOption(questionOptionId_Leader: string) {
+    console.log(questionOptionId_Leader);
+  }
+  changeFollowerQuestionOption(questionOptionId_Follower: string) {
+    console.log(questionOptionId_Follower);
+  }
 }
 
 class Mapping {
+  section: string;
+  question: string;
   answer: string;
   questionOptionId: string;
   registrableId: string;
   registrableName: string;
-  question: string;
+  isPartnerRegistrable: boolean;
   assignedRegistrableIds: string[];
+  questionId_Partner: string;
+  questionOptionId_Leader: string;
+  questionOptionId_Follower: string;
 }
 
 //class Registrable {
