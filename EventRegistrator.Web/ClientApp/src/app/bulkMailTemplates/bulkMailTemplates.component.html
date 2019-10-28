@@ -44,7 +44,15 @@
     </tr>
     <tr>
       <td>Adressaten</td>
-      <td><input [(ngModel)]="mailingTemplate.audience" type="number" class="form-control" /></td>
+      <td>
+        <ng-multiselect-dropdown [placeholder]="'-'"
+                                 [data]="possibleAudiences"
+                                 [(ngModel)]="selectedAudiences"
+                                 [settings]="dropdownSettings"
+                                 (onSelect)="setAudience($event)"
+                                 (onDeSelect)="setAudience($event)">
+        </ng-multiselect-dropdown>
+      </td>
     </tr>
     <tr>
       <td>Betreff</td>
@@ -73,4 +81,5 @@
 <button class="btn btn-primary" (click)="releaseMails()" *ngIf="mailingTemplate && mailingTemplate.mailsReadyCount > 0">Mails freigeben</button>
 <p *ngIf="mailingTemplate">Mails versendet: {{ mailingTemplate.mailsSentCount }}</p>
 
-<br /><br />
+<br />
+<br />

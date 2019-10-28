@@ -12,6 +12,9 @@ export class BulkMailTemplatesComponent {
   mailingTemplate: BulkMailTemplate;
   languages: Language[];
   saving: boolean;
+  selectedAudiences = [];
+  possibleAudiences = [];
+  dropdownSettings: {};
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
   }
@@ -27,10 +30,36 @@ export class BulkMailTemplatesComponent {
         error => {
           console.error(error);
         });
+    this.possibleAudiences = [
+      { id: Audience.paid, name: "bezahlt" },
+      { id: Audience.unpaid, name: "Zahlung ausstehend" },
+      { id: Audience.waitingList, name: "auf Warteliste" }
+    ];
+
+    this.dropdownSettings = {
+      placeholder: '-',
+      singleSelection: false,
+      idField: 'id',
+      textField: 'name',
+      enableCheckAll: false,
+      itemsShowLimit: 5,
+      allowSearchFilter: false
+    };
+
   }
 
   showTemplate(mailTemplate: BulkMailTemplate) {
     this.mailingTemplate = mailTemplate;
+    this.selectedAudiences = new Array();
+    if (this.mailingTemplate.audience & Audience.paid) {
+      this.selectedAudiences.push(this.possibleAudiences.find(itm => itm.id == Audience.paid));
+    }
+    if (this.mailingTemplate.audience & Audience.unpaid) {
+      this.selectedAudiences.push(this.possibleAudiences.find(itm => itm.id == Audience.unpaid));
+    }
+    if (this.mailingTemplate.audience & Audience.waitingList) {
+      this.selectedAudiences.push(this.possibleAudiences.find(itm => itm.id == Audience.waitingList));
+    }
   }
 
   saveTemplate() {
@@ -68,12 +97,18 @@ export class BulkMailTemplatesComponent {
     this.saving = true;
     this.http.post<BulkMailTemplate>(`api/events/${this.getEventAcronym()}/bulkMailTemplates/${this.mailingTemplate.key}/releaseMails`, this.mailingTemplate)
       .subscribe(result => {
-          this.saving = false;
-        },
+        this.saving = false;
+      },
         error => {
           console.error(error);
           this.saving = false;
         });
+  }
+
+  setAudience() {
+    this.mailingTemplate.audience = this.selectedAudiences.length > 0
+      ? this.selectedAudiences.map(itm => itm.id).reduce((sum, current) => sum += current)
+      : 0;
   }
 
   getEventAcronym() {
@@ -89,7 +124,7 @@ class BulkMailTemplate {
   senderMail: string;
   senderName: string;
   subject: string;
-  audience: number;
+  audience: Audience;
   mailsReadyCount: number;
   mailsSentCount: number;
 }
@@ -97,4 +132,10 @@ class BulkMailTemplate {
 class Language {
   acronym: string;
   userText: string;
+}
+
+enum Audience {
+  paid = 1,
+  unpaid = 2,
+  waitingList = 4
 }
