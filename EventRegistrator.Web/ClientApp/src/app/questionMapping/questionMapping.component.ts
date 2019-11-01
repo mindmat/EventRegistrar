@@ -12,6 +12,7 @@ export class QuestionMappingComponent implements OnInit {
   singleRegistrables: Registrable[];
   registrables: Registrable[];
   mappings: Mapping[];
+  questions: Question[];
   unassignedQuestionOptions: Mapping[];
   dropdownSettings = {};
 
@@ -63,7 +64,10 @@ export class QuestionMappingComponent implements OnInit {
     this.http.get<Mapping[]>(`api/events/${this.getEventAcronym()}/questions/unassignedOptions`).subscribe(result => {
       this.unassignedQuestionOptions = result;
     }, error => console.error(error));
-  }
+
+    this.http.get<Question[]>(`api/events/${this.getEventAcronym()}/questions`).subscribe(result => {
+      this.questions = result;
+    }, error => console.error(error)); }
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
   }
@@ -71,16 +75,25 @@ export class QuestionMappingComponent implements OnInit {
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
   }
-
-  changeLeaderQuestionOption(questionOptionId_Leader: string) {
-    console.log(questionOptionId_Leader);
+  
+  changeMappingAttribute(mapping: Mapping) {
+    mapping.saveAttributesPending = true;
   }
-  changeFollowerQuestionOption(questionOptionId_Follower: string) {
-    console.log(questionOptionId_Follower);
+
+  saveMapping(mapping: Mapping) {
+    var attributes = {
+      questionId_Partner: mapping.questionId_Partner,
+      questionOptionId_Leader: mapping.questionOptionId_Leader,
+      questionOptionId_Follower: mapping.questionOptionId_Follower
+    };
+    this.http.put(`api/events/${this.getEventAcronym()}/questionoptionsmapping/${mapping.id}`, attributes).subscribe(result => {
+      mapping.saveAttributesPending = false;
+    }, error => console.error(error));
   }
 }
 
 class Mapping {
+  id: string;
   section: string;
   question: string;
   answer: string;
@@ -92,6 +105,13 @@ class Mapping {
   questionId_Partner: string;
   questionOptionId_Leader: string;
   questionOptionId_Follower: string;
+  saveAttributesPending: boolean;
+}
+
+class Question{
+  id: string;
+  section: string;
+  question: string;
 }
 
 //class Registrable {

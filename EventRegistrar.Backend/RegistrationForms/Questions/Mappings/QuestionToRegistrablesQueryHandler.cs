@@ -22,6 +22,7 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
                                                        .OrderBy(map => map.QuestionOption.Question.Index)
                                                        .Select(map => new QuestionToRegistrablesDisplayItem
                                                        {
+                                                           Id = map.Id,
                                                            RegistrableId = map.RegistrableId,
                                                            RegistrableName = map.Registrable.Name,
                                                            IsPartnerRegistrable = map.Registrable.MaximumDoubleSeats != null,

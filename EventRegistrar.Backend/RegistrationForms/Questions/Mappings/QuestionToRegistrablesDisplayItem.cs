@@ -4,6 +4,7 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
 {
     public class QuestionToRegistrablesDisplayItem
     {
+        public Guid Id { get; set; }
         public string Section { get; set; }
         public string Question { get; set; }
         public string Answer { get; set; }

@@ -19,13 +19,13 @@ namespace EventRegistrar.Backend.Mailing.Templates
 
         public async Task<Unit> Handle(SaveMailTemplateCommand command, CancellationToken cancellationToken)
         {
+            if (command.Template?.Template == null)
+            {
+                throw new ArgumentException("no template provided");
+            }
             if (command.Template.Language == null)
             {
                 throw new ArgumentException("no language provided");
-            }
-            if (command.Template.Template == null)
-            {
-                throw new ArgumentException("no template provided");
             }
             if (command.Template.Subject == null)
             {

@@ -11,6 +11,7 @@
       <th>Partner</th>
       <th>Leader</th>
       <th>Follower</th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -18,16 +19,23 @@
       <td>{{ mapping.question }}</td>
       <td>{{ mapping.answer }}</td>
       <td><a [routerLink]="['/', getEventAcronym(), 'registrables', mapping.registrableId, 'participants']">{{ mapping.registrableName }}</a></td>
-      <td>{{ mapping.questionOptionId_Partner }}</td>
       <td>
-        <select [(ngModel)]="mapping.questionOptionId_Leader" *ngIf="mapping.isPartnerRegistrable" style="max-width: 300px" (change)="changeLeaderQuestionOption(mapping.questionOptionId_Leader)">
+        <select [(ngModel)]="mapping.questionId_Partner" *ngIf="mapping.isPartnerRegistrable" style="max-width: 300px" (change)="changeMappingAttribute(mapping)">
+          <option *ngFor="let question of questions" value={{question.id}}>{{ question.section }} / {{ question.question }}</option>
+        </select>
+      </td>
+      <td>
+        <select [(ngModel)]="mapping.questionOptionId_Leader" *ngIf="mapping.isPartnerRegistrable" style="max-width: 300px" (change)="changeMappingAttribute(mapping)">
           <option *ngFor="let questionOption of unassignedQuestionOptions" value={{questionOption.questionOptionId}}>{{ questionOption.section }} / {{ questionOption.question }} / {{ questionOption.answer }}</option>
         </select>
       </td>
       <td>
-        <select [(ngModel)]="mapping.questionOptionId_Follower" *ngIf="mapping.isPartnerRegistrable" style="max-width: 300px" (change)="changeFollowerQuestionOption(mapping.questionOptionId_Follower)">
+        <select [(ngModel)]="mapping.questionOptionId_Follower" *ngIf="mapping.isPartnerRegistrable" style="max-width: 300px" (change)="changeMappingAttribute(mapping)">
           <option *ngFor="let questionOption of unassignedQuestionOptions" value={{questionOption.questionOptionId}}>{{ questionOption.section }} / {{ questionOption.question }} / {{ questionOption.answer }}</option>
         </select>
+      </td>
+      <td>
+        <button class="btn btn-sm btn-primary" (click)="saveMapping(mapping)" *ngIf="mapping.saveAttributesPending">Speichern</button>
       </td>
     </tr>
   </tbody>

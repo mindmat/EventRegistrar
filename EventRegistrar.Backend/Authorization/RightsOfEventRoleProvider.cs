@@ -92,6 +92,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(UnassignedQuestionOptionsQuery);
                 yield return nameof(PricingQuery);
                 yield return nameof(EventQuery);
+                yield return nameof(QuestionsQuery);
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
@@ -134,6 +135,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(ActivateAutomaticPromotionCommand);
                 yield return nameof(DeactivateAutomaticPromotionCommand);
                 yield return nameof(IgnorePaymentCommand);
+                yield return nameof(SetQuestionOptionToRegistrableMappingAttributesCommand);
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

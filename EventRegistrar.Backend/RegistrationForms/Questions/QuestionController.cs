@@ -38,6 +38,30 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
             });
         }
 
+        [HttpGet("api/events/{eventAcronym}/questions")]
+        public async Task<IEnumerable<QuestionDisplayItem>> GetQuestions(string eventAcronym, Guid? formId)
+        {
+            return await _mediator.Send(new QuestionsQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                FormId = formId
+            });
+        }
+
+        [HttpPut("api/events/{eventAcronym}/questionoptionsmapping/{questionOptionToRegistrableMappingId:guid}")]
+        public async Task SetQuestionOptionToRegistrableMappingAttributes(string eventAcronym,
+                                                                          Guid questionOptionToRegistrableMappingId,
+                                                                          [FromBody]QuestionMappingAttributes attributes)
+        {
+            await _mediator.Send(new SetQuestionOptionToRegistrableMappingAttributesCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                QuestionOptionToRegistrableMappingId = questionOptionToRegistrableMappingId,
+                Attributes = attributes
+            });
+        }
+
+
         [HttpPut("api/events/{eventAcronym}/questionoptions/{questionOptionId:guid}/registrables/{registrableId:guid}")]
         public async Task AssignQuestionOptionToRegistrable(string eventAcronym, Guid questionOptionId, Guid registrableId)
         {
