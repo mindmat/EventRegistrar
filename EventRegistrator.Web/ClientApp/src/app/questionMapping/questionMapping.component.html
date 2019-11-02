@@ -5,6 +5,7 @@
 <table class='table' *ngIf="mappings">
   <thead>
     <tr>
+      <th>Abschnitt</th>
       <th>Frage</th>
       <th>Antwort</th>
       <th>Liste</th>
@@ -16,6 +17,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let mapping of mappings">
+      <td>{{ mapping.section }}</td>
       <td>{{ mapping.question }}</td>
       <td>{{ mapping.answer }}</td>
       <td><a [routerLink]="['/', getEventAcronym(), 'registrables', mapping.registrableId, 'participants']">{{ mapping.registrableName }}</a></td>
@@ -45,6 +47,7 @@
 <table class='table' *ngIf="unassignedQuestionOptions">
   <thead>
     <tr>
+      <th>Abschnitt</th>
       <th>Frage</th>
       <th>Antwort</th>
       <th>Zuordnung</th>
@@ -52,6 +55,7 @@
   </thead>
   <tbody>
     <tr *ngFor="let unassignedQuestionOption of unassignedQuestionOptions">
+      <td>{{ unassignedQuestionOption.section }}</td>
       <td>{{ unassignedQuestionOption.question }}</td>
       <td>{{ unassignedQuestionOption.answer }}</td>
       <td class="col-md-2">
