@@ -206,6 +206,20 @@ namespace EventRegistrar.Backend.Registrations.Register
                 };
 
             }
+            else if (formId == Guid.Parse("E03006B4-4DA6-40FE-8DF8-0D551CB39786")) // ll20
+            {
+                yield return new SingleRegistrationProcessConfiguration
+                {
+                    Description = "Leapin'",
+                    QuestionId_FirstName = Guid.Parse("A56611DC-F858-4E25-B8DB-A621453DCD92"),
+                    QuestionId_LastName = Guid.Parse("61863101-81A6-43CE-83AE-685D8527166D"),
+                    QuestionId_Email = Guid.Parse("4AC1A1C6-1F0B-4AAE-AD27-A85847B32CD4"),
+                    QuestionId_Phone = Guid.Parse("420D6986-C0B4-4D31-A5E5-E8A05DA2A45E"),
+                    QuestionId_Remarks = Guid.Parse("53E0BE8C-CAE5-4950-91E0-0690FB8FDF7B"),
+                    QuestionOptionId_Reduction = Guid.Parse("51F3FF71-93EB-4576-812B-7E6112998933")
+                };
+            }
+
         }
     }
 }
