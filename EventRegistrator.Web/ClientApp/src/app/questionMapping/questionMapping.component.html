@@ -38,6 +38,7 @@
       </td>
       <td>
         <button class="btn btn-sm btn-primary" (click)="saveMapping(mapping)" *ngIf="mapping.saveAttributesPending">Speichern</button>
+        <button class="btn btn-sm btn-primary" (click)="removeMapping(mapping.questionOptionId, mapping.registrableId)" *ngIf="!mapping.saveAttributesPending">Löschen</button>
       </td>
     </tr>
   </tbody>

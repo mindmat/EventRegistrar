@@ -46,15 +46,20 @@ export class QuestionMappingComponent implements OnInit {
     }
   }
 
-  private onItemSelect(item: Registrable, mapping: Mapping) {
-    this.http.put(`api/events/${this.getEventAcronym()}/questionoptions/${mapping.questionOptionId}/registrables/${item.id}`, null).subscribe(result => {
+  private onItemSelect(registrable: Registrable, mapping: Mapping) {
+    this.http.put(`api/events/${this.getEventAcronym()}/questionoptions/${mapping.questionOptionId}/registrables/${registrable.id}`, null).subscribe(result => {
     }, error => console.error(error));
   }
 
-  private onItemDeselect(item: Registrable, mapping: Mapping) {
-    this.http.delete(`api/events/${this.getEventAcronym()}/questionoptions/${mapping.questionOptionId}/registrables/${item.id}`).subscribe(result => {
-    }, error => console.error(error));
+  private onItemDeselect(registrable: Registrable, mapping: Mapping) {
+    this.removeMapping(mapping.questionOptionId, registrable.id);
   }
+
+  private removeMapping(questionOptionId: string, registrableId: string) {
+    this.http.delete(`api/events/${this.getEventAcronym()}/questionoptions/${questionOptionId}/registrables/${registrableId}`).subscribe(result => {
+      this.refreshLists();
+    }, error => console.error(error));
+}
 
   private refreshLists() {
     this.http.get<Mapping[]>(`api/events/${this.getEventAcronym()}/questions/mapping`).subscribe(result => {
