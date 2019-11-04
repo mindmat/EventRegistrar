@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Infrastructure.Configuration;
@@ -19,6 +20,7 @@ namespace EventRegistrar.Backend.Events
         public string Name { get; set; }
         public State State { get; set; }
         public string TwilioAccountSid { get; set; }
+        public Guid? PredecessorEventId { get; set; }
         public ICollection<UserInEvent> Users { get; set; }
         public ICollection<Registrable> Registrables { get; set; }
     }
