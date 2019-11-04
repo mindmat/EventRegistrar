@@ -18,6 +18,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
     {
         public Guid EventId { get; set; }
         public Guid RegistrableId { get; set; }
+        public Guid? RegistrationId { get; set; }
     }
 
     public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromoteFromWaitingListCommand>
@@ -52,7 +53,13 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
             {
                 var acceptedSpotCount = spots.Count(spt => !spt.IsWaitingList);
                 var spotsAvailable = registrableToCheck.MaximumSingleSeats.Value - acceptedSpotCount;
-                if (spotsAvailable > 0)
+                if (command.RegistrationId != null)
+                {
+                    var spotToPromote = spots.First(spt => spt.IsWaitingList
+                                                        && spt.RegistrationId == command.RegistrationId);
+                    await PromoteSpotFromWaitingList(spotToPromote);
+                }
+                else if (spotsAvailable > 0)
                 {
                     var spotsToPromote = spots.Where(spt => spt.IsWaitingList)
                                               .OrderBy(spt => spt.FirstPartnerJoined)
@@ -70,7 +77,10 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                                                                           && (spt.RegistrationId == null
                                                                            || spt.RegistrationId_Follower == null)));
 
-                var waitinglist = spots.Where(spt => spt.IsWaitingList)
+                var waitinglist = spots.Where(spt => spt.IsWaitingList
+                                                  && (command.RegistrationId == null
+                                                   || command.RegistrationId == spt.RegistrationId
+                                                   || command.RegistrationId == spt.RegistrationId_Follower))
                                        .OrderBy(spt => spt.FirstPartnerJoined)
                                        .ToList();
                 // fill the gaps
@@ -80,7 +90,8 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                     await ComplementSeatFromWaitingList(spotToComplement, waitinglist);
                 }
 
-                while (registrableToCheck.MaximumDoubleSeats.Value - spots.Count(spt => !spt.IsWaitingList) > 0)
+                while (registrableToCheck.MaximumDoubleSeats.Value - spots.Count(spt => !spt.IsWaitingList) > 0
+                    || command.RegistrationId != null)
                 {
                     var nextSpotOnWaitingList = waitinglist.FirstOrDefault();
                     if (nextSpotOnWaitingList == null)
@@ -108,7 +119,8 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                             if (!_imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(registrableToCheck.MaximumDoubleSeats.Value,
                                                                                             registrableToCheck.MaximumAllowedImbalance ?? 0,
                                                                                             spots,
-                                                                                            firstSingleRole))
+                                                                                            firstSingleRole)
+                             && command.RegistrationId != null)
                             {
                                 // no promotion due to imbalance
                                 waitinglist.Remove(nextSpotOnWaitingList);

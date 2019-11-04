@@ -8,6 +8,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class ParticipantsComponent {
   public registrable: Registrable;
+  public manualPromotion: boolean = false;
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
   }
@@ -26,6 +27,14 @@ export class ParticipantsComponent {
     this.http.post(`api/events/${this.getEventAcronym()}/registrables/${this.getRegistrableId()}/tryPromoteFromWaitingList`, null)
       .subscribe(result => { this.refreshParticipants(); },
         error => console.error(error));
+  }
+
+  promoteManually(registrationId: string) {
+    if (this.manualPromotion) {
+      this.http.post(`api/events/${this.getEventAcronym()}/registrables/${this.getRegistrableId()}/tryPromoteFromWaitingList/${registrationId}`, null)
+        .subscribe(result => { this.refreshParticipants(); },
+          error => console.error(error));
+    }
   }
 
   changeAutomaticPromotion(checked: boolean) {

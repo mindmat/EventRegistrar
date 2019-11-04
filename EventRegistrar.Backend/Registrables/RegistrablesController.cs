@@ -93,13 +93,15 @@ namespace EventRegistrar.Backend.Registrables
             });
         }
 
+        [HttpPost("api/events/{eventAcronym}/registrables/{registrableId:guid}/tryPromoteFromWaitingList/{registrationId:guid}")]
         [HttpPost("api/events/{eventAcronym}/registrables/{registrableId:guid}/tryPromoteFromWaitingList")]
-        public async Task TryPromoteFromWaitingList(string eventAcronym, Guid registrableId)
+        public async Task TryPromoteFromWaitingList(string eventAcronym, Guid registrableId, Guid? registrationId)
         {
             await _mediator.Send(new TryPromoteFromWaitingListCommand
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                RegistrableId = registrableId
+                RegistrableId = registrableId,
+                RegistrationId = registrationId
             });
         }
 
