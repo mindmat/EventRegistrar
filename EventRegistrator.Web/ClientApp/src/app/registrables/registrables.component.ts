@@ -2,12 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from "../events/eventService.service";
+import { Guid } from '../infrastructure/guid';
 
 @Component({
   selector: 'registrables',
   templateUrl: './registrables.component.html'
 })
 export class RegistrablesComponent implements OnInit {
+  newSingleRegistrableId: string;
+  newDoubleRegistrableId: string;
   constructor(private http: HttpClient, private route: ActivatedRoute, public readonly eventService: EventService) {
   }
 
@@ -73,6 +76,37 @@ export class RegistrablesComponent implements OnInit {
       this.refresh();
     }, error => console.error(error));
   }
+
+  createNewDoubleRegistrable(name: string) {
+    if (this.newDoubleRegistrableId == null) {
+      this.newDoubleRegistrableId = Guid.newGuid();
+    }
+    var params = {
+      id: this.newDoubleRegistrableId,
+      name: name,
+      isDoubleRegistrable: true
+    };
+    this.http.put(`api/events/${this.getEventAcronym()}/registrables/${this.newDoubleRegistrableId}`, params).subscribe(result => {
+      this.newDoubleRegistrableId = null;
+      this.refresh();
+    }, error => console.error(error));
+  }
+
+  createNewSingleRegistrable(name: string) {
+    if (this.newSingleRegistrableId == null) {
+      this.newSingleRegistrableId = Guid.newGuid();
+    }
+    var params = {
+      id: this.newSingleRegistrableId,
+      name: name,
+      isDoubleRegistrable: false
+    };
+    this.http.put(`api/events/${this.getEventAcronym()}/registrables/${this.newSingleRegistrableId}`, params).subscribe(result => {
+      this.newSingleRegistrableId = null;
+      this.refresh();
+    }, error => console.error(error));
+
+  }
 }
 
 export class Registrable {
@@ -81,7 +115,7 @@ export class Registrable {
   isDeletable: boolean;
   automaticPromotionFromWaitingList: boolean;
 }
-export class DoubleRegistrable extends Registrable{
+export class DoubleRegistrable extends Registrable {
   spotsAvailable: number;
   leadersAccepted: number;
   followersAccepted: number;

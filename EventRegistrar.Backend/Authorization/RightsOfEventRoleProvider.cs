@@ -136,6 +136,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(DeactivateAutomaticPromotionCommand);
                 yield return nameof(IgnorePaymentCommand);
                 yield return nameof(SetQuestionOptionToRegistrableMappingAttributesCommand);
+                yield return nameof(CreateRegistrableCommand);
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

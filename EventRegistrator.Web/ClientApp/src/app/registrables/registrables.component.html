@@ -29,6 +29,12 @@
       <td>{{ registrable.couplesOnWaitingList }}</td>
       <td><span class="badge badge-light" (click)="editCoupleLimits(registrable)" data-toggle="modal" data-target="#coupleRegistrableModal" style="cursor: pointer">{{ registrable.maximumAllowedImbalance }}</span></td>
     </tr>
+    <tr *ngIf="eventService.activeEvent?.state === 1">
+      <td>
+        <input type="text" class="form-control" #newDoubleRegistrable>
+        <button class="btn btn-primary btn-sm" (click)="createNewDoubleRegistrable(newDoubleRegistrable.value)">Erstellen</button>
+      </td>
+    </tr>
   </tbody>
 </table>
 <!--<button class="btn btn-primary" *ngIf="doubleRegistrables" (click)="promote()">Hinzufügen</button>-->
@@ -54,6 +60,13 @@
       <td>{{ registrable.accepted }}</td>
       <td>{{ registrable.onWaitingList }}</td>
     </tr>
+    <tr *ngIf="eventService.activeEvent?.state === 1">
+      <td>
+        <input type="text" class="form-control" #newSingleRegistrable>
+        <button class="btn btn-primary btn-sm" (click)="createNewSingleRegistrable(newSingleRegistrable.value)">Erstellen</button>
+      </td>
+    </tr>
+
   </tbody>
 </table>
 
