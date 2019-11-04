@@ -32,7 +32,7 @@
   <div class="input-group-prepend">
     <div class="input-group-text">
       <input type="checkbox" #automaticPromotion (change)="changeAutomaticPromotion(automaticPromotion.checked)"
-             [(ngModel)]="registrable?.automaticPromotionFromWaitingList">
+             [checked]="registrable?.automaticPromotionFromWaitingList">
     </div>
   </div>
   <label type="text" class="form-control" disabled>Automatisches Nachrücken</label>
@@ -62,13 +62,13 @@
       <td>
         <a *ngIf="participant.leader" [routerLink]="['/', getEventAcronym(), 'registration', participant.leader?.id]">{{ participant.leader?.firstName }} {{ participant.leader?.lastName }}</a>
         <a *ngIf="!participant.leader && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
-        <button class="btn btn-primary btn-sm" *ngIf="manualPromotion && participant.leader?.id != null" (click)="promoteManually(participant.leader?.id)">Nachrücken</button>
+        <button class="btn btn-primary btn-sm" *ngIf="manualPromotion && participant.leader?.id" (click)="promoteManually(participant.leader?.id)">Nachrücken</button>
       </td>
       <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">&</p></td>
       <td *ngIf="registrable.maximumDoubleSeats">
         <a *ngIf="participant.follower" [routerLink]="['/', getEventAcronym(), 'registration', participant.follower?.id]">{{ participant.follower?.firstName }} {{ participant.follower?.lastName }}</a>
         <a *ngIf="!participant.follower && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
-        <button class="btn btn-primary btn-sm" *ngIf="manualPromotion && participant.follower?.id != null" (click)="promoteManually(participant.follower?.id)">Nachrücken</button>
+        <button class="btn btn-primary btn-sm" *ngIf="manualPromotion && participant.follower?.id" (click)="promoteManually(participant.follower?.id)">Nachrücken</button>
       </td>
     </tr>
   </tbody>
