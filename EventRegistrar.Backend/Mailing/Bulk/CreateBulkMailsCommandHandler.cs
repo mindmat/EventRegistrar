@@ -22,6 +22,7 @@ namespace EventRegistrar.Backend.Mailing.Bulk
         private readonly IQueryable<MailTemplate> _mailTemplates;
         private readonly IQueryable<Registration> _registrations;
         private readonly IQueryable<Event> _events;
+        private const int ChunkSize = 100;
 
         public CreateBulkMailsCommandHandler(IQueryable<MailTemplate> mailTemplates,
                                              IQueryable<Registration> registrations,
@@ -58,7 +59,7 @@ namespace EventRegistrar.Backend.Mailing.Bulk
                     ? registrationsOfEvent
                     : registrationsOfEvent.Where(reg => reg.Seats_AsLeader.Any(spt => !spt.IsCancelled && spt.RegistrableId == mailTemplate.RegistrableId)
                                                      || reg.Seats_AsFollower.Any(spt => !spt.IsCancelled && spt.RegistrableId == mailTemplate.RegistrableId))
-                                          .Take(100)
+                                          .Take(ChunkSize)
                                           .ToList();
                 var receivers = new List<Registration>();
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.Paid) == true)
@@ -80,19 +81,26 @@ namespace EventRegistrar.Backend.Mailing.Bulk
                 }
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.PredecessorEvent) == true)
                 {
+                    var alreadyCoveredMailAddresses = await _mails.Where(mail => mail.BulkMailKey == command.BulkMailKey)
+                                                                  .SelectMany(mail => mail.Registrations)
+                                                                  .Select(map => map.Registration.RespondentEmail)
+                                                                  .ToListAsync();
+
                     // distinct by email, not registrationid
                     var predecessorReceivers = await _events.Where(evt => evt.Id == command.EventId)
                                                             .SelectMany(evt => evt.PredecessorEvent.Registrations)
-                                                            .Where(reg => !reg.Mails.Any(mail => mail.Mail.BulkMailKey == command.BulkMailKey))
+                                                            .Where(reg => !alreadyCoveredMailAddresses.Contains(reg.RespondentEmail))
+                                                            .Take(ChunkSize)
                                                             .ToListAsync();
                     if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.PrePredecessorEvent) == true)
                     {
                         predecessorReceivers.AddRange(await _events.Where(evt => evt.Id == command.EventId)
                                                                    .SelectMany(evt => evt.PredecessorEvent.PredecessorEvent.Registrations)
-                                                                   .Where(reg => !reg.Mails.Any(mail => mail.Mail.BulkMailKey == command.BulkMailKey))
+                                                                   .Where(reg => !alreadyCoveredMailAddresses.Contains(reg.RespondentEmail))
+                                                                   .Take(ChunkSize)
                                                                    .ToListAsync());
                     }
-                    receivers.AddRange(predecessorReceivers.DistinctBy(reg => reg.RespondentEmail.ToLower()));
+                    receivers.AddRange(predecessorReceivers.DistinctBy(reg => reg.RespondentEmail.ToLower()).Take(ChunkSize));
                 }
                 foreach (var registration in receivers.DistinctBy(reg => reg.Id))
                 {

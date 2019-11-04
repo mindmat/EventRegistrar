@@ -20,9 +20,6 @@ export class BulkMailTemplatesComponent {
   }
 
   ngOnInit() {
-    this.http.get<BulkMailTemplate[]>(`api/events/${this.getEventAcronym()}/bulkMailTemplates`)
-      .subscribe(result => this.mailingTemplates = result,
-        error => { console.error(error); });
     this.http.get<Language[]>(`api/events/${this.getEventAcronym()}/mails/languages`)
       .subscribe(result => this.languages = result,
         error => { console.error(error); });
@@ -41,6 +38,22 @@ export class BulkMailTemplatesComponent {
       allowSearchFilter: false
     };
 
+    this.refreshTemplates();
+  }
+
+  refreshTemplates() {
+    this.http.get<BulkMailTemplate[]>(`api/events/${this.getEventAcronym()}/bulkMailTemplates`)
+      .subscribe(result => {
+        this.mailingTemplates = result;
+        if (this.mailingTemplate != null) {
+          var updatedTemplate = this.mailingTemplates.find(mtp => mtp.id == this.mailingTemplate.id);
+          if (updatedTemplate != null) {
+            this.mailingTemplate.mailsReadyCount = updatedTemplate.mailsReadyCount;
+            this.mailingTemplate.mailsSentCount  = updatedTemplate.mailsSentCount;
+          }
+        }
+      },
+        error => { console.error(error); });
   }
 
   showTemplate(mailTemplate: BulkMailTemplate) {
@@ -82,6 +95,7 @@ export class BulkMailTemplatesComponent {
     this.http.post<BulkMailTemplate>(`api/events/${this.getEventAcronym()}/bulkMailTemplates/${this.mailingTemplate.key}/createMails`, this.mailingTemplate)
       .subscribe(result => {
         this.saving = false;
+        this.refreshTemplates();
       },
         error => {
           console.error(error);
@@ -99,6 +113,7 @@ export class BulkMailTemplatesComponent {
     this.http.post<BulkMailTemplate>(`api/events/${this.getEventAcronym()}/bulkMailTemplates/${this.mailingTemplate.key}/releaseMails`, this.mailingTemplate)
       .subscribe(result => {
         this.saving = false;
+        this.refreshTemplates();
       },
         error => {
           console.error(error);
