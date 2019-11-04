@@ -6,6 +6,7 @@ using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;
+using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Events
 {
@@ -23,5 +24,7 @@ namespace EventRegistrar.Backend.Events
         public Guid? PredecessorEventId { get; set; }
         public ICollection<UserInEvent> Users { get; set; }
         public ICollection<Registrable> Registrables { get; set; }
+        public ICollection<Registration> Registrations { get; set; }
+        public Event PredecessorEvent { get; set; }
     }
 }

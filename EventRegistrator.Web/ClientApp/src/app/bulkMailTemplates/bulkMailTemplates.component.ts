@@ -12,8 +12,8 @@ export class BulkMailTemplatesComponent {
   mailingTemplate: BulkMailTemplate;
   languages: Language[];
   saving: boolean;
-  selectedAudiences = [];
-  possibleAudiences = [];
+  selectedAudiences: PossibleAudience[];
+  possibleAudiences: PossibleAudience[];
   dropdownSettings: {};
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
@@ -22,24 +22,19 @@ export class BulkMailTemplatesComponent {
   ngOnInit() {
     this.http.get<BulkMailTemplate[]>(`api/events/${this.getEventAcronym()}/bulkMailTemplates`)
       .subscribe(result => this.mailingTemplates = result,
-        error => {
-          console.error(error);
-        });
+        error => { console.error(error); });
     this.http.get<Language[]>(`api/events/${this.getEventAcronym()}/mails/languages`)
       .subscribe(result => this.languages = result,
-        error => {
-          console.error(error);
-        });
-    this.possibleAudiences = [
-      { id: Audience.paid, name: "bezahlt" },
-      { id: Audience.unpaid, name: "Zahlung ausstehend" },
-      { id: Audience.waitingList, name: "auf Warteliste" }
-    ];
+        error => { console.error(error); });
+
+    this.http.get<PossibleAudience[]>(`api/events/${this.getEventAcronym()}/mails/possibleAudiences`)
+      .subscribe(result => this.possibleAudiences = result,
+        error => { console.error(error); });
 
     this.dropdownSettings = {
       placeholder: '-',
       singleSelection: false,
-      idField: 'id',
+      idField: 'audience',
       textField: 'name',
       enableCheckAll: false,
       itemsShowLimit: 5,
@@ -52,13 +47,19 @@ export class BulkMailTemplatesComponent {
     this.mailingTemplate = mailTemplate;
     this.selectedAudiences = new Array();
     if (this.mailingTemplate.audience & Audience.paid) {
-      this.selectedAudiences.push(this.possibleAudiences.find(itm => itm.id == Audience.paid));
+      this.selectedAudiences.push(this.possibleAudiences.find(itm => itm.audience == Audience.paid));
     }
     if (this.mailingTemplate.audience & Audience.unpaid) {
-      this.selectedAudiences.push(this.possibleAudiences.find(itm => itm.id == Audience.unpaid));
+      this.selectedAudiences.push(this.possibleAudiences.find(itm => itm.audience == Audience.unpaid));
     }
     if (this.mailingTemplate.audience & Audience.waitingList) {
-      this.selectedAudiences.push(this.possibleAudiences.find(itm => itm.id == Audience.waitingList));
+      this.selectedAudiences.push(this.possibleAudiences.find(itm => itm.audience == Audience.waitingList));
+    }
+    if (this.mailingTemplate.audience & Audience.predecessorEvent) {
+      this.selectedAudiences.push(this.possibleAudiences.find(itm => itm.audience == Audience.predecessorEvent));
+    }
+    if (this.mailingTemplate.audience & Audience.prePredecessorEvent) {
+      this.selectedAudiences.push(this.possibleAudiences.find(itm => itm.audience == Audience.prePredecessorEvent));
     }
   }
 
@@ -107,7 +108,7 @@ export class BulkMailTemplatesComponent {
 
   setAudience() {
     this.mailingTemplate.audience = this.selectedAudiences.length > 0
-      ? this.selectedAudiences.map(itm => itm.id).reduce((sum, current) => sum += current)
+      ? this.selectedAudiences.map(itm => itm.audience).reduce((sum, current) => sum += current)
       : 0;
   }
 
@@ -134,8 +135,15 @@ class Language {
   userText: string;
 }
 
+class PossibleAudience {
+  audience: Audience;
+  name: string;
+}
+
 enum Audience {
   paid = 1,
   unpaid = 2,
-  waitingList = 4
+  waitingList = 4,
+  predecessorEvent = 8,
+  prePredecessorEvent = 16
 }

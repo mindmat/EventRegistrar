@@ -10,6 +10,10 @@ namespace EventRegistrar.Backend.Events
         {
             base.Configure(builder);
             builder.ToTable("Events");
+
+            builder.HasOne(evt => evt.PredecessorEvent)
+                   .WithMany()
+                   .HasForeignKey(evt => evt.PredecessorEventId);
         }
     }
 }

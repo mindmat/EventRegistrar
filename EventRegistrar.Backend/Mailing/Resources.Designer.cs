@@ -19,7 +19,7 @@ namespace EventRegistrar.Backend.Mailing {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -57,6 +57,33 @@ namespace EventRegistrar.Backend.Mailing {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to bezahlt.
+        /// </summary>
+        internal static string MailingAudience_Paid {
+            get {
+                return ResourceManager.GetString("MailingAudience_Paid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to noch nicht bezahlt.
+        /// </summary>
+        internal static string MailingAudience_Unpaid {
+            get {
+                return ResourceManager.GetString("MailingAudience_Unpaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warteliste.
+        /// </summary>
+        internal static string MailingAudience_WaitingList {
+            get {
+                return ResourceManager.GetString("MailingAudience_WaitingList", resourceCulture);
             }
         }
         

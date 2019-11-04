@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Mailing.InvalidAddresses;
@@ -123,6 +124,15 @@ namespace EventRegistrar.Backend.Mailing
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 MailId = mailId
+            });
+        }
+
+        [HttpGet("api/events/{eventAcronym}/mails/possibleAudiences")]
+        public async Task<IEnumerable<PossibleAudience>> GetPossibleAudiences(string eventAcronym)
+        {
+            return await _mediator.Send(new PossibleAudiencesQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
             });
         }
     }

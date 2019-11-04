@@ -7,6 +7,8 @@ namespace EventRegistrar.Backend.Mailing.Templates
     {
         Paid = 1,
         Unpaid = 2,
-        WaitingList = 4
+        WaitingList = 4,
+        PredecessorEvent = 8,
+        PrePredecessorEvent = 16
     }
 }

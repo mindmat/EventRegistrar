@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="MailingAudience_Paid" xml:space="preserve">
+    <value>bezahlt</value>
+  </data>
+  <data name="MailingAudience_Unpaid" xml:space="preserve">
+    <value>noch nicht bezahlt</value>
+  </data>
+  <data name="MailingAudience_WaitingList" xml:space="preserve">
+    <value>Warteliste</value>
+  </data>
   <data name="MailType_PartnerRegistrationFirstReminder" xml:space="preserve">
     <value>Paaranmeldung: Reminder 1</value>
   </data>

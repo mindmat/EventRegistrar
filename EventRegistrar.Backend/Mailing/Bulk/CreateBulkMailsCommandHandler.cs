@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Mailing.Templates;
@@ -18,15 +21,18 @@ namespace EventRegistrar.Backend.Mailing.Bulk
         private readonly IRepository<MailToRegistration> _mailsToRegistrations;
         private readonly IQueryable<MailTemplate> _mailTemplates;
         private readonly IQueryable<Registration> _registrations;
+        private readonly IQueryable<Event> _events;
 
         public CreateBulkMailsCommandHandler(IQueryable<MailTemplate> mailTemplates,
                                              IQueryable<Registration> registrations,
+                                             IQueryable<Event> events,
                                              IRepository<Mail> mails,
                                              IRepository<MailToRegistration> mailsToRegistrations,
                                              MailComposer mailComposer)
         {
             _mailTemplates = mailTemplates;
             _registrations = registrations;
+            _events = events;
             _mails = mails;
             _mailsToRegistrations = mailsToRegistrations;
             _mailComposer = mailComposer;
@@ -54,34 +60,43 @@ namespace EventRegistrar.Backend.Mailing.Bulk
                                                      || reg.Seats_AsFollower.Any(spt => !spt.IsCancelled && spt.RegistrableId == mailTemplate.RegistrableId))
                                           .Take(100)
                                           .ToList();
+                var receivers = new List<Registration>();
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.Paid) == true)
                 {
-                    var receivers = registrationsForTemplate.Where(reg => reg.State == RegistrationState.Paid
-                                                                       && (reg.Language == mailTemplate.Language || reg.Language == null));
-                    foreach (var registration in receivers)
-                    {
-                        await CreateMail(mailTemplate, registration, cancellationToken);
-                    }
+                    receivers.AddRange(registrationsForTemplate.Where(reg => reg.State == RegistrationState.Paid
+                                                                          && (reg.Language == mailTemplate.Language || reg.Language == null)));
                 }
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.Unpaid) == true)
                 {
-                    var receivers = registrationsForTemplate.Where(reg => reg.State == RegistrationState.Received
-                                                                       && (reg.Language == mailTemplate.Language || reg.Language == null)
-                                                                       && reg.IsWaitingList != true);
-                    foreach (var registration in receivers)
-                    {
-                        await CreateMail(mailTemplate, registration, cancellationToken);
-                    }
+                    receivers.AddRange(registrationsForTemplate.Where(reg => reg.State == RegistrationState.Received
+                                                                          && (reg.Language == mailTemplate.Language || reg.Language == null)
+                                                                          && reg.IsWaitingList != true));
                 }
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.WaitingList) == true)
                 {
-                    var receivers = registrationsForTemplate.Where(reg => reg.State == RegistrationState.Received
-                                                                       && (reg.Language == mailTemplate.Language || reg.Language == null)
-                                                                       && reg.IsWaitingList == true);
-                    foreach (var registration in receivers)
+                    receivers.AddRange(registrationsForTemplate.Where(reg => reg.State == RegistrationState.Received
+                                                                          && (reg.Language == mailTemplate.Language || reg.Language == null)
+                                                                          && reg.IsWaitingList == true));
+                }
+                if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.PredecessorEvent) == true)
+                {
+                    // distinct by email, not registrationid
+                    var predecessorReceivers = await _events.Where(evt => evt.Id == command.EventId)
+                                                            .SelectMany(evt => evt.PredecessorEvent.Registrations)
+                                                            .Where(reg => !reg.Mails.Any(mail => mail.Mail.BulkMailKey == command.BulkMailKey))
+                                                            .ToListAsync();
+                    if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.PrePredecessorEvent) == true)
                     {
-                        await CreateMail(mailTemplate, registration, cancellationToken);
+                        predecessorReceivers.AddRange(await _events.Where(evt => evt.Id == command.EventId)
+                                                                   .SelectMany(evt => evt.PredecessorEvent.PredecessorEvent.Registrations)
+                                                                   .Where(reg => !reg.Mails.Any(mail => mail.Mail.BulkMailKey == command.BulkMailKey))
+                                                                   .ToListAsync());
                     }
+                    receivers.AddRange(predecessorReceivers.DistinctBy(reg => reg.RespondentEmail.ToLower()));
+                }
+                foreach (var registration in receivers.DistinctBy(reg => reg.Id))
+                {
+                    await CreateMail(mailTemplate, registration, cancellationToken);
                 }
             }
 
@@ -102,7 +117,7 @@ namespace EventRegistrar.Backend.Mailing.Bulk
                 Withhold = true,
                 BulkMailKey = mailTemplate.BulkMailKey,
                 ContentHtml = content,
-                EventId = registration.EventId,
+                EventId = mailTemplate.EventId,
                 MailTemplateId = mailTemplate.Id
             };
             await _mails.InsertOrUpdateEntity(mail, cancellationToken);

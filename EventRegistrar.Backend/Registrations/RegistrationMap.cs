@@ -18,7 +18,7 @@ namespace EventRegistrar.Backend.Registrations
                    .HasForeignKey(reg => reg.RegistrationId_Partner);
 
             builder.HasOne(reg => reg.Event)
-                   .WithMany()
+                   .WithMany(evt => evt.Registrations)
                    .HasForeignKey(reg => reg.EventId);
 
             builder.Property(reg => reg.PartnerNormalized)

@@ -93,6 +93,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(PricingQuery);
                 yield return nameof(EventQuery);
                 yield return nameof(QuestionsQuery);
+                yield return nameof(PossibleAudiencesQuery);
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
