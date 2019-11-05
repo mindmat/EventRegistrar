@@ -120,7 +120,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
                                                                                             registrableToCheck.MaximumAllowedImbalance ?? 0,
                                                                                             spots,
                                                                                             firstSingleRole)
-                             && command.RegistrationId != null)
+                             && command.RegistrationId == null) // manual promotion doesn't stick to the rules
                             {
                                 // no promotion due to imbalance
                                 waitinglist.Remove(nextSpotOnWaitingList);
