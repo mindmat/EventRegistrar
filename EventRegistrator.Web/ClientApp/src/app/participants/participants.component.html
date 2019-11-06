@@ -26,9 +26,9 @@
   </tbody>
 </table>
 <br />
-<button class="btn btn-primary btn-sm" *ngIf="registrable && registrable?.waitingList?.length > 0" (click)="promote()">Nachrücken auslösen</button>
+<button class="btn btn-primary btn-sm" *ngIf="registrable?.hasWaitingList && registrable?.waitingList?.length > 0" (click)="promote()">Nachrücken auslösen</button>
 
-<div class="input-group mb-3">
+<div class="input-group mb-3" *ngIf="registrable?.hasWaitingList">
   <div class="input-group-prepend">
     <div class="input-group-text">
       <input type="checkbox" #automaticPromotion (change)="changeAutomaticPromotion(automaticPromotion.checked)"
@@ -37,7 +37,7 @@
   </div>
   <label type="text" class="form-control" disabled>Automatisches Nachrücken</label>
 </div>
-<div class="input-group mb-3">
+<div class="input-group mb-3" *ngIf="registrable?.hasWaitingList">
   <div class="input-group-prepend">
     <div class="input-group-text">
       <input type="checkbox" [(ngModel)]="manualPromotion">
@@ -46,9 +46,9 @@
   <label type="text" class="form-control" disabled>Manuelles Rauspicken</label>
 </div>
 
-<h2 *ngIf="registrable && registrable.waitingList.length > 0">Warteliste</h2>
+<h2 *ngIf="registrable?.hasWaitingList && registrable.waitingList.length > 0">Warteliste</h2>
 
-<table class='table' *ngIf="registrable && registrable.waitingList.length > 0">
+<table class='table' *ngIf="registrable?.hasWaitingList && registrable.waitingList.length > 0">
   <thead>
     <tr>
       <th *ngIf="!registrable.maximumDoubleSeats">Name</th>
