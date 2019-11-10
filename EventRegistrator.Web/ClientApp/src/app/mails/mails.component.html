@@ -1,5 +1,7 @@
 <h1>Mails</h1>
 
+<button class="btn btn-primary" (click)="releaseAllPendingMails()" *ngIf="mails">Alle freigeben</button>
+
 <table class="table table-hover" *ngIf="mails">
   <thead class="thead-dark">
     <tr>
@@ -36,8 +38,9 @@
   </tbody>
 </table>-->
 
-<br /><br />
+<br />
+<br />
 
 <div id="mailRenderSpace" class="table-bordered">
 </div>
-<button class="btn btn-primary" (click)="releaseMail(mail.id)">Freigeben</button>
+<button class="btn btn-primary" (click)="releaseMail(mail.id)" *ngIf="mail">Freigeben</button>

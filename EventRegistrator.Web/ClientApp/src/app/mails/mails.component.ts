@@ -48,6 +48,12 @@ export class MailsComponent {
     });
   }
 
+  releaseAllPendingMails() {
+    this.http.post(`api/events/${this.getEventAcronym()}/mails/release`, null).subscribe(result => {
+      this.refresh();
+    });
+  }
+
   discardMail(mailId: string) {
     this.http.delete(`api/events/${this.getEventAcronym()}/mails/${mailId}`).subscribe(result => {
       this.refresh();

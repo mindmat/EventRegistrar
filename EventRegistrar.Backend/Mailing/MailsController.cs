@@ -127,6 +127,15 @@ namespace EventRegistrar.Backend.Mailing
             });
         }
 
+        [HttpPost("api/events/{eventAcronym}/mails/release")]
+        public async Task ReleaseAllPendingMails(string eventAcronym)
+        {
+            await _mediator.Send(new ReleaseAllPendingMailsCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
+        }
+
         [HttpGet("api/events/{eventAcronym}/mails/possibleAudiences")]
         public async Task<IEnumerable<PossibleAudience>> GetPossibleAudiences(string eventAcronym)
         {

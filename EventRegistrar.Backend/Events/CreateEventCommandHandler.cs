@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing.Templates;
@@ -137,6 +139,7 @@ namespace EventRegistrar.Backend.Events
 
                 // copy registrables
                 // ToDo: map RegistrableId1_ReductionActivatedIfCombinedWith etc to new ids
+                var registrableMap = new Dictionary<Guid, Guid>();
                 var registrablesOfSourceEvent = await _registrables.Where(mtp => mtp.EventId == sourceEventId)
                                                                    .Include(mtp => mtp.Reductions)
                                                                    .Include(mtp => mtp.Compositions)
@@ -159,6 +162,12 @@ namespace EventRegistrar.Backend.Events
                         IsCore = registrableOfSourceEvent.IsCore
                     }, cancellationToken);
 
+                    registrableMap.Add(registrableOfSourceEvent.Id, newRegistrableId);
+                }
+
+                foreach (var registrableOfSourceEvent in registrablesOfSourceEvent)
+                {
+                    var newRegistrableId = registrableMap[registrableOfSourceEvent.Id];
                     // copy reductions
                     foreach (var reduction in registrableOfSourceEvent.Reductions.ToList())
                     {
@@ -169,20 +178,24 @@ namespace EventRegistrar.Backend.Events
                             Amount = reduction.Amount,
                             OnlyForRole = reduction.OnlyForRole,
                             //QuestionOptionId_ActivatesReduction = reduction.QuestionOptionId_ActivatesReduction,
-                            RegistrableId1_ReductionActivatedIfCombinedWith = reduction.RegistrableId1_ReductionActivatedIfCombinedWith,
-                            RegistrableId2_ReductionActivatedIfCombinedWith = reduction.RegistrableId2_ReductionActivatedIfCombinedWith
+                            RegistrableId1_ReductionActivatedIfCombinedWith = registrableMap.Lookup(reduction.RegistrableId1_ReductionActivatedIfCombinedWith),
+                            RegistrableId2_ReductionActivatedIfCombinedWith = registrableMap.Lookup(reduction.RegistrableId2_ReductionActivatedIfCombinedWith)
                         }, cancellationToken);
                     }
 
                     // copy compositions
                     foreach (var composition in registrableOfSourceEvent.Compositions)
                     {
-                        await _registrableCompositions.InsertOrUpdateEntity(new RegistrableComposition
+                        var mappedRegistrableId_Contains = registrableMap.Lookup(composition.RegistrableId_Contains);
+                        if (mappedRegistrableId_Contains != null)
                         {
-                            Id = Guid.NewGuid(),
-                            RegistrableId = newRegistrableId,
-                            RegistrableId_Contains = composition.RegistrableId_Contains
-                        }, cancellationToken);
+                            await _registrableCompositions.InsertOrUpdateEntity(new RegistrableComposition
+                            {
+                                Id = Guid.NewGuid(),
+                                RegistrableId = newRegistrableId,
+                                RegistrableId_Contains = mappedRegistrableId_Contains.Value
+                            }, cancellationToken);
+                        }
                     }
                 }
 
