@@ -216,7 +216,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_Email = Guid.Parse("4AC1A1C6-1F0B-4AAE-AD27-A85847B32CD4"),
                     QuestionId_Phone = Guid.Parse("420D6986-C0B4-4D31-A5E5-E8A05DA2A45E"),
                     QuestionId_Remarks = Guid.Parse("53E0BE8C-CAE5-4950-91E0-0690FB8FDF7B"),
-                    QuestionOptionId_Reduction = Guid.Parse("51F3FF71-93EB-4576-812B-7E6112998933")
+                    QuestionOptionId_Reduction = Guid.Parse("75B965CA-E4CD-4FE1-BE46-3C63CBDA7E0E")
                 };
             }
 
