@@ -149,6 +149,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(RespondToRequestCommand);
                 yield return nameof(SaveRegistrationFormDefinitionCommand);
                 yield return nameof(OpenRegistrationCommand);
+                yield return nameof(ReleaseAllPendingMailsCommand);
             }
         }
     }
