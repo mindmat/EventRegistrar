@@ -4,7 +4,9 @@
 
 <div *ngIf="payment" class="carousel slide">
   <div class="carousel-inner" style="padding-left: 40px; padding-right: 40px">
-    Mitteilungstext: <textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected()">{{ payment.info }}</textarea>
+    Info: <textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected()">{{ payment.info }}</textarea>
+    <p>Debitor: {{ payment.debitorName }}</p>
+    <p>Mitteilung: {{ payment.message }}</p>
     <p>Zahlungseingang: {{ payment.amount }} {{ payment.currency }}<a *ngIf="payment.amountAssigned > 0">, noch offen: {{ payment.amount - payment.amountAssigned }}</a></p>
     <p>Valuta: {{ payment.bookingDate | date: 'dd.MM.yyyy' }}</p>
   </div>

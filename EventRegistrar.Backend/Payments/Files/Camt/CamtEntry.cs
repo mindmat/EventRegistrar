@@ -11,6 +11,7 @@ namespace EventRegistrar.Backend.Payments.Files.Camt
         public string DebitorIban { get; set; }
         public string DebitorName { get; set; }
         public string Info { get; set; }
+        public string Message { get; set; }
         public string InstructionIdentification { get; set; }
         public string Reference { get; set; }
         public CreditDebit Type { get; set; }

@@ -226,6 +226,7 @@ class PossibleRepaymentAssignment {
   currency: string;
   debitorName: string;
   info: string;
+  message: string;
   matchScore: number;
   paymentId_Counter: string;
   paymentId_OpenPosition: string;

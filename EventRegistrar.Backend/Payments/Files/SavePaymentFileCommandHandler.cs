@@ -132,6 +132,7 @@ namespace EventRegistrar.Backend.Payments.Files
                     Id = Guid.NewGuid(),
                     PaymentFileId = paymentFile.Id,
                     Info = camtEntry.Info,
+                    Message = camtEntry.Message,
                     Amount = camtEntry.Amount,
                     BookingDate = camtEntry.BookingDate,
                     Currency = camtEntry.Currency,

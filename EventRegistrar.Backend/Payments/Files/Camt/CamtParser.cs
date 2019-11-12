@@ -31,6 +31,7 @@ namespace EventRegistrar.Backend.Payments.Files.Camt
                 Amount = decimal.Parse(ntry.Descendants(ns + "Amt").First().Value, CultureInfo.InvariantCulture),
                 Currency = ntry.Descendants(ns + "Amt").First().Attribute("Ccy")?.Value,
                 Info = ntry.Descendants(ns + "AddtlNtryInf").FirstOrDefault()?.Value,
+                Message = ntry.Descendants(ns + "NtryDtls").Descendants(ns + "TxDtls").Descendants(ns + "RmtInf")?.Descendants(ns + "Ustrd")?.FirstOrDefault()?.Value,
                 Type = (CreditDebit)Enum.Parse(typeof(CreditDebit), ntry.Descendants(ns + "CdtDbtInd").First().Value),
                 BookingDate = DateTime.Parse(ntry.Descendants(ns + "BookgDt").Descendants(ns + "Dt").First().Value),
                 Reference = ntry.Descendants(ns + "AcctSvcrRef").FirstOrDefault()?.Value,

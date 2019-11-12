@@ -31,5 +31,6 @@ namespace EventRegistrar.Backend.Payments
         public ICollection<PaymentAssignment> RepaymentAssignments { get; set; }
         public bool Settled { get; set; }
         public bool Ignore { get; set; }
+        public string Message { get; set; }
     }
 }
