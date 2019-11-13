@@ -15,5 +15,7 @@ namespace EventRegistrar.Backend.Payments.Unassigned
         public decimal? AmountRepaid { get; set; }
         public bool Settled { get; set; }
         public bool Ignore { get; set; }
+        public string Message { get; set; }
+        public string DebitorName { get; set; }
     }
 }
