@@ -35,7 +35,9 @@ namespace EventRegistrar.Backend.Payments.Unassigned
                                      Reference = rpy.Reference,
                                      AmountRepaid = rpy.Repaid,
                                      Settled = rpy.Settled,
-                                     PaymentSlipId = rpy.PaymentSlipId
+                                     PaymentSlipId = rpy.PaymentSlipId,
+                                     Message = rpy.Message,
+                                     DebitorName = rpy.DebitorName
                                  })
                                  .ToListAsync(cancellationToken);
             return payments;
