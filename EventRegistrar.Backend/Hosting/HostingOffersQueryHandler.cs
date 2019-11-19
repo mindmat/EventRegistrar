@@ -53,6 +53,7 @@ namespace EventRegistrar.Backend.Hosting
                                                                ?.ResponseString)
                          })
                          .OrderBy(reg => reg.AdmittedAt ?? DateTime.MaxValue)
+                         .ToList()
             };
         }
     }

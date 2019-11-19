@@ -34,7 +34,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                               PaymentId_Counter = pmt.Id,
                                               BookingDate = pmt.BookingDate,
                                               Amount = pmt.Amount,
-                                              AmountUnsettled = pmt.Amount - pmt.Assignments.Select(ass => ass.Amount).DefaultIfEmpty(0).Sum(),
+                                              AmountUnsettled = pmt.Amount - pmt.Assignments.Select(ass => ass.Amount).Sum(),
                                               Settled = pmt.Settled,
                                               Currency = pmt.Currency,
                                               Info = pmt.Info,

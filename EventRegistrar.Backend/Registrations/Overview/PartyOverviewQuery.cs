@@ -54,14 +54,17 @@ namespace EventRegistrar.Backend.Registrations.Overview
 
         public async Task<IEnumerable<PartyItem>> Handle(PartyOverviewQuery query, CancellationToken cancellationToken)
         {
-            var mappings = await _compositions.Where(cmp => cmp.Registrable.EventId == query.EventId)
-                                              .GroupBy(cmp => cmp.RegistrableId_Contains)
-                                              .Select(grp => new
-                                              {
-                                                  PartyId = grp.Key,
-                                                  DependentRegistrablesIds = grp.Select(rbl => rbl.RegistrableId).ToList()
-                                              })
-                                              .ToListAsync(cancellationToken);
+            var mappings = (await _compositions.Where(cmp => cmp.Registrable.EventId == query.EventId)
+                                               .Select(cmp => new { cmp.RegistrableId_Contains, cmp.RegistrableId })
+                                               .ToListAsync(cancellationToken)
+                           )
+                           .GroupBy(cmp => cmp.RegistrableId_Contains)
+                           .Select(grp => new
+                           {
+                               PartyId = grp.Key,
+                               DependentRegistrablesIds = grp.Select(rbl => rbl.RegistrableId)
+                           })
+                           .ToList();
 
             var registrableIdsPartyParticipants = mappings.Select(map => map.PartyId).ToList();
             registrableIdsPartyParticipants.AddRange(mappings.SelectMany(map => map.DependentRegistrablesIds));

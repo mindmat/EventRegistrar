@@ -30,7 +30,7 @@ namespace EventRegistrar.Backend.Mailing.InvalidAddresses
 
     public class InvalidAddressesQueryHandler : IRequestHandler<InvalidAddressesQuery, IEnumerable<InvalidAddress>>
     {
-        private static readonly MailState[] DeliveredMailStates = { MailState.Delivered, MailState.Open, MailState.Click };
+        private static readonly MailState?[] DeliveredMailStates = { MailState.Delivered, MailState.Open, MailState.Click };
         private readonly IQueryable<Registration> _registrations;
 
         public InvalidAddressesQueryHandler(IQueryable<Registration> registrations)
@@ -40,29 +40,36 @@ namespace EventRegistrar.Backend.Mailing.InvalidAddresses
 
         public async Task<IEnumerable<InvalidAddress>> Handle(InvalidAddressesQuery query, CancellationToken cancellationToken)
         {
-            var invalidMails = await _registrations.Where(reg => reg.EventId == query.EventId
-                                                       && reg.State != RegistrationState.Cancelled
-                                                       && reg.Mails.Any(map => (map.State ?? map.Mail.State) != null)
-                                                       && !reg.Mails.Any(map => (map.State ?? map.Mail.State) != null && DeliveredMailStates.Contains((map.State ?? map.Mail.State).Value)))
-                                            .Select(reg => new InvalidAddress
-                                            {
-                                                RegistrationId = reg.Id,
-                                                RegistrationState = reg.State.ToString(),
-                                                FirstName = reg.RespondentFirstName,
-                                                LastName = reg.RespondentLastName,
-                                                Email = reg.RespondentEmail,
-                                                LastMailSent = reg.Mails.Where(map => (map.State ?? map.Mail.State) != null)
-                                                                        .OrderByDescending(map => map.Mail.Sent)
-                                                                        .Select(map => map.Mail.Sent)
-                                                                        .First(),
-                                                LastMailState = reg.Mails.Where(map => (map.State ?? map.Mail.State) != null)
+            var invalidMails = (await _registrations.Where(reg => reg.EventId == query.EventId
+                                                        && reg.State != RegistrationState.Cancelled
+                                                        && reg.Mails.Any(map => map.State != null)
+                                                        && !reg.Mails.Any(map => map.State != null && DeliveredMailStates.Contains(map.State)))
+                                             .Select(reg => new
+                                             {
+                                                 RegistrationId = reg.Id,
+                                                 RegistrationState = reg.State,
+                                                 FirstName = reg.RespondentFirstName,
+                                                 LastName = reg.RespondentLastName,
+                                                 Email = reg.RespondentEmail,
+                                                 LastMailSent = reg.Mails.Where(map => map.State != null)
                                                                          .OrderByDescending(map => map.Mail.Sent)
-                                                                         .Select(map => (map.State ?? map.Mail.State))
-                                                                         .First()
-                                                                         .ToString(),
-                                            })
-                                            .OrderByDescending(mail => mail.LastMailSent)
-                                            .ToListAsync(cancellationToken);
+                                                                         .Select(map => new { map.Mail.Sent, map.State })
+                                                                         .First(),
+                                             })
+                                             .ToListAsync(cancellationToken)
+                               )
+                               .Select(reg => new InvalidAddress
+                               {
+                                   RegistrationId = reg.RegistrationId,
+                                   RegistrationState = reg.RegistrationState.ToString(),
+                                   FirstName = reg.FirstName,
+                                   LastName = reg.LastName,
+                                   Email = reg.Email,
+                                   LastMailSent = reg.LastMailSent?.Sent,
+                                   LastMailState = reg.LastMailSent?.Sent.ToString(),
+                               })
+                               .OrderByDescending(mail => mail.LastMailSent)
+                               .ToList();
             foreach (var invalidMail in invalidMails)
             {
                 var otherRegistrations = await _registrations.Where(reg => reg.Id != invalidMail.RegistrationId

@@ -4,12 +4,12 @@ using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SimpleInjector;
 
@@ -27,7 +27,7 @@ namespace EventRegistrator.Web
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseSimpleInjector(_container);
             _container.RegisterInstance(GetDbOptions());
@@ -35,6 +35,7 @@ namespace EventRegistrator.Web
             _container.CrossWire<ILoggerFactory>(app);
             SetIdentityProvider(_container);
             CompositionRoot.RegisterTypes(_container);
+            OverrideRegistrations();
             _container.Verify();
 
             if (env.IsDevelopment())
@@ -51,19 +52,19 @@ namespace EventRegistrator.Web
 
             app.UseCors(builder => builder.AllowAnyOrigin()
                                           .AllowAnyHeader()
-                                          .AllowAnyMethod()
-                                          .AllowCredentials());
+                                          .AllowAnyMethod());
 
             app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
             {
-                routes.MapRoute(
+                endpoints.MapControllerRoute(
                     name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action=Index}/{id?}");
             });
 
             app.UseSpa(spa =>
@@ -80,10 +81,22 @@ namespace EventRegistrator.Web
             });
         }
 
+        protected virtual void OverrideRegistrations()
+        {
+            return;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc() //.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+                    .AddNewtonsoftJson(options =>
+                    {
+                        options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+                        options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Include;
+                        options.SerializerSettings.DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Include;
+                    });
+
 
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>

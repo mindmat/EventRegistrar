@@ -29,10 +29,11 @@ namespace EventRegistrar.Backend.Hosting
         [HttpGet("api/events/{eventAcronym}/hosting/requests")]
         public async Task<HostingRequests> GetHostingRequests(string eventAcronym)
         {
-            return await _mediator.Send(new HostingRequestsQuery
+            var test = await _mediator.Send(new HostingRequestsQuery
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
             });
+            return test;
         }
     }
 }

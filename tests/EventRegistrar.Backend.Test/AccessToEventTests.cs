@@ -1,14 +1,13 @@
 using System;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Authentication.Users;
-using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
+using EventRegistrar.Backend.Test.Infrastructure;
 using EventRegistrar.Backend.Test.TestInfrastructure;
 using Microsoft.EntityFrameworkCore;
 using Shouldly;

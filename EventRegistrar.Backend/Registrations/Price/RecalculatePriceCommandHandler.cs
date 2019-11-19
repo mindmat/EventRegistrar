@@ -31,7 +31,6 @@ namespace EventRegistrar.Backend.Registrations.Price
             var oldPrice = registration.Price ?? 0m;
             var individualReductions = registration.IndividualReductions
                                                    .Select(ird => ird.Amount)
-                                                   .DefaultIfEmpty(0m)
                                                    .Sum();
             var oldOriginalPrice = registration.OriginalPrice ?? 0m;
             var newOriginalPrice = await _priceCalculator.CalculatePrice(command.RegistrationId);

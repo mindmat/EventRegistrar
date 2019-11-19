@@ -22,10 +22,13 @@ namespace EventRegistrar.Backend.Registrations.Overview
 
         public async Task<CheckinView> Handle(CheckinQuery query, CancellationToken cancellationToken)
         {
-            var columns = await _registrables.Where(rbl => rbl.EventId == query.EventId
+            var columns = (await _registrables.Where(rbl => rbl.EventId == query.EventId
                                                         && rbl.CheckinListColumn != null)
-                                             .GroupBy(rbl => rbl.CheckinListColumn)
-                                             .ToDictionaryAsync(grp => grp.Key, grp => grp.Select(rbl => new { rbl.Id, rbl.Name }), cancellationToken);
+                                              .Select(rbl => new { rbl.Id, rbl.Name, rbl.CheckinListColumn })
+                                              .ToListAsync(cancellationToken)
+                          )
+                          .GroupBy(rbl => rbl.CheckinListColumn)
+                          .ToDictionary(grp => grp.Key, grp => grp.Select(rbl => new { rbl.Id, rbl.Name }));
             var registrations = await _registrations
                                       .Where(reg => reg.RegistrationForm.EventId == query.EventId
                                                  && reg.IsWaitingList == false
@@ -53,7 +56,7 @@ namespace EventRegistrar.Backend.Registrations.Overview
                             LastName = reg.LastName,
                             Status = reg.State.ToString(),
                             AdmittedAt = reg.AdmittedAt,
-                            UnsettledAmount = reg.Price - reg.Payments.DefaultIfEmpty(0m).Sum(),
+                            UnsettledAmount = reg.Price - reg.Payments.Sum(),
                             Columns = columns
                                       .ToDictionary(col => col.Key,
                                                     col => col.Value.Where(rbl => reg.SeatsAsLeader.Any(seat => seat.RegistrableId == rbl.Id)

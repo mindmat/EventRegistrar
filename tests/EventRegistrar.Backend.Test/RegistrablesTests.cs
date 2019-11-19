@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Test.Infrastructure;
 using EventRegistrar.Backend.Test.TestInfrastructure;
 using Shouldly;
 using Xunit;

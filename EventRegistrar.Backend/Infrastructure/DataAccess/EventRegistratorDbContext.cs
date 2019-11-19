@@ -10,6 +10,7 @@ using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Files;
+using EventRegistrar.Backend.Payments.Files.Fetch;
 using EventRegistrar.Backend.Payments.Files.Slips;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrables;
@@ -59,6 +60,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new PaymentAssignmentMap());
             builder.ApplyConfiguration(new PaymentFileMap());
             builder.ApplyConfiguration(new PaymentSlipMap());
+            builder.ApplyConfiguration(new RawBankStamentsFileMap());
 
             builder.ApplyConfiguration(new MailMap());
             builder.ApplyConfiguration(new MailToRegistrationMap());

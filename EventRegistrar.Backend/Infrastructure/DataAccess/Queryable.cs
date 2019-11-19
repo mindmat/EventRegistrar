@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query.Internal;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess
 {
@@ -21,19 +20,13 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
         public IQueryProvider Provider => ((IQueryable)DbSet).Provider;
         protected DbSet<TEntity> DbSet { get; }
 
-        public IEnumerator<TEntity> GetEnumerator()
-        {
-            return DbSet.AsEnumerable().GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
+        public IEnumerator<TEntity> GetEnumerator() => DbSet.AsEnumerable().GetEnumerator();
 
-        IAsyncEnumerator<TEntity> IAsyncEnumerable<TEntity>.GetEnumerator()
+        IAsyncEnumerator<TEntity> IAsyncEnumerable<TEntity>.GetAsyncEnumerator(System.Threading.CancellationToken cancellationToken)
         {
-            return ((IAsyncEnumerableAccessor<TEntity>)DbSet).AsyncEnumerable.GetEnumerator();
+            return DbSet.AsAsyncEnumerable().GetAsyncEnumerator();
         }
     }
 }

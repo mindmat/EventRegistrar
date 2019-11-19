@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace EventRegistrar.Backend.Hosting
+namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 {
     public class DomainEventsController : Controller
     {
@@ -18,9 +19,9 @@ namespace EventRegistrar.Backend.Hosting
         }
 
         [HttpGet("api/events/{eventAcronym}/domainevents")]
-        public async Task<HostingOffers> GetRecentEvent(string eventAcronym)
+        public async Task<IEnumerable<DomainEventDisplayItem>> GetRecentEvent(string eventAcronym)
         {
-            return await _mediator.Send(new HostingOffersQuery
+            return await _mediator.Send(new DomainEventsQuery
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
             });

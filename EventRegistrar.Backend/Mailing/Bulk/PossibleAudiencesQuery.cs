@@ -58,7 +58,6 @@ namespace EventRegistrar.Backend.Mailing.Bulk
                                                     PrePredecessorEvent = evt.PredecessorEvent.PredecessorEvent,
                                                     PrePredecessorEventRegistrationCount = evt.PredecessorEvent.PredecessorEvent.Registrations.Count(),
                                                 })
-                                                .Include(evt => evt.PredecessorEvent)
                                                 .FirstAsync();
             if (predecessorEvent?.PredecessorEvent != null)
             {

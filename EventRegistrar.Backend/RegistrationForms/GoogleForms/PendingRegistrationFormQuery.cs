@@ -33,19 +33,22 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                                                                     CancellationToken cancellationToken)
         {
             var acronym = await _events.FirstAsync(evt => evt.Id == query.EventId, cancellationToken);
-            var rawForms = await _rawForms.Where(frm => frm.EventAcronym == acronym.Acronym)
-                                          .GroupBy(frm => frm.FormExternalIdentifier)
-                                          .Select(grp => new
-                                          {
-                                              ExternalIdentifier = grp.Key,
-                                              PendingRawForm = grp.Where(frm => !frm.Processed)
-                                                                  .OrderByDescending(frm => frm.Created)
-                                                                  .FirstOrDefault(),
-                                              LastProcessedRawForm = grp.Where(frm => frm.Processed)
-                                                                        .OrderByDescending(frm => frm.Created)
-                                                                        .FirstOrDefault(),
-                                          })
-                                          .ToListAsync();
+            var rawForms = (await _rawForms.Where(frm => frm.EventAcronym == acronym.Acronym)
+                                           .Select(frm => new { frm.FormExternalIdentifier, frm.Processed, frm.Created, frm.Id })
+                                           .ToListAsync(cancellationToken)
+                           )
+                           .GroupBy(frm => frm.FormExternalIdentifier)
+                           .Select(grp => new
+                           {
+                               ExternalIdentifier = grp.Key,
+                               PendingRawForm = grp.Where(frm => !frm.Processed)
+                                                   .OrderByDescending(frm => frm.Created)
+                                                   .FirstOrDefault(),
+                               LastProcessedRawForm = grp.Where(frm => frm.Processed)
+                                                         .OrderByDescending(frm => frm.Created)
+                                                         .FirstOrDefault(),
+                           })
+                           .ToList();
             var forms = await _forms.Where(frm => frm.EventId == query.EventId)
                                     .Select(frm => new RegistrationFormItem
                                     {

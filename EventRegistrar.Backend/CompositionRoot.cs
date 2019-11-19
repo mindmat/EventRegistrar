@@ -11,8 +11,6 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SimpleInjector;
@@ -61,7 +59,7 @@ namespace EventRegistrar.Backend
             container.Register<IAuthenticatedUserProvider, AuthenticatedUserProvider>();
             container.Register<IRightsOfEventRoleProvider, RightsOfEventRoleProvider>();
 
-            container.Register(() => container.GetInstance<IHttpContextAccessor>().HttpContext?.Request ?? new DefaultHttpRequest(new DefaultHttpContext()));
+            //container.Register(() => container.GetInstance<IHttpContextAccessor>().HttpContext?.Request ?? new DefaultHttpRequest(new DefaultHttpContext()));
 
             var assembly = typeof(CompositionRoot).Assembly;
 
