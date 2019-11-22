@@ -68,7 +68,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
             var ownSeats = new List<Seat>();
 
-            var questionOptionIds = new HashSet<Guid>(registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue).Select(rsp => rsp.QuestionOptionId.Value));
+            var questionOptionIds = new List<Guid>(registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue).Select(rsp => rsp.QuestionOptionId.Value));
             var mappings = await _optionToRegistrableMappings
                                  .Where(map => questionOptionIds.Contains(map.QuestionOptionId))
                                  .Include(map => map.Registrable)
