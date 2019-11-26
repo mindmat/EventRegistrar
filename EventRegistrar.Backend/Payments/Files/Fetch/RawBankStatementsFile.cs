@@ -1,23 +1,26 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using System;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Payments.Files.Fetch
 {
-    public class RawBankStamentsFile : Entity
+    public class RawBankStatementsFile : Entity
     {
         public string Server { get; set; }
         public string ContractIdentifier { get; set; }
         public string Filename { get; set; }
         public byte[] Content { get; set; }
+        public DateTimeOffset? Imported { get; set; }
+        public DateTimeOffset? Processed { get; set; }
     }
 
-    public class RawBankStamentsFileMap : EntityTypeConfiguration<RawBankStamentsFile>
+    public class RawBankStatementsFileMap : EntityTypeConfiguration<RawBankStatementsFile>
     {
-        public override void Configure(EntityTypeBuilder<RawBankStamentsFile> builder)
+        public override void Configure(EntityTypeBuilder<RawBankStatementsFile> builder)
         {
             base.Configure(builder);
-            builder.ToTable("RawBankStatmentsFiles");
+            builder.ToTable("RawBankStatementsFiles");
 
             builder.Property(bst => bst.Server)
                    .HasMaxLength(200);

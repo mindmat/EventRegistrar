@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Payments.Files.Fetch;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +31,16 @@ namespace EventRegistrar.Backend.Payments.Files
                 FileStream = stream,
                 Filename = file.FileName,
                 ContentType = file.ContentType
+            });
+        }
+
+
+        [HttpPost("api/events/{eventAcronym}/fetchBankStatementFiles")]
+        public async Task FetchBankStatementFiles(string eventAcronym)
+        {
+            await _mediator.Send(new FetchBankStamentsFileCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
             });
         }
     }

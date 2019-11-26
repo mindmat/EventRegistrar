@@ -15,6 +15,7 @@ using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Files;
+using EventRegistrar.Backend.Payments.Files.Fetch;
 using EventRegistrar.Backend.Payments.Files.Slips;
 using EventRegistrar.Backend.Payments.PayAtCheckin;
 using EventRegistrar.Backend.Payments.Statements;
@@ -138,6 +139,8 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(IgnorePaymentCommand);
                 yield return nameof(SetQuestionOptionToRegistrableMappingAttributesCommand);
                 yield return nameof(CreateRegistrableCommand);
+                yield return nameof(FetchBankStamentsFileCommand);
+                yield return nameof(ProcessFetchedBankStatementsFileCommand);
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

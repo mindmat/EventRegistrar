@@ -60,7 +60,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new PaymentAssignmentMap());
             builder.ApplyConfiguration(new PaymentFileMap());
             builder.ApplyConfiguration(new PaymentSlipMap());
-            builder.ApplyConfiguration(new RawBankStamentsFileMap());
+            builder.ApplyConfiguration(new RawBankStatementsFileMap());
 
             builder.ApplyConfiguration(new MailMap());
             builder.ApplyConfiguration(new MailToRegistrationMap());

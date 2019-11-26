@@ -127,6 +127,12 @@ namespace EventRegistrar.Backend.Payments.Files
             await _paymentFiles.InsertOrUpdateEntity(paymentFile, cancellationToken);
             foreach (var camtEntry in camt.Entries)
             {
+                // dedup
+                if (await _payments.AnyAsync(pmt => pmt.Reference == camtEntry.Reference))
+                {
+                    continue;
+                }
+
                 var newPayment = new ReceivedPayment
                 {
                     Id = Guid.NewGuid(),

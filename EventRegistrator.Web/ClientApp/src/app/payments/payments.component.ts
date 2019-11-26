@@ -36,6 +36,13 @@ export class PaymentsComponent implements OnInit {
         error => console.error(error));
   }
 
+  fetchBankStatemensFiles() {
+    this.http.post(`api/events/${this.getEventAcronym()}/fetchBankStatementFiles`, null)
+      .subscribe(result => {
+      },
+        error => console.error(error));
+  }
+
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
   }

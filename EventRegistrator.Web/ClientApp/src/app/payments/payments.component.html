@@ -10,6 +10,8 @@
 
 <p *ngIf="!payments"><em>Loading...</em></p>
 
+<button class="btn btn-primary btn-sm" (click)="fetchBankStatemensFiles()">Kontoauszüge abholen</button>
+
 <div ng2FileDrop
      [ngClass]="{'nv-file-over': hasBaseDropZoneOver}"
      (fileOver)="fileOverBase($event)"
