@@ -106,6 +106,7 @@ namespace EventRegistrator.Web
             services.AddMemoryCache();
             services.UseSimpleInjector(_container);
             services.AddSingleton(_container);
+            services.AddApplicationInsightsTelemetry();
         }
 
         protected virtual DbContextOptions<EventRegistratorDbContext> GetDbOptions()
