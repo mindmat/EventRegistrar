@@ -80,6 +80,7 @@ namespace EventRegistrar.Backend.Mailing.Templates
             template.SenderName = command.Template.SenderName;
             template.Subject = command.Template.Subject;
             template.MailingAudience = command.Template.Audience;
+            template.ReleaseImmediately = command.Template.ReleaseImmediately;
             await _mailTemplates.InsertOrUpdateEntity(template, cancellationToken);
 
             return Unit.Value;

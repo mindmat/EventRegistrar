@@ -15,5 +15,6 @@ namespace EventRegistrar.Backend.Mailing.Templates
         public string Subject { get; set; }
         public string Template { get; set; }
         public MailType? Type { get; set; }
+        public bool ReleaseImmediately { get; set; }
     }
 }

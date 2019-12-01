@@ -37,6 +37,7 @@ namespace EventRegistrar.Backend.Mailing.Templates
                                       Subject = mtp.Subject,
                                       Audience = mtp.MailingAudience,
                                       Type = mtp.Type,
+                                      ReleaseImmediately = mtp.ReleaseImmediately,
                                       MailsReadyCount = mtp.Mails.Count(mail => mail.Sent == null),
                                       MailsSentCount = mtp.Mails.Count(mail => mail.Sent != null)
                                   })

@@ -64,6 +64,10 @@
       <td>Adressaten</td>
       <td><input [(ngModel)]="mailTemplate.audience" type="number" class="form-control" /></td>
     </tr>
+    <tr >
+      <td>Automatisch versenden</td>
+      <td><input [(ngModel)]="mailTemplate.releaseImmediately" type="checkbox" class="form-check-input" /></td>
+    </tr>
     <tr>
       <td>Template (HTML)</td>
       <!--<td><textarea [(ngModel)]="mailTemplate.template" type="" class="form-control" (keyup)="renderMail()"></textarea></td>-->

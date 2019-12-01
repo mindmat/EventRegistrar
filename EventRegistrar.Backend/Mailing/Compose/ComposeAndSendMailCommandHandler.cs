@@ -93,10 +93,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 mappings.Add(partnerRegistration);
             }
 
-            var releaseAutomatically = command.MailType != null
-                                    && _mailReleaseConfiguration.MailsToReleaseAutomatically != null
-                                    && _mailReleaseConfiguration.MailsToReleaseAutomatically.Contains(command.MailType.Value) == true;
-            var withhold = !releaseAutomatically
+            var withhold = !template.ReleaseImmediately
                         || command.Withhold;
             var mail = new Mail
             {

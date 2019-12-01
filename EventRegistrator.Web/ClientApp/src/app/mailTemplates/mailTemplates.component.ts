@@ -77,6 +77,7 @@ class MailTemplate {
   senderName: string;
   subject: string;
   audience: number;
+  releaseImmediately: boolean;
 }
 
 class MailType {

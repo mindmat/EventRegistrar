@@ -22,5 +22,6 @@ namespace EventRegistrar.Backend.Mailing.Templates
         public string Template { get; set; }
         public MailType Type { get; set; }
         public bool IsDeleted { get; set; }
+        public bool ReleaseImmediately { get; set; }
     }
 }
