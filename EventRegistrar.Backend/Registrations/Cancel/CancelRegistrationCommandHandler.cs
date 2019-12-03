@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Spots;
@@ -10,6 +11,15 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrations.Cancel
 {
+    public class CancelRegistrationCommand : IRequest, IEventBoundRequest
+    {
+        public Guid EventId { get; set; }
+        public bool IgnorePayments { get; set; }
+        public string Reason { get; set; }
+        public decimal RefundPercentage { get; set; }
+        public Guid RegistrationId { get; set; }
+    }
+
     public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrationCommand>
     {
         private readonly IRepository<RegistrationCancellation> _cancellations;
@@ -56,6 +66,7 @@ namespace EventRegistrar.Backend.Registrations.Cancel
             }
 
             registration.State = RegistrationState.Cancelled;
+            registration.RegistrationId_Partner = null; // remove reference to partner
             var spots = await _spots.Where(plc => plc.RegistrationId == command.RegistrationId
                                                || plc.RegistrationId_Follower == command.RegistrationId)
                                     .ToListAsync(cancellationToken);

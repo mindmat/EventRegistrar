@@ -38,7 +38,8 @@ namespace EventRegistrar.Backend.Registrations.Matching
                 throw new ArgumentException($"Registration {registration.Id} is already assigned to a partner");
             }
             var partnerRegistration = await _registrations.FirstOrDefaultAsync(reg => reg.EventId == command.EventId
-                                                                                   && reg.RegistrationId_Partner == registration.Id, cancellationToken);
+                                                                                   && reg.RegistrationId_Partner == registration.Id
+                                                                                   && reg.State != RegistrationState.Cancelled, cancellationToken);
             if (partnerRegistration != null)
             {
                 throw new ArgumentException($"Registration {registration.Id} is referenced by registration {partnerRegistration.Id} ({registration.RespondentFirstName} {registration.RespondentLastName})");
