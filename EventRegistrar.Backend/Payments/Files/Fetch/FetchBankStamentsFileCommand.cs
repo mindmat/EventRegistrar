@@ -64,26 +64,23 @@ namespace EventRegistrar.Backend.Payments.Files.Fetch
                                                         _configuration.ContractIdentifier,
                                                         new PrivateKeyAuthenticationMethod(_configuration.ContractIdentifier,
                                                         new PrivateKeyFile(stream, _configuration.Passphrase)));
-                //new PrivateKeyFile(@"C:\Users\Mathias.Minder\.ssh\id_rsa", _configuration.Passphrase)));
-                using (var client = new SftpClient(connectionInfo))
+                using var client = new SftpClient(connectionInfo);
+                client.Connect();
+                var result = client.ListDirectory(_configuration.Directory);
+                foreach (var fileReady in result.Where(fil => IsNew(fil.FullName)))
                 {
-                    client.Connect();
-                    var result = client.ListDirectory(_configuration.Directory);
-                    foreach (var fileReady in result.Where(fil => IsNew(fil.FullName)))
+                    var content = client.ReadAllBytes(fileReady.FullName);
+                    var rawFile = new RawBankStatementsFile
                     {
-                        var content = client.ReadAllBytes(fileReady.FullName);
-                        var rawFile = new RawBankStatementsFile
-                        {
-                            Id = Guid.NewGuid(),
-                            Server = _configuration.Server,
-                            ContractIdentifier = _configuration.ContractIdentifier,
-                            Filename = fileReady.FullName,
-                            Imported = DateTimeOffset.Now,
-                            Content = content
-                        };
-                        await _files.InsertOrUpdateEntity(rawFile);
-                        _eventBus.Publish(new BankStatementsFileImported { EventId = command.EventId, BankStatementsFileId = rawFile.Id });
-                    }
+                        Id = Guid.NewGuid(),
+                        Server = _configuration.Server,
+                        ContractIdentifier = _configuration.ContractIdentifier,
+                        Filename = fileReady.FullName,
+                        Imported = DateTimeOffset.Now,
+                        Content = content
+                    };
+                    await _files.InsertOrUpdateEntity(rawFile);
+                    _eventBus.Publish(new BankStatementsFileImported { EventId = command.EventId, BankStatementsFileId = rawFile.Id });
                 }
             }
             catch (Exception ex)
