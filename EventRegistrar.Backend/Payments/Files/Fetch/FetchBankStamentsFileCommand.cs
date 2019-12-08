@@ -1,16 +1,22 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
 using Azure.Identity;
-using Azure.Security.KeyVault.Keys;
+using Azure.Security.KeyVault.Secrets;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
 using MediatR;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+
 using Renci.SshNet;
 
 namespace EventRegistrar.Backend.Payments.Files.Fetch
@@ -41,21 +47,24 @@ namespace EventRegistrar.Backend.Payments.Files.Fetch
             _keyVaultUri = appConfiguration["KeyVaultUri"];
         }
 
-        public async Task<Unit> Handle(FetchBankStamentsFileCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(FetchBankStamentsFileCommand command, CancellationToken cancellationToken)
         {
             try
             {
                 var cred =
                     //new Azure.Identity.DefaultAzureCredential(true);
                     new ManagedIdentityCredential();
-                var keyVaultClient = new KeyClient(new Uri(_keyVaultUri), cred);
-                var key = await keyVaultClient.GetKeyAsync(_configuration.KeyName);
-                var keyStream = new MemoryStream(key.Value.Key.D);
+                var keyVaultClient = new SecretClient(new Uri(_keyVaultUri), cred);
+                var key = await keyVaultClient.GetSecretAsync(_configuration.KeyName);
+                var bytes = Encoding.ASCII.GetBytes(key.Value.Value);
+                var stream = new MemoryStream(bytes);
+
                 var connectionInfo = new ConnectionInfo(_configuration.Server,
                                                         22,
                                                         _configuration.ContractIdentifier,
                                                         new PrivateKeyAuthenticationMethod(_configuration.ContractIdentifier,
-                                                                                           new PrivateKeyFile(keyStream, _configuration.Passphrase)));
+                                                        new PrivateKeyFile(stream, _configuration.Passphrase)));
+                //new PrivateKeyFile(@"C:\Users\Mathias.Minder\.ssh\id_rsa", _configuration.Passphrase)));
                 using (var client = new SftpClient(connectionInfo))
                 {
                     client.Connect();
@@ -73,6 +82,7 @@ namespace EventRegistrar.Backend.Payments.Files.Fetch
                             Content = content
                         };
                         await _files.InsertOrUpdateEntity(rawFile);
+                        _eventBus.Publish(new BankStatementsFileImported { EventId = command.EventId, BankStatementsFileId = rawFile.Id });
                     }
                 }
             }
@@ -83,7 +93,7 @@ namespace EventRegistrar.Backend.Payments.Files.Fetch
 
             foreach (var pendingFile in _files.Where(fil => fil.Processed == null))
             {
-                _eventBus.Publish(new BankStatementsFileImported { BankStatementsFileId = pendingFile.Id });
+                _eventBus.Publish(new BankStatementsFileImported { EventId = command.EventId, BankStatementsFileId = pendingFile.Id });
             }
             return Unit.Value;
         }
