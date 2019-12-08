@@ -56,11 +56,11 @@ namespace EventRegistrar.Backend.Payments.Files.Fetch
                     new ManagedIdentityCredential();
                 var keyVaultClient = new SecretClient(new Uri(_keyVaultUri), cred);
                 var key = await keyVaultClient.GetSecretAsync(_configuration.KeyName);
-                var bytes = Encoding.ASCII.GetBytes(key.Value.Value);
+                var keyString = key.Value.Value.Replace("\\r\\n", Environment.NewLine);
+                var bytes = Encoding.ASCII.GetBytes(keyString);
                 var stream = new MemoryStream(bytes);
 
                 var connectionInfo = new ConnectionInfo(_configuration.Server,
-                                                        22,
                                                         _configuration.ContractIdentifier,
                                                         new PrivateKeyAuthenticationMethod(_configuration.ContractIdentifier,
                                                         new PrivateKeyFile(stream, _configuration.Passphrase)));
