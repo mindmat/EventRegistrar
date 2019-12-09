@@ -15,7 +15,7 @@ namespace EventRegistrar.Functions
     public static class TriggerBankStatementsImport
     {
         [FunctionName("TriggerBankStatementsImport")]
-        public static async Task Run([TimerTrigger("0 3 * * 1-6")]TimerInfo timer, ILogger log)
+        public static async Task Run([TimerTrigger("0 0 3 * * 1-6")]TimerInfo timer, ILogger log)
         {
             var config = new ConfigurationBuilder().AddEnvironmentVariables()
                                        .Build();
