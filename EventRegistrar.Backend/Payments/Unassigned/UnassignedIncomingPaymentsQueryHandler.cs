@@ -1,13 +1,24 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Payments.Files.Camt;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Payments.Unassigned
 {
+    public class UnassignedIncomingPaymentsQuery : IRequest<IEnumerable<PaymentDisplayItem>>, IEventBoundRequest
+    {
+        public Guid EventId { get; set; }
+        public Guid PaymentId { get; set; }
+    }
+
     public class UnassignedIncomingPaymentsQueryHandler : IRequestHandler<UnassignedIncomingPaymentsQuery, IEnumerable<PaymentDisplayItem>>
     {
         private readonly IQueryable<ReceivedPayment> _payments;
@@ -39,6 +50,7 @@ namespace EventRegistrar.Backend.Payments.Unassigned
                                      Message = rpy.Message,
                                      DebitorName = rpy.DebitorName
                                  })
+                                 .OrderByDescending(rpy => rpy.BookingDate)
                                  .ToListAsync(cancellationToken);
             return payments;
         }
