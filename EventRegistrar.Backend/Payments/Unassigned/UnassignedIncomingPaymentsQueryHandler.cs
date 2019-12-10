@@ -51,6 +51,7 @@ namespace EventRegistrar.Backend.Payments.Unassigned
                                      DebitorName = rpy.DebitorName
                                  })
                                  .OrderByDescending(rpy => rpy.BookingDate)
+                                 .ThenByDescending(rpy => rpy.Amount)
                                  .ToListAsync(cancellationToken);
             return payments;
         }
