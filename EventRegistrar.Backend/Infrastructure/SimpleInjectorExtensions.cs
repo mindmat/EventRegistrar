@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ViewComponents;
 using Microsoft.Extensions.DependencyInjection;
+
 using SimpleInjector;
 using SimpleInjector.Integration.AspNetCore.Mvc;
 using SimpleInjector.Lifestyles;
@@ -25,7 +26,7 @@ namespace EventRegistrar.Backend.Infrastructure
             services.UseSimpleInjectorAspNetRequestScoping(container);
         }
 
-        public static void UseSimpleInjector(this IApplicationBuilder app, Container container)
+        public static void UseSimpleInjectorInternal(this IApplicationBuilder app, Container container)
         {
             container.RegisterMvcControllers(app);
             container.RegisterMvcViewComponents(app);
