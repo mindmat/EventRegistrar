@@ -40,6 +40,7 @@ import { InvalidEmailAddressesComponent } from './invalid-email-addresses/invali
 import { WaitingListComponent } from './waiting-list/waiting-list.component';
 import { NotReceivedMailsComponent } from './mails/notReceivedMails.component';
 import { PricingComponent } from './pricing/pricing.component';
+import { RefundsComponent } from "./refunds/refunds.component";
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { PricingComponent } from './pricing/pricing.component';
     InvalidEmailAddressesComponent,
     WaitingListComponent,
     NotReceivedMailsComponent,
-    PricingComponent
+    PricingComponent,
+    RefundsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -107,7 +109,8 @@ import { PricingComponent } from './pricing/pricing.component';
       { path: ':eventAcronym/invalid-email-addresses', component: InvalidEmailAddressesComponent },
       { path: ':eventAcronym/not-received-mails', component: NotReceivedMailsComponent },
       { path: ':eventAcronym/waiting-list', component: WaitingListComponent },
-      { path: ':eventAcronym/pricing', component: PricingComponent }
+      { path: ':eventAcronym/pricing', component: PricingComponent },
+      { path: ':eventAcronym/refunds', component: RefundsComponent }
       //{ path: '**', redirectTo: 'll18/registrables' }
     ])
   ],

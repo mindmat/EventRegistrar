@@ -83,8 +83,7 @@ export class RegistrationComponent {
     }, error => console.error(error));
   }
 
-  cancelRegistration(reason: string, ignorePayments: boolean, refundPercentage: number, preventPromotion: boolean) {
-    console.log(`cancel registration ${this.registration.id}, reason ${reason}, ignorePayments ${ignorePayments}, refundPercentage ${refundPercentage}, preventPromotion ${preventPromotion}`);
+  cancelRegistration(reason: string, ignorePayments: boolean, refundPercentage: number, preventPromotion: boolean, received: Date) {
     this.registration.status = 4; // cancelled
     let url = `api/events/${this.getEventAcronym()}/registrations/${this.registration.id}/?reason=${reason}`;
     if (ignorePayments) {
@@ -95,6 +94,9 @@ export class RegistrationComponent {
     }
     if (preventPromotion) {
       url += `&preventPromotion=true`;
+    }
+    if (received) {
+      url += `&received=${received}`;
     }
     this.http.delete(url)
       .subscribe(result => { this.reloadRegistration(); }, error => console.error(error));

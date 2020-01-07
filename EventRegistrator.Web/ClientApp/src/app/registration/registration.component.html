@@ -227,6 +227,14 @@
       <div class="modal-body">
         <div class="row">
           <div class="col-sm-6">
+            <p>Abmeldezeitpunkt</p>
+          </div>
+          <div class="col-sm-6">
+            <input type="date" #cancellationReceived/>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
             <p>Grund:</p>
           </div>
           <div class="col-sm-6">
@@ -260,7 +268,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
-        <button type="button" class="btn btn-primary" (click)="cancelRegistration(reasonCancellation.value, ignorePayments.value, refundPercentage.value, preventPromotion.value)" data-dismiss="modal">Stornieren</button>
+        <button type="button" class="btn btn-primary" (click)="cancelRegistration(reasonCancellation.value, ignorePayments.value, refundPercentage.value, preventPromotion.value, cancellationReceived.value)" data-dismiss="modal">Stornieren</button>
       </div>
     </div>
   </div>

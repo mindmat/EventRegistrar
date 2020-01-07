@@ -113,6 +113,11 @@
           <span class='glyphicon glyphicon-envelope'></span> Preisgestaltung
         </a>
       </li>
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'refunds']">
+          <span class='glyphicon glyphicon-envelope'></span> Rückerstattungen
+        </a>
+      </li>
     </ul>
     <!--</div>-->
   </nav>

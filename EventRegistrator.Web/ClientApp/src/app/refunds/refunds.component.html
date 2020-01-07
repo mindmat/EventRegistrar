@@ -1,0 +1,45 @@
+<h1>Rückzahlungen</h1>
+
+<p *ngIf="!refunds"><em>Loading...</em></p>
+
+<table class='table' *ngIf="refunds">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Preis</th>
+      <th>Bezahlt</th>
+      <th>Zahlungen</th>
+      <th>Abmeldung</th>
+      <th>Rückerstattung</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let refund of refunds">
+      <td><a [routerLink]="['/', getEventAcronym(), 'registration', refund.registrationId]">{{ refund.firstName }} {{ refund.lastName }}</a></td>
+      <td>{{ refund.price | currency : 'CHF' }}</td>
+      <td>{{ refund.paid | currency : 'CHF' }}</td>
+      <td>
+        <div *ngFor="let payment of refund.payments">
+          <p>{{ payment.assigned | currency : 'CHF' }} <a *ngIf="payment.paymentAmount != payment.assigned">(Total {{ payment.paymentAmount | currency : 'CHF' }}) </a> am {{ payment.paymentBookingDate | date: 'dd.MM.yy' }} von {{ payment.paymentDebitorName }}, {{ payment.paymentDebitorIban }}</p>
+          <p>Mitteilung: {{ payment.paymentMessage }}</p>
+          <div class="card">
+            <p>{{ payment.paymentInfo }}</p>
+          </div>
+        </div>
+      </td>
+      <!--<td>
+        <div *ngFor="let payment of refund.payments">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ payment.assigned | currency : 'CHF' }}</h5>
+              <p class="card-text">{{ payment.assigned | currency : 'CHF' }} (Total {{ payment.paymentAmount | currency : 'CHF' }})</p>
+              <p class="card-text">von {{ payment.paymentDebitorName }}, {{ payment.paymentDebitorIban }}</p>
+            </div>
+          </div>
+        </div>
+      </td>-->
+      <td>{{ refund.cancellationDate | date: 'dd.MM.yy' }} ({{ refund.cancellationReason }})</td>
+      <td>{{ refund.refund | currency : 'CHF' }} ({{ refund.refundPercentage | percent }})</td>
+    </tr>
+  </tbody>
+</table>

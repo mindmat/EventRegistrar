@@ -1,4 +1,5 @@
 ﻿using System;
+
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 
 namespace EventRegistrar.Backend.Registrations.Cancel
@@ -11,5 +12,6 @@ namespace EventRegistrar.Backend.Registrations.Cancel
         public decimal RefundPercentage { get; set; }
         public Registration Registration { get; set; }
         public Guid RegistrationId { get; set; }
+        public DateTime? Received { get; set; }
     }
 }

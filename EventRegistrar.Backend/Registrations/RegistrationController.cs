@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Payments.PayAtCheckin;
 using EventRegistrar.Backend.Registrables.WaitingList;
@@ -10,7 +11,9 @@ using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Reductions;
 using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Registrations.Search;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Registrations
@@ -28,7 +31,7 @@ namespace EventRegistrar.Backend.Registrations
         }
 
         [HttpDelete("api/events/{eventAcronym}/registrations/{registrationId:guid}")]
-        public async Task CancelRegistration(string eventAcronym, Guid registrationId, string reason, bool ignorePayments, decimal refundPercentage)
+        public async Task CancelRegistration(string eventAcronym, Guid registrationId, string reason, bool ignorePayments, decimal refundPercentage, DateTime received)
         {
             await _mediator.Send(new CancelRegistrationCommand
             {
@@ -36,7 +39,8 @@ namespace EventRegistrar.Backend.Registrations
                 RegistrationId = registrationId,
                 Reason = reason,
                 IgnorePayments = ignorePayments,
-                RefundPercentage = refundPercentage
+                RefundPercentage = refundPercentage,
+                Received = received
             });
         }
 

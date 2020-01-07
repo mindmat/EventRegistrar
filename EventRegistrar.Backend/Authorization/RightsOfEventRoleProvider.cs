@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
@@ -18,6 +19,7 @@ using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Files.Fetch;
 using EventRegistrar.Backend.Payments.Files.Slips;
 using EventRegistrar.Backend.Payments.PayAtCheckin;
+using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unassigned;
 using EventRegistrar.Backend.PhoneMessages;
@@ -95,6 +97,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(EventQuery);
                 yield return nameof(QuestionsQuery);
                 yield return nameof(PossibleAudiencesQuery);
+                yield return nameof(RefundsQuery);
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))

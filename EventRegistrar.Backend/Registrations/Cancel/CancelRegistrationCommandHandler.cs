@@ -2,11 +2,14 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Spots;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrations.Cancel
@@ -18,6 +21,7 @@ namespace EventRegistrar.Backend.Registrations.Cancel
         public string Reason { get; set; }
         public decimal RefundPercentage { get; set; }
         public Guid RegistrationId { get; set; }
+        public DateTime? Received { get; set; }
     }
 
     public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrationCommand>
@@ -82,7 +86,8 @@ namespace EventRegistrar.Backend.Registrations.Cancel
                 Reason = command.Reason,
                 Created = DateTime.UtcNow,
                 RefundPercentage = refundPercentage,
-                Refund = refundPercentage * registration.Payments.Sum(ass => ass.Amount)
+                Refund = refundPercentage * registration.Payments.Sum(ass => ass.Amount),
+                Received = command.Received
             };
             await _cancellations.InsertOrUpdateEntity(cancellation, cancellationToken);
 
