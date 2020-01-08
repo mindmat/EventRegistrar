@@ -53,7 +53,7 @@ namespace EventRegistrar.Backend.Payments.Refunds
                                                         }),
                     RefundPercentage = cnc.RefundPercentage,
                     Refund = cnc.Refund,
-                    CancellationDate = cnc.Created,
+                    CancellationDate = cnc.Received ?? cnc.Created,
                     CancellationReason = cnc.Reason
                 })
                 .OrderByDescending(rpy => rpy.CancellationDate)
