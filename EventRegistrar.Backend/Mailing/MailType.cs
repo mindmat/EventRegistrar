@@ -10,6 +10,7 @@
         PartnerRegistrationFirstPartnerOnWaitingList = 13,
         PartnerRegistrationMatchedOnWaitingList = 14,
         SoldOut = 21,
+        CurrentState = 22,
         //OnlyOneRegistrationPerEmail = 22,
         RegistrationCancelled = 31,
         SingleRegistrationFullyPaid = 41,
@@ -19,6 +20,7 @@
         SingleRegistrationSecondReminder = 52,
         PartnerRegistrationFirstReminder = 61,
         PartnerRegistrationSecondReminder = 62,
-        OptionsForRegistrationsOnWaitingList = 101
+        OptionsForRegistrationsOnWaitingList = 101,
+
     }
 }
