@@ -14,6 +14,7 @@ using EventRegistrar.Backend.Mailing.ManualTrigger;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Assignments;
+using EventRegistrar.Backend.Payments.Differences;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Files.Fetch;
@@ -98,6 +99,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(QuestionsQuery);
                 yield return nameof(PossibleAudiencesQuery);
                 yield return nameof(RefundsQuery);
+                yield return nameof(DifferencesQuery);
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))

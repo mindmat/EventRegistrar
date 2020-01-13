@@ -118,6 +118,11 @@
           <span class='glyphicon glyphicon-envelope'></span> Rückerstattungen
         </a>
       </li>
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'payment-differences']">
+          <span class='glyphicon glyphicon-envelope'></span> Zahlungsdifferenzen
+        </a>
+      </li>
     </ul>
     <!--</div>-->
   </nav>
