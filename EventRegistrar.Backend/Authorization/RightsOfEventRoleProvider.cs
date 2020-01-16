@@ -147,6 +147,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(FetchBankStamentsFileCommand);
                 yield return nameof(ProcessFetchedBankStatementsFileCommand);
                 yield return nameof(SendPaymentDueMailCommand);
+                yield return nameof(SendTooMuchPaidMailCommand);
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

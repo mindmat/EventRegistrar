@@ -63,14 +63,16 @@ namespace EventRegistrar.Backend.Payments.Differences
                                                     && mail.Registrations.Any(reg => registrationIds.Contains(reg.RegistrationId))
                                                     && (mail.Type == MailType.MoneyOwed || mail.Type == MailType.TooMuchPaid)
                                                     && !mail.Discarded)
-                                        .SelectMany(mail => mail.Registrations.Select(map => new
-                                        {
-                                            map.RegistrationId,
-                                            MailType = mail.Type.Value,
-                                            mail.Created,
-                                            mail.Sent,
-                                            mail.DataJson
-                                        }))
+                                        .SelectMany(mail => mail.Registrations
+                                                                .Where(map => registrationIds.Contains(map.RegistrationId))
+                                                                .Select(map => new
+                                                                {
+                                                                    map.RegistrationId,
+                                                                    MailType = mail.Type.Value,
+                                                                    mail.Created,
+                                                                    mail.Sent,
+                                                                    mail.DataJson
+                                                                }))
                                         .ToListAsync(cancellationToken);
             foreach (var registration in sentMails.GroupBy(mail => mail.RegistrationId)
                                                   .Select(grp => new
