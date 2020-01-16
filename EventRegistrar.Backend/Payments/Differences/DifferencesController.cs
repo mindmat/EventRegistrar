@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using EventRegistrar.Backend.Events;
@@ -27,6 +28,16 @@ namespace EventRegistrar.Backend.Payments.Differences
             return await _mediator.Send(new DifferencesQuery
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+            });
+        }
+
+        [HttpPost("api/events/{eventAcronym}/registration/{registrationId:guid}/sendpaymentduemail")]
+        public async Task SendPaymentDueMail(string eventAcronym, Guid registrationId)
+        {
+            await _mediator.Send(new SendPaymentDueMailCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId
             });
         }
     }

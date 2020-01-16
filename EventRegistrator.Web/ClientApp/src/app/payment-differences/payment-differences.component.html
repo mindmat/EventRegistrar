@@ -17,8 +17,20 @@
       <td><a [routerLink]="['/', getEventAcronym(), 'registration', difference.registrationId]">{{ difference.firstName }} {{ difference.lastName }}</a></td>
       <td>{{ difference.price | currency : 'CHF' }}</td>
       <td>{{ difference.amountPaid | currency : 'CHF' }}</td>
-      <td><a *ngIf="difference.difference > 0">{{ difference.difference | currency : 'CHF' }}</a></td>
-      <td><a *ngIf="difference.difference < 0">{{ -difference.difference | currency : 'CHF' }}</a></td>
+      <td>
+        <div *ngIf="difference.difference > 0">
+          {{ difference.difference | currency : 'CHF' }}
+          <a *ngIf="difference.paymentDueMailSent">Mail gesendet {{ difference.paymentDueMailSent | date: 'dd.MM.yy HH:mm' }}</a>
+          <button (click)="sendPaymentDueMail(difference)">Mail senden</button>
+        </div>
+      </td>
+      <td>
+        <div *ngIf="difference.difference < 0">
+          {{ -difference.difference | currency : 'CHF' }}
+          <a *ngIf="difference.tooMuchPaidMailSent">Mail gesendet {{ difference.tooMuchPaidMailSent | date: 'dd.MM.yy HH:mm' }}</a>
+          <button class="btn btn-sm" (click)="sendTooMuchPaidMail(difference)">Mail senden</button>
+        </div>
+      </td>
     </tr>
   </tbody>
 </table>

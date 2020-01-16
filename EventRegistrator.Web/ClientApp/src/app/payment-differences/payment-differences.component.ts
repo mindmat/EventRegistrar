@@ -9,7 +9,7 @@ import { ActivatedRoute } from '@angular/router';
 export class PaymentDifferencesComponent {
   differences: Difference[];
 
-  constructor(http: HttpClient, private route: ActivatedRoute) {
+  constructor(private http: HttpClient, private route: ActivatedRoute) {
     http.get<Difference[]>(`api/events/${this.getEventAcronym()}/differences`).subscribe(result => {
       this.differences = result;
     },
@@ -18,6 +18,19 @@ export class PaymentDifferencesComponent {
 
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
+  }
+
+  sendPaymentDueMail(difference: Difference) {
+    this.http.post(`api/events/${this.getEventAcronym()}/registration/${difference.registrationId}/sendpaymentduemail`, null).subscribe(result => {
+
+    },
+      error => console.error(error));
+  }
+  sendTooMuchPaidMail(difference: Difference) {
+    //this.http.post(`api/events/${this.getEventAcronym()}/registration/${difference.registrationId}/sendpaymentduemail`, null).subscribe(result => {
+
+    //},
+    //  error => console.error(error));
   }
 }
 
@@ -28,4 +41,6 @@ class Difference {
   difference: number;
   firstName: string;
   lastName: string;
+  paymentDueMailSent: Date;
+  tooMuchPaidMailSent: Date;
 }

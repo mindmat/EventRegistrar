@@ -3,24 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
+using Newtonsoft.Json;
+
 namespace EventRegistrar.Backend.Mailing.Compose
 {
+    public class ComposeAndSendMailCommand : IRequest, IEventBoundRequest
+    {
+        public bool AllowDuplicate { get; set; }
+        public string BulkMailKey { get; set; }
+        public Guid EventId { get; set; }
+        public MailType? MailType { get; set; }
+        public Guid RegistrationId { get; set; }
+        public bool Withhold { get; set; }
+        public object Data { get; set; }
+    }
+
     public class ComposeAndSendMailCommandHandler : IRequestHandler<ComposeAndSendMailCommand>
     {
         public const string FallbackLanguage = Language.English;
 
         private readonly ILogger _log;
-        private readonly MailReleaseConfiguration _mailReleaseConfiguration;
         private readonly MailComposer _mailComposer;
         private readonly IRepository<Mail> _mails;
         private readonly IRepository<MailToRegistration> _mailsToRegistrations;
@@ -34,8 +50,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                                 IRepository<MailToRegistration> mailsToRegistrations,
                                                 MailComposer mailComposer,
                                                 ServiceBusClient serviceBusClient,
-                                                ILogger log,
-                                                MailReleaseConfiguration mailReleaseConfiguration)
+                                                ILogger log)
         {
             _templates = templates;
             _registrations = registrations;
@@ -44,17 +59,30 @@ namespace EventRegistrar.Backend.Mailing.Compose
             _mailComposer = mailComposer;
             _serviceBusClient = serviceBusClient;
             _log = log;
-            _mailReleaseConfiguration = mailReleaseConfiguration;
         }
 
         public async Task<Unit> Handle(ComposeAndSendMailCommand command, CancellationToken cancellationToken)
         {
+            string dataTypeFullName = null;
+            string dataJson = null;
+            if (command.Data != null)
+            {
+                try
+                {
+                    dataTypeFullName = command.Data.GetType().FullName;
+                    dataJson = JsonConvert.SerializeObject(command.Data);
+                }
+                finally { }
+            }
+
             if (!command.AllowDuplicate)
             {
-                var duplicate = await _mails.FirstOrDefaultAsync(ml => ml.Type == command.MailType
-                                                                    && !ml.Discarded
-                                                                    && ml.Registrations.Any(map => map.RegistrationId == command.RegistrationId),
-                                                                 cancellationToken);
+                var duplicate = await _mails.Where(ml => ml.Type == command.MailType
+                                                                  && !ml.Discarded
+                                                                  && ml.Registrations.Any(map => map.RegistrationId == command.RegistrationId))
+                                            .WhereIf(dataJson != null && dataTypeFullName != null,
+                                                     ml => ml.DataTypeFullName == dataTypeFullName && ml.DataJson == dataJson)
+                                            .FirstOrDefaultAsync(cancellationToken);
                 if (duplicate != null)
                 {
                     _log.LogWarning("No mail created because Mail with type {0} found (Id {1})", command.MailType, duplicate.Id);
@@ -109,6 +137,15 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 Withhold = withhold,
                 Created = DateTime.UtcNow
             };
+            if (command.Data != null)
+            {
+                try
+                {
+                    mail.DataTypeFullName = dataTypeFullName;
+                    mail.DataJson = dataJson;
+                }
+                finally { }
+            }
 
             if (template.ContentType == MailContentType.Html)
             {

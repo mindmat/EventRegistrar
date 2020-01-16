@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Payments.Due;
@@ -11,6 +12,7 @@ using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Spots;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -128,6 +130,21 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 else if (parts.key == "PAIDAMOUNT")
                 {
                     templateFiller[key] = (await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id)).ToString("F2"); // HACK: format hardcoded
+                }
+                else if (parts.key == "DUEAMOUNT" ||
+                         parts.key == "OVERPAIDAMOUNT")
+                {
+                    var paid = (await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id));
+                    var price = (parts.prefix == null
+                                                 ? registration.Price + (partnerRegistration == null ? 0m : partnerRegistration.Price)
+                                                 : (registrationForPrefix ?? registration).Price)
+                                ?? 0m;
+                    var difference = price - paid;
+                    if (parts.key == "OVERPAIDAMOUNT")
+                    {
+                        difference = -difference;
+                    }
+                    templateFiller[key] = difference.ToString("F2"); // HACK: format hardcoded
                 }
                 else if (parts.key == "UNPAIDAMOUNT")
                 {

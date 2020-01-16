@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing.Feedback;
 using EventRegistrar.Backend.Mailing.Templates;
@@ -27,5 +28,7 @@ namespace EventRegistrar.Backend.Mailing
         public string Subject { get; set; }
         public MailType? Type { get; set; }
         public bool Withhold { get; set; }
+        public string DataTypeFullName { get; set; }
+        public string DataJson { get; set; }
     }
 }
