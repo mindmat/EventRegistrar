@@ -21,16 +21,16 @@ export class PaymentDifferencesComponent {
   }
 
   sendPaymentDueMail(difference: Difference) {
-    this.http.post(`api/events/${this.getEventAcronym()}/registration/${difference.registrationId}/sendpaymentduemail`, null).subscribe(result => {
+    this.http.post(`api/events/${this.getEventAcronym()}/registration/${difference.registrationId}/sendPaymentDueMail`, null).subscribe(result => {
 
     },
       error => console.error(error));
   }
   sendTooMuchPaidMail(difference: Difference) {
-    //this.http.post(`api/events/${this.getEventAcronym()}/registration/${difference.registrationId}/sendpaymentduemail`, null).subscribe(result => {
+    this.http.post(`api/events/${this.getEventAcronym()}/registration/${difference.registrationId}/sendTooMuchPaidMail`, null).subscribe(result => {
 
-    //},
-    //  error => console.error(error));
+    },
+      error => console.error(error));
   }
 }
 

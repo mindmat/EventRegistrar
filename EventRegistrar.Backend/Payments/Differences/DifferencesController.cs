@@ -16,7 +16,7 @@ namespace EventRegistrar.Backend.Payments.Differences
         private readonly IMediator _mediator;
 
         public DifferencesController(IMediator mediator,
-                                IEventAcronymResolver eventAcronymResolver)
+                                     IEventAcronymResolver eventAcronymResolver)
         {
             _mediator = mediator;
             _eventAcronymResolver = eventAcronymResolver;
@@ -31,8 +31,18 @@ namespace EventRegistrar.Backend.Payments.Differences
             });
         }
 
-        [HttpPost("api/events/{eventAcronym}/registration/{registrationId:guid}/sendpaymentduemail")]
+        [HttpPost("api/events/{eventAcronym}/registration/{registrationId:guid}/sendPaymentDueMail")]
         public async Task SendPaymentDueMail(string eventAcronym, Guid registrationId)
+        {
+            await _mediator.Send(new SendPaymentDueMailCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationId = registrationId
+            });
+        }
+
+        [HttpPost("api/events/{eventAcronym}/registration/{registrationId:guid}/sendTooMuchPaidMail")]
+        public async Task SendTooMuchPaidMail(string eventAcronym, Guid registrationId)
         {
             await _mediator.Send(new SendPaymentDueMailCommand
             {
