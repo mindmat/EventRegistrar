@@ -2,9 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Infrastructure;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents
@@ -30,6 +33,8 @@ namespace EventRegistrar.Backend.Events.UsersInEvents
         public async Task<IEnumerable<UserInEventDisplayItem>> Handle(EventsOfUserQuery request, CancellationToken cancellationToken)
         {
             var authorizedEvents = await _usersInEvents.Where(uie => uie.UserId == _authenticatedUserId.UserId)
+                                                       .OrderBy(uie => uie.Event.State)
+                                                       .ThenBy(uie => uie.Event.Name)
                                                        .Select(uie => new UserInEventDisplayItem
                                                        {
                                                            EventId = uie.EventId,
