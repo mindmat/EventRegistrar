@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -22,6 +23,10 @@ namespace EventRegistrar.Backend.Payments
             builder.HasOne(pas => pas.Registration)
                    .WithMany(pmt => pmt.Payments)
                    .HasForeignKey(pas => pas.RegistrationId);
+
+            builder.HasOne(pas => pas.PayoutRequest)
+                   .WithMany(pmt => pmt.Assignments)
+                   .HasForeignKey(pas => pas.PayoutRequestId);
         }
     }
 }

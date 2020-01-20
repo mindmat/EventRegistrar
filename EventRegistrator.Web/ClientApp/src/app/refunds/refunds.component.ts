@@ -31,15 +31,4 @@ class Refund {
   refund: number;
   cancellationDate: Date;
   cancellationReason: string;
-  payments: Payment[];
-}
-
-class Payment {
-  assigned: number;
-  paymentAmount: number;
-  paymentBookingDate: Date;
-  paymentDebitorIban: string;
-  paymentDebitorName: string;
-  paymentMessage: string;
-  paymentInfo: string;
 }

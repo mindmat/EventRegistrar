@@ -41,10 +41,10 @@ namespace EventRegistrar.Backend.Payments.Differences
             });
         }
 
-        [HttpPost("api/events/{eventAcronym}/registration/{registrationId:guid}/sendTooMuchPaidMail")]
-        public async Task SendTooMuchPaidMail(string eventAcronym, Guid registrationId)
+        [HttpPost("api/events/{eventAcronym}/registration/{registrationId:guid}/refundDifference")]
+        public async Task RefundDifference(string eventAcronym, Guid registrationId)
         {
-            await _mediator.Send(new SendPaymentDueMailCommand
+            await _mediator.Send(new RefundDifferenceCommand
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 RegistrationId = registrationId

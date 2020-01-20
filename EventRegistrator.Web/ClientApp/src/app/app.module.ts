@@ -42,6 +42,7 @@ import { NotReceivedMailsComponent } from './mails/notReceivedMails.component';
 import { PricingComponent } from './pricing/pricing.component';
 import { RefundsComponent } from "./refunds/refunds.component";
 import { PaymentDifferencesComponent } from "./payment-differences/payment-differences.component";
+import { PayoutsComponent } from "./payouts/payouts.component";
 
 @NgModule({
   declarations: [
@@ -73,7 +74,8 @@ import { PaymentDifferencesComponent } from "./payment-differences/payment-diffe
     NotReceivedMailsComponent,
     PricingComponent,
     RefundsComponent,
-    PaymentDifferencesComponent
+    PaymentDifferencesComponent,
+    PayoutsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -112,7 +114,8 @@ import { PaymentDifferencesComponent } from "./payment-differences/payment-diffe
       { path: ':eventAcronym/not-received-mails', component: NotReceivedMailsComponent },
       { path: ':eventAcronym/waiting-list', component: WaitingListComponent },
       { path: ':eventAcronym/pricing', component: PricingComponent },
-      { path: ':eventAcronym/refunds', component: RefundsComponent },
+      { path: ':eventAcronym/cancellations', component: RefundsComponent },
+      { path: ':eventAcronym/payouts', component: PayoutsComponent },
       { path: ':eventAcronym/payment-differences', component: PaymentDifferencesComponent }
       //{ path: '**', redirectTo: 'll18/registrables' }
     ])

@@ -1,0 +1,34 @@
+<h1>Rückzahlungen</h1>
+
+<p *ngIf="!payouts"><em>Loading...</em></p>
+
+<table class='table' *ngIf="payouts">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Preis</th>
+      <th>Bezahlt</th>
+      <th>Zahlungen</th>
+      <th>Erstellt</th>
+      <th>Rückerstattung</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let payout of payouts">
+      <td><a [routerLink]="['/', getEventAcronym(), 'registration', payout.registrationId]">{{ payout.firstName }} {{ payout.lastName }}</a></td>
+      <td>{{ payout.price | currency : 'CHF' }}</td>
+      <td>{{ payout.paid | currency : 'CHF' }}</td>
+      <td>
+        <div *ngFor="let payment of payout.payments">
+          <p>{{ payment.assigned | currency : 'CHF' }} <a *ngIf="payment.paymentAmount != payment.assigned">(Total {{ payment.paymentAmount | currency : 'CHF' }}) </a> am {{ payment.paymentBookingDate | date: 'dd.MM.yy' }} von {{ payment.paymentDebitorName }}, {{ payment.paymentDebitorIban }}</p>
+          <p>Mitteilung: {{ payment.paymentMessage }}</p>
+          <div class="card">
+            <p>{{ payment.paymentInfo }}</p>
+          </div>
+        </div>
+      </td>
+      <td>{{ payout.created | date: 'dd.MM.yy' }} ({{ payout.reason }})</td>
+      <td>{{ payout.amount | currency : 'CHF' }}</td>
+    </tr>
+  </tbody>
+</table>

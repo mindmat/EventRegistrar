@@ -12,6 +12,7 @@ using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Files.Fetch;
 using EventRegistrar.Backend.Payments.Files.Slips;
+using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Compositions;
@@ -25,6 +26,7 @@ using EventRegistrar.Backend.Registrations.IndividualReductions;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Spots;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess
@@ -61,6 +63,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new PaymentFileMap());
             builder.ApplyConfiguration(new PaymentSlipMap());
             builder.ApplyConfiguration(new RawBankStatementsFileMap());
+            builder.ApplyConfiguration(new PayoutRequestMap());
 
             builder.ApplyConfiguration(new MailMap());
             builder.ApplyConfiguration(new MailToRegistrationMap());

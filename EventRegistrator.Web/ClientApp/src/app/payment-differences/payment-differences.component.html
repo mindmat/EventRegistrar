@@ -28,7 +28,7 @@
         <div *ngIf="difference.difference < 0">
           {{ -difference.difference | currency : 'CHF' }}
           <a *ngIf="difference.tooMuchPaidMailSent">Mail gesendet {{ difference.tooMuchPaidMailSent | date: 'dd.MM.yy HH:mm' }}</a>
-          <button class="btn btn-primary btn-sm" (click)="sendTooMuchPaidMail(difference)">Mail senden</button>
+          <button class="btn btn-primary btn-sm" (click)="sendTooMuchPaidMail(difference)">Zurückbezahlen</button>
         </div>
       </td>
     </tr>

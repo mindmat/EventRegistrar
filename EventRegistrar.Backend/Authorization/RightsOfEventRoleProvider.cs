@@ -100,6 +100,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(PossibleAudiencesQuery);
                 yield return nameof(RefundsQuery);
                 yield return nameof(DifferencesQuery);
+                yield return nameof(PayoutQuery);
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
@@ -147,7 +148,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(FetchBankStamentsFileCommand);
                 yield return nameof(ProcessFetchedBankStatementsFileCommand);
                 yield return nameof(SendPaymentDueMailCommand);
-                yield return nameof(SendTooMuchPaidMailCommand);
+                yield return nameof(RefundDifferenceCommand);
             }
 
             if (usersRolesInEvent.Contains(UserInEventRole.Admin))

@@ -29,5 +29,14 @@ namespace EventRegistrar.Backend.Payments.Refunds
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
             });
         }
+
+        [HttpGet("api/events/{eventAcronym}/payouts")]
+        public async Task<IEnumerable<PayoutDisplayItem>> GetPayoutRequest(string eventAcronym)
+        {
+            return await _mediator.Send(new PayoutQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+            });
+        }
     }
 }

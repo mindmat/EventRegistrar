@@ -27,7 +27,7 @@ export class PaymentDifferencesComponent {
       error => console.error(error));
   }
   sendTooMuchPaidMail(difference: Difference) {
-    this.http.post(`api/events/${this.getEventAcronym()}/registration/${difference.registrationId}/sendTooMuchPaidMail`, null).subscribe(result => {
+    this.http.post(`api/events/${this.getEventAcronym()}/registration/${difference.registrationId}/refundDifference`, null).subscribe(result => {
 
     },
       error => console.error(error));

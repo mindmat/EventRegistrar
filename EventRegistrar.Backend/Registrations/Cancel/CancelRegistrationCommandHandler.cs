@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Spots;
 
 using MediatR;
@@ -27,6 +28,7 @@ namespace EventRegistrar.Backend.Registrations.Cancel
     public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrationCommand>
     {
         private readonly IRepository<RegistrationCancellation> _cancellations;
+        private readonly IRepository<PayoutRequest> _payoutRequests;
         private readonly IEventBus _eventBus;
         private readonly IQueryable<Registration> _registrations;
         private readonly SpotRemover _spotRemover;
@@ -35,12 +37,14 @@ namespace EventRegistrar.Backend.Registrations.Cancel
         public CancelRegistrationCommandHandler(IQueryable<Registration> registrations,
                                                 IQueryable<Seat> spots,
                                                 IRepository<RegistrationCancellation> cancellations,
+                                                IRepository<PayoutRequest> payoutRequests,
                                                 SpotRemover spotRemover,
                                                 IEventBus eventBus)
         {
             _registrations = registrations;
             _spots = spots;
             _cancellations = cancellations;
+            _payoutRequests = payoutRequests;
             _spotRemover = spotRemover;
             _eventBus = eventBus;
         }
@@ -90,6 +94,20 @@ namespace EventRegistrar.Backend.Registrations.Cancel
                 Received = command.Received
             };
             await _cancellations.InsertOrUpdateEntity(cancellation, cancellationToken);
+
+            if (cancellation.Refund > 0m)
+            {
+                var payoutRequest = new PayoutRequest
+                {
+                    RegistrationId = command.RegistrationId,
+                    Amount = cancellation.Refund,
+                    Reason = command.Reason ?? "Refund after cancellation",
+                    State = PayoutState.Requested,
+                    Created = DateTimeOffset.Now
+                };
+                await _payoutRequests.InsertOrUpdateEntity(payoutRequest, cancellationToken);
+
+            }
 
             _eventBus.Publish(new RegistrationCancelled
             {
