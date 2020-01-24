@@ -17,5 +17,7 @@ namespace EventRegistrar.Backend.Payments.Unassigned
         public bool Ignore { get; set; }
         public string Message { get; set; }
         public string DebitorName { get; set; }
+        public string CreditorName { get; set; }
+        public string CreditorIban { get; set; }
     }
 }

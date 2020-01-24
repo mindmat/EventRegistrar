@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Xml;
 using System.Xml.Linq;
+
 using EventRegistrar.Backend.Infrastructure;
 
 namespace EventRegistrar.Backend.Payments.Files.Camt
@@ -39,6 +40,8 @@ namespace EventRegistrar.Backend.Payments.Files.Camt
                 InstructionIdentification = ntry.Descendants(ns + "NtryDtls").Descendants(ns + "TxDtls").Descendants(ns + "Refs").Descendants(ns + "InstrId").FirstOrDefault()?.Value,
                 DebitorName = ntry.Descendants(ns + "NtryDtls").Descendants(ns + "TxDtls").Descendants(ns + "RltdPties").Descendants(ns + "Dbtr").Descendants(ns + "Nm").FirstOrDefault()?.Value,
                 DebitorIban = ntry.Descendants(ns + "NtryDtls").Descendants(ns + "TxDtls").Descendants(ns + "RltdPties").Descendants(ns + "DbtrAcct").Descendants(ns + "Id").Descendants(ns + "IBAN").FirstOrDefault()?.Value,
+                CreditorName = ntry.Descendants(ns + "NtryDtls").Descendants(ns + "TxDtls").Descendants(ns + "RltdPties").Descendants(ns + "Cdtr").Descendants(ns + "Nm").FirstOrDefault()?.Value,
+                CreditorIban = ntry.Descendants(ns + "NtryDtls").Descendants(ns + "TxDtls").Descendants(ns + "RltdPties").Descendants(ns + "CdtrAcct").Descendants(ns + "Id").Descendants(ns + "IBAN").FirstOrDefault()?.Value,
                 Xml = ntry.ToString()
             });
 

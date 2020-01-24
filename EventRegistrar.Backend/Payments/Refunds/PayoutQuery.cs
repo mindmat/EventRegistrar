@@ -30,31 +30,32 @@ namespace EventRegistrar.Backend.Payments.Refunds
         public async Task<IEnumerable<PayoutDisplayItem>> Handle(PayoutQuery query, CancellationToken cancellationToken)
         {
             var payouts = await _payoutRequests
-                .Where(por => por.Registration.EventId == query.EventId)
-                .Select(por => new PayoutDisplayItem
-                {
-                    RegistrationId = por.RegistrationId,
-                    Amount = por.Amount,
-                    FirstName = por.Registration.RespondentFirstName,
-                    LastName = por.Registration.RespondentLastName,
-                    Price = (por.Registration.Price ?? 0m) - por.Registration.IndividualReductions.Sum(red => red.Amount),
-                    Paid = por.Registration.Payments.Sum(ass => ass.Amount),
-                    Payments = por.Registration.Payments.Where(pmt => pmt.Payment.CreditDebitType == CreditDebit.CRDT)
-                                                        .Select(pmt => new PaymentDisplayItem
-                                                        {
-                                                            Assigned = pmt.Amount,
-                                                            PaymentAmount = pmt.Payment.Amount,
-                                                            PaymentBookingDate = pmt.Payment.BookingDate,
-                                                            PaymentDebitorIban = pmt.Payment.DebitorIban,
-                                                            PaymentDebitorName = pmt.Payment.DebitorName,
-                                                            PaymentMessage = pmt.Payment.Message,
-                                                            PaymentInfo = pmt.Payment.Info
-                                                        }),
-                    Reason = por.Reason,
-                    Created = por.Created
-                })
-                .OrderByDescending(rpy => rpy.Created)
-                .ToListAsync(cancellationToken);
+                                .Where(por => por.Registration.EventId == query.EventId)
+                                .Select(por => new PayoutDisplayItem
+                                {
+                                    RegistrationId = por.RegistrationId,
+                                    Amount = por.Amount,
+                                    FirstName = por.Registration.RespondentFirstName,
+                                    LastName = por.Registration.RespondentLastName,
+                                    Price = (por.Registration.Price ?? 0m),
+                                    Paid = por.Registration.Payments.Sum(ass => ass.Amount),
+                                    Payments = por.Registration.Payments
+                                                  .Where(pmt => pmt.Payment.CreditDebitType == CreditDebit.CRDT)
+                                                  .Select(pmt => new PaymentDisplayItem
+                                                  {
+                                                      Assigned = pmt.Amount,
+                                                      PaymentAmount = pmt.Payment.Amount,
+                                                      PaymentBookingDate = pmt.Payment.BookingDate,
+                                                      PaymentDebitorIban = pmt.Payment.DebitorIban,
+                                                      PaymentDebitorName = pmt.Payment.DebitorName,
+                                                      PaymentMessage = pmt.Payment.Message,
+                                                      PaymentInfo = pmt.Payment.Info
+                                                  }),
+                                    Reason = por.Reason,
+                                    Created = por.Created
+                                })
+                                .OrderByDescending(rpy => rpy.Created)
+                                .ToListAsync(cancellationToken);
             return payouts;
         }
     }

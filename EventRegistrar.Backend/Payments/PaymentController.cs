@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unassigned;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Payments
@@ -84,6 +87,15 @@ namespace EventRegistrar.Backend.Payments
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 PaymentId = paymentId
+            });
+        }
+
+        [HttpGet("api/events/{eventAcronym}/payouts/unassigned")]
+        public async Task<IEnumerable<PaymentDisplayItem>> GetUnassignedPayouts(string eventAcronym)
+        {
+            return await _mediator.Send(new UnassignedPayoutsQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
             });
         }
     }

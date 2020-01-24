@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Files.Camt;
@@ -32,5 +33,7 @@ namespace EventRegistrar.Backend.Payments
         public bool Settled { get; set; }
         public bool Ignore { get; set; }
         public string Message { get; set; }
+        public string CreditorName { get; set; }
+        public string CreditorIban { get; set; }
     }
 }

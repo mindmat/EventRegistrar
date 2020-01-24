@@ -9,13 +9,17 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
+
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Files.Camt;
 using EventRegistrar.Backend.Payments.Files.Slips;
+
 using ICSharpCode.SharpZipLib.Tar;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -128,7 +132,7 @@ namespace EventRegistrar.Backend.Payments.Files
             foreach (var camtEntry in camt.Entries)
             {
                 // dedup
-                if (await _payments.AnyAsync(pmt => pmt.Reference == camtEntry.Reference))
+                if (await _payments.AnyAsync(pmt => pmt.Reference == camtEntry.Reference, cancellationToken))
                 {
                     continue;
                 }
@@ -148,7 +152,9 @@ namespace EventRegistrar.Backend.Payments.Files
                     DebitorName = camtEntry.DebitorName,
                     DebitorIban = camtEntry.DebitorIban,
                     InstructionIdentification = camtEntry.InstructionIdentification,
-                    RawXml = camtEntry.Xml
+                    RawXml = camtEntry.Xml,
+                    CreditorName = camtEntry.CreditorName,
+                    CreditorIban = camtEntry.CreditorIban
                 };
                 await _payments.InsertOrUpdateEntity(newPayment, cancellationToken);
                 newPayments.Add(newPayment);

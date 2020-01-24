@@ -1,6 +1,14 @@
 ﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
 using MediatR;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Payments.Assignments
 {
@@ -8,5 +16,48 @@ namespace EventRegistrar.Backend.Payments.Assignments
     {
         public Guid EventId { get; set; }
         public Guid PaymentAssignmentId { get; set; }
+    }
+
+    public class UnassignPaymentCommandHandler : IRequestHandler<UnassignPaymentCommand>
+    {
+        private readonly IRepository<PaymentAssignment> _assignments;
+        private readonly IEventBus _eventBus;
+
+        public UnassignPaymentCommandHandler(IRepository<PaymentAssignment> assignments,
+                                             IEventBus eventBus)
+        {
+            _assignments = assignments;
+            _eventBus = eventBus;
+        }
+
+        public async Task<Unit> Handle(UnassignPaymentCommand request, CancellationToken cancellationToken)
+        {
+            var assignment = await _assignments.FirstAsync(ass => ass.Id == request.PaymentAssignmentId, cancellationToken);
+            if (assignment.PaymentAssignmentId_Counter != null)
+            {
+                throw new ArgumentException($"Assignment {assignment.Id} already has a counter assignment: {assignment.PaymentAssignmentId_Counter}");
+            }
+
+            var counterAssignment = new PaymentAssignment
+            {
+                Id = Guid.NewGuid(),
+                RegistrationId = assignment.RegistrationId,
+                ReceivedPaymentId = assignment.ReceivedPaymentId,
+                PaymentAssignmentId_Counter = assignment.Id,
+                Amount = -assignment.Amount,
+                Created = DateTime.UtcNow
+            };
+            assignment.PaymentAssignmentId_Counter = counterAssignment.Id;
+            await _assignments.InsertOrUpdateEntity(counterAssignment, cancellationToken);
+            _eventBus.Publish(new PaymentUnassigned
+            {
+                EventId = request.EventId,
+                PaymentAssignmentId = request.PaymentAssignmentId,
+                PaymentAssignmentId_Counter = counterAssignment.Id,
+                PaymentId = assignment.ReceivedPaymentId,
+                RegistrationId = assignment.RegistrationId
+            });
+            return Unit.Value;
+        }
     }
 }

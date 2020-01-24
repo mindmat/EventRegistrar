@@ -1,0 +1,78 @@
+<h1>Nicht ausgeglichene Zahlungen</h1>
+
+<p *ngIf="!payouts"><em>Loading...</em></p>
+
+<div *ngIf="payment" class="carousel slide">
+  <div class="carousel-inner" style="padding-left: 40px; padding-right: 40px">
+    Info: <textarea readonly="readonly" style="min-width: 100%; min-height: 50pt; resize: none;" #paymentInfo (select)="textSelected()">{{ payment.info }}</textarea>
+    <p>Kreditor: {{ payment.creditorName }}, {{ payment.creditorIban }}</p>
+    <p>Mitteilung: {{ payment.message }}</p>
+    <p>Auszahlung: {{ payment.amount }} {{ payment.currency }}<a *ngIf="payment.amountAssigned > 0">, noch offen: {{ payment.amount - payment.amountAssigned }}</a></p>
+    <p>Valuta: {{ payment.bookingDate | date: 'dd.MM.yyyy' }}</p>
+  </div>
+  <a class="carousel-control-prev" role="button" data-slide="prev" style="width: 30px; background: darkgray" (click)="gotoPreviousPayment()" *ngIf="paymentPointer > 0">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="carousel-control-next" role="button" data-slide="next" style="width: 30px; background: darkgray" (click)="gotoNextPayment()" *ngIf="paymentPointer < payments.length - 1">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+</div>
+
+<br />
+
+Manuelle Suche:
+<input #searchString type="text" (keyup.enter)="searchRegistrationManually(searchString.value)">
+<br />
+<button class="btn btn-primary btn-sm" *ngIf="payment" (click)="ignoreBooking(payment)">Buchung ignorieren</button>
+
+<br />
+<br />
+
+<h3>Rückzahlungsaufträge</h3>
+
+<table class="table table-hover">
+  <thead class="thead-dark">
+    <tr>
+      <th>Name</th>
+      <th>IBAN</th>
+      <th>Betrag</th>
+      <th>offen</th>
+      <th>ausgleichen</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let possibleAssignment of possibleAssignments">
+      <td>
+        <a [routerLink]="['/', getEventAcronym(), 'registration', possibleAssignment.registrationId]">{{ possibleAssignment.participant }}</a>
+      </td>
+      <td>{{ possibleAssignment.ibans }}</td>
+      <td>{{ possibleAssignment.amount }}</td>
+      <td [class.alert-success]="possibleAssignment.amountMatch">{{ possibleAssignment.amount - possibleAssignment.amountAssigned }}</td>
+      <td>
+        <input [(ngModel)]="possibleAssignment.amountToAssign"
+               type="number"
+               *ngIf="!possibleAssignment.locked" />
+      </td>
+      <td>
+        <input [(ngModel)]="possibleAssignment.acceptDifference"
+               type="checkbox"
+               *ngIf="!possibleAssignment.locked && (possibleAssignment.amount - possibleAssignment.amountAssigned - possibleAssignment.amountToAssign) > 0" />
+        <span *ngIf="!possibleAssignment.locked && (possibleAssignment.amount - possibleAssignment.amountAssigned - possibleAssignment.amountToAssign) > 0">Differenz akzeptieren</span>
+        <div *ngIf="!possibleAssignment.locked && possibleAssignment.acceptDifference">
+          Grund: <input [(ngModel)]="possibleAssignment.acceptDifferenceReason" type="text" />
+        </div>
+      </td>
+      <td>
+        <button class="btn btn-primary btn-sm"
+                (click)="assignPayment(possibleAssignment)"
+                *ngIf="!possibleAssignment.locked && possibleAssignment.amountToAssign > 0">
+          <span class="glyphicon glyphicon-ok">Ausgleichen</span>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>

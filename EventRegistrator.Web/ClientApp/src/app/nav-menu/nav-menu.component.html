@@ -54,6 +54,11 @@
         </a>
       </li>
       <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+        <a [routerLink]="[eventService.activeEvent.acronym, 'unassigned-payouts']">
+          <span class='glyphicon glyphicon-calendar'></span> Auszahlungen
+        </a>
+      </li>
+      <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
         <a [routerLink]="[eventService.activeEvent.acronym, 'paymentOverview']">
           <span class='glyphicon glyphicon-usd'></span> Übersicht Einnahmen
         </a>
