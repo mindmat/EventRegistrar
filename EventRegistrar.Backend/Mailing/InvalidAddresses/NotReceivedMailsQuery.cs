@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Mailing.InvalidAddresses
@@ -46,6 +49,7 @@ namespace EventRegistrar.Backend.Mailing.InvalidAddresses
                                 .Include(ml => ml.Mail).ThenInclude(ml => ml.Events)
                                 .Include(ml => ml.Registration)
                                 .OrderBy(ml => ml.Mail.Sent)
+                                .Take(300)
                                 .ToListAsync(cancellationToken))
                                .Where(ml => !ml.Mail.Events.Any(mev => string.Equals(mev.EMail, ml.Registration.RespondentEmail, StringComparison.InvariantCultureIgnoreCase)
                                                                     && receivedStates.Contains(mev.State)))
