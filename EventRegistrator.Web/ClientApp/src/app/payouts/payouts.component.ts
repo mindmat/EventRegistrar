@@ -7,11 +7,13 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './payouts.component.html'
 })
 export class PayoutsComponent {
-  payouts: Payout[];
+  payoutsPending: Payout[];
+  payoutsDone: Payout[];
 
   constructor(http: HttpClient, private route: ActivatedRoute) {
     http.get<Payout[]>(`api/events/${this.getEventAcronym()}/payouts`).subscribe(result => {
-      this.payouts = result;
+      this.payoutsPending = result.filter(por => por.state !== 3);
+      this.payoutsDone = result.filter(por => por.state === 3);
     },
       error => console.error(error));
   }
@@ -30,6 +32,8 @@ class Payout {
   created: Date;
   reason: string;
   payments: Payment[];
+  stateText: string;
+  state: number;
 }
 
 class Payment {

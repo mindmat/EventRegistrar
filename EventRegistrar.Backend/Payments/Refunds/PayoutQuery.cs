@@ -52,6 +52,8 @@ namespace EventRegistrar.Backend.Payments.Refunds
                                                       PaymentInfo = pmt.Payment.Info
                                                   }),
                                     Reason = por.Reason,
+                                    StateText = por.State.ToString(),
+                                    State = por.State,
                                     Created = por.Created
                                 })
                                 .OrderByDescending(rpy => rpy.Created)
@@ -71,6 +73,8 @@ namespace EventRegistrar.Backend.Payments.Refunds
         public DateTimeOffset Created { get; set; }
         public IEnumerable<PaymentDisplayItem> Payments { get; set; }
         public decimal Amount { get; set; }
+        public string StateText { get; set; }
+        public PayoutState State { get; set; }
     }
 
     public class PaymentDisplayItem
