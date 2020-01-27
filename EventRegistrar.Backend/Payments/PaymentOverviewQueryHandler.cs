@@ -2,10 +2,13 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Payments
@@ -46,7 +49,7 @@ namespace EventRegistrar.Backend.Payments
                                                               reg.Id,
                                                               reg.State,
                                                               reg.Price,
-                                                              Paid = (decimal?)reg.Payments.Sum(ass => ass.Amount)
+                                                              Paid = (decimal?)reg.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
                                                           })
                                                           .ToListAsync(cancellationToken);
 

@@ -39,7 +39,7 @@ namespace EventRegistrar.Backend.Payments.Refunds
                                          .Include(por => por.Assignments)
                                          .ThenInclude(asn => asn.Payment)
                                          .FirstAsync(cancellationToken);
-            var openAmount = payment.Amount - payment.Assignments.Sum(ass => ass.Amount);
+            var openAmount = payment.Amount - payment.Assignments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
 
             var payouts = await _payoutRequests.Where(por => por.Registration.EventId == query.EventId
                                                           && por.State != PayoutState.Confirmed)
@@ -50,7 +50,7 @@ namespace EventRegistrar.Backend.Payments.Refunds
                                                    PayoutRequestId = por.Id,
                                                    Created = por.Created,
                                                    Amount = por.Amount,
-                                                   AmountAssigned = por.Assignments.Select(ass => ass.Amount).Sum(),
+                                                   AmountAssigned = por.Assignments.Select(asn => asn.Amount).Sum(),
                                                    IsOpen = por.State == PayoutState.Sent,
                                                    Info = por.Reason,
                                                    Participant = por.Registration.RespondentFirstName + " " + por.Registration.RespondentLastName,

@@ -35,7 +35,7 @@ namespace EventRegistrar.Backend.Payments.Statements
                 {
                     Id = rpy.Id,
                     Amount = rpy.Amount,
-                    AmountAssigned = rpy.Assignments.Sum(ass => ass.Amount),
+                    AmountAssigned = rpy.Assignments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                     BookingDate = rpy.BookingDate,
                     Currency = rpy.Currency,
                     Info = rpy.Info,

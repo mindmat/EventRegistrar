@@ -61,6 +61,7 @@ namespace EventRegistrar.Backend.Payments.Refunds
             var assignment = new PaymentAssignment
             {
                 Id = Guid.NewGuid(),
+                RegistrationId = payoutRequest.RegistrationId,
                 PayoutRequestId = payoutRequest.Id,
                 ReceivedPaymentId = payment.Id,
                 Amount = command.Amount,

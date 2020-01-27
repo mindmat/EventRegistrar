@@ -1,9 +1,12 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrables;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrations.Overview
@@ -42,7 +45,7 @@ namespace EventRegistrar.Backend.Registrations.Overview
                                           reg.State,
                                           reg.AdmittedAt,
                                           Price = reg.Price ?? 0m,
-                                          Payments = reg.Payments.Select(ass => ass.Amount).ToList(),
+                                          Payments = reg.Payments.Select(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount).ToList(),
                                           SeatsAsLeader = reg.Seats_AsLeader.Where(seat => !seat.IsCancelled).ToList(),
                                           SeatsAsFollower = reg.Seats_AsFollower.Where(seat => !seat.IsCancelled).ToList()
                                       })

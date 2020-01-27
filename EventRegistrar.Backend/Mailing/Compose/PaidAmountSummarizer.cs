@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Payments;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Mailing.Compose
@@ -18,7 +20,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
         public Task<decimal> GetPaidAmount(Guid registrationId)
         {
             return _payments.Where(pmt => pmt.RegistrationId == registrationId)
-                            .SumAsync(pmt => pmt.Amount);
+                            .SumAsync(pmt => pmt.PayoutRequestId == null ? pmt.Amount : -pmt.Amount);
         }
     }
 }

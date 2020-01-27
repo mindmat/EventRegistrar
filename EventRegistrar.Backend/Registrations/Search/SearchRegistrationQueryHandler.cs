@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrations.Search
@@ -33,7 +35,7 @@ namespace EventRegistrar.Backend.Registrations.Search
                                                         FirstName = reg.RespondentFirstName,
                                                         LastName = reg.RespondentLastName,
                                                         Amount = reg.Price ?? 0m,
-                                                        AmountPaid = reg.Payments.Select(pmt => pmt.Amount).Sum(),
+                                                        AmountPaid = reg.Payments.Select(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount).Sum(),
                                                         State = reg.State,
                                                         StateText = reg.State.ToString(),
                                                         IsWaitingList = reg.IsWaitingList == true

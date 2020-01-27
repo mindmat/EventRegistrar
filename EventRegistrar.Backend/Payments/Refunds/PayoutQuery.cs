@@ -38,7 +38,7 @@ namespace EventRegistrar.Backend.Payments.Refunds
                                     FirstName = por.Registration.RespondentFirstName,
                                     LastName = por.Registration.RespondentLastName,
                                     Price = (por.Registration.Price ?? 0m),
-                                    Paid = por.Registration.Payments.Sum(ass => ass.Amount),
+                                    Paid = por.Registration.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                                     Payments = por.Registration.Payments
                                                   .Where(pmt => pmt.Payment.CreditDebitType == CreditDebit.CRDT)
                                                   .Select(pmt => new PaymentDisplayItem

@@ -44,7 +44,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                               PaymentId_Counter = pmt.Id,
                                               BookingDate = pmt.BookingDate,
                                               Amount = pmt.Amount,
-                                              AmountUnsettled = pmt.Amount - pmt.Assignments.Select(ass => ass.Amount).Sum(),
+                                              AmountUnsettled = pmt.Amount - pmt.Assignments.Select(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount).Sum(),
                                               Settled = pmt.Settled,
                                               Currency = pmt.Currency,
                                               Info = pmt.Info,
@@ -62,7 +62,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
             var debitorParts = paymentCandidate.DebitorName?.Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)?.Select(wrd => wrd.ToLowerInvariant()) ?? new List<string>();
             var wordsInCandidate = paymentCandidate.Info?.Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)?.Select(wrd => wrd.ToLowerInvariant())?.ToList() ?? new List<string>();
 
-            var unsettledAmountInOpenPayment = openPayment.Amount - openPayment.Assignments.Sum(ass => ass.Amount);
+            var unsettledAmountInOpenPayment = openPayment.Amount - openPayment.Assignments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
             var wordsInOpenPayment = openPayment.Info.Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries).Select(wrd => wrd.ToLowerInvariant()).ToHashSet();
 
             return wordsInOpenPayment.Sum(opw => wordsInCandidate.Count(cdw => cdw == opw))

@@ -40,8 +40,8 @@ namespace EventRegistrar.Backend.Payments.Differences
                                                   .Select(reg => new
                                                   {
                                                       Registration = reg,
-                                                      PaymentsTotal = reg.Payments.Sum(pmt => pmt.Amount),
-                                                      Difference = (reg.Price ?? 0m) - reg.Payments.Sum(pmt => pmt.Amount)
+                                                      PaymentsTotal = reg.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
+                                                      Difference = (reg.Price ?? 0m) - reg.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
                                                   })
                                                   .Where(reg => reg.Difference != 0m
                                                              && reg.PaymentsTotal > 0m)

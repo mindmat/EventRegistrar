@@ -47,7 +47,7 @@ namespace EventRegistrar.Backend.Payments.Differences
             var data = new TooMuchPaidMailData
             {
                 Price = registration.Price ?? 0m,
-                AmountPaid = registration.Payments.Sum(pmt => pmt.Amount),
+                AmountPaid = registration.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
             };
             data.RefundAmount = data.AmountPaid - data.Price;
             if (data.RefundAmount <= 0m)

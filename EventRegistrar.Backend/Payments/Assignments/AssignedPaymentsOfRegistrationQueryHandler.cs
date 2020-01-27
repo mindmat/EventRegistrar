@@ -2,7 +2,11 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+using EventRegistrar.Backend.Payments.Files.Camt;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Payments.Assignments
@@ -19,7 +23,8 @@ namespace EventRegistrar.Backend.Payments.Assignments
         public async Task<IEnumerable<AssignedPaymentDisplayItem>> Handle(AssignedPaymentsOfRegistrationQuery query, CancellationToken cancellationToken)
         {
             return await _paymentsAssignments.Where(pya => pya.Payment.PaymentFile.EventId == query.EventId
-                                                        && pya.RegistrationId == query.RegistrationId)
+                                                        && pya.RegistrationId == query.RegistrationId
+                                                        && pya.Payment.CreditDebitType == CreditDebit.CRDT)
                                              .Select(pya => new AssignedPaymentDisplayItem
                                              {
                                                  PaymentAssignmentId = pya.Id,

@@ -38,7 +38,7 @@ namespace EventRegistrar.Backend.Payments.Refunds
                     FirstName = cnc.Registration.RespondentFirstName,
                     LastName = cnc.Registration.RespondentLastName,
                     Price = (cnc.Registration.Price ?? 0m) - cnc.Registration.IndividualReductions.Sum(red => red.Amount),
-                    Paid = cnc.Registration.Payments.Sum(ass => ass.Amount),
+                    Paid = cnc.Registration.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                     RefundPercentage = cnc.RefundPercentage,
                     Refund = cnc.Refund,
                     CancellationDate = cnc.Received ?? cnc.Created,

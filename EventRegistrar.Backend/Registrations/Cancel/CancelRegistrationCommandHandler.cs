@@ -90,7 +90,7 @@ namespace EventRegistrar.Backend.Registrations.Cancel
                 Reason = command.Reason,
                 Created = DateTime.UtcNow,
                 RefundPercentage = refundPercentage,
-                Refund = refundPercentage * registration.Payments.Sum(ass => ass.Amount),
+                Refund = refundPercentage * registration.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                 Received = command.Received
             };
             await _cancellations.InsertOrUpdateEntity(cancellation, cancellationToken);

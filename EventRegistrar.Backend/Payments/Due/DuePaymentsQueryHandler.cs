@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Payments.Due
@@ -41,7 +44,7 @@ namespace EventRegistrar.Backend.Payments.Due
                                                reg.ReceivedAt,
                                                reg.PhoneNormalized,
                                                reg.ReminderLevel,
-                                               Paid = (decimal?)reg.Payments.Sum(ass => ass.Amount),
+                                               Paid = (decimal?)reg.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                                                Mails = reg.Mails.Select(rml => new { rml.Mail.Id, Sent = rml.Mail.Created, rml.Mail.Type, rml.Mail.Withhold, rml.Mail.Discarded }),
                                                ReminderSms = reg.Sms.Where(sms => sms.Type == SmsType.Reminder)
                                            })

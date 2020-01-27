@@ -39,7 +39,7 @@ namespace EventRegistrar.Backend.Payments.Unassigned
                                  {
                                      Id = pmo.Id,
                                      Amount = pmo.Amount,
-                                     AmountAssigned = pmo.Assignments.Sum(ass => ass.Amount),
+                                     AmountAssigned = pmo.Assignments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                                      BookingDate = pmo.BookingDate,
                                      Currency = pmo.Currency,
                                      Info = pmo.Info,

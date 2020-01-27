@@ -2,9 +2,12 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrations.Confirmation
@@ -33,7 +36,7 @@ namespace EventRegistrar.Backend.Registrations.Confirmation
             }
 
             var difference = registration.Price
-                             - registration.Payments.Sum(pmt => pmt.Amount);
+                           - registration.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
             if (registration.State == RegistrationState.Received
              && (difference <= 0m || registration.WillPayAtCheckin))
             {

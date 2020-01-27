@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrations
@@ -26,7 +28,7 @@ namespace EventRegistrar.Backend.Registrations
                                                        Price = reg.Price,
                                                        Status = reg.State,
                                                        StatusText = reg.State.ToString(),
-                                                       Paid = (decimal?)reg.Payments.Sum(ass => ass.Amount) ?? 0m,
+                                                       Paid = (decimal?)reg.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount) ?? 0m,
                                                        Language = reg.Language,
                                                        ReceivedAt = reg.ReceivedAt,
                                                        ReminderLevel = reg.ReminderLevel,

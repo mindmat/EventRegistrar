@@ -71,7 +71,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
             if (command.AcceptDifference)
             {
                 var difference = (registration.Price ?? 0m)
-                                 - registration.Payments.Sum(pmt => pmt.Amount);
+                                - registration.Payments.Sum(pmt => pmt.PayoutRequestId == null ? pmt.Amount : -pmt.Amount);
                 await _individualReductions.InsertOrUpdateEntity(new IndividualReduction
                 {
                     Id = Guid.NewGuid(),

@@ -38,7 +38,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                          .Include(pmt => pmt.Assignments)
                                          .FirstAsync(cancellationToken);
             var info = payment.Info;
-            var openAmount = payment.Amount - payment.Assignments.Sum(ass => ass.Amount);
+            var openAmount = payment.Amount - payment.Assignments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
 
             var wordsInPayment = info.Split(' ', StringSplitOptions.RemoveEmptyEntries).Select(wrd => wrd.ToLowerInvariant()).ToHashSet();
             var registrations = await _registrations.Where(reg => reg.EventId == query.EventId
@@ -55,7 +55,7 @@ namespace EventRegistrar.Backend.Payments.Assignments
                                                         LastName = reg.RespondentLastName,
                                                         Email = reg.RespondentEmail,
                                                         Amount = reg.Price ?? 0m,
-                                                        AmountPaid = reg.Payments.Sum(pmt => pmt.Amount),
+                                                        AmountPaid = reg.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                                                         IsWaitingList = reg.IsWaitingList == true,
                                                     })
                                                     .ToListAsync(cancellationToken);
