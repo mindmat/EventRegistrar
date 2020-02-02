@@ -1,9 +1,11 @@
 using System.Threading.Tasks;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
 
 namespace EventRegistrar.Functions
@@ -18,7 +20,14 @@ namespace EventRegistrar.Functions
             log.LogInformation(JsonConvert.SerializeObject(req.Form));
             var twilioSms = req.Form.Deserialize<TwilioSms>();
 
-            await ServiceBusClient.SendCommand(new { Sms = twilioSms }, "processreceivedsms");
+            var command = new { Sms = twilioSms };
+            var message = new
+            {
+                CommandType = "EventRegistrar.Backend.PhoneMessages.ProcessReceivedSmsCommand",
+                CommandSerialized = JsonConvert.SerializeObject(command)
+            };
+            await ServiceBusClient.SendCommand(message);
+
             return new OkResult();
         }
     }

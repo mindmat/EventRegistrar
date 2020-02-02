@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 
@@ -16,7 +17,7 @@ namespace EventRegistrar.Functions
                 CommandType = "EventRegistrar.Backend.Mailing.Import.ImportMailsFromImapForAllActiveEventsCommand",
                 CommandSerialized = "{}"
             };
-            await ServiceBusClient.SendCommand(command, "CommandQueue");
+            await ServiceBusClient.SendCommand(command);
         }
     }
 }

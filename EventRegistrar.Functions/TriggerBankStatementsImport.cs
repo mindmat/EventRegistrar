@@ -37,7 +37,7 @@ namespace EventRegistrar.Functions
                         CommandType = "EventRegistrar.Backend.Payments.Files.Fetch.FetchBankStamentsFileCommand",
                         CommandSerialized = JsonConvert.SerializeObject(command)
                     };
-                    await ServiceBusClient.SendCommand(message, "CommandQueue");
+                    await ServiceBusClient.SendCommand(message);
                 }
             }
         }
