@@ -1,6 +1,9 @@
 ﻿using System;
+
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrations;
+
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.PhoneMessages
 {
@@ -21,5 +24,17 @@ namespace EventRegistrar.Backend.PhoneMessages
         public string SmsStatus { get; set; }
         public string To { get; set; }
         public SmsType Type { get; set; }
+    }
+
+    public class SmsMap : EntityTypeConfiguration<Sms>
+    {
+        public override void Configure(EntityTypeBuilder<Sms> builder)
+        {
+            base.Configure(builder);
+
+            builder.HasOne(sms => sms.Registration)
+                .WithMany(reg => reg.Sms)
+                .HasForeignKey(sms => sms.RegistrationId);
+        }
     }
 }

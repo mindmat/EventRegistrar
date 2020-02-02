@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Linq;
+
 using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
+
 using Newtonsoft.Json;
+
 using SimpleInjector;
 
 namespace EventRegistrar.Backend.Infrastructure.DomainEvents
@@ -29,14 +32,18 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents
         public void Publish<TEvent>(TEvent @event)
             where TEvent : DomainEvent
         {
+            // try to fill out missing data
             if (@event.Id == Guid.Empty)
             {
                 @event.Id = Guid.NewGuid();
             }
-
             if (@event.UserId == null)
             {
                 @event.UserId = _user.UserId;
+            }
+            if (@event.EventId == null && _eventContext.EventId != null)
+            {
+                @event.EventId = _eventContext.EventId.Value;
             }
 
             _serviceBusClient.SendMessage(new SaveDomainEventCommand
