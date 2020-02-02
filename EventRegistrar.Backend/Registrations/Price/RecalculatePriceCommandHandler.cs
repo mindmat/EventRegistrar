@@ -1,9 +1,12 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrations.Price
@@ -39,7 +42,13 @@ namespace EventRegistrar.Backend.Registrations.Price
             {
                 registration.OriginalPrice = newOriginalPrice;
                 registration.Price = newPrice;
-                _eventBus.Publish(new PriceChanged { RegistrationId = registration.Id, OldPrice = oldPrice, NewPrice = registration.Price ?? 0m });
+                _eventBus.Publish(new PriceChanged
+                {
+                    EventId = registration.EventId,
+                    RegistrationId = registration.Id,
+                    OldPrice = oldPrice,
+                    NewPrice = registration.Price ?? 0m
+                });
             }
 
             return Unit.Value;

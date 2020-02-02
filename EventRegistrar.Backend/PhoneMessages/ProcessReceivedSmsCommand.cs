@@ -79,6 +79,7 @@ namespace EventRegistrar.Backend.PhoneMessages
             _eventBus.Publish(new SmsReceived
             {
                 RegistrationId = registration?.Id,
+                EventId = registration?.EventId,
                 Registration = registration == null ? null : $"{registration.RespondentFirstName} {registration.RespondentLastName}",
                 From = command.Sms.From,
                 Text = command.Sms.Body,

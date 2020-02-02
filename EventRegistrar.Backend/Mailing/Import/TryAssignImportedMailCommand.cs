@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Mailing.Import
@@ -45,15 +48,16 @@ namespace EventRegistrar.Backend.Mailing.Import
                 var registrations = await _registrations.Where(reg => reg.EventId == mail.EventId
                                                                    && reg.RespondentEmail == emailAddress
                                                                    && !existingRegistrationMappings.Contains(reg.Id))
-                                                        .Select(reg => reg.Id)
+                                                        .Select(reg => new { reg.Id, reg.EventId })
                                                         .ToListAsync(cancellationToken);
                 foreach (var registration in registrations)
                 {
-                    await _mailToRegistrations.InsertOrUpdateEntity(new ImportedMailToRegistration { ImportedMailId = mail.Id, RegistrationId = registration }, cancellationToken);
+                    await _mailToRegistrations.InsertOrUpdateEntity(new ImportedMailToRegistration { ImportedMailId = mail.Id, RegistrationId = registration.Id }, cancellationToken);
                     _eventBus.Publish(new ImportedMailAssigned
                     {
+                        EventId = registration.EventId,
                         ImportedMailId = mail.Id,
-                        RegistrationId = registration,
+                        RegistrationId = registration.Id,
                         ExternalDate = mail.Date
                     });
                 }
