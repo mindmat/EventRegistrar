@@ -106,6 +106,16 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Platz von Warteliste nachgerückt.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Registrables_WaitingList_SingleSpotPromotedFromWaitingList {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Registrables_WaitingList_SingleSpotPromotedFromWaitingList" +
+                        "", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Anmeldung storniert.
         /// </summary>
         internal static string EventRegistrar_Backend_Registrations_Cancel_RegistrationCancelled {

@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -27,15 +30,18 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
         private readonly ImbalanceManager _imbalanceManager;
         private readonly ILogger _log;
         private readonly IQueryable<Registrable> _registrables;
+        private readonly IQueryable<Registration> _registrations;
         private readonly IRepository<Seat> _spots;
 
         public TryPromoteFromWaitingListCommandHandler(IQueryable<Registrable> registrables,
+                                                       IQueryable<Registration> registrations,
                                                        IRepository<Seat> spots,
                                                        ImbalanceManager imbalanceManager,
                                                        IEventBus eventBus,
                                                        ILogger log)
         {
             _registrables = registrables;
+            _registrations = registrations;
             _spots = spots;
             _imbalanceManager = imbalanceManager;
             _eventBus = eventBus;
@@ -187,12 +193,7 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
 
                 await _spots.InsertOrUpdateEntity(seatToComplement);
                 await _spots.InsertOrUpdateEntity(nextFollowerOnWaitingList);
-                _eventBus.Publish(new SingleSpotPromotedFromWaitingList
-                {
-                    Id = Guid.NewGuid(),
-                    RegistrableId = seatToComplement.RegistrableId,
-                    RegistrationId = nextFollowerOnWaitingList.RegistrationId_Follower.Value
-                });
+                PublishPromotedEvent(seatToComplement.RegistrableId, nextFollowerOnWaitingList.RegistrationId_Follower.Value);
                 return true;
             }
             if (seatToComplement.IsSingleFollowerSpot())
@@ -214,16 +215,25 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
 
                 await _spots.InsertOrUpdateEntity(seatToComplement);
                 await _spots.InsertOrUpdateEntity(nextLeaderOnWaitingList);
-                _eventBus.Publish(new SingleSpotPromotedFromWaitingList
-                {
-                    Id = Guid.NewGuid(),
-                    RegistrableId = seatToComplement.RegistrableId,
-                    RegistrationId = nextLeaderOnWaitingList.RegistrationId.Value
-                });
+                PublishPromotedEvent(seatToComplement.RegistrableId, nextLeaderOnWaitingList.RegistrationId.Value);
                 return true;
             }
 
             return false;
+        }
+
+        private void PublishPromotedEvent(Guid registrableId, Guid registrationId)
+        {
+            var registrable = _registrables.First(rbl => rbl.Id == registrableId);
+            var registration = _registrations.First(reg => reg.Id == registrationId);
+            _eventBus.Publish(new SingleSpotPromotedFromWaitingList
+            {
+                Id = Guid.NewGuid(),
+                RegistrableId = registrableId,
+                Registrable = registrable.Name,
+                RegistrationId = registrationId,
+                Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}"
+            });
         }
 
         private async Task PromoteSpotFromWaitingList(Seat spot, List<Seat> waitinglist = null)
@@ -254,22 +264,12 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
             {
                 if (spot.RegistrationId.HasValue)
                 {
-                    _eventBus.Publish(new SingleSpotPromotedFromWaitingList
-                    {
-                        Id = Guid.NewGuid(),
-                        RegistrableId = spot.RegistrableId,
-                        RegistrationId = spot.RegistrationId.Value
-                    });
+                    PublishPromotedEvent(spot.RegistrableId, spot.RegistrationId.Value);
                 }
 
                 if (spot.RegistrationId_Follower.HasValue)
                 {
-                    _eventBus.Publish(new SingleSpotPromotedFromWaitingList
-                    {
-                        Id = Guid.NewGuid(),
-                        RegistrableId = spot.RegistrableId,
-                        RegistrationId = spot.RegistrationId_Follower.Value
-                    });
+                    PublishPromotedEvent(spot.RegistrableId, spot.RegistrationId_Follower.Value);
                 }
             }
         }

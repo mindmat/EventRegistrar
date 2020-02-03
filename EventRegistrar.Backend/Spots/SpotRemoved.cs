@@ -18,7 +18,7 @@ namespace EventRegistrar.Backend.Spots
     {
         public string GetText(SpotRemoved domainEvent)
         {
-            return $"{domainEvent.Participant} wurde aus {(domainEvent.WasSpotOnWaitingList ? "der Warteliste von " : " ")}{domainEvent.Registrable} entfernt.";
+            return $"{domainEvent.Participant} wurde aus {(domainEvent.WasSpotOnWaitingList ? "der Warteliste von " : "")}{domainEvent.Registrable} entfernt.";
         }
     }
 }

@@ -151,6 +151,9 @@
   <data name="EventRegistrar_Backend_Mailing_Import_ExternalMailImported" xml:space="preserve">
     <value>Mail importiert</value>
   </data>
+  <data name="EventRegistrar_Backend_Registrables_WaitingList_SingleSpotPromotedFromWaitingList" xml:space="preserve">
+    <value>Platz von Warteliste nachgerückt</value>
+  </data>
   <data name="EventRegistrar_Backend_Registrations_Cancel_RegistrationCancelled" xml:space="preserve">
     <value>Anmeldung storniert</value>
   </data>

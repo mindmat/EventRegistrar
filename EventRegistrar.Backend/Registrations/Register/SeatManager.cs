@@ -76,7 +76,8 @@ namespace EventRegistrar.Backend.Registrations.Register
                 RegistrableId = registrable.Id,
                 Registrable = registrable.Name,
                 RegistrationId = registrationId_Leader,
-                IsInitialProcessing = initialProcessing
+                IsInitialProcessing = initialProcessing,
+                IsWaitingList = seat.IsWaitingList
             });
             _eventBus.Publish(new SpotAdded
             {
@@ -85,7 +86,8 @@ namespace EventRegistrar.Backend.Registrations.Register
                 RegistrableId = registrable.Id,
                 Registrable = registrable.Name,
                 RegistrationId = registrationId_Follower,
-                IsInitialProcessing = initialProcessing
+                IsInitialProcessing = initialProcessing,
+                IsWaitingList = seat.IsWaitingList
             });
             return seat;
         }
@@ -141,7 +143,8 @@ namespace EventRegistrar.Backend.Registrations.Register
                             RegistrableId = registrable.Id,
                             Registrable = registrable.Name,
                             RegistrationId = registrationId,
-                            IsInitialProcessing = initialProcessing
+                            IsInitialProcessing = initialProcessing,
+                            IsWaitingList = existingPartnerSeat.IsWaitingList
                         });
                         return existingPartnerSeat;
                     }
@@ -199,7 +202,8 @@ namespace EventRegistrar.Backend.Registrations.Register
                             RegistrableId = registrable.Id,
                             Registrable = registrable.Name,
                             RegistrationId = registrationId,
-                            IsInitialProcessing = initialProcessing
+                            IsInitialProcessing = initialProcessing,
+                            IsWaitingList = matchingSingleSeat.IsWaitingList
                         });
                         return matchingSingleSeat;
                     }
@@ -233,7 +237,8 @@ namespace EventRegistrar.Backend.Registrations.Register
                 RegistrableId = registrable.Id,
                 Registrable = registrable.Name,
                 RegistrationId = registrationId,
-                IsInitialProcessing = initialProcessing
+                IsInitialProcessing = initialProcessing,
+                IsWaitingList = seat.IsWaitingList
             });
 
             return seat;
@@ -277,7 +282,8 @@ namespace EventRegistrar.Backend.Registrations.Register
                 RegistrableId = registrable.Id,
                 Registrable = registrable.Name,
                 RegistrationId = registrationId,
-                IsInitialProcessing = initialProcessing
+                IsInitialProcessing = initialProcessing,
+                IsWaitingList = seat.IsWaitingList
             });
 
             return seat;
