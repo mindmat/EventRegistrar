@@ -44,6 +44,7 @@ import { RefundsComponent } from "./refunds/refunds.component";
 import { PaymentDifferencesComponent } from "./payment-differences/payment-differences.component";
 import { PayoutsComponent } from "./payouts/payouts.component";
 import { UnassignedPayoutsComponent } from "./unassigned-payouts/unassigned-payouts.component";
+import { DomainEventsComponent } from "./domain-events/domain-events.component";
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { UnassignedPayoutsComponent } from "./unassigned-payouts/unassigned-payo
     RefundsComponent,
     PaymentDifferencesComponent,
     PayoutsComponent,
-    UnassignedPayoutsComponent
+    UnassignedPayoutsComponent,
+    DomainEventsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -119,7 +121,8 @@ import { UnassignedPayoutsComponent } from "./unassigned-payouts/unassigned-payo
       { path: ':eventAcronym/cancellations', component: RefundsComponent },
       { path: ':eventAcronym/payouts', component: PayoutsComponent },
       { path: ':eventAcronym/payment-differences', component: PaymentDifferencesComponent },
-      { path: ':eventAcronym/unassigned-payouts', component: UnassignedPayoutsComponent }
+      { path: ':eventAcronym/unassigned-payouts', component: UnassignedPayoutsComponent },
+      { path: ':eventAcronym/domain-events', component: DomainEventsComponent }
       //{ path: '**', redirectTo: 'll18/registrables' }
     ])
   ],

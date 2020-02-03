@@ -2,12 +2,15 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Mailing
@@ -62,7 +65,8 @@ namespace EventRegistrar.Backend.Mailing
             _eventBus.Publish(new MailReleased
             {
                 MailId = withheldMail.Id,
-                To = sendMailCommand.To.Select(to => $"{to.Name} - {to.Email}").StringJoin()
+                To = sendMailCommand.To.Select(to => $"{to.Name} - {to.Email}").StringJoin(),
+                Subject = sendMailCommand.Subject
             });
 
             return Unit.Value;

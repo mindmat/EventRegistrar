@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.Context;
@@ -10,9 +11,12 @@ using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 using SimpleInjector;
 
 namespace EventRegistrar.Backend
@@ -87,7 +91,7 @@ namespace EventRegistrar.Backend
             container.Register<ServiceBusClient>();
             container.Register<IEventBus, EventBus>();
             container.Register<SourceQueueProvider>();
-
+            container.Register(typeof(IEventToUserTranslation<>), assembly);
             container.Verify();
 
             container.GetInstance<MessageQueueReceiver>().RegisterMessageHandlers();

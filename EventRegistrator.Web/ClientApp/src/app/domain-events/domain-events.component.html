@@ -1,0 +1,22 @@
+<h1>Logs</h1>
+
+<p *ngIf="!domainevents"><em>Loading...</em></p>
+
+<table class="table table-hover" *ngIf="domainevents">
+  <thead class="thead-dark">
+    <tr>
+      <th>Zeitpunkt</th>
+      <th>Vorgang</th>
+      <th>Inhalt</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let domainevent of domainevents">
+      <td>{{ domainevent.timestamp | date: 'dd.MM.yy HH:mm:ss' }}</td>
+      <td>{{ domainevent.type }}</td>
+      <td>{{ domainevent.content }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />

@@ -70,6 +70,51 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mail erhalten.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Mailing_Import_ImportedMailAssigned {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Mailing_Import_ImportedMailAssigned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mail freigegeben.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Mailing_MailReleased {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Mailing_MailReleased", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SMS erhalten.
+        /// </summary>
+        internal static string EventRegistrar_Backend_PhoneMessages_SmsReceived {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_PhoneMessages_SmsReceived", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preis wurde neu berechnet.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Registrations_Price_PriceChanged {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Registrations_Price_PriceChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Neue Registrierung erhalten.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Registrations_Register_RegistrationProcessed {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Registrations_Register_RegistrationProcessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vorname.
         /// </summary>
         internal static string FirstName {

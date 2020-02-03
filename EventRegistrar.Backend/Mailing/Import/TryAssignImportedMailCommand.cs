@@ -58,7 +58,9 @@ namespace EventRegistrar.Backend.Mailing.Import
                         EventId = registration.EventId,
                         ImportedMailId = mail.Id,
                         RegistrationId = registration.Id,
-                        ExternalDate = mail.Date
+                        ExternalDate = mail.Date,
+                        SenderMail = mail.SenderMail,
+                        SenderName = mail.SenderName,
                     });
                 }
             }

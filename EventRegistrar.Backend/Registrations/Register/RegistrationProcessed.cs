@@ -1,4 +1,6 @@
 ﻿using System;
+
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Registrations.Register
@@ -10,5 +12,13 @@ namespace EventRegistrar.Backend.Registrations.Register
         public string[] Registrables { get; set; }
         public Guid RegistrationId { get; set; }
         public string Email { get; set; }
+    }
+
+    public class RegistrationProcessedUserTranslation : IEventToUserTranslation<RegistrationProcessed>
+    {
+        public string GetText(RegistrationProcessed domainEvent)
+        {
+            return $"Teilnehmer: {domainEvent.FirstName} {domainEvent.LastName}, angemeldet für {domainEvent.Registrables.StringJoin()}";
+        }
     }
 }

@@ -133,4 +133,19 @@
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
   </data>
+  <data name="EventRegistrar_Backend_Mailing_Import_ImportedMailAssigned" xml:space="preserve">
+    <value>Mail erhalten</value>
+  </data>
+  <data name="EventRegistrar_Backend_Mailing_MailReleased" xml:space="preserve">
+    <value>Mail freigegeben</value>
+  </data>
+  <data name="EventRegistrar_Backend_PhoneMessages_SmsReceived" xml:space="preserve">
+    <value>SMS erhalten</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrations_Price_PriceChanged" xml:space="preserve">
+    <value>Preis wurde neu berechnet</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrations_Register_RegistrationProcessed" xml:space="preserve">
+    <value>Neue Registrierung erhalten</value>
+  </data>
 </root>

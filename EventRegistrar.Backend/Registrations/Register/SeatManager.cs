@@ -34,7 +34,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             _eventBus = eventBus;
         }
 
-        public async Task<Seat> ReservePartnerSpot(Guid? eventId,
+        public async Task<Seat> ReservePartnerSpot(Guid eventId,
                                                    Registrable registrable,
                                                    Guid registrationId_Leader,
                                                    Guid registrationId_Follower,
@@ -69,8 +69,24 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
 
             await _seats.InsertOrUpdateEntity(seat);
-            _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), EventId = eventId, RegistrableId = registrable.Id, RegistrationId = registrationId_Leader, IsInitialProcessing = initialProcessing });
-            _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), EventId = eventId, RegistrableId = registrable.Id, RegistrationId = registrationId_Follower, IsInitialProcessing = initialProcessing });
+            _eventBus.Publish(new SpotAdded
+            {
+                Id = Guid.NewGuid(),
+                EventId = eventId,
+                RegistrableId = registrable.Id,
+                Registrable = registrable.Name,
+                RegistrationId = registrationId_Leader,
+                IsInitialProcessing = initialProcessing
+            });
+            _eventBus.Publish(new SpotAdded
+            {
+                Id = Guid.NewGuid(),
+                EventId = eventId,
+                RegistrableId = registrable.Id,
+                Registrable = registrable.Name,
+                RegistrationId = registrationId_Follower,
+                IsInitialProcessing = initialProcessing
+            });
             return seat;
         }
 
@@ -118,7 +134,15 @@ namespace EventRegistrar.Backend.Registrations.Register
                     if (existingPartnerSeat != null)
                     {
                         ComplementExistingSeat(registrationId, ownRole, existingPartnerSeat);
-                        _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), EventId = eventId, RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
+                        _eventBus.Publish(new SpotAdded
+                        {
+                            Id = Guid.NewGuid(),
+                            EventId = eventId,
+                            RegistrableId = registrable.Id,
+                            Registrable = registrable.Name,
+                            RegistrationId = registrationId,
+                            IsInitialProcessing = initialProcessing
+                        });
                         return existingPartnerSeat;
                     }
 
@@ -173,6 +197,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                             Id = Guid.NewGuid(),
                             EventId = eventId,
                             RegistrableId = registrable.Id,
+                            Registrable = registrable.Name,
                             RegistrationId = registrationId,
                             IsInitialProcessing = initialProcessing
                         });
@@ -201,7 +226,15 @@ namespace EventRegistrar.Backend.Registrations.Register
 
             seat.Id = Guid.NewGuid();
             await _seats.InsertOrUpdateEntity(seat);
-            _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), EventId = eventId, RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
+            _eventBus.Publish(new SpotAdded
+            {
+                Id = Guid.NewGuid(),
+                EventId = eventId,
+                RegistrableId = registrable.Id,
+                Registrable = registrable.Name,
+                RegistrationId = registrationId,
+                IsInitialProcessing = initialProcessing
+            });
 
             return seat;
         }
@@ -238,7 +271,14 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
 
             await _seats.InsertOrUpdateEntity(seat);
-            _eventBus.Publish(new SpotAdded { Id = Guid.NewGuid(), RegistrableId = registrable.Id, RegistrationId = registrationId, IsInitialProcessing = initialProcessing });
+            _eventBus.Publish(new SpotAdded
+            {
+                Id = Guid.NewGuid(),
+                RegistrableId = registrable.Id,
+                Registrable = registrable.Name,
+                RegistrationId = registrationId,
+                IsInitialProcessing = initialProcessing
+            });
 
             return seat;
         }

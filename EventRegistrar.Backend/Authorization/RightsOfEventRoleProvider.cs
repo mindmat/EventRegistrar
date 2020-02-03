@@ -5,6 +5,7 @@ using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Hosting;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Compose;
@@ -103,6 +104,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(PayoutQuery);
                 yield return nameof(UnassignedPayoutsQuery);
                 yield return nameof(PossiblePayoutAssignmentQuery);
+                yield return nameof(DomainEventsQuery);
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
