@@ -101,7 +101,7 @@ namespace EventRegistrar.Backend.Registrations.Cancel
                 {
                     RegistrationId = command.RegistrationId,
                     Amount = cancellation.Refund,
-                    Reason = command.Reason ?? "Refund after cancellation",
+                    Reason = command.Reason,
                     State = PayoutState.Requested,
                     Created = DateTimeOffset.Now
                 };
@@ -113,7 +113,11 @@ namespace EventRegistrar.Backend.Registrations.Cancel
             {
                 Id = Guid.NewGuid(),
                 RegistrationId = command.RegistrationId,
-                EventId = registration.EventId
+                EventId = registration.EventId,
+                Reason = command.Reason,
+                Refund = cancellation.Refund,
+                Received = command.Received ?? DateTimeOffset.Now,
+                Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}"
             });
 
             return Unit.Value;

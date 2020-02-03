@@ -148,4 +148,13 @@
   <data name="EventRegistrar_Backend_Registrations_Register_RegistrationProcessed" xml:space="preserve">
     <value>Neue Registrierung erhalten</value>
   </data>
+  <data name="EventRegistrar_Backend_Mailing_Import_ExternalMailImported" xml:space="preserve">
+    <value>Mail importiert</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrations_Cancel_RegistrationCancelled" xml:space="preserve">
+    <value>Anmeldung storniert</value>
+  </data>
+  <data name="EventRegistrar_Backend_Spots_SpotRemoved" xml:space="preserve">
+    <value>Platz entfernt</value>
+  </data>
 </root>

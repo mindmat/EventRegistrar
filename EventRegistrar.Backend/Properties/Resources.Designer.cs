@@ -70,6 +70,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mail importiert.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Mailing_Import_ExternalMailImported {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Mailing_Import_ExternalMailImported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mail erhalten.
         /// </summary>
         internal static string EventRegistrar_Backend_Mailing_Import_ImportedMailAssigned {
@@ -97,6 +106,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anmeldung storniert.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Registrations_Cancel_RegistrationCancelled {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Registrations_Cancel_RegistrationCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Preis wurde neu berechnet.
         /// </summary>
         internal static string EventRegistrar_Backend_Registrations_Price_PriceChanged {
@@ -111,6 +129,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string EventRegistrar_Backend_Registrations_Register_RegistrationProcessed {
             get {
                 return ResourceManager.GetString("EventRegistrar_Backend_Registrations_Register_RegistrationProcessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Platz entfernt.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Spots_SpotRemoved {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Spots_SpotRemoved", resourceCulture);
             }
         }
         

@@ -1,16 +1,25 @@
 ﻿using System;
+using System.Linq;
 
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Spots
 {
     public class SpotRemover
     {
         private readonly IEventBus _eventBus;
+        private readonly IQueryable<Registration> _registrations;
+        private readonly IQueryable<Registrable> _registrables;
 
-        public SpotRemover(IEventBus eventBus)
+        public SpotRemover(IEventBus eventBus,
+                           IQueryable<Registration> registrations,
+                           IQueryable<Registrable> registrables)
         {
             _eventBus = eventBus;
+            _registrations = registrations;
+            _registrables = registrables;
         }
 
         public void RemoveSpot(Seat spot, Guid registrationId, RemoveSpotReason reason)
@@ -45,13 +54,18 @@ namespace EventRegistrar.Backend.Spots
                     spot.IsCancelled = true;
                 }
             }
+
+            var registration = _registrations.First(reg => reg.Id == registrationId);
+            var registrable = _registrables.First(rbl => rbl.Id == spot.RegistrableId);
             _eventBus.Publish(new SpotRemoved
             {
                 Id = Guid.NewGuid(),
                 RegistrableId = spot.RegistrableId,
                 RegistrationId = registrationId,
                 Reason = reason,
-                WasSpotOnWaitingList = spot.IsWaitingList
+                WasSpotOnWaitingList = spot.IsWaitingList,
+                Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}",
+                Registrable = registrable.Name
             });
         }
     }
