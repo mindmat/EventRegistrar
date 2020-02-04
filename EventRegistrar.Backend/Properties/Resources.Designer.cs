@@ -134,6 +134,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Einzelanmeldung bezahlt.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Registrations_Confirmation_SingleRegistrationPaid {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Registrations_Confirmation_SingleRegistrationPaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Preis wurde neu berechnet.
         /// </summary>
         internal static string EventRegistrar_Backend_Registrations_Price_PriceChanged {
