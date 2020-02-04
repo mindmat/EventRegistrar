@@ -14,7 +14,7 @@ namespace EventRegistrar.Backend.Spots
         public string Registrable { get; set; }
     }
 
-    public class ExternalMailImportedUserTranslation : IEventToUserTranslation<SpotRemoved>
+    public class SpotRemovedUserTranslation : IEventToUserTranslation<SpotRemoved>
     {
         public string GetText(SpotRemoved domainEvent)
         {

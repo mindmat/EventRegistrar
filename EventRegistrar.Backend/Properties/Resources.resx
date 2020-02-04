@@ -151,6 +151,9 @@
   <data name="EventRegistrar_Backend_Mailing_Import_ExternalMailImported" xml:space="preserve">
     <value>Mail importiert</value>
   </data>
+  <data name="EventRegistrar_Backend_Payments_Assignments_PaymentAssigned" xml:space="preserve">
+    <value>Zahlung zugeordnet</value>
+  </data>
   <data name="EventRegistrar_Backend_Registrables_WaitingList_SingleSpotPromotedFromWaitingList" xml:space="preserve">
     <value>Platz von Warteliste nachgerückt</value>
   </data>
@@ -159,5 +162,8 @@
   </data>
   <data name="EventRegistrar_Backend_Spots_SpotRemoved" xml:space="preserve">
     <value>Platz entfernt</value>
+  </data>
+  <data name="EventRegistrar_Backend_Spots_SpotAdded" xml:space="preserve">
+    <value>Platz hinzugefügt</value>
   </data>
 </root>

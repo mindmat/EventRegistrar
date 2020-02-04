@@ -90,7 +90,8 @@ namespace EventRegistrar.Backend.Payments.Refunds
 
             _eventBus.Publish(new PaymentAssigned
             {
-                Id = Guid.NewGuid(),
+                PaymentAssignmentId = assignment.Id,
+                Amount = assignment.Amount,
                 PayoutRequestId = assignment.PayoutRequestId,
                 PaymentId = assignment.ReceivedPaymentId
             });

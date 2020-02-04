@@ -97,6 +97,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zahlung zugeordnet.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Payments_Assignments_PaymentAssigned {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Payments_Assignments_PaymentAssigned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SMS erhalten.
         /// </summary>
         internal static string EventRegistrar_Backend_PhoneMessages_SmsReceived {
@@ -139,6 +148,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string EventRegistrar_Backend_Registrations_Register_RegistrationProcessed {
             get {
                 return ResourceManager.GetString("EventRegistrar_Backend_Registrations_Register_RegistrationProcessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Platz hinzugefügt.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Spots_SpotAdded {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Spots_SpotAdded", resourceCulture);
             }
         }
         

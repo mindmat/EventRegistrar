@@ -2,9 +2,12 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Payments.Assignments
@@ -43,6 +46,8 @@ namespace EventRegistrar.Backend.Payments.Assignments
 
             _eventBus.Publish(new PaymentAssigned
             {
+                PaymentAssignmentId = assignment.Id,
+                Amount = assignment.Amount,
                 EventId = command.EventId,
                 PaymentId = paymentIncoming.Id,
                 PaymentId_Counter = paymentOutgoing.Id

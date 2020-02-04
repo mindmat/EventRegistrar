@@ -19,7 +19,6 @@ namespace EventRegistrar.Backend.Spots
         public string GetText(SpotAdded domainEvent)
         {
             return $"{domainEvent.Participant} wurde in {(domainEvent.IsWaitingList ? "die Warteliste von " : "")}{domainEvent.Registrable} aufgenommen.";
-            return $"für {domainEvent.Registrable}";
         }
     }
 }
