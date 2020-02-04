@@ -115,6 +115,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Partypass reserviert.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Registrables_WaitingList_FallbackToPartyPassSet {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Registrables_WaitingList_FallbackToPartyPassSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Platz von Warteliste nachgerückt.
         /// </summary>
         internal static string EventRegistrar_Backend_Registrables_WaitingList_SingleSpotPromotedFromWaitingList {

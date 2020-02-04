@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
 
 using MediatR;
@@ -30,14 +31,17 @@ namespace EventRegistrar.Backend.PhoneMessages
         private readonly IQueryable<Registration> _registrations;
         private readonly IRepository<Sms> _sms;
         private readonly TwilioConfiguration _twilioConfiguration;
+        private readonly IEventBus _eventBus;
 
         public SendSmsCommandHandler(IQueryable<Registration> registrations,
                                      IRepository<Sms> sms,
-                                     TwilioConfiguration twilioConfiguration)
+                                     TwilioConfiguration twilioConfiguration,
+                                     IEventBus eventBus)
         {
             _registrations = registrations;
             _sms = sms;
             _twilioConfiguration = twilioConfiguration;
+            _eventBus = eventBus;
         }
 
         public async Task<Unit> Handle(SendSmsCommand command, CancellationToken cancellationToken)
@@ -47,12 +51,11 @@ namespace EventRegistrar.Backend.PhoneMessages
                 throw new Exception("No Twilio SID/Token found");
             }
 
-            var phone = await _registrations.Where(reg => reg.Id == command.RegistrationId
-                                                       && reg.EventId == command.EventId)
-                                            .Select(reg => reg.PhoneNormalized)
-                                            .FirstOrDefaultAsync(cancellationToken);
+            var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId
+                                                              && reg.EventId == command.EventId)
+                                                   .FirstOrDefaultAsync(cancellationToken);
 
-            if (phone == null)
+            if (registration.PhoneNormalized == null)
             {
                 throw new Exception("No number found in registration");
             }
@@ -61,7 +64,7 @@ namespace EventRegistrar.Backend.PhoneMessages
 
             var callbackUrl = new Uri($"https://eventregistrarfunctions.azurewebsites.net/api/events/{command.EventId}/sms/setStatus");
 
-            var message = await MessageResource.CreateAsync(phone,
+            var message = await MessageResource.CreateAsync(registration.PhoneNormalized,
                                                             from: _twilioConfiguration.Number,
                                                             body: command.Message,
                                                             statusCallback: callbackUrl);
@@ -85,6 +88,16 @@ namespace EventRegistrar.Backend.PhoneMessages
             };
 
             await _sms.InsertOrUpdateEntity(sms, cancellationToken);
+
+            _eventBus.Publish(new SmsSent
+            {
+                RegistrationId = registration?.Id,
+                EventId = registration?.EventId,
+                To = registration.PhoneNormalized,
+                Text = command.Message,
+                Sent = DateTimeOffset.UtcNow
+            });
+
 
             return Unit.Value;
         }

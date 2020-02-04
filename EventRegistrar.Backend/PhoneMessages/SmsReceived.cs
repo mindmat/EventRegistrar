@@ -13,7 +13,7 @@ namespace EventRegistrar.Backend.PhoneMessages
         public DateTimeOffset Received { get; set; }
     }
 
-    public class TranslateSmsReceived : IEventToUserTranslation<SmsReceived>
+    public class SmsReceivedUserTranslation : IEventToUserTranslation<SmsReceived>
     {
         public string GetText(SmsReceived domainEvent)
         {

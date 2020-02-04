@@ -163,6 +163,9 @@
   <data name="EventRegistrar_Backend_Spots_SpotRemoved" xml:space="preserve">
     <value>Platz entfernt</value>
   </data>
+  <data name="EventRegistrar_Backend_Registrables_WaitingList_FallbackToPartyPassSet" xml:space="preserve">
+    <value>Partypass reserviert</value>
+  </data>
   <data name="EventRegistrar_Backend_Registrations_Confirmation_SingleRegistrationPaid" xml:space="preserve">
     <value>Einzelanmeldung bezahlt</value>
   </data>
