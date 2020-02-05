@@ -59,8 +59,8 @@
                 </a>
               </li>
               <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
-                <a [routerLink]="[eventService.activeEvent.acronym, 'domain-events']">
-                  <span class='glyphicon glyphicon-envelope'></span> Logs
+                <a [routerLink]="[eventService.activeEvent.acronym, 'log']">
+                  <span class='glyphicon glyphicon-envelope'></span> Log
                 </a>
               </li>
             </ul>

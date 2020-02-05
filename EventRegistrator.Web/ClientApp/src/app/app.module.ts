@@ -122,7 +122,7 @@ import { DomainEventsComponent } from "./domain-events/domain-events.component";
       { path: ':eventAcronym/payouts', component: PayoutsComponent },
       { path: ':eventAcronym/payment-differences', component: PaymentDifferencesComponent },
       { path: ':eventAcronym/unassigned-payouts', component: UnassignedPayoutsComponent },
-      { path: ':eventAcronym/domain-events', component: DomainEventsComponent }
+      { path: ':eventAcronym/log', component: DomainEventsComponent }
       //{ path: '**', redirectTo: 'll18/registrables' }
     ])
   ],
