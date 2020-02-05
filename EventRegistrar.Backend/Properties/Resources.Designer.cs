@@ -115,6 +115,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SMS gesendet.
+        /// </summary>
+        internal static string EventRegistrar_Backend_PhoneMessages_SmsSent {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_PhoneMessages_SmsSent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Partypass reserviert.
         /// </summary>
         internal static string EventRegistrar_Backend_Registrables_WaitingList_FallbackToPartyPassSet {

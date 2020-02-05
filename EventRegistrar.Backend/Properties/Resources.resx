@@ -172,4 +172,7 @@
   <data name="EventRegistrar_Backend_Spots_SpotAdded" xml:space="preserve">
     <value>Platz hinzugefügt</value>
   </data>
+  <data name="EventRegistrar_Backend_PhoneMessages_SmsSent" xml:space="preserve">
+    <value>SMS gesendet</value>
+  </data>
 </root>
