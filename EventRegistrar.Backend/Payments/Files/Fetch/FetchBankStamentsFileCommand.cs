@@ -79,7 +79,7 @@ namespace EventRegistrar.Backend.Payments.Files.Fetch
                         Imported = DateTimeOffset.Now,
                         Content = content
                     };
-                    await _files.InsertOrUpdateEntity(rawFile);
+                    await _files.InsertOrUpdateEntity(rawFile, cancellationToken);
                     _eventBus.Publish(new BankStatementsFileImported { EventId = command.EventId, BankStatementsFileId = rawFile.Id });
                 }
             }

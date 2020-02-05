@@ -44,5 +44,4 @@ namespace EventRegistrar.Backend.Payments.Assignments
             return $"Zahlungseingang über {domainEvent.Amount} von {payment?.DebitorName} zu Anmeldung {registration?.RespondentFirstName} {registration?.RespondentLastName} zugeordnet";
         }
     }
-
 }

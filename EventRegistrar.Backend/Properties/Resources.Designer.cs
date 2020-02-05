@@ -106,6 +106,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zahlungszuordnung zurückgenommen.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Payments_Assignments_PaymentUnassigned {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Payments_Assignments_PaymentUnassigned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kontoauszug importiert.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Payments_Files_Fetch_BankStatementsFileImported {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Payments_Files_Fetch_BankStatementsFileImported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SMS erhalten.
         /// </summary>
         internal static string EventRegistrar_Backend_PhoneMessages_SmsReceived {

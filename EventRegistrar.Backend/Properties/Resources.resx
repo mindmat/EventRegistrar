@@ -175,4 +175,10 @@
   <data name="EventRegistrar_Backend_PhoneMessages_SmsSent" xml:space="preserve">
     <value>SMS gesendet</value>
   </data>
+  <data name="EventRegistrar_Backend_Payments_Assignments_PaymentUnassigned" xml:space="preserve">
+    <value>Zahlungszuordnung zurückgenommen</value>
+  </data>
+  <data name="EventRegistrar_Backend_Payments_Files_Fetch_BankStatementsFileImported" xml:space="preserve">
+    <value>Kontoauszug importiert</value>
+  </data>
 </root>
