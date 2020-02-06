@@ -172,7 +172,6 @@ namespace EventRegistrar.Backend.Payments.Files
             if (@event != null)
             {
                 _eventBus.Publish(new PaymentFileProcessed { EventId = eventId, Account = camt.Account, Balance = camt.Balance, EntriesCount = camt.Entries.Count });
-                //await ServiceBusClient.SendEvent(new ProcessPaymentFilesCommand { EventId = @event.Id }, ProcessPaymentFiles.ProcessPaymentFilesQueueName);
             }
 
             return newPayments;

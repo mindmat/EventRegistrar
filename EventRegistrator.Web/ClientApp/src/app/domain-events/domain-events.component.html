@@ -1,7 +1,14 @@
 <h1>Logs</h1>
 
 <p *ngIf="!domainevents"><em>Loading...</em></p>
-
+Filter:
+<ng-multiselect-dropdown [placeholder]="'-'"
+                         [data]="domaineventTypes"
+                         [(ngModel)]="selectedDomaineventTypes"
+                         [settings]="dropdownSettings"
+                         (onSelect)="refresh()"
+                         (onDeSelect)="refresh()">
+</ng-multiselect-dropdown>
 <table class="table table-hover" *ngIf="domainevents">
   <thead class="thead-dark">
     <tr>

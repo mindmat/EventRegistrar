@@ -1,7 +1,11 @@
 ﻿using System;
+
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Spots
 {
@@ -18,5 +22,26 @@ namespace EventRegistrar.Backend.Spots
         public Registration Registration_Follower { get; set; }
         public Guid? RegistrationId { get; set; }
         public Guid? RegistrationId_Follower { get; set; }
+    }
+
+    public class SeatMap : EntityTypeConfiguration<Seat>
+    {
+        public override void Configure(EntityTypeBuilder<Seat> builder)
+        {
+            base.Configure(builder);
+            builder.ToTable("Seats");
+            builder.HasOne(seat => seat.Registrable)
+                   .WithMany(rbl => rbl.Seats)
+                   .HasForeignKey(rbl => rbl.RegistrableId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(seat => seat.Registration)
+                   .WithMany(reg => reg.Seats_AsLeader)
+                   .HasForeignKey(seat => seat.RegistrationId);
+
+            builder.HasOne(seat => seat.Registration_Follower)
+                   .WithMany(reg => reg.Seats_AsFollower)
+                   .HasForeignKey(seat => seat.RegistrationId_Follower);
+        }
     }
 }

@@ -72,6 +72,9 @@ namespace EventRegistrar.Backend
             var defaultConfigItemTypes = container.GetTypesToRegister<IDefaultConfigurationItem>(assembly).ToList();
             container.Collection.Register<IDefaultConfigurationItem>(defaultConfigItemTypes);
 
+            var domainEventTypes = container.GetTypesToRegister<DomainEvent>(assembly);
+            container.RegisterSingleton(() => new DomainEventCatalog(domainEventTypes));
+
             var configTypes = container.GetTypesToRegister<IConfigurationItem>(assembly)
                                        .Except(defaultConfigItemTypes);
             foreach (var configType in configTypes)

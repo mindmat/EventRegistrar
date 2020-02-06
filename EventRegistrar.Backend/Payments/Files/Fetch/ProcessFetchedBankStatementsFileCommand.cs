@@ -15,7 +15,6 @@ namespace EventRegistrar.Backend.Payments.Files.Fetch
     public class ProcessFetchedBankStatementsFileCommand : IRequest, IEventBoundRequest
     {
         public Guid RawBankStatementFileId { get; set; }
-
         public Guid EventId { get; set; }
     }
 

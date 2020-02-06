@@ -8,16 +8,41 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class DomainEventsComponent {
   domainevents: DomainEvent[];
+  domaineventTypes: DomainEventType[];
+  selectedDomaineventTypes: DomainEventType[];
+  dropdownSettings: {};
 
   constructor(private readonly http: HttpClient, private readonly route: ActivatedRoute) {
   }
 
   ngOnInit() {
+    this.dropdownSettings = {
+      placeholder: '-',
+      singleSelection: false,
+      idField: 'typeName',
+      textField: 'userText',
+      enableCheckAll: true,
+      itemsShowLimit: 10,
+      allowSearchFilter: true
+    };
+
     this.refresh();
+    this.http.get<DomainEventType[]>(`api/events/${this.getEventAcronym()}/domaineventtypes`)
+      .subscribe(result => {
+        this.domaineventTypes = result;
+      },
+        error => {
+          console.error(error);
+        });
   }
 
   refresh() {
-    this.http.get<DomainEvent[]>(`api/events/${this.getEventAcronym()}/domainevents`)
+    let url = `api/events/${this.getEventAcronym()}/domainevents`;
+    if (this.selectedDomaineventTypes) {
+      url += "?" + this.selectedDomaineventTypes.map(typ => `types=${typ.typeName}`).join("&");
+    }
+
+    this.http.get<DomainEvent[]>(url)
       .subscribe(result => {
         this.domainevents = result;
       },
@@ -36,4 +61,9 @@ class DomainEvent {
   timestamp: Date;
   type: string;
   content: string;
+}
+
+class DomainEventType {
+  typeName: string;
+  userText: string;
 }

@@ -47,7 +47,8 @@ namespace EventRegistrar.Backend.Registrations.Search
                                                         AmountPaid = reg.Payments.Select(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount).Sum(),
                                                         State = reg.State,
                                                         StateText = reg.State.ToString(),
-                                                        IsWaitingList = reg.IsWaitingList == true
+                                                        IsWaitingList = reg.IsWaitingList == true,
+                                                        //Registrables = reg.Seats_AsLeader.Select(spt => spt.Registrable.Name).Union(reg.Seats_AsFollower.Select(spt => spt.Registrable.Name))
                                                     })
                                                     .ToListAsync(cancellationToken);
             return registrations;

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+
 using EventRegistrar.Backend.Events.Context;
+
 using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.Infrastructure.Configuration
@@ -24,7 +26,7 @@ namespace EventRegistrar.Backend.Infrastructure.Configuration
         public T GetConfiguration<T>(Guid? eventId = null)
            where T : class, IConfigurationItem
         {
-            eventId = eventId ?? _eventContext.EventId;
+            eventId ??= _eventContext.EventId;
             if (eventId != null)
             {
                 var dbConfig = _configurations.FirstOrDefault(cfg => cfg.EventId == eventId.Value

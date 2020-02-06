@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace EventRegistrar.Backend.Registrations.Search
 {
@@ -13,5 +14,6 @@ namespace EventRegistrar.Backend.Registrations.Search
         public Guid RegistrationId { get; set; }
         public RegistrationState State { get; set; }
         public string StateText { get; set; }
+        public IEnumerable<string> Registrables { get; set; }
     }
 }

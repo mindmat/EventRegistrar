@@ -27,6 +27,7 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents
     public class DomainEventsQuery : IRequest<IEnumerable<DomainEventDisplayItem>>, IEventBoundRequest
     {
         public Guid EventId { get; set; }
+        public IEnumerable<string> Types { get; set; }
     }
 
     public class DomainEventsQueryHandler : IRequestHandler<DomainEventsQuery, IEnumerable<DomainEventDisplayItem>>
@@ -43,7 +44,8 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 
         public async Task<IEnumerable<DomainEventDisplayItem>> Handle(DomainEventsQuery query, CancellationToken cancellationToken)
         {
-            var rawEvents = await _domainEvents.Where(evt => evt.EventId == query.EventId)
+            var rawEvents = await _domainEvents.Where(evt => evt.EventId == query.EventId
+                                                          && query.Types.Contains(evt.Type))
                                                .OrderByDescending(evt => evt.Sequence)
                                                .Take(100)
                                                .Select(evt => new
