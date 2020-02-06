@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
@@ -13,11 +14,20 @@ namespace EventRegistrar.Backend.Registrations.Cancel
         public string Participant { get; set; }
     }
 
-    public class ExternalMailImportedUserTranslation : IEventToUserTranslation<RegistrationCancelled>
+    public class RegistrationCancelledUserTranslation : IEventToUserTranslation<RegistrationCancelled>
     {
+        private readonly IQueryable<Registration> _registrations;
+
+        public RegistrationCancelledUserTranslation(IQueryable<Registration> registrations)
+        {
+            _registrations = registrations;
+        }
+
+
         public string GetText(RegistrationCancelled domainEvent)
         {
-            return $"Teilnehmer {domainEvent.Participant}, Grund {domainEvent.Reason}, eingegangen {domainEvent.Received}, Rückerstattung {domainEvent.Refund}";
+            var registration = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
+            return $"{registration?.RespondentFirstName} {registration?.RespondentLastName} hat am {domainEvent.Received:g} storniert mit Begründung '{domainEvent.Reason}'. Rückerstattung {domainEvent.Refund}";
         }
     }
 }
