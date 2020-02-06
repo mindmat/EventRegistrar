@@ -4,6 +4,8 @@ using System.Linq;
 
 using EventRegistrar.Backend.Properties;
 
+using Twilio.Rest;
+
 namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 {
     public class DomainEventCatalog
@@ -12,14 +14,15 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 
         public DomainEventCatalog(IEnumerable<Type> domainEventTypes)
         {
-            DomainEventTypes = domainEventTypes.Select(det => new DomainEventCatalogItem
-            {
-                TypeName = det.FullName,
-                UserText = TranslateType(det.FullName)
-            })
-                .ToList();
+            DomainEventTypes = domainEventTypes.Where(typ => typ != typeof(Domain))
+                                               .Select(det => new DomainEventCatalogItem
+                                               {
+                                                   TypeName = det.FullName,
+                                                   UserText = TranslateType(det.FullName)
+                                               })
+                                               .ToList();
         }
-        private string TranslateType(string type)
+        private static string TranslateType(string type)
         {
             return Resources.ResourceManager.GetString(type.Replace('.', '_')) ?? type;
         }
