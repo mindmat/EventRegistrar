@@ -2,9 +2,12 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Payments.Files.Fetch
@@ -30,7 +33,7 @@ namespace EventRegistrar.Backend.Payments.Files.Fetch
 
         public async Task<Unit> Handle(ProcessFetchedBankStatementsFileCommand command, CancellationToken cancellationToken)
         {
-            var file = await _files.FirstAsync(fil => fil.Id == command.RawBankStatementFileId);
+            var file = await _files.FirstAsync(fil => fil.Id == command.RawBankStatementFileId, cancellationToken);
             if (file.Processed != null)
             {
                 return Unit.Value;
@@ -46,7 +49,7 @@ namespace EventRegistrar.Backend.Payments.Files.Fetch
             return await _savePaymentFileCommandHandler.Handle(savePaymentFileCommand, cancellationToken);
         }
 
-        private string GetContentType(string filename)
+        private static string GetContentType(string filename)
         {
             if (filename == null)
             {

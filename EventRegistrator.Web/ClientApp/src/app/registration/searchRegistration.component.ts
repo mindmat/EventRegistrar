@@ -52,4 +52,5 @@ class Registration {
   amountPaid: number;
   state: number;
   stateText: string;
+  isWaitingList: boolean;
 }
