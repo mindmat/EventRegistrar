@@ -205,6 +205,9 @@
   <data name="EventRegistrar_Backend_Registrables_WaitingList_Promotion_AutomaticPromotionActivated" xml:space="preserve">
     <value>Automatische Nachrücken aktiviert</value>
   </data>
+  <data name="EventRegistrar_Backend_Payments_PayAtCheckin_WillPayAtCheckinSet" xml:space="preserve">
+    <value>Bezahlung am Checkin</value>
+  </data>
   <data name="EventRegistrar_Backend_Registrations_IndividualReductions_IndividualReductionAdded" xml:space="preserve">
     <value>Persönlicher Rabatt gewährt</value>
   </data>

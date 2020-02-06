@@ -151,6 +151,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bezahlung am Checkin.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Payments_PayAtCheckin_WillPayAtCheckinSet {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Payments_PayAtCheckin_WillPayAtCheckinSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to SMS erhalten.
         /// </summary>
         internal static string EventRegistrar_Backend_PhoneMessages_SmsReceived {
