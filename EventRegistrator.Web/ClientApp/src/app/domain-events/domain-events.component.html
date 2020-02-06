@@ -6,8 +6,8 @@ Filter:
                          [data]="domaineventTypes"
                          [(ngModel)]="selectedDomaineventTypes"
                          [settings]="dropdownSettings"
-                         (onSelect)="refresh()"
-                         (onDeSelect)="refresh()">
+                         (onSelect)="filterChanged()"
+                         (onDeSelect)="filterChanged()">
 </ng-multiselect-dropdown>
 <table class="table table-hover" *ngIf="domainevents">
   <thead class="thead-dark">
