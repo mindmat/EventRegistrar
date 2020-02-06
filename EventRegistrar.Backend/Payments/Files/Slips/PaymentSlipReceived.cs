@@ -1,4 +1,5 @@
 ﻿using System;
+
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Payments.Files.Slips
@@ -7,5 +8,14 @@ namespace EventRegistrar.Backend.Payments.Files.Slips
     {
         public Guid PaymentSlipId { get; set; }
         public string Reference { get; set; }
+    }
+
+
+    public class PaymentSlipReceivedUserTranslation : IEventToUserTranslation<PaymentSlipReceived>
+    {
+        public string GetText(PaymentSlipReceived domainEvent)
+        {
+            return $"Referenz {domainEvent.Reference}";
+        }
     }
 }

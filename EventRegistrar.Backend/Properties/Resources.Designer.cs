@@ -88,6 +88,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ungültige Mailadresse korrigiert.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Mailing_InvalidAddresses_InvalidEmailAddressFixed {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Mailing_InvalidAddresses_InvalidEmailAddressFixed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mail freigegeben.
         /// </summary>
         internal static string EventRegistrar_Backend_Mailing_MailReleased {
@@ -120,6 +129,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string EventRegistrar_Backend_Payments_Files_Fetch_BankStatementsFileImported {
             get {
                 return ResourceManager.GetString("EventRegistrar_Backend_Payments_Files_Fetch_BankStatementsFileImported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kontoauszug verarbeitet.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Payments_Files_PaymentFileProcessed {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Payments_Files_PaymentFileProcessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bild von Einzahlungsschein erhalten.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Payments_Files_Slips_PaymentSlipReceived {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Payments_Files_Slips_PaymentSlipReceived", resourceCulture);
             }
         }
         

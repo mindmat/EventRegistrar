@@ -181,6 +181,15 @@
   <data name="EventRegistrar_Backend_Payments_Files_Fetch_BankStatementsFileImported" xml:space="preserve">
     <value>Kontoauszug importiert</value>
   </data>
+  <data name="EventRegistrar_Backend_Mailing_InvalidAddresses_InvalidEmailAddressFixed" xml:space="preserve">
+    <value>Ungültige Mailadresse korrigiert</value>
+  </data>
+  <data name="EventRegistrar_Backend_Payments_Files_PaymentFileProcessed" xml:space="preserve">
+    <value>Kontoauszug verarbeitet</value>
+  </data>
+  <data name="EventRegistrar_Backend_Payments_Files_Slips_PaymentSlipReceived" xml:space="preserve">
+    <value>Bild von Einzahlungsschein erhalten</value>
+  </data>
   <data name="EventRegistrar_Backend_Registrations_Confirmation_PartnerRegistrationPaid" xml:space="preserve">
     <value>Partneranmeldung bezahlt</value>
   </data>
