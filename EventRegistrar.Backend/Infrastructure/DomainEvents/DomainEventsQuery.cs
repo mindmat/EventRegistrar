@@ -44,8 +44,8 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents
 
         public async Task<IEnumerable<DomainEventDisplayItem>> Handle(DomainEventsQuery query, CancellationToken cancellationToken)
         {
-            var rawEvents = await _domainEvents.Where(evt => evt.EventId == query.EventId
-                                                          && query.Types.Contains(evt.Type))
+            var rawEvents = await _domainEvents.Where(evt => evt.EventId == query.EventId)
+                                               .WhereIf(query.Types?.Any() == true, evt => query.Types.Contains(evt.Type))
                                                .OrderByDescending(evt => evt.Sequence)
                                                .Take(100)
                                                .Select(evt => new
