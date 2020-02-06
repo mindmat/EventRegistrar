@@ -84,7 +84,8 @@ namespace EventRegistrar.Backend.Payments.Assignments
                 _eventBus.Publish(new IndividualReductionAdded
                 {
                     RegistrationId = registration.Id,
-                    Amount = difference
+                    Amount = difference,
+                    Reason = command.AcceptDifferenceReason
                 });
             }
 

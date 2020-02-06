@@ -178,6 +178,26 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Partneranmeldung von Warteliste nachgerückt.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Registrables_WaitingList_PartnerSpotPromotedFromWaitingList {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Registrables_WaitingList_PartnerSpotPromotedFromWaitingLis" +
+                        "t", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatische Nachrücken aktiviert.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Registrables_WaitingList_Promotion_AutomaticPromotionActivated {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Registrables_WaitingList_Promotion_AutomaticPromotionActiv" +
+                        "ated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Platz von Warteliste nachgerückt.
         /// </summary>
         internal static string EventRegistrar_Backend_Registrables_WaitingList_SingleSpotPromotedFromWaitingList {
@@ -225,11 +245,30 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Persönlicher Rabatt gewährt.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Registrations_IndividualReductions_IndividualReductionAdded {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Registrations_IndividualReductions_IndividualReductionAdde" +
+                        "d", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Preis wurde neu berechnet.
         /// </summary>
         internal static string EventRegistrar_Backend_Registrations_Price_PriceChanged {
             get {
                 return ResourceManager.GetString("EventRegistrar_Backend_Registrations_Price_PriceChanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anspruch auf Reduktion geändert.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Registrations_Reductions_ReductionChanged {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Registrations_Reductions_ReductionChanged", resourceCulture);
             }
         }
         

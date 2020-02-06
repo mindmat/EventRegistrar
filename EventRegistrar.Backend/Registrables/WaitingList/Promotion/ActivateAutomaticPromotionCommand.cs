@@ -1,11 +1,14 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+
+using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
+using MediatR;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList.Promotion
 {
@@ -15,7 +18,6 @@ namespace EventRegistrar.Backend.Registrables.WaitingList.Promotion
         public bool TryPromoteImmediately { get; set; }
         public Guid RegistrableId { get; set; }
     }
-
 
     public class ActivateAutomaticPromotionCommandHandler : IRequestHandler<ActivateAutomaticPromotionCommand>
     {

@@ -2,11 +2,14 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrations.IndividualReductions
@@ -56,7 +59,8 @@ namespace EventRegistrar.Backend.Registrations.IndividualReductions
             _eventBus.Publish(new IndividualReductionAdded
             {
                 RegistrationId = registration.Id,
-                Amount = command.Amount
+                Amount = command.Amount,
+                Reason = command.Reason
             });
             return Unit.Value;
         }

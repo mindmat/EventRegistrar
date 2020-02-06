@@ -190,10 +190,22 @@
   <data name="EventRegistrar_Backend_Payments_Files_Slips_PaymentSlipReceived" xml:space="preserve">
     <value>Bild von Einzahlungsschein erhalten</value>
   </data>
+  <data name="EventRegistrar_Backend_Registrables_WaitingList_PartnerSpotPromotedFromWaitingList" xml:space="preserve">
+    <value>Partneranmeldung von Warteliste nachgerückt</value>
+  </data>
   <data name="EventRegistrar_Backend_Registrations_Confirmation_PartnerRegistrationPaid" xml:space="preserve">
     <value>Partneranmeldung bezahlt</value>
   </data>
   <data name="EventRegistrar_Backend_Registrations_Confirmation_PartnerRegistrationPartiallyPaid" xml:space="preserve">
     <value>Partneranmeldung teilweise bezahlt</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrations_Reductions_ReductionChanged" xml:space="preserve">
+    <value>Anspruch auf Reduktion geändert</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrables_WaitingList_Promotion_AutomaticPromotionActivated" xml:space="preserve">
+    <value>Automatische Nachrücken aktiviert</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrations_IndividualReductions_IndividualReductionAdded" xml:space="preserve">
+    <value>Persönlicher Rabatt gewährt</value>
   </data>
 </root>
