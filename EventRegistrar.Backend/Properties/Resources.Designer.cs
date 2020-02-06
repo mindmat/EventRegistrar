@@ -170,6 +170,25 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Partneranmeldung bezahlt.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Registrations_Confirmation_PartnerRegistrationPaid {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Registrations_Confirmation_PartnerRegistrationPaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Partneranmeldung teilweise bezahlt.
+        /// </summary>
+        internal static string EventRegistrar_Backend_Registrations_Confirmation_PartnerRegistrationPartiallyPaid {
+            get {
+                return ResourceManager.GetString("EventRegistrar_Backend_Registrations_Confirmation_PartnerRegistrationPartiallyPai" +
+                        "d", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einzelanmeldung bezahlt.
         /// </summary>
         internal static string EventRegistrar_Backend_Registrations_Confirmation_SingleRegistrationPaid {

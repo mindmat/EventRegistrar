@@ -181,4 +181,10 @@
   <data name="EventRegistrar_Backend_Payments_Files_Fetch_BankStatementsFileImported" xml:space="preserve">
     <value>Kontoauszug importiert</value>
   </data>
+  <data name="EventRegistrar_Backend_Registrations_Confirmation_PartnerRegistrationPaid" xml:space="preserve">
+    <value>Partneranmeldung bezahlt</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrations_Confirmation_PartnerRegistrationPartiallyPaid" xml:space="preserve">
+    <value>Partneranmeldung teilweise bezahlt</value>
+  </data>
 </root>
