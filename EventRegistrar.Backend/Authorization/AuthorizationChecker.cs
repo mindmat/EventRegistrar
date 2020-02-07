@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -13,7 +15,7 @@ namespace EventRegistrar.Backend.Authorization
     {
         private readonly IMemoryCache _memoryCache;
         private readonly IRightsOfEventRoleProvider _rightsOfEventRoleProvider;
-        private readonly TimeSpan _slidingExpiration = new TimeSpan(1, 0, 0, 0);
+        private readonly TimeSpan _slidingExpiration = new TimeSpan(0, 1, 0, 0);
         private readonly SourceQueueProvider _sourceQueueProvider;
         private readonly AuthenticatedUserId _user;
         private readonly IQueryable<UserInEvent> _usersInEvents;
