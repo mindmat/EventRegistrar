@@ -12,6 +12,6 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
         public DateTime? LastImport { get; internal set; }
         public DateTime? PendingRawFormCreated { get; internal set; }
         public Guid? PendingRawFormId { get; internal set; }
-
+        public bool Deletable { get; set; }
     }
 }

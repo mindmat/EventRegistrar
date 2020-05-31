@@ -2,10 +2,13 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrables
@@ -30,7 +33,7 @@ namespace EventRegistrar.Backend.Registrables
 
         public async Task<Unit> Handle(DeleteRegistrableCommand command, CancellationToken cancellationToken)
         {
-            var @event = await _events.FirstAsync(evt => evt.Id == command.EventId);
+            var @event = await _events.FirstAsync(evt => evt.Id == command.EventId, cancellationToken);
             if (@event.State != RegistrationForms.State.Setup)
             {
                 throw new Exception($"To delete a registrable, event must be in state Setup, but it is in state {@event.State}");
@@ -38,7 +41,7 @@ namespace EventRegistrar.Backend.Registrables
 
             var registrable = await _registrables.Where(rbl => rbl.Id == command.RegistrableId)
                                                  .Include(rbl => rbl.Seats)
-                                                 .FirstAsync();
+                                                 .FirstAsync(cancellationToken);
             if (registrable.Seats.Any(spt => !spt.IsCancelled))
             {
                 throw new Exception("Registrable cannot be deleted because it contains registrations");

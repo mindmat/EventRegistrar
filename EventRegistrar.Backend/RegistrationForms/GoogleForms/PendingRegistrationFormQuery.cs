@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Events;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
@@ -56,9 +59,10 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                                         ExternalIdentifier = frm.ExternalIdentifier,
                                         State = frm.State,
                                         Title = frm.Title,
-                                        Language = frm.Language
+                                        Language = frm.Language,
+                                        Deletable = frm.Event.State == State.Setup && frm.State == State.Setup
                                     })
-                                    .ToListAsync();
+                                    .ToListAsync(cancellationToken);
 
             foreach (var rawForm in rawForms)
             {

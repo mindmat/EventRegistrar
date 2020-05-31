@@ -1,8 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.RegistrationForms
@@ -35,6 +39,16 @@ namespace EventRegistrar.Backend.RegistrationForms
             return await _mediator.Send(new PendingRegistrationFormQuery
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
+        }
+
+        [HttpDelete("api/events/{eventAcronym}/registrationforms/{registrationFormId}")]
+        public async Task DeleteRegistrationForm(string eventAcronym, Guid registrationFormId)
+        {
+            await _mediator.Send(new DeleteRegistrationFormCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationFormId = registrationFormId
             });
         }
     }

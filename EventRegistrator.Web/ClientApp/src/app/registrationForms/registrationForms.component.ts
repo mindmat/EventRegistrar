@@ -30,6 +30,13 @@ export class RegistrationFormsComponent implements OnInit {
       );
   }
 
+  delete(form: RegistrationForm) {
+    this.http.delete(`api/events/${this.getEventAcronym()}/registrationforms/${form.registrationFormId}`)
+      .subscribe(result => { this.refreshList() },
+        error => { console.error(error); }
+      );
+  }
+
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
   }
@@ -44,4 +51,6 @@ class RegistrationForm {
   lastImport: Date;
   pendingRawFormCreated: Date;
   pendingRawFormId: string;
+  state: string;
+  deletable: boolean;
 }
