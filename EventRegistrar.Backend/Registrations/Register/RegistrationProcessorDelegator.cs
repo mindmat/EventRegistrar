@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Spots;
-using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.Registrations.Register
 {
@@ -24,11 +24,9 @@ namespace EventRegistrar.Backend.Registrations.Register
 
         public async Task<IEnumerable<Seat>> Process(Registration registration, RegistrationForm form)
         {
-            var processConfiguration = form.ProcessConfigurationJson != null
-                                       ? JsonConvert.DeserializeObject<IEnumerable<IRegistrationProcessConfiguration>>(form.ProcessConfigurationJson)
-                                       : GetHardcodedConfiguration(form.Id);
+            var processConfigurations = GetConfigurations(form);
             var spots = new List<Seat>();
-            foreach (var registrationProcessConfiguration in processConfiguration)
+            foreach (var registrationProcessConfiguration in processConfigurations)
             {
                 if (registrationProcessConfiguration is SingleRegistrationProcessConfiguration singleConfig
                  && (!singleConfig.QuestionOptionId_Trigger.HasValue // no trigger -> process all registrations
@@ -48,6 +46,25 @@ namespace EventRegistrar.Backend.Registrations.Register
             }
 
             return spots;
+        }
+
+        private IEnumerable<IRegistrationProcessConfiguration> GetConfigurations(RegistrationForm form)
+        {
+            // ToDo: multiple configs per form
+            IRegistrationProcessConfiguration? config = null;
+            if (form.ProcessConfigurationJson != null)
+            {
+                if (form.Type == FormType.Single)
+                {
+                    config = JsonHelper.TryDeserialize<SingleRegistrationProcessConfiguration>(form.ProcessConfigurationJson);
+                }
+            }
+
+            if (config != null)
+            {
+                return new[] { config };
+            }
+            return GetHardcodedConfiguration(form.Id);
         }
 
         private IEnumerable<IRegistrationProcessConfiguration> GetHardcodedConfiguration(Guid formId)

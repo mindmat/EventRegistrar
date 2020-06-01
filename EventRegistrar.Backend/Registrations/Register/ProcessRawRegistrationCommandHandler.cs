@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.RegistrationForms;
@@ -10,14 +11,23 @@ using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Responses;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json;
+
 using QuestionType = EventRegistrar.Backend.RegistrationForms.Questions.QuestionType;
 
 namespace EventRegistrar.Backend.Registrations.Register
 {
+    public class ProcessRawRegistrationCommand : IRequest
+    {
+        public Guid RawRegistrationId { get; set; }
+    }
+
     public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRegistrationCommand>
     {
         private readonly IEventBus _eventBus;
@@ -62,7 +72,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             {
                 throw new KeyNotFoundException($"No form found with id '{rawRegistration.FormExternalIdentifier}'");
             }
-            _logger.LogInformation($"Questions: {form.Questions.Count}, Options: {form.Questions.Sum(qst => qst.QuestionOptions.Count)}");
+            _logger.LogInformation($"Questions: {form.Questions?.Count}, Options: {form.Questions?.Sum(qst => qst.QuestionOptions?.Count)}");
 
             // check form state
             if (form.State == State.RegistrationClosed)
