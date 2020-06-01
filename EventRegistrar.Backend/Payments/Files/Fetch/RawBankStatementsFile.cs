@@ -1,5 +1,7 @@
 ﻿using System;
+
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -7,10 +9,10 @@ namespace EventRegistrar.Backend.Payments.Files.Fetch
 {
     public class RawBankStatementsFile : Entity
     {
-        public string Server { get; set; }
-        public string ContractIdentifier { get; set; }
-        public string Filename { get; set; }
-        public byte[] Content { get; set; }
+        public string? Server { get; set; }
+        public string? ContractIdentifier { get; set; }
+        public string? Filename { get; set; }
+        public byte[]? Content { get; set; }
         public DateTimeOffset? Imported { get; set; }
         public DateTimeOffset? Processed { get; set; }
     }

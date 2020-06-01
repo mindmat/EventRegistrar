@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.RegistrationForms.Questions
@@ -13,8 +16,8 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
     public class QuestionDisplayItem
     {
         public Guid Id { get; set; }
-        public string Section { get; set; }
-        public string Question { get; set; }
+        public string? Section { get; set; }
+        public string Question { get; set; } = null!;
     }
 
     public class QuestionsQuery : IRequest<IEnumerable<QuestionDisplayItem>>, IEventBoundRequest
@@ -43,7 +46,7 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
                                        Section = que.Section,
                                        Question = que.Title
                                    })
-                                   .ToListAsync();
+                                   .ToListAsync(cancellationToken);
         }
     }
 }

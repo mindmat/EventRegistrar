@@ -9,7 +9,7 @@ namespace EventRegistrar.Backend.Registrations.IndividualReductions
     {
         public decimal Amount { get; set; }
         public Guid RegistrationId { get; set; }
-        public string Reason { get; set; }
+        public string? Reason { get; set; }
     }
 
     public class IndividualReductionAddedUserTranslation : IEventToUserTranslation<IndividualReductionAdded>

@@ -23,7 +23,7 @@ namespace EventRegistrar.Backend.RegistrationForms
             _eventAcronymResolver = eventAcronymResolver;
         }
 
-        [HttpPost("api/events/{eventAcronym}/registrationforms/{formId}")]
+        [HttpPost("api/events/{eventAcronym}/registrationForms/{formId}")]
         public async Task SaveRegistrationFormDefinition(string eventAcronym, string formId)
         {
             await _mediator.Send(new SaveRegistrationFormDefinitionCommand
@@ -33,12 +33,37 @@ namespace EventRegistrar.Backend.RegistrationForms
             });
         }
 
-        [HttpGet("api/events/{eventAcronym}/registrationforms/pending")]
+        [HttpGet("api/events/{eventAcronym}/registrationForms/pending")]
         public async Task<IEnumerable<RegistrationFormItem>> GetPendingRegistrationForms(string eventAcronym)
         {
             return await _mediator.Send(new PendingRegistrationFormQuery
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
+        }
+
+        [HttpGet("api/registrationFormTypes")]
+        public async Task<IEnumerable<RegistrationFormType>> GetRegistrationFormTypes()
+        {
+            return await _mediator.Send(new RegistrationFormTypesQuery());
+        }
+
+        [HttpGet("api/events/{eventAcronym}/registrationForms")]
+        public async Task<IEnumerable<RegistrationFormMappings>> GetRegistrationForms(string eventAcronym)
+        {
+            return await _mediator.Send(new RegistrationFormsQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
+        }
+
+        [HttpPost("api/events/{eventAcronym}/registrationForms/{formId}/mappings")]
+        public async Task SaveRegistrationFormMappings(string eventAcronym, Guid formId, [FromBody] RegistrationFormMappings mappings)
+        {
+            await _mediator.Send(new SaveRegistrationFormMappingsCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                Mappings = mappings
             });
         }
 

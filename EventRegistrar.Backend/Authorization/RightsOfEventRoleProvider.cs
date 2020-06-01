@@ -31,6 +31,7 @@ using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrables.WaitingList.Promotion;
+using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
@@ -105,6 +106,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(UnassignedPayoutsQuery);
                 yield return nameof(PossiblePayoutAssignmentQuery);
                 yield return nameof(DomainEventsQuery);
+                yield return nameof(RegistrationFormsQuery);
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
@@ -167,6 +169,7 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(OpenRegistrationCommand);
                 yield return nameof(ReleaseAllPendingMailsCommand);
                 yield return nameof(DeleteRegistrationFormCommand);
+                yield return nameof(SaveRegistrationFormMappingsCommand);
             }
         }
     }

@@ -11,10 +11,14 @@ export class QuestionMappingComponent implements OnInit {
   doubleRegistrables: Registrable[];
   singleRegistrables: Registrable[];
   registrables: Registrable[];
-  mappings: Mapping[];
-  questions: Question[];
-  unassignedQuestionOptions: Mapping[];
+  //mappings: Mapping[];
+  //questions: Question[];
+  //unassignedQuestionOptions: Mapping[];
   dropdownSettings = {};
+
+  formTypeItems: FormTypeItem[];
+
+  forms: RegistrationFormMappings[];
 
   ngOnInit() {
     this.dropdownSettings = {
@@ -39,6 +43,10 @@ export class QuestionMappingComponent implements OnInit {
       this.fillRegistrables();
     }, error => console.error(error));
 
+    this.http.get<FormTypeItem[]>(`api/registrationFormTypes`).subscribe(result => {
+      this.formTypeItems = result;
+    }, error => console.error(error));
+
   }
   private fillRegistrables() {
     if (this.singleRegistrables != null && this.doubleRegistrables != null) {
@@ -59,20 +67,13 @@ export class QuestionMappingComponent implements OnInit {
     this.http.delete(`api/events/${this.getEventAcronym()}/questionoptions/${questionOptionId}/registrables/${registrableId}`).subscribe(result => {
       this.refreshLists();
     }, error => console.error(error));
-}
+  }
 
   private refreshLists() {
-    this.http.get<Mapping[]>(`api/events/${this.getEventAcronym()}/questions/mapping`).subscribe(result => {
-      this.mappings = result;
+    this.http.get<RegistrationFormMappings[]>(`api/events/${this.getEventAcronym()}/registrationForms`).subscribe(result => {
+      this.forms = result;
     }, error => console.error(error));
-
-    this.http.get<Mapping[]>(`api/events/${this.getEventAcronym()}/questions/unassignedOptions`).subscribe(result => {
-      this.unassignedQuestionOptions = result;
-    }, error => console.error(error));
-
-    this.http.get<Question[]>(`api/events/${this.getEventAcronym()}/questions`).subscribe(result => {
-      this.questions = result;
-    }, error => console.error(error)); }
+  }
 
   constructor(private http: HttpClient, private route: ActivatedRoute) {
   }
@@ -80,9 +81,15 @@ export class QuestionMappingComponent implements OnInit {
   getEventAcronym() {
     return this.route.snapshot.params['eventAcronym'];
   }
-  
+
   changeMappingAttribute(mapping: Mapping) {
     mapping.saveAttributesPending = true;
+  }
+
+  changeFormType(form: RegistrationFormMappings) {
+    if (!form.singleConfiguration) {
+      form.singleConfiguration = new SingleRegistrationFormConfiguration();
+    }
   }
 
   saveMapping(mapping: Mapping) {
@@ -95,10 +102,26 @@ export class QuestionMappingComponent implements OnInit {
       mapping.saveAttributesPending = false;
     }, error => console.error(error));
   }
+
+  save(form: RegistrationFormMappings) {
+    this.http.post(`api/events/${this.getEventAcronym()}/registrationForms/${form.registrationFormId}/mappings`, form).subscribe(result => {
+    }, error => console.error(error));
+  }
+}
+
+class RegistrationFormMappings {
+  registrationFormId: string;
+  type: FormType;
+  title: string;
+  singleConfiguration: SingleRegistrationFormConfiguration;
+  mappings: Mapping[];
+  unassignedOptions: Mapping[];
+  questions: Question[];
 }
 
 class Mapping {
   id: string;
+  registrationFormId: string;
   section: string;
   question: string;
   answer: string;
@@ -113,7 +136,7 @@ class Mapping {
   saveAttributesPending: boolean;
 }
 
-class Question{
+class Question {
   id: string;
   section: string;
   question: string;
@@ -123,3 +146,29 @@ class Question{
 //  id: string;
 //  name: string;
 //}
+
+enum FormType {
+  Single = 1,
+  Partner = 2
+}
+
+class FormTypeItem {
+  type: FormType;
+  name: string;
+}
+
+class SingleRegistrationFormConfiguration {
+  type: FormType;
+  description: string;
+  //IEnumerable< (Guid QuestionOptionId, string Language)> LanguageMappings: string;
+  questionId_Email: string;
+  questionId_FirstName: string;
+  questionId_LastName: string;
+  questionId_Phone: string;
+  questionId_Remarks: string;
+  questionOptionId_Follower: string;
+  questionOptionId_Leader: string;
+  questionOptionId_Reduction: string;
+  questionOptionId_Trigger: string;
+}
+

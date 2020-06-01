@@ -20,6 +20,7 @@ using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
+using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.IndividualReductions;

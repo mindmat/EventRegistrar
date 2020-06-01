@@ -11,11 +11,11 @@ namespace EventRegistrar.Backend.Payments.Refunds
 {
     public class PayoutRequest : Entity
     {
-        public Registration Registration { get; set; }
         public Guid RegistrationId { get; set; }
+        public Registration? Registration { get; set; }
         public decimal Amount { get; set; }
-        public string Reason { get; set; }
-        public IList<PaymentAssignment> Assignments { get; set; }
+        public string? Reason { get; set; }
+        public IList<PaymentAssignment>? Assignments { get; set; }
         public DateTimeOffset Created { get; set; }
         public PayoutState State { get; set; }
     }
