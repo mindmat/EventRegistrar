@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
@@ -23,8 +24,9 @@ using QuestionType = EventRegistrar.Backend.RegistrationForms.Questions.Question
 
 namespace EventRegistrar.Backend.Registrations.Register
 {
-    public class ProcessRawRegistrationCommand : IRequest
+    public class ProcessRawRegistrationCommand : IRequest, IQueueBoundMessage
     {
+        public string QueueName => "processrawregistration";
         public Guid RawRegistrationId { get; set; }
     }
 

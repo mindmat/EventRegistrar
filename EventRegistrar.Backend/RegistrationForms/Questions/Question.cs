@@ -31,7 +31,7 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
             builder.ToTable("Questions");
 
             builder.HasOne(que => que.RegistrationForm)
-                   .WithMany(frm => frm.Questions)
+                   .WithMany(frm => frm!.Questions)
                    .HasForeignKey(que => que.RegistrationFormId);
         }
     }
