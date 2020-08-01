@@ -13,13 +13,16 @@ namespace EventRegistrar.Backend.Registrations.Register
     public class RegistrationProcessorDelegator
     {
         private readonly CoupleRegistrationProcessor _coupleRegistrationProcessor;
+        private readonly JsonHelper _jsonHelper;
         private readonly SingleRegistrationProcessor _singleRegistrationProcessor;
 
         public RegistrationProcessorDelegator(SingleRegistrationProcessor singleRegistrationProcessor,
-                                              CoupleRegistrationProcessor coupleRegistrationProcessor)
+                                              CoupleRegistrationProcessor coupleRegistrationProcessor,
+                                              JsonHelper jsonHelper)
         {
             _singleRegistrationProcessor = singleRegistrationProcessor;
             _coupleRegistrationProcessor = coupleRegistrationProcessor;
+            _jsonHelper = jsonHelper;
         }
 
         public async Task<IEnumerable<Seat>> Process(Registration registration, RegistrationForm form)
@@ -56,7 +59,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             {
                 if (form.Type == FormType.Single)
                 {
-                    config = JsonHelper.TryDeserialize<SingleRegistrationProcessConfiguration>(form.ProcessConfigurationJson);
+                    config = _jsonHelper.TryDeserialize<SingleRegistrationProcessConfiguration>(form.ProcessConfigurationJson);
                 }
             }
 

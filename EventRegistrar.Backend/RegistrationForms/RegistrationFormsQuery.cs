@@ -34,10 +34,13 @@ namespace EventRegistrar.Backend.RegistrationForms
     public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQuery, IEnumerable<RegistrationFormMappings>>
     {
         private readonly IQueryable<RegistrationForm> _forms;
+        private readonly JsonHelper _jsonHelper;
 
-        public RegistrationFormsQueryHandler(IQueryable<RegistrationForm> forms)
+        public RegistrationFormsQueryHandler(IQueryable<RegistrationForm> forms,
+                                             JsonHelper jsonHelper)
         {
             _forms = forms;
+            _jsonHelper = jsonHelper;
         }
 
         public async Task<IEnumerable<RegistrationFormMappings>> Handle(RegistrationFormsQuery query, CancellationToken cancellationToken)
@@ -54,7 +57,7 @@ namespace EventRegistrar.Backend.RegistrationForms
                 Type = form.Type,
                 Title = form.Title,
                 SingleConfiguration = form.ProcessConfigurationJson != null && form.Type == FormType.Single
-                                      ? JsonHelper.TryDeserialize<SingleRegistrationProcessConfiguration>(form.ProcessConfigurationJson)
+                                      ? _jsonHelper.TryDeserialize<SingleRegistrationProcessConfiguration>(form.ProcessConfigurationJson)
                                       : null,
                 Mappings = form.Questions.SelectMany(qst => qst.QuestionOptions.SelectMany(qop => qop.Registrables)
                                                                                .OrderBy(map => map.QuestionOption?.Question?.Index)

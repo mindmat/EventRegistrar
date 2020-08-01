@@ -2,5 +2,6 @@
 {
     public interface IRegistrationProcessConfiguration
     {
+        public string Description { get; }
     }
 }
