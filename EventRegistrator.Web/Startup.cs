@@ -1,19 +1,17 @@
 using EventRegistrar.Backend;
 using EventRegistrar.Backend.Authentication;
-using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 using SimpleInjector;
+using SimpleInjector.Lifestyles;
 
 namespace EventRegistrator.Web
 {
@@ -31,10 +29,10 @@ namespace EventRegistrator.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseSimpleInjectorInternal(_container);
+            app.UseSimpleInjector(_container);
             _container.RegisterInstance(GetDbOptions());
-            _container.CrossWire<IMemoryCache>(app);
-            _container.CrossWire<ILoggerFactory>(app);
+            //_container.CrossWire<IMemoryCache>(app);
+            //_container.CrossWire<ILoggerFactory>(app);
             SetIdentityProvider(_container);
             CompositionRoot.RegisterTypes(_container);
             OverrideRegistrations();
@@ -91,6 +89,10 @@ namespace EventRegistrator.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            _container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
+            _container.Options.ResolveUnregisteredConcreteTypes = true;
+            _container.Options.DefaultLifestyle = Lifestyle.Scoped;
+
             services.AddMvc() //.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
                     .AddNewtonsoftJson(options =>
                     {
@@ -106,7 +108,28 @@ namespace EventRegistrator.Web
                 configuration.RootPath = "ClientApp/dist";
             });
             services.AddMemoryCache();
-            services.UseSimpleInjector(_container);
+            services.AddSimpleInjector(_container, options =>
+            {
+                // AddAspNetCore() wraps web requests in a Simple Injector scope and
+                // allows request-scoped framework services to be resolved.
+                options.AddAspNetCore()
+
+                        // Ensure activation of a specific framework type to be created by
+                        // Simple Injector instead of the built-in configuration system.
+                        // All calls are optional. You can enable what you need. For instance,
+                        // ViewComponents, PageModels, and TagHelpers are not needed when you
+                        // build a Web API.
+                        .AddControllerActivation();
+                //.AddViewComponentActivation()
+                //.AddPageModelActivation()
+                //.AddTagHelperActivation();
+
+                // Optionally, allow application components to depend on the non-generic
+                // ILogger (Microsoft.Extensions.Logging) or IStringLocalizer
+                // (Microsoft.Extensions.Localization) abstractions.
+                options.AddLogging();
+                //options.AddLocalization();
+            });
             services.AddSingleton(_container);
             services.AddApplicationInsightsTelemetry();
         }

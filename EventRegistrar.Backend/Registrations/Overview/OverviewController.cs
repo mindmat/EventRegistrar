@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Threading.Tasks;
+
 using ClosedXML.Excel;
+
 using EventRegistrar.Backend.Events;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Registrations.Overview
@@ -53,9 +57,9 @@ namespace EventRegistrar.Backend.Registrations.Overview
 
             var dataTable = new DataTable("Checkin");
 
-            foreach (var mapping in mappings)
+            foreach (var (title, _) in mappings)
             {
-                dataTable.Columns.Add(mapping.Title);
+                dataTable.Columns.Add(title);
             }
 
             foreach (var registration in data.Items)

@@ -1,11 +1,13 @@
 using System;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
+
 using Dapper;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -27,7 +29,7 @@ namespace EventRegistrar.Functions
             var messageStatus = req.Form["MessageStatus"];
             var eventId = Guid.Parse(eventIdString);
 
-            using (var connection = new SqlConnection(connectionString))
+            await using (var connection = new SqlConnection(connectionString))
             {
                 var affectedRows = await connection.ExecuteAsync(@"
                    UPDATE SMS

@@ -49,7 +49,7 @@ export class QuestionMappingComponent implements OnInit {
 
   }
   private fillRegistrables() {
-    if (this.singleRegistrables != null && this.doubleRegistrables != null) {
+    if (this.singleRegistrables != null && this.doubleRegistrables !== null) {
       this.registrables = this.singleRegistrables.concat(this.doubleRegistrables);
     }
   }

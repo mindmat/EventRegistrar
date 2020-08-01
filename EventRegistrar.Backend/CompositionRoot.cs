@@ -15,7 +15,6 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using MediatR;
 
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 using SimpleInjector;
 
@@ -40,12 +39,6 @@ namespace EventRegistrar.Backend
                 typeof(AuthorizationDecorator<,>),
                 typeof(CommitUnitOfWorkDecorator<,>)
             });
-
-            container.RegisterConditional(
-                typeof(ILogger),
-                c => typeof(Logger<>).MakeGenericType(c.Consumer.ImplementationType),
-                Lifestyle.Singleton,
-                c => true);
 
             container.Register(typeof(IQueryable<>), typeof(Queryable<>));
             container.Register(typeof(IRepository<>), typeof(Repository<>));
