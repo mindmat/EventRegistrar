@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrations.Register;
 
@@ -22,19 +23,17 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
     public class SaveFormPathsCommandHandler : IRequestHandler<SaveFormPathsCommand>
     {
         private readonly IRepository<FormPath> _formPaths;
+        private readonly JsonHelper _jsonHelper;
 
-        public SaveFormPathsCommandHandler(IRepository<FormPath> formPaths)
+        public SaveFormPathsCommandHandler(IRepository<FormPath> formPaths,
+                                           JsonHelper jsonHelper)
         {
             _formPaths = formPaths;
+            _jsonHelper = jsonHelper;
         }
 
         public async Task<Unit> Handle(SaveFormPathsCommand command, CancellationToken cancellationToken)
         {
-            var type = FormPathType.Single;
-            if (command.Configuration is PartnerRegistrationProcessConfiguration)
-            {
-                type = FormPathType.Partner;
-            }
 
             var formPath = await _formPaths.FirstOrDefaultAsync(fpt => fpt.Id == command.Configuration.Id, cancellationToken)
                            ?? new FormPath
@@ -44,8 +43,17 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
 
             formPath.RegistrationFormId = command.Configuration.RegistrationFormId;
             formPath.Description = command.Configuration.Description;
-            formPath.Type = type;
-            formPath.Configuration = command.Configuration;
+            if (command.Configuration is SingleRegistrationProcessConfiguration singleConfig)
+            {
+                formPath.ConfigurationJson = _jsonHelper.Serialize(command.Configuration);
+                formPath.Type = FormPathType.Single;
+            }
+            else if (command.Configuration is PartnerRegistrationProcessConfiguration partnerConfig)
+            {
+                formPath.ConfigurationJson = _jsonHelper.Serialize(command.Configuration);
+                formPath.Type = FormPathType.Partner;
+            }
+
             formPath.RegistrationFormId = command.RegistrationFormId;
 
             await _formPaths.InsertOrUpdateEntity(formPath, cancellationToken);

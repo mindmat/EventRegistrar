@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 using EventRegistrar.Backend.RegistrationForms;
 
@@ -10,5 +11,6 @@ namespace EventRegistrar.Backend.Registrations.Register
         Guid RegistrationFormId { get; }
         string? Description { get; }
         public FormPathType Type { get; }
+        IEnumerable<LanguageMapping>? LanguageMappings { get; }
     }
 }

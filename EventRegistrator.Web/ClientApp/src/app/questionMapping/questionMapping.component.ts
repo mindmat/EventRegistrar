@@ -19,7 +19,7 @@ export class QuestionMappingComponent implements OnInit {
   formTypeItems: FormTypeItem[];
 
   forms: RegistrationFormMappings[];
-  formPaths: IRegistrationProcessConfiguration[];
+  formPaths: RegistrationFormGroup[];
 
   ngOnInit() {
     this.dropdownSettings = {
@@ -75,7 +75,7 @@ export class QuestionMappingComponent implements OnInit {
       this.forms = result;
     }, error => console.error(error));
 
-    this.http.get<IRegistrationProcessConfiguration[]>(`api/events/${this.getEventAcronym()}/formPaths`).subscribe(result => {
+    this.http.get<RegistrationFormGroup[]>(`api/events/${this.getEventAcronym()}/formPaths`).subscribe(result => {
       this.formPaths = result;
     }, error => console.error(error));
   }
@@ -160,6 +160,21 @@ enum FormType {
 class FormTypeItem {
   type: FormType;
   name: string;
+}
+
+class RegistrationFormGroup {
+  id: string;
+  title: string;
+  paths: RegistrationFormPath[];
+  questions: Question[];
+  unassignedOptions: Mapping[];
+}
+
+class RegistrationFormPath {
+  id: string;
+  description: string;
+  singleConfig: SingleRegistrationFormConfiguration;
+  //partnerConfig: Partner
 }
 
 interface IRegistrationProcessConfiguration {

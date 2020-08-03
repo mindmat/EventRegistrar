@@ -18,6 +18,7 @@ using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Compositions;
 using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.RegistrationForms;
+using EventRegistrar.Backend.RegistrationForms.FormPaths;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
@@ -52,6 +53,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
             builder.ApplyConfiguration(new ReductionMap());
             builder.ApplyConfiguration(new RegistrationFormMap());
             builder.ApplyConfiguration(new RegistrationMap());
+            builder.ApplyConfiguration(new FormPathMap());
             builder.ApplyConfiguration(new UserMap());
             builder.ApplyConfiguration(new UserInEventMap());
             builder.ApplyConfiguration(new SeatMap());

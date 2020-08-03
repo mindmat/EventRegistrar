@@ -1,15 +1,12 @@
 <p *ngIf="!forms"><em>Loading...</em></p>
 
-<div class="jumbotron" *ngFor="let form of forms">
+<div *ngFor="let form of formPaths">
   <h2>Formular <i>{{ form.title }}</i></h2>
-  Typ:
-  <select [(ngModel)]="form.type" style="max-width: 300px" (change)="changeFormType(form)" class="custom-select">
-    <option>-</option>
-    <option *ngFor="let formTypeItem of formTypeItems" value={{formTypeItem.type}}>{{ formTypeItem.name }}</option>
-  </select>
 
-  <table class='table' *ngIf="form.type == 1">
-    <tbody>
+  <div class="jumbotron" *ngFor="let path of form.paths">
+    <h3>Pfad <i>{{ path.description }}</i></h3>
+    <table class='table' *ngIf="path.singleConfig">
+      <tbody>
       <!--<tr>
         <td>Bezeichnung Formular</td>
         <td><input [(ngModel)]="form.description" type="text" class="form-control"/></td>
@@ -17,7 +14,7 @@
       <tr>
         <td>Vorname</td>
         <td>
-          <select [(ngModel)]="form.singleConfiguration.questionId_FirstName" class="custom-select">
+          <select [(ngModel)]="path.singleConfig.questionId_FirstName" class="custom-select">
             <option>-</option>
             <option *ngFor="let question of form.questions" value={{question.id}}>{{ question.section }} / {{ question.question }}</option>
           </select>
@@ -26,7 +23,7 @@
       <tr>
         <td>Nachname</td>
         <td>
-          <select [(ngModel)]="form.singleConfiguration.questionId_LastName" class="custom-select">
+          <select [(ngModel)]="path.singleConfig.questionId_LastName" class="custom-select">
             <option>-</option>
             <option *ngFor="let question of form.questions" value={{question.id}}>{{ question.section }} / {{ question.question }}</option>
           </select>
@@ -35,7 +32,7 @@
       <tr>
         <td>Mailadresse</td>
         <td>
-          <select [(ngModel)]="form.singleConfiguration.questionId_Email" class="custom-select">
+          <select [(ngModel)]="path.singleConfig.questionId_Email" class="custom-select">
             <option>-</option>
             <option *ngFor="let question of form.questions" value={{question.id}}>{{ question.section }} / {{ question.question }}</option>
           </select>
@@ -44,7 +41,7 @@
       <tr>
         <td>Telefon</td>
         <td>
-          <select [(ngModel)]="form.singleConfiguration.questionId_Phone" class="custom-select">
+          <select [(ngModel)]="path.singleConfig.questionId_Phone" class="custom-select">
             <option>-</option>
             <option *ngFor="let question of form.questions" value={{question.id}}>{{ question.section }} / {{ question.question }}</option>
           </select>
@@ -53,7 +50,7 @@
       <tr>
         <td>Bemerkungen</td>
         <td>
-          <select [(ngModel)]="form.singleConfiguration.questionId_Remarks" class="custom-select">
+          <select [(ngModel)]="path.singleConfig.questionId_Remarks" class="custom-select">
             <option>-</option>
             <option *ngFor="let question of form.questions" value={{question.id}}>{{ question.section }} / {{ question.question }}</option>
           </select>
@@ -62,18 +59,18 @@
       <tr>
         <td>Reduktion</td>
         <td>
-          <select [(ngModel)]="form.singleConfiguration.questionOptionId_Reduction" class="custom-select">
+          <select [(ngModel)]="path.singleConfig.questionOptionId_Reduction" class="custom-select">
             <option>-</option>
             <option *ngFor="let unassignedOption of form.unassignedOptions" value={{unassignedOption.questionOptionId}}>{{ unassignedOption.answer }} ({{ unassignedOption.section }} / {{ unassignedOption.question }})</option>
           </select>
         </td>
       </tr>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
 
-  <h3>Zuordnungen</h3>
-  <table class='table' *ngIf="form.mappings">
-    <thead>
+    <h3>Zuordnungen</h3>
+    <table class='table' *ngIf="form.mappings">
+      <thead>
       <tr>
         <th>Abschnitt</th>
         <th>Frage</th>
@@ -84,8 +81,8 @@
         <th>Follower</th>
         <th></th>
       </tr>
-    </thead>
-    <tbody>
+      </thead>
+      <tbody>
       <tr *ngFor="let mapping of form.mappings">
         <td>{{ mapping.section }}</td>
         <td>{{ mapping.question }}</td>
@@ -111,36 +108,39 @@
           <button class="btn btn-sm btn-primary" (click)="removeMapping(mapping.questionOptionId, mapping.registrableId)" *ngIf="!mapping.saveAttributesPending">Löschen</button>
         </td>
       </tr>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+
+    <button class="btn btn-sm btn-primary" (click)="save(form)">Speichern</button>
+  </div>
 
   <h3>Nicht zugeordnete Antwortoptionen</h3>
   <table class='table' *ngIf="form.unassignedOptions">
     <thead>
-      <tr>
-        <th>Abschnitt</th>
-        <th>Frage</th>
-        <th>Antwort</th>
-        <th>Zuordnung</th>
-      </tr>
+    <tr>
+      <th>Abschnitt</th>
+      <th>Frage</th>
+      <th>Antwort</th>
+      <th>Zuordnung</th>
+    </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let unassignedOption of form.unassignedOptions">
-        <td>{{ unassignedOption.section }}</td>
-        <td>{{ unassignedOption.question }}</td>
-        <td>{{ unassignedOption.answer }}</td>
-        <td class="col-md-2">
-          <ng-multiselect-dropdown [placeholder]="'Zuordnung'"
-                                   [data]="registrables"
-                                   [(ngModel)]="unassignedOption.assignedRegistrableIds"
-                                   [settings]="dropdownSettings"
-                                   (onSelect)="onItemSelect($event, unassignedOption)"
-                                   (onDeSelect)="onItemDeselect($event, unassignedOption)">
-          </ng-multiselect-dropdown>
-        </td>
-      </tr>
+    <tr *ngFor="let unassignedOption of form.unassignedOptions">
+      <td>{{ unassignedOption.section }}</td>
+      <td>{{ unassignedOption.question }}</td>
+      <td>{{ unassignedOption.answer }}</td>
+      <td class="col-md-2">
+        <ng-multiselect-dropdown [placeholder]="'Zuordnung'"
+                                 [data]="registrables"
+                                 [(ngModel)]="unassignedOption.assignedRegistrableIds"
+                                 [settings]="dropdownSettings"
+                                 (onSelect)="onItemSelect($event, unassignedOption)"
+                                 (onDeSelect)="onItemDeselect($event, unassignedOption)">
+        </ng-multiselect-dropdown>
+      </td>
+    </tr>
     </tbody>
   </table>
-
-  <button class="btn btn-sm btn-primary" (click)="save(form)">Speichern</button>
 </div>
+
+

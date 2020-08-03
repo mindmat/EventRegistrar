@@ -63,7 +63,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                                           .ToListAsync();
             if (configs.Any())
             {
-                return configs.Select(fpt => fpt.Configuration);
+                return configs.Select(fpt => _jsonHelper.Deserialize<IRegistrationProcessConfiguration>(fpt.ConfigurationJson));
             }
             //IRegistrationProcessConfiguration? config = null;
             //if (form.ProcessConfigurationJson != null)
@@ -96,13 +96,13 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_Phone = Guid.Parse("3AFD336A-3C57-4A6A-A1BB-A0824B14431C"),
                     QuestionOptionId_Leader = Guid.Parse("F5DEF570-730B-4411-82DC-42959FF2E088"),
                     QuestionOptionId_Follower = Guid.Parse("AB8363D9-F816-4927-BFED-078E04201C50"),
-                    LanguageMappings = new[]
-                    {
-                        (new Guid("46AD095F-A014-4321-BC5F-5C98F9060F1D"), Language.Deutsch ),
-                        (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
-                        (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
-                        (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
-                    }
+                    //LanguageMappings = new[]
+                    //{
+                    //    (new Guid("46AD095F-A014-4321-BC5F-5C98F9060F1D"), Language.Deutsch ),
+                    //    (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
+                    //    (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
+                    //    (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
+                    //}
                 };
                 yield return new PartnerRegistrationProcessConfiguration
                 {
@@ -132,13 +132,13 @@ namespace EventRegistrar.Backend.Registrations.Register
                         (new Guid("82C51368-BF74-43C2-80C1-F85D0A996359"), Role.Follower, new Guid("2148016C-BB24-4055-B5C2-14F0E2333ABA" )),  // Herrenmodell Grösse M
                         (new Guid("C21720AF-94A9-4B45-917D-306934F00868"), Role.Follower, new Guid("F9F46BE4-4E57-4748-897A-3708D312A8EC" )),  // Herrenmodell Grösse S
                     },
-                    LanguageMappings = new[]
-                    {
-                        (new Guid("46AD095F-A014-4321-BC5F-5C98F9060F1D"), Language.Deutsch ),
-                        (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
-                        (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
-                        (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
-                    }
+                    //LanguageMappings = new[]
+                    //{
+                    //    (new Guid("46AD095F-A014-4321-BC5F-5C98F9060F1D"), Language.Deutsch ),
+                    //    (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
+                    //    (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
+                    //    (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
+                    //}
                 };
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -148,11 +148,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_LastName = Guid.Parse("809AC411-A99C-40F1-96BE-356316918724"),
                     QuestionId_Email = Guid.Parse("C97B62D1-F883-4D67-830D-6355311EFDC9"),
                     QuestionId_Phone = Guid.Parse("FA6734EA-19EE-4E44-8F9E-5DB3BC286BD9"),
-                    LanguageMappings = new[]
-                    {
-                        (new Guid("B1AB2D25-FEBE-431F-B1D1-F6574341C0B2"), Language.Deutsch ),
-                        (new Guid("C8BFCFF1-CE38-4A37-AC54-B06489CB0484"), Language.English ),
-                    }
+                    //LanguageMappings = new[]
+                    //{
+                    //    (new Guid("B1AB2D25-FEBE-431F-B1D1-F6574341C0B2"), Language.Deutsch ),
+                    //    (new Guid("C8BFCFF1-CE38-4A37-AC54-B06489CB0484"), Language.English ),
+                    //}
                 };
             }
             else if (registrationFormId == Guid.Parse("BD14FB5C-EC31-48F0-9DDA-E7D1BB2781C0")) // ll19
@@ -198,11 +198,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionOptionId_Leader = Guid.Parse("2F9EB3BF-5772-417E-922A-E0CC6706F289"),
                     QuestionOptionId_Follower = Guid.Parse("C7EC7438-A03E-4EEA-8224-CF9DFF467DE4"),
                     QuestionOptionId_Reduction = Guid.Parse("BDB67C48-096A-4143-B1C4-4E546368E34F"),
-                    LanguageMappings = new[]
-                    {
-                        (new Guid("09C78885-1414-485D-9B79-9804410020BC"), Language.Deutsch ),
-                        (new Guid("D82315E1-90B3-4D34-AF56-625A57A96D8F"), Language.English )
-                    }
+                    //LanguageMappings = new[]
+                    //{
+                    //    (new Guid("09C78885-1414-485D-9B79-9804410020BC"), Language.Deutsch ),
+                    //    (new Guid("D82315E1-90B3-4D34-AF56-625A57A96D8F"), Language.English )
+                    //}
                 };
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -215,11 +215,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionOptionId_Leader = Guid.Parse("3E0C3286-2531-4505-BEB2-45EB3807A8D0"),
                     QuestionOptionId_Follower = Guid.Parse("2DC7461D-7440-4B2E-AE1A-1BBE1255511A"),
                     QuestionOptionId_Reduction = Guid.Parse("D15EDBAF-24F2-4B09-AF1B-CD02298708B9"),
-                    LanguageMappings = new[]
-                    {
-                        (new Guid("08D1F924-BBC4-4CAD-83E8-92890BB1C39C"), Language.Deutsch ),
-                        (new Guid("A9BA2C11-F67A-4D31-8E4A-323682C706CF"), Language.English )
-                    }
+                    //LanguageMappings = new[]
+                    //{
+                    //    (new Guid("08D1F924-BBC4-4CAD-83E8-92890BB1C39C"), Language.Deutsch ),
+                    //    (new Guid("A9BA2C11-F67A-4D31-8E4A-323682C706CF"), Language.English )
+                    //}
                 };
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -229,11 +229,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_LastName = Guid.Parse("966F1966-A135-40E7-BD7C-C7B1FDC8245F"),
                     QuestionId_Email = Guid.Parse("490F5556-B79C-4AF3-84AA-1D0B4F820F93"),
                     QuestionId_Phone = Guid.Parse("735AE310-01E5-4279-8E7A-96325FBA3328"),
-                    LanguageMappings = new[]
-                    {
-                        (new Guid("A3D304E2-7E5C-4B77-B6F0-36EFF6E8192C"), Language.Deutsch ),
-                        (new Guid("73AC9B2F-1109-446A-946E-7AA50F09D649"), Language.English )
-                    }
+                    //LanguageMappings = new[]
+                    //{
+                    //    (new Guid("A3D304E2-7E5C-4B77-B6F0-36EFF6E8192C"), Language.Deutsch ),
+                    //    (new Guid("73AC9B2F-1109-446A-946E-7AA50F09D649"), Language.English )
+                    //}
                 };
 
             }

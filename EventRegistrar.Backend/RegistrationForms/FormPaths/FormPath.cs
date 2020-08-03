@@ -18,7 +18,9 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
 
         public string? Description { get; set; }
         public FormPathType Type { get; set; }
-        public IRegistrationProcessConfiguration Configuration { get; set; } = null!;
+        public string ConfigurationJson { get; set; } = null!;
+        public SingleRegistrationProcessConfiguration? SingleConfiguration { get; set; }
+        public PartnerRegistrationProcessConfiguration? PartnerConfiguration { get; set; }
     }
 
     public class FormPathMap : EntityTypeConfiguration<FormPath>
@@ -32,8 +34,11 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
                    .WithMany(frm => frm!.FormPaths)
                    .HasForeignKey(fpt => fpt.RegistrationFormId);
 
-            builder.Property(ral => ral.Configuration)
-                   .HasConversion(StorageConverters.JsonConverter<IRegistrationProcessConfiguration>());
+            builder.Property(ral => ral.SingleConfiguration)
+                   .HasConversion(StorageConverters.JsonConverter<SingleRegistrationProcessConfiguration>());
+
+            builder.Property(ral => ral.PartnerConfiguration)
+                   .HasConversion(StorageConverters.JsonConverter<PartnerRegistrationProcessConfiguration>());
         }
     }
 
@@ -44,11 +49,11 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
             DefaultValueHandling = DefaultValueHandling.Ignore,
             TypeNameHandling = TypeNameHandling.Auto
         };
-        public static ValueConverter<T, string> JsonConverter<T>()
+        public static ValueConverter<T?, string?> JsonConverter<T>()
            where T : class
         {
-            return new ValueConverter<T, string>(value => JsonConvert.SerializeObject(value, _settings),
-                                                 json => JsonConvert.DeserializeObject<T>(json, _settings));
+            return new ValueConverter<T?, string?>(value => value == null ? null : JsonConvert.SerializeObject(value, _settings),
+                                                   json => json == null ? null : JsonConvert.DeserializeObject<T>(json, _settings));
         }
     }
 }

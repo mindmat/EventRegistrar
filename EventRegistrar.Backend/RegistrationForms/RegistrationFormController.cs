@@ -81,7 +81,7 @@ namespace EventRegistrar.Backend.RegistrationForms
 
 
         [HttpGet("api/events/{eventAcronym}/formPaths")]
-        public async Task<IEnumerable<IRegistrationProcessConfiguration>> GetFormPaths(string eventAcronym)
+        public async Task<IEnumerable<RegistrationFormGroup>> GetFormPaths(string eventAcronym)
         {
             return await _mediator.Send(new FormPathsQuery
             {

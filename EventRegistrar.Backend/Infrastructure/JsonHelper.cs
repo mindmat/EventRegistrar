@@ -21,12 +21,17 @@ namespace EventRegistrar.Backend.Infrastructure
         {
             try
             {
-                return JsonConvert.DeserializeObject<T>(json, _settings);
+                return Deserialize<T>(json);
             }
             catch
             {
                 return null;
             }
+        }
+        public T Deserialize<T>(string json)
+            where T : class
+        {
+            return JsonConvert.DeserializeObject<T>(json, _settings);
         }
 
         public string Serialize<T>(T value)
