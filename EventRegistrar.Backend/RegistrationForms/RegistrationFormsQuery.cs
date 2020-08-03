@@ -18,7 +18,7 @@ namespace EventRegistrar.Backend.RegistrationForms
     public class RegistrationFormMappings
     {
         public Guid RegistrationFormId { get; set; }
-        public FormType? Type { get; set; }
+        public FormPathType? Type { get; set; }
         public SingleRegistrationProcessConfiguration? SingleConfiguration { get; set; }
         public IEnumerable<QuestionToRegistrablesDisplayItem>? Mappings { get; set; }
         public IEnumerable<QuestionToRegistrablesDisplayItem>? UnassignedOptions { get; set; }
@@ -54,11 +54,11 @@ namespace EventRegistrar.Backend.RegistrationForms
             return forms.Select(form => new RegistrationFormMappings
             {
                 RegistrationFormId = form.Id,
-                Type = form.Type,
+                //Type = form.Type,
                 Title = form.Title,
-                SingleConfiguration = form.ProcessConfigurationJson != null && form.Type == FormType.Single
-                                      ? _jsonHelper.TryDeserialize<SingleRegistrationProcessConfiguration>(form.ProcessConfigurationJson)
-                                      : null,
+                //SingleConfiguration = form.ProcessConfigurationJson != null && form.Type == FormPathType.Single
+                //                      ? _jsonHelper.TryDeserialize<SingleRegistrationProcessConfiguration>(form.ProcessConfigurationJson)
+                //                      : null,
                 Mappings = form.Questions.SelectMany(qst => qst.QuestionOptions.SelectMany(qop => qop.Registrables)
                                                                                .OrderBy(map => map.QuestionOption?.Question?.Index)
                                                                                .Select(map => new QuestionToRegistrablesDisplayItem

@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 
 using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.RegistrationForms.FormPaths;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
+using EventRegistrar.Backend.Registrations.Register;
 
 using MediatR;
 
@@ -67,13 +69,37 @@ namespace EventRegistrar.Backend.RegistrationForms
             });
         }
 
-        [HttpDelete("api/events/{eventAcronym}/registrationforms/{registrationFormId}")]
+        [HttpDelete("api/events/{eventAcronym}/registrationForms/{registrationFormId}")]
         public async Task DeleteRegistrationForm(string eventAcronym, Guid registrationFormId)
         {
             await _mediator.Send(new DeleteRegistrationFormCommand
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                 RegistrationFormId = registrationFormId
+            });
+        }
+
+
+        [HttpGet("api/events/{eventAcronym}/formPaths")]
+        public async Task<IEnumerable<IRegistrationProcessConfiguration>> GetFormPaths(string eventAcronym)
+        {
+            return await _mediator.Send(new FormPathsQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
+        }
+
+        [HttpPost("api/events/{eventAcronym}/registrationForms/{registrationFormId}/formPaths/{formPathId}/mappings")]
+        public async Task SaveRegistrationFormMappings(string eventAcronym,
+                                                       Guid registrationFormId,
+                                                       Guid formPathId,
+                                                       [FromBody] IRegistrationProcessConfiguration configuration)
+        {
+            await _mediator.Send(new SaveFormPathsCommand
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                RegistrationFormId = registrationFormId,
+                Configuration = configuration
             });
         }
     }

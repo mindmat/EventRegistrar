@@ -23,7 +23,7 @@ namespace EventRegistrar.Backend.Test.Infrastructure
                 QuestionId_FirstName = new Guid("67243B20-79D8-4EDA-9868-E46D71FAB80E"),
                 QuestionOptionId_Leader = new Guid("6EB8702D-6C67-41BB-BC5C-8CEB4C2FE53B")
             };
-            var partnerConfig = new CoupleRegistrationProcessConfiguration
+            var partnerConfig = new PartnerRegistrationProcessConfiguration
             {
                 Description = "PartnerTest",
                 QuestionId_Leader_FirstName = new Guid("F7E809C0-A339-40D0-8832-BFB88BD755F9"),
@@ -45,7 +45,7 @@ namespace EventRegistrar.Backend.Test.Infrastructure
                                                  .ShouldBeOfType<SingleRegistrationProcessConfiguration>();
             singleConfigRoundtrip.QuestionId_FirstName.ShouldBe(singleConfig.QuestionId_FirstName);
             var partnerConfigRoundtrip = roundtrip.Single(cfg => cfg.Description == partnerConfig.Description)
-                                                  .ShouldBeOfType<CoupleRegistrationProcessConfiguration>();
+                                                  .ShouldBeOfType<PartnerRegistrationProcessConfiguration>();
             partnerConfigRoundtrip.QuestionId_Leader_FirstName.ShouldBe(partnerConfig.QuestionId_Leader_FirstName);
         }
 

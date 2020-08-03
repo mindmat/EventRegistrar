@@ -9,8 +9,6 @@ using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-using Newtonsoft.Json;
-
 namespace EventRegistrar.Backend.RegistrationForms
 {
     public class SaveRegistrationFormMappingsCommand : IRequest, IEventBoundRequest
@@ -38,11 +36,11 @@ namespace EventRegistrar.Backend.RegistrationForms
 
             var form = await _forms.FirstAsync(frm => frm.Id == formToSave.RegistrationFormId, cancellationToken);
 
-            form.Type = formToSave.Type ?? form.Type;
-            if (form.Type == FormType.Single && formToSave.SingleConfiguration != null)
-            {
-                form.ProcessConfigurationJson = JsonConvert.SerializeObject(formToSave.SingleConfiguration);
-            }
+            //form.Type = formToSave.Type ?? form.Type;
+            //if (form.Type == FormPathType.Single && formToSave.SingleConfiguration != null)
+            //{
+            //    form.ProcessConfigurationJson = JsonConvert.SerializeObject(formToSave.SingleConfiguration);
+            //}
 
             return Unit.Value;
         }

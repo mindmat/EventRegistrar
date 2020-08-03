@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.RegistrationForms.FormPaths;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 
 using Microsoft.EntityFrameworkCore;
@@ -12,13 +13,13 @@ namespace EventRegistrar.Backend.RegistrationForms
 {
     public class RegistrationForm : Entity
     {
-        public Guid? EventId { get; set; }
+        public Guid EventId { get; set; }
         public Event? Event { get; set; }
 
         public string ExternalIdentifier { get; set; } = null!;
-        public string? Language { get; set; }
+        //public string? Language { get; set; }
 
-        public string? ProcessConfigurationJson { get; set; }
+        //public string? ProcessConfigurationJson { get; set; }
         //public Guid? QuestionId_FirstName { get; set; }
         //public Guid? QuestionId_LastName { get; set; }
         //public Guid? QuestionId_Phone { get; set; }
@@ -26,7 +27,8 @@ namespace EventRegistrar.Backend.RegistrationForms
         public ICollection<Question>? Questions { get; set; }
         public State State { get; set; }
         public string? Title { get; set; }
-        public FormType? Type { get; set; }
+        //public FormPathType? Type { get; set; }
+        public ICollection<FormPath>? FormPaths { get; set; }
     }
 
     public class RegistrationFormMap : EntityTypeConfiguration<RegistrationForm>

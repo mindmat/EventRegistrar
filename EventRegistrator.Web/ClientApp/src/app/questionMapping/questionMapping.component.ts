@@ -19,6 +19,7 @@ export class QuestionMappingComponent implements OnInit {
   formTypeItems: FormTypeItem[];
 
   forms: RegistrationFormMappings[];
+  formPaths: IRegistrationProcessConfiguration[];
 
   ngOnInit() {
     this.dropdownSettings = {
@@ -72,6 +73,10 @@ export class QuestionMappingComponent implements OnInit {
   private refreshLists() {
     this.http.get<RegistrationFormMappings[]>(`api/events/${this.getEventAcronym()}/registrationForms`).subscribe(result => {
       this.forms = result;
+    }, error => console.error(error));
+
+    this.http.get<IRegistrationProcessConfiguration[]>(`api/events/${this.getEventAcronym()}/formPaths`).subscribe(result => {
+      this.formPaths = result;
     }, error => console.error(error));
   }
 
@@ -157,7 +162,16 @@ class FormTypeItem {
   name: string;
 }
 
-class SingleRegistrationFormConfiguration {
+interface IRegistrationProcessConfiguration {
+  id: string;
+  registrationFormId: string;
+  description: string;
+  type: FormType;
+}
+
+class SingleRegistrationFormConfiguration implements IRegistrationProcessConfiguration {
+  id: string;
+  registrationFormId: string;
   type: FormType;
   description: string;
   //IEnumerable< (Guid QuestionOptionId, string Language)> LanguageMappings: string;

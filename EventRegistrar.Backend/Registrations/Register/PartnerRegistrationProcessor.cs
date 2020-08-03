@@ -15,7 +15,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrations.Register
 {
-    public class CoupleRegistrationProcessor
+    public class PartnerRegistrationProcessor
     {
         private readonly IQueryable<QuestionOptionToRegistrableMapping> _optionToRegistrableMappings;
         private readonly PhoneNormalizer _phoneNormalizer;
@@ -24,7 +24,7 @@ namespace EventRegistrar.Backend.Registrations.Register
         private readonly SeatManager _seatManager;
         private readonly ServiceBusClient _serviceBusClient;
 
-        public CoupleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
+        public PartnerRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                            IQueryable<QuestionOptionToRegistrableMapping> optionToRegistrableMappings,
                                            SeatManager seatManager,
                                            IRepository<Registration> registrations,
@@ -39,7 +39,7 @@ namespace EventRegistrar.Backend.Registrations.Register
             _serviceBusClient = serviceBusClient;
         }
 
-        public async Task<IEnumerable<Seat>> Process(Registration registration, CoupleRegistrationProcessConfiguration config)
+        public async Task<IEnumerable<Seat>> Process(Registration registration, PartnerRegistrationProcessConfiguration config)
         {
             registration.RespondentFirstName = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_FirstName)?.ResponseString;
             registration.RespondentLastName = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_LastName)?.ResponseString;

@@ -59,7 +59,7 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
                                         ExternalIdentifier = frm.ExternalIdentifier,
                                         State = frm.State,
                                         Title = frm.Title,
-                                        Language = frm.Language,
+                                        //Language = frm.Language,
                                         Deletable = frm.Event.State == State.Setup && frm.State == State.Setup
                                     })
                                     .ToListAsync(cancellationToken);
