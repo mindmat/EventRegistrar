@@ -20,20 +20,19 @@ export class QuestionMappingComponent implements OnInit {
 
   forms: RegistrationFormMappings[];
   formPaths: RegistrationFormGroup[];
+  availableQuestionOptionMappings: AvailableQuestionOptionMapping[];
 
   ngOnInit() {
     this.dropdownSettings = {
       placeholder: 'Zuordnung',
       singleSelection: false,
-      idField: 'id',
+      idField: 'combinedId',
       textField: 'name',
       selectAllText: 'Select All',
-      unSelectAllText: 'UnSelect All',
+      unSelectAllText: 'Unselect All',
       itemsShowLimit: 5,
       allowSearchFilter: true
     };
-
-    this.refreshLists();
 
     this.http.get<DoubleRegistrable[]>(`api/events/${this.getEventAcronym()}/DoubleRegistrableOverview`).subscribe(result => {
       this.doubleRegistrables = result;
@@ -48,20 +47,42 @@ export class QuestionMappingComponent implements OnInit {
       this.formTypeItems = result;
     }, error => console.error(error));
 
+    this.http.get<AvailableQuestionOptionMapping[]>(`api/events/${this.getEventAcronym()}/availableQuestionOptionMappings`).subscribe(result => {
+      this.availableQuestionOptionMappings = result;
+    }, error => console.error(error));
+
+    this.refreshLists();
   }
+
   private fillRegistrables() {
-    if (this.singleRegistrables != null && this.doubleRegistrables !== null) {
+    if (this.singleRegistrables && this.doubleRegistrables) {
       this.registrables = this.singleRegistrables.concat(this.doubleRegistrables);
     }
   }
 
-  private onItemSelect(registrable: Registrable, mapping: Mapping) {
-    this.http.put(`api/events/${this.getEventAcronym()}/questionoptions/${mapping.questionOptionId}/registrables/${registrable.id}`, null).subscribe(result => {
-    }, error => console.error(error));
+  private onItemSelect(registrable: Registrable, unassignedOption: QuestionOption, formPath: RegistrationFormPath) {
+    //this.http.put(`api/events/${this.getEventAcronym()}/questionoptions/${mapping.questionOptionId}/registrables/${registrable.id}`, null).subscribe(result => {
+    //}, error => console.error(error));
+    let config = formPath.singleConfig;
+    let newMapping = new Mapping();
+    newMapping.questionOptionId = unassignedOption.questionOptionId;
+    newMapping.registrableId = registrable.id;
+    if (config.mappingsToRegistrables === null) {
+      config.mappingsToRegistrables = [newMapping];
+    } else {
+      config.mappingsToRegistrables.push(newMapping);
+    }
   }
 
-  private onItemDeselect(registrable: Registrable, mapping: Mapping) {
-    this.removeMapping(mapping.questionOptionId, registrable.id);
+  private onItemDeselect(registrable: Registrable, unassignedOption: QuestionOption, formPath: RegistrationFormPath) {
+    let config = formPath.singleConfig;
+    //let newMapping = new Mapping();
+    //newMapping.questionOptionId = unassignedOption.questionOptionId;
+    //newMapping.registrableId = registrable.id;
+    //config.mappingsToRegistrables.reduce() slice(newMapping);
+
+
+    //this.removeMapping(mapping.questionOptionId, registrable.id);
   }
 
   private removeMapping(questionOptionId: string, registrableId: string) {
@@ -77,6 +98,7 @@ export class QuestionMappingComponent implements OnInit {
 
     this.http.get<RegistrationFormGroup[]>(`api/events/${this.getEventAcronym()}/formPaths`).subscribe(result => {
       this.formPaths = result;
+      console.log(this.formPaths);
     }, error => console.error(error));
   }
 
@@ -88,7 +110,7 @@ export class QuestionMappingComponent implements OnInit {
   }
 
   changeMappingAttribute(mapping: Mapping) {
-    mapping.saveAttributesPending = true;
+    //mapping.saveAttributesPending = true;
   }
 
   changeFormType(form: RegistrationFormMappings) {
@@ -98,14 +120,14 @@ export class QuestionMappingComponent implements OnInit {
   }
 
   saveMapping(mapping: Mapping) {
-    var attributes = {
-      questionId_Partner: mapping.questionId_Partner,
-      questionOptionId_Leader: mapping.questionOptionId_Leader,
-      questionOptionId_Follower: mapping.questionOptionId_Follower
-    };
-    this.http.put(`api/events/${this.getEventAcronym()}/questionoptionsmapping/${mapping.id}`, attributes).subscribe(result => {
-      mapping.saveAttributesPending = false;
-    }, error => console.error(error));
+    //var attributes = {
+    //  questionId_Partner: mapping.questionId_Partner,
+    //  questionOptionId_Leader: mapping.questionOptionId_Leader,
+    //  questionOptionId_Follower: mapping.questionOptionId_Follower
+    //};
+    //this.http.put(`api/events/${this.getEventAcronym()}/questionoptionsmapping/${mapping.id}`, attributes).subscribe(result => {
+    //  //mapping.saveAttributesPending = false;
+    //}, error => console.error(error));
   }
 
   save(form: RegistrationFormMappings) {
@@ -119,26 +141,40 @@ class RegistrationFormMappings {
   type: FormType;
   title: string;
   singleConfiguration: SingleRegistrationFormConfiguration;
-  mappings: Mapping[];
   unassignedOptions: Mapping[];
   questions: Question[];
 }
 
+//class Mapping {
+//  id: string;
+//  registrationFormId: string;
+//  section: string;
+//  question: string;
+//  answer: string;
+//  questionOptionId: string;
+//  registrableId: string;
+//  registrableName: string;
+//  isPartnerRegistrable: boolean;
+//  assignedRegistrableIds: string[];
+//  questionId_Partner: string;
+//  questionOptionId_Leader: string;
+//  questionOptionId_Follower: string;
+//  saveAttributesPending: boolean;
+//}
 class Mapping {
-  id: string;
-  registrationFormId: string;
-  section: string;
-  question: string;
-  answer: string;
   questionOptionId: string;
   registrableId: string;
-  registrableName: string;
-  isPartnerRegistrable: boolean;
   assignedRegistrableIds: string[];
   questionId_Partner: string;
   questionOptionId_Leader: string;
   questionOptionId_Follower: string;
-  saveAttributesPending: boolean;
+}
+
+class QuestionOption {
+  section: string;
+  question: string;
+  questionOptionId: string;
+  answer: string;
 }
 
 class Question {
@@ -166,8 +202,9 @@ class RegistrationFormGroup {
   id: string;
   title: string;
   paths: RegistrationFormPath[];
+  sections: FormSection[];
   questions: Question[];
-  unassignedOptions: Mapping[];
+  unassignedOptions: QuestionOption[];
 }
 
 class RegistrationFormPath {
@@ -199,5 +236,63 @@ class SingleRegistrationFormConfiguration implements IRegistrationProcessConfigu
   questionOptionId_Leader: string;
   questionOptionId_Reduction: string;
   questionOptionId_Trigger: string;
+  mappingsToRegistrables: Mapping[];
 }
 
+class FormSection {
+  name: string;
+  sortKey: number;
+  questions: QuestionMapping[];
+}
+
+class QuestionMapping {
+  id: string;
+  question: string;
+  type: QuestionType;
+  options: QuestionOptionMapping[];
+}
+
+enum QuestionType {
+  Checkbox = 1,
+
+  CheckboxGrid = 2,
+  Date = 3,
+
+  Datetime = 4,
+  Duration = 5,
+
+  Grid = 6,
+  Image = 7,
+  List = 8,
+  MultipleChoice = 9,
+
+  PageBreak = 10,
+  ParagraphText = 11,
+  Scale = 12,
+  SectionHeader = 13,
+  Text = 14,
+
+  Time = 15
+}
+
+class QuestionOptionMapping {
+  combinedId: string;
+  id: string;
+  answer: string;
+  mappedRegistrables: Registrable[];
+}
+
+class AvailableQuestionOptionMapping {
+  id: string;
+  type: MappingType;
+  name: string;
+}
+
+enum MappingType {
+  SingleRegistrable = 1,
+  //DoubleRegistrable = 2,
+  DoubleRegistrableLeader = 3,
+  DoubleRegistrableFollower = 4,
+  Language = 5,
+  Reduction = 6
+}

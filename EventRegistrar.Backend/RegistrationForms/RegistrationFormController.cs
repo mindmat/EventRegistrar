@@ -89,6 +89,15 @@ namespace EventRegistrar.Backend.RegistrationForms
             });
         }
 
+        [HttpGet("api/events/{eventAcronym}/availableQuestionOptionMappings")]
+        public async Task<IEnumerable<QuestionOptionMapping>> AvailableQuestionOptionMappingsQuery(string eventAcronym)
+        {
+            return await _mediator.Send(new AvailableQuestionOptionMappingsQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
+        }
+
         [HttpPost("api/events/{eventAcronym}/registrationForms/{registrationFormId}/formPaths/{formPathId}/mappings")]
         public async Task SaveRegistrationFormMappings(string eventAcronym,
                                                        Guid registrationFormId,

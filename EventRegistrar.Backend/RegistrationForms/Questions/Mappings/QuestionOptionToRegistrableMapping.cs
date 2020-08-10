@@ -16,6 +16,7 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
         public Guid? QuestionId_Partner { get; set; }
         public Guid? QuestionOptionId_Follower { get; set; }
         public Guid? QuestionOptionId_Leader { get; set; }
+        public MappingType? Type { get; set; }
 
         public Guid RegistrableId { get; set; }
         public Registrable? Registrable { get; set; }
@@ -29,12 +30,23 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
             builder.ToTable("QuestionOptionToRegistrableMappings");
 
             builder.HasOne(qop => qop.Registrable)
-                   .WithMany(qst => qst.QuestionOptionMappings)
+                   .WithMany(qst => qst!.QuestionOptionMappings)
                    .HasForeignKey(qop => qop.RegistrableId);
 
             builder.HasOne(qop => qop.QuestionOption)
-                   .WithMany(qst => qst.Registrables)
+                   .WithMany(qst => qst!.Registrables)
                    .HasForeignKey(qop => qop.QuestionOptionId);
         }
     }
+
+    public enum MappingType
+    {
+        SingleRegistrable = 1,
+        //DoubleRegistrable = 2,
+        DoubleRegistrableLeader = 3,
+        DoubleRegistrableFollower = 4,
+        Language = 5,
+        Reduction = 6
+    }
+
 }

@@ -1,10 +1,12 @@
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Threading.Tasks;
+
 using Dapper;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
@@ -22,12 +24,10 @@ namespace EventRegistrar.Functions
                                                    .Build();
 
             var connectionString = config.GetConnectionString("DefaultConnection");
-            using (var connection = new SqlConnection(connectionString))
-            {
-                return await connection.QueryAsync<string>("SELECT RegistrationExternalIdentifier " +
-                                                           "FROM dbo.RawRegistrations " +
-                                                           "WHERE FormExternalIdentifier = @formId", new { formId });
-            }
+            await using var connection = new SqlConnection(connectionString);
+            return await connection.QueryAsync<string>("SELECT RegistrationExternalIdentifier " +
+                                                       "FROM dbo.RawRegistrations " +
+                                                       "WHERE FormExternalIdentifier = @formId", new { formId });
         }
     }
 }

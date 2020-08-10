@@ -1,17 +1,36 @@
-<p *ngIf="!forms"><em>Loading...</em></p>
+<p *ngIf="!formPaths"><em>Loading...</em></p>
 
-<div *ngFor="let form of formPaths">
+<div *ngFor="let form of formPaths" class="jumbotron container">
   <h2>Formular <i>{{ form.title }}</i></h2>
 
-  <div class="jumbotron" *ngFor="let path of form.paths">
-    <h3>Pfad <i>{{ path.description }}</i></h3>
-    <table class='table' *ngIf="path.singleConfig">
-      <tbody>
-      <!--<tr>
-        <td>Bezeichnung Formular</td>
-        <td><input [(ngModel)]="form.description" type="text" class="form-control"/></td>
-      </tr>-->
-      <tr>
+  <div *ngFor="let section of form.sections" class="">
+    <h4>Abschnitt <i>{{ section.name }}</i></h4>
+    <div *ngFor="let question of section.questions">
+      <div class="row" *ngIf="!question.options">
+        <p>{{ question.question }}</p>
+      </div>
+      <div class="row" *ngIf="question.options">
+        <p>{{ question.question }}</p>
+      </div>
+      <div *ngIf="question.options">
+        <div class="row" *ngFor="let option of question.options">
+          <div class="col"><span>&#8226;</span> {{ option.answer }}</div>
+          <div class="col" *ngIf="registrables">
+            <ng-multiselect-dropdown textField="name"
+                                     [placeholder]="'Zuordnung'"
+                                     [data]="availableQuestionOptionMappings"
+                                     [(ngModel)]="option.mappedRegistrables"
+                                     [settings]="dropdownSettings">
+            </ng-multiselect-dropdown>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--
+  <table class='table' *ngIf="path.singleConfig" hidden="hidden">
+    <tbody>
+    <tr>
         <td>Vorname</td>
         <td>
           <select [(ngModel)]="path.singleConfig.questionId_FirstName" class="custom-select">
@@ -65,82 +84,10 @@
           </select>
         </td>
       </tr>
-      </tbody>
-    </table>
-
-    <h3>Zuordnungen</h3>
-    <table class='table' *ngIf="form.mappings">
-      <thead>
-      <tr>
-        <th>Abschnitt</th>
-        <th>Frage</th>
-        <th>Antwort</th>
-        <th>Liste</th>
-        <th>Partner</th>
-        <th>Leader</th>
-        <th>Follower</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr *ngFor="let mapping of form.mappings">
-        <td>{{ mapping.section }}</td>
-        <td>{{ mapping.question }}</td>
-        <td>{{ mapping.answer }}</td>
-        <td><a [routerLink]="['/', getEventAcronym(), 'registrables', mapping.registrableId, 'participants']">{{ mapping.registrableName }}</a></td>
-        <td>
-          <select [(ngModel)]="mapping.questionId_Partner" *ngIf="mapping.isPartnerRegistrable" style="max-width: 300px" (change)="changeMappingAttribute(mapping)" class="custom-select">
-            <option *ngFor="let question of form.questions" value={{question.id}}>{{ question.question }} ({{ question.section }})</option>
-          </select>
-        </td>
-        <td>
-          <select [(ngModel)]="mapping.questionOptionId_Leader" *ngIf="mapping.isPartnerRegistrable" style="max-width: 300px" (change)="changeMappingAttribute(mapping)" class="custom-select">
-            <option *ngFor="let unassignedOption of form.unassignedOptions" value={{unassignedOption.questionOptionId}}>{{ unassignedOption.answer }} ({{ unassignedOption.section }} / {{ unassignedOption.question }})</option>
-          </select>
-        </td>
-        <td>
-          <select [(ngModel)]="mapping.questionOptionId_Follower" *ngIf="mapping.isPartnerRegistrable" style="max-width: 300px" (change)="changeMappingAttribute(mapping)" class="custom-select">
-            <option *ngFor="let unassignedOption of form.unassignedOptions" value={{unassignedOption.questionOptionId}}>{{ unassignedOption.answer }} ({{ unassignedOption.section }} / {{ unassignedOption.question }})</option>
-          </select>
-        </td>
-        <td>
-          <button class="btn btn-sm btn-primary" (click)="saveMapping(mapping)" *ngIf="mapping.saveAttributesPending">Speichern</button>
-          <button class="btn btn-sm btn-primary" (click)="removeMapping(mapping.questionOptionId, mapping.registrableId)" *ngIf="!mapping.saveAttributesPending">Löschen</button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
-
-    <button class="btn btn-sm btn-primary" (click)="save(form)">Speichern</button>
-  </div>
-
-  <h3>Nicht zugeordnete Antwortoptionen</h3>
-  <table class='table' *ngIf="form.unassignedOptions">
-    <thead>
-    <tr>
-      <th>Abschnitt</th>
-      <th>Frage</th>
-      <th>Antwort</th>
-      <th>Zuordnung</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let unassignedOption of form.unassignedOptions">
-      <td>{{ unassignedOption.section }}</td>
-      <td>{{ unassignedOption.question }}</td>
-      <td>{{ unassignedOption.answer }}</td>
-      <td class="col-md-2">
-        <ng-multiselect-dropdown [placeholder]="'Zuordnung'"
-                                 [data]="registrables"
-                                 [(ngModel)]="unassignedOption.assignedRegistrableIds"
-                                 [settings]="dropdownSettings"
-                                 (onSelect)="onItemSelect($event, unassignedOption)"
-                                 (onDeSelect)="onItemDeselect($event, unassignedOption)">
-        </ng-multiselect-dropdown>
-      </td>
-    </tr>
     </tbody>
-  </table>
+  </table>-->
+
+  <button class="btn btn-sm btn-primary" (click)="save(form)">Speichern</button>
 </div>
 
 
