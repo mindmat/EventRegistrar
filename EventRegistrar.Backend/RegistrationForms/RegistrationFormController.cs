@@ -60,12 +60,15 @@ namespace EventRegistrar.Backend.RegistrationForms
         }
 
         [HttpPost("api/events/{eventAcronym}/registrationForms/{formId}/mappings")]
-        public async Task SaveRegistrationFormMappings(string eventAcronym, Guid formId, [FromBody] RegistrationFormMappings mappings)
+        public async Task SaveRegistrationFormMappings(string eventAcronym,
+                                                       Guid formId,
+                                                       [FromBody] RegistrationFormGroup form)
         {
             await _mediator.Send(new SaveRegistrationFormMappingsCommand
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                Mappings = mappings
+                FormId = formId,
+                Mappings = form
             });
         }
 
@@ -90,7 +93,7 @@ namespace EventRegistrar.Backend.RegistrationForms
         }
 
         [HttpGet("api/events/{eventAcronym}/availableQuestionOptionMappings")]
-        public async Task<IEnumerable<QuestionOptionMapping>> AvailableQuestionOptionMappingsQuery(string eventAcronym)
+        public async Task<IEnumerable<QuestionOptionMappingDisplayItem>> AvailableQuestionOptionMappingsQuery(string eventAcronym)
         {
             return await _mediator.Send(new AvailableQuestionOptionMappingsQuery
             {

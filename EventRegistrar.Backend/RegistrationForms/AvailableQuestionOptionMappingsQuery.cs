@@ -13,15 +13,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.RegistrationForms
 {
-    public class AvailableQuestionOptionMappingsQuery : IRequest<IEnumerable<QuestionOptionMapping>>
+    public class AvailableQuestionOptionMappingsQuery : IRequest<IEnumerable<QuestionOptionMappingDisplayItem>>
     {
         public Guid EventId { get; set; }
     }
 
-    public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<AvailableQuestionOptionMappingsQuery, IEnumerable<QuestionOptionMapping>>
+    public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<AvailableQuestionOptionMappingsQuery, IEnumerable<QuestionOptionMappingDisplayItem>>
     {
-        //public Guid ReductionId = Guid.Parse("13B798C3-CA92-4533-B12F-B7A0E83DD021");
-
         private readonly IQueryable<Registrable> _registrables;
 
         public AvailableQuestionOptionMappingsQueryHandler(IQueryable<Registrable> registrables)
@@ -29,9 +27,9 @@ namespace EventRegistrar.Backend.RegistrationForms
             _registrables = registrables;
         }
 
-        public async Task<IEnumerable<QuestionOptionMapping>> Handle(AvailableQuestionOptionMappingsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<QuestionOptionMappingDisplayItem>> Handle(AvailableQuestionOptionMappingsQuery request, CancellationToken cancellationToken)
         {
-            var result = new List<QuestionOptionMapping>();
+            var result = new List<QuestionOptionMappingDisplayItem>();
             var doubleRegistrables = await _registrables.Where(rbl => rbl.EventId == request.EventId
                                                                    && rbl.MaximumDoubleSeats != null)
                                                         .Select(rbl => new
@@ -47,13 +45,13 @@ namespace EventRegistrar.Backend.RegistrationForms
                                               {
                                                   return new[]
                                                   {
-                                                     new QuestionOptionMapping
+                                                     new QuestionOptionMappingDisplayItem
                                                      {
                                                          Id = rbl.Id,
                                                          Type = MappingType.DoubleRegistrableLeader,
                                                          Name = $"{rbl.Name} (Leader)"
                                                      },
-                                                     new QuestionOptionMapping
+                                                     new QuestionOptionMappingDisplayItem
                                                      {
                                                          Id = rbl.Id,
                                                          Type = MappingType.DoubleRegistrableFollower,
@@ -63,9 +61,9 @@ namespace EventRegistrar.Backend.RegistrationForms
                                               }));
 
             var singleRegistrables = await _registrables.Where(rbl => rbl.EventId == request.EventId
-                                                                   && rbl.MaximumSingleSeats != null)
+                                                                   && rbl.MaximumDoubleSeats == null)
                                                         .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
-                                                        .Select(rbl => new QuestionOptionMapping
+                                                        .Select(rbl => new QuestionOptionMappingDisplayItem
                                                         {
                                                             Id = rbl.Id,
                                                             Type = MappingType.SingleRegistrable,
@@ -74,23 +72,38 @@ namespace EventRegistrar.Backend.RegistrationForms
                                                         .ToListAsync(cancellationToken);
             result.AddRange(singleRegistrables);
 
-            result.Add(new QuestionOptionMapping
+            result.Add(new QuestionOptionMappingDisplayItem
             {
                 Type = MappingType.Reduction,
                 Name = "Reduktion"
             });
 
-            result.ForEach(aqo => aqo.CombinedId = $"{aqo.Id}/{aqo.Type}");
+            result.Add(new QuestionOptionMappingDisplayItem
+            {
+                Type = MappingType.Language,
+                Name = "Sprache: Deutsch",
+                Language = "de"
+            });
+
+            result.Add(new QuestionOptionMappingDisplayItem
+            {
+                Type = MappingType.Language,
+                Name = "Sprache: Englisch",
+                Language = "en"
+            });
+
+            result.ForEach(aqo => aqo.CombinedId = $"{aqo.Id}/{aqo.Type}/{aqo.Language}");
 
             return result;
         }
     }
 
-    public class QuestionOptionMapping
+    public class QuestionOptionMappingDisplayItem
     {
         public string CombinedId { get; set; } = null!;
         public Guid? Id { get; set; }
         public MappingType? Type { get; set; }
+        public string? Language { get; set; }
         public string? Name { get; set; }
     }
 }

@@ -18,7 +18,7 @@ namespace EventRegistrar.Backend.Registrations.Register
 {
     public class SingleRegistrationProcessor
     {
-        private readonly IQueryable<QuestionOptionToRegistrableMapping> _optionToRegistrableMappings;
+        private readonly IQueryable<QuestionOptionMapping> _optionToRegistrableMappings;
         private readonly PhoneNormalizer _phoneNormalizer;
         private readonly PriceCalculator _priceCalculator;
         private readonly IRepository<Registration> _registrations;
@@ -26,7 +26,7 @@ namespace EventRegistrar.Backend.Registrations.Register
         private readonly ServiceBusClient _serviceBusClient;
 
         public SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
-                                           IQueryable<QuestionOptionToRegistrableMapping> optionToRegistrableMappings,
+                                           IQueryable<QuestionOptionMapping> optionToRegistrableMappings,
                                            SeatManager seatManager,
                                            PriceCalculator priceCalculator,
                                            IRepository<Registration> registrations,

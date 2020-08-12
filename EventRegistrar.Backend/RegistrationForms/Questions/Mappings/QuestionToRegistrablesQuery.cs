@@ -19,9 +19,9 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
 
     public class QuestionToRegistrablesQueryHandler : IRequestHandler<QuestionToRegistrablesQuery, IEnumerable<QuestionToRegistrablesDisplayItem>>
     {
-        private readonly IQueryable<QuestionOptionToRegistrableMapping> _questionOptionsToRegistrables;
+        private readonly IQueryable<QuestionOptionMapping> _questionOptionsToRegistrables;
 
-        public QuestionToRegistrablesQueryHandler(IQueryable<QuestionOptionToRegistrableMapping> questionOptionsToRegistrables)
+        public QuestionToRegistrablesQueryHandler(IQueryable<QuestionOptionMapping> questionOptionsToRegistrables)
         {
             _questionOptionsToRegistrables = questionOptionsToRegistrables;
         }

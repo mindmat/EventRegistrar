@@ -130,8 +130,8 @@ export class QuestionMappingComponent implements OnInit {
     //}, error => console.error(error));
   }
 
-  save(form: RegistrationFormMappings) {
-    this.http.post(`api/events/${this.getEventAcronym()}/registrationForms/${form.registrationFormId}/mappings`, form).subscribe(result => {
+  save(form: RegistrationFormGroup) {
+    this.http.post(`api/events/${this.getEventAcronym()}/registrationForms/${form.id}/mappings`, form).subscribe(result => {
     }, error => console.error(error));
   }
 }
@@ -279,10 +279,11 @@ class QuestionOptionMapping {
   combinedId: string;
   id: string;
   answer: string;
-  mappedRegistrables: Registrable[];
+  mappedRegistrables: AvailableQuestionOptionMapping[];
 }
 
 class AvailableQuestionOptionMapping {
+  combinedId: string;
   id: string;
   type: MappingType;
   name: string;

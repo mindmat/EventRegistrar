@@ -47,7 +47,7 @@ namespace EventRegistrar.Backend.RegistrationForms
         {
             var forms = await _forms.Where(frm => frm.EventId == query.EventId)
                                     .Include(frm => frm.Questions).ThenInclude(qst => qst.QuestionOptions)
-                                                                  .ThenInclude(qop => qop.Registrables)
+                                                                  .ThenInclude(qop => qop.Mappings)
                                                                   .ThenInclude(map => map.Registrable)
                                     .ToListAsync(cancellationToken);
 
@@ -59,14 +59,14 @@ namespace EventRegistrar.Backend.RegistrationForms
                 //SingleConfiguration = form.ProcessConfigurationJson != null && form.Type == FormPathType.Single
                 //                      ? _jsonHelper.TryDeserialize<SingleRegistrationProcessConfiguration>(form.ProcessConfigurationJson)
                 //                      : null,
-                Mappings = form.Questions.SelectMany(qst => qst.QuestionOptions.SelectMany(qop => qop.Registrables)
+                Mappings = form.Questions.SelectMany(qst => qst.QuestionOptions.SelectMany(qop => qop.Mappings)
                                                                                .OrderBy(map => map.QuestionOption?.Question?.Index)
                                                                                .Select(map => new QuestionToRegistrablesDisplayItem
                                                                                {
                                                                                    MappingId = map.Id,
                                                                                    RegistrableId = map.RegistrableId,
-                                                                                   RegistrableName = map.Registrable!.Name,
-                                                                                   IsPartnerRegistrable = map.Registrable.MaximumDoubleSeats != null,
+                                                                                   RegistrableName = map.Registrable?.Name,
+                                                                                   IsPartnerRegistrable = map.Registrable?.MaximumDoubleSeats != null,
                                                                                    QuestionOptionId = map.QuestionOptionId,
                                                                                    Section = map.QuestionOption?.Question?.Section,
                                                                                    Question = map.QuestionOption?.Question?.Title,
@@ -76,7 +76,7 @@ namespace EventRegistrar.Backend.RegistrationForms
                                                                                    QuestionOptionId_Follower = map.QuestionOptionId_Follower
                                                                                })),
                 UnassignedOptions = form.Questions.SelectMany(qst => qst.QuestionOptions
-                                                                        .Where(qop => !qop.Registrables.Any(map => map.Registrable?.RowVersion != null))
+                                                                        .Where(qop => !qop.Mappings.Any(map => map.Registrable?.RowVersion != null))
                                                                         .OrderBy(qop => qop.Question?.Index)
                                                                         .Select(qop => new QuestionToRegistrablesDisplayItem
                                                                         {

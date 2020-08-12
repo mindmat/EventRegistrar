@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -15,7 +14,7 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
         public Question? Question { get; set; }
 
         public string Answer { get; set; } = null!;
-        public IEnumerable<QuestionOptionToRegistrableMapping>? Registrables { get; set; }
+        public IEnumerable<Mappings.QuestionOptionMapping>? Mappings { get; set; }
     }
 
     public class QuestionOptionMap : EntityTypeConfiguration<QuestionOption>

@@ -44,7 +44,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
         {
             builder.ApplyConfiguration(new QuestionMap());
             builder.ApplyConfiguration(new QuestionOptionMap());
-            builder.ApplyConfiguration(new QuestionOptionToRegistrableMappingMap());
+            builder.ApplyConfiguration(new QuestionOptionMappingMap());
             builder.ApplyConfiguration(new ResponseMap());
 
             builder.ApplyConfiguration(new EventMap());

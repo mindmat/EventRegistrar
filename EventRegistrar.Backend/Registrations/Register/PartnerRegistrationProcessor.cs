@@ -17,7 +17,7 @@ namespace EventRegistrar.Backend.Registrations.Register
 {
     public class PartnerRegistrationProcessor
     {
-        private readonly IQueryable<QuestionOptionToRegistrableMapping> _optionToRegistrableMappings;
+        private readonly IQueryable<QuestionOptionMapping> _optionToRegistrableMappings;
         private readonly PhoneNormalizer _phoneNormalizer;
         private readonly PriceCalculator _priceCalculator;
         private readonly IRepository<Registration> _registrations;
@@ -25,7 +25,7 @@ namespace EventRegistrar.Backend.Registrations.Register
         private readonly ServiceBusClient _serviceBusClient;
 
         public PartnerRegistrationProcessor(PhoneNormalizer phoneNormalizer,
-                                           IQueryable<QuestionOptionToRegistrableMapping> optionToRegistrableMappings,
+                                           IQueryable<QuestionOptionMapping> optionToRegistrableMappings,
                                            SeatManager seatManager,
                                            IRepository<Registration> registrations,
                                            PriceCalculator priceCalculator,
@@ -85,7 +85,9 @@ namespace EventRegistrar.Backend.Registrations.Register
             var registrables = await _optionToRegistrableMappings
                                             .Where(map => map.Registrable.EventId == registration.EventId
                                                        && (questionOptionIds.Contains(map.QuestionOptionId)
-                                                        || roleSpecificRegistrableIds != null && roleSpecificRegistrableIds.Contains(map.RegistrableId)))
+                                                        || roleSpecificRegistrableIds != null
+                                                           && map.RegistrableId != null
+                                                           && roleSpecificRegistrableIds.Contains(map.RegistrableId.Value)))
                                             .Include(map => map.Registrable)
                                             .Include(map => map.Registrable.Seats)
                                             .ToListAsync();

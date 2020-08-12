@@ -71,7 +71,7 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
                                                         {
                                                             qop.Id,
                                                             qop.Answer,
-                                                            MappedRegistrables = qop.Registrables.Select(map => new { map.RegistrableId, map.Type, map.Registrable!.Name })
+                                                            MappedRegistrables = qop.Mappings.Select(map => new { map.RegistrableId, map.Type, map.Registrable!.Name, map.Language })
                                                         })
                                                     })
 
@@ -122,12 +122,12 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
                                        {
                                            Id = qop.Id,
                                            Answer = qop.Answer,
-                                           MappedRegistrables = qop.MappedRegistrables.Select(map => new QuestionOptionMapping
+                                           MappedRegistrables = qop.MappedRegistrables.Select(map => new RegistrationForms.QuestionOptionMappingDisplayItem
                                            {
-                                               CombinedId = $"{map.RegistrableId}/{map.Type}",
+                                               CombinedId = $"{map.RegistrableId}/{map.Type}/{map.Language}",
                                                Id = map.RegistrableId,
                                                Type = map.Type,
-                                               Name = map.Name
+                                               Name = GetName(map.Type, map.Name, map.Language)
                                            })
                                        })
                                    }).OrderBy(qst => qst.SortKey)
@@ -152,13 +152,39 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
 
             });
         }
+
+        private string GetName(MappingType? type, string registrableName, string? language)
+        {
+            switch (type)
+            {
+                case MappingType.Language:
+                    {
+                        return language switch
+                        {
+                            "en" => "Sprache: Englisch",
+                            "de" => "Sprache: Deutsch",
+                            _ => "Sprache: ?"
+                        };
+                    }
+                case MappingType.Reduction:
+                    return "Reduktion";
+
+                case MappingType.DoubleRegistrableLeader:
+                    return $"{registrableName} (Leader)";
+
+                case MappingType.DoubleRegistrableFollower:
+                    return $"{registrableName} (Follower)";
+            }
+
+            return registrableName;
+        }
     }
 
     public class QuestionOptionMappingDisplayItem
     {
         public Guid Id { get; set; }
         public string? Answer { get; set; }
-        public IEnumerable<QuestionOptionMapping>? MappedRegistrables { get; set; }
+        public IEnumerable<RegistrationForms.QuestionOptionMappingDisplayItem>? MappedRegistrables { get; set; }
     }
 
     public class QuestionMappingDisplayItem
