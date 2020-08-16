@@ -161,19 +161,23 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
                     {
                         return language switch
                         {
-                            "en" => "Sprache: Englisch",
-                            "de" => "Sprache: Deutsch",
-                            _ => "Sprache: ?"
+                            "en" => $"{Properties.Resources.Language}: {Properties.Resources.English}",
+                            "de" => $"{Properties.Resources.Language}: {Properties.Resources.German}",
+                            _ => $"{Properties.Resources.Language}: ?"
                         };
                     }
                 case MappingType.Reduction:
-                    return "Reduktion";
+                    return Properties.Resources.Reduction;
 
                 case MappingType.DoubleRegistrableLeader:
-                    return $"{registrableName} (Leader)";
-
+                    return $"{registrableName} ({Properties.Resources.Leader})";
                 case MappingType.DoubleRegistrableFollower:
-                    return $"{registrableName} (Follower)";
+                    return $"{registrableName} ({Properties.Resources.Follower})";
+
+                case MappingType.RoleLeader:
+                    return $"{Properties.Resources.Role}: {Properties.Resources.Leader}";
+                case MappingType.RoleFollower:
+                    return $"{Properties.Resources.Role}: {Properties.Resources.Follower}";
             }
 
             return registrableName;

@@ -211,4 +211,25 @@
   <data name="EventRegistrar_Backend_Registrations_IndividualReductions_IndividualReductionAdded" xml:space="preserve">
     <value>Persönlicher Rabatt gewährt</value>
   </data>
+  <data name="English" xml:space="preserve">
+    <value>Englisch</value>
+  </data>
+  <data name="Follower" xml:space="preserve">
+    <value>Follower</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Leader" xml:space="preserve">
+    <value>Leader</value>
+  </data>
+  <data name="Reduction" xml:space="preserve">
+    <value>Reduktion</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Rolle</value>
+  </data>
 </root>

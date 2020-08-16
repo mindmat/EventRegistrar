@@ -70,6 +70,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Englisch.
+        /// </summary>
+        internal static string English {
+            get {
+                return ResourceManager.GetString("English", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mail importiert.
         /// </summary>
         internal static string EventRegistrar_Backend_Mailing_Import_ExternalMailImported {
@@ -318,11 +327,47 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Follower.
+        /// </summary>
+        internal static string Follower {
+            get {
+                return ResourceManager.GetString("Follower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deutsch.
+        /// </summary>
+        internal static string German {
+            get {
+                return ResourceManager.GetString("German", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sprache.
+        /// </summary>
+        internal static string Language {
+            get {
+                return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nachname.
         /// </summary>
         internal static string LastName {
             get {
                 return ResourceManager.GetString("LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leader.
+        /// </summary>
+        internal static string Leader {
+            get {
+                return ResourceManager.GetString("Leader", resourceCulture);
             }
         }
         
@@ -336,11 +381,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reduktion.
+        /// </summary>
+        internal static string Reduction {
+            get {
+                return ResourceManager.GetString("Reduction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} ist leider ausverkauft.
         /// </summary>
         internal static string RegistrableSoldOut {
             get {
                 return ResourceManager.GetString("RegistrableSoldOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rolle.
+        /// </summary>
+        internal static string Role {
+            get {
+                return ResourceManager.GetString("Role", resourceCulture);
             }
         }
     }

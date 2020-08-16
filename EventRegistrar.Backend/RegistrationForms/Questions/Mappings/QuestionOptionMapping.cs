@@ -51,7 +51,8 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
         DoubleRegistrableLeader = 3,
         DoubleRegistrableFollower = 4,
         Language = 5,
-        Reduction = 6
+        Reduction = 6,
+        RoleLeader = 7,
+        RoleFollower = 8
     }
-
 }

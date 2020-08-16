@@ -49,13 +49,13 @@ namespace EventRegistrar.Backend.RegistrationForms
                                                      {
                                                          Id = rbl.Id,
                                                          Type = MappingType.DoubleRegistrableLeader,
-                                                         Name = $"{rbl.Name} (Leader)"
+                                                         Name = $"{rbl.Name} ({Properties.Resources.Leader})"
                                                      },
                                                      new QuestionOptionMappingDisplayItem
                                                      {
                                                          Id = rbl.Id,
                                                          Type = MappingType.DoubleRegistrableFollower,
-                                                         Name = $"{rbl.Name} (Follower)"
+                                                         Name = $"{rbl.Name} ({Properties.Resources.Follower})"
                                                      }
                                                   };
                                               }));
@@ -72,24 +72,38 @@ namespace EventRegistrar.Backend.RegistrationForms
                                                         .ToListAsync(cancellationToken);
             result.AddRange(singleRegistrables);
 
+            // Reduction
             result.Add(new QuestionOptionMappingDisplayItem
             {
                 Type = MappingType.Reduction,
-                Name = "Reduktion"
+                Name = Properties.Resources.Reduction
             });
 
+            // Languages
             result.Add(new QuestionOptionMappingDisplayItem
             {
                 Type = MappingType.Language,
-                Name = "Sprache: Deutsch",
+                Name = $"{Properties.Resources.Language}: {Properties.Resources.German}",
                 Language = "de"
             });
 
             result.Add(new QuestionOptionMappingDisplayItem
             {
                 Type = MappingType.Language,
-                Name = "Sprache: Englisch",
+                Name = $"{Properties.Resources.Language}: {Properties.Resources.English}",
                 Language = "en"
+            });
+
+            // Roles
+            result.Add(new QuestionOptionMappingDisplayItem
+            {
+                Type = MappingType.RoleLeader,
+                Name = $"{Properties.Resources.Role}: {Properties.Resources.Leader}"
+            });
+            result.Add(new QuestionOptionMappingDisplayItem
+            {
+                Type = MappingType.RoleFollower,
+                Name = $"{Properties.Resources.Role}: {Properties.Resources.Follower}"
             });
 
             result.ForEach(aqo => aqo.CombinedId = $"{aqo.Id}/{aqo.Type}/{aqo.Language}");
