@@ -52,7 +52,13 @@ namespace EventRegistrar.Backend.RegistrationForms
             foreach (var questionToSave in formToSave.Sections.SelectMany(sec => sec.Questions))
             {
                 var question = form.Questions.FirstOrDefault(qst => qst.Id == questionToSave.Id);
-                foreach (var optionToSave in questionToSave.Options ?? Enumerable.Empty<FormPaths.QuestionOptionMappingDisplayItem>())
+                if (question == null)
+                {
+                    continue;
+                }
+
+                question.Mapping = questionToSave.Mapping;
+                foreach (var optionToSave in questionToSave.Options ?? Enumerable.Empty<QuestionOptionMappingDisplayItem>())
                 {
                     var option = question?.QuestionOptions.FirstOrDefault(qop => qop.Id == optionToSave.Id);
                     if (option == null)
@@ -63,7 +69,7 @@ namespace EventRegistrar.Backend.RegistrationForms
                     var existingMappings = new List<QuestionOptionMapping>(option.Mappings ?? Enumerable.Empty<QuestionOptionMapping>());
 
                     foreach (var mapping in optionToSave.MappedRegistrables ??
-                                            Enumerable.Empty<QuestionOptionMappingDisplayItem>())
+                                            Enumerable.Empty<AvailableQuestionOptionMapping>())
                     {
                         if (mapping.Type == null || mapping.Id == null || mapping.Language == null)
                         {

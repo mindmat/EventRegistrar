@@ -128,7 +128,7 @@
     <value>Vorname</value>
   </data>
   <data name="EMail" xml:space="preserve">
-    <value>EMail</value>
+    <value>E-Mail</value>
   </data>
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
@@ -231,5 +231,14 @@
   </data>
   <data name="Role" xml:space="preserve">
     <value>Rolle</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>Partner</value>
+  </data>
+  <data name="Remarks" xml:space="preserve">
+    <value>Bemerkungen</value>
+  </data>
+  <data name="Town" xml:space="preserve">
+    <value>Wohnort</value>
   </data>
 </root>

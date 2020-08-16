@@ -14,20 +14,32 @@ export class QuestionMappingComponent implements OnInit {
   //mappings: Mapping[];
   //questions: Question[];
   //unassignedQuestionOptions: Mapping[];
-  dropdownSettings = {};
+  dropdownSettingsQuestionOptions = {};
+  dropdownSettingsQuestions = {};
 
   formTypeItems: FormTypeItem[];
 
   forms: RegistrationFormMappings[];
   formPaths: RegistrationFormGroup[];
   availableQuestionOptionMappings: AvailableQuestionOptionMapping[];
+  availableQuestionMappings: AvailableQuestionMapping[];
 
   ngOnInit() {
-    this.dropdownSettings = {
+    this.dropdownSettingsQuestionOptions = {
       placeholder: 'Zuordnung',
       singleSelection: false,
       idField: 'combinedId',
       textField: 'name',
+      selectAllText: 'Select All',
+      unSelectAllText: 'Unselect All',
+      itemsShowLimit: 5,
+      allowSearchFilter: true
+    };
+    this.dropdownSettingsQuestions = {
+      placeholder: 'Zuordnung',
+      singleSelection: true,
+      idField: 'type',
+      textField: 'text',
       selectAllText: 'Select All',
       unSelectAllText: 'Unselect All',
       itemsShowLimit: 5,
@@ -49,6 +61,9 @@ export class QuestionMappingComponent implements OnInit {
 
     this.http.get<AvailableQuestionOptionMapping[]>(`api/events/${this.getEventAcronym()}/availableQuestionOptionMappings`).subscribe(result => {
       this.availableQuestionOptionMappings = result;
+    }, error => console.error(error));
+    this.http.get<AvailableQuestionMapping[]>(`api/events/${this.getEventAcronym()}/availableQuestionMappings`).subscribe(result => {
+      this.availableQuestionMappings = result;
     }, error => console.error(error));
 
     this.refreshLists();
@@ -249,6 +264,8 @@ class QuestionMapping {
   id: string;
   question: string;
   type: QuestionType;
+  mappable: boolean;
+  mapping: QuestionMappingType;
   options: QuestionOptionMapping[];
 }
 
@@ -285,15 +302,26 @@ class QuestionOptionMapping {
 class AvailableQuestionOptionMapping {
   combinedId: string;
   id: string;
-  type: MappingType;
+  type: QuestionOptionMappingType;
   name: string;
 }
 
-enum MappingType {
+enum QuestionOptionMappingType {
   SingleRegistrable = 1,
   //DoubleRegistrable = 2,
   DoubleRegistrableLeader = 3,
   DoubleRegistrableFollower = 4,
   Language = 5,
   Reduction = 6
+}
+
+class AvailableQuestionMapping {
+  type: QuestionMappingType;
+  text: string;
+}
+
+enum QuestionMappingType {
+  FirstName = 1,
+  LastName = 2,
+  Phone = 3
 }

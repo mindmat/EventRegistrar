@@ -67,6 +67,7 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
                                                         qst.Index,
                                                         qst.Title,
                                                         qst.Type,
+                                                        qst.Mapping,
                                                         Options = qst.QuestionOptions.Select(qop => new
                                                         {
                                                             qop.Id,
@@ -118,11 +119,14 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
                                        Question = qst.Title,
                                        Type = qst.Type,
                                        SortKey = qst.Index,
+                                       Mappable = qst.Type == QuestionType.Text
+                                               || qst.Type == QuestionType.ParagraphText,
+                                       Mapping = qst.Mapping,
                                        Options = qst.Options.Select(qop => new QuestionOptionMappingDisplayItem
                                        {
                                            Id = qop.Id,
                                            Answer = qop.Answer,
-                                           MappedRegistrables = qop.MappedRegistrables.Select(map => new RegistrationForms.QuestionOptionMappingDisplayItem
+                                           MappedRegistrables = qop.MappedRegistrables.Select(map => new AvailableQuestionOptionMapping
                                            {
                                                CombinedId = $"{map.RegistrableId}/{map.Type}/{map.Language}",
                                                Id = map.RegistrableId,
@@ -166,6 +170,7 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
                             _ => $"{Properties.Resources.Language}: ?"
                         };
                     }
+
                 case MappingType.Reduction:
                     return Properties.Resources.Reduction;
 
@@ -188,7 +193,7 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
     {
         public Guid Id { get; set; }
         public string? Answer { get; set; }
-        public IEnumerable<RegistrationForms.QuestionOptionMappingDisplayItem>? MappedRegistrables { get; set; }
+        public IEnumerable<AvailableQuestionOptionMapping>? MappedRegistrables { get; set; }
     }
 
     public class QuestionMappingDisplayItem
@@ -198,6 +203,8 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
         public QuestionType Type { get; set; }
         public IEnumerable<QuestionOptionMappingDisplayItem>? Options { get; set; }
         public int SortKey { get; set; }
+        public bool Mappable { get; set; }
+        public QuestionMappingType? Mapping { get; set; }
     }
 
 

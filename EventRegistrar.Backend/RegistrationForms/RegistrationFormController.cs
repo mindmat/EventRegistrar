@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.RegistrationForms.FormPaths;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
+using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 using EventRegistrar.Backend.Registrations.Register;
 
 using MediatR;
@@ -93,9 +94,18 @@ namespace EventRegistrar.Backend.RegistrationForms
         }
 
         [HttpGet("api/events/{eventAcronym}/availableQuestionOptionMappings")]
-        public async Task<IEnumerable<QuestionOptionMappingDisplayItem>> AvailableQuestionOptionMappingsQuery(string eventAcronym)
+        public async Task<IEnumerable<AvailableQuestionOptionMapping>> AvailableQuestionOptionMappingsQuery(string eventAcronym)
         {
             return await _mediator.Send(new AvailableQuestionOptionMappingsQuery
+            {
+                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+            });
+        }
+
+        [HttpGet("api/events/{eventAcronym}/availableQuestionMappings")]
+        public async Task<IEnumerable<AvailableQuestionMapping>> AvailableQuestionMappingsQuery(string eventAcronym)
+        {
+            return await _mediator.Send(new AvailableQuestionMappingsQuery
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
             });
