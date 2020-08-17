@@ -16,10 +16,9 @@
       <td>{{ form.title }}</td>
       <td>{{ form.language }}</td>
       <td>{{ form.lastImport | date: 'dd.MM.yy HH:mm' }}</td>
-      <td>{{ form.pendingRawFormCreated | date: 'dd.MM.yy HH:mm' }}</td>
+      <td>{{ form.pendingRawFormCreated | date: 'dd.MM.yy HH:mm' }}<button *ngIf="form.pendingRawFormId" class="btn btn-primary btn-xs" (click)="import(form)">Import</button></td>
       <td>{{ form.externalIdentifier }}</td>
       <td>
-        <button *ngIf="form.pendingRawFormId" class="btn btn-primary btn-xs" (click)="import(form)">Import</button>
         <button *ngIf="form.deletable" class="btn btn-primary btn-xs" (click)="delete(form)">Löschen</button>
       </td>
     </tr>

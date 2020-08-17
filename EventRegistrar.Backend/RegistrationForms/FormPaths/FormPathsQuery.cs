@@ -108,34 +108,38 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
                 //    SingleConfig = fpt.SingleConfiguration,
                 //    PartnerConfig = fpt.PartnerConfiguration
                 //}),
-                Sections = frm.Questions.GroupBy(qst => qst.Section).Select(grp => new FormSection
-                {
-                    Name = grp.Key,
-                    SortKey = grp.Min(qst => qst.Index),
-                    Questions = grp.Where(qst => qst.Type != QuestionType.SectionHeader && qst.Type != QuestionType.PageBreak)
-                                   .Select(qst => new QuestionMappingDisplayItem
-                                   {
-                                       Id = qst.Id,
-                                       Question = qst.Title,
-                                       Type = qst.Type,
-                                       SortKey = qst.Index,
-                                       Mappable = qst.Type == QuestionType.Text
-                                               || qst.Type == QuestionType.ParagraphText,
-                                       Mapping = qst.Mapping,
-                                       Options = qst.Options.Select(qop => new QuestionOptionMappingDisplayItem
-                                       {
-                                           Id = qop.Id,
-                                           Answer = qop.Answer,
-                                           MappedRegistrables = qop.MappedRegistrables.Select(map => new AvailableQuestionOptionMapping
-                                           {
-                                               CombinedId = $"{map.RegistrableId}/{map.Type}/{map.Language}",
-                                               Id = map.RegistrableId,
-                                               Type = map.Type,
-                                               Name = GetName(map.Type, map.Name, map.Language)
-                                           })
-                                       })
-                                   }).OrderBy(qst => qst.SortKey)
-                }).OrderBy(sec => sec.SortKey),
+                Sections = frm.Questions.GroupBy(qst => qst.Section)
+                                        .Select(grp => new FormSection
+                                        {
+                                            Name = grp.Key,
+                                            SortKey = grp.Min(qst => qst.Index),
+                                            Questions = grp.Where(qst => qst.Type != QuestionType.SectionHeader && qst.Type != QuestionType.PageBreak)
+                                                           .Select(qst => new QuestionMappingDisplayItem
+                                                           {
+                                                               Id = qst.Id,
+                                                               Question = qst.Title,
+                                                               Type = qst.Type,
+                                                               SortKey = qst.Index,
+                                                               Mappable = qst.Type == QuestionType.Text
+                                                                       || qst.Type == QuestionType.ParagraphText,
+                                                               Mapping = qst.Mapping,
+                                                               Options = qst.Options.Select(qop => new QuestionOptionMappingDisplayItem
+                                                               {
+                                                                   Id = qop.Id,
+                                                                   Answer = qop.Answer,
+                                                                   MappedRegistrables = qop.MappedRegistrables.Select(map => new AvailableQuestionOptionMapping
+                                                                   {
+                                                                       CombinedId = $"{map.RegistrableId}/{map.Type}/{map.Language}",
+                                                                       Id = map.RegistrableId,
+                                                                       Type = map.Type,
+                                                                       Name = GetName(map.Type, map.Name, map.Language)
+                                                                   })
+                                                               })
+                                                           })
+                                                           .OrderBy(qst => qst.SortKey)
+                                        })
+                                        .Where(sec => sec.Questions?.Any() == true)
+                                        .OrderBy(sec => sec.SortKey),
                 //UnassignedOptions = frm.Questions.SelectMany(qst => qst.QuestionOptions
                 //                                 .Where(qop => !qop.Registrables.Any(map => map.Registrable!.Id != null))
                 //                                 .OrderBy(qop => qop.Question!.Index)
