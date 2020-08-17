@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
@@ -17,9 +20,9 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
 
     public class RemoveQuestionOptionFromRegistrableCommandHandler : IRequestHandler<RemoveQuestionOptionFromRegistrableCommand>
     {
-        private readonly IRepository<QuestionOptionToRegistrableMapping> _mappings;
+        private readonly IRepository<QuestionOptionMapping> _mappings;
 
-        public RemoveQuestionOptionFromRegistrableCommandHandler(IRepository<QuestionOptionToRegistrableMapping> mappings)
+        public RemoveQuestionOptionFromRegistrableCommandHandler(IRepository<QuestionOptionMapping> mappings)
         {
             _mappings = mappings;
         }
@@ -29,7 +32,7 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
             var mapping = await _mappings.FirstAsync(map => map.RegistrableId == command.RegistrableId
                                                          && map.QuestionOptionId == command.QuestionOptionId
                                                          && map.Registrable.EventId == command.EventId
-                                                         && map.QuestionOption.Question.RegistrationForm.EventId == command.EventId);
+                                                         && map.QuestionOption.Question.RegistrationForm.EventId == command.EventId, cancellationToken);
             if (mapping != null)
             {
                 _mappings.Remove(mapping);

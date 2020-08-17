@@ -52,9 +52,9 @@ namespace EventRegistrar.Backend.Registrables.WaitingList
         {
             var registrableToCheck = await _registrables.Where(rbl => rbl.Id == command.RegistrableId
                                                                    && rbl.EventId == command.EventId)
-                                                        .Include(rbl => rbl.Seats)
+                                                        .Include(rbl => rbl.Spots)
                                                         .FirstOrDefaultAsync(cancellationToken);
-            var spots = registrableToCheck.Seats.Where(spt => !spt.IsCancelled).ToList();
+            var spots = registrableToCheck.Spots.Where(spt => !spt.IsCancelled).ToList();
             if (registrableToCheck.MaximumSingleSeats.HasValue)
             {
                 var acceptedSpotCount = spots.Count(spt => !spt.IsWaitingList);

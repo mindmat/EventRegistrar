@@ -81,10 +81,10 @@ namespace EventRegistrar.Backend.Registrations.Register
             {
                 throw new ApplicationException("Registration is closed");
             }
-            if (!form.EventId.HasValue)
-            {
-                throw new ApplicationException("Registration form is not yet assigned to an event");
-            }
+            //if (!form.EventId.HasValue)
+            //{
+            //    throw new ApplicationException("Registration form is not yet assigned to an event");
+            //}
 
             var registration = await _registrations.FirstOrDefaultAsync(reg => reg.ExternalIdentifier == rawRegistration.RegistrationExternalIdentifier, cancellationToken);
             if (registration != null)
@@ -95,13 +95,13 @@ namespace EventRegistrar.Backend.Registrations.Register
             registration = new Registration
             {
                 Id = Guid.NewGuid(),
-                EventId = form.EventId.Value,
+                EventId = form.EventId,
                 ExternalIdentifier = rawRegistration.RegistrationExternalIdentifier,
                 RegistrationFormId = form.Id,
                 ReceivedAt = DateTime.UtcNow,
                 ExternalTimestamp = googleRegistration.Timestamp,
                 RespondentEmail = googleRegistration.Email,
-                Language = form.Language,
+                //Language = form.Language,
                 State = RegistrationState.Received,
                 Responses = new List<Response>()
             };
@@ -140,11 +140,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                     await _responses.InsertOrUpdateEntity(response, cancellationToken);
                 }
             }
-            var spots = await _registrationProcessorDelegator.Process(registration, form);
+            var spots = await _registrationProcessorDelegator.Process(registration);
             _eventBus.Publish(new RegistrationProcessed
             {
                 Id = Guid.NewGuid(),
-                EventId = form.EventId.Value,
+                EventId = form.EventId,
                 RegistrationId = registration.Id,
                 FirstName = registration.RespondentFirstName,
                 LastName = registration.RespondentLastName,

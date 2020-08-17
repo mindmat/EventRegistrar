@@ -1,12 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using EventRegistrar.Backend.RegistrationForms;
+
 namespace EventRegistrar.Backend.Registrations.Register
 {
-    public class CoupleRegistrationProcessConfiguration : IRegistrationProcessConfiguration
+    public class PartnerRegistrationProcessConfiguration : IRegistrationProcessConfiguration
     {
-        public string Description { get; set; }
-        public IEnumerable<(Guid QuestionOptionId, string Language)>? LanguageMappings { get; set; }
+        public Guid Id { get; set; }
+        public Guid RegistrationFormId { get; set; }
+        public string? Description { get; set; }
+        public FormPathType Type { get; set; }
+        public IEnumerable<LanguageMapping>? LanguageMappings { get; set; }
         public Guid QuestionId_Follower_Email { get; set; }
         public Guid QuestionId_Follower_FirstName { get; set; }
         public Guid QuestionId_Follower_LastName { get; set; }

@@ -2,10 +2,13 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrables;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
@@ -19,11 +22,11 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
 
     public class AssignQuestionOptionToRegistrableCommandHandler : IRequestHandler<AssignQuestionOptionToRegistrableCommand>
     {
-        private readonly IRepository<QuestionOptionToRegistrableMapping> _mappings;
+        private readonly IRepository<QuestionOptionMapping> _mappings;
         private readonly IQueryable<Registrable> _registrables;
         private readonly IQueryable<QuestionOption> _questionOptions;
 
-        public AssignQuestionOptionToRegistrableCommandHandler(IRepository<QuestionOptionToRegistrableMapping> mappings,
+        public AssignQuestionOptionToRegistrableCommandHandler(IRepository<QuestionOptionMapping> mappings,
                                                                IQueryable<Registrable> registrables,
                                                                IQueryable<QuestionOption> questionOptions)
         {
@@ -41,17 +44,17 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
             if (registrable == null
              || questionOption == null
              || await _mappings.AnyAsync(map => map.RegistrableId == command.RegistrableId
-                                             && map.QuestionOptionId == command.QuestionOptionId))
+                                             && map.QuestionOptionId == command.QuestionOptionId, cancellationToken))
             {
                 return Unit.Value;
             }
 
-            await _mappings.InsertOrUpdateEntity(new QuestionOptionToRegistrableMapping
+            await _mappings.InsertOrUpdateEntity(new QuestionOptionMapping
             {
                 Id = Guid.NewGuid(),
                 RegistrableId = command.RegistrableId,
                 QuestionOptionId = command.QuestionOptionId
-            });
+            }, cancellationToken);
 
             return Unit.Value;
         }

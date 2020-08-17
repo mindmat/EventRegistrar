@@ -1,13 +1,15 @@
 using System;
-using System.Data.SqlClient;
 using System.IO;
 using System.Threading.Tasks;
+
 using Dapper;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 
 namespace EventRegistrar.Functions
@@ -27,7 +29,7 @@ namespace EventRegistrar.Functions
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
             var connectionString = config.GetConnectionString("DefaultConnection");
-            using (var connection = new SqlConnection(connectionString))
+            await using (var connection = new SqlConnection(connectionString))
             {
                 const string insertQuery = @"INSERT INTO dbo.RawRegistrationForms(Id, EventAcronym, ReceivedMessage, FormExternalIdentifier, Created) " +
                                            @"VALUES (@Id, @EventAcronym, @ReceivedMessage, @FormExternalIdentifier, @Created)";

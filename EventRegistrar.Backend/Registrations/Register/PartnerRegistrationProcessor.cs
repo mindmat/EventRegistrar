@@ -15,31 +15,31 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrations.Register
 {
-    public class CoupleRegistrationProcessor
+    public class PartnerRegistrationProcessor
     {
-        private readonly IQueryable<QuestionOptionToRegistrableMapping> _optionToRegistrableMappings;
+        private readonly IQueryable<QuestionOptionMapping> _optionToRegistrableMappings;
         private readonly PhoneNormalizer _phoneNormalizer;
         private readonly PriceCalculator _priceCalculator;
         private readonly IRepository<Registration> _registrations;
-        private readonly SeatManager _seatManager;
+        private readonly SpotManager _spotManager;
         private readonly ServiceBusClient _serviceBusClient;
 
-        public CoupleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
-                                           IQueryable<QuestionOptionToRegistrableMapping> optionToRegistrableMappings,
-                                           SeatManager seatManager,
+        public PartnerRegistrationProcessor(PhoneNormalizer phoneNormalizer,
+                                           IQueryable<QuestionOptionMapping> optionToRegistrableMappings,
+                                           SpotManager spotManager,
                                            IRepository<Registration> registrations,
                                            PriceCalculator priceCalculator,
                                            ServiceBusClient serviceBusClient)
         {
             _phoneNormalizer = phoneNormalizer;
             _optionToRegistrableMappings = optionToRegistrableMappings;
-            _seatManager = seatManager;
+            _spotManager = spotManager;
             _registrations = registrations;
             _priceCalculator = priceCalculator;
             _serviceBusClient = serviceBusClient;
         }
 
-        public async Task<IEnumerable<Seat>> Process(Registration registration, CoupleRegistrationProcessConfiguration config)
+        public async Task<IEnumerable<Seat>> Process(Registration registration, PartnerRegistrationProcessConfiguration config)
         {
             registration.RespondentFirstName = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_FirstName)?.ResponseString;
             registration.RespondentLastName = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_LastName)?.ResponseString;
@@ -85,17 +85,19 @@ namespace EventRegistrar.Backend.Registrations.Register
             var registrables = await _optionToRegistrableMappings
                                             .Where(map => map.Registrable.EventId == registration.EventId
                                                        && (questionOptionIds.Contains(map.QuestionOptionId)
-                                                        || roleSpecificRegistrableIds != null && roleSpecificRegistrableIds.Contains(map.RegistrableId)))
+                                                        || roleSpecificRegistrableIds != null
+                                                           && map.RegistrableId != null
+                                                           && roleSpecificRegistrableIds.Contains(map.RegistrableId.Value)))
                                             .Include(map => map.Registrable)
-                                            .Include(map => map.Registrable.Seats)
+                                            .Include(map => map.Registrable.Spots)
                                             .ToListAsync();
             foreach (var response in registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue))
             {
                 foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
                 {
                     var seat = registrable.Registrable.MaximumDoubleSeats.HasValue
-                        ? await _seatManager.ReservePartnerSpot(registration.EventId, registrable.Registrable, registration.Id, followerRegistration.Id, true)
-                        : await _seatManager.ReserveSingleSpot(registration.EventId, registrable.Registrable, registration.Id, true);
+                        ? await _spotManager.ReservePartnerSpot(registration.EventId, registrable.Registrable, registration.Id, followerRegistration.Id, true)
+                        : await _spotManager.ReserveSingleSpot(registration.EventId, registrable.Id, registration.Id, true);
 
                     if (seat == null)
                     {
@@ -116,7 +118,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     var registrationId = roleSpecificMapping.Role == Role.Leader
                                          ? registration.Id
                                          : followerRegistration.Id;
-                    var seat = await _seatManager.ReserveSingleSpot(registration.EventId, registrable.Registrable, registrationId, false);
+                    var seat = await _spotManager.ReserveSingleSpot(registration.EventId, registrable.Id, registrationId, false);
                     if (seat == null)
                     {
                         registration.SoldOutMessage = (registration.SoldOutMessage == null ? string.Empty : registration.SoldOutMessage + Environment.NewLine) +
@@ -138,7 +140,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 followerRegistration.AdmittedAt = DateTime.UtcNow;
             }
 
-            followerRegistration.OriginalPrice = await _priceCalculator.CalculatePrice(followerRegistration, registration.Responses, spots);
+            followerRegistration.OriginalPrice = await _priceCalculator.CalculatePrice(followerRegistration, spots);
             followerRegistration.Price = followerRegistration.OriginalPrice;
 
             await _registrations.InsertOrUpdateEntity(followerRegistration);
@@ -150,7 +152,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                 registration.AdmittedAt = DateTime.UtcNow;
             }
 
-            registration.OriginalPrice = await _priceCalculator.CalculatePrice(registration, registration.Responses, spots);
+            registration.OriginalPrice = await _priceCalculator.CalculatePrice(registration, spots);
             registration.Price = registration.OriginalPrice;
 
             await _registrations.InsertOrUpdateEntity(registration);

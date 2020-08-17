@@ -14,6 +14,7 @@
     <ApplicationInsightsResourceId>/subscriptions/aa0cb34f-eb53-4377-8b74-14f3766835ab/resourcegroups/EventRegistrator/providers/microsoft.insights/components/EventRegistratorWeb</ApplicationInsightsResourceId>
     <ApplicationInsightsAnnotationResourceId>/subscriptions/aa0cb34f-eb53-4377-8b74-14f3766835ab/resourcegroups/EventRegistrator/providers/microsoft.insights/components/EventRegistratorWeb</ApplicationInsightsAnnotationResourceId>
     <StartupObject />
+    <UserSecretsId>552f1e00-96a9-4b33-b15f-356256193df7</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

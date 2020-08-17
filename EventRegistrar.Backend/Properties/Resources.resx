@@ -128,7 +128,7 @@
     <value>Vorname</value>
   </data>
   <data name="EMail" xml:space="preserve">
-    <value>EMail</value>
+    <value>E-Mail</value>
   </data>
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
@@ -210,5 +210,35 @@
   </data>
   <data name="EventRegistrar_Backend_Registrations_IndividualReductions_IndividualReductionAdded" xml:space="preserve">
     <value>Persönlicher Rabatt gewährt</value>
+  </data>
+  <data name="English" xml:space="preserve">
+    <value>Englisch</value>
+  </data>
+  <data name="Follower" xml:space="preserve">
+    <value>Follower</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>Deutsch</value>
+  </data>
+  <data name="Language" xml:space="preserve">
+    <value>Sprache</value>
+  </data>
+  <data name="Leader" xml:space="preserve">
+    <value>Leader</value>
+  </data>
+  <data name="Reduction" xml:space="preserve">
+    <value>Reduktion</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Rolle</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>Partner</value>
+  </data>
+  <data name="Remarks" xml:space="preserve">
+    <value>Bemerkungen</value>
+  </data>
+  <data name="Town" xml:space="preserve">
+    <value>Wohnort</value>
   </data>
 </root>

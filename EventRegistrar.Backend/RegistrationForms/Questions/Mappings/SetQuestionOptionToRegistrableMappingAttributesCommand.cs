@@ -17,9 +17,9 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
 
     public class SetQuestionOptionToRegistrableMappingAttributesCommandHandler : IRequestHandler<SetQuestionOptionToRegistrableMappingAttributesCommand>
     {
-        private readonly IRepository<QuestionOptionToRegistrableMapping> _mappings;
+        private readonly IRepository<QuestionOptionMapping> _mappings;
 
-        public SetQuestionOptionToRegistrableMappingAttributesCommandHandler(IRepository<QuestionOptionToRegistrableMapping> mappings)
+        public SetQuestionOptionToRegistrableMappingAttributesCommandHandler(IRepository<QuestionOptionMapping> mappings)
         {
             _mappings = mappings;
         }

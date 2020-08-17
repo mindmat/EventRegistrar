@@ -6,14 +6,14 @@ using MediatR;
 
 namespace EventRegistrar.Backend.RegistrationForms
 {
-    public enum FormType
+    public enum FormPathType
     {
         Single = 1,
         Partner = 2
     }
     public class RegistrationFormType
     {
-        public FormType Type { get; set; }
+        public FormPathType PathType { get; set; }
         public string Name { get; set; }
     }
 
@@ -25,8 +25,8 @@ namespace EventRegistrar.Backend.RegistrationForms
         {
             var items = new[]
             {
-                new RegistrationFormType { Type = FormType.Single, Name = "Einzelanmeldung"},
-                new RegistrationFormType { Type = FormType.Partner, Name = "Partneranmeldung" },
+                new RegistrationFormType { PathType = FormPathType.Single, Name = "Einzelanmeldung"},
+                new RegistrationFormType { PathType = FormPathType.Partner, Name = "Partneranmeldung" },
             } as IEnumerable<RegistrationFormType>;
             return Task.FromResult(items);
         }

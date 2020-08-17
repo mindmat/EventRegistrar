@@ -84,7 +84,7 @@ namespace EventRegistrar.Backend.Registrations.Overview
                                                       rbl.Id,
                                                       rbl.Name,
                                                       rbl.ShowInMailListOrder,
-                                                      Participants = rbl.Seats.Where(spt => !spt.IsCancelled && !spt.IsWaitingList)
+                                                      Participants = rbl.Spots.Where(spt => !spt.IsCancelled && !spt.IsWaitingList)
                                                                               .Select(spt => (spt.RegistrationId.HasValue ? 1 : 0) +
                                                                                              (spt.RegistrationId_Follower.HasValue ? 1 : 0))
                                                                               .Sum(),

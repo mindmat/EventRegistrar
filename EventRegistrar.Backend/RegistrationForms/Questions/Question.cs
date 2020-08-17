@@ -16,11 +16,14 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
         public int ExternalId { get; set; }
         public int Index { get; set; }
         public ICollection<QuestionOption>? QuestionOptions { get; set; }
-        public string? TemplateKey { get; set; }
 
         public QuestionType Type { get; set; }
         public string Title { get; set; } = null!;
         public string? Section { get; set; }
+
+        public QuestionMappingType? Mapping { get; set; }
+        public string? TemplateKey { get; set; }
+
     }
 
     public class QuestionMap : EntityTypeConfiguration<Question>
@@ -34,5 +37,16 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions
                    .WithMany(frm => frm!.Questions)
                    .HasForeignKey(que => que.RegistrationFormId);
         }
+    }
+
+    public enum QuestionMappingType
+    {
+        FirstName = 1,
+        LastName = 2,
+        EMail = 3,
+        Phone = 4,
+        Town = 5,
+        Remarks = 6,
+        Partner = 10
     }
 }

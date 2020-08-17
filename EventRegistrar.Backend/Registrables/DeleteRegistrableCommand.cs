@@ -40,9 +40,9 @@ namespace EventRegistrar.Backend.Registrables
             }
 
             var registrable = await _registrables.Where(rbl => rbl.Id == command.RegistrableId)
-                                                 .Include(rbl => rbl.Seats)
+                                                 .Include(rbl => rbl.Spots)
                                                  .FirstAsync(cancellationToken);
-            if (registrable.Seats.Any(spt => !spt.IsCancelled))
+            if (registrable.Spots.Any(spt => !spt.IsCancelled))
             {
                 throw new Exception("Registrable cannot be deleted because it contains registrations");
             }

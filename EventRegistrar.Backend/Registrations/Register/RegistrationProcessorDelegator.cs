@@ -5,75 +5,88 @@ using System.Linq;
 using System.Threading.Tasks;
 
 using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.RegistrationForms;
+using EventRegistrar.Backend.RegistrationForms.FormPaths;
 using EventRegistrar.Backend.Spots;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Registrations.Register
 {
     public class RegistrationProcessorDelegator
     {
-        private readonly CoupleRegistrationProcessor _coupleRegistrationProcessor;
+        private readonly PartnerRegistrationProcessor _partnerRegistrationProcessor;
+        private readonly IQueryable<FormPath> _formPaths;
         private readonly JsonHelper _jsonHelper;
         private readonly SingleRegistrationProcessor _singleRegistrationProcessor;
 
         public RegistrationProcessorDelegator(SingleRegistrationProcessor singleRegistrationProcessor,
-                                              CoupleRegistrationProcessor coupleRegistrationProcessor,
+                                              PartnerRegistrationProcessor partnerRegistrationProcessor,
+                                              IQueryable<FormPath> formPaths,
                                               JsonHelper jsonHelper)
         {
             _singleRegistrationProcessor = singleRegistrationProcessor;
-            _coupleRegistrationProcessor = coupleRegistrationProcessor;
+            _partnerRegistrationProcessor = partnerRegistrationProcessor;
+            _formPaths = formPaths;
             _jsonHelper = jsonHelper;
         }
 
-        public async Task<IEnumerable<Seat>> Process(Registration registration, RegistrationForm form)
+        public Task<IEnumerable<Seat>> Process(Registration registration)
         {
-            var processConfigurations = GetConfigurations(form);
-            var spots = new List<Seat>();
-            foreach (var registrationProcessConfiguration in processConfigurations)
-            {
-                if (registrationProcessConfiguration is SingleRegistrationProcessConfiguration singleConfig
-                 && (!singleConfig.QuestionOptionId_Trigger.HasValue // no trigger -> process all registrations
-                  || registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue &&
-                                                       rsp.QuestionOptionId.Value == singleConfig.QuestionOptionId_Trigger)))
-                {
-                    var newSpots = await _singleRegistrationProcessor.Process(registration, singleConfig);
-                    spots.AddRange(newSpots);
-                }
-                else if (registrationProcessConfiguration is CoupleRegistrationProcessConfiguration coupleConfig
-                      && registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue &&
-                                                           rsp.QuestionOptionId.Value == coupleConfig.QuestionOptionId_Trigger))
-                {
-                    var newSpots = await _coupleRegistrationProcessor.Process(registration, coupleConfig);
-                    spots.AddRange(newSpots);
-                }
-            }
+            return _singleRegistrationProcessor.Process(registration);
 
-            return spots;
+            //var processConfigurations = await GetConfigurations(registrationFormId);
+            //var spots = new List<Seat>();
+            //foreach (var registrationProcessConfiguration in processConfigurations)
+            //{
+            //    if (registrationProcessConfiguration is SingleRegistrationProcessConfiguration singleConfig
+            //     && (!singleConfig.QuestionOptionId_Trigger.HasValue // no trigger -> process all registrations
+            //      || registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue &&
+            //                                           rsp.QuestionOptionId.Value == singleConfig.QuestionOptionId_Trigger)))
+            //    {
+            //        var newSpots = await _singleRegistrationProcessor.Process(registration);
+            //        spots.AddRange(newSpots);
+            //    }
+            //    else if (registrationProcessConfiguration is PartnerRegistrationProcessConfiguration coupleConfig
+            //          && registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue &&
+            //                                               rsp.QuestionOptionId.Value == coupleConfig.QuestionOptionId_Trigger))
+            //    {
+            //        var newSpots = await _partnerRegistrationProcessor.Process(registration, coupleConfig);
+            //        spots.AddRange(newSpots);
+            //    }
+            //}
+
+            //return spots;
         }
 
-        private IEnumerable<IRegistrationProcessConfiguration> GetConfigurations(RegistrationForm form)
+        private async Task<IEnumerable<IRegistrationProcessConfiguration>> GetConfigurations(Guid registrationFormId)
         {
             // ToDo: multiple configs per form
-            IRegistrationProcessConfiguration? config = null;
-            if (form.ProcessConfigurationJson != null)
+            var configs = await _formPaths.Where(fpt => fpt.RegistrationFormId == registrationFormId)
+                                          .ToListAsync();
+            if (configs.Any())
             {
-                if (form.Type == FormType.Single)
-                {
-                    config = _jsonHelper.TryDeserialize<SingleRegistrationProcessConfiguration>(form.ProcessConfigurationJson);
-                }
+                return configs.Select(fpt => _jsonHelper.Deserialize<IRegistrationProcessConfiguration>(fpt.ConfigurationJson));
             }
+            //IRegistrationProcessConfiguration? config = null;
+            //if (form.ProcessConfigurationJson != null)
+            //{
+            //    if (form.Type == FormPathType.Single)
+            //    {
+            //        config = _jsonHelper.TryDeserialize<SingleRegistrationProcessConfiguration>(form.ProcessConfigurationJson);
+            //    }
+            //}
 
-            if (config != null)
-            {
-                return new[] { config };
-            }
-            return GetHardcodedConfiguration(form.Id);
+            //if (config != null)
+            //{
+            //    return new[] { config };
+            //}
+            return GetHardcodedConfiguration(registrationFormId);
         }
 
-        private IEnumerable<IRegistrationProcessConfiguration> GetHardcodedConfiguration(Guid formId)
+        private IEnumerable<IRegistrationProcessConfiguration> GetHardcodedConfiguration(Guid registrationFormId)
         {
             // HACK: hardcoded
-            if (formId == Guid.Parse("954BE8A3-3FAB-4C9C-9C0B-4B9FFDD1FF3F")) // rb18
+            if (registrationFormId == Guid.Parse("954BE8A3-3FAB-4C9C-9C0B-4B9FFDD1FF3F")) // rb18
             {
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -85,15 +98,15 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_Phone = Guid.Parse("3AFD336A-3C57-4A6A-A1BB-A0824B14431C"),
                     QuestionOptionId_Leader = Guid.Parse("F5DEF570-730B-4411-82DC-42959FF2E088"),
                     QuestionOptionId_Follower = Guid.Parse("AB8363D9-F816-4927-BFED-078E04201C50"),
-                    LanguageMappings = new[]
-                    {
-                        (new Guid("46AD095F-A014-4321-BC5F-5C98F9060F1D"), Language.Deutsch ),
-                        (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
-                        (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
-                        (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
-                    }
+                    //LanguageMappings = new[]
+                    //{
+                    //    (new Guid("46AD095F-A014-4321-BC5F-5C98F9060F1D"), Language.Deutsch ),
+                    //    (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
+                    //    (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
+                    //    (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
+                    //}
                 };
-                yield return new CoupleRegistrationProcessConfiguration
+                yield return new PartnerRegistrationProcessConfiguration
                 {
                     Description = "Balboa Paaranmeldung",
                     QuestionOptionId_Trigger = Guid.Parse("FD9AAAA7-934D-4F43-B2A1-CBC2BA73324E"),
@@ -121,13 +134,13 @@ namespace EventRegistrar.Backend.Registrations.Register
                         (new Guid("82C51368-BF74-43C2-80C1-F85D0A996359"), Role.Follower, new Guid("2148016C-BB24-4055-B5C2-14F0E2333ABA" )),  // Herrenmodell Grösse M
                         (new Guid("C21720AF-94A9-4B45-917D-306934F00868"), Role.Follower, new Guid("F9F46BE4-4E57-4748-897A-3708D312A8EC" )),  // Herrenmodell Grösse S
                     },
-                    LanguageMappings = new[]
-                    {
-                        (new Guid("46AD095F-A014-4321-BC5F-5C98F9060F1D"), Language.Deutsch ),
-                        (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
-                        (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
-                        (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
-                    }
+                    //LanguageMappings = new[]
+                    //{
+                    //    (new Guid("46AD095F-A014-4321-BC5F-5C98F9060F1D"), Language.Deutsch ),
+                    //    (new Guid("C77C269F-CCA1-4B42-89C5-06E5F1E2D3A4"), Language.English ),
+                    //    (new Guid("509B56FD-5A99-42E5-9C8B-ED00DCA55288"), Language.Deutsch ),
+                    //    (new Guid("9B78AFFF-CE9B-4EF1-AC95-957B869A13D8"), Language.English )
+                    //}
                 };
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -137,14 +150,14 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_LastName = Guid.Parse("809AC411-A99C-40F1-96BE-356316918724"),
                     QuestionId_Email = Guid.Parse("C97B62D1-F883-4D67-830D-6355311EFDC9"),
                     QuestionId_Phone = Guid.Parse("FA6734EA-19EE-4E44-8F9E-5DB3BC286BD9"),
-                    LanguageMappings = new[]
-                    {
-                        (new Guid("B1AB2D25-FEBE-431F-B1D1-F6574341C0B2"), Language.Deutsch ),
-                        (new Guid("C8BFCFF1-CE38-4A37-AC54-B06489CB0484"), Language.English ),
-                    }
+                    //LanguageMappings = new[]
+                    //{
+                    //    (new Guid("B1AB2D25-FEBE-431F-B1D1-F6574341C0B2"), Language.Deutsch ),
+                    //    (new Guid("C8BFCFF1-CE38-4A37-AC54-B06489CB0484"), Language.English ),
+                    //}
                 };
             }
-            else if (formId == Guid.Parse("BD14FB5C-EC31-48F0-9DDA-E7D1BB2781C0")) // ll19
+            else if (registrationFormId == Guid.Parse("BD14FB5C-EC31-48F0-9DDA-E7D1BB2781C0")) // ll19
             {
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -160,7 +173,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionOptionId_Reduction = Guid.Parse("25D7532F-8850-4653-B4A9-A0D07D5E9BEE")
                 };
             }
-            else if (formId == Guid.Parse("196B878A-510E-49D9-86D1-9E41665D0544")) // ll19 party passes
+            else if (registrationFormId == Guid.Parse("196B878A-510E-49D9-86D1-9E41665D0544")) // ll19 party passes
             {
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -174,7 +187,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionOptionId_Reduction = Guid.Parse("CD825A86-78A7-45B3-A354-8A14BEAB68A6")
                 };
             }
-            else if (formId == Guid.Parse("8A39B7CD-D97F-4438-8604-D85E90925DF5")) // rb19
+            else if (registrationFormId == Guid.Parse("8A39B7CD-D97F-4438-8604-D85E90925DF5")) // rb19
             {
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -187,11 +200,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionOptionId_Leader = Guid.Parse("2F9EB3BF-5772-417E-922A-E0CC6706F289"),
                     QuestionOptionId_Follower = Guid.Parse("C7EC7438-A03E-4EEA-8224-CF9DFF467DE4"),
                     QuestionOptionId_Reduction = Guid.Parse("BDB67C48-096A-4143-B1C4-4E546368E34F"),
-                    LanguageMappings = new[]
-                    {
-                        (new Guid("09C78885-1414-485D-9B79-9804410020BC"), Language.Deutsch ),
-                        (new Guid("D82315E1-90B3-4D34-AF56-625A57A96D8F"), Language.English )
-                    }
+                    //LanguageMappings = new[]
+                    //{
+                    //    (new Guid("09C78885-1414-485D-9B79-9804410020BC"), Language.Deutsch ),
+                    //    (new Guid("D82315E1-90B3-4D34-AF56-625A57A96D8F"), Language.English )
+                    //}
                 };
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -204,11 +217,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionOptionId_Leader = Guid.Parse("3E0C3286-2531-4505-BEB2-45EB3807A8D0"),
                     QuestionOptionId_Follower = Guid.Parse("2DC7461D-7440-4B2E-AE1A-1BBE1255511A"),
                     QuestionOptionId_Reduction = Guid.Parse("D15EDBAF-24F2-4B09-AF1B-CD02298708B9"),
-                    LanguageMappings = new[]
-                    {
-                        (new Guid("08D1F924-BBC4-4CAD-83E8-92890BB1C39C"), Language.Deutsch ),
-                        (new Guid("A9BA2C11-F67A-4D31-8E4A-323682C706CF"), Language.English )
-                    }
+                    //LanguageMappings = new[]
+                    //{
+                    //    (new Guid("08D1F924-BBC4-4CAD-83E8-92890BB1C39C"), Language.Deutsch ),
+                    //    (new Guid("A9BA2C11-F67A-4D31-8E4A-323682C706CF"), Language.English )
+                    //}
                 };
                 yield return new SingleRegistrationProcessConfiguration
                 {
@@ -218,15 +231,15 @@ namespace EventRegistrar.Backend.Registrations.Register
                     QuestionId_LastName = Guid.Parse("966F1966-A135-40E7-BD7C-C7B1FDC8245F"),
                     QuestionId_Email = Guid.Parse("490F5556-B79C-4AF3-84AA-1D0B4F820F93"),
                     QuestionId_Phone = Guid.Parse("735AE310-01E5-4279-8E7A-96325FBA3328"),
-                    LanguageMappings = new[]
-                    {
-                        (new Guid("A3D304E2-7E5C-4B77-B6F0-36EFF6E8192C"), Language.Deutsch ),
-                        (new Guid("73AC9B2F-1109-446A-946E-7AA50F09D649"), Language.English )
-                    }
+                    //LanguageMappings = new[]
+                    //{
+                    //    (new Guid("A3D304E2-7E5C-4B77-B6F0-36EFF6E8192C"), Language.Deutsch ),
+                    //    (new Guid("73AC9B2F-1109-446A-946E-7AA50F09D649"), Language.English )
+                    //}
                 };
 
             }
-            else if (formId == Guid.Parse("E03006B4-4DA6-40FE-8DF8-0D551CB39786")) // ll20
+            else if (registrationFormId == Guid.Parse("E03006B4-4DA6-40FE-8DF8-0D551CB39786")) // ll20
             {
                 yield return new SingleRegistrationProcessConfiguration
                 {

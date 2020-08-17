@@ -30,9 +30,9 @@ namespace EventRegistrar.Backend.Registrables
         public string Name { get; set; } = null!;
         public decimal? Price { get; set; }
         public decimal? ReducedPrice { get; set; }
-        public ICollection<QuestionOptionToRegistrableMapping>? QuestionOptionMappings { get; set; }
+        public ICollection<QuestionOptionMapping>? QuestionOptionMappings { get; set; }
         public ICollection<Reduction>? Reductions { get; set; }
-        public ICollection<Seat>? Seats { get; set; }
+        public ICollection<Seat>? Spots { get; set; }
         public int? ShowInMailListOrder { get; set; }
     }
 
