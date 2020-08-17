@@ -47,9 +47,9 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
     public enum MappingType
     {
         SingleRegistrable = 1,
-        //DoubleRegistrable = 2,
-        DoubleRegistrableLeader = 3,
-        DoubleRegistrableFollower = 4,
+        PartnerRegistrable = 2,
+        PartnerRegistrableLeader = 3,
+        PartnerRegistrableFollower = 4,
         Language = 5,
         Reduction = 6,
         RoleLeader = 7,

@@ -1,6 +1,5 @@
 using System.Linq;
 
-using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 
 using MediatR;
@@ -48,27 +47,25 @@ namespace EventRegistrar.ParticipantPortal
                 // allows request-scoped framework services to be resolved.
                 options.AddAspNetCore()
 
-                // Ensure activation of a specific framework type to be created by
-                // Simple Injector instead of the built-in configuration system.
-                // All calls are optional. You can enable what you need. For instance,
-                // PageModels and TagHelpers are not needed when you build a Web API.
-                       .AddControllerActivation()
-                       .AddViewComponentActivation()
-                       .AddPageModelActivation()
-                       .AddTagHelperActivation();
+                       // Ensure activation of a specific framework type to be created by
+                       // Simple Injector instead of the built-in configuration system.
+                       // All calls are optional. You can enable what you need. For instance,
+                       // PageModels and TagHelpers are not needed when you build a Web API.
+                       .AddControllerActivation();
 
                 // Optionally, allow application components to depend on the non-generic
                 // ILogger (Microsoft.Extensions.Logging) or IStringLocalizer
                 // (Microsoft.Extensions.Localization) abstractions.
                 options.AddLogging();
                 //options.AddLocalization();
+                //options.CrossWire<>()
             });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddSingleton<IControllerActivator>(new SimpleInjectorControllerActivator(_container));
             services.AddSingleton<IViewComponentActivator>(new SimpleInjectorViewComponentActivator(_container));
 
-            services.EnableSimpleInjectorCrossWiring(_container);
+            //services.EnableSimpleInjectorCrossWiring(_container);
             services.UseSimpleInjectorAspNetRequestScoping(_container);
 
 

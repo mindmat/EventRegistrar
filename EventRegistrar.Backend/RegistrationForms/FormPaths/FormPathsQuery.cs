@@ -174,9 +174,9 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
                 case MappingType.Reduction:
                     return Properties.Resources.Reduction;
 
-                case MappingType.DoubleRegistrableLeader:
+                case MappingType.PartnerRegistrableLeader:
                     return $"{registrableName} ({Properties.Resources.Leader})";
-                case MappingType.DoubleRegistrableFollower:
+                case MappingType.PartnerRegistrableFollower:
                     return $"{registrableName} ({Properties.Resources.Follower})";
 
                 case MappingType.RoleLeader:

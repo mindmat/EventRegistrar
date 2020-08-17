@@ -140,7 +140,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                     await _responses.InsertOrUpdateEntity(response, cancellationToken);
                 }
             }
-            var spots = await _registrationProcessorDelegator.Process(registration, form.Id);
+            var spots = await _registrationProcessorDelegator.Process(registration);
             _eventBus.Publish(new RegistrationProcessed
             {
                 Id = Guid.NewGuid(),

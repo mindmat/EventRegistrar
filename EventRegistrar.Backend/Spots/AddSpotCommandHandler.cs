@@ -1,10 +1,13 @@
 ﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Register;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Spots
@@ -13,15 +16,15 @@ namespace EventRegistrar.Backend.Spots
     {
         private readonly IQueryable<Registrable> _registrables;
         private readonly IQueryable<Registration> _registrations;
-        private readonly SeatManager _seatManager;
+        private readonly SpotManager _spotManager;
 
         public AddSpotCommandHandler(IQueryable<Registration> registrations,
                                      IQueryable<Registrable> registrables,
-                                     SeatManager seatManager)
+                                     SpotManager spotManager)
         {
             _registrations = registrations;
             _registrables = registrables;
-            _seatManager = seatManager;
+            _spotManager = spotManager;
         }
 
         public async Task<Unit> Handle(AddSpotCommand command, CancellationToken cancellationToken)
@@ -31,12 +34,12 @@ namespace EventRegistrar.Backend.Spots
                                                                cancellationToken);
             var registrable = await _registrables.Where(rbl => rbl.Id == command.RegistrableId
                                                             && rbl.EventId == command.EventId)
-                                                 .Include(rbl => rbl.Seats)
+                                                 .Include(rbl => rbl.Spots)
                                                  .FirstAsync(cancellationToken);
             if (registrable.MaximumDoubleSeats.HasValue)
             {
-                await _seatManager.ReserveSinglePartOfPartnerSpot(command.EventId,
-                                                                  registrable,
+                await _spotManager.ReserveSinglePartOfPartnerSpot(command.EventId,
+                                                                  registrable.Id,
                                                                   registration.Id,
                                                                   new RegistrationIdentification(registration),
                                                                   null,
@@ -45,7 +48,10 @@ namespace EventRegistrar.Backend.Spots
             }
             else
             {
-                await _seatManager.ReserveSingleSpot(command.EventId, registrable, registration.Id, false);
+                await _spotManager.ReserveSingleSpot(command.EventId,
+                                                     registrable.Id,
+                                                     registration.Id,
+                                                     false);
             }
 
             return Unit.Value;

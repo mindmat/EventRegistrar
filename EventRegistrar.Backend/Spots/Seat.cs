@@ -34,7 +34,7 @@ namespace EventRegistrar.Backend.Spots
             base.Configure(builder);
             builder.ToTable("Seats");
             builder.HasOne(seat => seat.Registrable)
-                   .WithMany(rbl => rbl!.Seats)
+                   .WithMany(rbl => rbl!.Spots)
                    .HasForeignKey(rbl => rbl.RegistrableId)
                    .OnDelete(DeleteBehavior.Cascade);
 

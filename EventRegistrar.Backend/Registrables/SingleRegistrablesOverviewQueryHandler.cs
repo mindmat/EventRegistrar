@@ -30,7 +30,7 @@ namespace EventRegistrar.Backend.Registrables
             var registrables = await _registrables.Where(rbl => rbl.EventId == query.EventId
                                                              && !rbl.MaximumDoubleSeats.HasValue)
                                                   .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
-                                                  .Include(rbl => rbl.Seats)
+                                                  .Include(rbl => rbl.Spots)
                                                   .ToListAsync(cancellationToken);
 
             var registrationsOnWaitingList = new HashSet<Guid>(_registrations.Where(reg => reg.EventId == query.EventId
@@ -44,12 +44,12 @@ namespace EventRegistrar.Backend.Registrables
                                    Name = rbl.Name,
                                    SpotsAvailable = rbl.MaximumSingleSeats,
                                    AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,
-                                   Accepted = rbl.Seats.Count(spt => !spt.IsCancelled
+                                   Accepted = rbl.Spots.Count(spt => !spt.IsCancelled
                                                                   && !spt.IsWaitingList
                                                                   && !registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty)),
-                                   OnWaitingList = rbl.Seats.Count(spt => !spt.IsCancelled
+                                   OnWaitingList = rbl.Spots.Count(spt => !spt.IsCancelled
                                                                        && (spt.IsWaitingList || registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty))),
-                                   IsDeletable = !rbl.Seats.Any(spt => !spt.IsCancelled)
+                                   IsDeletable = !rbl.Spots.Any(spt => !spt.IsCancelled)
                                               && userCanDeleteRegistrable
                                               && rbl.Event.State == RegistrationForms.State.Setup
                                });

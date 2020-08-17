@@ -13,24 +13,27 @@ using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Backend.Registrations.Register
 {
-    public class SeatManager
+    public class SpotManager
     {
         private readonly IEventBus _eventBus;
         private readonly ImbalanceManager _imbalanceManager;
         private readonly ILogger _logger;
         private readonly IQueryable<Registration> _registrations;
+        private readonly IQueryable<Registrable> _registrables;
         private readonly IRepository<Seat> _seats;
 
-        public SeatManager(IRepository<Seat> seats,
+        public SpotManager(IRepository<Seat> seats,
                            ImbalanceManager imbalanceManager,
                            ILogger logger,
                            IQueryable<Registration> registrations,
+                           IQueryable<Registrable> registrables,
                            IEventBus eventBus)
         {
             _seats = seats;
             _imbalanceManager = imbalanceManager;
             _logger = logger;
             _registrations = registrations;
+            _registrables = registrables;
             _eventBus = eventBus;
         }
 
@@ -40,7 +43,7 @@ namespace EventRegistrar.Backend.Registrations.Register
                                                    Guid registrationId_Follower,
                                                    bool initialProcessing)
         {
-            var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();
+            var seats = registrable.Spots.Where(st => !st.IsCancelled).ToList();
             if (registrable.MaximumSingleSeats.HasValue)
             {
                 throw new InvalidOperationException("Unexpected: Attempt to reserve single spot as partner spot");
@@ -92,22 +95,26 @@ namespace EventRegistrar.Backend.Registrations.Register
             return seat;
         }
 
-        public async Task<Seat> ReserveSinglePartOfPartnerSpot(Guid eventId,
-                                                               Registrable registrable,
-                                                               Guid registrationId,
-                                                               RegistrationIdentification ownIdentification,
-                                                               string partner,
-                                                               Role? role,
-                                                               bool initialProcessing)
+        public async Task<Seat?> ReserveSinglePartOfPartnerSpot(Guid eventId,
+                                                                Guid registrableId,
+                                                                Guid registrationId,
+                                                                RegistrationIdentification ownIdentification,
+                                                                string? partner,
+                                                                Role? role,
+                                                                bool initialProcessing)
         {
             Seat seat;
-            var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();
-            if (registrable.MaximumSingleSeats.HasValue)
+            var registrable = await _registrables.Where(rbl => rbl.Id == registrableId)
+                                                 .Include(rbl => rbl.Spots)
+                                                 .FirstOrDefaultAsync();
+            var spots = registrable.Spots.Where(st => !st.IsCancelled)
+                                         .ToList();
+            if (registrable.MaximumSingleSeats != null)
             {
-                var waitingList = seats.Any(st => st.IsWaitingList);
-                var seatAvailable = !waitingList && seats.Count < registrable.MaximumSingleSeats.Value;
-                _logger.LogInformation($"Registrable {registrable.Name}, Seat count {seats.Count}, MaximumSingleSeats {registrable.MaximumSingleSeats}, seat available {seatAvailable}");
-                if (!seatAvailable && !registrable.HasWaitingList)
+                var waitingList = spots.Any(st => st.IsWaitingList);
+                var spotAvailable = !waitingList && spots.Count < registrable.MaximumSingleSeats.Value;
+                _logger.LogInformation($"Registrable {registrable.Name}, Seat count {spots.Count}, MaximumSingleSeats {registrable.MaximumSingleSeats}, seat available {spotAvailable}");
+                if (!spotAvailable && !registrable.HasWaitingList)
                 {
                     return null;
                 }
@@ -116,10 +123,10 @@ namespace EventRegistrar.Backend.Registrations.Register
                     FirstPartnerJoined = DateTime.UtcNow,
                     RegistrationId = registrationId,
                     RegistrableId = registrable.Id,
-                    IsWaitingList = !seatAvailable
+                    IsWaitingList = !spotAvailable
                 };
             }
-            else if (registrable.MaximumDoubleSeats.HasValue)
+            else if (registrable.MaximumDoubleSeats != null)
             {
                 if (!role.HasValue)
                 {
@@ -127,11 +134,11 @@ namespace EventRegistrar.Backend.Registrations.Register
                 }
                 var isPartnerRegistration = !string.IsNullOrEmpty(partner);
                 var ownRole = role.Value;
-                var waitingList = seats.Where(st => st.IsWaitingList).ToList();
+                var waitingList = spots.Where(st => st.IsWaitingList).ToList();
                 if (isPartnerRegistration)
                 {
                     // complement existing partner seat
-                    var existingPartnerSeat = await FindPartnerSeat(eventId, ownIdentification, partner, ownRole, seats);
+                    var existingPartnerSeat = await FindPartnerSeat(eventId, ownIdentification, partner, ownRole, spots);
 
                     if (existingPartnerSeat != null)
                     {
@@ -151,7 +158,7 @@ namespace EventRegistrar.Backend.Registrations.Register
 
                     // create new partner seat
                     var waitingListForPartnerRegistrations = waitingList.Any(st => !string.IsNullOrEmpty(st.PartnerEmail));
-                    var seatAvailable = !waitingListForPartnerRegistrations && seats.Count < registrable.MaximumDoubleSeats.Value;
+                    var seatAvailable = !waitingListForPartnerRegistrations && spots.Count < registrable.MaximumDoubleSeats.Value;
                     if (!seatAvailable && !registrable.HasWaitingList)
                     {
                         return null;
@@ -175,11 +182,11 @@ namespace EventRegistrar.Backend.Registrations.Register
 
                     var waitingListForOwnRole = ownRole == Role.Leader && waitingListForSingleLeaders ||
                                                 ownRole == Role.Follower && waitingListForSingleFollowers;
-                    var matchingSingleSeat = FindMatchingSingleSeat(seats, ownRole);
+                    var matchingSingleSeat = FindMatchingSingleSeat(spots, ownRole);
                     var seatAvailable = !waitingListForOwnRole
                                      && (_imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(registrable.MaximumDoubleSeats.Value,
                                                                                                     registrable.MaximumAllowedImbalance ?? 0,
-                                                                                                    seats,
+                                                                                                    spots,
                                                                                                     ownRole)
                                          || matchingSingleSeat != null);
                     if (!seatAvailable && !registrable.HasWaitingList)
@@ -245,11 +252,15 @@ namespace EventRegistrar.Backend.Registrations.Register
         }
 
         public async Task<Seat> ReserveSingleSpot(Guid? eventId,
-                                                  Registrable registrable,
+                                                  Guid registrableId,
                                                   Guid registrationId,
                                                   bool initialProcessing)
         {
-            var seats = registrable.Seats.Where(st => !st.IsCancelled).ToList();
+            var registrable = await _registrables.Where(rbl => rbl.Id == registrableId)
+                                                 .Include(rbl => rbl.Spots)
+                                                 .FirstOrDefaultAsync();
+            var seats = registrable.Spots.Where(st => !st.IsCancelled)
+                                         .ToList();
             if (registrable.MaximumDoubleSeats.HasValue)
             {
                 throw new InvalidOperationException("Unexpected: Attempt to reserve single spot as partner spot");

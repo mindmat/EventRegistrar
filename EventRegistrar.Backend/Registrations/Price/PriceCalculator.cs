@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+
+using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Reductions;
-using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Spots;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -15,58 +17,53 @@ namespace EventRegistrar.Backend.Registrations.Price
         private readonly ILogger _logger;
         private readonly IQueryable<Reduction> _reductions;
         private readonly IQueryable<Registration> _registrations;
-        private readonly IQueryable<Response> _responses;
-        private readonly IQueryable<Seat> _seats;
+        private readonly IQueryable<Registrable> _registrables;
+        private readonly IQueryable<Seat> _spots;
 
         public PriceCalculator(ILogger logger,
-                               IQueryable<Seat> seats,
-                               IQueryable<Response> responses,
+                               IQueryable<Seat> spots,
                                IQueryable<Registration> registrations,
+                               IQueryable<Registrable> registrables,
                                IQueryable<Reduction> reductions)
         {
             _logger = logger;
-            _seats = seats;
-            _responses = responses;
+            _spots = spots;
             _registrations = registrations;
+            _registrables = registrables;
             _reductions = reductions;
         }
 
         public async Task<decimal> CalculatePrice(Guid registrationId)
         {
             var registration = await _registrations.FirstAsync(reg => reg.Id == registrationId);
-            var seats = await _seats.Where(seat => seat.RegistrationId == registrationId
-                                                || seat.RegistrationId_Follower == registrationId)
-                                    .Include(seat => seat.Registrable)
+            var spots = await _spots.Where(spot => spot.RegistrationId == registrationId
+                                                || spot.RegistrationId_Follower == registrationId)
+                                    .Include(spot => spot.Registrable)
                                     .ToListAsync();
-            var responses = await _responses.Where(rsp => rsp.RegistrationId == registrationId)
-                                            .ToListAsync();
-            if (!responses.Any())
-            {
-                if (registration.RegistrationId_Partner.HasValue)
-                {
-                    responses = await _responses.Where(rsp => rsp.RegistrationId == registration.RegistrationId_Partner.Value)
-                                                .ToListAsync();
-                }
-            }
 
-            return await CalculatePrice(registration, responses, seats);
+            return await CalculatePrice(registration, spots);
         }
 
-        public async Task<decimal> CalculatePrice(Registration registration, IEnumerable<Response> responses, IEnumerable<Seat> seats)
+        public async Task<decimal> CalculatePrice(Registration registration, IEnumerable<Seat> spots)
         {
-            var notCancelledSeats = seats.Where(seat => !seat.IsCancelled &&
-                                                        (seat.RegistrationId == registration.Id || seat.RegistrationId_Follower == registration.Id))
+            var notCancelledSpots = spots.Where(spot => !spot.IsCancelled &&
+                                                        (spot.RegistrationId == registration.Id || spot.RegistrationId_Follower == registration.Id))
                                          .ToList();
 
-            var bookedRegistrableIds = new HashSet<Guid>(notCancelledSeats.Select(seat => seat.RegistrableId));
+            var bookedRegistrableIds = new HashSet<Guid>(notCancelledSpots.Select(seat => seat.RegistrableId));
             var price = 0m;
-            foreach (var seat in notCancelledSeats)
+            foreach (var spot in notCancelledSpots)
             {
+                var registrable = spot.Registrable ?? await _registrables.FirstAsync(rbl => rbl.Id == spot.RegistrableId);
+                if (registrable == null)
+                {
+                    continue;
+                }
                 price += registration.IsReduced
-                            ? (seat.Registrable.ReducedPrice ?? seat.Registrable.Price ?? 0m)
-                            : (seat.Registrable.Price ?? 0m);
-                var roleInThisSpot = seat.RegistrationId_Follower == registration.Id ? Role.Follower : Role.Leader;
-                var potentialReductions = await _reductions.Where(red => red.RegistrableId == seat.RegistrableId && !red.ActivatedByReduction).ToListAsync();
+                           ? registrable.ReducedPrice ?? registrable.Price ?? 0m
+                           : registrable.Price ?? 0m;
+                var roleInThisSpot = spot.RegistrationId_Follower == registration.Id ? Role.Follower : Role.Leader;
+                var potentialReductions = await _reductions.Where(red => red.RegistrableId == spot.RegistrableId && !red.ActivatedByReduction).ToListAsync();
                 _logger.LogInformation($"potential reductions: {potentialReductions.Count}");
 
                 //var applicableReductions = potentialReductions.Where(red => red.ActivatedByReduction

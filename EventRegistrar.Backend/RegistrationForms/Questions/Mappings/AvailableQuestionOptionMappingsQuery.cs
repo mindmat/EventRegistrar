@@ -48,14 +48,20 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
                                                      new AvailableQuestionOptionMapping
                                                      {
                                                          Id = rbl.Id,
-                                                         Type = MappingType.DoubleRegistrableLeader,
+                                                         Type = MappingType.PartnerRegistrableLeader,
                                                          Name = $"{rbl.Name} ({Properties.Resources.Leader})"
                                                      },
                                                      new AvailableQuestionOptionMapping
                                                      {
                                                          Id = rbl.Id,
-                                                         Type = MappingType.DoubleRegistrableFollower,
+                                                         Type = MappingType.PartnerRegistrableFollower,
                                                          Name = $"{rbl.Name} ({Properties.Resources.Follower})"
+                                                     },
+                                                     new AvailableQuestionOptionMapping
+                                                     {
+                                                         Id = rbl.Id,
+                                                         Type = MappingType.PartnerRegistrable,
+                                                         Name = rbl.Name
                                                      }
                                                   };
                                               }));

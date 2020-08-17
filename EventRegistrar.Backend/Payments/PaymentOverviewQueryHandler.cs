@@ -63,8 +63,8 @@ namespace EventRegistrar.Backend.Payments
                                                       rbl.Name,
                                                       Price = rbl.Price.Value,
                                                       SpotsAvailable = rbl.MaximumSingleSeats ?? rbl.MaximumDoubleSeats.Value * 2,
-                                                      LeaderCount = rbl.Seats.Where(seat => !seat.IsCancelled && !seat.IsWaitingList).Count(seat => seat.RegistrationId != null),
-                                                      FollowerCount = rbl.Seats.Where(seat => !seat.IsCancelled && !seat.IsWaitingList).Count(seat => seat.RegistrationId_Follower != null),
+                                                      LeaderCount = rbl.Spots.Where(seat => !seat.IsCancelled && !seat.IsWaitingList).Count(seat => seat.RegistrationId != null),
+                                                      FollowerCount = rbl.Spots.Where(seat => !seat.IsCancelled && !seat.IsWaitingList).Count(seat => seat.RegistrationId_Follower != null),
                                                   })
                                                   .ToListAsync(cancellationToken);
 

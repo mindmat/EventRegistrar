@@ -30,30 +30,32 @@ namespace EventRegistrar.Backend.Registrations.Register
             _jsonHelper = jsonHelper;
         }
 
-        public async Task<IEnumerable<Seat>> Process(Registration registration, Guid registrationFormId)
+        public Task<IEnumerable<Seat>> Process(Registration registration)
         {
-            var processConfigurations = await GetConfigurations(registrationFormId);
-            var spots = new List<Seat>();
-            foreach (var registrationProcessConfiguration in processConfigurations)
-            {
-                if (registrationProcessConfiguration is SingleRegistrationProcessConfiguration singleConfig
-                 && (!singleConfig.QuestionOptionId_Trigger.HasValue // no trigger -> process all registrations
-                  || registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue &&
-                                                       rsp.QuestionOptionId.Value == singleConfig.QuestionOptionId_Trigger)))
-                {
-                    var newSpots = await _singleRegistrationProcessor.Process(registration, singleConfig);
-                    spots.AddRange(newSpots);
-                }
-                else if (registrationProcessConfiguration is PartnerRegistrationProcessConfiguration coupleConfig
-                      && registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue &&
-                                                           rsp.QuestionOptionId.Value == coupleConfig.QuestionOptionId_Trigger))
-                {
-                    var newSpots = await _partnerRegistrationProcessor.Process(registration, coupleConfig);
-                    spots.AddRange(newSpots);
-                }
-            }
+            return _singleRegistrationProcessor.Process(registration);
 
-            return spots;
+            //var processConfigurations = await GetConfigurations(registrationFormId);
+            //var spots = new List<Seat>();
+            //foreach (var registrationProcessConfiguration in processConfigurations)
+            //{
+            //    if (registrationProcessConfiguration is SingleRegistrationProcessConfiguration singleConfig
+            //     && (!singleConfig.QuestionOptionId_Trigger.HasValue // no trigger -> process all registrations
+            //      || registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue &&
+            //                                           rsp.QuestionOptionId.Value == singleConfig.QuestionOptionId_Trigger)))
+            //    {
+            //        var newSpots = await _singleRegistrationProcessor.Process(registration);
+            //        spots.AddRange(newSpots);
+            //    }
+            //    else if (registrationProcessConfiguration is PartnerRegistrationProcessConfiguration coupleConfig
+            //          && registration.Responses.Any(rsp => rsp.QuestionOptionId.HasValue &&
+            //                                               rsp.QuestionOptionId.Value == coupleConfig.QuestionOptionId_Trigger))
+            //    {
+            //        var newSpots = await _partnerRegistrationProcessor.Process(registration, coupleConfig);
+            //        spots.AddRange(newSpots);
+            //    }
+            //}
+
+            //return spots;
         }
 
         private async Task<IEnumerable<IRegistrationProcessConfiguration>> GetConfigurations(Guid registrationFormId)
