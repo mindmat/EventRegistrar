@@ -2,8 +2,11 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
 using EventRegistrar.Backend.Authorization;
+
 using MediatR;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Events
@@ -24,7 +27,7 @@ namespace EventRegistrar.Backend.Events
 
         public async Task<EventDetails> Handle(EventQuery query, CancellationToken cancellationToken)
         {
-            var @event = await _events.FirstAsync(evt => evt.Id == query.EventId);
+            var @event = await _events.FirstAsync(evt => evt.Id == query.EventId, cancellationToken);
             return new EventDetails
             {
                 Id = @event.Id,

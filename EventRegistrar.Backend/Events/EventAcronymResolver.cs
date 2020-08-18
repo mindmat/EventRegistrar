@@ -1,10 +1,16 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace EventRegistrar.Backend.Events
 {
+    public interface IEventAcronymResolver
+    {
+        Task<Guid> GetEventIdFromAcronym(string eventAcronym);
+    }
+
     internal class EventAcronymResolver : IEventAcronymResolver
     {
         private readonly IQueryable<Event> _events;
