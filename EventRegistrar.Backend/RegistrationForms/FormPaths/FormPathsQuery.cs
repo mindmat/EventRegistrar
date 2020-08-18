@@ -23,9 +23,6 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
     {
         public Guid Id { get; set; }
         public string? Title { get; set; }
-        public IEnumerable<RegistrationFormPath>? Paths { get; set; }
-        public IEnumerable<QuestionToRegistrablesDisplayItem>? UnassignedOptions { get; set; }
-        public IEnumerable<QuestionDisplayItem>? Questions { get; set; }
         public IEnumerable<FormSection> Sections { get; set; }
     }
 
@@ -53,13 +50,6 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
                                                 {
                                                     frm.Id,
                                                     frm.Title,
-                                                    //Paths = frm.FormPaths.Select(fpt => new RegistrationFormPath
-                                                    //{
-                                                    //    Id = fpt.Id,
-                                                    //    Description = fpt.Description,
-                                                    //    SingleConfig = fpt.SingleConfiguration,
-                                                    //    PartnerConfig = fpt.PartnerConfiguration
-                                                    //}),
                                                     Questions = frm.Questions.Select(qst => new
                                                     {
                                                         qst.Id,
@@ -75,25 +65,6 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
                                                             MappedRegistrables = qop.Mappings.Select(map => new { map.RegistrableId, map.Type, map.Registrable!.Name, map.Language })
                                                         })
                                                     })
-
-                                                    //UnassignedOptions = frm.Questions.SelectMany(qst => qst.QuestionOptions
-                                                    //                                 .Where(qop => !qop.Registrables.Any(map => map.Registrable!.Id != null))
-                                                    //                                 .OrderBy(qop => qop.Question!.Index)
-                                                    //                                 .Select(qop => new QuestionToRegistrablesDisplayItem
-                                                    //                                 {
-                                                    //                                     Section = qop.Question!.Section,
-                                                    //                                     Question = qop.Question!.Title,
-                                                    //                                     QuestionOptionId = qop.Id,
-                                                    //                                     Answer = qop.Answer
-                                                    //                                 })),
-                                                    //Questions = frm.Questions.Where(que => que.Type == QuestionType.Text)
-                                                    //                         .Select(que => new QuestionDisplayItem
-                                                    //                         {
-                                                    //                             Id = que.Id,
-                                                    //                             Section = que.Section,
-                                                    //                             Question = que.Title
-                                                    //                         })
-
                                                 })
                                                 .ToListAsync(cancellationToken);
 
@@ -101,13 +72,6 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
             {
                 Id = frm.Id,
                 Title = frm.Title,
-                //Paths = frm.FormPaths.Select(fpt => new RegistrationFormPath
-                //{
-                //    Id = fpt.Id,
-                //    Description = fpt.Description,
-                //    SingleConfig = fpt.SingleConfiguration,
-                //    PartnerConfig = fpt.PartnerConfiguration
-                //}),
                 Sections = frm.Questions.GroupBy(qst => qst.Section)
                                         .Select(grp => new FormSection
                                         {
@@ -140,24 +104,6 @@ namespace EventRegistrar.Backend.RegistrationForms.FormPaths
                                         })
                                         .Where(sec => sec.Questions?.Any() == true)
                                         .OrderBy(sec => sec.SortKey),
-                //UnassignedOptions = frm.Questions.SelectMany(qst => qst.QuestionOptions
-                //                                 .Where(qop => !qop.Registrables.Any(map => map.Registrable!.Id != null))
-                //                                 .OrderBy(qop => qop.Question!.Index)
-                //                                 .Select(qop => new QuestionToRegistrablesDisplayItem
-                //                                 {
-                //                                     Section = qop.Question!.Section,
-                //                                     Question = qop.Question!.Title,
-                //                                     QuestionOptionId = qop.Id,
-                //                                     Answer = qop.Answer
-                //                                 })),
-                //Questions = frm.Questions.Where(que => que.Type == QuestionType.Text)
-                //                         .Select(que => new QuestionDisplayItem
-                //                         {
-                //                             Id = que.Id,
-                //                             Section = que.Section,
-                //                             Question = que.Title
-                //                         })
-
             });
         }
 

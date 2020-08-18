@@ -13,13 +13,6 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
         public Guid QuestionOptionId { get; set; }
         public QuestionOption? QuestionOption { get; set; }
 
-        [Obsolete]
-        public Guid? QuestionId_Partner { get; set; }
-        [Obsolete]
-        public Guid? QuestionOptionId_Follower { get; set; }
-        [Obsolete]
-        public Guid? QuestionOptionId_Leader { get; set; }
-
         public MappingType? Type { get; set; }
         public string? Language { get; set; }
 

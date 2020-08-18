@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.RegistrationForms.FormPaths;
-using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
 using MediatR;
 
 using Microsoft.EntityFrameworkCore;
 
-namespace EventRegistrar.Backend.RegistrationForms
+namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings
 {
     public class SaveRegistrationFormMappingsCommand : IRequest, IEventBoundRequest
     {
@@ -119,14 +118,6 @@ namespace EventRegistrar.Backend.RegistrationForms
                     }
                 }
             }
-
-
-
-            //form.Type = formToSave.Type ?? form.Type;
-            //if (form.Type == FormPathType.Single && formToSave.SingleConfiguration != null)
-            //{
-            //    form.ProcessConfigurationJson = JsonConvert.SerializeObject(formToSave.SingleConfiguration);
-            //}
 
             return Unit.Value;
         }

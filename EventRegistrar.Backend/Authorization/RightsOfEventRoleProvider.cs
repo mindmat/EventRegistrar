@@ -31,9 +31,7 @@ using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrables.WaitingList.Promotion;
-using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
-using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Cancel;
@@ -73,7 +71,6 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(DuePaymentsQuery);
                 yield return nameof(MailTemplatesQuery);
                 yield return nameof(ParticipantsOfRegistrableQuery);
-                yield return nameof(QuestionToRegistrablesQuery);
                 yield return nameof(GetPendingMailsQuery);
                 yield return nameof(MailTypesQuery);
                 yield return nameof(LanguagesQuery);
@@ -95,10 +92,8 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(UnassignedIncomingPaymentsQuery);
                 yield return nameof(RegistrationsOnWaitingListQuery);
                 yield return nameof(NotReceivedMailsQuery);
-                yield return nameof(UnassignedQuestionOptionsQuery);
                 yield return nameof(PricingQuery);
                 yield return nameof(EventQuery);
-                yield return nameof(QuestionsQuery);
                 yield return nameof(PossibleAudiencesQuery);
                 yield return nameof(RefundsQuery);
                 yield return nameof(DifferencesQuery);
@@ -106,7 +101,6 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(UnassignedPayoutsQuery);
                 yield return nameof(PossiblePayoutAssignmentQuery);
                 yield return nameof(DomainEventsQuery);
-                yield return nameof(RegistrationFormsQuery);
             }
             if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
                 usersRolesInEvent.Contains(UserInEventRole.Admin))
@@ -139,8 +133,6 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(SetFallbackToPartyPassCommand);
                 yield return nameof(SetReductionCommand);
                 yield return nameof(WillPayAtCheckinCommand);
-                yield return nameof(AssignQuestionOptionToRegistrableCommand);
-                yield return nameof(RemoveQuestionOptionFromRegistrableCommand);
                 yield return nameof(DeleteRegistrableCommand);
                 yield return nameof(DeleteMailTemplateCommand);
                 yield return nameof(SaveReductionCommand);
@@ -149,7 +141,6 @@ namespace EventRegistrar.Backend.Authorization
                 yield return nameof(ActivateAutomaticPromotionCommand);
                 yield return nameof(DeactivateAutomaticPromotionCommand);
                 yield return nameof(IgnorePaymentCommand);
-                yield return nameof(SetQuestionOptionToRegistrableMappingAttributesCommand);
                 yield return nameof(CreateRegistrableCommand);
                 yield return nameof(FetchBankStamentsFileCommand);
                 yield return nameof(ProcessFetchedBankStatementsFileCommand);

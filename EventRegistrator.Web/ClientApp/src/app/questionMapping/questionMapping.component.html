@@ -1,6 +1,6 @@
-<p *ngIf="!formPaths"><em>Loading...</em></p>
+<p *ngIf="!forms"><em>Loading...</em></p>
 
-<div *ngFor="let form of formPaths" class="jumbotron container">
+<div *ngFor="let form of forms" class="jumbotron container">
   <h2>Formular <i>{{ form.title }}</i></h2>
 
   <div *ngFor="let section of form.sections" class="">
@@ -12,8 +12,8 @@
         </div>
         <div class="col" *ngIf="question.mappable">
           <select [(ngModel)]="question.mapping" class="custom-select">
-            <option>-</option>
-            <option *ngFor="let mapping of availableQuestionMappings" value={{mapping.type}}>{{ mapping.text}}</option>
+            <option value=null>-</option>
+            <option *ngFor="let mapping of availableQuestionMappings" value={{mapping.type}}>{{ mapping.text }}</option>
           </select>
         </div>
       </div>
@@ -21,10 +21,8 @@
         <div class="row" *ngFor="let option of question.options">
           <div class="col"><span>&#8226;</span> {{ option.answer }}</div>
           <div class="col">
-            <ng-multiselect-dropdown [placeholder]="'Zuordnung'"
-                                     [data]="availableQuestionOptionMappings"
-                                     [(ngModel)]="option.mappedRegistrables"
-                                     [settings]="dropdownSettingsQuestionOptions">
+            <ng-multiselect-dropdown [placeholder]="'Zuordnung'" [data]="availableQuestionOptionMappings"
+              [(ngModel)]="option.mappedRegistrables" [settings]="dropdownSettingsQuestionOptions">
             </ng-multiselect-dropdown>
           </div>
         </div>
@@ -34,5 +32,3 @@
 
   <button class="btn btn-sm btn-primary" (click)="save(form)">Speichern</button>
 </div>
-
-

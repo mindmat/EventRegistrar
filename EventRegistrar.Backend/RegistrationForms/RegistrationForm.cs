@@ -17,13 +17,6 @@ namespace EventRegistrar.Backend.RegistrationForms
         public Event? Event { get; set; }
 
         public string ExternalIdentifier { get; set; } = null!;
-        //public string? Language { get; set; }
-
-        //public string? ProcessConfigurationJson { get; set; }
-        //public Guid? QuestionId_FirstName { get; set; }
-        //public Guid? QuestionId_LastName { get; set; }
-        //public Guid? QuestionId_Phone { get; set; }
-        //public Guid? QuestionId_Remarks { get; set; }
         public ICollection<Question>? Questions { get; set; }
         public State State { get; set; }
         public string? Title { get; set; }

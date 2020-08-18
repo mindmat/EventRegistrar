@@ -6,7 +6,6 @@ using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.RegistrationForms.FormPaths;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
-using EventRegistrar.Backend.Registrations.Register;
 
 using MediatR;
 
@@ -40,21 +39,6 @@ namespace EventRegistrar.Backend.RegistrationForms
         public async Task<IEnumerable<RegistrationFormItem>> GetPendingRegistrationForms(string eventAcronym)
         {
             return await _mediator.Send(new PendingRegistrationFormQuery
-            {
-                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-            });
-        }
-
-        [HttpGet("api/registrationFormTypes")]
-        public async Task<IEnumerable<RegistrationFormType>> GetRegistrationFormTypes()
-        {
-            return await _mediator.Send(new RegistrationFormTypesQuery());
-        }
-
-        [HttpGet("api/events/{eventAcronym}/registrationForms")]
-        public async Task<IEnumerable<RegistrationFormMappings>> GetRegistrationForms(string eventAcronym)
-        {
-            return await _mediator.Send(new RegistrationFormsQuery
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
             });
@@ -108,20 +92,6 @@ namespace EventRegistrar.Backend.RegistrationForms
             return await _mediator.Send(new AvailableQuestionMappingsQuery
             {
                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-            });
-        }
-
-        [HttpPost("api/events/{eventAcronym}/registrationForms/{registrationFormId}/formPaths/{formPathId}/mappings")]
-        public async Task SaveRegistrationFormMappings(string eventAcronym,
-                                                       Guid registrationFormId,
-                                                       Guid formPathId,
-                                                       [FromBody] IRegistrationProcessConfiguration configuration)
-        {
-            await _mediator.Send(new SaveFormPathsCommand
-            {
-                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                RegistrationFormId = registrationFormId,
-                Configuration = configuration
             });
         }
     }
