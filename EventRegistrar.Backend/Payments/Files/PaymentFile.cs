@@ -2,6 +2,9 @@
 
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 namespace EventRegistrar.Backend.Payments.Files
 {
     public class PaymentFile : Entity
@@ -14,5 +17,14 @@ namespace EventRegistrar.Backend.Payments.Files
         public string? Currency { get; set; }
         public Guid? EventId { get; set; }
         public string? FileId { get; set; }
+    }
+
+    public class PaymentFileMap : EntityTypeConfiguration<PaymentFile>
+    {
+        public override void Configure(EntityTypeBuilder<PaymentFile> builder)
+        {
+            base.Configure(builder);
+            builder.ToTable("PaymentFiles");
+        }
     }
 }

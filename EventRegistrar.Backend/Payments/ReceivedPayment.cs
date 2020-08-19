@@ -6,6 +6,9 @@ using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Files.Camt;
 using EventRegistrar.Backend.Payments.Files.Slips;
 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 namespace EventRegistrar.Backend.Payments
 {
     public class ReceivedPayment : Entity
@@ -38,5 +41,40 @@ namespace EventRegistrar.Backend.Payments
         public string? Message { get; set; }
         public string? CreditorName { get; set; }
         public string? CreditorIban { get; set; }
+    }
+
+    public class ReceivedPaymentMap : EntityTypeConfiguration<ReceivedPayment>
+    {
+        public override void Configure(EntityTypeBuilder<ReceivedPayment> builder)
+        {
+            base.Configure(builder);
+            builder.ToTable("ReceivedPayments");
+
+            builder.Property(pmt => pmt.Info)
+                   .HasMaxLength(400);
+
+            builder.Property(pmt => pmt.Reference)
+                   .HasMaxLength(100);
+
+            builder.Property(pmt => pmt.RecognizedEmail)
+                   .HasMaxLength(100);
+
+            builder.Property(pmt => pmt.DebitorName)
+                   .HasMaxLength(200);
+
+            builder.Property(pmt => pmt.DebitorIban)
+                   .HasMaxLength(200);
+
+            builder.Property(pmt => pmt.InstructionIdentification)
+                   .HasMaxLength(200);
+
+            builder.HasOne(pmt => pmt.PaymentFile)
+                   .WithMany()
+                   .HasForeignKey(pmt => pmt.PaymentFileId);
+
+            builder.HasOne(psl => psl.PaymentSlip)
+                   .WithMany()
+                   .HasForeignKey(psl => psl.PaymentSlipId);
+        }
     }
 }
