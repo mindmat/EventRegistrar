@@ -18,14 +18,5 @@ namespace EventRegistrator.Web
         {
             CreateHostBuilder(args).Build().Run();
         }
-
-        //private static void ConfigureSerilog(WebHostBuilderContext context, LoggerConfiguration configuration)
-        //{
-        //    configuration
-        //        .MinimumLevel.Debug()
-        //        .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
-        //        .Enrich.FromLogContext()
-        //        .WriteTo.ApplicationInsightsTraces(context.Configuration["ApplicationInsights:InstrumentationKey"]);
-        //}
     }
 }
