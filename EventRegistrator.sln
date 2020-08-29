@@ -23,9 +23,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistrar.OrganizerApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistrar.OrganizerApp.iOS", "EventRegistrar.OrganizerApp\EventRegistrar.OrganizerApp.iOS\EventRegistrar.OrganizerApp.iOS.csproj", "{2E4A9424-1D61-47CB-800F-8F8D1B805B2F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistrar.OrganizerApp", "EventRegistrar.OrganizerApp\EventRegistrar.OrganizerApp\EventRegistrar.OrganizerApp.csproj", "{DD7F773C-E8AE-4DD2-9B34-B53CB1BB35EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EventRegistrar.OrganizerApp", "EventRegistrar.OrganizerApp\EventRegistrar.OrganizerApp\EventRegistrar.OrganizerApp.csproj", "{DD7F773C-E8AE-4DD2-9B34-B53CB1BB35EA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{A9C64069-93B9-4018-B32C-9A02C218379F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventRegistrar.Web", "EventRegistrar.Web\EventRegistrar.Web.csproj", "{8CF634F2-2550-41F8-A4CA-795904849EE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -149,6 +151,18 @@ Global
 		{DD7F773C-E8AE-4DD2-9B34-B53CB1BB35EA}.Release|iPhone.Build.0 = Release|Any CPU
 		{DD7F773C-E8AE-4DD2-9B34-B53CB1BB35EA}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{DD7F773C-E8AE-4DD2-9B34-B53CB1BB35EA}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
+		{8CF634F2-2550-41F8-A4CA-795904849EE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8CF634F2-2550-41F8-A4CA-795904849EE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8CF634F2-2550-41F8-A4CA-795904849EE2}.Debug|iPhone.ActiveCfg = Debug|Any CPU
+		{8CF634F2-2550-41F8-A4CA-795904849EE2}.Debug|iPhone.Build.0 = Debug|Any CPU
+		{8CF634F2-2550-41F8-A4CA-795904849EE2}.Debug|iPhoneSimulator.ActiveCfg = Debug|Any CPU
+		{8CF634F2-2550-41F8-A4CA-795904849EE2}.Debug|iPhoneSimulator.Build.0 = Debug|Any CPU
+		{8CF634F2-2550-41F8-A4CA-795904849EE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8CF634F2-2550-41F8-A4CA-795904849EE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8CF634F2-2550-41F8-A4CA-795904849EE2}.Release|iPhone.ActiveCfg = Release|Any CPU
+		{8CF634F2-2550-41F8-A4CA-795904849EE2}.Release|iPhone.Build.0 = Release|Any CPU
+		{8CF634F2-2550-41F8-A4CA-795904849EE2}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
+		{8CF634F2-2550-41F8-A4CA-795904849EE2}.Release|iPhoneSimulator.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
