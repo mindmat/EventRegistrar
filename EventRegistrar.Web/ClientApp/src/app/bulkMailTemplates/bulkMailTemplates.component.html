@@ -1,0 +1,85 @@
+<h1>Mailvorlagen</h1>
+
+<table class="table table-hover" *ngIf="mailingTemplates">
+  <thead class="thead-dark">
+    <tr>
+      <th>Typ</th>
+      <th>Sprache</th>
+      <th>Betreff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let template of mailingTemplates" (click)="showTemplate(template)">
+      <td>
+        <select [(ngModel)]="template.type" disabled="disabled" style="border: none; outline: none">
+          <option *ngFor="let mailType of mailTypes" value={{mailType.type}}>{{ mailType.userText }}</option>
+        </select>
+      </td>
+      <td>{{ template.language }}</td>
+      <td>{{ template.subject }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+<button class="btn btn-primary" (click)="createNew()" *ngIf="!mailingTemplate">Neu</button>
+
+<p *ngIf="!mailingTemplates"><em>Loading...</em></p>
+
+<table class="table" *ngIf="mailingTemplate">
+  <tbody>
+    <tr>
+      <td>ID</td>
+      <td>
+        <input type="text" [(ngModel)]="mailingTemplate.key" class="custom-select form-control" />
+      </td>
+    </tr>
+    <tr>
+      <td>Sprache</td>
+      <td>
+        <select [(ngModel)]="mailingTemplate.language" class="custom-select form-control">
+          <option *ngFor="let language of languages" value={{language.acronym}}>{{ language.userText }}</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Adressaten</td>
+      <td>
+        <ng-multiselect-dropdown [placeholder]="'-'"
+                                 [data]="possibleAudiences"
+                                 [(ngModel)]="selectedAudiences"
+                                 [settings]="dropdownSettings"
+                                 (onSelect)="setAudience($event)"
+                                 (onDeSelect)="setAudience($event)">
+        </ng-multiselect-dropdown>
+      </td>
+    </tr>
+    <tr>
+      <td>Betreff</td>
+      <td><input [(ngModel)]="mailingTemplate.subject" type="text" class="form-control" /></td>
+    </tr>
+    <tr>
+      <td>Absender</td>
+      <td><input [(ngModel)]="mailingTemplate.senderMail" type="text" class="form-control" /></td>
+    </tr>
+    <tr>
+      <td>Absender Alias</td>
+      <td><input [(ngModel)]="mailingTemplate.senderName" type="text" class="form-control" /></td>
+    </tr>
+    <tr>
+      <td>Template (HTML)</td>
+      <!--<td><textarea [(ngModel)]="mailTemplate.template" type="" class="form-control" (keyup)="renderMail()"></textarea></td>-->
+      <td><div [froalaEditor] [(ngModel)]="mailingTemplate.template"></div></td>
+    </tr>
+  </tbody>
+</table>
+
+<button class="btn btn-primary" (click)="saveTemplate()" *ngIf="mailingTemplate">Speichern</button>
+
+<button class="btn btn-primary" (click)="createMails()" *ngIf="mailingTemplate">Mails erzeugen</button>
+<p *ngIf="mailingTemplate">Mails bereit: {{ mailingTemplate.mailsReadyCount }}</p>
+<button class="btn btn-primary" (click)="releaseMails()" *ngIf="mailingTemplate && mailingTemplate.mailsReadyCount > 0">Mails freigeben</button>
+<p *ngIf="mailingTemplate">Mails versendet: {{ mailingTemplate.mailsSentCount }}</p>
+
+<br />
+<br />

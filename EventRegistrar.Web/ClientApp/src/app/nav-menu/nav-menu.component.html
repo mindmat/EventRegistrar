@@ -1,44 +1,227 @@
-<header>
-  <nav
-    class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3"
-  >
-    <div class="container">
-      <a class="navbar-brand" [routerLink]="['/']">EventRegistrar.Web</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target=".navbar-collapse"
-        aria-label="Toggle navigation"
-        [attr.aria-expanded]="isExpanded"
-        (click)="toggle()"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div
-        class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
-        [ngClass]="{ show: isExpanded }"
-      >
-        <ul class="navbar-nav flex-grow">
-          <li
-            class="nav-item"
-            [routerLinkActive]="['link-active']"
-            [routerLinkActiveOptions]="{ exact: true }"
-          >
-            <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/counter']"
-              >Counter</a
-            >
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/fetch-data']"
-              >Fetch data</a
-            >
-          </li>
-        </ul>
+<header class='main-nav'>
+  <nav class='navbar'>
+    <div class="accordion" id="accordionExample">
+      <div class="card">
+        <div class="card-header" id="headingOne">
+          <h2 class="mb-0">
+            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+              Übersichten
+            </button>
+          </h2>
+        </div>
+
+        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
+          <div class="card-body">
+            <ul class='nav navbar-nav'>
+              <!--<li [routerLinkActive]='["link-active"]'>
+                <a [routerLink]='["/"]'>
+                  <span class='glyphicon glyphicon-home'></span> Home
+                </a>
+              </li>-->
+              <li [routerLinkActive]='["link-active"]' *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'registrables']">
+                  <span class='glyphicon glyphicon-th-list'></span> Übersicht Anmeldungen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'paymentOverview']">
+                  <span class='glyphicon glyphicon-usd'></span> Übersicht Einnahmen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'hosting']">
+                  <span class='glyphicon glyphicon-home'></span> Hosting
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'checkinView']">
+                  <span class='glyphicon glyphicon-list'></span> Übersicht Checkin
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'partyOverview']">
+                  <span class='glyphicon glyphicon-file'></span> Übersicht Parties
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'searchRegistration']">
+                  <span class='glyphicon glyphicon-search'></span> Anmeldung suchen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'waiting-list']">
+                  <span class='glyphicon glyphicon-envelope'></span> Wartelisten
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'cancellations']">
+                  <span class='glyphicon glyphicon-envelope'></span> Stornierungen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'log']">
+                  <span class='glyphicon glyphicon-envelope'></span> Log
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header" id="headingTwo">
+          <h2 class="mb-0">
+            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+              Datenqualität
+            </button>
+          </h2>
+        </div>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
+          <div class="card-body">
+            <ul class='nav navbar-nav'>
+              <li [routerLinkActive]='["link-active"]' *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'partnerMatching']">
+                  <span class='glyphicon glyphicon-th-list'></span> Partneranmeldungen zuordnen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'invalid-email-addresses']">
+                  <span class='glyphicon glyphicon-envelope'></span> Ungültige Mailadressen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'not-received-mails']">
+                  <span class='glyphicon glyphicon-envelope'></span> Nicht empfangene Mails
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header" id="headingThree">
+          <h2 class="mb-0">
+            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+              Buchhaltung
+            </button>
+          </h2>
+        </div>
+        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
+          <div class="card-body">
+            <ul class='nav navbar-nav'>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'payments']">
+                  <span class='glyphicon glyphicon-usd'></span> Kontoauszug
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'unassignedPayments']">
+                  <span class='glyphicon glyphicon-usd'></span> Nicht ausgeglichene Zahlungen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'unassigned-payouts']">
+                  <span class='glyphicon glyphicon-calendar'></span> Auszahlungen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'paymentReminders']">
+                  <span class='glyphicon glyphicon-calendar'></span> Ausstehende Zahlungen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'payouts']">
+                  <span class='glyphicon glyphicon-envelope'></span> Rückerstattungen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'payment-differences']">
+                  <span class='glyphicon glyphicon-envelope'></span> Zahlungsdifferenzen
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header" id="headingFour">
+          <h2 class="mb-0">
+            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+              Mailing
+            </button>
+          </h2>
+        </div>
+        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordionExample">
+          <div class="card-body">
+            <ul class='nav navbar-nav'>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'mails']">
+                  <span class='glyphicon glyphicon-envelope'></span> Mails
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'mailTemplates']">
+                  <span class='glyphicon glyphicon-envelope'></span> Mailvorlagen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'bulkMailTemplates']">
+                  <span class='glyphicon glyphicon-envelope'></span> Massenmails
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header" id="headingFive">
+          <h2 class="mb-0">
+            <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+              Admin
+            </button>
+          </h2>
+        </div>
+        <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordionExample">
+          <div class="card-body">
+            <ul class='nav navbar-nav'>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'authorization']">
+                  <span class='glyphicon glyphicon-envelope'></span> Berechtigungen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'registrationForms']">
+                  <span class='glyphicon glyphicon-envelope'></span> Anmeldeformulare
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'questionMapping']">
+                  <span class='glyphicon glyphicon-envelope'></span> Zuordnung Fragen zu Listen
+                </a>
+              </li>
+              <li [routerLinkActive]="['link-active']" *ngIf="eventService.activeEvent">
+                <a [routerLink]="[eventService.activeEvent.acronym, 'pricing']">
+                  <span class='glyphicon glyphicon-envelope'></span> Preisgestaltung
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
     </div>
+
+    <!--<div class='navbar-header'>
+      <a class='navbar-brand'>Hallo {{ authService.user }}</a>
+      <button class="btn btn-primary btn-xs"><a href="/.auth/logout">Logout</a></button>
+      <a class='navbar-brand'>{{ eventService.name }}</a>
+    </div>-->
+    <!--<div class='clearfix'></div>-->
+    <!--<div class='navbar-collapse'>-->
+    <!--<ul class='nav navbar-nav'>
+
+
+
+
+      </li>
+    </ul>-->
   </nav>
 </header>

@@ -1,0 +1,53 @@
+<h1>Biete Hosting</h1>
+
+<p *ngIf="!offers"><em>Loading...</em></p>
+
+<table class='table' *ngIf="offers">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Mail</th>
+      <th>Telefon</th>
+      <!--<th>Sprache</th>-->
+      <th *ngFor="let header of offers.dynamicColumns">{{ header }}</th>
+      <th>Zugelassen</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let offer of offers.offers">
+      <td><a [routerLink]="['/', getEventAcronym(), 'registration', offer.registrationId]">{{ offer.firstName }} {{ offer.lastName }}</a></td>
+      <td>{{ offer.email }}</td>
+      <td>{{ offer.phone }}</td>
+      <!--<td>{{ offer.language }}</td>-->
+      <td *ngFor="let header of offers.dynamicColumns">{{ offer.columns[header] }}</td>
+      <td>{{ offer.admittedAt | date: 'dd.MM.yy HH:mm' }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<h1>Suche Hosting</h1>
+
+<p *ngIf="!requests"><em>Loading...</em></p>
+
+<table class='table' *ngIf="requests">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Mail</th>
+      <th>Telefon</th>
+      <!--<th>Sprache</th>-->
+      <th *ngFor="let header of requests.dynamicColumns">{{ header }}</th>
+      <th>Zugelassen</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let request of requests.requests">
+      <td><a [routerLink]="['/', getEventAcronym(), 'registration', request.registrationId]">{{ request.firstName }} {{ request.lastName }}</a></td>
+      <td>{{ request.email }}</td>
+      <td>{{ request.phone }}</td>
+      <!--<td>{{ request.language }}</td>-->
+      <td *ngFor="let header of requests.dynamicColumns">{{ request.columns[header] }}</td>
+      <td>{{ request.admittedAt | date: 'dd.MM.yy HH:mm' }}</td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,25 @@
+<h1>Übersicht Checkin</h1>
+
+<p *ngIf="!checkinView"><em>Loading...</em></p>
+
+<button *ngIf="checkinView" (click)="downloadXlsx()" class="btn btn-primary">Download</button>
+
+<table class="table" *ngIf="checkinView">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th *ngFor="let header of checkinView.dynamicHeaders">{{ header }}</th>
+      <th>Betrag ausstehend</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let registration of checkinView.items">
+      <td><a [routerLink]="['/', getEventAcronym(), 'registration', registration.registrationId]">{{ registration.firstName }} {{ registration.lastName }}</a></td>
+      <td *ngFor="let header of checkinView.dynamicHeaders">{{ registration.columns[header] }}</td>
+      <!--      <td>{{ registration.admittedAt | date: 'dd.MM.yy HH:mm' }}</td>-->
+      <td><span *ngIf="registration.unsettledAmount != 0">{{ registration.unsettledAmount | currency : 'CHF' }}</span></td>
+      <td>{{ registration.status }}</td>
+    </tr>
+  </tbody>
+</table>

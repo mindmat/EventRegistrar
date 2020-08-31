@@ -1,0 +1,125 @@
+<h1>Übersicht Anmeldungen</h1>
+
+<p *ngIf="!doubleRegistrables"><em>Loading...</em></p>
+
+<table class='table' *ngIf="doubleRegistrables">
+  <thead>
+    <tr>
+      <th>Bezeichnung</th>
+      <th>Max. Paare</th>
+      <th>Leader akzeptiert</th>
+      <th>Follower akzeptiert</th>
+      <th>Leader auf Warteliste</th>
+      <th>Follower auf Warteliste</th>
+      <th>Paare auf Warteliste</th>
+      <th>Max Ungleichgewicht</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let registrable of doubleRegistrables">
+      <td>
+        <a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a>
+        <button class="btn btn-primary btn-sm" *ngIf="registrable.isDeletable && eventService.activeEvent?.state === 1" (click)="deleteRegistrable(registrable.id)">Löschen</button>
+      </td>
+      <td><span class="badge badge-light" (click)="editCoupleLimits(registrable)" data-toggle="modal" data-target="#coupleRegistrableModal" style="cursor: pointer">{{ registrable.spotsAvailable }}</span></td>
+      <td>{{ registrable.leadersAccepted }}</td>
+      <td>{{ registrable.followersAccepted }}</td>
+      <td>{{ registrable.leadersOnWaitingList }}</td>
+      <td>{{ registrable.followersOnWaitingList }}</td>
+      <td>{{ registrable.couplesOnWaitingList }}</td>
+      <td><span class="badge badge-light" (click)="editCoupleLimits(registrable)" data-toggle="modal" data-target="#coupleRegistrableModal" style="cursor: pointer">{{ registrable.maximumAllowedImbalance }}</span></td>
+    </tr>
+    <tr *ngIf="eventService.activeEvent?.state === 1">
+      <td>
+        <input type="text" class="form-control" #newDoubleRegistrable>
+        <button class="btn btn-primary btn-sm" (click)="createNewDoubleRegistrable(newDoubleRegistrable.value)">Erstellen</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<!--<button class="btn btn-primary" *ngIf="doubleRegistrables" (click)="promote()">Hinzufügen</button>-->
+
+<p *ngIf="!singleRegistrables"><em>Loading...</em></p>
+
+<table class='table' *ngIf="singleRegistrables">
+  <thead>
+    <tr>
+      <th>Bezeichnung</th>
+      <th>Plätze verfügbar</th>
+      <th>Akzeptiert</th>
+      <th>Auf Warteliste</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let registrable of singleRegistrables">
+      <td>
+        <a [routerLink]="['/', getEventAcronym(), 'registrables', registrable.id, 'participants']">{{ registrable.name }}</a>
+        <button class="btn btn-primary btn-sm" *ngIf="registrable.isDeletable && eventService.activeEvent?.state === 1" (click)="deleteRegistrable(registrable.id)">Löschen</button>
+      </td>
+      <td><span class="badge badge-light" (click)="editSingleLimits(registrable)" data-toggle="modal" data-target="#singleRegistrableModal" style="cursor: pointer">{{ registrable.spotsAvailable }}</span></td>
+      <td>{{ registrable.accepted }}</td>
+      <td>{{ registrable.onWaitingList }}</td>
+    </tr>
+    <tr *ngIf="eventService.activeEvent?.state === 1">
+      <td>
+        <input type="text" class="form-control" #newSingleRegistrable>
+        <button class="btn btn-primary btn-sm" (click)="createNewSingleRegistrable(newSingleRegistrable.value)">Erstellen</button>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+<div *ngIf="eventService.activeEvent?.state === 1">
+  <button class="btn btn-primary btn-xs" (click)="deleteTestDataAndOpen()">Testdaten löschen & Registrierung öffnen</button>
+</div>
+
+<div class="modal fade" id="coupleRegistrableModal" tabindex="-1" role="dialog" aria-labelledby="coupleRegistrableModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="coupleRegistrableModalLabel">{{ doubleRegistrableLimits.name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="maximumCouples">Maximale Anzahl Paare</label>
+          <input type="number" class="form-control" id="maximumCouples" [(ngModel)]="doubleRegistrableLimits.spotsAvailable">
+        </div>
+        <div class="form-group">
+          <label for="maximumCouples">Maximales Ungleichgewicht</label>
+          <input type="number" class="form-control" id="maximumImbalance" [(ngModel)]="doubleRegistrableLimits.maximumAllowedImbalance">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="changeCoupleRegistrableLimits()">Speichern</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="singleRegistrableModal" tabindex="-1" role="dialog" aria-labelledby="singleRegistrableModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="singleRegistrableModalLabel">{{ singleRegistrableLimits.name }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="maximumCouples">Maximale Anzahl Teilnehmer</label>
+          <input type="number" class="form-control" id="maximumParticipants" [(ngModel)]="singleRegistrableLimits.maximumParticipants">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="changeSingleRegistrableLimits()">Speichern</button>
+      </div>
+    </div>
+  </div>
+</div>

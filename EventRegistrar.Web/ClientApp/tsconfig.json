@@ -19,5 +19,8 @@
     {
       "path": "./e2e/tsconfig.e2e.json"
     }
-  ]
+  ],
+  "compilerOptions": {
+    "experimentalDecorators": true
+  }
 }
