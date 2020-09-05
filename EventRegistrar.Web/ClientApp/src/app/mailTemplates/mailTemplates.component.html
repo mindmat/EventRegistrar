@@ -1,0 +1,85 @@
+<h1>Mailvorlagen</h1>
+
+<table class="table table-hover" *ngIf="mailTemplates" style="max-height: 100px">
+  <thead class="thead-dark">
+    <tr>
+      <th>Typ</th>
+      <th>Sprache</th>
+      <th>Betreff</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let template of mailTemplates" (click)="showTemplate(template)">
+      <td>
+        <select [(ngModel)]="template.type" disabled="disabled" style="border: none; outline: none">
+          <option *ngFor="let mailType of mailTypes" value={{mailType.type}}>{{ mailType.userText }}</option>
+        </select>
+      </td>
+      <td>{{ template.language }}</td>
+      <td>{{ template.subject }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p *ngIf="!mailTemplates"><em>Loading...</em></p>
+
+<table class="table" *ngIf="mailTemplate">
+  <tbody>
+    <tr *ngIf="mailTemplate.type">
+      <td>Typ</td>
+      <td>
+        <select [(ngModel)]="mailTemplate.type" class="custom-select form-control" disabled="disabled">
+          <option value="0">----</option>
+          <option *ngFor="let mailType of mailTypes" value={{mailType.type}}>{{ mailType.userText }}</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Sprache</td>
+      <td>
+        <select [(ngModel)]="mailTemplate.language" class="custom-select form-control" disabled="disabled">
+          <option *ngFor="let language of languages" value={{language.acronym}}>{{ language.userText }}</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Betreff</td>
+      <td><input [(ngModel)]="mailTemplate.subject" type="text" class="form-control" /></td>
+    </tr>
+    <tr>
+      <td>Absender</td>
+      <td><input [(ngModel)]="mailTemplate.senderMail" type="text" class="form-control" /></td>
+    </tr>
+    <tr>
+      <td>Absender Alias</td>
+      <td><input [(ngModel)]="mailTemplate.senderName" type="text" class="form-control" /></td>
+    </tr>
+    <tr *ngIf="!mailTemplate.type">
+      <td>Template Key</td>
+      <td><input [(ngModel)]="mailTemplate.key" type="text" class="form-control" /></td>
+    </tr>
+    <tr *ngIf="!mailTemplate.type">
+      <td>Adressaten</td>
+      <td><input [(ngModel)]="mailTemplate.audience" type="number" class="form-control" /></td>
+    </tr>
+    <tr >
+      <td>Automatisch versenden</td>
+      <td><input [(ngModel)]="mailTemplate.releaseImmediately" type="checkbox" class="form-check-input" /></td>
+    </tr>
+    <tr>
+      <td>Template (HTML)</td>
+      <!--<td><textarea [(ngModel)]="mailTemplate.template" type="" class="form-control" (keyup)="renderMail()"></textarea></td>-->
+      <td><div [froalaEditor] [(ngModel)]="mailTemplate.template"></div></td>
+    </tr>
+  </tbody>
+</table>
+<button class="btn btn-outline-primary" (click)="deleteTemplate(mailTemplate.id)" *ngIf="mailTemplate">Löschen</button>
+
+<button class="btn btn-primary" (click)="saveTemplate()" *ngIf="mailTemplate">Speichern</button>
+
+<br /><br />
+
+<!--<div id="templateRenderSpace" class="table-bordered">
+</div>-->

@@ -1,0 +1,32 @@
+<h1>Wartelisten</h1>
+
+<p *ngIf="!spots"><em>Loading...</em></p>
+
+<table class='table' *ngIf="spots">
+  <thead>
+    <tr>
+      <th>Level</th>
+      <th>Leader</th>
+      <th></th>
+      <th>Follower</th>
+      <th>Registriert</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let spot of spots">
+      <td>{{ spot.registrableName }}</td>
+      <td>
+        <a *ngIf="spot.leader" [routerLink]="['/', getEventAcronym(), 'registration', spot.leader?.id]">{{ spot.leader?.firstName }} {{ spot.leader?.lastName }}</a>
+        <a *ngIf="!spot.leader && spot.isPartnerRegistration" class="font-italic">({{ spot.placeholderPartner }})</a>
+        &nbsp;<button class="btn btn-primary btn-sm" *ngIf="spot.leader?.optionsSent==false" (click)="sendOptions(spot.leader?.id)">senden</button>
+      </td>
+      <td><p *ngIf="spot.isPartnerRegistration">&</p></td>
+      <td>
+        <a *ngIf="spot.follower" [routerLink]="['/', getEventAcronym(), 'registration', spot.follower?.id]">{{ spot.follower?.firstName }} {{ spot.follower?.lastName }}</a>
+        <a *ngIf="!spot.follower && spot.isPartnerRegistration" class="font-italic">({{ spot.placeholderPartner }})</a>
+        &nbsp;<button class="btn btn-primary btn-sm" *ngIf="spot.follower?.optionsSent==false" (click)="sendOptions(spot.follower?.id)">senden</button>
+      </td>
+      <td>{{ spot.joined | date: 'dd.MM.yy HH:mm:ss' }}</td>
+    </tr>
+  </tbody>
+</table>

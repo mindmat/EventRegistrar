@@ -1,0 +1,75 @@
+<h1>Teilnehmer {{ registrable?.name }} </h1>
+
+<p *ngIf="!registrable"><em>Loading...</em></p>
+
+<table class='table' *ngIf="registrable">
+  <thead>
+    <tr>
+      <th *ngIf="!registrable.maximumDoubleSeats">Name</th>
+      <th *ngIf="registrable.maximumDoubleSeats">Leader</th>
+      <th></th>
+      <th *ngIf="registrable.maximumDoubleSeats">Follower</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let participant of registrable.participants">
+      <td [style.font-weight]="participant.leader?.state == 1 ? 'bold' : 'normal'">
+        <a *ngIf="participant.leader" [routerLink]="['/', getEventAcronym(), 'registration', participant.leader.id]">{{ participant.leader?.firstName }} {{ participant.leader?.lastName }}</a>
+        <a *ngIf="!participant.leader && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
+      </td>
+      <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">&</p></td>
+      <td [style.font-weight]="participant.follower?.state == 1 ? 'bold' : 'normal'" *ngIf="registrable.maximumDoubleSeats">
+        <a *ngIf="participant.follower" [routerLink]="['/', getEventAcronym(), 'registration', participant.follower?.id]">{{ participant.follower?.firstName }} {{ participant.follower?.lastName }}</a>
+        <a *ngIf="!participant.follower && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<br />
+<button class="btn btn-primary btn-sm" *ngIf="registrable?.hasWaitingList && registrable?.waitingList?.length > 0" (click)="promote()">Nachrücken auslösen</button>
+
+<div class="input-group mb-3" *ngIf="registrable?.hasWaitingList">
+  <div class="input-group-prepend">
+    <div class="input-group-text">
+      <input type="checkbox" #automaticPromotion (change)="changeAutomaticPromotion(automaticPromotion.checked)"
+             [checked]="registrable?.automaticPromotionFromWaitingList">
+    </div>
+  </div>
+  <label type="text" class="form-control" disabled>Automatisches Nachrücken</label>
+</div>
+<div class="input-group mb-3" *ngIf="registrable?.hasWaitingList">
+  <div class="input-group-prepend">
+    <div class="input-group-text">
+      <input type="checkbox" [(ngModel)]="manualPromotion">
+    </div>
+  </div>
+  <label type="text" class="form-control" disabled>Manuelles Rauspicken</label>
+</div>
+
+<h2 *ngIf="registrable?.hasWaitingList && registrable.waitingList.length > 0">Warteliste</h2>
+
+<table class='table' *ngIf="registrable?.hasWaitingList && registrable.waitingList.length > 0">
+  <thead>
+    <tr>
+      <th *ngIf="!registrable.maximumDoubleSeats">Name</th>
+      <th *ngIf="registrable.maximumDoubleSeats">Leader</th>
+      <th *ngIf="registrable.maximumDoubleSeats"></th>
+      <th *ngIf="registrable.maximumDoubleSeats">Follower</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let participant of registrable.waitingList">
+      <td>
+        <a *ngIf="participant.leader" [routerLink]="['/', getEventAcronym(), 'registration', participant.leader?.id]">{{ participant.leader?.firstName }} {{ participant.leader?.lastName }}</a>
+        <a *ngIf="!participant.leader && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
+        <button class="btn btn-primary btn-sm" *ngIf="manualPromotion && participant.leader?.id" (click)="promoteManually(participant.leader?.id)">Nachrücken</button>
+      </td>
+      <td *ngIf="registrable.maximumDoubleSeats"><p *ngIf="participant.isPartnerRegistration">&</p></td>
+      <td *ngIf="registrable.maximumDoubleSeats">
+        <a *ngIf="participant.follower" [routerLink]="['/', getEventAcronym(), 'registration', participant.follower?.id]">{{ participant.follower?.firstName }} {{ participant.follower?.lastName }}</a>
+        <a *ngIf="!participant.follower && participant.isPartnerRegistration" class="font-italic">({{ participant.placeholderPartner }})</a>
+        <button class="btn btn-primary btn-sm" *ngIf="manualPromotion && participant.follower?.id" (click)="promoteManually(participant.follower?.id)">Nachrücken</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

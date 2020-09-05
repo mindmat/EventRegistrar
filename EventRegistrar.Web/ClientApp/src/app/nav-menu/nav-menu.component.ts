@@ -14,7 +14,7 @@ export class NavMenuComponent {
     public eventService: EventService) {
   }
 
-  isExpanded = false;
+  isExpanded = false;;
 
   collapse() {
     this.isExpanded = false;

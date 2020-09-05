@@ -1,0 +1,37 @@
+<h1>Ausstehende Zahlungen</h1>
+
+<p *ngIf="!dueRegistrations"><em>Loading...</em></p>
+
+<input type="checkbox" />Mails zurückhalten
+
+<table class='table' *ngIf="dueRegistrations">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Preis</th>
+      <th>bezahlt</th>
+      <th>akzeptiert</th>
+      <th>Erinnerung 1</th>
+      <th>Erinnerung 2</th>
+      <th>Email</th>
+      <th>Erinnerungs-SMS</th>
+      <th>Phone</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let dueRegistration of dueRegistrations">
+      <td>
+        <a [routerLink]="[ '/', getEventAcronym(), 'registration', dueRegistration.id]">{{ dueRegistration.firstName }} {{ dueRegistration.lastName }}</a>
+      </td>
+      <td class="text-right">{{ dueRegistration.price | currency : 'CHF' }}</td>
+      <td class="text-right">{{ dueRegistration.paid | currency : 'CHF' }}</td>
+      <td>{{ dueRegistration.acceptedMail?.sent | date: 'dd.MM.yy HH:mm' }}</td>
+      <td>{{ dueRegistration.reminder1Mail?.sent | date: 'dd.MM.yy HH:mm' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.reminder1Due" (click)="sendReminder(dueRegistration?.id, 1)">erinnern</button></td>
+      <td>{{ dueRegistration.reminder2Mail?.sent | date: 'dd.MM.yy HH:mm' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.reminder2Due" (click)="sendReminder(dueRegistration?.id, 2)">erinnern</button></td>
+      <td>{{ dueRegistration.email }}</td>
+      <td>{{ dueRegistration.reminderSmsSent | date: 'dd.MM.yy HH:mm' }}<button class="btn btn-primary btn-sm" *ngIf="dueRegistration.reminderSmsPossible" (click)="sendSmsReminder(dueRegistration?.id)">SMS schicken</button></td>
+      <td>{{ dueRegistration.phoneNormalized }}</td>
+    </tr>
+  </tbody>
+</table>
+<br />

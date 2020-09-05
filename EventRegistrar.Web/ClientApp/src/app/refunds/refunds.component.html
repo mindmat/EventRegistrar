@@ -1,0 +1,24 @@
+<h1>Rückzahlungen</h1>
+
+<p *ngIf="!refunds"><em>Loading...</em></p>
+
+<table class='table' *ngIf="refunds">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Preis</th>
+      <th>Bezahlt</th>
+      <th>Abmeldung</th>
+      <th>Rückerstattung</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let refund of refunds">
+      <td><a [routerLink]="['/', getEventAcronym(), 'registration', refund.registrationId]">{{ refund.firstName }} {{ refund.lastName }}</a></td>
+      <td>{{ refund.price | currency : 'CHF' }}</td>
+      <td>{{ refund.paid | currency : 'CHF' }}</td>
+      <td>{{ refund.cancellationDate | date: 'dd.MM.yy' }} ({{ refund.cancellationReason }})</td>
+      <td>{{ refund.refund | currency : 'CHF' }} ({{ refund.refundPercentage | percent }})</td>
+    </tr>
+  </tbody>
+</table>
