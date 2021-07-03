@@ -1,4 +1,0 @@
-﻿PMC:
-EntityFrameworkCore\Add-Migration InitialCreate -o Infrastructure\DataAccess\Migrations -p EventRegistrar.Backend
-EntityFrameworkCore\Remove-Migration -p EventRegistrar.Backend
-EntityFrameworkCore\Update-Database -p EventRegistrar.Backend

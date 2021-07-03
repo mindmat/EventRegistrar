@@ -33,8 +33,6 @@ namespace EventRegistrator.Web
         {
             app.UseSimpleInjectorInternal(_container);
             _container.RegisterInstance(GetDbOptions());
-            _container.CrossWire<IMemoryCache>(app);
-            _container.CrossWire<ILoggerFactory>(app);
             SetIdentityProvider(_container);
             CompositionRoot.RegisterTypes(_container);
             OverrideRegistrations();
