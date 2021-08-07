@@ -1,11 +1,13 @@
-﻿using System;
-using EventRegistrar.Backend.Authentication;
+﻿using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
-using EventRegistrator.Web;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+
 using SimpleInjector;
+
+using System;
 
 namespace EventRegistrar.Backend.Test.TestInfrastructure
 {

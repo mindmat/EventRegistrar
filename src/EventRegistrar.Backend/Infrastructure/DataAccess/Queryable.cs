@@ -26,7 +26,7 @@ namespace EventRegistrar.Backend.Infrastructure.DataAccess
 
         IAsyncEnumerator<TEntity> IAsyncEnumerable<TEntity>.GetAsyncEnumerator(System.Threading.CancellationToken cancellationToken)
         {
-            return DbSet.AsAsyncEnumerable().GetAsyncEnumerator();
+            return DbSet.AsAsyncEnumerable<TEntity>().GetAsyncEnumerator();
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrator.Web;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;

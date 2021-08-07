@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>876f35b6-9023-4fb3-8ea6-719b42d06574</UserSecretsId>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -33,12 +33,6 @@
     <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc" Version="5.0.0" />
     <PackageReference Include="SSH.NET" Version="2016.1.0" />
     <PackageReference Include="Twilio" Version="5.45.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.TestPlatform.CoreUtilities">
-      <HintPath>..\..\..\..\.nuget\packages\microsoft.testplatform.objectmodel\15.7.2\lib\netstandard1.5\Microsoft.TestPlatform.CoreUtilities.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

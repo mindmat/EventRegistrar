@@ -14,7 +14,7 @@ namespace EventRegistrar.Backend.Test.TestInfrastructure
     {
         public IntegrationTestEnvironment()
         {
-            var builderKiss4Web = WebHost.CreateDefaultBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 //.ConfigureAppConfiguration(o => o.AddInMemoryCollection(new[]
                 //{
                 //    //new KeyValuePair<string, string>("ConnectionStrings:DefaultConnection", connectionString),
@@ -25,7 +25,7 @@ namespace EventRegistrar.Backend.Test.TestInfrastructure
                 })
                 .UseStartup<TestStartup>();
 
-            TestServer = new TestServer(builderKiss4Web);
+            TestServer = new TestServer(builder);
             var container = TestServer.Host.Services.GetService<Container>();
             Scenario = container.GetInstance<TestScenario>();
             Scenario.Create(container).Wait();

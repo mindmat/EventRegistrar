@@ -7,7 +7,7 @@ namespace EventRegistrar.Backend.Test.TestInfrastructure
     public class CustomWebApplicationFactory : WebApplicationFactory<TestStartup>
     {
         protected override IWebHostBuilder CreateWebHostBuilder() => WebHost.CreateDefaultBuilder()
-            .UseApplicationInsights()
+            //.UseApplicationInsights()
             .UseStartup<TestStartup>();
     }
 }
