@@ -7,7 +7,7 @@ namespace EventRegistrar.Backend.Authentication
     {
         IdentityProvider Provider { get; }
 
-        string GetIdentifier(IHttpContextAccessor contextAccessor);
+        string? GetIdentifier(IHttpContextAccessor contextAccessor);
 
         AuthenticatedUser GetUser(IHttpContextAccessor httpContextAccessor);
     }

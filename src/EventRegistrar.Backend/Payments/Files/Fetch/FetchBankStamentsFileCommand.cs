@@ -1,11 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-using Azure.Identity;
+﻿using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 
 using EventRegistrar.Backend.Authorization;
@@ -17,7 +10,11 @@ using MediatR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-using Renci.SshNet;
+using System;
+using System.IO;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace EventRegistrar.Backend.Payments.Files.Fetch
 {
@@ -60,11 +57,11 @@ namespace EventRegistrar.Backend.Payments.Files.Fetch
                 var bytes = Encoding.ASCII.GetBytes(keyString);
                 var stream = new MemoryStream(bytes);
 
-                var connectionInfo = new ConnectionInfo(_configuration.Server,
-                                                        _configuration.ContractIdentifier,
-                                                        new PrivateKeyAuthenticationMethod(_configuration.ContractIdentifier,
-                                                        new PrivateKeyFile(stream, _configuration.Passphrase)));
-                using var client = new SftpClient(connectionInfo);
+                var connectionInfo = new Renci.SshNet.ConnectionInfo(_configuration.Server,
+                                                                     _configuration.ContractIdentifier,
+                                                                     new Renci.SshNet.PrivateKeyAuthenticationMethod(_configuration.ContractIdentifier,
+                                                                     new Renci.SshNet.PrivateKeyFile(stream, _configuration.Passphrase)));
+                using var client = new Renci.SshNet.SftpClient(connectionInfo);
                 client.Connect();
                 var result = client.ListDirectory(_configuration.Directory);
                 foreach (var fileReady in result.Where(fil => IsNew(fil.FullName)))

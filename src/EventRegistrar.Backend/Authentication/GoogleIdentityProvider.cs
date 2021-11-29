@@ -19,9 +19,9 @@ namespace EventRegistrar.Backend.Authentication
 
         public IdentityProvider Provider => IdentityProvider.Google;
 
-        public string GetIdentifier(IHttpContextAccessor contextAccessor)
+        public string? GetIdentifier(IHttpContextAccessor contextAccessor)
         {
-            var idTokenString = (string)contextAccessor.HttpContext?.Request?.Headers?[HeaderKeyIdToken];
+            var idTokenString = contextAccessor.HttpContext?.Request?.Headers?[HeaderKeyIdToken].FirstOrDefault();
             if (idTokenString != null)
             {
                 var token = new JwtSecurityToken(idTokenString);
@@ -35,7 +35,7 @@ namespace EventRegistrar.Backend.Authentication
         public AuthenticatedUser GetUser(IHttpContextAccessor contextAccessor)
         {
             var headers = contextAccessor.HttpContext?.Request?.Headers;
-            var idTokenString = (string)headers?[HeaderKeyIdToken];
+            var idTokenString = headers?[HeaderKeyIdToken].FirstOrDefault();
             if (idTokenString != null)
             {
                 var token = new JwtSecurityToken(idTokenString);

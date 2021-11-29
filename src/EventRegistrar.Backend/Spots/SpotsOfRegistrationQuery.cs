@@ -34,8 +34,8 @@ namespace EventRegistrar.Backend.Spots
 
         public async Task<IEnumerable<SpotDisplayItem>> Handle(SpotsOfRegistrationQuery query, CancellationToken cancellationToken)
         {
-            var spots = await _seats.Where(seat => (seat.Registration.EventId == query.EventId ||
-                                                    seat.Registration_Follower.EventId == query.EventId)
+            var spots = await _seats.Where(seat => (seat.Registration!.EventId == query.EventId ||
+                                                    seat.Registration_Follower!.EventId == query.EventId)
                                                 && (seat.RegistrationId == query.RegistrationId
                                                  || seat.RegistrationId_Follower == query.RegistrationId))
                                     .Where(seat => !seat.IsCancelled)
@@ -60,10 +60,9 @@ namespace EventRegistrar.Backend.Spots
 
             foreach (var spot in spots.Where(spot => spot.PartnerRegistrationId != null))
             {
-                var names = await _registrations
-                                  .Where(reg => reg.Id == spot.PartnerRegistrationId)
-                                  .Select(reg => new { reg.RespondentFirstName, reg.RespondentLastName })
-                                  .FirstOrDefaultAsync(cancellationToken);
+                var names = await _registrations.Where(reg => reg.Id == spot.PartnerRegistrationId)
+                                                .Select(reg => new { reg.RespondentFirstName, reg.RespondentLastName })
+                                                .FirstOrDefaultAsync(cancellationToken);
                 spot.Partner = $"{names.RespondentFirstName} {names.RespondentLastName}";
             }
 
