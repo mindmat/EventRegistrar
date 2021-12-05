@@ -16,9 +16,11 @@
         "lib": [
             "es2020",
             "dom"
-        ]
+        ],
+        // "resolveJsonModule": true,
     },
     "angularCompilerOptions": {
-        "enableI18nLegacyMessageIdFormat": false
+        "enableI18nLegacyMessageIdFormat": false,
+        // "strictTemplates": true
     }
 }

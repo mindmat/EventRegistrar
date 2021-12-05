@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, CanLoad, Route, Router, RouterStateSnapshot, UrlSegment, UrlTree } from '@angular/router';
 import { Observable, of, switchMap } from 'rxjs';
-import { AuthService } from 'app/core/auth/auth.service';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Injectable({
     providedIn: 'root'
@@ -70,7 +70,7 @@ export class AuthGuard implements CanActivate, CanActivateChild, CanLoad
     private _check(redirectURL: string): Observable<boolean>
     {
         // Check the authentication status
-        return this._authService.check()
+        return this._authService.isAuthenticated$
                    .pipe(
                        switchMap((authenticated) => {
 

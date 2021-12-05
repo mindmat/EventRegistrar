@@ -12,6 +12,7 @@ import { mockApiServices } from 'app/mock-api';
 import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
+import { AuthModule } from '@auth0/auth0-angular';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
@@ -39,7 +40,12 @@ const routerConfig: ExtraOptions = {
         LayoutModule,
 
         // 3rd party modules that require global configuration via forRoot
-        MarkdownModule.forRoot({})
+        MarkdownModule.forRoot({}),
+
+        AuthModule.forRoot({
+            domain: 'eventregistrar.eu.auth0.com',
+            clientId: 'yoCfBbd0zLWvoA6qg0FzNPtHxEHu4YH3'
+          })      
     ],
     bootstrap   : [
         AppComponent
