@@ -1,0 +1,6 @@
+{
+    "javascript.format.semicolons": "insert",
+    "typescript.format.placeOpenBraceOnNewLineForControlBlocks": true,
+    "typescript.format.placeOpenBraceOnNewLineForFunctions": true,
+    "typescript.format.semicolons": "insert"
+}

@@ -44,13 +44,35 @@ const routerConfig: ExtraOptions = {
 
         AuthModule.forRoot({
             domain: 'eventregistrar.eu.auth0.com',
-            clientId: 'yoCfBbd0zLWvoA6qg0FzNPtHxEHu4YH3'
-          })      
+            clientId: 'yoCfBbd0zLWvoA6qg0FzNPtHxEHu4YH3',
+
+            // Request this audience at user authentication time
+            audience: 'https://eventregistrar.azurewebsites.net/api',
+
+            // Request this scope at user authentication time
+            scope: 'read:current_user',
+
+            // Specify configuration for the interceptor              
+            httpInterceptor: {
+                allowedList: [
+                    {
+                        // Match any request that starts {uri} (note the asterisk)
+                        uri: 'https://eventregistrar.azurewebsites.net/api/*',
+                        tokenOptions: {
+                            // The attached token should target this audience
+                            audience: 'https://eventregistrar.azurewebsites.net/api',
+
+                            // The attached token should have these scopes
+                            scope: 'read:current_user'
+                        }
+                    }
+                ]
+            }
+        })
     ],
-    bootstrap   : [
+    bootstrap: [
         AppComponent
     ]
 })
-export class AppModule
-{
+export class AppModule {
 }

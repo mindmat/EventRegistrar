@@ -1,21 +1,21 @@
 import { NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { AuthService } from 'app/core/auth/auth.service';
-import { AuthInterceptor } from 'app/core/auth/auth.interceptor';
+import { AuthHttpInterceptor, AuthService } from '@auth0/auth0-angular';
+import { AuthService as AuthServiceFuse } from './auth.service';
 
 @NgModule({
-    imports  : [
+    imports: [
         HttpClientModule
     ],
     providers: [
+        AuthServiceFuse,
         AuthService,
         {
-            provide : HTTP_INTERCEPTORS,
-            useClass: AuthInterceptor,
-            multi   : true
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthHttpInterceptor,
+            multi: true
         }
     ]
 })
-export class AuthModule
-{
+export class AuthModule {
 }

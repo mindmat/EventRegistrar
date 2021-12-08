@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, Observable, ReplaySubject, tap } from 'rxjs';
 import { User } from 'app/core/user/user.types';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Injectable({
     providedIn: 'root'
@@ -13,7 +14,8 @@ export class UserService
     /**
      * Constructor
      */
-    constructor(private _httpClient: HttpClient)
+    constructor(private _httpClient: HttpClient,
+        private _authService: AuthService)
     {
     }
 
@@ -34,7 +36,15 @@ export class UserService
 
     get user$(): Observable<User>
     {
-        return this._user.asObservable();
+        return this._authService.user$.pipe(
+            map(usr => ({
+                id: usr.sub,
+                name: usr.name,
+                email: usr.email,
+                avatar: usr.picture
+            } as User))
+        );
+        // return this._user.asObservable();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -47,7 +57,8 @@ export class UserService
     get(): Observable<User>
     {
         return this._httpClient.get<User>('api/common/user').pipe(
-            tap((user) => {
+            tap((user) =>
+            {
                 this._user.next(user);
             })
         );
@@ -60,8 +71,9 @@ export class UserService
      */
     update(user: User): Observable<any>
     {
-        return this._httpClient.patch<User>('api/common/user', {user}).pipe(
-            map((response) => {
+        return this._httpClient.patch<User>('api/common/user', { user }).pipe(
+            map((response) =>
+            {
                 this._user.next(response);
             })
         );
