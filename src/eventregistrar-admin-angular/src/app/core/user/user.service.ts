@@ -41,7 +41,8 @@ export class UserService
                 id: usr.sub,
                 name: usr.name,
                 email: usr.email,
-                avatar: usr.picture
+                avatar: usr.picture,
+                status: null
             } as User))
         );
         // return this._user.asObservable();

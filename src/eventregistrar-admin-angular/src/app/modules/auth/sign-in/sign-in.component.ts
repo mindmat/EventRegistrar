@@ -4,7 +4,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from '@auth0/auth0-angular';
-import { firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'auth-sign-in',
@@ -16,7 +15,7 @@ export class AuthSignInComponent implements OnInit
 {
     @ViewChild('signInNgForm') signInNgForm: NgForm;
 
-    alert: { type: FuseAlertType; message: string } = {
+    alert: { type: FuseAlertType; message: string; } = {
         type: 'success',
         message: ''
     };
@@ -62,7 +61,7 @@ export class AuthSignInComponent implements OnInit
     signIn(): void
     {
         // Return if the form is invalid
-        if ( this.signInForm.invalid )
+        if (this.signInForm.invalid)
         {
             return;
         }
@@ -76,7 +75,8 @@ export class AuthSignInComponent implements OnInit
         // Sign in
         this._authService.loginWithRedirect()
             .subscribe(
-                () => {
+                () =>
+                {
 
                     // Set the redirect url.
                     // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
@@ -88,7 +88,8 @@ export class AuthSignInComponent implements OnInit
                     this._router.navigateByUrl(redirectURL);
 
                 },
-                (response) => {
+                (response) =>
+                {
 
                     // Re-enable the form
                     this.signInForm.enable();
