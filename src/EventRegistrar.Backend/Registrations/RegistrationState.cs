@@ -1,9 +1,8 @@
-﻿namespace EventRegistrar.Backend.Registrations
+﻿namespace EventRegistrar.Backend.Registrations;
+
+public enum RegistrationState
 {
-    public enum RegistrationState
-    {
-        Received = 1,
-        Paid = 2,
-        Cancelled = 4
-    }
+    Received = 1,
+    Paid = 2,
+    Cancelled = 4
 }

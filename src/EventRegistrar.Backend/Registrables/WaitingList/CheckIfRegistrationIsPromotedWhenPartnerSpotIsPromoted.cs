@@ -1,23 +1,17 @@
-﻿using System.Collections.Generic;
-
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
-
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using MediatR;
 
-namespace EventRegistrar.Backend.Registrables.WaitingList
+namespace EventRegistrar.Backend.Registrables.WaitingList;
+
+public class
+    CheckIfRegistrationIsPromotedWhenPartnerSpotIsPromoted : IEventToCommandTranslation<
+        PartnerSpotPromotedFromWaitingList>
 {
-    public class CheckIfRegistrationIsPromotedWhenPartnerSpotIsPromoted : IEventToCommandTranslation<PartnerSpotPromotedFromWaitingList>
+    public IEnumerable<IRequest> Translate(PartnerSpotPromotedFromWaitingList e)
     {
-        public IEnumerable<IRequest> Translate(PartnerSpotPromotedFromWaitingList e)
-        {
-            if (e.RegistrationId.HasValue)
-            {
-                yield return new CheckIfRegistrationIsPromotedCommand { RegistrationId = e.RegistrationId.Value };
-            }
-            if (e.RegistrationId_Follower.HasValue)
-            {
-                yield return new CheckIfRegistrationIsPromotedCommand { RegistrationId = e.RegistrationId_Follower.Value };
-            }
-        }
+        if (e.RegistrationId.HasValue)
+            yield return new CheckIfRegistrationIsPromotedCommand { RegistrationId = e.RegistrationId.Value };
+        if (e.RegistrationId_Follower.HasValue)
+            yield return new CheckIfRegistrationIsPromotedCommand { RegistrationId = e.RegistrationId_Follower.Value };
     }
 }

@@ -1,8 +1,7 @@
-﻿namespace EventRegistrar.Backend.Payments.Files.Camt
+﻿namespace EventRegistrar.Backend.Payments.Files.Camt;
+
+public enum CreditDebit
 {
-    public enum CreditDebit
-    {
-        CRDT = 1,
-        DBIT = 2
-    }
+    CRDT = 1,
+    DBIT = 2
 }

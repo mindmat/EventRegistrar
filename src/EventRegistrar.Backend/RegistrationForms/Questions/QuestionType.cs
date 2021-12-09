@@ -1,26 +1,25 @@
-﻿namespace EventRegistrar.Backend.RegistrationForms.Questions
+﻿namespace EventRegistrar.Backend.RegistrationForms.Questions;
+
+public enum QuestionType
 {
-    public enum QuestionType
-    {
-        Checkbox = 1,
+    Checkbox = 1,
 
-        CheckboxGrid = 2,
-        Date = 3,
+    CheckboxGrid = 2,
+    Date = 3,
 
-        Datetime = 4,
-        Duration = 5,
+    Datetime = 4,
+    Duration = 5,
 
-        Grid = 6,
-        Image = 7,
-        List = 8,
-        MultipleChoice = 9,
+    Grid = 6,
+    Image = 7,
+    List = 8,
+    MultipleChoice = 9,
 
-        PageBreak = 10,
-        ParagraphText = 11,
-        Scale = 12,
-        SectionHeader = 13,
-        Text = 14,
+    PageBreak = 10,
+    ParagraphText = 11,
+    Scale = 12,
+    SectionHeader = 13,
+    Text = 14,
 
-        Time = 15
-    }
+    Time = 15
 }

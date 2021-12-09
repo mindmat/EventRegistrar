@@ -1,43 +1,42 @@
-﻿
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace EventRegistrar.Backend.Infrastructure
+namespace EventRegistrar.Backend.Infrastructure;
+
+public class JsonHelper
 {
-    public class JsonHelper
+    private readonly JsonSerializerSettings _settings;
+
+    public JsonHelper()
     {
-        private readonly JsonSerializerSettings _settings;
+        _settings = new JsonSerializerSettings
+                    {
+                        TypeNameHandling = TypeNameHandling.Auto,
+                        DefaultValueHandling = DefaultValueHandling.Ignore
+                    };
+    }
 
-        public JsonHelper()
+    public T? TryDeserialize<T>(string json)
+        where T : class
+    {
+        try
         {
-            _settings = new JsonSerializerSettings
-            {
-                TypeNameHandling = TypeNameHandling.Auto,
-                DefaultValueHandling = DefaultValueHandling.Ignore
-            };
+            return Deserialize<T>(json);
         }
+        catch
+        {
+            return null;
+        }
+    }
 
-        public T? TryDeserialize<T>(string json)
-            where T : class
-        {
-            try
-            {
-                return Deserialize<T>(json);
-            }
-            catch
-            {
-                return null;
-            }
-        }
-        public T Deserialize<T>(string json)
-            where T : class
-        {
-            return JsonConvert.DeserializeObject<T>(json, _settings);
-        }
+    public T Deserialize<T>(string json)
+        where T : class
+    {
+        return JsonConvert.DeserializeObject<T>(json, _settings);
+    }
 
-        public string Serialize<T>(T value)
-            where T : class
-        {
-            return JsonConvert.SerializeObject(value, _settings);
-        }
+    public string Serialize<T>(T value)
+        where T : class
+    {
+        return JsonConvert.SerializeObject(value, _settings);
     }
 }

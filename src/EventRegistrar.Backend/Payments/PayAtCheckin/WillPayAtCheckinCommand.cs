@@ -1,45 +1,41 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using EventRegistrar.Backend.Authorization;
+﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
-namespace EventRegistrar.Backend.Payments.PayAtCheckin
+namespace EventRegistrar.Backend.Payments.PayAtCheckin;
+
+public class WillPayAtCheckinCommand : IRequest, IEventBoundRequest
 {
-    public class WillPayAtCheckinCommand : IRequest, IEventBoundRequest
+    public Guid EventId { get; set; }
+    public Guid RegistrationId { get; set; }
+}
+
+public class WillPayAtCheckinCommandHandler : IRequestHandler<WillPayAtCheckinCommand>
+{
+    private readonly IEventBus _eventBus;
+    private readonly IRepository<Registration> _registrations;
+
+    public WillPayAtCheckinCommandHandler(IRepository<Registration> registrations,
+                                          IEventBus eventBus)
     {
-        public Guid EventId { get; set; }
-        public Guid RegistrationId { get; set; }
+        _registrations = registrations;
+        _eventBus = eventBus;
     }
 
-    public class WillPayAtCheckinCommandHandler : IRequestHandler<WillPayAtCheckinCommand>
+    public async Task<Unit> Handle(WillPayAtCheckinCommand command, CancellationToken cancellationToken)
     {
-        private readonly IEventBus _eventBus;
-        private readonly IRepository<Registration> _registrations;
+        var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId
+                                                               && reg.EventId == command.EventId, cancellationToken);
 
-        public WillPayAtCheckinCommandHandler(IRepository<Registration> registrations,
-                                              IEventBus eventBus)
+        if (!registration.WillPayAtCheckin)
         {
-            _registrations = registrations;
-            _eventBus = eventBus;
+            registration.WillPayAtCheckin = true;
+            _eventBus.Publish(new WillPayAtCheckinSet
+                              { EventId = registration.EventId, RegistrationId = registration.Id });
         }
 
-        public async Task<Unit> Handle(WillPayAtCheckinCommand command, CancellationToken cancellationToken)
-        {
-            var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId
-                                                                   && reg.EventId == command.EventId, cancellationToken);
-
-            if (!registration.WillPayAtCheckin)
-            {
-                registration.WillPayAtCheckin = true;
-                _eventBus.Publish(new WillPayAtCheckinSet { EventId = registration.EventId, RegistrationId = registration.Id });
-            }
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

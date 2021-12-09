@@ -1,58 +1,41 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using EventRegistrar.Backend.Authorization;
+﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
-namespace EventRegistrar.Backend.Registrations.Matching
+namespace EventRegistrar.Backend.Registrations.Matching;
+
+public class UnbindPartnerRegistrationCommand : IRequest, IEventBoundRequest
 {
-    public class UnbindPartnerRegistrationCommand : IRequest, IEventBoundRequest
+    public Guid EventId { get; set; }
+    public Guid RegistrationId { get; set; }
+}
+
+public class UnbindPartnerRegistrationCommandHandler : IRequestHandler<UnbindPartnerRegistrationCommand>
+{
+    private readonly IRepository<Registration> _registrations;
+
+    public UnbindPartnerRegistrationCommandHandler(IRepository<Registration> registrations)
     {
-        public Guid EventId { get; set; }
-        public Guid RegistrationId { get; set; }
+        _registrations = registrations;
     }
 
-    public class UnbindPartnerRegistrationCommandHandler : IRequestHandler<UnbindPartnerRegistrationCommand>
+    public async Task<Unit> Handle(UnbindPartnerRegistrationCommand command, CancellationToken cancellationToken)
     {
-        private readonly IRepository<Registration> _registrations;
+        var registration = await _registrations.Include(reg => reg.Seats_AsLeader)
+                                               .Include(reg => reg.Seats_AsFollower)
+                                               .FirstAsync(reg => reg.Id == command.RegistrationId
+                                                               && reg.EventId == command.EventId, cancellationToken);
 
-        public UnbindPartnerRegistrationCommandHandler(IRepository<Registration> registrations)
-        {
-            _registrations = registrations;
-        }
+        if (registration.RegistrationId_Partner != null) registration.RegistrationId_Partner = null;
 
-        public async Task<Unit> Handle(UnbindPartnerRegistrationCommand command, CancellationToken cancellationToken)
-        {
-            var registration = await _registrations.Include(reg => reg.Seats_AsLeader)
-                                                   .Include(reg => reg.Seats_AsFollower)
-                                                   .FirstAsync(reg => reg.Id == command.RegistrationId
-                                                                   && reg.EventId == command.EventId, cancellationToken);
+        // unbind spots
+        if (registration.Seats_AsLeader != null)
+            foreach (var spot in registration.Seats_AsLeader.Where(spot => spot.IsPartnerSpot))
+                spot.IsPartnerSpot = false;
+        if (registration.Seats_AsFollower != null)
+            foreach (var spot in registration.Seats_AsFollower.Where(spot => spot.IsPartnerSpot))
+                spot.IsPartnerSpot = false;
 
-            if (registration.RegistrationId_Partner != null)
-            {
-                registration.RegistrationId_Partner = null;
-            }
-
-            // unbind spots
-            if (registration.Seats_AsLeader != null)
-            {
-                foreach (var spot in registration.Seats_AsLeader.Where(spot => spot.IsPartnerSpot))
-                {
-                    spot.IsPartnerSpot = false;
-                }
-            }
-            if (registration.Seats_AsFollower != null)
-            {
-                foreach (var spot in registration.Seats_AsFollower.Where(spot => spot.IsPartnerSpot))
-                {
-                    spot.IsPartnerSpot = false;
-                }
-            }
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

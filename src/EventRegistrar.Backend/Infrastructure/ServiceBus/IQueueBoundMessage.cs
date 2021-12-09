@@ -1,9 +1,8 @@
 ﻿using MediatR;
 
-namespace EventRegistrar.Backend.Infrastructure.ServiceBus
+namespace EventRegistrar.Backend.Infrastructure.ServiceBus;
+
+public interface IQueueBoundMessage : IRequest
 {
-    public interface IQueueBoundMessage : IRequest
-    {
-        string QueueName { get; }
-    }
+    string QueueName { get; }
 }

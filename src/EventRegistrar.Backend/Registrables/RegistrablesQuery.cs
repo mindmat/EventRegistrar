@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using EventRegistrar.Backend.Authorization;
+﻿using EventRegistrar.Backend.Authorization;
 using MediatR;
 
-namespace EventRegistrar.Backend.Registrables
+namespace EventRegistrar.Backend.Registrables;
+
+public class RegistrablesQuery : IRequest<IEnumerable<RegistrableDisplayItem>>, IEventBoundRequest
 {
-    public class RegistrablesQuery : IRequest<IEnumerable<RegistrableDisplayItem>>, IEventBoundRequest
-    {
-        public Guid EventId { get; set; }
-    }
+    public Guid EventId { get; set; }
 }

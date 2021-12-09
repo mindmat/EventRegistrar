@@ -1,7 +1,6 @@
-﻿namespace EventRegistrar.Backend.PhoneMessages
+﻿namespace EventRegistrar.Backend.PhoneMessages;
+
+public enum SmsType
 {
-    public enum SmsType
-    {
-        Reminder = 1
-    }
+    Reminder = 1
 }

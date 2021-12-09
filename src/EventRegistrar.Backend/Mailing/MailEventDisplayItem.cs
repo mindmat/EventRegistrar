@@ -1,12 +1,9 @@
-﻿using System;
+﻿namespace EventRegistrar.Backend.Mailing;
 
-namespace EventRegistrar.Backend.Mailing
+public class MailEventDisplayItem
 {
-    public class MailEventDisplayItem
-    {
-        public string Email { get; set; }
-        public MailState State { get; set; }
-        public string StateText { get; set; }
-        public DateTime When { get; set; }
-    }
+    public string Email { get; set; }
+    public MailState State { get; set; }
+    public string StateText { get; set; }
+    public DateTime When { get; set; }
 }

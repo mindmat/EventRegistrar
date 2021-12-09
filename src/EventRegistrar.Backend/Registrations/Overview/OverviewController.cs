@@ -1,96 +1,78 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Threading.Tasks;
-
+﻿using System.Data;
 using ClosedXML.Excel;
-
 using EventRegistrar.Backend.Events;
-
 using MediatR;
-
 using Microsoft.AspNetCore.Mvc;
 
-namespace EventRegistrar.Backend.Registrations.Overview
+namespace EventRegistrar.Backend.Registrations.Overview;
+
+public class OverviewController : Controller
 {
-    public class OverviewController : Controller
+    private readonly IEventAcronymResolver _eventAcronymResolver;
+    private readonly IMediator _mediator;
+
+    public OverviewController(IMediator mediator,
+                              IEventAcronymResolver eventAcronymResolver)
     {
-        private readonly IEventAcronymResolver _eventAcronymResolver;
-        private readonly IMediator _mediator;
+        _mediator = mediator;
+        _eventAcronymResolver = eventAcronymResolver;
+    }
 
-        public OverviewController(IMediator mediator,
-                                  IEventAcronymResolver eventAcronymResolver)
+    [HttpGet("api/events/{eventAcronym}/checkinView")]
+    public async Task<CheckinView> GetCheckinView(string eventAcronym)
+    {
+        return await _mediator.Send(new CheckinQuery
+                                    {
+                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+                                    });
+    }
+
+    [HttpGet("api/events/{eventAcronym}/checkinView.xlsx")]
+    public async Task<IActionResult> GetCheckinViewXlsx(string eventAcronym)
+    {
+        var data = await _mediator.Send(new CheckinQuery
+                                        {
+                                            EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+                                        });
+
+        var mappings = new List<(string Title, Func<CheckinViewItem, object> GetValue)>
+                       {
+                           ("Vorname", itm => itm.FirstName),
+                           ("Nachname", itm => itm.LastName)
+                       };
+        foreach (var header in data.DynamicHeaders) mappings.Add((header, itm => itm.Columns[header]));
+        mappings.Add(("Status", itm => itm.Status));
+        mappings.Add(("Ausstehend", itm => itm.UnsettledAmount));
+
+        var dataTable = new DataTable("Checkin");
+
+        foreach (var (title, _) in mappings) dataTable.Columns.Add(title);
+
+        foreach (var registration in data.Items)
         {
-            _mediator = mediator;
-            _eventAcronymResolver = eventAcronymResolver;
+            var row = dataTable.NewRow();
+            foreach (var (title, getValue) in mappings) row[title] = getValue(registration);
+
+            dataTable.Rows.Add(row);
         }
 
-        [HttpGet("api/events/{eventAcronym}/checkinView")]
-        public async Task<CheckinView> GetCheckinView(string eventAcronym)
-        {
-            return await _mediator.Send(new CheckinQuery
-            {
-                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-            });
-        }
+        var workbook = new XLWorkbook();
+        var worksheet = workbook.AddWorksheet(dataTable, "Checkin");
+        //worksheet.SortColumns.Add(1, XLSortOrder.Ascending);
+        //worksheet.SortColumns.Add(2, XLSortOrder.Ascending);
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
 
-        [HttpGet("api/events/{eventAcronym}/checkinView.xlsx")]
-        public async Task<IActionResult> GetCheckinViewXlsx(string eventAcronym)
-        {
-            var data = await _mediator.Send(new CheckinQuery
-            {
-                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-            });
+        return File(stream, "application/octet-stream");
+    }
 
-            var mappings = new List<(string Title, Func<CheckinViewItem, object> GetValue)>
-            {
-                ("Vorname", itm => itm.FirstName),
-                ("Nachname", itm => itm.LastName)
-            };
-            foreach (var header in data.DynamicHeaders)
-            {
-                mappings.Add((header, itm => itm.Columns[header]));
-            }
-            mappings.Add(("Status", itm => itm.Status));
-            mappings.Add(("Ausstehend", itm => itm.UnsettledAmount));
-
-            var dataTable = new DataTable("Checkin");
-
-            foreach (var (title, _) in mappings)
-            {
-                dataTable.Columns.Add(title);
-            }
-
-            foreach (var registration in data.Items)
-            {
-                var row = dataTable.NewRow();
-                foreach (var (title, getValue) in mappings)
-                {
-                    row[title] = getValue(registration);
-                }
-
-                dataTable.Rows.Add(row);
-            }
-
-            var workbook = new XLWorkbook();
-            var worksheet = workbook.AddWorksheet(dataTable, "Checkin");
-            //worksheet.SortColumns.Add(1, XLSortOrder.Ascending);
-            //worksheet.SortColumns.Add(2, XLSortOrder.Ascending);
-            var stream = new MemoryStream();
-            workbook.SaveAs(stream);
-            stream.Position = 0;
-
-            return File(stream, "application/octet-stream");
-        }
-
-        [HttpGet("api/events/{eventAcronym}/partyOverview")]
-        public async Task<IEnumerable<PartyItem>> GetPartyOverview(string eventAcronym)
-        {
-            return await _mediator.Send(new PartyOverviewQuery
-            {
-                EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-            });
-        }
+    [HttpGet("api/events/{eventAcronym}/partyOverview")]
+    public async Task<IEnumerable<PartyItem>> GetPartyOverview(string eventAcronym)
+    {
+        return await _mediator.Send(new PartyOverviewQuery
+                                    {
+                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+                                    });
     }
 }

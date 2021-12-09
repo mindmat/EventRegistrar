@@ -1,8 +1,7 @@
-﻿namespace EventRegistrar.Backend.Spots
+﻿namespace EventRegistrar.Backend.Spots;
+
+public enum RemoveSpotReason
 {
-    public enum RemoveSpotReason
-    {
-        Modification = 1,
-        CancellationOfRegistration = 2
-    }
+    Modification = 1,
+    CancellationOfRegistration = 2
 }

@@ -1,8 +1,7 @@
-﻿namespace EventRegistrar.Backend.Infrastructure.ServiceBus
+﻿namespace EventRegistrar.Backend.Infrastructure.ServiceBus;
+
+public class CommandMessage
 {
-    public class CommandMessage
-    {
-        public string CommandSerialized { get; set; }
-        public string CommandType { get; set; }
-    }
+    public string CommandSerialized { get; set; }
+    public string CommandType { get; set; }
 }

@@ -1,8 +1,7 @@
-﻿namespace EventRegistrar.Backend.Infrastructure.DomainEvents
+﻿namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
+
+public interface IEventToUserTranslation<in TDomainEvent>
+    where TDomainEvent : DomainEvent
 {
-    public interface IEventToUserTranslation<in TDomainEvent>
-       where TDomainEvent : DomainEvent
-    {
-        public string GetText(TDomainEvent domainEvent);
-    }
+    public string GetText(TDomainEvent domainEvent);
 }

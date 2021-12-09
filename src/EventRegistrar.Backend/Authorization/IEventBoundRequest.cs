@@ -1,9 +1,6 @@
-﻿using System;
+﻿namespace EventRegistrar.Backend.Authorization;
 
-namespace EventRegistrar.Backend.Authorization
+public interface IEventBoundRequest
 {
-    public interface IEventBoundRequest
-    {
-        Guid EventId { get; }
-    }
+    Guid EventId { get; }
 }

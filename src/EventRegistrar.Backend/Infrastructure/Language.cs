@@ -1,8 +1,7 @@
-﻿namespace EventRegistrar.Backend.Infrastructure
+﻿namespace EventRegistrar.Backend.Infrastructure;
+
+public static class Language
 {
-    public static class Language
-    {
-        public const string Deutsch = "de";
-        public const string English = "en";
-    }
+    public const string Deutsch = "de";
+    public const string English = "en";
 }

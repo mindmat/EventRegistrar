@@ -1,10 +1,8 @@
-using System.Collections.Generic;
 using MediatR;
 
-namespace EventRegistrar.Backend.Events.UsersInEvents
+namespace EventRegistrar.Backend.Events.UsersInEvents;
+
+public class EventsOfUserQuery : IRequest<IEnumerable<UserInEventDisplayItem>>
 {
-    public class EventsOfUserQuery : IRequest<IEnumerable<UserInEventDisplayItem>>
-    {
-        public bool IncludeRequestedEvents { get; set; }
-    }
+    public bool IncludeRequestedEvents { get; set; }
 }

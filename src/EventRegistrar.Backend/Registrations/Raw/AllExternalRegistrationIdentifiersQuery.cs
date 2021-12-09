@@ -1,38 +1,33 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using MediatR;
 
-using MediatR;
+namespace EventRegistrar.Backend.Registrations.Raw;
 
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-
-namespace EventRegistrar.Backend.Registrations.Raw
+public class AllExternalRegistrationIdentifiersQuery : IRequest<IEnumerable<string>>
 {
-    public class AllExternalRegistrationIdentifiersQuery : IRequest<IEnumerable<string>>
+    public string RegistrationFormExternalIdentifier { get; set; }
+}
+
+public class
+    AllExternalRegistrationIdentifiersQueryHandler : IRequestHandler<AllExternalRegistrationIdentifiersQuery,
+        IEnumerable<string>>
+{
+    private readonly ILogger _log;
+    private readonly IQueryable<RawRegistration> _rawRegistrations;
+
+    public AllExternalRegistrationIdentifiersQueryHandler(IQueryable<RawRegistration> rawRegistrations,
+                                                          ILogger log)
     {
-        public string RegistrationFormExternalIdentifier { get; set; }
+        _rawRegistrations = rawRegistrations;
+        _log = log;
     }
 
-    public class AllExternalRegistrationIdentifiersQueryHandler : IRequestHandler<AllExternalRegistrationIdentifiersQuery, IEnumerable<string>>
+    public async Task<IEnumerable<string>> Handle(AllExternalRegistrationIdentifiersQuery query,
+                                                  CancellationToken cancellationToken)
     {
-        private readonly ILogger _log;
-        private readonly IQueryable<RawRegistration> _rawRegistrations;
-
-        public AllExternalRegistrationIdentifiersQueryHandler(IQueryable<RawRegistration> rawRegistrations,
-                                                              ILogger log)
-        {
-            _rawRegistrations = rawRegistrations;
-            _log = log;
-        }
-
-        public async Task<IEnumerable<string>> Handle(AllExternalRegistrationIdentifiersQuery query, CancellationToken cancellationToken)
-        {
-            var ids = await _rawRegistrations.Where(reg => reg.FormExternalIdentifier == query.RegistrationFormExternalIdentifier)
-                                             .Select(reg => reg.RegistrationExternalIdentifier)
-                                             .ToListAsync(cancellationToken);
-            return ids;
-        }
+        var ids = await _rawRegistrations
+                        .Where(reg => reg.FormExternalIdentifier == query.RegistrationFormExternalIdentifier)
+                        .Select(reg => reg.RegistrationExternalIdentifier)
+                        .ToListAsync(cancellationToken);
+        return ids;
     }
 }

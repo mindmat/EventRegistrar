@@ -1,8 +1,7 @@
-﻿namespace EventRegistrar.Backend.Infrastructure.DomainEvents
+﻿namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
+
+public interface IEventBus
 {
-    public interface IEventBus
-    {
-        void Publish<TEvent>(TEvent @event)
-            where TEvent : DomainEvent;
-    }
+    void Publish<TEvent>(TEvent @event)
+        where TEvent : DomainEvent;
 }

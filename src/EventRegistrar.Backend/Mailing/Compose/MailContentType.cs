@@ -1,8 +1,7 @@
-﻿namespace EventRegistrar.Backend.Mailing.Compose
+﻿namespace EventRegistrar.Backend.Mailing.Compose;
+
+public enum MailContentType
 {
-    public enum MailContentType
-    {
-        Plaintext = 1,
-        Html = 2
-    }
+    Plaintext = 1,
+    Html = 2
 }

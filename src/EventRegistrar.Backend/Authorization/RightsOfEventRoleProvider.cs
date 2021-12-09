@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using EventRegistrar.Backend.Events;
+﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Hosting;
@@ -43,125 +40,125 @@ using EventRegistrar.Backend.Registrations.Reductions;
 using EventRegistrar.Backend.Registrations.Search;
 using EventRegistrar.Backend.Spots;
 
-namespace EventRegistrar.Backend.Authorization
-{
-    internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
-    {
-        /// <summary>
-        /// hook for dynamic setup of rights in roles per event
-        /// hardcoded to start
-        /// </summary>
-        /// <param name="eventId"></param>
-        /// <param name="usersRolesInEvent"></param>
-        /// <returns></returns>
-        public IEnumerable<string> GetRightsOfEventRoles(Guid eventId, ICollection<UserInEventRole> usersRolesInEvent)
-        {
-            if (usersRolesInEvent.Contains(UserInEventRole.Reader) ||
-                usersRolesInEvent.Contains(UserInEventRole.Writer) ||
-                usersRolesInEvent.Contains(UserInEventRole.Admin))
-            {
-                yield return nameof(SingleRegistrablesOverviewQuery);
-                yield return nameof(DoubleRegistrablesOverviewQuery);
-                yield return nameof(PaymentOverviewQuery);
-                yield return nameof(SearchRegistrationQuery);
-                yield return nameof(RegistrablesQuery);
-                yield return nameof(RegistrationQuery);
-                yield return nameof(MailsOfRegistrationQuery);
-                yield return nameof(SpotsOfRegistrationQuery);
-                yield return nameof(DuePaymentsQuery);
-                yield return nameof(MailTemplatesQuery);
-                yield return nameof(ParticipantsOfRegistrableQuery);
-                yield return nameof(GetPendingMailsQuery);
-                yield return nameof(MailTypesQuery);
-                yield return nameof(LanguagesQuery);
-                yield return nameof(AllExternalRegistrationIdentifiersQuery);
-                yield return nameof(PaymentStatementsQuery);
-                yield return nameof(PossibleAssignmentsQuery);
-                yield return nameof(SmsConversationQuery);
-                yield return nameof(CheckinQuery);
-                yield return nameof(RegistrationsWithUnmatchedPartnerQuery);
-                yield return nameof(PotentialPartnersQuery);
-                yield return nameof(AssignedPaymentsOfRegistrationQuery);
-                yield return nameof(PaymentSlipImageQuery);
-                yield return nameof(HostingOffersQuery);
-                yield return nameof(HostingRequestsQuery);
-                yield return nameof(PossibleRepaymentAssignmentQuery);
-                yield return nameof(InvalidAddressesQuery);
-                yield return nameof(PartyOverviewQuery);
-                yield return nameof(PossibleMailTypesQuery);
-                yield return nameof(UnassignedIncomingPaymentsQuery);
-                yield return nameof(RegistrationsOnWaitingListQuery);
-                yield return nameof(NotReceivedMailsQuery);
-                yield return nameof(PricingQuery);
-                yield return nameof(EventQuery);
-                yield return nameof(PossibleAudiencesQuery);
-                yield return nameof(RefundsQuery);
-                yield return nameof(DifferencesQuery);
-                yield return nameof(PayoutQuery);
-                yield return nameof(UnassignedPayoutsQuery);
-                yield return nameof(PossiblePayoutAssignmentQuery);
-                yield return nameof(DomainEventsQuery);
-            }
-            if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
-                usersRolesInEvent.Contains(UserInEventRole.Admin))
-            {
-                yield return nameof(SaveMailTemplateCommand);
-                yield return nameof(ReleaseMailCommand);
-                yield return nameof(DeleteMailCommand);
-                yield return nameof(SendReminderCommand);
-                yield return nameof(AddSpotCommand);
-                yield return nameof(RemoveSpotCommand);
-                yield return nameof(SavePaymentFileCommand);
-                yield return nameof(SetDoubleRegistrableLimitsCommand);
-                yield return nameof(SetSingleRegistrableLimitsCommand);
-                yield return nameof(CreateBulkMailsCommand);
-                yield return nameof(ReleaseBulkMailsCommand);
-                yield return nameof(TryPromoteFromWaitingListCommand);
-                yield return nameof(AssignPaymentCommand);
-                yield return nameof(ComposeAndSendMailCommand);
-                yield return nameof(CancelRegistrationCommand);
-                yield return nameof(SendSmsCommand);
-                yield return nameof(SwapFirstLastNameCommand);
-                yield return nameof(MatchPartnerRegistrationsCommand);
-                yield return nameof(ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand);
-                yield return nameof(UnassignPaymentCommand);
-                yield return nameof(AssignRepaymentCommand);
-                yield return nameof(FixInvalidAddressCommand);
-                yield return nameof(AddIndividualReductionCommand);
-                yield return nameof(ImportMailsFromImapCommand);
-                yield return nameof(UnbindPartnerRegistrationCommand);
-                yield return nameof(SetFallbackToPartyPassCommand);
-                yield return nameof(SetReductionCommand);
-                yield return nameof(WillPayAtCheckinCommand);
-                yield return nameof(DeleteRegistrableCommand);
-                yield return nameof(DeleteMailTemplateCommand);
-                yield return nameof(SaveReductionCommand);
-                yield return nameof(DeleteReductionCommand);
-                yield return nameof(SetRegistrablesPricesCommand);
-                yield return nameof(ActivateAutomaticPromotionCommand);
-                yield return nameof(DeactivateAutomaticPromotionCommand);
-                yield return nameof(IgnorePaymentCommand);
-                yield return nameof(CreateRegistrableCommand);
-                yield return nameof(FetchBankStamentsFileCommand);
-                yield return nameof(ProcessFetchedBankStatementsFileCommand);
-                yield return nameof(SendPaymentDueMailCommand);
-                yield return nameof(RefundDifferenceCommand);
-                yield return nameof(AssignPayoutCommand);
-            }
+namespace EventRegistrar.Backend.Authorization;
 
-            if (usersRolesInEvent.Contains(UserInEventRole.Admin))
-            {
-                yield return nameof(AccessRequestsOfEventQuery);
-                yield return nameof(UsersOfEventQuery);
-                yield return nameof(AddUserToRoleInEventCommand);
-                yield return nameof(RemoveUserFromRoleInEventCommand);
-                yield return nameof(RespondToRequestCommand);
-                yield return nameof(SaveRegistrationFormDefinitionCommand);
-                yield return nameof(OpenRegistrationCommand);
-                yield return nameof(ReleaseAllPendingMailsCommand);
-                yield return nameof(DeleteRegistrationFormCommand);
-                yield return nameof(SaveRegistrationFormMappingsCommand);
-            }
+internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
+{
+    /// <summary>
+    /// hook for dynamic setup of rights in roles per event
+    /// hardcoded to start
+    /// </summary>
+    /// <param name="eventId"></param>
+    /// <param name="usersRolesInEvent"></param>
+    /// <returns></returns>
+    public IEnumerable<string> GetRightsOfEventRoles(Guid eventId, ICollection<UserInEventRole> usersRolesInEvent)
+    {
+        if (usersRolesInEvent.Contains(UserInEventRole.Reader) ||
+            usersRolesInEvent.Contains(UserInEventRole.Writer) ||
+            usersRolesInEvent.Contains(UserInEventRole.Admin))
+        {
+            yield return nameof(SingleRegistrablesOverviewQuery);
+            yield return nameof(DoubleRegistrablesOverviewQuery);
+            yield return nameof(PaymentOverviewQuery);
+            yield return nameof(SearchRegistrationQuery);
+            yield return nameof(RegistrablesQuery);
+            yield return nameof(RegistrationQuery);
+            yield return nameof(MailsOfRegistrationQuery);
+            yield return nameof(SpotsOfRegistrationQuery);
+            yield return nameof(DuePaymentsQuery);
+            yield return nameof(MailTemplatesQuery);
+            yield return nameof(ParticipantsOfRegistrableQuery);
+            yield return nameof(GetPendingMailsQuery);
+            yield return nameof(MailTypesQuery);
+            yield return nameof(LanguagesQuery);
+            yield return nameof(AllExternalRegistrationIdentifiersQuery);
+            yield return nameof(PaymentStatementsQuery);
+            yield return nameof(PossibleAssignmentsQuery);
+            yield return nameof(SmsConversationQuery);
+            yield return nameof(CheckinQuery);
+            yield return nameof(RegistrationsWithUnmatchedPartnerQuery);
+            yield return nameof(PotentialPartnersQuery);
+            yield return nameof(AssignedPaymentsOfRegistrationQuery);
+            yield return nameof(PaymentSlipImageQuery);
+            yield return nameof(HostingOffersQuery);
+            yield return nameof(HostingRequestsQuery);
+            yield return nameof(PossibleRepaymentAssignmentQuery);
+            yield return nameof(InvalidAddressesQuery);
+            yield return nameof(PartyOverviewQuery);
+            yield return nameof(PossibleMailTypesQuery);
+            yield return nameof(UnassignedIncomingPaymentsQuery);
+            yield return nameof(RegistrationsOnWaitingListQuery);
+            yield return nameof(NotReceivedMailsQuery);
+            yield return nameof(PricingQuery);
+            yield return nameof(EventQuery);
+            yield return nameof(PossibleAudiencesQuery);
+            yield return nameof(RefundsQuery);
+            yield return nameof(DifferencesQuery);
+            yield return nameof(PayoutQuery);
+            yield return nameof(UnassignedPayoutsQuery);
+            yield return nameof(PossiblePayoutAssignmentQuery);
+            yield return nameof(DomainEventsQuery);
+        }
+
+        if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
+            usersRolesInEvent.Contains(UserInEventRole.Admin))
+        {
+            yield return nameof(SaveMailTemplateCommand);
+            yield return nameof(ReleaseMailCommand);
+            yield return nameof(DeleteMailCommand);
+            yield return nameof(SendReminderCommand);
+            yield return nameof(AddSpotCommand);
+            yield return nameof(RemoveSpotCommand);
+            yield return nameof(SavePaymentFileCommand);
+            yield return nameof(SetDoubleRegistrableLimitsCommand);
+            yield return nameof(SetSingleRegistrableLimitsCommand);
+            yield return nameof(CreateBulkMailsCommand);
+            yield return nameof(ReleaseBulkMailsCommand);
+            yield return nameof(TryPromoteFromWaitingListCommand);
+            yield return nameof(AssignPaymentCommand);
+            yield return nameof(ComposeAndSendMailCommand);
+            yield return nameof(CancelRegistrationCommand);
+            yield return nameof(SendSmsCommand);
+            yield return nameof(SwapFirstLastNameCommand);
+            yield return nameof(MatchPartnerRegistrationsCommand);
+            yield return nameof(ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand);
+            yield return nameof(UnassignPaymentCommand);
+            yield return nameof(AssignRepaymentCommand);
+            yield return nameof(FixInvalidAddressCommand);
+            yield return nameof(AddIndividualReductionCommand);
+            yield return nameof(ImportMailsFromImapCommand);
+            yield return nameof(UnbindPartnerRegistrationCommand);
+            yield return nameof(SetFallbackToPartyPassCommand);
+            yield return nameof(SetReductionCommand);
+            yield return nameof(WillPayAtCheckinCommand);
+            yield return nameof(DeleteRegistrableCommand);
+            yield return nameof(DeleteMailTemplateCommand);
+            yield return nameof(SaveReductionCommand);
+            yield return nameof(DeleteReductionCommand);
+            yield return nameof(SetRegistrablesPricesCommand);
+            yield return nameof(ActivateAutomaticPromotionCommand);
+            yield return nameof(DeactivateAutomaticPromotionCommand);
+            yield return nameof(IgnorePaymentCommand);
+            yield return nameof(CreateRegistrableCommand);
+            yield return nameof(FetchBankStamentsFileCommand);
+            yield return nameof(ProcessFetchedBankStatementsFileCommand);
+            yield return nameof(SendPaymentDueMailCommand);
+            yield return nameof(RefundDifferenceCommand);
+            yield return nameof(AssignPayoutCommand);
+        }
+
+        if (usersRolesInEvent.Contains(UserInEventRole.Admin))
+        {
+            yield return nameof(AccessRequestsOfEventQuery);
+            yield return nameof(UsersOfEventQuery);
+            yield return nameof(AddUserToRoleInEventCommand);
+            yield return nameof(RemoveUserFromRoleInEventCommand);
+            yield return nameof(RespondToRequestCommand);
+            yield return nameof(SaveRegistrationFormDefinitionCommand);
+            yield return nameof(OpenRegistrationCommand);
+            yield return nameof(ReleaseAllPendingMailsCommand);
+            yield return nameof(DeleteRegistrationFormCommand);
+            yield return nameof(SaveRegistrationFormMappingsCommand);
         }
     }
 }

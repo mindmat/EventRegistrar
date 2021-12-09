@@ -1,14 +1,11 @@
-﻿using System;
+﻿namespace EventRegistrar.Backend.Events.Context;
 
-namespace EventRegistrar.Backend.Events.Context
+public class EventContext
 {
-    public class EventContext
-    {
-        public Guid? EventId { get; set; }
+    public Guid? EventId { get; set; }
 
-        public static implicit operator Guid? (EventContext eventContext)
-        {
-            return eventContext.EventId;
-        }
+    public static implicit operator Guid?(EventContext eventContext)
+    {
+        return eventContext.EventId;
     }
 }

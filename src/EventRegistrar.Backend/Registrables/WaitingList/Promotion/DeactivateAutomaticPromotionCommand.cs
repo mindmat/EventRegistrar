@@ -1,40 +1,32 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace EventRegistrar.Backend.Registrables.WaitingList.Promotion
+namespace EventRegistrar.Backend.Registrables.WaitingList.Promotion;
+
+public class DeactivateAutomaticPromotionCommand : IRequest, IEventBoundRequest
 {
-    public class DeactivateAutomaticPromotionCommand : IRequest, IEventBoundRequest
+    public Guid EventId { get; set; }
+    public Guid RegistrableId { get; set; }
+}
+
+public class DeactivateAutomaticPromotionCommandHandler : IRequestHandler<DeactivateAutomaticPromotionCommand>
+{
+    private readonly IRepository<Registrable> _registrables;
+
+    public DeactivateAutomaticPromotionCommandHandler(IRepository<Registrable> registrables)
     {
-        public Guid EventId { get; set; }
-        public Guid RegistrableId { get; set; }
+        _registrables = registrables;
     }
 
-
-    public class DeactivateAutomaticPromotionCommandHandler : IRequestHandler<DeactivateAutomaticPromotionCommand>
+    public async Task<Unit> Handle(DeactivateAutomaticPromotionCommand command, CancellationToken cancellationToken)
     {
-        private readonly IRepository<Registrable> _registrables;
-
-        public DeactivateAutomaticPromotionCommandHandler(IRepository<Registrable> registrables)
-        {
-            _registrables = registrables;
-        }
-
-        public async Task<Unit> Handle(DeactivateAutomaticPromotionCommand command, CancellationToken cancellationToken)
-        {
-            var registrable = await _registrables.FirstAsync(rbl => rbl.Id == command.RegistrableId);
-            if (registrable.AutomaticPromotionFromWaitingList == false)
-            {
-                // already activated
-                return Unit.Value;
-            }
-
-            registrable.AutomaticPromotionFromWaitingList = false;
+        var registrable = await _registrables.FirstAsync(rbl => rbl.Id == command.RegistrableId);
+        if (registrable.AutomaticPromotionFromWaitingList == false)
+            // already activated
             return Unit.Value;
-        }
+
+        registrable.AutomaticPromotionFromWaitingList = false;
+        return Unit.Value;
     }
 }

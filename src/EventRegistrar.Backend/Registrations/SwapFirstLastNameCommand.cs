@@ -1,40 +1,32 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-
-using EventRegistrar.Backend.Authorization;
+﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
-
 using MediatR;
 
-using Microsoft.EntityFrameworkCore;
+namespace EventRegistrar.Backend.Registrations;
 
-namespace EventRegistrar.Backend.Registrations
+public class SwapFirstLastNameCommand : IRequest, IEventBoundRequest
 {
-    public class SwapFirstLastNameCommand : IRequest, IEventBoundRequest
+    public Guid EventId { get; set; }
+    public Guid RegistrationId { get; set; }
+}
+
+public class SwapFirstLastNameCommandHandler : IRequestHandler<SwapFirstLastNameCommand>
+{
+    private readonly IRepository<Registration> _registrations;
+
+    public SwapFirstLastNameCommandHandler(IRepository<Registration> registrations)
     {
-        public Guid EventId { get; set; }
-        public Guid RegistrationId { get; set; }
+        _registrations = registrations;
     }
 
-    public class SwapFirstLastNameCommandHandler : IRequestHandler<SwapFirstLastNameCommand>
+    public async Task<Unit> Handle(SwapFirstLastNameCommand command, CancellationToken cancellationToken)
     {
-        private readonly IRepository<Registration> _registrations;
+        var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId
+                                                               && reg.EventId == command.EventId, cancellationToken);
+        var firstName = registration.RespondentFirstName;
+        registration.RespondentFirstName = registration.RespondentLastName;
+        registration.RespondentLastName = firstName;
 
-        public SwapFirstLastNameCommandHandler(IRepository<Registration> registrations)
-        {
-            _registrations = registrations;
-        }
-
-        public async Task<Unit> Handle(SwapFirstLastNameCommand command, CancellationToken cancellationToken)
-        {
-            var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId
-                                                                      && reg.EventId == command.EventId, cancellationToken);
-            var firstName = registration.RespondentFirstName;
-            registration.RespondentFirstName = registration.RespondentLastName;
-            registration.RespondentLastName = firstName;
-
-            return Unit.Value;
-        }
+        return Unit.Value;
     }
 }

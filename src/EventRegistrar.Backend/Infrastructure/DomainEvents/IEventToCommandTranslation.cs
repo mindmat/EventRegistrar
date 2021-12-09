@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using MediatR;
+﻿using MediatR;
 
-namespace EventRegistrar.Backend.Infrastructure.DomainEvents
+namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
+
+public interface IEventToCommandTranslation<in TEvent>
+    where TEvent : DomainEvent
 {
-    public interface IEventToCommandTranslation<in TEvent>
-        where TEvent : DomainEvent
-    {
-        IEnumerable<IRequest> Translate(TEvent e);
-    }
+    IEnumerable<IRequest> Translate(TEvent e);
 }

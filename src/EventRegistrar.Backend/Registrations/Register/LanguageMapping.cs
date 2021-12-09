@@ -1,10 +1,7 @@
-﻿using System;
+﻿namespace EventRegistrar.Backend.Registrations.Register;
 
-namespace EventRegistrar.Backend.Registrations.Register
+public struct LanguageMapping
 {
-    public struct LanguageMapping
-    {
-        public Guid QuestionOptionId { get; set; }
-        public string Language { get; set; }
-    }
+    public Guid QuestionOptionId { get; set; }
+    public string Language { get; set; }
 }

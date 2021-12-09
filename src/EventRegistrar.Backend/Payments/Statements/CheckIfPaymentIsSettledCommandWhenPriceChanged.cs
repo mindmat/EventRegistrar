@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations.Confirmation;
 using EventRegistrar.Backend.Registrations.Price;
 using MediatR;
 
-namespace EventRegistrar.Backend.Payments.Statements
+namespace EventRegistrar.Backend.Payments.Statements;
+
+public class CheckIfRegistrationSettledAfterPaymentCommandWhenPriceChanged : IEventToCommandTranslation<PriceChanged>
 {
-    public class CheckIfRegistrationSettledAfterPaymentCommandWhenPriceChanged : IEventToCommandTranslation<PriceChanged>
+    public IEnumerable<IRequest> Translate(PriceChanged e)
     {
-        public IEnumerable<IRequest> Translate(PriceChanged e)
-        {
-            yield return new CheckRegistrationAfterPaymentCommand { RegistrationId = e.RegistrationId };
-        }
+        yield return new CheckRegistrationAfterPaymentCommand { RegistrationId = e.RegistrationId };
     }
 }

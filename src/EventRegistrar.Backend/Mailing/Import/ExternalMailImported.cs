@@ -1,22 +1,19 @@
-﻿using System;
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
+namespace EventRegistrar.Backend.Mailing.Import;
 
-namespace EventRegistrar.Backend.Mailing.Import
+public class ExternalMailImported : DomainEvent
 {
-    public class ExternalMailImported : DomainEvent
-    {
-        public DateTime ExternalDate { get; set; }
-        public Guid ImportedMailId { get; set; }
-        public string Subject { get; set; }
-        public string From { get; set; }
-    }
+    public DateTime ExternalDate { get; set; }
+    public Guid ImportedMailId { get; set; }
+    public string Subject { get; set; }
+    public string From { get; set; }
+}
 
-    public class ExternalMailImportedUserTranslation : IEventToUserTranslation<ExternalMailImported>
+public class ExternalMailImportedUserTranslation : IEventToUserTranslation<ExternalMailImported>
+{
+    public string GetText(ExternalMailImported domainEvent)
     {
-        public string GetText(ExternalMailImported domainEvent)
-        {
-            return $"von {domainEvent.From}, Betreff {domainEvent.Subject}, erhalten um {domainEvent.ExternalDate}";
-        }
+        return $"von {domainEvent.From}, Betreff {domainEvent.Subject}, erhalten um {domainEvent.ExternalDate}";
     }
 }

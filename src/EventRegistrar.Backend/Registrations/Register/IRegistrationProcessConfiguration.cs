@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EventRegistrar.Backend.RegistrationForms;
 
-using EventRegistrar.Backend.RegistrationForms;
+namespace EventRegistrar.Backend.Registrations.Register;
 
-namespace EventRegistrar.Backend.Registrations.Register
+public interface IRegistrationProcessConfiguration
 {
-    public interface IRegistrationProcessConfiguration
-    {
-        Guid Id { get; }
-        Guid RegistrationFormId { get; }
-        string? Description { get; }
-        public FormPathType Type { get; }
-        IEnumerable<LanguageMapping>? LanguageMappings { get; }
-    }
+    Guid Id { get; }
+    Guid RegistrationFormId { get; }
+    string? Description { get; }
+    public FormPathType Type { get; }
+    IEnumerable<LanguageMapping>? LanguageMappings { get; }
 }

@@ -1,10 +1,9 @@
-﻿namespace EventRegistrar.Backend.PhoneMessages
+﻿namespace EventRegistrar.Backend.PhoneMessages;
+
+public enum TwilioSmsStatus
 {
-    public enum TwilioSmsStatus
-    {
-        Queued,
-        Sent,
-        Delivered,
-        Received
-    }
+    Queued,
+    Sent,
+    Delivered,
+    Received
 }

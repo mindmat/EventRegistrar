@@ -1,28 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using MediatR;
 
-using MediatR;
+namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
 
-namespace EventRegistrar.Backend.Infrastructure.DomainEvents
+public class DomainEventCatalogQuery : IRequest<IEnumerable<DomainEventCatalogItem>>
 {
-    public class DomainEventCatalogQuery : IRequest<IEnumerable<DomainEventCatalogItem>>
-    {
+}
 
+public class
+    DomainEventCatalogQueryHandler : IRequestHandler<DomainEventCatalogQuery, IEnumerable<DomainEventCatalogItem>>
+{
+    private readonly DomainEventCatalog _catalog;
+
+    public DomainEventCatalogQueryHandler(DomainEventCatalog catalog)
+    {
+        _catalog = catalog;
     }
 
-    public class DomainEventCatalogQueryHandler : IRequestHandler<DomainEventCatalogQuery, IEnumerable<DomainEventCatalogItem>>
+    public Task<IEnumerable<DomainEventCatalogItem>> Handle(DomainEventCatalogQuery request,
+                                                            CancellationToken cancellationToken)
     {
-        private readonly DomainEventCatalog _catalog;
-
-        public DomainEventCatalogQueryHandler(DomainEventCatalog catalog)
-        {
-            _catalog = catalog;
-        }
-
-        public Task<IEnumerable<DomainEventCatalogItem>> Handle(DomainEventCatalogQuery request, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(_catalog.DomainEventTypes as IEnumerable<DomainEventCatalogItem>);
-        }
+        return Task.FromResult(_catalog.DomainEventTypes as IEnumerable<DomainEventCatalogItem>);
     }
 }

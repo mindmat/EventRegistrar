@@ -1,8 +1,7 @@
-﻿namespace EventRegistrar.Backend.Authentication
+﻿namespace EventRegistrar.Backend.Authentication;
+
+public enum IdentityProvider
 {
-    public enum IdentityProvider
-    {
-        Google = 1,
-        Microsoft = 2,
-    }
+    Google = 1,
+    Microsoft = 2
 }

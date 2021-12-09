@@ -1,11 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿namespace EventRegistrar.Backend.Authorization;
 
-namespace EventRegistrar.Backend.Authorization
+public interface IAuthorizationChecker
 {
-    public interface IAuthorizationChecker
-    {
-        Task ThrowIfUserHasNotRight(Guid eventId, string requestTypeName);
-        Task<bool> UserHasRight(Guid eventId, string requestTypeName);
-    }
+    Task ThrowIfUserHasNotRight(Guid eventId, string requestTypeName);
+    Task<bool> UserHasRight(Guid eventId, string requestTypeName);
 }

@@ -1,7 +1,6 @@
-﻿namespace EventRegistrar.Backend.Infrastructure.ServiceBus
+﻿namespace EventRegistrar.Backend.Infrastructure.ServiceBus;
+
+public class SourceQueueProvider
 {
-    public class SourceQueueProvider
-    {
-        public string SourceQueueName { get; set; }
-    }
+    public string SourceQueueName { get; set; }
 }

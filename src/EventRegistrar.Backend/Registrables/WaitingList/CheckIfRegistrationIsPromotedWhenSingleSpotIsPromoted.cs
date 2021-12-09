@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
-
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
-
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using MediatR;
 
-namespace EventRegistrar.Backend.Registrables.WaitingList
+namespace EventRegistrar.Backend.Registrables.WaitingList;
+
+public class
+    CheckIfRegistrationIsPromotedWhenSingleSpotIsPromoted : IEventToCommandTranslation<
+        SingleSpotPromotedFromWaitingList>
 {
-    public class CheckIfRegistrationIsPromotedWhenSingleSpotIsPromoted : IEventToCommandTranslation<SingleSpotPromotedFromWaitingList>
+    public IEnumerable<IRequest> Translate(SingleSpotPromotedFromWaitingList e)
     {
-        public IEnumerable<IRequest> Translate(SingleSpotPromotedFromWaitingList e)
-        {
-            yield return new CheckIfRegistrationIsPromotedCommand { RegistrationId = e.RegistrationId };
-        }
+        yield return new CheckIfRegistrationIsPromotedCommand { RegistrationId = e.RegistrationId };
     }
 }

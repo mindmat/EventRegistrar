@@ -1,27 +1,22 @@
-﻿using System;
-
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-
-using Microsoft.EntityFrameworkCore;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
-{
-    public class RawRegistrationForm : Entity
-    {
-        public DateTime Created { get; set; }
-        public string EventAcronym { get; set; } = null!;
-        public string FormExternalIdentifier { get; set; } = null!;
-        public bool Processed { get; set; }
-        public string ReceivedMessage { get; set; } = null!;
-    }
+namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
 
-    public class RawRegistrationFormMap : EntityTypeConfiguration<RawRegistrationForm>
+public class RawRegistrationForm : Entity
+{
+    public DateTime Created { get; set; }
+    public string EventAcronym { get; set; } = null!;
+    public string FormExternalIdentifier { get; set; } = null!;
+    public bool Processed { get; set; }
+    public string ReceivedMessage { get; set; } = null!;
+}
+
+public class RawRegistrationFormMap : EntityTypeConfiguration<RawRegistrationForm>
+{
+    public override void Configure(EntityTypeBuilder<RawRegistrationForm> builder)
     {
-        public override void Configure(EntityTypeBuilder<RawRegistrationForm> builder)
-        {
-            base.Configure(builder);
-            builder.ToTable("RawRegistrationForms");
-        }
+        base.Configure(builder);
+        builder.ToTable("RawRegistrationForms");
     }
 }

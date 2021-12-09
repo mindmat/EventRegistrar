@@ -1,8 +1,7 @@
-﻿namespace EventRegistrar.Backend.Mailing.Send
+﻿namespace EventRegistrar.Backend.Mailing.Send;
+
+public class EmailAddress
 {
-    public class EmailAddress
-    {
-        public string Email { get; set; }
-        public string Name { get; set; }
-    }
+    public string Email { get; set; }
+    public string Name { get; set; }
 }

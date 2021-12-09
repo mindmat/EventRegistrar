@@ -1,52 +1,50 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 
-namespace EventRegistrar.Backend.Authentication
+namespace EventRegistrar.Backend.Authentication;
+
+public class GoogleIdentityProvider : IIdentityProvider
 {
-    public class GoogleIdentityProvider : IIdentityProvider
+    public const string HeaderKeyIdToken = "X-MS-TOKEN-GOOGLE-ID-TOKEN";
+    private readonly ILogger _logger;
+
+    public GoogleIdentityProvider(ILogger logger)
     {
-        public const string HeaderKeyIdToken = "X-MS-TOKEN-GOOGLE-ID-TOKEN";
-        private readonly ILogger _logger;
+        _logger = logger;
+    }
 
-        public GoogleIdentityProvider(ILogger logger)
+    public IdentityProvider Provider => IdentityProvider.Google;
+
+    public string? GetIdentifier(IHttpContextAccessor contextAccessor)
+    {
+        var idTokenString = contextAccessor.HttpContext?.Request?.Headers?[HeaderKeyIdToken].FirstOrDefault();
+        if (idTokenString != null)
         {
-            _logger = logger;
+            var token = new JwtSecurityToken(idTokenString);
+            _logger.LogInformation("token {0}, subject {1}, issuer {2}", idTokenString, token.Subject, token.Issuer);
+            return token.Subject;
         }
 
-        public IdentityProvider Provider => IdentityProvider.Google;
+        _logger.LogInformation("no token found in request. headers present: {0}",
+            contextAccessor.HttpContext?.Request?.Headers?.Select(hdr => $"{hdr.Key}: {hdr.Value}")?.StringJoin());
+        return null;
+    }
 
-        public string? GetIdentifier(IHttpContextAccessor contextAccessor)
+    public AuthenticatedUser GetUser(IHttpContextAccessor contextAccessor)
+    {
+        var headers = contextAccessor.HttpContext?.Request?.Headers;
+        var idTokenString = headers?[HeaderKeyIdToken].FirstOrDefault();
+        if (idTokenString != null)
         {
-            var idTokenString = contextAccessor.HttpContext?.Request?.Headers?[HeaderKeyIdToken].FirstOrDefault();
-            if (idTokenString != null)
-            {
-                var token = new JwtSecurityToken(idTokenString);
-                _logger.LogInformation("token {0}, subject {1}, issuer {2}", idTokenString, token.Subject, token.Issuer);
-                return token.Subject;
-            }
-            _logger.LogInformation("no token found in request. headers present: {0}", contextAccessor.HttpContext?.Request?.Headers?.Select(hdr => $"{hdr.Key}: {hdr.Value}")?.StringJoin());
-            return null;
+            var token = new JwtSecurityToken(idTokenString);
+
+            var firstName = token.GetClaim("given_name");
+            var lastName = token.GetClaim("family_name");
+            var email = token.GetClaim("email");
+            return new AuthenticatedUser(Provider, token.Subject, firstName, lastName, email);
         }
 
-        public AuthenticatedUser GetUser(IHttpContextAccessor contextAccessor)
-        {
-            var headers = contextAccessor.HttpContext?.Request?.Headers;
-            var idTokenString = headers?[HeaderKeyIdToken].FirstOrDefault();
-            if (idTokenString != null)
-            {
-                var token = new JwtSecurityToken(idTokenString);
-
-                var firstName = token.GetClaim("given_name");
-                var lastName = token.GetClaim("family_name");
-                var email = token.GetClaim("email");
-                return new AuthenticatedUser(Provider, token.Subject, firstName, lastName, email);
-            }
-
-            return AuthenticatedUser.None;
-        }
+        return AuthenticatedUser.None;
     }
 }

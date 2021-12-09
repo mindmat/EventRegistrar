@@ -1,8 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure.Configuration;
 
-namespace EventRegistrar.Backend.PhoneMessages
+namespace EventRegistrar.Backend.PhoneMessages;
+
+internal class NullTwilioConfiguration : TwilioConfiguration, IDefaultConfigurationItem
 {
-    internal class NullTwilioConfiguration : TwilioConfiguration, IDefaultConfigurationItem
-    {
-    }
 }

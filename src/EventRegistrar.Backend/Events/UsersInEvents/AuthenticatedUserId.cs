@@ -1,14 +1,11 @@
-﻿using System;
+﻿namespace EventRegistrar.Backend.Events.UsersInEvents;
 
-namespace EventRegistrar.Backend.Events.UsersInEvents
+public class AuthenticatedUserId
 {
-    public class AuthenticatedUserId
+    public AuthenticatedUserId(Guid? userId)
     {
-        public AuthenticatedUserId(Guid? userId)
-        {
-            UserId = userId;
-        }
-
-        public Guid? UserId { get; }
+        UserId = userId;
     }
+
+    public Guid? UserId { get; }
 }

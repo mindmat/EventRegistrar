@@ -1,8 +1,7 @@
-﻿namespace EventRegistrar.Backend.Mailing
+﻿namespace EventRegistrar.Backend.Mailing;
+
+public enum MailTask
 {
-    public enum MailTask
-    {
-        RegistrationReceived = 1,
-        RegistrationAccepted = 2,
-    }
+    RegistrationReceived = 1,
+    RegistrationAccepted = 2
 }

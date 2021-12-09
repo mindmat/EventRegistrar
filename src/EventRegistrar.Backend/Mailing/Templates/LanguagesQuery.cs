@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using EventRegistrar.Backend.Authorization;
+﻿using EventRegistrar.Backend.Authorization;
 using MediatR;
 
-namespace EventRegistrar.Backend.Mailing.Templates
+namespace EventRegistrar.Backend.Mailing.Templates;
+
+public class LanguagesQuery : IRequest<IEnumerable<LanguageItem>>, IEventBoundRequest
 {
-    public class LanguagesQuery : IRequest<IEnumerable<LanguageItem>>, IEventBoundRequest
-    {
-        public Guid EventId { get; set; }
-    }
+    public Guid EventId { get; set; }
 }

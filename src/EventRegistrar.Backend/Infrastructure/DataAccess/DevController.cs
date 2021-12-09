@@ -1,28 +1,25 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using SimpleInjector;
 
-namespace EventRegistrar.Backend.Infrastructure.DataAccess
+namespace EventRegistrar.Backend.Infrastructure.DataAccess;
+
+public class DevController : Controller
 {
-    public class DevController : Controller
+    private readonly Container _container;
+    private readonly DbContext _dbContext;
+
+    public DevController(DbContext dbContext, Container container)
     {
-        private readonly Container _container;
-        private readonly DbContext _dbContext;
+        _dbContext = dbContext;
+        _container = container;
+    }
 
-        public DevController(DbContext dbContext, Container container)
-        {
-            _dbContext = dbContext;
-            _container = container;
-        }
-
-        [HttpPost("api/dev/migratedb")]
-        public async Task MigrateDb()
-        {
-            //await _dbContext.Database.MigrateAsync();
-            //var scenario = new TestScenario();
-            //await scenario.Create(_container);
-            await Task.CompletedTask;
-        }
+    [HttpPost("api/dev/migratedb")]
+    public async Task MigrateDb()
+    {
+        //await _dbContext.Database.MigrateAsync();
+        //var scenario = new TestScenario();
+        //await scenario.Create(_container);
+        await Task.CompletedTask;
     }
 }

@@ -1,10 +1,7 @@
-﻿using System.Collections.Generic;
+﻿namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
 
-namespace EventRegistrar.Backend.RegistrationForms.GoogleForms
+public class FormDescription
 {
-    public class FormDescription
-    {
-        public IEnumerable<QuestionDescription> Questions { get; set; }
-        public string Title { get; set; }
-    }
+    public IEnumerable<QuestionDescription> Questions { get; set; }
+    public string Title { get; set; }
 }

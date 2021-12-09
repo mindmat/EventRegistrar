@@ -1,9 +1,8 @@
-﻿namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
+﻿namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
+
+public class RequestResponseDto
 {
-    public class RequestResponseDto
-    {
-        public RequestResponse Response { get; set; }
-        public UserInEventRole Role { get; set; }
-        public string Text { get; set; }
-    }
+    public RequestResponse Response { get; set; }
+    public UserInEventRole Role { get; set; }
+    public string Text { get; set; }
 }

@@ -1,40 +1,38 @@
-﻿using System.Collections.Generic;
-using EventRegistrar.Backend.Infrastructure.Configuration;
+﻿using EventRegistrar.Backend.Infrastructure.Configuration;
 
-namespace EventRegistrar.Backend.Mailing
+namespace EventRegistrar.Backend.Mailing;
+
+public class MailReleaseConfiguration : IConfigurationItem
 {
-    public class MailReleaseConfiguration : IConfigurationItem
-    {
-        public IEnumerable<MailType> MailsToReleaseAutomatically { get; set; }
-        public bool SendRegistrationReceivedMail { get; set; }
-    }
+    public IEnumerable<MailType> MailsToReleaseAutomatically { get; set; }
+    public bool SendRegistrationReceivedMail { get; set; }
+}
 
-    public class DefaultMailReleaseConfiguration : MailReleaseConfiguration, IDefaultConfigurationItem
+public class DefaultMailReleaseConfiguration : MailReleaseConfiguration, IDefaultConfigurationItem
+{
+    public DefaultMailReleaseConfiguration()
     {
-        public DefaultMailReleaseConfiguration()
-        {
-            MailsToReleaseAutomatically = new[]
-            {
-                //MailType.SingleRegistrationAccepted ,
-                //MailType.SingleRegistrationOnWaitingList ,
-                MailType.RegistrationReceived,
-                //MailType.PartnerRegistrationFirstPartnerAccepted ,
-                //MailType.PartnerRegistrationMatchedAndAccepted ,
-                //MailType.PartnerRegistrationFirstPartnerOnWaitingList ,
-                //MailType.PartnerRegistrationMatchedOnWaitingList ,
-                //MailType.SoldOut ,
-                //MailType.OnlyOneRegistrationPerEmail ,
-                //MailType.RegistrationCancelled ,
-                MailType.SingleRegistrationFullyPaid ,
-                MailType.PartnerRegistrationFirstPaid ,
-                MailType.PartnerRegistrationFullyPaid ,
-                //MailType.SingleRegistrationFirstReminder ,
-                //MailType.SingleRegistrationSecondReminder ,
-                //MailType.PartnerRegistrationFirstReminder ,
-                //MailType.PartnerRegistrationSecondReminder,
-                //MailType.OptionsForRegistrationsOnWaitingList
-            };
-            SendRegistrationReceivedMail = true;
-        }
+        MailsToReleaseAutomatically = new[]
+                                      {
+                                          //MailType.SingleRegistrationAccepted ,
+                                          //MailType.SingleRegistrationOnWaitingList ,
+                                          MailType.RegistrationReceived,
+                                          //MailType.PartnerRegistrationFirstPartnerAccepted ,
+                                          //MailType.PartnerRegistrationMatchedAndAccepted ,
+                                          //MailType.PartnerRegistrationFirstPartnerOnWaitingList ,
+                                          //MailType.PartnerRegistrationMatchedOnWaitingList ,
+                                          //MailType.SoldOut ,
+                                          //MailType.OnlyOneRegistrationPerEmail ,
+                                          //MailType.RegistrationCancelled ,
+                                          MailType.SingleRegistrationFullyPaid,
+                                          MailType.PartnerRegistrationFirstPaid,
+                                          MailType.PartnerRegistrationFullyPaid
+                                          //MailType.SingleRegistrationFirstReminder ,
+                                          //MailType.SingleRegistrationSecondReminder ,
+                                          //MailType.PartnerRegistrationFirstReminder ,
+                                          //MailType.PartnerRegistrationSecondReminder,
+                                          //MailType.OptionsForRegistrationsOnWaitingList
+                                      };
+        SendRegistrationReceivedMail = true;
     }
 }

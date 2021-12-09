@@ -1,9 +1,8 @@
-﻿namespace EventRegistrar.Backend.Mailing.Templates
+﻿namespace EventRegistrar.Backend.Mailing.Templates;
+
+public class MailTypeItem
 {
-    public class MailTypeItem
-    {
-        public string BulkMailKey { get; set; }
-        public MailType? Type { get; set; }
-        public string UserText { get; set; }
-    }
+    public string BulkMailKey { get; set; }
+    public MailType? Type { get; set; }
+    public string UserText { get; set; }
 }

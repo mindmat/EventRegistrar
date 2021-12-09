@@ -1,13 +1,11 @@
-using System;
 using EventRegistrar.Backend.Authorization;
 using MediatR;
 
-namespace EventRegistrar.Backend.Events.UsersInEvents
+namespace EventRegistrar.Backend.Events.UsersInEvents;
+
+public class AddUserToRoleInEventCommand : IRequest<Guid>, IEventBoundRequest
 {
-    public class AddUserToRoleInEventCommand : IRequest<Guid>, IEventBoundRequest
-    {
-        public Guid EventId { get; set; }
-        public UserInEventRole Role { get; set; }
-        public Guid UserId { get; set; }
-    }
+    public Guid EventId { get; set; }
+    public UserInEventRole Role { get; set; }
+    public Guid UserId { get; set; }
 }

@@ -1,8 +1,7 @@
-﻿namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests
+﻿namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
+
+public enum RequestResponse
 {
-    public enum RequestResponse
-    {
-        Granted = 1,
-        Denied = 2
-    }
+    Granted = 1,
+    Denied = 2
 }

@@ -1,34 +1,24 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿namespace EventRegistrar.Backend.Events;
 
-using Microsoft.EntityFrameworkCore;
-
-namespace EventRegistrar.Backend.Events
+public interface IEventAcronymResolver
 {
-    public interface IEventAcronymResolver
+    Task<Guid> GetEventIdFromAcronym(string eventAcronym);
+}
+
+internal class EventAcronymResolver : IEventAcronymResolver
+{
+    private readonly IQueryable<Event> _events;
+
+    public EventAcronymResolver(IQueryable<Event> events)
     {
-        Task<Guid> GetEventIdFromAcronym(string eventAcronym);
+        _events = events;
     }
 
-    internal class EventAcronymResolver : IEventAcronymResolver
+    public async Task<Guid> GetEventIdFromAcronym(string eventAcronym)
     {
-        private readonly IQueryable<Event> _events;
+        var @event = await _events.FirstOrDefaultAsync(evt => evt.Acronym == eventAcronym);
+        if (@event == null) throw new ArgumentOutOfRangeException($"There is no event {eventAcronym}");
 
-        public EventAcronymResolver(IQueryable<Event> events)
-        {
-            _events = events;
-        }
-
-        public async Task<Guid> GetEventIdFromAcronym(string eventAcronym)
-        {
-            var @event = await _events.FirstOrDefaultAsync(evt => evt.Acronym == eventAcronym);
-            if (@event == null)
-            {
-                throw new ArgumentOutOfRangeException($"There is no event {eventAcronym}");
-            }
-
-            return @event.Id;
-        }
+        return @event.Id;
     }
 }

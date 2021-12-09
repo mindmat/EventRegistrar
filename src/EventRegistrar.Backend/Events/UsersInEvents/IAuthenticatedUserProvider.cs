@@ -1,12 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿namespace EventRegistrar.Backend.Events.UsersInEvents;
 
-namespace EventRegistrar.Backend.Events.UsersInEvents
+public interface IAuthenticatedUserProvider
 {
-    public interface IAuthenticatedUserProvider
-    {
-        AuthenticatedUser GetAuthenticatedUser();
+    AuthenticatedUser GetAuthenticatedUser();
 
-        Task<Guid?> GetAuthenticatedUserId();
-    }
+    Task<Guid?> GetAuthenticatedUserId();
 }

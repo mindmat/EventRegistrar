@@ -1,14 +1,10 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace EventRegistrar.Backend.Infrastructure.DataAccess
+namespace EventRegistrar.Backend.Infrastructure.DataAccess;
+
+public class Entity
 {
-    public class Entity
-    {
-        [Key]
-        public Guid Id { get; set; }
+    [Key] public Guid Id { get; set; }
 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
-    }
+    [Timestamp] public byte[] RowVersion { get; set; }
 }

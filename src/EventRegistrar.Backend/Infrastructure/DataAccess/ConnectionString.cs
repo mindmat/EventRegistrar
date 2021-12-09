@@ -1,17 +1,16 @@
-﻿namespace EventRegistrar.Backend.Infrastructure.DataAccess
+﻿namespace EventRegistrar.Backend.Infrastructure.DataAccess;
+
+public class ConnectionString
 {
-    public class ConnectionString
+    private readonly string _connectionString;
+
+    public ConnectionString(string connectionString)
     {
-        private readonly string _connectionString;
+        _connectionString = connectionString;
+    }
 
-        public ConnectionString(string connectionString)
-        {
-            _connectionString = connectionString;
-        }
-
-        public override string ToString()
-        {
-            return _connectionString;
-        }
+    public override string ToString()
+    {
+        return _connectionString;
     }
 }

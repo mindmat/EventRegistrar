@@ -1,28 +1,24 @@
-﻿using System;
-using System.Linq;
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
+namespace EventRegistrar.Backend.Payments.Files.Fetch;
 
-namespace EventRegistrar.Backend.Payments.Files.Fetch
+public class BankStatementsFileImported : DomainEvent
 {
-    public class BankStatementsFileImported : DomainEvent
+    public Guid BankStatementsFileId { get; set; }
+}
+
+public class PaymentUnassignedUserTranslation : IEventToUserTranslation<BankStatementsFileImported>
+{
+    private readonly IQueryable<RawBankStatementsFile> _rawBankStatementsFiles;
+
+    public PaymentUnassignedUserTranslation(IQueryable<RawBankStatementsFile> rawBankStatementsFiles)
     {
-        public Guid BankStatementsFileId { get; set; }
+        _rawBankStatementsFiles = rawBankStatementsFiles;
     }
 
-    public class PaymentUnassignedUserTranslation : IEventToUserTranslation<BankStatementsFileImported>
+    public string GetText(BankStatementsFileImported domainEvent)
     {
-        private readonly IQueryable<RawBankStatementsFile> _rawBankStatementsFiles;
-
-        public PaymentUnassignedUserTranslation(IQueryable<RawBankStatementsFile> rawBankStatementsFiles)
-        {
-            _rawBankStatementsFiles = rawBankStatementsFiles;
-        }
-
-        public string GetText(BankStatementsFileImported domainEvent)
-        {
-            var file = _rawBankStatementsFiles.FirstOrDefault(rbf => rbf.Id == domainEvent.BankStatementsFileId);
-            return $"Datei {file?.Filename} importiert";
-        }
+        var file = _rawBankStatementsFiles.FirstOrDefault(rbf => rbf.Id == domainEvent.BankStatementsFileId);
+        return $"Datei {file?.Filename} importiert";
     }
 }
