@@ -4,8 +4,16 @@
     <div class="flex-auto p-6 sm:p-10">
 
         <!-- CONTENT GOES HERE -->
-        <div class="h-400 min-h-400 max-h-400 border-2 border-dashed border-gray-300 rounded-2xl"></div>
+        <div class="h-400 min-h-400 max-h-400 border-2 border-dashed border-gray-300 rounded-2xl">
+            <button type="button" class="fuse-mat-button-large w-full mt-6" mat-flat-button (click)="callApi()">Test
 
+
+            </button>
+            <ul>
+                <li *ngFor="let result of result$ | async">
+                    {{result.eventName}}
+                </li>
+            </ul>
+        </div>
     </div>
-
 </div>

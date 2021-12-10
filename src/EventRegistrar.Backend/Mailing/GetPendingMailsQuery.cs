@@ -1,7 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
+
 using MediatR;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace EventRegistrar.Backend.Mailing;
 

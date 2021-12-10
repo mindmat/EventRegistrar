@@ -4,9 +4,7 @@ namespace EventRegistrar.Backend.Authentication;
 
 public interface IIdentityProvider
 {
-    IdentityProvider Provider { get; }
-
-    string? GetIdentifier(IHttpContextAccessor contextAccessor);
+    (IdentityProvider? Provider, string? Identifier) GetIdentifier(IHttpContextAccessor contextAccessor);
 
     AuthenticatedUser GetUser(IHttpContextAccessor httpContextAccessor);
 }

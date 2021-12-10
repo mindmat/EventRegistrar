@@ -4,54 +4,53 @@ using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
-namespace EventRegistrar.Backend.Test.TestInfrastructure
+namespace EventRegistrar.Backend.Test.TestInfrastructure;
+
+public class TestGoogleIdentityProvider : IIdentityProvider
 {
-    public class TestGoogleIdentityProvider : IIdentityProvider
+    public const string TestHeaderUserId = "TestHeaderUserId";
+    public const string TestInjectedUser = "TestInjectedUser";
+    private readonly TestScenario _testScenario;
+
+    public TestGoogleIdentityProvider(TestScenario testScenario)
     {
-        public const string TestHeaderUserId = "TestHeaderUserId";
-        public const string TestInjectedUser = "TestInjectedUser";
-        private readonly TestScenario _testScenario;
+        _testScenario = testScenario;
+    }
 
-        public TestGoogleIdentityProvider(TestScenario testScenario)
+    public IdentityProvider Provider => IdentityProvider.Google;
+
+    public (IdentityProvider? Provider, string? Identifier) GetIdentifier(IHttpContextAccessor contextAccessor)
+    {
+        return (IdentityProvider.Google, contextAccessor.HttpContext?.Request?.Headers?[TestHeaderUserId]);
+    }
+
+    public AuthenticatedUser GetUser(IHttpContextAccessor contextAccessor)
+    {
+        var id = GetIdentifier(contextAccessor);
+        if (id.Identifier == _testScenario.Administrator.IdentityProviderUserIdentifier)
         {
-            _testScenario = testScenario;
+            return new AuthenticatedUser(Provider,
+                _testScenario.Administrator.IdentityProviderUserIdentifier,
+                _testScenario.Administrator.FirstName,
+                _testScenario.Administrator.LastName,
+                _testScenario.Administrator.Email);
         }
 
-        public IdentityProvider Provider => IdentityProvider.Google;
-
-        public string GetIdentifier(IHttpContextAccessor contextAccessor)
+        if (id.Identifier == _testScenario.Reader.IdentityProviderUserIdentifier)
         {
-            return contextAccessor.HttpContext?.Request?.Headers?[TestHeaderUserId];
+            return new AuthenticatedUser(Provider,
+                _testScenario.Reader.IdentityProviderUserIdentifier,
+                _testScenario.Reader.FirstName,
+                _testScenario.Reader.LastName,
+                _testScenario.Reader.Email);
         }
 
-        public AuthenticatedUser GetUser(IHttpContextAccessor contextAccessor)
+        var injectedUser = contextAccessor.HttpContext?.Request?.Headers?[TestInjectedUser];
+        if (injectedUser.HasValue)
         {
-            var identifier = GetIdentifier(contextAccessor);
-            if (identifier == _testScenario.Administrator.IdentityProviderUserIdentifier)
-            {
-                return new AuthenticatedUser(Provider,
-                                             _testScenario.Administrator.IdentityProviderUserIdentifier,
-                                             _testScenario.Administrator.FirstName,
-                                             _testScenario.Administrator.LastName,
-                                             _testScenario.Administrator.Email);
-            }
-
-            if (identifier == _testScenario.Reader.IdentityProviderUserIdentifier)
-            {
-                return new AuthenticatedUser(Provider,
-                                             _testScenario.Reader.IdentityProviderUserIdentifier,
-                                             _testScenario.Reader.FirstName,
-                                             _testScenario.Reader.LastName,
-                                             _testScenario.Reader.Email);
-            }
-
-            var injectedUser = contextAccessor.HttpContext?.Request?.Headers?[TestInjectedUser];
-            if (injectedUser.HasValue)
-            {
-                return JsonConvert.DeserializeObject<AuthenticatedUser>(injectedUser);
-            }
-
-            return AuthenticatedUser.None;
+            return JsonConvert.DeserializeObject<AuthenticatedUser>(injectedUser);
         }
+
+        return AuthenticatedUser.None;
     }
 }

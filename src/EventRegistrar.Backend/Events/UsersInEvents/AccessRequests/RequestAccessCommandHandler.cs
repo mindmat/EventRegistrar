@@ -32,10 +32,12 @@ public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand,
         {
             var authenticatedUser = _authenticatedUserProvider.GetAuthenticatedUser();
             if (authenticatedUser?.IdentityProviderUserIdentifier == null)
+            {
                 throw new ArgumentException("You are not authenticated");
-            requestExpression = requestExpression.Where(req =>
-                req.IdentityProvider == authenticatedUser.IdentityProvider
-             && req.Identifier == authenticatedUser.IdentityProviderUserIdentifier);
+            }
+
+            requestExpression = requestExpression.Where(req => req.IdentityProvider == authenticatedUser.IdentityProvider
+                                                            && req.Identifier == authenticatedUser.IdentityProviderUserIdentifier);
         }
 
         var request = await requestExpression.FirstOrDefaultAsync(cancellationToken);

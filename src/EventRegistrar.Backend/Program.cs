@@ -1,10 +1,9 @@
 using EventRegistrar.Backend;
 using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 
@@ -48,7 +47,28 @@ builder.Services.AddSimpleInjector(container, options =>
 });
 builder.Services.AddSingleton(container);
 
+builder.Services.AddAuthentication(options =>
+       {
+           options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+           options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+       })
+       .AddJwtBearer(options =>
+       {
+           options.Authority = "https://eventregistrar.eu.auth0.com/";
+           options.Audience = "https://eventregistrar.azurewebsites.net/api";
+       });
+
 var app = builder.Build();
+
+((IApplicationBuilder)app).UseSimpleInjector(container);
+container.RegisterInstance(GetDbOptions());
+//_container.CrossWire<IMemoryCache>(app);
+//_container.CrossWire<ILoggerFactory>(app);
+container.Register<IIdentityProvider, Auth0IdentityProvider>();
+
+CompositionRoot.RegisterTypes(container);
+container.Verify();
+
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -57,27 +77,13 @@ if (!app.Environment.IsDevelopment())
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.UseAuthorization();
-
-
-((IApplicationBuilder)app).UseSimpleInjector(container);
-container.RegisterInstance(GetDbOptions());
-//_container.CrossWire<IMemoryCache>(app);
-//_container.CrossWire<ILoggerFactory>(app);
-container.Register<IIdentityProvider, GoogleIdentityProvider>();
-
-CompositionRoot.RegisterTypes(container);
-container.Verify();
+else
+{
+    app.UseDeveloperExceptionPage();
+}
 
 
 app.UseRequestLocalization();
-
 app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin()
                                       .AllowAnyHeader()
                                       .AllowAnyMethod());

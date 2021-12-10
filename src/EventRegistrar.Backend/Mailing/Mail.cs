@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing.Feedback;
 using EventRegistrar.Backend.Mailing.Templates;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Mailing;
