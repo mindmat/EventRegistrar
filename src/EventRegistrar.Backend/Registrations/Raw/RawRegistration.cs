@@ -13,7 +13,7 @@ public class RawRegistration : Entity
     public string RegistrationExternalIdentifier { get; set; } = null!;
 }
 
-public class RawRegistrationMap : EntityTypeConfiguration<RawRegistration>
+public class RawRegistrationMap : EntityMap<RawRegistration>
 {
     public override void Configure(EntityTypeBuilder<RawRegistration> builder)
     {

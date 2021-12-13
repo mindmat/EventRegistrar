@@ -20,7 +20,7 @@ public class Question : Entity
     public string? TemplateKey { get; set; }
 }
 
-public class QuestionMap : EntityTypeConfiguration<Question>
+public class QuestionMap : EntityMap<Question>
 {
     public override void Configure(EntityTypeBuilder<Question> builder)
     {

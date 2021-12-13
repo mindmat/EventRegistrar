@@ -12,7 +12,7 @@ public class QuestionOption : Entity
     public IEnumerable<Mappings.QuestionOptionMapping>? Mappings { get; set; }
 }
 
-public class QuestionOptionMap : EntityTypeConfiguration<QuestionOption>
+public class QuestionOptionMap : EntityMap<QuestionOption>
 {
     public override void Configure(EntityTypeBuilder<QuestionOption> builder)
     {

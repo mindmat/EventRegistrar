@@ -22,7 +22,7 @@ public enum PayoutState
     Confirmed = 3
 }
 
-public class PayoutRequestMap : EntityTypeConfiguration<PayoutRequest>
+public class PayoutRequestMap : EntityMap<PayoutRequest>
 {
     public override void Configure(EntityTypeBuilder<PayoutRequest> builder)
     {

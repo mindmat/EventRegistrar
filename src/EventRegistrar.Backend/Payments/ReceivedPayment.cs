@@ -38,7 +38,7 @@ public class ReceivedPayment : Entity
     public string? CreditorIban { get; set; }
 }
 
-public class ReceivedPaymentMap : EntityTypeConfiguration<ReceivedPayment>
+public class ReceivedPaymentMap : EntityMap<ReceivedPayment>
 {
     public override void Configure(EntityTypeBuilder<ReceivedPayment> builder)
     {

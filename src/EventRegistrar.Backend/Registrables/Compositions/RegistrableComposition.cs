@@ -12,7 +12,7 @@ public class RegistrableComposition : Entity
     public Registrable? Registrable_Contains { get; set; }
 }
 
-public class RegistrableCompositionMap : EntityTypeConfiguration<RegistrableComposition>
+public class RegistrableCompositionMap : EntityMap<RegistrableComposition>
 {
     public override void Configure(EntityTypeBuilder<RegistrableComposition> builder)
     {

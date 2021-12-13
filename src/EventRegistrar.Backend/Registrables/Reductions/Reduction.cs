@@ -21,7 +21,7 @@ public class Reduction : Entity
     public Guid? RegistrableId2_ReductionActivatedIfCombinedWith { get; set; }
 }
 
-public class ReductionMap : EntityTypeConfiguration<Reduction>
+public class ReductionMap : EntityMap<Reduction>
 {
     public override void Configure(EntityTypeBuilder<Reduction> builder)
     {

@@ -6,19 +6,20 @@ namespace EventRegistrar.Backend.Authentication.Users;
 
 public class User : Entity
 {
-    public string? Email { get; set; }
     public ICollection<UserInEvent>? Events { get; set; }
-    public string? FirstName { get; set; }
+
     public IdentityProvider IdentityProvider { get; set; }
     public string? IdentityProviderUserIdentifier { get; set; }
+
+    public string? Email { get; set; }
+    public string? FirstName { get; set; }
     public string? LastName { get; set; }
 }
 
-public class UserMap : EntityTypeConfiguration<User>
+public class UserMap : EntityMap<User>
 {
-    public override void Configure(EntityTypeBuilder<User> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<User> builder)
     {
-        base.Configure(builder);
         builder.ToTable("Users");
     }
 }

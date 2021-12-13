@@ -10,15 +10,15 @@ public class MailToRegistration : Entity
     public Mail? Mail { get; set; }
     public Guid RegistrationId { get; set; }
     public Registration? Registration { get; set; }
+
     public MailState? State { get; set; }
 }
 
-public class MailToRegistrationMap : EntityTypeConfiguration<MailToRegistration>
+public class MailToRegistrationMap : EntityMap<MailToRegistration>
 {
-    public override void Configure(EntityTypeBuilder<MailToRegistration> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<MailToRegistration> builder)
     {
-        base.Configure(builder);
-        builder.ToTable("MailToRegistrations");
+        builder.ToTable("MailsToRegistrations");
 
         builder.HasOne(map => map.Mail)
                .WithMany(mail => mail!.Registrations)

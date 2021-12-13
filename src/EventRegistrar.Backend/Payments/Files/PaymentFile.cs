@@ -15,7 +15,7 @@ public class PaymentFile : Entity
     public string? FileId { get; set; }
 }
 
-public class PaymentFileMap : EntityTypeConfiguration<PaymentFile>
+public class PaymentFileMap : EntityMap<PaymentFile>
 {
     public override void Configure(EntityTypeBuilder<PaymentFile> builder)
     {

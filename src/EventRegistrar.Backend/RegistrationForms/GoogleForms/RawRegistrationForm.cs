@@ -12,7 +12,7 @@ public class RawRegistrationForm : Entity
     public string ReceivedMessage { get; set; } = null!;
 }
 
-public class RawRegistrationFormMap : EntityTypeConfiguration<RawRegistrationForm>
+public class RawRegistrationFormMap : EntityMap<RawRegistrationForm>
 {
     public override void Configure(EntityTypeBuilder<RawRegistrationForm> builder)
     {

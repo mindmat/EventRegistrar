@@ -24,7 +24,7 @@ public class PaymentAssignment : Entity
     public PayoutRequest? PayoutRequest { get; set; }
 }
 
-public class PaymentAssignmentMap : EntityTypeConfiguration<PaymentAssignment>
+public class PaymentAssignmentMap : EntityMap<PaymentAssignment>
 {
     public override void Configure(EntityTypeBuilder<PaymentAssignment> builder)
     {

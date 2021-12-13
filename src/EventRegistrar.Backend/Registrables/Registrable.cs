@@ -31,7 +31,7 @@ public class Registrable : Entity
     public int? ShowInMailListOrder { get; set; }
 }
 
-public class RegistrableMap : EntityTypeConfiguration<Registrable>
+public class RegistrableMap : EntityMap<Registrable>
 {
     public override void Configure(EntityTypeBuilder<Registrable> builder)
     {

@@ -18,7 +18,7 @@ public class Response : Entity
     //public QuestionOptionToRegistrableMapping RegistrableMappings { get; set; }
 }
 
-public class ResponseMap : EntityTypeConfiguration<Response>
+public class ResponseMap : EntityMap<Response>
 {
     public override void Configure(EntityTypeBuilder<Response> builder)
     {

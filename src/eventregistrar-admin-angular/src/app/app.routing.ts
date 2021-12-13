@@ -3,6 +3,7 @@ import { AuthGuard } from '@auth0/auth0-angular';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { InitialDataResolver } from 'app/app.resolvers';
+import { OverviewComponent } from './modules/admin/overview/overview/overview.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -75,6 +76,7 @@ export const appRoutes: Route[] = [
         },
         children   : [
             {path: 'example', loadChildren: () => import('app/modules/admin/example/example.module').then(m => m.ExampleModule)},
+            {path: 'overview', component: OverviewComponent},
         ]
     }
 ];

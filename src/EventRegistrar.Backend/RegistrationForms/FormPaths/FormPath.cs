@@ -18,7 +18,7 @@ public class FormPath : Entity
     public PartnerRegistrationProcessConfiguration? PartnerConfiguration { get; set; }
 }
 
-public class FormPathMap : EntityTypeConfiguration<FormPath>
+public class FormPathMap : EntityMap<FormPath>
 {
     public override void Configure(EntityTypeBuilder<FormPath> builder)
     {

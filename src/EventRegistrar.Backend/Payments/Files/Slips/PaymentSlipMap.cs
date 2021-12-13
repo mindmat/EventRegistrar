@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Payments.Files.Slips;
 
-public class PaymentSlipMap : EntityTypeConfiguration<PaymentSlip>
+public class PaymentSlipMap : EntityMap<PaymentSlip>
 {
     public override void Configure(EntityTypeBuilder<PaymentSlip> builder)
     {

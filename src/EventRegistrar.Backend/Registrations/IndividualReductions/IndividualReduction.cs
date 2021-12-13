@@ -13,7 +13,7 @@ public class IndividualReduction : Entity
     public Guid UserId { get; set; }
 }
 
-public class IndividualReductionMap : EntityTypeConfiguration<IndividualReduction>
+public class IndividualReductionMap : EntityMap<IndividualReduction>
 {
     public override void Configure(EntityTypeBuilder<IndividualReduction> builder)
     {

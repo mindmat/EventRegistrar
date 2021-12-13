@@ -23,7 +23,7 @@ public class Seat : Entity
     public string? PartnerEmail { get; set; }
 }
 
-public class SeatMap : EntityTypeConfiguration<Seat>
+public class SeatMap : EntityMap<Seat>
 {
     public override void Configure(EntityTypeBuilder<Seat> builder)
     {

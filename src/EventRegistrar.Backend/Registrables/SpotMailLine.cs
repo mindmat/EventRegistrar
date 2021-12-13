@@ -10,7 +10,7 @@ public class SpotMailLine : Entity
     public string? Text { get; set; }
 }
 
-public class SpotMailLineMap : EntityTypeConfiguration<SpotMailLine>
+public class SpotMailLineMap : EntityMap<SpotMailLine>
 {
     public override void Configure(EntityTypeBuilder<SpotMailLine> builder)
     {

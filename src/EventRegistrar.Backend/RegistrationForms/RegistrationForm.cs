@@ -21,7 +21,7 @@ public class RegistrationForm : Entity
     public ICollection<FormPath>? FormPaths { get; set; }
 }
 
-public class RegistrationFormMap : EntityTypeConfiguration<RegistrationForm>
+public class RegistrationFormMap : EntityMap<RegistrationForm>
 {
     public override void Configure(EntityTypeBuilder<RegistrationForm> builder)
     {

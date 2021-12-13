@@ -15,7 +15,7 @@ public class RegistrationCancellation : Entity
     public Registration? Registration { get; set; }
 }
 
-public class RegistrationCancellationMap : EntityTypeConfiguration<RegistrationCancellation>
+public class RegistrationCancellationMap : EntityMap<RegistrationCancellation>
 {
     public override void Configure(EntityTypeBuilder<RegistrationCancellation> builder)
     {

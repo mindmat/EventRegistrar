@@ -24,7 +24,7 @@ public class Sms : Entity
     public Registration? Registration { get; set; }
 }
 
-public class SmsMap : EntityTypeConfiguration<Sms>
+public class SmsMap : EntityMap<Sms>
 {
     public override void Configure(EntityTypeBuilder<Sms> builder)
     {

@@ -58,7 +58,7 @@ public class Registration : Entity
     public bool WillPayAtCheckin { get; set; }
 }
 
-public class RegistrationMap : EntityTypeConfiguration<Registration>
+public class RegistrationMap : EntityMap<Registration>
 {
     public override void Configure(EntityTypeBuilder<Registration> builder)
     {

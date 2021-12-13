@@ -13,7 +13,7 @@ public class RawBankStatementsFile : Entity
     public DateTimeOffset? Processed { get; set; }
 }
 
-public class RawBankStatementsFileMap : EntityTypeConfiguration<RawBankStatementsFile>
+public class RawBankStatementsFileMap : EntityMap<RawBankStatementsFile>
 {
     public override void Configure(EntityTypeBuilder<RawBankStatementsFile> builder)
     {

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
 import { ExtraOptions, PreloadAllModules, RouterModule } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 import { FuseModule } from '@fuse';
@@ -13,6 +14,7 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import { AuthModule } from '@auth0/auth0-angular';
+import { OverviewComponent } from './modules/admin/overview/overview/overview.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy       : PreloadAllModules,
@@ -21,7 +23,8 @@ const routerConfig: ExtraOptions = {
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        OverviewComponent
     ],
     imports     : [
         BrowserModule,
@@ -41,7 +44,9 @@ const routerConfig: ExtraOptions = {
 
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),
-
+        
+        CommonModule,
+        
         AuthModule.forRoot({
             domain: 'eventregistrar.eu.auth0.com',
             clientId: 'yoCfBbd0zLWvoA6qg0FzNPtHxEHu4YH3',

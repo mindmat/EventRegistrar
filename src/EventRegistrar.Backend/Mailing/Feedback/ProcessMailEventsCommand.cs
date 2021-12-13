@@ -14,9 +14,9 @@ public class ProcessMailEventsCommandHandler : IRequestHandler<ProcessMailEvents
     private readonly ILogger _log;
     private readonly IRepository<MailEvent> _mailEvents;
     private readonly IRepository<Mail> _mails;
-    private readonly IRepository<RawMailEvents> _rawMailEvents;
+    private readonly IRepository<RawMailEvent> _rawMailEvents;
 
-    public ProcessMailEventsCommandHandler(IRepository<RawMailEvents> rawMailEvents,
+    public ProcessMailEventsCommandHandler(IRepository<RawMailEvent> rawMailEvents,
                                            IRepository<Mail> mails,
                                            IRepository<MailEvent> mailEvents,
                                            ILogger log)

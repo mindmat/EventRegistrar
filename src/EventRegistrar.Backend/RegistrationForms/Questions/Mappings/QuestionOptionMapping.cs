@@ -16,7 +16,7 @@ public class QuestionOptionMapping : Entity
     public Registrable? Registrable { get; set; }
 }
 
-public class QuestionOptionMappingMap : EntityTypeConfiguration<QuestionOptionMapping>
+public class QuestionOptionMappingMap : EntityMap<QuestionOptionMapping>
 {
     public override void Configure(EntityTypeBuilder<QuestionOptionMapping> builder)
     {
