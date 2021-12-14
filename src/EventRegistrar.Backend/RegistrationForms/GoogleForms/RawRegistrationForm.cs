@@ -1,5 +1,6 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+using EventRegistrar.Backend.Infrastructure.DataAccess;
 
 namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
 
@@ -14,9 +15,13 @@ public class RawRegistrationForm : Entity
 
 public class RawRegistrationFormMap : EntityMap<RawRegistrationForm>
 {
-    public override void Configure(EntityTypeBuilder<RawRegistrationForm> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<RawRegistrationForm> builder)
     {
-        base.Configure(builder);
         builder.ToTable("RawRegistrationForms");
+
+        builder.Property(rrf => rrf.EventAcronym)
+               .HasMaxLength(20);
+        builder.Property(rrf => rrf.FormExternalIdentifier)
+               .HasMaxLength(200);
     }
 }

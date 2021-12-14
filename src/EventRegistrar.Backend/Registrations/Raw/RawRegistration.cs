@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Registrations.Raw;
@@ -15,9 +16,15 @@ public class RawRegistration : Entity
 
 public class RawRegistrationMap : EntityMap<RawRegistration>
 {
-    public override void Configure(EntityTypeBuilder<RawRegistration> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<RawRegistration> builder)
     {
-        base.Configure(builder);
         builder.ToTable("RawRegistrations");
+
+        builder.Property(rrg => rrg.EventAcronym)
+               .HasMaxLength(20);
+        builder.Property(rrg => rrg.FormExternalIdentifier)
+               .HasMaxLength(500);
+        builder.Property(rrg => rrg.RegistrationExternalIdentifier)
+               .HasMaxLength(500);
     }
 }

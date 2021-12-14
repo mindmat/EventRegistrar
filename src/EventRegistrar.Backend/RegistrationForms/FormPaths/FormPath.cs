@@ -1,7 +1,9 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrations.Register;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+
 using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.RegistrationForms.FormPaths;
@@ -20,13 +22,12 @@ public class FormPath : Entity
 
 public class FormPathMap : EntityMap<FormPath>
 {
-    public override void Configure(EntityTypeBuilder<FormPath> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<FormPath> builder)
     {
-        base.Configure(builder);
         builder.ToTable("FormPaths");
 
         builder.HasOne(fpt => fpt.RegistrationForm)
-               .WithMany(frm => frm!.FormPaths)
+               .WithMany(frm => frm.FormPaths)
                .HasForeignKey(fpt => fpt.RegistrationFormId);
 
         builder.Property(ral => ral.SingleConfiguration)
@@ -39,17 +40,17 @@ public class FormPathMap : EntityMap<FormPath>
 
 public static class StorageConverters
 {
-    private static readonly JsonSerializerSettings _settings = new()
-                                                               {
-                                                                   DefaultValueHandling = DefaultValueHandling.Ignore,
-                                                                   TypeNameHandling = TypeNameHandling.Auto
-                                                               };
+    private static readonly JsonSerializerSettings Settings = new()
+                                                              {
+                                                                  DefaultValueHandling = DefaultValueHandling.Ignore,
+                                                                  TypeNameHandling = TypeNameHandling.Auto
+                                                              };
 
     public static ValueConverter<T?, string?> JsonConverter<T>()
         where T : class
     {
         return new ValueConverter<T?, string?>(
-            value => value == null ? null : JsonConvert.SerializeObject(value, _settings),
-            json => json == null ? null : JsonConvert.DeserializeObject<T>(json, _settings));
+            value => value == null ? null : JsonConvert.SerializeObject(value, Settings),
+            json => json == null ? null : JsonConvert.DeserializeObject<T>(json, Settings));
     }
 }

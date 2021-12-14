@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Payments.Files.Camt;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Refunds;
@@ -31,7 +32,7 @@ public class
                                                 && pmt.PaymentFile.EventId == query.EventId
                                                 && pmt.CreditDebitType == CreditDebit.DBIT)
                                      .Include(por => por.Assignments)
-                                     .ThenInclude(asn => asn.Payment)
+                                     .ThenInclude(asn => asn.ReceivedPayment)
                                      .FirstAsync(cancellationToken);
         var openAmount = payment.Amount -
                          payment.Assignments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
@@ -46,13 +47,13 @@ public class
                                                               Created = por.Created,
                                                               Amount = por.Amount,
                                                               AmountAssigned = por.Assignments.Select(asn => asn.Amount)
-                                                                  .Sum(),
+                                                                                  .Sum(),
                                                               IsOpen = por.State == PayoutState.Sent,
                                                               Info = por.Reason,
                                                               Participant = por.Registration.RespondentFirstName + " " +
                                                                             por.Registration.RespondentLastName,
                                                               Ibans = por.Registration.Payments
-                                                                         .Select(pmt => pmt.Payment.DebitorIban)
+                                                                         .Select(pmt => pmt.ReceivedPayment.DebitorIban)
                                                                          .Where(ibn => ibn != null)
                                                                          .ToArray()
                                                           })

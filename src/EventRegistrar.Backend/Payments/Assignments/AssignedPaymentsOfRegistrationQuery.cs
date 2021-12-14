@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Payments.Files.Camt;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
@@ -23,15 +24,15 @@ public class AssignedPaymentsOfRegistrationQueryHandler : IRequestHandler<Assign
     public async Task<IEnumerable<AssignedPaymentDisplayItem>> Handle(AssignedPaymentsOfRegistrationQuery query,
                                                                       CancellationToken cancellationToken)
     {
-        return await _paymentsAssignments.Where(pya => pya.Payment.PaymentFile.EventId == query.EventId
+        return await _paymentsAssignments.Where(pya => pya.ReceivedPayment.PaymentFile.EventId == query.EventId
                                                     && pya.RegistrationId == query.RegistrationId
-                                                    && pya.Payment.CreditDebitType == CreditDebit.CRDT)
+                                                    && pya.ReceivedPayment.CreditDebitType == CreditDebit.CRDT)
                                          .Select(pya => new AssignedPaymentDisplayItem
                                                         {
                                                             PaymentAssignmentId = pya.Id,
                                                             Amount = pya.Amount,
-                                                            Currency = pya.Payment.Currency,
-                                                            BookingDate = pya.Payment.BookingDate,
+                                                            Currency = pya.ReceivedPayment.Currency,
+                                                            BookingDate = pya.ReceivedPayment.BookingDate,
                                                             PaymentAssignmentId_Counter =
                                                                 pya.PaymentAssignmentId_Counter,
                                                             PaymentId_Repayment = pya.PaymentId_Repayment

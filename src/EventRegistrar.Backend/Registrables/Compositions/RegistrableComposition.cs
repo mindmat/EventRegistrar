@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Registrables.Compositions;
@@ -14,13 +15,12 @@ public class RegistrableComposition : Entity
 
 public class RegistrableCompositionMap : EntityMap<RegistrableComposition>
 {
-    public override void Configure(EntityTypeBuilder<RegistrableComposition> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<RegistrableComposition> builder)
     {
-        base.Configure(builder);
         builder.ToTable("RegistrableCompositions");
 
         builder.HasOne(cmp => cmp.Registrable)
-               .WithMany(rbl => rbl!.Compositions)
+               .WithMany(rbl => rbl.Compositions)
                .HasForeignKey(cmp => cmp.RegistrableId);
 
         builder.HasOne(cmp => cmp.Registrable_Contains)

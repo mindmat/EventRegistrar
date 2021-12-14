@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.RegistrationForms.Questions;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Registrations.Responses;
@@ -8,28 +9,30 @@ public class Response : Entity
 {
     public Guid? QuestionId { get; set; }
     public Question? Question { get; set; }
-
     public Guid RegistrationId { get; set; }
     public Registration? Registration { get; set; }
-
     public Guid? QuestionOptionId { get; set; }
+    public QuestionOption? QuestionOption { get; set; }
 
     public string ResponseString { get; set; } = null!;
-    //public QuestionOptionToRegistrableMapping RegistrableMappings { get; set; }
 }
 
 public class ResponseMap : EntityMap<Response>
 {
-    public override void Configure(EntityTypeBuilder<Response> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<Response> builder)
     {
-        base.Configure(builder);
         builder.ToTable("Responses");
 
         builder.HasOne(rsp => rsp.Question)
                .WithMany()
                .HasForeignKey(rsp => rsp.QuestionId);
+
         builder.HasOne(rsp => rsp.Registration)
-               .WithMany(reg => reg!.Responses)
+               .WithMany(reg => reg.Responses)
                .HasForeignKey(rsp => rsp.RegistrationId);
+
+        builder.HasOne(rsp => rsp.QuestionOption)
+               .WithMany()
+               .HasForeignKey(rsp => rsp.QuestionOptionId);
     }
 }

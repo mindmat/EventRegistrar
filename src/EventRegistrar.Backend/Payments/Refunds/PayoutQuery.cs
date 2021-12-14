@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Payments.Files.Camt;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Refunds;
@@ -33,19 +34,19 @@ public class PayoutQueryHandler : IRequestHandler<PayoutQuery, IEnumerable<Payou
                                                    asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                                                Payments = por.Registration.Payments
                                                              .Where(pmt =>
-                                                                 pmt.Payment.CreditDebitType == CreditDebit.CRDT)
+                                                                 pmt.ReceivedPayment.CreditDebitType == CreditDebit.CRDT)
                                                              .Select(pmt => new PaymentDisplayItem
                                                                             {
                                                                                 Assigned = pmt.Amount,
-                                                                                PaymentAmount = pmt.Payment.Amount,
+                                                                                PaymentAmount = pmt.ReceivedPayment.Amount,
                                                                                 PaymentBookingDate =
-                                                                                    pmt.Payment.BookingDate,
+                                                                                    pmt.ReceivedPayment.BookingDate,
                                                                                 PaymentDebitorIban =
-                                                                                    pmt.Payment.DebitorIban,
+                                                                                    pmt.ReceivedPayment.DebitorIban,
                                                                                 PaymentDebitorName =
-                                                                                    pmt.Payment.DebitorName,
-                                                                                PaymentMessage = pmt.Payment.Message,
-                                                                                PaymentInfo = pmt.Payment.Info
+                                                                                    pmt.ReceivedPayment.DebitorName,
+                                                                                PaymentMessage = pmt.ReceivedPayment.Message,
+                                                                                PaymentInfo = pmt.ReceivedPayment.Info
                                                                             }),
                                                Reason = por.Reason,
                                                StateText = por.State.ToString(),
