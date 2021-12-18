@@ -58,7 +58,7 @@ builder.Services.AddSimpleInjector(container, options =>
     //options.AddLocalization();
 });
 builder.Services.AddSingleton(container);
-builder.Services.AddDbContext<EventRegistratorDbContext>(SetDbOptions);
+//builder.Services.AddDbContext<EventRegistratorDbContext>(SetDbOptions);
 
 builder.Services.AddAuthentication(options =>
        {
@@ -185,6 +185,6 @@ app.Run();
 
 void SetDbOptions(DbContextOptionsBuilder o)
 {
-    o.UseSqlServer("name=ConnectionStrings:DefaultConnection", sqlBuilder => { sqlBuilder.EnableRetryOnFailure(); })
+    o.UseSqlServer(connectionString, sqlBuilder => { sqlBuilder.EnableRetryOnFailure(); })
      .EnableSensitiveDataLogging();
 }

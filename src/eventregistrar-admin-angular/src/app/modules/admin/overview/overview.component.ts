@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { DoubleRegistrable, OverviewService, SingleRegistrable } from './overview.service';
+import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDisplayItem';
 
 @Component({
     selector: 'app-overview',
@@ -14,6 +15,7 @@ import { DoubleRegistrable, OverviewService, SingleRegistrable } from './overvie
 })
 export class OverviewComponent implements OnInit, OnDestroy
 {
+    tags: RegistrableTagDisplayItem[];
     singleRegistrables: SingleRegistrable[];
     doubleRegistrables: DoubleRegistrable[];
     filteredSingleRegistrables: SingleRegistrable[];
@@ -41,7 +43,17 @@ export class OverviewComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {
-        // Get the categories
+        // Get the tags
+        this.overviewService.registrableTags$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((tags: RegistrableTagDisplayItem[]) =>
+            {
+                this.tags = tags;
+
+                // Mark for check
+                this._changeDetectorRef.markForCheck();
+            });
+
         this.overviewService.singleRegistrables$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((singleRegistrables: SingleRegistrable[]) =>

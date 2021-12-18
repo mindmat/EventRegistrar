@@ -20,6 +20,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FuseFindByKeyPipeModule } from '@fuse/pipes/find-by-key';
+import { MatInputModule } from '@angular/material/input';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -40,6 +42,7 @@ const routerConfig: ExtraOptions = {
         FuseModule,
         FuseConfigModule.forRoot(appConfig),
         FuseMockApiModule.forRoot(mockApiServices),
+        FuseFindByKeyPipeModule,
 
         // Core module of your application
         CoreModule,
@@ -56,6 +59,7 @@ const routerConfig: ExtraOptions = {
         MatButtonModule,
         MatIconModule,
         MatSlideToggleModule,
+        MatInputModule,
 
         AuthModule.forRoot({
             domain: 'eventregistrar.eu.auth0.com',

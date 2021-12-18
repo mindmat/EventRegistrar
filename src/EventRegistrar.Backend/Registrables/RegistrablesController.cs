@@ -2,9 +2,12 @@
 using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.Registrables.Reductions;
+using EventRegistrar.Backend.Registrables.Tags;
 using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrables.WaitingList.Promotion;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Registrables;
@@ -48,6 +51,16 @@ public class RegistrablesController : Controller
                                         EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
                                     });
     }
+
+    [HttpGet("api/events/{eventAcronym}/registrableTags")]
+    public async Task<IEnumerable<RegistrableTagDisplayItem>> GetRegistrableTags(string eventAcronym)
+    {
+        return await _mediator.Send(new RegistrableTagsQuery
+                                    {
+                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+                                    });
+    }
+
 
     [HttpGet("api/events/{eventAcronym}/registrationsOnWaitingList")]
     public async Task<IEnumerable<WaitingListSpot>> GetRegistrationsOnWaitingList(string eventAcronym)
@@ -110,7 +123,11 @@ public class RegistrablesController : Controller
                                         Guid registrableId,
                                         [FromBody] CreateRegistrableParameters parameters)
     {
-        if (parameters == null) throw new ArgumentNullException(nameof(parameters));
+        if (parameters == null)
+        {
+            throw new ArgumentNullException(nameof(parameters));
+        }
+
         parameters.Id = registrableId;
         await _mediator.Send(new CreateRegistrableCommand
                              {

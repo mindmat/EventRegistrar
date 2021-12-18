@@ -5,7 +5,7 @@ import { FuseFindByKeyPipe } from '@fuse/pipes/find-by-key/find-by-key.pipe';
     declarations: [
         FuseFindByKeyPipe
     ],
-    exports     : [
+    exports: [
         FuseFindByKeyPipe
     ]
 })

@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class EventService
 {
-  private selectedEventAcronymSubject: BehaviorSubject<string | null> = new BehaviorSubject(null);
+  private selectedEventAcronymSubject: BehaviorSubject<string | null> = new BehaviorSubject('ll22');
 
   constructor() { }
 

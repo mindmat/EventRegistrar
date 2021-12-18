@@ -14,6 +14,9 @@ export class OverviewResolver implements Resolve<any>
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {
-        return merge(this.overviewService.fetchSingleRegistrables(), this.overviewService.fetchDoubleRegistrables());
+        return merge(
+            this.overviewService.fetchRegistrableTags(),
+            this.overviewService.fetchSingleRegistrables(),
+            this.overviewService.fetchDoubleRegistrables());
     }
 }

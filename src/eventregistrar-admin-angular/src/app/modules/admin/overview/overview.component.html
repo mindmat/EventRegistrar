@@ -30,14 +30,14 @@
         <div class="flex flex-col flex-auto w-full max-w-xs sm:max-w-5xl mx-auto">
             <!-- Filters -->
             <div class="flex flex-col sm:flex-row items-center justify-between w-full max-w-xs sm:max-w-none">
-                <!-- <mat-form-field class="fuse-mat-no-subscript w-full sm:w-36">
+                <mat-form-field class="fuse-mat-no-subscript w-full sm:w-36">
                     <mat-select [value]="'all'" (selectionChange)="filterByCategory($event)">
                         <mat-option [value]="'all'">All</mat-option>
-                        <ng-container *ngFor="let category of categories; trackBy: trackByFn">
-                            <mat-option [value]="category.slug">{{category.title}}</mat-option>
+                        <ng-container *ngFor="let tag of tags; trackBy: trackByFn">
+                            <mat-option [value]="tag.tag">{{tag.text}}</mat-option>
                         </ng-container>
                     </mat-select>
-                </mat-form-field> -->
+                </mat-form-field>
                 <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4"
                     [floatLabel]="'always'">
                     <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
@@ -49,16 +49,16 @@
                     Hide completed
                 </mat-slide-toggle>
             </div>
-            <!-- Courses -->
-            <ng-container *ngIf="this.filteredSingleRegistrables.length; else noCourses">
+            <!-- Registrables -->
+            <ng-container *ngIf="this.filteredDoubleRegistrables.length; else noCourses">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 sm:mt-10">
-                    <ng-container *ngFor="let course of filteredSingleRegistrables; trackBy: trackByFn">
-                        <!-- Course -->
+                    <ng-container *ngFor="let doubleRegistrable of filteredDoubleRegistrables; trackBy: trackByFn">
+                        <!-- Double Registrable -->
                         <div class="flex flex-col h-96 shadow rounded-2xl overflow-hidden bg-card">
                             <div class="flex flex-col p-6">
                                 <div class="flex items-center justify-between">
-                                    <!-- Course category -->
-                                    <ng-container
+                                    <!-- Registrable tags -->
+                                    <!-- <ng-container
                                         *ngIf="(course.category | fuseFindByKey:'slug':categories) as category">
                                         <div class="py-0.5 px-3 rounded-full text-sm font-semibold"
                                             [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.slug === 'web',
@@ -67,44 +67,38 @@
                                                         'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.slug === 'firebase'}">
                                             {{category.title}}
                                         </div>
-                                    </ng-container>
+                                    </ng-container> -->
                                     <!-- Completed at least once -->
-                                    <div class="flex items-center">
+                                    <!-- <div class="flex items-center">
                                         <ng-container *ngIf="course.progress.completed > 0">
                                             <mat-icon class="icon-size-5 text-green-600"
                                                 [svgIcon]="'heroicons_solid:badge-check'"
                                                 [matTooltip]="'You completed this course at least once'"></mat-icon>
                                         </ng-container>
-                                    </div>
+                                    </div> -->
                                 </div>
-                                <!-- Course title & description -->
-                                <div class="mt-4 text-lg font-medium">{{course.title}}</div>
-                                <div class="mt-0.5 line-clamp-2 text-secondary">{{course.description}}</div>
+                                <!-- Registrable title & description -->
+                                <div class="mt-4 text-lg font-medium">{{doubleRegistrable.name}}</div>
+                                <!-- <div class="mt-0.5 line-clamp-2 text-secondary">{{course.description}}</div> -->
                                 <div class="w-12 h-1 my-6 border-t-2"></div>
                                 <!-- Course time -->
-                                <div class="flex items-center leading-5 text-md text-secondary">
+                                <!-- <div class="flex items-center leading-5 text-md text-secondary">
                                     <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:clock'">
                                     </mat-icon>
                                     <div class="ml-1.5">{{course.duration}} minutes</div>
-                                </div>
+                                </div> -->
                                 <!-- Course completion -->
-                                <div class="flex items-center mt-2 leading-5 text-md text-secondary">
+                                <!-- <div class="flex items-center mt-2 leading-5 text-md text-secondary">
                                     <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:academic-cap'">
                                     </mat-icon>
-                                    <ng-container *ngIf="course.progress.completed === 0">
-                                        <div class="ml-1.5">Never completed</div>
-                                    </ng-container>
                                     <ng-container *ngIf="course.progress.completed > 0">
                                         <div class="ml-1.5">
                                             <span>Completed</span>
                                             <span class="ml-1">
-                                                <!-- Once -->
                                                 <ng-container *ngIf="course.progress.completed === 1">once
                                                 </ng-container>
-                                                <!-- Twice -->
                                                 <ng-container *ngIf="course.progress.completed === 2">twice
                                                 </ng-container>
-                                                <!-- Others -->
                                                 <ng-container *ngIf="course.progress.completed > 2">
                                                     {{course.progress.completed}}
                                                     {{course.progress.completed | i18nPlural: {
@@ -116,42 +110,25 @@
                                             </span>
                                         </div>
                                     </ng-container>
-                                </div>
+                                </div> -->
                             </div>
                             <!-- Footer -->
                             <div class="flex flex-col w-full mt-auto">
-                                <!-- Course progress -->
+                                <!-- Registrable completion -->
                                 <div class="relative h-0.5">
                                     <div class="z-10 absolute inset-x-0 h-6 -mt-3"
-                                        [matTooltip]="course.progress.currentStep / course.totalSteps | percent"
+                                        [matTooltip]="(doubleRegistrable.leadersAccepted + doubleRegistrable.followersAccepted) / (doubleRegistrable.spotsAvailable * 2) | percent"
                                         [matTooltipPosition]="'above'" [matTooltipClass]="'-mb-0.5'"></div>
                                     <mat-progress-bar class="h-0.5"
-                                        [value]="(100 * course.progress.currentStep) / course.totalSteps">
+                                        [value]="100 *(doubleRegistrable.leadersAccepted + doubleRegistrable.followersAccepted) / (doubleRegistrable.spotsAvailable * 2)">
                                     </mat-progress-bar>
                                 </div>
 
                                 <!-- Course launch button -->
                                 <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                    <button mat-stroked-button [routerLink]="[course.id]">
+                                    <button mat-stroked-button [routerLink]="[doubleRegistrable.id]">
                                         <span class="inline-flex items-center">
-
-                                            <!-- Not started -->
-                                            <ng-container *ngIf="course.progress.currentStep === 0">
-                                                <!-- Never completed -->
-                                                <ng-container *ngIf="course.progress.completed === 0">
-                                                    <span>Start</span>
-                                                </ng-container>
-                                                <!-- Completed before -->
-                                                <ng-container *ngIf="course.progress.completed > 0">
-                                                    <span>Start again</span>
-                                                </ng-container>
-                                            </ng-container>
-
-                                            <!-- Started -->
-                                            <ng-container *ngIf="course.progress.currentStep > 0">
-                                                <span>Continue</span>
-                                            </ng-container>
-
+                                            Details
                                             <mat-icon class="ml-1.5 icon-size-5"
                                                 [svgIcon]="'heroicons_solid:arrow-sm-right'"></mat-icon>
                                         </span>

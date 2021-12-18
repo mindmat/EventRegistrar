@@ -17,6 +17,33 @@ SELECT [Id]
       ,[AccountIban]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[Events]
 
+INSERT INTO [dbo].[Users]
+           ([Id]
+           ,[IdentityProvider]
+           ,[IdentityProviderUserIdentifier]
+           ,[Email]
+           ,[FirstName]
+           ,[LastName])
+SELECT [Id]
+      ,[IdentityProvider]
+      ,[IdentityProviderUserIdentifier]
+      ,[Email]
+      ,[FirstName]
+      ,[LastName]
+  FROM [AZURE_ER].[EventRegistrator].[dbo].[Users]
+
+
+INSERT INTO [dbo].[UsersInEvents]
+           ([Id]
+           ,[EventId]
+           ,[UserId]
+           ,[Role])
+SELECT [Id]
+      ,[EventId]
+      ,[UserId]
+      ,[Role]
+  FROM [AZURE_ER].[EventRegistrator].[dbo].[UsersInEvents]
+
 
 INSERT INTO [dbo].[Registrables]
            ([Id]
@@ -117,6 +144,29 @@ SELECT [Id]
       ,[State]
       ,[WillPayAtCheckin]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[Registrations]
+
+
+INSERT INTO [dbo].[Seats]
+           ([Id]
+           ,[RegistrableId]
+           ,[RegistrationId]
+           ,[RegistrationId_Follower]
+           ,[FirstPartnerJoined]
+           ,[IsCancelled]
+           ,[IsPartnerSpot]
+           ,[IsWaitingList]
+           ,[PartnerEmail])
+SELECT [Id]
+      ,[RegistrableId]
+      ,[RegistrationId]
+      ,[RegistrationId_Follower]
+      ,[FirstPartnerJoined]
+      ,[IsCancelled]
+      ,[IsPartnerSpot]
+      ,[IsWaitingList]
+      ,[PartnerEmail]
+  FROM [AZURE_ER].[EventRegistrator].[dbo].[Seats]
+
 
 ROLLBACK
 --COMMIT

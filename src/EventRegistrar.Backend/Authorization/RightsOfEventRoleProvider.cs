@@ -26,6 +26,7 @@ using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.Registrables.Reductions;
+using EventRegistrar.Backend.Registrables.Tags;
 using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrables.WaitingList.Promotion;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
@@ -59,6 +60,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
         {
             yield return nameof(SingleRegistrablesOverviewQuery);
             yield return nameof(DoubleRegistrablesOverviewQuery);
+            yield return nameof(RegistrableTagsQuery);
             yield return nameof(PaymentOverviewQuery);
             yield return nameof(SearchRegistrationQuery);
             yield return nameof(RegistrablesQuery);
