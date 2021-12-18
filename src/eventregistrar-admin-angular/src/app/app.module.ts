@@ -14,10 +14,15 @@ import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import { AuthModule } from '@auth0/auth0-angular';
-import { OverviewComponent } from './modules/admin/overview/overview/overview.component';
+import { OverviewComponent } from './modules/admin/overview/overview.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 const routerConfig: ExtraOptions = {
-    preloadingStrategy       : PreloadAllModules,
+    preloadingStrategy: PreloadAllModules,
     scrollPositionRestoration: 'enabled'
 };
 
@@ -26,7 +31,7 @@ const routerConfig: ExtraOptions = {
         AppComponent,
         OverviewComponent
     ],
-    imports     : [
+    imports: [
         BrowserModule,
         BrowserAnimationsModule,
         RouterModule.forRoot(appRoutes, routerConfig),
@@ -44,9 +49,14 @@ const routerConfig: ExtraOptions = {
 
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),
-        
+
         CommonModule,
-        
+        MatFormFieldModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSlideToggleModule,
+
         AuthModule.forRoot({
             domain: 'eventregistrar.eu.auth0.com',
             clientId: 'yoCfBbd0zLWvoA6qg0FzNPtHxEHu4YH3',

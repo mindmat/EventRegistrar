@@ -1,13 +1,25 @@
-using EventRegistrar.Backend;
 using EventRegistrar.Backend.Authentication;
+using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Events.Context;
+using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
+
+using MediatR;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
 var container = new Container();
 container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 container.Options.ResolveUnregisteredConcreteTypes = true;
@@ -46,6 +58,7 @@ builder.Services.AddSimpleInjector(container, options =>
     //options.AddLocalization();
 });
 builder.Services.AddSingleton(container);
+builder.Services.AddDbContext<EventRegistratorDbContext>(SetDbOptions);
 
 builder.Services.AddAuthentication(options =>
        {
@@ -61,13 +74,79 @@ builder.Services.AddAuthentication(options =>
 var app = builder.Build();
 
 ((IApplicationBuilder)app).UseSimpleInjector(container);
-container.RegisterInstance(GetDbOptions());
 //_container.CrossWire<IMemoryCache>(app);
 //_container.CrossWire<ILoggerFactory>(app);
-container.Register<IIdentityProvider, Auth0IdentityProvider>();
 
-CompositionRoot.RegisterTypes(container);
+var assemblies = new[] { typeof(Program).Assembly };
+
+container.Register(typeof(IRequestHandler<>), assemblies);
+container.Register(typeof(IRequestHandler<,>), assemblies);
+container.Collection.Register(typeof(IEventToCommandTranslation<>), assemblies);
+
+container.RegisterSingleton<IMediator, Mediator>();
+container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
+
+container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
+                                                            {
+                                                                typeof(ExtractEventIdDecorator<,>),
+                                                                typeof(AuthorizationDecorator<,>),
+                                                                typeof(CommitUnitOfWorkDecorator<,>)
+                                                            });
+
+container.Register(typeof(IQueryable<>), typeof(Queryable<>));
+container.Register(typeof(IRepository<>), typeof(Repository<>));
+
+var optionsBuilder = new DbContextOptionsBuilder<EventRegistratorDbContext>();
+SetDbOptions(optionsBuilder);
+container.RegisterInstance(optionsBuilder);
+container.RegisterInstance(optionsBuilder.Options);
+container.Register<DbContext, EventRegistratorDbContext>();
+
+container.Register<IIdentityProvider, Auth0IdentityProvider>();
+container.Register(() => new AuthenticatedUserId(container.GetInstance<IAuthenticatedUserProvider>()
+                                                          .GetAuthenticatedUserId()
+                                                          .Result));
+container.Register(() => container.GetInstance<IAuthenticatedUserProvider>().GetAuthenticatedUser());
+
+container.Register<IEventAcronymResolver, EventAcronymResolver>();
+container.Register<IAuthorizationChecker, AuthorizationChecker>();
+container.Register<IAuthenticatedUserProvider, AuthenticatedUserProvider>();
+container.Register<IRightsOfEventRoleProvider, RightsOfEventRoleProvider>();
+
+//container.Register(() => container.GetInstance<IHttpContextAccessor>().HttpContext?.Request ?? new DefaultHttpRequest(new DefaultHttpContext()));
+
+// Configuration
+container.Register<ConfigurationResolver>();
+var defaultConfigItemTypes = container.GetTypesToRegister<IDefaultConfigurationItem>(assemblies).ToList();
+container.Collection.Register<IDefaultConfigurationItem>(defaultConfigItemTypes);
+
+var domainEventTypes = container.GetTypesToRegister<DomainEvent>(assemblies);
+container.RegisterSingleton(() => new DomainEventCatalog(domainEventTypes));
+
+var configTypes = container.GetTypesToRegister<IConfigurationItem>(assemblies)
+                           .Except(defaultConfigItemTypes);
+foreach (var configType in configTypes)
+    container.Register(configType,
+        () => container.GetInstance<ConfigurationResolver>().GetConfigurationTypeless(configType));
+
+var serviceBusConsumers = container.GetTypesToRegister<IQueueBoundMessage>(assemblies)
+                                   .Select(type => new ServiceBusConsumer
+                                                   {
+                                                       QueueName =
+                                                           ((IQueueBoundMessage)Activator.CreateInstance(type)!)
+                                                           .QueueName,
+                                                       RequestType = type
+                                                   })
+                                   .ToList();
+container.RegisterInstance<IEnumerable<ServiceBusConsumer>>(serviceBusConsumers);
+container.RegisterSingleton<MessageQueueReceiver>();
+container.Register<ServiceBusClient>();
+container.Register<IEventBus, EventBus>();
+container.Register<SourceQueueProvider>();
+container.Register(typeof(IEventToUserTranslation<>), assemblies);
 container.Verify();
+
+container.GetInstance<MessageQueueReceiver>().RegisterMessageHandlers();
 
 
 // Configure the HTTP request pipeline.
@@ -104,12 +183,8 @@ app.UseEndpoints(endpoints =>
 app.Run();
 
 
-DbContextOptions<EventRegistratorDbContext> GetDbOptions()
+void SetDbOptions(DbContextOptionsBuilder o)
 {
-    var optionsBuilder = new DbContextOptionsBuilder<EventRegistratorDbContext>();
-    var connectionString = app.Configuration.GetConnectionString("DefaultConnection");
-    optionsBuilder.UseSqlServer(connectionString, sqlBuilder => { sqlBuilder.EnableRetryOnFailure(); });
-    optionsBuilder.EnableSensitiveDataLogging();
-
-    return optionsBuilder.Options;
+    o.UseSqlServer("name=ConnectionStrings:DefaultConnection", sqlBuilder => { sqlBuilder.EnableRetryOnFailure(); })
+     .EnableSensitiveDataLogging();
 }

@@ -1,32 +1,35 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
+
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
 
-public class PersistedDomainEvent
+public class PersistedDomainEvent : Entity
 {
-    public string Data { get; set; }
-    public Guid? DomainEventId_Parent { get; set; }
     public Guid? EventId { get; set; }
-    public Guid Id { get; set; }
+    public Event? Event { get; set; }
 
-    public long Sequence { get; set; }
+    public string Type { get; set; } = null!;
+    public string Data { get; set; } = null!;
+    public Guid? DomainEventId_Parent { get; set; }
     public DateTime Timestamp { get; set; }
-
-    public string Type { get; set; }
 }
 
-public class PersistedDomainEventMap : IEntityTypeConfiguration<PersistedDomainEvent>
+public class PersistedDomainEventMap : EntityMap<PersistedDomainEvent>
 {
-    public void Configure(EntityTypeBuilder<PersistedDomainEvent> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<PersistedDomainEvent> builder)
     {
         builder.ToTable("DomainEvents");
-        builder.HasKey(dev => dev.Id);
-        builder.HasIndex(dev => dev.Sequence)
-               .IsClustered();
 
-        builder.Property(dev => dev.Sequence)
-               .ValueGeneratedOnAdd();
-        //builder.Property(evt => evt.Sequence)
-        //       .UseSqlServerIdentityColumn();
+        builder.HasOne(dev => dev.Event)
+               .WithMany()
+               .HasForeignKey(dev => dev.EventId);
+
+        builder.Property(dev => dev.Type)
+               .HasMaxLength(300);
+
+        builder.HasIndex(dev => dev.Timestamp)
+               .IsUnique(false);
     }
 }

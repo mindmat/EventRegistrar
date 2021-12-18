@@ -1,5 +1,6 @@
 using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 
@@ -68,7 +69,7 @@ public class Startup
         //_container.CrossWire<IMemoryCache>(app);
         //_container.CrossWire<ILoggerFactory>(app);
         SetIdentityProvider(_container);
-        CompositionRoot.RegisterTypes(_container);
+        //CompositionRoot.RegisterTypes(_container);
         OverrideRegistrations();
         _container.Verify();
 

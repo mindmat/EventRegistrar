@@ -3,7 +3,8 @@ import { AuthGuard } from '@auth0/auth0-angular';
 import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layout.component';
 import { InitialDataResolver } from 'app/app.resolvers';
-import { OverviewComponent } from './modules/admin/overview/overview/overview.component';
+import { OverviewComponent } from './modules/admin/overview/overview.component';
+import { OverviewResolver } from './modules/admin/overview/overview.resolvers';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -48,35 +49,35 @@ export const appRoutes: Route[] = [
             layout: 'empty'
         },
         children: [
-            {path: 'sign-out', loadChildren: () => import('app/modules/auth/sign-out/sign-out.module').then(m => m.AuthSignOutModule)},
-            {path: 'unlock-session', loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.module').then(m => m.AuthUnlockSessionModule)}
+            { path: 'sign-out', loadChildren: () => import('app/modules/auth/sign-out/sign-out.module').then(m => m.AuthSignOutModule) },
+            { path: 'unlock-session', loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.module').then(m => m.AuthUnlockSessionModule) }
         ]
     },
 
     // Landing routes
     {
         path: '',
-        component  : LayoutComponent,
+        component: LayoutComponent,
         data: {
             layout: 'empty'
         },
-        children   : [
-            {path: 'home', loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule)},
+        children: [
+            { path: 'home', loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule) },
         ]
     },
 
     // Admin routes
     {
-        path       : '',
+        path: '',
         canActivate: [AuthGuard],
         canActivateChild: [AuthGuard],
-        component  : LayoutComponent,
-        resolve    : {
+        component: LayoutComponent,
+        resolve: {
             initialData: InitialDataResolver,
         },
-        children   : [
-            {path: 'example', loadChildren: () => import('app/modules/admin/example/example.module').then(m => m.ExampleModule)},
-            {path: 'overview', component: OverviewComponent},
+        children: [
+            { path: 'example', loadChildren: () => import('app/modules/admin/example/example.module').then(m => m.ExampleModule) },
+            { path: 'overview', component: OverviewComponent, resolve: { initialData: OverviewResolver } },
         ]
     }
 ];

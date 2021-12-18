@@ -16,6 +16,7 @@ public class Reduction : Entity
 
     public decimal Amount { get; set; }
     public Role? OnlyForRole { get; set; }
+    public bool ActivatedByReduction { get; set; }
 }
 
 public class ReductionMap : EntityMap<Reduction>

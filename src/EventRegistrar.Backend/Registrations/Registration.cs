@@ -68,11 +68,13 @@ public class RegistrationMap : EntityMap<Registration>
 
         builder.HasOne(reg => reg.Event)
                .WithMany(evt => evt.Registrations)
-               .HasForeignKey(reg => reg.EventId);
+               .HasForeignKey(reg => reg.EventId)
+               .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(reg => reg.RegistrationForm)
                .WithMany()
-               .HasForeignKey(reg => reg.RegistrationFormId);
+               .HasForeignKey(reg => reg.RegistrationFormId)
+               .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(reg => reg.Registration_Partner)
                .WithMany()

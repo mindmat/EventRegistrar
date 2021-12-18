@@ -21,10 +21,12 @@ public class RegistrableCompositionMap : EntityMap<RegistrableComposition>
 
         builder.HasOne(cmp => cmp.Registrable)
                .WithMany(rbl => rbl.Compositions)
-               .HasForeignKey(cmp => cmp.RegistrableId);
+               .HasForeignKey(cmp => cmp.RegistrableId)
+               .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(cmp => cmp.Registrable_Contains)
                .WithMany()
-               .HasForeignKey(cmp => cmp.RegistrableId_Contains);
+               .HasForeignKey(cmp => cmp.RegistrableId_Contains)
+               .OnDelete(DeleteBehavior.Restrict);
     }
 }

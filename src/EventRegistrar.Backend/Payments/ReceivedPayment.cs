@@ -51,7 +51,7 @@ public class ReceivedPaymentMap : EntityMap<ReceivedPayment>
 
         builder.HasOne(pmt => pmt.PaymentSlip)
                .WithMany()
-               .HasForeignKey(pmt => pmt.PaymentSlip);
+               .HasForeignKey(pmt => pmt.PaymentSlipId);
 
         builder.Property(pmt => pmt.Info)
                .HasMaxLength(400);

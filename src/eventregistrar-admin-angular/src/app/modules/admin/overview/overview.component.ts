@@ -3,67 +3,61 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
+import { DoubleRegistrable, OverviewService, SingleRegistrable } from './overview.service';
 
 @Component({
-  selector: 'app-overview',
-  templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.scss'],
-  encapsulation  : ViewEncapsulation.None,
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-overview',
+    templateUrl: './overview.component.html',
+    styleUrls: ['./overview.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OverviewComponent implements OnInit, OnDestroy
 {
-    categories: Category[];
-    courses: Course[];
-    filteredCourses: Course[];
+    singleRegistrables: SingleRegistrable[];
+    doubleRegistrables: DoubleRegistrable[];
+    filteredSingleRegistrables: SingleRegistrable[];
+    filteredDoubleRegistrables: DoubleRegistrable[];
     filters: {
         categorySlug$: BehaviorSubject<string>;
         query$: BehaviorSubject<string>;
         hideCompleted$: BehaviorSubject<boolean>;
     } = {
-        categorySlug$ : new BehaviorSubject('all'),
-        query$        : new BehaviorSubject(''),
-        hideCompleted$: new BehaviorSubject(false)
-    };
+            categorySlug$: new BehaviorSubject('all'),
+            query$: new BehaviorSubject(''),
+            hideCompleted$: new BehaviorSubject(false)
+        };
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    /**
-     * Constructor
-     */
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _academyService: AcademyService
+        private overviewService: OverviewService
     )
     {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
     ngOnInit(): void
     {
         // Get the categories
-        this._academyService.categories$
+        this.overviewService.singleRegistrables$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((categories: Category[]) => {
-                this.categories = categories;
+            .subscribe((singleRegistrables: SingleRegistrable[]) =>
+            {
+                this.singleRegistrables = this.filteredSingleRegistrables = singleRegistrables;
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
             });
 
         // Get the courses
-        this._academyService.courses$
+        this.overviewService.doubleRegistrables$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((courses: Course[]) => {
-                this.courses = this.filteredCourses = courses;
+            .subscribe((doubleRegistrables: DoubleRegistrable[]) =>
+            {
+                this.doubleRegistrables = this.filteredDoubleRegistrables = doubleRegistrables;
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();
@@ -71,36 +65,34 @@ export class OverviewComponent implements OnInit, OnDestroy
 
         // Filter the courses
         combineLatest([this.filters.categorySlug$, this.filters.query$, this.filters.hideCompleted$])
-            .subscribe(([categorySlug, query, hideCompleted]) => {
+            .subscribe(([categorySlug, query, hideCompleted]) =>
+            {
 
                 // Reset the filtered courses
-                this.filteredCourses = this.courses;
+                this.filteredSingleRegistrables = this.singleRegistrables;
+                this.filteredDoubleRegistrables = this.doubleRegistrables;
 
                 // Filter by category
-                if ( categorySlug !== 'all' )
+                if (categorySlug !== 'all')
                 {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.category === categorySlug);
+                    // this.filteredSingleRegistrables = this.filteredSingleRegistrables.filter(course => course.category === categorySlug);
                 }
 
                 // Filter by search query
-                if ( query !== '' )
+                if (query !== '')
                 {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.title.toLowerCase().includes(query.toLowerCase())
-                        || course.description.toLowerCase().includes(query.toLowerCase())
-                        || course.category.toLowerCase().includes(query.toLowerCase()));
+                    this.filteredSingleRegistrables = this.filteredSingleRegistrables.filter(rbl => rbl.name.toLowerCase().includes(query.toLowerCase()));
+                    this.filteredDoubleRegistrables = this.filteredDoubleRegistrables.filter(rbl => rbl.name.toLowerCase().includes(query.toLowerCase()));
                 }
 
                 // Filter by completed
-                if ( hideCompleted )
+                if (hideCompleted)
                 {
-                    this.filteredCourses = this.filteredCourses.filter(course => course.progress.completed === 0);
+                    // this.filteredCourses = this.filteredCourses.filter(course => course.progress.completed === 0);
                 }
             });
     }
 
-    /**
-     * On destroy
-     */
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
@@ -108,46 +100,21 @@ export class OverviewComponent implements OnInit, OnDestroy
         this._unsubscribeAll.complete();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Filter by search query
-     *
-     * @param query
-     */
     filterByQuery(query: string): void
     {
         this.filters.query$.next(query);
     }
 
-    /**
-     * Filter by category
-     *
-     * @param change
-     */
     filterByCategory(change: MatSelectChange): void
     {
         this.filters.categorySlug$.next(change.value);
     }
 
-    /**
-     * Show/hide completed courses
-     *
-     * @param change
-     */
     toggleCompleted(change: MatSlideToggleChange): void
     {
         this.filters.hideCompleted$.next(change.checked);
     }
 
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
     trackByFn(index: number, item: any): any
     {
         return item.id || index;

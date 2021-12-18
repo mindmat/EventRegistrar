@@ -48,15 +48,17 @@ public class PriceCalculator
         foreach (var spot in notCancelledSpots)
         {
             var registrable = spot.Registrable ?? await _registrables.FirstAsync(rbl => rbl.Id == spot.RegistrableId);
-            if (registrable == null) continue;
+            if (registrable == null)
+            {
+                continue;
+            }
+
             price += registration.IsReduced
                 ? registrable.ReducedPrice ?? registrable.Price ?? 0m
                 : registrable.Price ?? 0m;
             var roleInThisSpot = spot.RegistrationId_Follower == registration.Id ? Role.Follower : Role.Leader;
-            var potentialReductions = await _reductions
-                                            .Where(red =>
-                                                red.RegistrableId == spot.RegistrableId && !red.ActivatedByReduction)
-                                            .ToListAsync();
+            var potentialReductions = await _reductions.Where(red => red.RegistrableId == spot.RegistrableId && !red.ActivatedByReduction)
+                                                       .ToListAsync();
             _logger.LogInformation($"potential reductions: {potentialReductions.Count}");
 
             //var applicableReductions = potentialReductions.Where(red => red.ActivatedByReduction
@@ -65,12 +67,11 @@ public class PriceCalculator
             //                                                         && (!red.OnlyForRole.HasValue || red.OnlyForRole == roleInThisSpot))
             //                                              .ToList();
 
-            var applicableReductions = potentialReductions.Where(red =>
-                red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue &&
-                bookedRegistrableIds.Contains(red.RegistrableId1_ReductionActivatedIfCombinedWith.Value)
-             && (!red.RegistrableId2_ReductionActivatedIfCombinedWith.HasValue ||
-                 bookedRegistrableIds.Contains(red.RegistrableId2_ReductionActivatedIfCombinedWith.Value))
-             && (!red.OnlyForRole.HasValue || red.OnlyForRole == roleInThisSpot));
+            var applicableReductions = potentialReductions.Where(red => red.RegistrableId1_ReductionActivatedIfCombinedWith.HasValue &&
+                                                                        bookedRegistrableIds.Contains(red.RegistrableId1_ReductionActivatedIfCombinedWith.Value)
+                                                                     && (!red.RegistrableId2_ReductionActivatedIfCombinedWith.HasValue ||
+                                                                         bookedRegistrableIds.Contains(red.RegistrableId2_ReductionActivatedIfCombinedWith.Value))
+                                                                     && (!red.OnlyForRole.HasValue || red.OnlyForRole == roleInThisSpot));
 
             price -= applicableReductions.Sum(red => red.Amount);
         }

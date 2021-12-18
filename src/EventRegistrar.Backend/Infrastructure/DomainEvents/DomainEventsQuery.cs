@@ -1,7 +1,10 @@
 ﻿using System.Text.Json;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Properties;
+
 using MediatR;
+
 using SimpleInjector;
 
 namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
@@ -37,7 +40,7 @@ public class DomainEventsQueryHandler : IRequestHandler<DomainEventsQuery, IEnum
     {
         var rawEvents = await _domainEvents.Where(evt => evt.EventId == query.EventId)
                                            .WhereIf(query.Types?.Any() == true, evt => query.Types.Contains(evt.Type))
-                                           .OrderByDescending(evt => evt.Sequence)
+                                           .OrderByDescending(evt => evt.Timestamp)
                                            .Take(100)
                                            .Select(evt => new
                                                           {
