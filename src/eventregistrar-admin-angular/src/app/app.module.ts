@@ -22,6 +22,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FuseFindByKeyPipeModule } from '@fuse/pipes/find-by-key';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressBar, MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -60,6 +62,8 @@ const routerConfig: ExtraOptions = {
         MatIconModule,
         MatSlideToggleModule,
         MatInputModule,
+        MatProgressBarModule,
+        MatTooltipModule,
 
         AuthModule.forRoot({
             domain: 'eventregistrar.eu.auth0.com',
