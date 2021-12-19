@@ -80,6 +80,8 @@ export class DoubleRegistrable extends Registrable
   leadersOnWaitingList: number;
   followersOnWaitingList: number;
   maximumAllowedImbalance: number;
+  class: DoubleSpotState[];
+  waitingList: DoubleSpotState[];
 }
 
 export class SingleRegistrable extends Registrable
@@ -87,4 +89,18 @@ export class SingleRegistrable extends Registrable
   spotsAvailable: number;
   accepted: number;
   onWaitingList: number;
+}
+
+export class SpotState
+{
+  available = 1;
+  reserved = 2;
+  registered = 3;
+  paid = 4;
+}
+
+export class DoubleSpotState
+{
+  leader: SpotState;
+  follower: SpotState;
 }

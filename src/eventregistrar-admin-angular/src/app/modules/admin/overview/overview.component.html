@@ -78,16 +78,101 @@
                                     </div> -->
                                 </div>
                                 <!-- Registrable title & description -->
-                                <div class="mt-4 text-lg font-medium">{{doubleRegistrable.name}}</div>
-                                <div class="mt-0.5 line-clamp-2 text-secondary">{{doubleRegistrable.nameSecondary}}
+                                <div class="mt-4 text-lg font-medium">{{ doubleRegistrable.name }}</div>
+                                <div class="mt-0.5 line-clamp-2 text-secondary">{{ doubleRegistrable.nameSecondary }}
                                 </div>
                                 <div class="w-12 h-1 my-6 border-t-2"></div>
-                                <!-- Course time -->
-                                <!-- <div class="flex items-center leading-5 text-md text-secondary">
-                                    <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:clock'">
+                                <!-- Class -->
+                                <div class="flex items-center mt-2 leading-5 text-md text-secondary">
+                                    <mat-icon class="icon-size-5 text-hint mr-2"
+                                        [svgIcon]="'heroicons_solid:academic-cap'" [matTooltip]="'Class'"
+                                        [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
+                                        >
                                     </mat-icon>
-                                    <div class="ml-1.5">{{course.duration}} minutes</div>
-                                </div> -->
+                                    <ng-container *ngFor="let spotState of doubleRegistrable.class; trackBy: trackByFn">
+                                        <div>
+                                            <!-- Leader: available -->
+                                            <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-gray-200 rounded overflow-hidden"
+                                                *ngIf="spotState.leader == 1">
+                                            </div>
+                                            <!-- Leader: reserved -->
+                                            <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-gray-400 rounded overflow-hidden"
+                                                *ngIf="spotState.leader == 2">
+                                            </div>
+                                            <!-- Leader: registered -->
+                                            <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-primary-400 rounded overflow-hidden"
+                                                *ngIf="spotState.leader == 3">
+                                            </div>
+                                            <!-- Leader: paid -->
+                                            <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-primary-600 rounded overflow-hidden"
+                                                *ngIf="spotState.leader == 4">
+                                            </div>
+
+                                            <!-- Follower: available -->
+                                            <div class="flex items-end ml-0.5 w-1 h-3 bg-gray-200 rounded overflow-hidden"
+                                                *ngIf="spotState.follower == 1">
+                                            </div>
+                                            <!-- Follower: reserved -->
+                                            <div class="flex items-end ml-0.5 w-1 h-3 bg-gray-400 rounded overflow-hidden"
+                                                *ngIf="spotState.follower == 2">
+                                            </div>
+                                            <!-- Follower: registered -->
+                                            <div class="flex items-end ml-0.5 w-1 h-3 bg-primary-400 rounded overflow-hidden"
+                                                *ngIf="spotState.follower == 3">
+                                            </div>
+                                            <!-- Follower: paid -->
+                                            <div class="flex items-end ml-0.5 w-1 h-3 bg-primary-600 rounded overflow-hidden"
+                                                *ngIf="spotState.follower == 4">
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
+
+                                <!-- Waiting List -->
+                                <div class="flex items-center mt-2 leading-5 text-md text-secondary">
+                                    <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:clock'"
+                                        [matTooltip]="'Waiting list'" [matTooltipPosition]="'above'"
+                                        [matTooltipClass]="'mb-1'">
+                                    </mat-icon>
+                                    <ng-container
+                                        *ngFor="let spotState of doubleRegistrable.waitingList; trackBy: trackByFn">
+                                        <div>
+                                            <!-- Leader: available -->
+                                            <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-gray-200 rounded overflow-hidden"
+                                                *ngIf="spotState.leader == 1">
+                                            </div>
+                                            <!-- Leader: reserved -->
+                                            <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-orange-200 rounded overflow-hidden"
+                                                *ngIf="spotState.leader == 2">
+                                            </div>
+                                            <!-- Leader: registered -->
+                                            <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-gray-400 rounded overflow-hidden"
+                                                *ngIf="spotState.leader == 3">
+                                            </div>
+                                            <!-- Leader: paid -->
+                                            <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-green-600 rounded overflow-hidden"
+                                                *ngIf="spotState.leader == 4">
+                                            </div>
+
+                                            <!-- Follower: available -->
+                                            <div class="flex items-end ml-0.5 w-1 h-3 bg-gray-200 rounded overflow-hidden"
+                                                *ngIf="spotState.follower == 1">
+                                            </div>
+                                            <!-- Follower: reserved -->
+                                            <div class="flex items-end ml-0.5 w-1 h-3 bg-orange-200 rounded overflow-hidden"
+                                                *ngIf="spotState.follower == 2">
+                                            </div>
+                                            <!-- Follower: registered -->
+                                            <div class="flex items-end ml-0.5 w-1 h-3 bg-gray-400 rounded overflow-hidden"
+                                                *ngIf="spotState.follower == 3">
+                                            </div>
+                                            <!-- Follower: paid -->
+                                            <div class="flex items-end ml-0.5 w-1 h-3 bg-green-600 rounded overflow-hidden"
+                                                *ngIf="spotState.follower == 4">
+                                            </div>
+                                        </div>
+                                    </ng-container>
+                                </div>
                                 <!-- Course completion -->
                                 <!-- <div class="flex items-center mt-2 leading-5 text-md text-secondary">
                                     <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:academic-cap'">
