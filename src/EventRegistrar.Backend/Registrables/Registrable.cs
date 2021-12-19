@@ -18,13 +18,14 @@ public class Registrable : Entity
     public ICollection<Reduction>? Reductions { get; set; }
     public ICollection<Seat>? Spots { get; set; }
 
+    public string Name { get; set; } = null!;
+    public string? NameSecondary { get; set; } = null!;
     public bool HasWaitingList { get; set; }
     public bool AutomaticPromotionFromWaitingList { get; set; }
     public bool IsCore { get; set; }
     public int? MaximumAllowedImbalance { get; set; }
     public int? MaximumDoubleSeats { get; set; }
     public int? MaximumSingleSeats { get; set; }
-    public string Name { get; set; } = null!;
     public decimal? Price { get; set; }
     public decimal? ReducedPrice { get; set; }
     public int? ShowInMailListOrder { get; set; }

@@ -67,9 +67,11 @@ export class Registrable
 {
   id: string;
   name: string;
+  nameSecondary?: string;
   isDeletable: boolean;
   automaticPromotionFromWaitingList: boolean;
 }
+
 export class DoubleRegistrable extends Registrable
 {
   spotsAvailable: number;

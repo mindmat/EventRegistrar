@@ -1,6 +1,6 @@
 ﻿namespace EventRegistrar.Backend.Registrables;
 
-public class DoubleRegistrableDisplayItem
+public record DoubleRegistrableDisplayItem
 {
     public int CouplesOnWaitingList { get; set; }
     public int FollowersAccepted { get; set; }
@@ -9,7 +9,8 @@ public class DoubleRegistrableDisplayItem
     public int LeadersAccepted { get; set; }
     public int LeadersOnWaitingList { get; set; }
     public int? MaximumAllowedImbalance { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
+    public string? NameSecondary { get; set; }
     public int? SpotsAvailable { get; set; }
     public bool IsDeletable { get; set; }
     public bool AutomaticPromotionFromWaitingList { get; set; }
