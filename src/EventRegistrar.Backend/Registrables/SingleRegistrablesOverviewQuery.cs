@@ -1,5 +1,8 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Spots;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrables;
@@ -31,32 +34,52 @@ public class SingleRegistrablesOverviewQueryHandler : IRequestHandler<SingleRegi
         var registrables = await _registrables.Where(rbl => rbl.EventId == query.EventId
                                                          && !rbl.MaximumDoubleSeats.HasValue)
                                               .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
-                                              .Include(rbl => rbl.Spots)
+                                              .Include(rbl => rbl.Spots!)
+                                              .ThenInclude(spt => spt.Registration)
+                                              .Include(rbl => rbl.Event)
                                               .ToListAsync(cancellationToken);
 
         var registrationsOnWaitingList = new HashSet<Guid>(_registrations.Where(reg => reg.EventId == query.EventId
-                                                                          && (reg.IsWaitingList ?? false))
+                                                                                    && reg.IsWaitingList == true)
                                                                          .Select(reg => reg.Id));
-        var userCanDeleteRegistrable =
-            await _authorizationChecker.UserHasRight(query.EventId, nameof(DeleteRegistrableCommand));
+        var userCanDeleteRegistrable = await _authorizationChecker.UserHasRight(query.EventId, nameof(DeleteRegistrableCommand));
         return registrables.OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
                            .Select(rbl => new SingleRegistrableDisplayItem
                                           {
                                               Id = rbl.Id,
                                               Name = rbl.Name,
                                               SpotsAvailable = rbl.MaximumSingleSeats,
+                                              HasWaitingList = rbl.HasWaitingList,
                                               AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,
-                                              Accepted = rbl.Spots.Count(spt => !spt.IsCancelled
-                                               && !spt.IsWaitingList
-                                               && !registrationsOnWaitingList.Contains(spt.RegistrationId ??
-                                                      Guid.Empty)),
-                                              OnWaitingList = rbl.Spots.Count(spt => !spt.IsCancelled
-                                               && (spt.IsWaitingList ||
-                                                   registrationsOnWaitingList.Contains(spt.RegistrationId ??
-                                                       Guid.Empty))),
-                                              IsDeletable = !rbl.Spots.Any(spt => !spt.IsCancelled)
+                                              Accepted = rbl.Spots!.Count(spt => !spt.IsCancelled
+                                                                              && !spt.IsWaitingList
+                                                                              && !registrationsOnWaitingList.Contains(spt.RegistrationId ??
+                                                                                                                      Guid.Empty)),
+                                              OnWaitingList = rbl.Spots!.Count(spt => !spt.IsCancelled
+                                                                                   && (spt.IsWaitingList ||
+                                                                                       registrationsOnWaitingList.Contains(spt.RegistrationId ??
+                                                                                                                           Guid.Empty))),
+                                              IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
                                                          && userCanDeleteRegistrable
-                                                         && rbl.Event.State == RegistrationForms.State.Setup
+                                                         && rbl.Event!.State == RegistrationForms.State.Setup,
+                                              Class = rbl.Spots!.Where(spt => !spt.IsCancelled
+                                                                           && !spt.IsWaitingList)
+                                                         .Select(GetSpotState)
+                                                         .FillUpIf(rbl.MaximumSingleSeats, () => SpotState.Available)
+                                                         .ToList(),
+                                              WaitingList = rbl.Spots!.Where(spt => !spt.IsCancelled
+                                                                                 && spt.IsWaitingList)
+                                                               .Select(GetSpotState)
+                                                               .ToList()
                                           });
+    }
+
+    private static SpotState GetSpotState(Seat spot)
+    {
+        return spot.Registration == null
+            ? SpotState.Available
+            : spot.Registration.State == RegistrationState.Paid
+                ? SpotState.Paid
+                : SpotState.Registered;
     }
 }

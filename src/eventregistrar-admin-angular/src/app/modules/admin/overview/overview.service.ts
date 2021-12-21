@@ -69,6 +69,7 @@ export class Registrable
   name: string;
   nameSecondary?: string;
   isDeletable: boolean;
+  hasWaitingList:boolean;
   automaticPromotionFromWaitingList: boolean;
 }
 
@@ -89,6 +90,8 @@ export class SingleRegistrable extends Registrable
   spotsAvailable: number;
   accepted: number;
   onWaitingList: number;
+  class: SpotState[];
+  waitingList: SpotState[];
 }
 
 export class SpotState

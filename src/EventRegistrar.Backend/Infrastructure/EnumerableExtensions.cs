@@ -2,10 +2,10 @@
 
 public static class EnumerableExtensions
 {
-    public static IEnumerable<TSource> FillUpIf<TSource>(this IEnumerable<TSource> source, bool condition, Func<TSource> createFillElement, int minLength)
+    public static IEnumerable<TSource> FillUpIf<TSource>(this IEnumerable<TSource> source, int? minLength, Func<TSource> createFillElement)
     {
-        return condition
-            ? FillUp(source, createFillElement, minLength)
+        return minLength != null
+            ? FillUp(source, createFillElement, minLength.Value)
             : source;
     }
 
