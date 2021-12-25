@@ -11,6 +11,7 @@ public class RegistrableTag : Entity
     public Event? Event { get; set; }
     public string Tag { get; set; } = null!;
     public string FallbackText { get; set; } = null!;
+    public int SortKey { get; set; }
 }
 
 public class RegistrableTagMap : EntityMap<RegistrableTag>

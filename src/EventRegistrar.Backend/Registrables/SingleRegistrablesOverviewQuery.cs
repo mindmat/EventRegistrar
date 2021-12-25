@@ -12,8 +12,7 @@ public class SingleRegistrablesOverviewQuery : IRequest<IEnumerable<SingleRegist
     public Guid EventId { get; set; }
 }
 
-public class SingleRegistrablesOverviewQueryHandler : IRequestHandler<SingleRegistrablesOverviewQuery,
-    IEnumerable<SingleRegistrableDisplayItem>>
+public class SingleRegistrablesOverviewQueryHandler : IRequestHandler<SingleRegistrablesOverviewQuery, IEnumerable<SingleRegistrableDisplayItem>>
 {
     private readonly IQueryable<Registrable> _registrables;
     private readonly IQueryable<Registration> _registrations;

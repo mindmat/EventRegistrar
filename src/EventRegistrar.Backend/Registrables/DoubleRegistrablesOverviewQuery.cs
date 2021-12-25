@@ -43,6 +43,7 @@ public class DoubleRegistrablesOverviewQueryHandler : IRequestHandler<DoubleRegi
                                               Name = rbl.Name,
                                               NameSecondary = rbl.NameSecondary,
                                               SpotsAvailable = rbl.MaximumDoubleSeats,
+                                              HasWaitingList = rbl.HasWaitingList,
                                               AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,
                                               MaximumAllowedImbalance = rbl.MaximumAllowedImbalance,
                                               LeadersAccepted = rbl.Spots!.Count(spt => !spt.IsCancelled

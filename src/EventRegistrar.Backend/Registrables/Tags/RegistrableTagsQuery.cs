@@ -22,13 +22,14 @@ public class RegistrableTagsQueryHandler : IRequestHandler<RegistrableTagsQuery,
                                                                      CancellationToken cancellationToken)
     {
         return await _tags.Where(rbl => rbl.EventId == query.EventId)
+                          .OrderBy(rbt => rbt.SortKey)
+                          .ThenBy(rbt => rbt.Tag)
                           .Select(rbt => new RegistrableTagDisplayItem
                                          {
                                              TagId = rbt.Id,
                                              Tag = rbt.Tag,
                                              Text = rbt.FallbackText
                                          })
-                          .OrderBy(rbt => rbt.Text)
                           .ToListAsync(cancellationToken);
     }
 }
