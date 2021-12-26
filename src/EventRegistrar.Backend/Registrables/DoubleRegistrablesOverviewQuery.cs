@@ -41,6 +41,7 @@ public class DoubleRegistrablesOverviewQueryHandler : IRequestHandler<DoubleRegi
                                           {
                                               Id = rbl.Id,
                                               Name = rbl.Name,
+                                              Tag = rbl.Tag,
                                               NameSecondary = rbl.NameSecondary,
                                               SpotsAvailable = rbl.MaximumDoubleSeats,
                                               HasWaitingList = rbl.HasWaitingList,

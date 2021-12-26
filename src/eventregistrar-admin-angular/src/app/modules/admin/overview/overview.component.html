@@ -55,43 +55,30 @@
                             <div class="flex flex-col p-6">
                                 <div class="flex items-center justify-between">
                                     <!-- Registrable tags -->
-                                    <!-- <ng-container
-                                        *ngIf="(course.category | fuseFindByKey:'slug':categories) as category">
-                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold"
-                                            [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.slug === 'web',
-                                                        'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.slug === 'android',
-                                                        'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.slug === 'cloud',
-                                                        'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.slug === 'firebase'}">
-                                            {{category.title}}
+                                    <ng-container *ngIf="(doubleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
+                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
+                                                        'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.sortKey === 2,
+                                                        'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.sortKey === 3,
+                                                        'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.sortKey === 4}">
+                                            {{category.text}}
                                         </div>
-                                    </ng-container> -->
-                                    <!-- Completed at least once -->
-                                    <!-- <div class="flex items-center">
-                                        <ng-container *ngIf="course.progress.completed > 0">
-                                            <mat-icon class="icon-size-5 text-green-600"
-                                                [svgIcon]="'heroicons_solid:badge-check'"
-                                                [matTooltip]="'You completed this course at least once'"></mat-icon>
-                                        </ng-container>
-                                    </div> -->
+                                    </ng-container>
                                 </div>
+
                                 <!-- Registrable title & description -->
                                 <div class="mt-4 text-lg font-medium">{{ doubleRegistrable.name }}</div>
                                 <div class="mt-0.5 line-clamp-2 text-secondary">{{ doubleRegistrable.nameSecondary }}</div>
                                 <div class="w-12 h-1 my-6 border-t-2"></div>
+
                                 <!-- Class -->
                                 <div class="flex items-center mt-2 leading-5 text-md text-secondary">
-                                    <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:academic-cap'"
+                                    <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:check-circle'"
                                         [matTooltip]="'Accepted: L' + doubleRegistrable.leadersAccepted + ' F' + doubleRegistrable.followersAccepted" [matTooltipPosition]="'above'"
                                         [matTooltipClass]="'mb-1'">
                                         >
                                     </mat-icon>
                                     <div class="flex flex-wrap">
                                         <ng-container *ngFor="let spotState of doubleRegistrable.class; let i = index; trackBy: trackByFn">
-
-                                            <div class="flex -mt-0.5 ml-1 mr-0.5 mb-0.5 w-0.5 h-9 bg-gray-600 rounded overflow-hidden" *ngIf="doubleRegistrable.spotsAvailable == i"
-                                                [matTooltip]="'max: ' + doubleRegistrable.spotsAvailable" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
-                                            </div>
-
                                             <div class="flex flex-col pb-1 ml-0.5 w-1 rounded overflow-hidden">
                                                 <!-- Leader: available -->
                                                 <div class="h-4 bg-gray-200" *ngIf="spotState.leader == 1">
@@ -122,7 +109,10 @@
                                                 <!-- Follower: paid -->
                                                 <div class="h-4 bg-primary-600 rounded-b" *ngIf="spotState.follower == 4">
                                                 </div>
+                                            </div>
 
+                                            <div class="-mt-0.5 ml-1 mr-0.5 mb-0.5 w-0.5 h-9 bg-gray-600 " *ngIf="doubleRegistrable.spotsAvailable == i + 1"
+                                                [matTooltip]="'max: ' + doubleRegistrable.spotsAvailable" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                             </div>
                                         </ng-container>
                                     </div>
@@ -173,31 +163,8 @@
                                         </ng-container>
                                     </div>
                                 </div>
-                                <!-- Course completion -->
-                                <!-- <div class="flex items-center mt-2 leading-5 text-md text-secondary">
-                                    <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:academic-cap'">
-                                    </mat-icon>
-                                    <ng-container *ngIf="course.progress.completed > 0">
-                                        <div class="ml-1.5">
-                                            <span>Completed</span>
-                                            <span class="ml-1">
-                                                <ng-container *ngIf="course.progress.completed === 1">once
-                                                </ng-container>
-                                                <ng-container *ngIf="course.progress.completed === 2">twice
-                                                </ng-container>
-                                                <ng-container *ngIf="course.progress.completed > 2">
-                                                    {{course.progress.completed}}
-                                                    {{course.progress.completed | i18nPlural: {
-                                                    '=0' : 'time',
-                                                    '=1' : 'time',
-                                                    'other': 'times'
-                                                    } }}
-                                                </ng-container>
-                                            </span>
-                                        </div>
-                                    </ng-container>
-                                </div> -->
                             </div>
+
                             <!-- Footer -->
                             <div class="flex flex-col w-full mt-auto">
                                 <!-- Registrable completion -->
@@ -233,53 +200,46 @@
                             <div class="flex flex-col p-6">
                                 <div class="flex items-center justify-between">
                                     <!-- Registrable tags -->
-                                    <!-- <ng-container
-                                                    *ngIf="(course.category | fuseFindByKey:'slug':categories) as category">
-                                                    <div class="py-0.5 px-3 rounded-full text-sm font-semibold"
-                                                        [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.slug === 'web',
-                                                                    'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.slug === 'android',
-                                                                    'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.slug === 'cloud',
-                                                                    'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.slug === 'firebase'}">
-                                                        {{category.title}}
-                                                    </div>
-                                                </ng-container> -->
-                                    <!-- Completed at least once -->
-                                    <!-- <div class="flex items-center">
-                                                    <ng-container *ngIf="course.progress.completed > 0">
-                                                        <mat-icon class="icon-size-5 text-green-600"
-                                                            [svgIcon]="'heroicons_solid:badge-check'"
-                                                            [matTooltip]="'You completed this course at least once'"></mat-icon>
-                                                    </ng-container>
-                                                </div> -->
+                                    <ng-container *ngIf="(singleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
+                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
+                                                                    'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.sortKey === 2,
+                                                                    'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.sortKey === 3,
+                                                                    'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.sortKey === 4}">
+                                            {{category.text}}
+                                        </div>
+                                    </ng-container>
                                 </div>
+
                                 <!-- Registrable title & description -->
                                 <div class="mt-4 text-lg font-medium">{{ singleRegistrable.name }}</div>
-                                <div class="mt-0.5 line-clamp-2 text-secondary">{{ singleRegistrable.nameSecondary }}
-                                </div>
+                                <div class="mt-0.5 line-clamp-2 text-secondary">{{ singleRegistrable.nameSecondary }}</div>
                                 <div class="w-12 h-1 my-6 border-t-2"></div>
+
                                 <!-- Class -->
                                 <div class="flex items-center mt-2 leading-5 text-md text-secondary">
-                                    <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:academic-cap'" [matTooltip]="'Class'" [matTooltipPosition]="'above'"
-                                        [matTooltipClass]="'mb-1'">
+                                    <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:check-circle'" [matTooltip]="'Accepted: ' + singleRegistrable.accepted"
+                                        [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                         >
                                     </mat-icon>
+
                                     <div class="flex flex-wrap">
                                         <ng-container *ngFor="let spotState of singleRegistrable.class; let i=index;trackBy: trackByFn">
-                                            <div class="pb-1">
+                                            <div class="flex flex-col ml-0.5 w-1 pt-0.5 pb-0.5">
                                                 <!-- Leader: available -->
-                                                <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-gray-200 rounded overflow-hidden" *ngIf="spotState == 1">
+                                                <div class="h-4 bg-gray-200 rounded overflow-hidden" *ngIf="spotState == 1">
                                                 </div>
                                                 <!-- Leader: reserved -->
-                                                <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-warn-400 rounded overflow-hidden" *ngIf="spotState == 2">
+                                                <div class="h-4 bg-warn-400 rounded overflow-hidden" *ngIf="spotState == 2">
                                                 </div>
                                                 <!-- Leader: registered -->
-                                                <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-primary-400 rounded overflow-hidden" *ngIf="spotState == 3">
+                                                <div class="h-4 bg-primary-400 rounded overflow-hidden" *ngIf="spotState == 3">
                                                 </div>
                                                 <!-- Leader: paid -->
-                                                <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-primary-600 rounded overflow-hidden" *ngIf="spotState == 4">
+                                                <div class="h-4 bg-primary-600 rounded overflow-hidden" *ngIf="spotState == 4">
                                                 </div>
                                             </div>
-                                            <div class="flex items-end -mt-0.5 ml-0.5 mb-0.5 w-0.5 h-4 bg-gray-600 rounded overflow-hidden" *ngIf="singleRegistrable.spotsAvailable == i+1"
+
+                                            <div class="flex ml-1 mr-0.5 mb-1 w-0.5 h-5 bg-gray-600 rounded overflow-hidden" *ngIf="singleRegistrable.spotsAvailable == i + 1"
                                                 [matTooltip]="'max: ' + singleRegistrable.spotsAvailable" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                             </div>
                                         </ng-container>
@@ -288,53 +248,30 @@
 
                                 <!-- Waiting List -->
                                 <div class="flex items-center mt-2 leading-5 text-md text-secondary" *ngIf="singleRegistrable.hasWaitingList">
-                                    <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:clock'" [matTooltip]="'Waiting list'" [matTooltipPosition]="'above'"
-                                        [matTooltipClass]="'mb-1'">
+                                    <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:clock'" [matTooltip]="'Waiting list: ' + singleRegistrable.onWaitingList"
+                                        [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                     </mat-icon>
                                     <div class="flex flex-wrap">
                                         <ng-container *ngFor="let spotState of singleRegistrable.waitingList; trackBy: trackByFn">
-                                            <div class="pb-1">
+                                            <div class="flex flex-col ml-0.5 w-1 pt-0.5 pb-0.5">
                                                 <!-- Leader: available -->
-                                                <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-gray-200 rounded overflow-hidden" *ngIf="spotState == 1">
+                                                <div class="h-4 bg-gray-200 rounded overflow-hidden" *ngIf="spotState == 1">
                                                 </div>
                                                 <!-- Leader: reserved -->
-                                                <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-warn-400 rounded overflow-hidden" *ngIf="spotState == 2">
+                                                <div class="h-4 bg-warn-400 rounded overflow-hidden" *ngIf="spotState == 2">
                                                 </div>
                                                 <!-- Leader: registered -->
-                                                <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-primary-400 rounded overflow-hidden" *ngIf="spotState == 3">
+                                                <div class="h-4 bg-primary-400 rounded overflow-hidden" *ngIf="spotState == 3">
                                                 </div>
                                                 <!-- Leader: paid -->
-                                                <div class="flex items-end ml-0.5 mb-0.5 w-1 h-3 bg-primary-600 rounded overflow-hidden" *ngIf="spotState == 4">
+                                                <div class="h-4 bg-primary-600 rounded overflow-hidden" *ngIf="spotState == 4">
                                                 </div>
                                             </div>
                                         </ng-container>
                                     </div>
                                 </div>
-                                <!-- Course completion -->
-                                <!-- <div class="flex items-center mt-2 leading-5 text-md text-secondary">
-                                                <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:academic-cap'">
-                                                </mat-icon>
-                                                <ng-container *ngIf="course.progress.completed > 0">
-                                                    <div class="ml-1.5">
-                                                        <span>Completed</span>
-                                                        <span class="ml-1">
-                                                            <ng-container *ngIf="course.progress.completed === 1">once
-                                                            </ng-container>
-                                                            <ng-container *ngIf="course.progress.completed === 2">twice
-                                                            </ng-container>
-                                                            <ng-container *ngIf="course.progress.completed > 2">
-                                                                {{course.progress.completed}}
-                                                                {{course.progress.completed | i18nPlural: {
-                                                                '=0' : 'time',
-                                                                '=1' : 'time',
-                                                                'other': 'times'
-                                                                } }}
-                                                            </ng-container>
-                                                        </span>
-                                                    </div>
-                                                </ng-container>
-                                            </div> -->
                             </div>
+
                             <!-- Footer -->
                             <div class="flex flex-col w-full mt-auto">
                                 <!-- Registrable completion -->

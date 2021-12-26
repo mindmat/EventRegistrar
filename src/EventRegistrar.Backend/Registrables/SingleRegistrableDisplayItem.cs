@@ -4,6 +4,8 @@ public class SingleRegistrableDisplayItem
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
+    public string? NameSecondary { get; set; } = null!;
+    public string? Tag { get; set; }
     public int Accepted { get; set; }
     public int? OnWaitingList { get; set; }
     public int? SpotsAvailable { get; set; }

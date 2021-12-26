@@ -47,6 +47,8 @@ public class SingleRegistrablesOverviewQueryHandler : IRequestHandler<SingleRegi
                                           {
                                               Id = rbl.Id,
                                               Name = rbl.Name,
+                                              NameSecondary = rbl.NameSecondary,
+                                              Tag = rbl.Tag,
                                               SpotsAvailable = rbl.MaximumSingleSeats,
                                               HasWaitingList = rbl.HasWaitingList,
                                               AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,

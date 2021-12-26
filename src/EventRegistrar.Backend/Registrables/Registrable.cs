@@ -30,6 +30,7 @@ public class Registrable : Entity
     public decimal? ReducedPrice { get; set; }
     public int? ShowInMailListOrder { get; set; }
     public string? CheckinListColumn { get; set; }
+    public string? Tag { get; set; }
 }
 
 public class RegistrableMap : EntityMap<Registrable>
@@ -41,5 +42,17 @@ public class RegistrableMap : EntityMap<Registrable>
         builder.HasOne(rbl => rbl.Event)
                .WithMany(evt => evt.Registrables)
                .HasForeignKey(rbl => rbl.EventId);
+
+        builder.Property(rbl => rbl.Name)
+               .HasMaxLength(200);
+
+        builder.Property(rbl => rbl.NameSecondary)
+               .HasMaxLength(200);
+
+        builder.Property(rbl => rbl.CheckinListColumn)
+               .HasMaxLength(200);
+
+        builder.Property(rbl => rbl.Tag)
+               .HasMaxLength(200);
     }
 }

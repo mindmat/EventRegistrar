@@ -72,6 +72,7 @@ export class Registrable
   isDeletable: boolean;
   hasWaitingList: boolean;
   automaticPromotionFromWaitingList: boolean;
+  tag: string;
 }
 
 export class DoubleRegistrable extends Registrable

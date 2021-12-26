@@ -21,11 +21,11 @@ export class OverviewComponent implements OnInit, OnDestroy
     filteredSingleRegistrables: SingleRegistrable[];
     filteredDoubleRegistrables: DoubleRegistrable[];
     filters: {
-        categorySlug$: BehaviorSubject<string>;
+        categoryTag$: BehaviorSubject<string>;
         query$: BehaviorSubject<string>;
         hideCompleted$: BehaviorSubject<boolean>;
     } = {
-            categorySlug$: new BehaviorSubject('all'),
+            categoryTag$: new BehaviorSubject('all'),
             query$: new BehaviorSubject(''),
             hideCompleted$: new BehaviorSubject(false)
         };
@@ -76,8 +76,8 @@ export class OverviewComponent implements OnInit, OnDestroy
             });
 
         // Filter the courses
-        combineLatest([this.filters.categorySlug$, this.filters.query$, this.filters.hideCompleted$])
-            .subscribe(([categorySlug, query, hideCompleted]) =>
+        combineLatest([this.filters.categoryTag$, this.filters.query$, this.filters.hideCompleted$])
+            .subscribe(([categoryTag, query, hideCompleted]) =>
             {
 
                 // Reset the filtered courses
@@ -85,9 +85,10 @@ export class OverviewComponent implements OnInit, OnDestroy
                 this.filteredDoubleRegistrables = this.doubleRegistrables;
 
                 // Filter by category
-                if (categorySlug !== 'all')
+                if (categoryTag !== 'all')
                 {
-                    // this.filteredSingleRegistrables = this.filteredSingleRegistrables.filter(course => course.category === categorySlug);
+                    this.filteredSingleRegistrables = this.filteredSingleRegistrables.filter(course => course.tag === categoryTag);
+                    this.filteredDoubleRegistrables = this.filteredDoubleRegistrables.filter(course => course.tag === categoryTag);
                 }
 
                 // Filter by search query
@@ -119,7 +120,7 @@ export class OverviewComponent implements OnInit, OnDestroy
 
     filterByCategory(change: MatSelectChange): void
     {
-        this.filters.categorySlug$.next(change.value);
+        this.filters.categoryTag$.next(change.value);
     }
 
     toggleCompleted(change: MatSlideToggleChange): void

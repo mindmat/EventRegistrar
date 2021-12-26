@@ -5,6 +5,7 @@ public record DoubleRegistrableDisplayItem
     public Guid Id { get; set; }
     public string Name { get; set; } = null!;
     public string? NameSecondary { get; set; }
+    public string? Tag { get; set; }
     public int CouplesOnWaitingList { get; set; }
     public int FollowersAccepted { get; set; }
     public int FollowersOnWaitingList { get; set; }

@@ -28,7 +28,8 @@ public class RegistrableTagsQueryHandler : IRequestHandler<RegistrableTagsQuery,
                                          {
                                              TagId = rbt.Id,
                                              Tag = rbt.Tag,
-                                             Text = rbt.FallbackText
+                                             Text = rbt.FallbackText,
+                                             SortKey = rbt.SortKey
                                          })
                           .ToListAsync(cancellationToken);
     }
@@ -39,4 +40,5 @@ public record RegistrableTagDisplayItem
     public Guid TagId { get; set; }
     public string Text { get; set; } = null!;
     public string Tag { get; set; } = null!;
+    public int SortKey { get; set; }
 }
