@@ -13,8 +13,7 @@ export class OverviewService
   private singleRegistrables: BehaviorSubject<SingleRegistrable[] | null> = new BehaviorSubject(null);
   private doubleRegistrables: BehaviorSubject<DoubleRegistrable[] | null> = new BehaviorSubject(null);
 
-  constructor(private http: HttpClient,
-    private eventService: EventService) { }
+  constructor(private http: HttpClient, private eventService: EventService) { }
 
   get registrableTags$(): Observable<RegistrableTagDisplayItem[]>
   {
@@ -33,35 +32,37 @@ export class OverviewService
 
   fetchRegistrableTags(): Observable<RegistrableTagDisplayItem[]>
   {
-    return this.http.get<RegistrableTagDisplayItem[]>(`https://localhost:5001/api/events/${this.eventService.selected}/RegistrableTags`).pipe(
-      tap((response: any) =>
-      {
-        this.registrableTags.next(response);
-      })
-    );
+    return this.http.get<RegistrableTagDisplayItem[]>(`https://localhost:5001/api/events/${this.eventService.selected}/RegistrableTags`)
+      .pipe(
+        tap((response: any) =>
+        {
+          this.registrableTags.next(response);
+        })
+      );
   }
 
   fetchSingleRegistrables(): Observable<SingleRegistrable[]>
   {
-    return this.http.get<SingleRegistrable[]>(`https://localhost:5001/api/events/${this.eventService.selected}/SingleRegistrableOverview`).pipe(
-      tap((response: any) =>
-      {
-        this.singleRegistrables.next(response);
-      })
-    );
+    return this.http.get<SingleRegistrable[]>(`https://localhost:5001/api/events/${this.eventService.selected}/SingleRegistrableOverview`)
+      .pipe(
+        tap((response: any) =>
+        {
+          this.singleRegistrables.next(response);
+        })
+      );
   }
 
   fetchDoubleRegistrables(): Observable<DoubleRegistrable[]>
   {
-    return this.http.get<DoubleRegistrable[]>(`https://localhost:5001/api/events/${this.eventService.selected}/DoubleRegistrableOverview`).pipe(
-      tap((response: any) =>
-      {
-        this.doubleRegistrables.next(response);
-      })
-    );
+    return this.http.get<DoubleRegistrable[]>(`https://localhost:5001/api/events/${this.eventService.selected}/DoubleRegistrableOverview`)
+      .pipe(
+        tap((response: any) =>
+        {
+          this.doubleRegistrables.next(response);
+        })
+      );
   }
 }
-
 
 export class Registrable
 {
@@ -69,7 +70,7 @@ export class Registrable
   name: string;
   nameSecondary?: string;
   isDeletable: boolean;
-  hasWaitingList:boolean;
+  hasWaitingList: boolean;
   automaticPromotionFromWaitingList: boolean;
 }
 
@@ -106,4 +107,5 @@ export class DoubleSpotState
 {
   leader: SpotState;
   follower: SpotState;
+  linked: boolean;
 }

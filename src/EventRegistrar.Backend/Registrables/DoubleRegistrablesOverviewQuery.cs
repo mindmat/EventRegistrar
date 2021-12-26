@@ -93,7 +93,8 @@ public class DoubleRegistrablesOverviewQueryHandler : IRequestHandler<DoubleRegi
                            : SpotState.Available
                        : spot.Registration_Follower.State == RegistrationState.Paid
                            ? SpotState.Paid
-                           : SpotState.Registered
+                           : SpotState.Registered,
+                   Linked = spot.IsPartnerSpot
                };
     }
 }
@@ -110,4 +111,5 @@ public record DoubleSpotState
 {
     public SpotState Leader { get; set; }
     public SpotState Follower { get; set; }
+    public bool Linked { get; set; }
 }
