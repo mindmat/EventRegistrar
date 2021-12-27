@@ -9,7 +9,6 @@ import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDi
 @Component({
     selector: 'app-overview',
     templateUrl: './overview.component.html',
-    styleUrls: ['./overview.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush
 })

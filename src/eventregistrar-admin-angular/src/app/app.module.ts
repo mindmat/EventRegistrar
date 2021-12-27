@@ -13,7 +13,7 @@ import { mockApiServices } from 'app/mock-api';
 import { LayoutModule } from 'app/layout/layout.module';
 import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
-import { AuthModule } from '@auth0/auth0-angular';
+import { AuthHttpInterceptor, AuthModule, AuthService } from '@auth0/auth0-angular';
 import { OverviewComponent } from './modules/admin/overview/overview.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -24,6 +24,10 @@ import { FuseFindByKeyPipeModule } from '@fuse/pipes/find-by-key';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBar, MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ParticipantsDoubleComponent } from './modules/admin/participants-double/participants-double.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { BaseUrlInterceptor } from '@fuse/services/utils/baseUrl.interceptor';
+import { AuthService as AuthServiceFuse } from './core/auth/auth.service';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -33,7 +37,23 @@ const routerConfig: ExtraOptions = {
 @NgModule({
     declarations: [
         AppComponent,
-        OverviewComponent
+        OverviewComponent,
+        ParticipantsDoubleComponent
+    ],
+    providers: [
+        { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: BaseUrlInterceptor,
+            multi: true
+        },
+        AuthServiceFuse,
+        AuthService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthHttpInterceptor,
+            multi: true
+        }
     ],
     imports: [
         BrowserModule,

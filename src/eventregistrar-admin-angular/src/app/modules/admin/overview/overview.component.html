@@ -172,13 +172,13 @@
                                     <div class="z-10 absolute inset-x-0 h-6 -mt-3"
                                         [matTooltip]="(doubleRegistrable.leadersAccepted + doubleRegistrable.followersAccepted) / (doubleRegistrable.spotsAvailable * 2) | percent"
                                         [matTooltipPosition]="'above'" [matTooltipClass]="'-mb-0.5'"></div>
-                                    <mat-progress-bar class="h-0.5" [value]="100 *(doubleRegistrable.leadersAccepted + doubleRegistrable.followersAccepted) / (doubleRegistrable.spotsAvailable * 2)">
+                                    <mat-progress-bar class="h-0.5" [value]="100 * (doubleRegistrable.leadersAccepted + doubleRegistrable.followersAccepted) / (doubleRegistrable.spotsAvailable * 2)">
                                     </mat-progress-bar>
                                 </div>
 
                                 <!-- Course launch button -->
                                 <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                    <button mat-stroked-button [routerLink]="[doubleRegistrable.id]">
+                                    <button mat-stroked-button [routerLink]="[doubleRegistrable.id, 'doubleparticipants']">
                                         <span class="inline-flex items-center">
                                             Details
                                             <mat-icon class="ml-1.5 icon-size-5" [svgIcon]="'heroicons_solid:arrow-sm-right'"></mat-icon>

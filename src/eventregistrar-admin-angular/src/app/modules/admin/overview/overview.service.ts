@@ -32,7 +32,7 @@ export class OverviewService
 
   fetchRegistrableTags(): Observable<RegistrableTagDisplayItem[]>
   {
-    return this.http.get<RegistrableTagDisplayItem[]>(`https://localhost:5001/api/events/${this.eventService.selected}/RegistrableTags`)
+    return this.http.get<RegistrableTagDisplayItem[]>(`api/events/${this.eventService.selected}/RegistrableTags`)
       .pipe(
         tap((response: any) =>
         {
@@ -43,7 +43,7 @@ export class OverviewService
 
   fetchSingleRegistrables(): Observable<SingleRegistrable[]>
   {
-    return this.http.get<SingleRegistrable[]>(`https://localhost:5001/api/events/${this.eventService.selected}/SingleRegistrableOverview`)
+    return this.http.get<SingleRegistrable[]>(`api/events/${this.eventService.selected}/SingleRegistrableOverview`)
       .pipe(
         tap((response: any) =>
         {
@@ -54,7 +54,7 @@ export class OverviewService
 
   fetchDoubleRegistrables(): Observable<DoubleRegistrable[]>
   {
-    return this.http.get<DoubleRegistrable[]>(`https://localhost:5001/api/events/${this.eventService.selected}/DoubleRegistrableOverview`)
+    return this.http.get<DoubleRegistrable[]>(`api/events/${this.eventService.selected}/DoubleRegistrableOverview`)
       .pipe(
         tap((response: any) =>
         {

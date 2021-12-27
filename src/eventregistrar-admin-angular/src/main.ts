@@ -8,7 +8,7 @@ if (environment.production)
     enableProdMode();
 }
 const providers = [
-    { provide: 'BASE_URL', useValue: 'https://localhost:5001', deps: [] }
+    { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' }
 ];
 
 platformBrowserDynamic(providers).bootstrapModule(AppModule)
