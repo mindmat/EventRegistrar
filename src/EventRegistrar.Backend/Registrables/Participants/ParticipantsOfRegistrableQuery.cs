@@ -78,17 +78,20 @@ public class ParticipantsOfRegistrableQueryHandler : IRequestHandler<Participant
                                                        })
                                        .ToListAsync(cancellationToken);
 
-        return new RegistrableDisplayInfo
-               {
-                   Name = registrable.Name,
-                   NameSecondary = registrable.NameSecondary,
-                   MaximumDoubleSeats = registrable.MaximumDoubleSeats,
-                   MaximumSingleSeats = registrable.MaximumSingleSeats,
-                   MaximumAllowedImbalance = registrable.MaximumAllowedImbalance,
-                   HasWaitingList = registrable.HasWaitingList,
-                   AutomaticPromotionFromWaitingList = registrable.AutomaticPromotionFromWaitingList,
-                   Participants = participants.Where(prt => !prt.IsOnWaitingList),
-                   WaitingList = participants.Where(prt => prt.IsOnWaitingList)
-               };
+        var result = new RegistrableDisplayInfo
+                     {
+                         Name = registrable.Name,
+                         NameSecondary = registrable.NameSecondary,
+                         MaximumDoubleSeats = registrable.MaximumDoubleSeats,
+                         MaximumSingleSeats = registrable.MaximumSingleSeats,
+                         MaximumAllowedImbalance = registrable.MaximumAllowedImbalance,
+                         HasWaitingList = registrable.HasWaitingList,
+                         AutomaticPromotionFromWaitingList = registrable.AutomaticPromotionFromWaitingList,
+                         Participants = participants.Where(prt => !prt.IsOnWaitingList),
+                         WaitingList = participants.Where(prt => prt.IsOnWaitingList)
+                     };
+        result.AcceptedLeaders = result.Participants.Count(spt => spt.Leader != null);
+        result.AcceptedFollowers = result.Participants.Count(spt => spt.Follower != null);
+        return result;
     }
 }

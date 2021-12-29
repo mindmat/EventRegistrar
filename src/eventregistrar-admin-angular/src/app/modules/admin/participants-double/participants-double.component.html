@@ -7,17 +7,6 @@
             <div class="text-4xl font-extrabold tracking-tight leading-none">{{registrable.name}}</div>
             <div class="mt-1.5 text-lg text-secondary">{{registrable.nameSecondary}}</div>
         </div>
-        <!-- Actions -->
-        <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
-            <a mat-stroked-button [routerLink]="['..']">
-                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:view-boards'"></mat-icon>
-                Boards
-            </a>
-            <button class="ml-3" mat-stroked-button>
-                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:cog'"></mat-icon>
-                Settings
-            </button>
-        </div>
     </div>
 
     <!-- Main -->
@@ -27,65 +16,73 @@
         <div class="flex">
 
             <!-- Group all cdkDropList's after this point together so that the cards can be transferred between lists -->
-            <div class="flex items-start" cdkDropListGroup>
+            <div class="flex flex-wrap">
 
-                <!-- List -->
-                <!-- <ng-container *ngFor="let participants of registrable.participants; trackBy: trackByFn"> -->
-                <div class="flex-0 w-144 p-2 rounded-2xl bg-default" cdkDrag>
+                <!-- Participants -->
+                <div class="flex-0 w-144 p-2 rounded-2xl bg-default">
 
-                    <div class="flex items-center justify-between" cdkDragHandle>
+                    <div class="flex items-center justify-between">
                         <div class="font-medium">Teilnehmer</div>
-                        <!-- <div
-                                class="flex items-center w-full py-2 px-3 rounded-md cursor-text border border-transparent focus-within:bg-white focus-within:shadow-sm focus-within:border-primary dark:focus-within:bg-gray-900">
-                                <input class="w-full font-medium leading-5 bg-transparent" [spellcheck]="'false'" [value]="list.title" (focusout)="updateListTitle($event, list)"
-                                    (keydown.enter)="listTitleInput.blur()" #listTitleInput> 
-                            </div>-->
-                        <div class="flex items-center justify-center min-w-6 ml-4 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
-                            {{registrable.participants.length}}
+                        <div class="flex items-center justify-center min-w-12 ml-4 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
+                            {{registrable.acceptedLeaders}} · {{registrable.acceptedFollowers}}
                         </div>
-                        <!-- <div class="ml-1">
-                            <button class="w-8 h-8 min-h-8" mat-icon-button [matMenuTriggerFor]="listMenu">
-                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
-                            </button>
-                            <mat-menu #listMenu="matMenu">
-                                <button mat-menu-item (click)="renameList(listTitleInput)">
-                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                                    Rename list
-                                </button>
-                                <button mat-menu-item (click)="deleteList(list.id)">
-                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:trash'"></mat-icon>
-                                    Delete list
-                                </button>
-                            </mat-menu>
-                        </div> -->
                     </div>
 
-                    <!-- Cards -->
+                    <!-- Spots -->
                     <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
-                        <div [id]="'participants'" class="p-3 pb-0" cdkDropList [cdkDropListData]="registrable.participants" (cdkDropListDropped)="participantsDropped($event)">
-
-                            <!-- Card -->
+                        <div [id]="'participants'" class="p-3 pb-0">
+                            <div class="flex flex-row items-center">
+                                <div class="flex flex-col w-72 h-8 items-start mb-3 p-5 space-y-3 overflow-hidden">Leaders
+                                    <div class="flex items-center justify-center min-w-12 ml-4 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
+                                        {{registrable.acceptedLeaders}}
+                                    </div>
+                                </div>
+                                <div class="w-4"></div>
+                                <div class="flex flex-col w-72 h-8 items-start mb-3 p-5 space-y-3 overflow-hidden">Followers</div>
+                            </div>
+                            <!-- Spot -->
                             <ng-container *ngFor="let spot of registrable.participants; trackBy: trackByFn">
-                                <div class="flex flex-row space-x-4">
+                                <div class="flex flex-row items-center">
                                     <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner"></app-participant>
+                                    <div *ngIf="spot.isPartnerRegistration" class="w-4 h-6 mb-2 z-10 overflow-hidden bg-card"></div>
+                                    <div *ngIf="!spot.isPartnerRegistration" class="w-4"></div>
                                     <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner"></app-participant>
                                 </div>
                             </ng-container>
                         </div>
-
-                        <!-- New card -->
-                        <!-- <scrumboard-board-add-card (saved)="addCard(list, $event)" [buttonTitle]="list.cards.length ? 'Add another card' : 'Add a card'">
-                            </scrumboard-board-add-card> -->
                     </div>
                 </div>
-                <!-- </ng-container> -->
+
+                <!-- Waiting list -->
+                <div class="flex-0 w-144 p-2 rounded-2xl bg-default">
+
+                    <div class="flex items-center justify-between">
+                        <div class="font-medium">Warteliste</div>
+                        <!-- <div class="flex items-center justify-center min-w-12 ml-4 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
+                            {{registrable.acceptedLeaders}} · {{registrable.acceptedFollowers}}
+                        </div> -->
+                    </div>
+
+                    <!-- Spots -->
+                    <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+                        <div [id]="'participants'" class="p-3 pb-0">
+
+                            <!-- Spot -->
+                            <ng-container *ngFor="let spot of registrable.waitingList; trackBy: trackByFn">
+                                <div class="flex flex-row items-center">
+                                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner"></app-participant>
+                                    <div *ngIf="spot.isPartnerRegistration" class="w-4 h-6 mb-2 z-10 overflow-hidden bg-card"></div>
+                                    <div *ngIf="!spot.isPartnerRegistration" class="w-4 h-6 mb-2"></div>
+                                    <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner"></app-participant>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
 
             </div>
-
         </div>
-
     </div>
-
 </div>
 
 <!-- Invisible router-outlet for ScrumboardCard component -->

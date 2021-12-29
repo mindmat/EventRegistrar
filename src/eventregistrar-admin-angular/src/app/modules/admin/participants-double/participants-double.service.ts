@@ -53,6 +53,8 @@ export class RegistrableWithParticipants
   automaticPromotionFromWaitingList: boolean;
   participants: Spot[];
   waitingList: Spot[];
+  acceptedLeaders: string;
+  acceptedFollowers: string;
 }
 
 export class Spot

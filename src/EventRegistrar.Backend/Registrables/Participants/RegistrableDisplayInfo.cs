@@ -11,4 +11,6 @@ public class RegistrableDisplayInfo
     public IEnumerable<SpotDisplayInfo> Participants { get; set; } = null!;
     public IEnumerable<SpotDisplayInfo> WaitingList { get; set; } = null!;
     public bool AutomaticPromotionFromWaitingList { get; set; }
+    public int AcceptedLeaders { get; set; }
+    public int AcceptedFollowers { get; set; }
 }
