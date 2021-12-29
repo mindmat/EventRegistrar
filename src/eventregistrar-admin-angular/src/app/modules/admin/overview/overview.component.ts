@@ -53,6 +53,7 @@ export class OverviewComponent implements OnInit, OnDestroy
                 this._changeDetectorRef.markForCheck();
             });
 
+        // Get the registrables
         this.overviewService.singleRegistrables$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((singleRegistrables: SingleRegistrable[]) =>
@@ -63,7 +64,6 @@ export class OverviewComponent implements OnInit, OnDestroy
                 this._changeDetectorRef.markForCheck();
             });
 
-        // Get the courses
         this.overviewService.doubleRegistrables$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((doubleRegistrables: DoubleRegistrable[]) =>

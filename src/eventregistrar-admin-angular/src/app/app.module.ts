@@ -28,6 +28,8 @@ import { ParticipantsDoubleComponent } from './modules/admin/participants-double
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BaseUrlInterceptor } from '@fuse/services/utils/baseUrl.interceptor';
 import { AuthService as AuthServiceFuse } from './core/auth/auth.service';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ParticipantComponent } from './modules/admin/participant/participant.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -38,7 +40,8 @@ const routerConfig: ExtraOptions = {
     declarations: [
         AppComponent,
         OverviewComponent,
-        ParticipantsDoubleComponent
+        ParticipantsDoubleComponent,
+        ParticipantComponent
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },
@@ -76,6 +79,7 @@ const routerConfig: ExtraOptions = {
         MarkdownModule.forRoot({}),
 
         CommonModule,
+        DragDropModule,
         MatFormFieldModule,
         MatSelectModule,
         MatButtonModule,

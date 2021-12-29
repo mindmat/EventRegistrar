@@ -67,11 +67,13 @@ public class DoubleRegistrablesOverviewQueryHandler : IRequestHandler<DoubleRegi
                                                          && rbl.Event!.State == RegistrationForms.State.Setup,
                                               Class = rbl.Spots!.Where(spt => !spt.IsCancelled
                                                                            && !spt.IsWaitingList)
+                                                         .OrderBy(spt => spt.FirstPartnerJoined)
                                                          .Select(GetSpotState)
                                                          .FillUpIf(rbl.MaximumDoubleSeats, () => new DoubleSpotState { Leader = SpotState.Available, Follower = SpotState.Available })
                                                          .ToList(),
                                               WaitingList = rbl.Spots!.Where(spt => !spt.IsCancelled
                                                                                  && spt.IsWaitingList)
+                                                               .OrderBy(spt => spt.FirstPartnerJoined)
                                                                .Select(GetSpotState)
                                                                .ToList()
                                           });

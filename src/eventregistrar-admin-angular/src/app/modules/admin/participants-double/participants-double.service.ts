@@ -8,18 +8,18 @@ import { EventService } from '../events/event.service';
 })
 export class ParticipantsDoubleService
 {
-  private registrable: BehaviorSubject<Registrable | null> = new BehaviorSubject(null);
+  private registrable: BehaviorSubject<RegistrableWithParticipants | null> = new BehaviorSubject(null);
 
   constructor(private httpClient: HttpClient, private eventService: EventService) { }
 
-  get registrable$(): Observable<Registrable>
+  get registrable$(): Observable<RegistrableWithParticipants>
   {
     return this.registrable.asObservable();
   }
 
-  fetchParticipantsOf(registrableId: string): Observable<Registrable>
+  fetchParticipantsOf(registrableId: string): Observable<RegistrableWithParticipants>
   {
-    return this.httpClient.get<Registrable>(`api/events/${this.eventService.selected}/registrables/${registrableId}/participants`).pipe(
+    return this.httpClient.get<RegistrableWithParticipants>(`api/events/${this.eventService.selected}/registrables/${registrableId}/participants`).pipe(
       map(registrable =>
       {
         // Update the course
@@ -42,29 +42,30 @@ export class ParticipantsDoubleService
 }
 
 
-class Registrable
+export class RegistrableWithParticipants
 {
   name: string;
+  nameSecondary: string;
   maximumSingleSeats: number;
   maximumDoubleSeats: number;
   maximumAllowedImbalance: number;
   hasWaitingList: boolean;
   automaticPromotionFromWaitingList: boolean;
-  participants: Place[];
-  waitingList: Place[];
+  participants: Spot[];
+  waitingList: Spot[];
 }
 
-class Place
+export class Spot
 {
-  leader: Registration;
-  follower: Registration;
+  leader?: Registration;
+  follower?: Registration;
   isOnWaitingList: boolean;
   isPartnerRegistration: boolean;
-  placeholderPartner: string;
+  placeholderPartner?: string;
   joined: Date;
 }
 
-class Registration
+export class Registration
 {
   id: string;
   firstName: string;
