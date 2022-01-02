@@ -92,6 +92,8 @@ public class ParticipantsOfRegistrableQueryHandler : IRequestHandler<Participant
                      };
         result.AcceptedLeaders = result.Participants.Count(spt => spt.Leader != null);
         result.AcceptedFollowers = result.Participants.Count(spt => spt.Follower != null);
+        result.LeadersOnWaitingList = result.WaitingList.Count(spt => spt.Leader != null);
+        result.FollowersOnWaitingList = result.WaitingList.Count(spt => spt.Follower != null);
         return result;
     }
 }

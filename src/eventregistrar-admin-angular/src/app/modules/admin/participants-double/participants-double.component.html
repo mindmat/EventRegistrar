@@ -21,24 +21,25 @@
                 <!-- Participants -->
                 <div class="flex-0 w-144 p-2 rounded-2xl bg-default">
 
-                    <div class="flex items-center justify-between">
-                        <div class="font-medium">Teilnehmer</div>
-                        <div class="flex items-center justify-center min-w-12 ml-4 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
-                            {{registrable.acceptedLeaders}} · {{registrable.acceptedFollowers}}
-                        </div>
-                    </div>
+                    <div class="font-medium">Teilnehmer</div>
 
                     <!-- Spots -->
                     <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                         <div [id]="'participants'" class="p-3 pb-0">
-                            <div class="flex flex-row items-center">
-                                <div class="flex flex-col w-72 h-8 items-start mb-3 p-5 space-y-3 overflow-hidden">Leaders
-                                    <div class="flex items-center justify-center min-w-12 ml-4 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
+                            <!-- Header -->
+                            <div class="flex flex-row items-center m-3 space-x-4">
+                                <div class="flex flex-row w-72">
+                                    <div class="font-normal">Leader</div>
+                                    <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
                                         {{registrable.acceptedLeaders}}
                                     </div>
                                 </div>
-                                <div class="w-4"></div>
-                                <div class="flex flex-col w-72 h-8 items-start mb-3 p-5 space-y-3 overflow-hidden">Followers</div>
+                                <div class="flex flex-row w-72">
+                                    <div class="font-normal">Followers</div>
+                                    <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
+                                        {{registrable.acceptedFollowers}}
+                                    </div>
+                                </div>
                             </div>
                             <!-- Spot -->
                             <ng-container *ngFor="let spot of registrable.participants; trackBy: trackByFn">
@@ -56,16 +57,26 @@
                 <!-- Waiting list -->
                 <div class="flex-0 w-144 p-2 rounded-2xl bg-default">
 
-                    <div class="flex items-center justify-between">
-                        <div class="font-medium">Warteliste</div>
-                        <!-- <div class="flex items-center justify-center min-w-12 ml-4 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
-                            {{registrable.acceptedLeaders}} · {{registrable.acceptedFollowers}}
-                        </div> -->
-                    </div>
+                    <div class="font-medium">Warteliste</div>
 
                     <!-- Spots -->
                     <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                         <div [id]="'participants'" class="p-3 pb-0">
+                            <!-- header -->
+                            <div class="flex flex-row items-center m-3 space-x-4">
+                                <div class="flex flex-row w-72">
+                                    <div class="font-normal">Leader</div>
+                                    <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
+                                        {{registrable.leadersOnWaitingList}}
+                                    </div>
+                                </div>
+                                <div class="flex flex-row w-72">
+                                    <div class="font-normal">Followers</div>
+                                    <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
+                                        {{registrable.followersOnWaitingList}}
+                                    </div>
+                                </div>
+                            </div>
 
                             <!-- Spot -->
                             <ng-container *ngFor="let spot of registrable.waitingList; trackBy: trackByFn">

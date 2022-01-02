@@ -13,4 +13,6 @@ public class RegistrableDisplayInfo
     public bool AutomaticPromotionFromWaitingList { get; set; }
     public int AcceptedLeaders { get; set; }
     public int AcceptedFollowers { get; set; }
+    public int LeadersOnWaitingList { get; set; }
+    public int FollowersOnWaitingList { get; set; }
 }
