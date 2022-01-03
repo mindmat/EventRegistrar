@@ -24,12 +24,13 @@ import { FuseFindByKeyPipeModule } from '@fuse/pipes/find-by-key';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBar, MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ParticipantsDoubleComponent } from './modules/admin/participants-double/participants-double.component';
+import { ParticipantsDoubleComponent } from './modules/admin/participants/participants-double/participants-double.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BaseUrlInterceptor } from '@fuse/services/utils/baseUrl.interceptor';
 import { AuthService as AuthServiceFuse } from './core/auth/auth.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { ParticipantComponent } from './modules/admin/participant/participant.component';
+import { ParticipantComponent } from './modules/admin/participants/participant/participant.component';
+import { ParticipantsSingleComponent } from './modules/admin/participants/participants-single/participants-single.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -41,7 +42,8 @@ const routerConfig: ExtraOptions = {
         AppComponent,
         OverviewComponent,
         ParticipantsDoubleComponent,
-        ParticipantComponent
+        ParticipantComponent,
+        ParticipantsSingleComponent
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },

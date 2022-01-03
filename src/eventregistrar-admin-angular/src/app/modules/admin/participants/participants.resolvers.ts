@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, merge, Observable, throwError } from 'rxjs';
-import { ParticipantsDoubleService } from './participants-double.service';
+import { ParticipantsService } from './participants.service';
 
 @Injectable({
     providedIn: 'root'
 })
-export class ParticipantsDoubleResolver implements Resolve<any>
+export class ParticipantsResolver implements Resolve<any>
 {
-    constructor(private router: Router, private participantsService: ParticipantsDoubleService)
+    constructor(private router: Router, private participantsService: ParticipantsService)
     {
     }
 

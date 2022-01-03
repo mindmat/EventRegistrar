@@ -1,10 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Registration } from '../participants-double/participants-double.service';
+import { Registration } from '../participants.service';
 
 @Component({
   selector: 'app-participant',
-  templateUrl: './participant.component.html',
-  styleUrls: ['./participant.component.scss']
+  templateUrl: './participant.component.html'
 })
 export class ParticipantComponent implements OnInit
 {

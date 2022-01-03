@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ParticipantsDoubleService, RegistrableWithParticipants, Spot, Registration } from './participants-double.service';
+import { ParticipantsService, RegistrableWithParticipants, Spot, Registration } from '../participants.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -9,14 +9,14 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 })
 export class ParticipantsDoubleComponent implements OnInit
 {
-  constructor(private service: ParticipantsDoubleService, private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private service: ParticipantsService, private changeDetectorRef: ChangeDetectorRef) { }
 
   private unsubscribeAll: Subject<any> = new Subject<any>();
   registrable: RegistrableWithParticipants;
 
   ngOnInit(): void
   {
-    // Get the tags
+    // Get the participants
     this.service.registrable$
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe((registrable: RegistrableWithParticipants) =>

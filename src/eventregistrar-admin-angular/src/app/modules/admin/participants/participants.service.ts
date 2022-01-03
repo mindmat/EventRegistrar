@@ -6,7 +6,7 @@ import { EventService } from '../events/event.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ParticipantsDoubleService
+export class ParticipantsService
 {
   private registrable: BehaviorSubject<RegistrableWithParticipants | null> = new BehaviorSubject(null);
 
@@ -28,14 +28,14 @@ export class ParticipantsDoubleService
         // Return the course
         return registrable;
       }),
-      switchMap(course =>
+      switchMap(registrable =>
       {
-        if (!course)
+        if (!registrable)
         {
-          return throwError(() => 'Could not find course with id of ' + registrableId + '!');
+          return throwError(() => 'Could not find registrable with id of ' + registrableId + '!');
         }
 
-        return of(course);
+        return of(registrable);
       })
     );
   }
