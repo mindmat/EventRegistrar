@@ -26,7 +26,7 @@
     <!-- Main -->
     <div class="flex flex-auto p-6 sm:p-10">
 
-        <div class="flex flex-col flex-auto w-full max-w-xs sm:max-w-5xl mx-auto">
+        <div class="flex flex-col flex-auto w-full max-w-xs sm:max-w-7xl mx-auto">
             <!-- Filters -->
             <div class="flex flex-col sm:flex-row items-center justify-between w-full max-w-xs sm:max-w-none">
                 <mat-form-field class="fuse-mat-no-subscript w-full sm:w-36">
@@ -41,14 +41,13 @@
                     <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
                     <input (input)="filterByQuery(query.value)" placeholder="Search by title or description" matInput #query>
                 </mat-form-field>
-                <!-- <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" (change)="toggleCompleted($event)">
-                    Hide completed
-                </mat-slide-toggle> -->
             </div>
 
-            <!-- Double Registrables -->
+            <!-- Registrables -->
             <ng-container *ngIf="this.filteredDoubleRegistrables.length">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 sm:mt-10">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-8 sm:mt-10">
+
+                    <!-- Double Registrables -->
                     <ng-container *ngFor="let doubleRegistrable of filteredDoubleRegistrables; trackBy: trackByFn">
                         <!-- Double Registrable -->
                         <div class="flex flex-col h-96 shadow rounded-2xl overflow-hidden bg-card">
@@ -188,12 +187,8 @@
                             </div>
                         </div>
                     </ng-container>
-                </div>
-            </ng-container>
 
-            <!-- Single Registrables -->
-            <ng-container *ngIf="this.filteredSingleRegistrables.length">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 sm:mt-10">
+                    <!-- Single Registrables -->
                     <ng-container *ngFor="let singleRegistrable of filteredSingleRegistrables; trackBy: trackByFn">
                         <!-- Single Registrable -->
                         <div class="flex flex-col h-96 shadow rounded-2xl overflow-hidden bg-card">
@@ -202,9 +197,9 @@
                                     <!-- Registrable tags -->
                                     <ng-container *ngIf="(singleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
                                         <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
-                                                                    'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.sortKey === 2,
-                                                                    'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.sortKey === 3,
-                                                                    'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.sortKey === 4}">
+                                                                                        'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.sortKey === 2,
+                                                                                        'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.sortKey === 3,
+                                                                                        'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.sortKey === 4}">
                                             {{category.text}}
                                         </div>
                                     </ng-container>
@@ -284,7 +279,7 @@
 
                                 <!-- Course launch button -->
                                 <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                    <button mat-stroked-button [routerLink]="[singleRegistrable.id]">
+                                    <button mat-stroked-button [routerLink]="[singleRegistrable.id, 'singleparticipants']">
                                         <span class="inline-flex items-center">
                                             Details
                                             <mat-icon class="ml-1.5 icon-size-5" [svgIcon]="'heroicons_solid:arrow-sm-right'">
