@@ -8,6 +8,8 @@ import { OverviewResolver } from './modules/admin/overview/overview.resolvers';
 import { ParticipantsDoubleComponent } from './modules/admin/participants/participants-double/participants-double.component';
 import { ParticipantsResolver } from './modules/admin/participants/participants.resolvers';
 import { ParticipantsSingleComponent } from './modules/admin/participants/participants-single/participants-single.component';
+import { RegistrationComponent } from './modules/admin/registration/registration.component';
+import { RegistrationResolver } from './modules/admin/registration/registration.resolvers';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -86,7 +88,10 @@ export const appRoutes: Route[] = [
                     { path: ':id/doubleparticipants', component: ParticipantsDoubleComponent, resolve: { initialData: ParticipantsResolver } },
                     { path: ':id/singleparticipants', component: ParticipantsSingleComponent, resolve: { initialData: ParticipantsResolver } },
                 ]
+            },
+            {
+                path: 'registration/:id', canActivate: [AuthGuard], component: RegistrationComponent, resolve: { initialData: RegistrationResolver }
             }
         ]
-    }
+    },
 ];

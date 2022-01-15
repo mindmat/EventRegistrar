@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { EventService } from '../../events/event.service';
 import { ParticipantsService, RegistrableWithParticipants } from '../participants.service';
 
 @Component({
@@ -11,7 +12,9 @@ export class ParticipantsSingleComponent implements OnInit
   registrable: RegistrableWithParticipants;
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
-  constructor(private service: ParticipantsService, private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private service: ParticipantsService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private eventService: EventService) { }
 
   ngOnInit(): void
   {

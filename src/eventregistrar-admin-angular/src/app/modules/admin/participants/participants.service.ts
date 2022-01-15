@@ -61,15 +61,15 @@ export class RegistrableWithParticipants
 
 export class Spot
 {
-  leader?: Registration;
-  follower?: Registration;
+  leader?: Participant;
+  follower?: Participant;
   isOnWaitingList: boolean;
   isPartnerRegistration: boolean;
   placeholderPartner?: string;
   joined: Date;
 }
 
-export class Registration
+export class Participant
 {
   id: string;
   firstName: string;

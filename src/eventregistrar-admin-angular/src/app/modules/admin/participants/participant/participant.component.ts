@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Registration } from '../participants.service';
+import { Participant } from '../participants.service';
 
 @Component({
   selector: 'app-participant',
@@ -8,7 +8,7 @@ import { Registration } from '../participants.service';
 export class ParticipantComponent implements OnInit
 {
 
-  @Input() registration?: Registration;
+  @Input() registration?: Participant;
   @Input() placeholderPartner?: string;
 
   constructor() { }

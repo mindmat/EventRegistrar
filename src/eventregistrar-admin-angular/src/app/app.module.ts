@@ -31,6 +31,11 @@ import { AuthService as AuthServiceFuse } from './core/auth/auth.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ParticipantComponent } from './modules/admin/participants/participant/participant.component';
 import { ParticipantsSingleComponent } from './modules/admin/participants/participants-single/participants-single.component';
+import { RegistrationComponent } from './modules/admin/registration/registration.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatMenuModule } from '@angular/material/menu';
+import { FuseCardComponent } from '@fuse/components/card/card.component';
+import { FuseCardModule } from '@fuse/components/card';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -43,7 +48,8 @@ const routerConfig: ExtraOptions = {
         OverviewComponent,
         ParticipantsDoubleComponent,
         ParticipantComponent,
-        ParticipantsSingleComponent
+        ParticipantsSingleComponent,
+        RegistrationComponent
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },
@@ -70,6 +76,7 @@ const routerConfig: ExtraOptions = {
         FuseConfigModule.forRoot(appConfig),
         FuseMockApiModule.forRoot(mockApiServices),
         FuseFindByKeyPipeModule,
+        FuseCardModule,
 
         // Core module of your application
         CoreModule,
@@ -90,6 +97,8 @@ const routerConfig: ExtraOptions = {
         MatInputModule,
         MatProgressBarModule,
         MatTooltipModule,
+        MatDividerModule,
+        MatMenuModule,
 
         AuthModule.forRoot({
             domain: 'eventregistrar.eu.auth0.com',

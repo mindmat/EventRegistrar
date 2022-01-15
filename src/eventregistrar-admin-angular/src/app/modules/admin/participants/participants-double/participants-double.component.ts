@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
-import { ParticipantsService, RegistrableWithParticipants, Spot, Registration } from '../participants.service';
+import { Participant, ParticipantsService, RegistrableWithParticipants, Spot } from '../participants.service';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
@@ -28,7 +28,7 @@ export class ParticipantsDoubleComponent implements OnInit
       });
   }
 
-  participantsDropped(event: CdkDragDrop<Spot | Registration>): void
+  participantsDropped(event: CdkDragDrop<Spot | Participant>): void
   {
     console.log(event);
     // Move or transfer the item
