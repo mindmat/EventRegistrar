@@ -63,7 +63,7 @@
         <!-- Column -->
         <div class="flex flex-col items-start mr-8">
 
-            <!-- About me -->
+            <!-- Participant -->
             <fuse-card class="flex flex-col max-w-80 w-full p-8">
                 <div class="text-2xl font-semibold leading-tight">Übersicht</div>
                 <hr class="w-full border-t my-6">
@@ -73,23 +73,23 @@
                         <span class="leading-none">{{registration.receivedAt | date: 'dd.MM.yy HH:mm:ss'}}</span>
                     </div>
                     <div class="flex items-center mt-4">
-                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
-                        <span class="leading-none">
-                            <a *ngIf="registration.partnerId" class="hover:underline" [routerLink]="['/registration', registration.partnerId]">{{registration.partnerOriginal}}</a>
-                            <span *ngIf="!registration.partnerId" class="italic">{{ registration.partnerOriginal }}</span>
-                        </span>
-                    </div>
-                    <div class="flex items-center mt-4">
-                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                        <span class="leading-none">{{registration.paid | number : '1.2-2'}} / {{registration.price | number : '1.2-2'}}</span>
-                    </div>
-                    <div class="flex items-center mt-4">
                         <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                         <span class="leading-none">{{registration.email}}</span>
                     </div>
                     <div class="flex items-center mt-4">
                         <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:phone'"></mat-icon>
                         <span class="leading-none">{{registration.phoneNormalized}}</span>
+                    </div>
+                    <div class="flex items-center mt-4">
+                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
+                        <span class="leading-none">{{registration.paid | number : '1.2-2'}} / {{registration.price | number : '1.2-2'}}</span>
+                    </div>
+                    <div class="flex items-center mt-4" *ngIf="registration.partnerOriginal">
+                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
+                        <span class="leading-none">
+                            <a *ngIf="registration.partnerId" class="hover:underline" [routerLink]="['/registration', registration.partnerId]">{{registration.partnerOriginal}}</a>
+                            <span *ngIf="!registration.partnerId" class="italic">{{ registration.partnerOriginal }}</span>
+                        </span>
                     </div>
                 </div>
             </fuse-card>
@@ -98,6 +98,38 @@
 
         <!-- Column -->
         <div class="flex flex-col items-start">
+
+            <!-- Spots -->
+            <fuse-card class="flex flex-col w-full px-8 pt-6 pb-4 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div class="text-2xl font-semibold leading-tight">Plätze</div>
+                    <div class="-mr-3">
+                        <button mat-icon-button [matMenuTriggerFor]="listCard04Menu">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                        </button>
+                        <mat-menu #listCard04Menu="matMenu">
+                            <button mat-menu-item>Clear activities</button>
+                        </mat-menu>
+                    </div>
+                </div>
+                <hr class="w-full border-t my-6">
+                <div class="flex flex-col space-y-4">
+                    <ng-container *ngFor="let spot of spots">
+                        <div class="flex flex-col rounded-xl bg-default shadow p-3">
+                            <div class="leading-tight">{{ spot.registrableName }}</div>
+                            <div class="text-md leading-none text-secondary mt-2">{{ spot.registrableNameSecondary }}</div>
+                            <div class="flex items-center mt-4" *ngIf="spot.partner">
+                                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
+                                <span class="text-md leading-none text-secondary">
+                                    <a *ngIf="registration.partnerId" class="hover:underline" [routerLink]="['/registration', spot.partnerRegistrationId]">{{spot.partner}}</a>
+                                    <span *ngIf="!registration.partnerId" class="italic">{{ spot.partner }}</span>
+                                </span>
+                            </div>
+                            <div class="text-md leading-none text-secondary mt-2">{{spot.firstPartnerJoined | date: 'dd.MM.yy HH:mm:ss'}}</div>
+                        </div>
+                    </ng-container>
+                </div>
+            </fuse-card>
 
         </div>
 

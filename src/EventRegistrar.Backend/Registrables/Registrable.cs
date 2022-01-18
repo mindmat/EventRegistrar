@@ -31,6 +31,13 @@ public class Registrable : Entity
     public int? ShowInMailListOrder { get; set; }
     public string? CheckinListColumn { get; set; }
     public string? Tag { get; set; }
+    public RegistrableType Type { get; set; }
+}
+
+public enum RegistrableType
+{
+    Single = 1,
+    Double = 2
 }
 
 public class RegistrableMap : EntityMap<Registrable>
@@ -54,5 +61,8 @@ public class RegistrableMap : EntityMap<Registrable>
 
         builder.Property(rbl => rbl.Tag)
                .HasMaxLength(200);
+
+        builder.Property(rbl => rbl.Type)
+               .HasDefaultValue(RegistrableType.Single);
     }
 }

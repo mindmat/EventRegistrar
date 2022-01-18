@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Spots;
@@ -30,12 +31,14 @@ public class SpotsOfRegistrationQueryHandler : IRequestHandler<SpotsOfRegistrati
                                             && (seat.RegistrationId == query.RegistrationId
                                              || seat.RegistrationId_Follower == query.RegistrationId))
                                 .Where(seat => !seat.IsCancelled)
+                                .OrderByDescending(seat => seat.Registrable!.IsCore)
+                                .ThenBy(seat => seat.Registrable!.ShowInMailListOrder)
                                 .Select(seat => new SpotDisplayItem
                                                 {
                                                     Id = seat.Id,
                                                     RegistrableId = seat.RegistrableId,
-                                                    Registrable = seat.Registrable.Name,
-                                                    SortKey = seat.Registrable.ShowInMailListOrder,
+                                                    RegistrableName = seat.Registrable.Name,
+                                                    RegistrableNameSecondary = seat.Registrable.NameSecondary,
                                                     PartnerRegistrationId = seat.IsPartnerSpot
                                                         ? seat.RegistrationId == query.RegistrationId
                                                             ? seat.RegistrationId_Follower
@@ -44,9 +47,9 @@ public class SpotsOfRegistrationQueryHandler : IRequestHandler<SpotsOfRegistrati
                                                     FirstPartnerJoined = seat.FirstPartnerJoined,
                                                     IsCore = seat.Registrable.IsCore,
                                                     Partner = seat.IsPartnerSpot ? seat.PartnerEmail : null,
-                                                    IsWaitingList = seat.IsWaitingList
+                                                    IsWaitingList = seat.IsWaitingList,
+                                                    Type = seat.Registrable.Type
                                                 })
-                                .OrderBy(seat => seat.SortKey)
                                 .ToListAsync(cancellationToken);
 
         foreach (var spot in spots.Where(spot => spot.PartnerRegistrationId != null))

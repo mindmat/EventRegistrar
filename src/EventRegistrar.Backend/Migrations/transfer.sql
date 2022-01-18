@@ -58,7 +58,8 @@ INSERT INTO [dbo].[Registrables]
            ,[Price]
            ,[ReducedPrice]
            ,[ShowInMailListOrder]
-           ,[CheckinListColumn])
+           ,[CheckinListColumn]
+           ,[Type])
 SELECT [Id]
       ,[EventId]
       ,[HasWaitingList]
@@ -72,6 +73,7 @@ SELECT [Id]
       ,[ReducedPrice]
       ,[ShowInMailListOrder]
       ,[CheckinListColumn]
+      ,[Type] = CASE WHEN [MaximumDoubleSeats] IS NULL THEN 1 ELSE 2 END
   FROM [AZURE_ER].[EventRegistrator].[dbo].[Registrables]
 
 INSERT INTO [dbo].[RegistrationForms]

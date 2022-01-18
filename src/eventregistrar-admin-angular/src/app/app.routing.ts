@@ -85,8 +85,8 @@ export const appRoutes: Route[] = [
                 path: 'overview',
                 children: [
                     { path: '', component: OverviewComponent, resolve: { initialData: OverviewResolver } },
-                    { path: ':id/doubleparticipants', component: ParticipantsDoubleComponent, resolve: { initialData: ParticipantsResolver } },
-                    { path: ':id/singleparticipants', component: ParticipantsSingleComponent, resolve: { initialData: ParticipantsResolver } },
+                    { path: ':id/double/participants', component: ParticipantsDoubleComponent, resolve: { initialData: ParticipantsResolver } },
+                    { path: ':id/single/participants', component: ParticipantsSingleComponent, resolve: { initialData: ParticipantsResolver } },
                 ]
             },
             {

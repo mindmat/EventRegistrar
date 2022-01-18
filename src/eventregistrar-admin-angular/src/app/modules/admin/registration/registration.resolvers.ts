@@ -1,20 +1,27 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
-import { catchError, merge, Observable, throwError } from 'rxjs';
+import { catchError, combineLatest, merge, Observable, throwError } from 'rxjs';
 import { RegistrationService } from './registration.service';
+import { SpotsService } from './spots/spots.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RegistrationResolver implements Resolve<any>
 {
-    constructor(private router: Router, private registrationService: RegistrationService)
+    constructor(private router: Router,
+        private registrationService: RegistrationService,
+        private spotService: SpotsService)
     {
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {
-        return this.registrationService.fetchRegistration(route.paramMap.get('id'))
+        const id = route.paramMap.get('id');
+        return combineLatest(
+            this.registrationService.fetchRegistration(id),
+            this.spotService.fetchSpotsOfRegistration(id)
+        )
             .pipe(
                 // Error here means the requested task is not available
                 catchError((error) =>
