@@ -28,7 +28,7 @@ public class SeatMap : EntityMap<Seat>
 {
     protected override void ConfigureEntity(EntityTypeBuilder<Seat> builder)
     {
-        builder.ToTable("Seats");
+        builder.ToTable("Spots");
 
         builder.HasOne(seat => seat.Registrable)
                .WithMany(rbl => rbl.Spots)

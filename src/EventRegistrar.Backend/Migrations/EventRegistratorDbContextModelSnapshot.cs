@@ -2128,7 +2128,7 @@ namespace EventRegistrar.Backend.Migrations
 
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
 
-                    b.ToTable("Seats", (string)null);
+                    b.ToTable("Spots", (string)null);
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Events.Event", b =>

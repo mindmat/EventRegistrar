@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventRegistrar.Backend.Migrations
 {
     [DbContext(typeof(EventRegistratorDbContext))]
-    [Migration("20211218114902_Initial")]
+    [Migration("20220123195249_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -1292,7 +1292,8 @@ namespace EventRegistrar.Backend.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("CheckinListColumn")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<Guid>("EventId")
                         .HasColumnType("uniqueidentifier");
@@ -1314,7 +1315,12 @@ namespace EventRegistrar.Backend.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("NameSecondary")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<decimal?>("Price")
                         .HasPrecision(18, 2)
@@ -1338,6 +1344,15 @@ namespace EventRegistrar.Backend.Migrations
 
                     b.Property<int?>("ShowInMailListOrder")
                         .HasColumnType("int");
+
+                    b.Property<string>("Tag")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Type")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(1);
 
                     b.HasKey("Id");
 
@@ -1393,6 +1408,54 @@ namespace EventRegistrar.Backend.Migrations
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
 
                     b.ToTable("SpotMailLines", (string)null);
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Registrables.Tags.RegistrableTag", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FallbackText")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("Sequence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
+
+                    b.Property<int>("SortKey")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Tag")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("Sequence")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
+
+                    b.ToTable("RegistrableTags", (string)null);
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.RegistrationForms.FormPaths.FormPath", b =>
@@ -2067,7 +2130,7 @@ namespace EventRegistrar.Backend.Migrations
 
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
 
-                    b.ToTable("Seats", (string)null);
+                    b.ToTable("Spots", (string)null);
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Events.Event", b =>
@@ -2387,6 +2450,17 @@ namespace EventRegistrar.Backend.Migrations
                         .IsRequired();
 
                     b.Navigation("Registrable");
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Registrables.Tags.RegistrableTag", b =>
+                {
+                    b.HasOne("EventRegistrar.Backend.Events.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.RegistrationForms.FormPaths.FormPath", b =>

@@ -117,63 +117,26 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RegistrableSoldOut" xml:space="preserve">
-    <value>{0} ist leider ausverkauft</value>
-    <comment>{0}: Registrable name</comment>
-  </data>
-  <data name="LastName" xml:space="preserve">
-    <value>Nachname</value>
-  </data>
-  <data name="FirstName" xml:space="preserve">
-    <value>Vorname</value>
-  </data>
   <data name="EMail" xml:space="preserve">
     <value>E-Mail</value>
   </data>
-  <data name="Phone" xml:space="preserve">
-    <value>Phone</value>
-  </data>
-  <data name="EventRegistrar_Backend_Mailing_Import_ImportedMailAssigned" xml:space="preserve">
-    <value>Mail erhalten</value>
-  </data>
-  <data name="EventRegistrar_Backend_Mailing_MailReleased" xml:space="preserve">
-    <value>Mail freigegeben</value>
-  </data>
-  <data name="EventRegistrar_Backend_PhoneMessages_SmsReceived" xml:space="preserve">
-    <value>SMS erhalten</value>
-  </data>
-  <data name="EventRegistrar_Backend_Registrations_Price_PriceChanged" xml:space="preserve">
-    <value>Preis wurde neu berechnet</value>
-  </data>
-  <data name="EventRegistrar_Backend_Registrations_Register_RegistrationProcessed" xml:space="preserve">
-    <value>Neue Registrierung erhalten</value>
+  <data name="English" xml:space="preserve">
+    <value>Englisch</value>
   </data>
   <data name="EventRegistrar_Backend_Mailing_Import_ExternalMailImported" xml:space="preserve">
     <value>Mail importiert</value>
   </data>
+  <data name="EventRegistrar_Backend_Mailing_Import_ImportedMailAssigned" xml:space="preserve">
+    <value>Mail erhalten</value>
+  </data>
+  <data name="EventRegistrar_Backend_Mailing_InvalidAddresses_InvalidEmailAddressFixed" xml:space="preserve">
+    <value>Ungültige Mailadresse korrigiert</value>
+  </data>
+  <data name="EventRegistrar_Backend_Mailing_MailReleased" xml:space="preserve">
+    <value>Mail freigegeben</value>
+  </data>
   <data name="EventRegistrar_Backend_Payments_Assignments_PaymentAssigned" xml:space="preserve">
     <value>Zahlung zugeordnet</value>
-  </data>
-  <data name="EventRegistrar_Backend_Registrables_WaitingList_SingleSpotPromotedFromWaitingList" xml:space="preserve">
-    <value>Platz von Warteliste nachgerückt</value>
-  </data>
-  <data name="EventRegistrar_Backend_Registrations_Cancel_RegistrationCancelled" xml:space="preserve">
-    <value>Anmeldung storniert</value>
-  </data>
-  <data name="EventRegistrar_Backend_Spots_SpotRemoved" xml:space="preserve">
-    <value>Platz entfernt</value>
-  </data>
-  <data name="EventRegistrar_Backend_Registrables_WaitingList_FallbackToPartyPassSet" xml:space="preserve">
-    <value>Partypass reserviert</value>
-  </data>
-  <data name="EventRegistrar_Backend_Registrations_Confirmation_SingleRegistrationPaid" xml:space="preserve">
-    <value>Einzelanmeldung bezahlt</value>
-  </data>
-  <data name="EventRegistrar_Backend_Spots_SpotAdded" xml:space="preserve">
-    <value>Platz hinzugefügt</value>
-  </data>
-  <data name="EventRegistrar_Backend_PhoneMessages_SmsSent" xml:space="preserve">
-    <value>SMS gesendet</value>
   </data>
   <data name="EventRegistrar_Backend_Payments_Assignments_PaymentUnassigned" xml:space="preserve">
     <value>Zahlungszuordnung zurückgenommen</value>
@@ -181,17 +144,35 @@
   <data name="EventRegistrar_Backend_Payments_Files_Fetch_BankStatementsFileImported" xml:space="preserve">
     <value>Kontoauszug importiert</value>
   </data>
-  <data name="EventRegistrar_Backend_Mailing_InvalidAddresses_InvalidEmailAddressFixed" xml:space="preserve">
-    <value>Ungültige Mailadresse korrigiert</value>
-  </data>
   <data name="EventRegistrar_Backend_Payments_Files_PaymentFileProcessed" xml:space="preserve">
     <value>Kontoauszug verarbeitet</value>
   </data>
   <data name="EventRegistrar_Backend_Payments_Files_Slips_PaymentSlipReceived" xml:space="preserve">
     <value>Bild von Einzahlungsschein erhalten</value>
   </data>
+  <data name="EventRegistrar_Backend_Payments_PayAtCheckin_WillPayAtCheckinSet" xml:space="preserve">
+    <value>Bezahlung am Checkin</value>
+  </data>
+  <data name="EventRegistrar_Backend_PhoneMessages_SmsReceived" xml:space="preserve">
+    <value>SMS erhalten</value>
+  </data>
+  <data name="EventRegistrar_Backend_PhoneMessages_SmsSent" xml:space="preserve">
+    <value>SMS gesendet</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrables_WaitingList_FallbackToPartyPassSet" xml:space="preserve">
+    <value>Partypass reserviert</value>
+  </data>
   <data name="EventRegistrar_Backend_Registrables_WaitingList_PartnerSpotPromotedFromWaitingList" xml:space="preserve">
     <value>Partneranmeldung von Warteliste nachgerückt</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrables_WaitingList_Promotion_AutomaticPromotionActivated" xml:space="preserve">
+    <value>Automatische Nachrücken aktiviert</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrables_WaitingList_SingleSpotPromotedFromWaitingList" xml:space="preserve">
+    <value>Platz von Warteliste nachgerückt</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrations_Cancel_RegistrationCancelled" xml:space="preserve">
+    <value>Anmeldung storniert</value>
   </data>
   <data name="EventRegistrar_Backend_Registrations_Confirmation_PartnerRegistrationPaid" xml:space="preserve">
     <value>Partneranmeldung bezahlt</value>
@@ -199,20 +180,29 @@
   <data name="EventRegistrar_Backend_Registrations_Confirmation_PartnerRegistrationPartiallyPaid" xml:space="preserve">
     <value>Partneranmeldung teilweise bezahlt</value>
   </data>
-  <data name="EventRegistrar_Backend_Registrations_Reductions_ReductionChanged" xml:space="preserve">
-    <value>Anspruch auf Reduktion geändert</value>
-  </data>
-  <data name="EventRegistrar_Backend_Registrables_WaitingList_Promotion_AutomaticPromotionActivated" xml:space="preserve">
-    <value>Automatische Nachrücken aktiviert</value>
-  </data>
-  <data name="EventRegistrar_Backend_Payments_PayAtCheckin_WillPayAtCheckinSet" xml:space="preserve">
-    <value>Bezahlung am Checkin</value>
+  <data name="EventRegistrar_Backend_Registrations_Confirmation_SingleRegistrationPaid" xml:space="preserve">
+    <value>Einzelanmeldung bezahlt</value>
   </data>
   <data name="EventRegistrar_Backend_Registrations_IndividualReductions_IndividualReductionAdded" xml:space="preserve">
     <value>Persönlicher Rabatt gewährt</value>
   </data>
-  <data name="English" xml:space="preserve">
-    <value>Englisch</value>
+  <data name="EventRegistrar_Backend_Registrations_Price_PriceChanged" xml:space="preserve">
+    <value>Preis wurde neu berechnet</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrations_Reductions_ReductionChanged" xml:space="preserve">
+    <value>Anspruch auf Reduktion geändert</value>
+  </data>
+  <data name="EventRegistrar_Backend_Registrations_Register_RegistrationProcessed" xml:space="preserve">
+    <value>Neue Registrierung erhalten</value>
+  </data>
+  <data name="EventRegistrar_Backend_Spots_SpotAdded" xml:space="preserve">
+    <value>Platz hinzugefügt</value>
+  </data>
+  <data name="EventRegistrar_Backend_Spots_SpotRemoved" xml:space="preserve">
+    <value>Platz entfernt</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Vorname</value>
   </data>
   <data name="Follower" xml:space="preserve">
     <value>Follower</value>
@@ -223,20 +213,36 @@
   <data name="Language" xml:space="preserve">
     <value>Sprache</value>
   </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Nachname</value>
+  </data>
   <data name="Leader" xml:space="preserve">
     <value>Leader</value>
-  </data>
-  <data name="Reduction" xml:space="preserve">
-    <value>Reduktion</value>
-  </data>
-  <data name="Role" xml:space="preserve">
-    <value>Rolle</value>
   </data>
   <data name="Partner" xml:space="preserve">
     <value>Partner</value>
   </data>
+  <data name="Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="Reduction" xml:space="preserve">
+    <value>Reduktion</value>
+  </data>
+  <data name="RegistrableSoldOut" xml:space="preserve">
+    <value>{0} ist leider ausverkauft</value>
+    <comment>{0}: Registrable name</comment>
+  </data>
   <data name="Remarks" xml:space="preserve">
     <value>Bemerkungen</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Rolle</value>
+  </data>
+  <data name="Role_Follower" xml:space="preserve">
+    <value>Follower</value>
+  </data>
+  <data name="Role_Leader" xml:space="preserve">
+    <value>Leader</value>
   </data>
   <data name="Town" xml:space="preserve">
     <value>Wohnort</value>

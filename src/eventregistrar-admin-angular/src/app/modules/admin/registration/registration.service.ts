@@ -50,6 +50,7 @@ export class Registration
   remarks: string;
   phoneNormalized: string;
   partnerOriginal: string;
+  partnerName: string;
   partnerId: string;
   isReduced: boolean;
   willPayAtCheckin: boolean;

@@ -37,9 +37,10 @@ export class SpotOfRegistration
   registrableId: string;
   registrableName: string;
   registrableNameSecondary: string;
+  roleText: string;
   partnerRegistrationId: string;
   firstPartnerJoined: Date;
-  partner: string;
+  partnerName: string;
   isCore: boolean;
   isWaitingList: boolean;
   type: RegistrableType;

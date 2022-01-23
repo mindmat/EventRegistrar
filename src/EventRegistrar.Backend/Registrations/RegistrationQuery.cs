@@ -1,15 +1,16 @@
 ﻿using EventRegistrar.Backend.Authorization;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrations;
 
-public class RegistrationQuery : IRequest<RegistrationDisplayItem>, IEventBoundRequest
+public class RegistrationQuery : IRequest<RegistrationDisplayItem?>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
     public Guid RegistrationId { get; set; }
 }
 
-public class RegistrationQueryHandler : IRequestHandler<RegistrationQuery, RegistrationDisplayItem>
+public class RegistrationQueryHandler : IRequestHandler<RegistrationQuery, RegistrationDisplayItem?>
 {
     private readonly IQueryable<Registration> _registrations;
 
@@ -18,7 +19,7 @@ public class RegistrationQueryHandler : IRequestHandler<RegistrationQuery, Regis
         _registrations = registrations;
     }
 
-    public async Task<RegistrationDisplayItem> Handle(RegistrationQuery query, CancellationToken cancellationToken)
+    public async Task<RegistrationDisplayItem?> Handle(RegistrationQuery query, CancellationToken cancellationToken)
     {
         var registration = await _registrations.Where(reg => reg.EventId == query.EventId
                                                           && reg.Id == query.RegistrationId)
@@ -29,7 +30,7 @@ public class RegistrationQueryHandler : IRequestHandler<RegistrationQuery, Regis
                                                                   Price = reg.Price,
                                                                   Status = reg.State,
                                                                   StatusText = reg.State.ToString(),
-                                                                  Paid = (decimal?)reg.Payments.Sum(asn =>
+                                                                  Paid = (decimal?)reg.Payments!.Sum(asn =>
                                                                       asn.PayoutRequestId == null
                                                                           ? asn.Amount
                                                                           : -asn.Amount) ?? 0m,
@@ -42,11 +43,14 @@ public class RegistrationQueryHandler : IRequestHandler<RegistrationQuery, Regis
                                                                   LastName = reg.RespondentLastName,
                                                                   SoldOutMessage = reg.SoldOutMessage,
                                                                   FallbackToPartyPass = reg.FallbackToPartyPass,
-                                                                  SmsCount = reg.Sms.Count,
+                                                                  SmsCount = reg.Sms!.Count,
                                                                   PhoneNormalized = reg.PhoneNormalized,
                                                                   PartnerOriginal = reg.PartnerNormalized == null
                                                                       ? null
                                                                       : reg.PartnerOriginal,
+                                                                  PartnerName = reg.RegistrationId_Partner == null
+                                                                      ? null
+                                                                      : $"{reg.Registration_Partner!.RespondentFirstName} {reg.Registration_Partner.RespondentLastName}",
                                                                   PartnerId = reg.RegistrationId_Partner,
                                                                   IsReduced = reg.IsReduced,
                                                                   WillPayAtCheckin = reg.WillPayAtCheckin

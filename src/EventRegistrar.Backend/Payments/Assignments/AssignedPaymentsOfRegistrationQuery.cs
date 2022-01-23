@@ -11,8 +11,7 @@ public class AssignedPaymentsOfRegistrationQuery : IRequest<IEnumerable<Assigned
     public Guid RegistrationId { get; set; }
 }
 
-public class AssignedPaymentsOfRegistrationQueryHandler : IRequestHandler<AssignedPaymentsOfRegistrationQuery,
-    IEnumerable<AssignedPaymentDisplayItem>>
+public class AssignedPaymentsOfRegistrationQueryHandler : IRequestHandler<AssignedPaymentsOfRegistrationQuery, IEnumerable<AssignedPaymentDisplayItem>>
 {
     private readonly IQueryable<PaymentAssignment> _paymentsAssignments;
 
@@ -24,17 +23,16 @@ public class AssignedPaymentsOfRegistrationQueryHandler : IRequestHandler<Assign
     public async Task<IEnumerable<AssignedPaymentDisplayItem>> Handle(AssignedPaymentsOfRegistrationQuery query,
                                                                       CancellationToken cancellationToken)
     {
-        return await _paymentsAssignments.Where(pya => pya.ReceivedPayment.PaymentFile.EventId == query.EventId
+        return await _paymentsAssignments.Where(pya => pya.ReceivedPayment!.PaymentFile!.EventId == query.EventId
                                                     && pya.RegistrationId == query.RegistrationId
                                                     && pya.ReceivedPayment.CreditDebitType == CreditDebit.CRDT)
                                          .Select(pya => new AssignedPaymentDisplayItem
                                                         {
                                                             PaymentAssignmentId = pya.Id,
                                                             Amount = pya.Amount,
-                                                            Currency = pya.ReceivedPayment.Currency,
+                                                            Currency = pya.ReceivedPayment!.Currency,
                                                             BookingDate = pya.ReceivedPayment.BookingDate,
-                                                            PaymentAssignmentId_Counter =
-                                                                pya.PaymentAssignmentId_Counter,
+                                                            PaymentAssignmentId_Counter = pya.PaymentAssignmentId_Counter,
                                                             PaymentId_Repayment = pya.PaymentId_Repayment
                                                         })
                                          .ToListAsync(cancellationToken);

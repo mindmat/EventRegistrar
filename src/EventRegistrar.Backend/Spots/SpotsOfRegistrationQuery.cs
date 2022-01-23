@@ -1,4 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 
 using MediatR;
@@ -13,52 +15,53 @@ public class SpotsOfRegistrationQuery : IRequest<IEnumerable<SpotDisplayItem>>, 
 
 public class SpotsOfRegistrationQueryHandler : IRequestHandler<SpotsOfRegistrationQuery, IEnumerable<SpotDisplayItem>>
 {
-    private readonly IQueryable<Registration> _registrations;
+    private readonly EnumTranslator _enumTranslator;
     private readonly IQueryable<Seat> _seats;
 
     public SpotsOfRegistrationQueryHandler(IQueryable<Seat> seats,
-                                           IQueryable<Registration> registrations)
+                                           EnumTranslator enumTranslator)
     {
         _seats = seats;
-        _registrations = registrations;
+        _enumTranslator = enumTranslator;
     }
 
     public async Task<IEnumerable<SpotDisplayItem>> Handle(SpotsOfRegistrationQuery query,
                                                            CancellationToken cancellationToken)
     {
-        var spots = await _seats.Where(seat => (seat.Registration!.EventId == query.EventId ||
-                                                seat.Registration_Follower!.EventId == query.EventId)
-                                            && (seat.RegistrationId == query.RegistrationId
-                                             || seat.RegistrationId_Follower == query.RegistrationId))
-                                .Where(seat => !seat.IsCancelled)
-                                .OrderByDescending(seat => seat.Registrable!.IsCore)
-                                .ThenBy(seat => seat.Registrable!.ShowInMailListOrder)
-                                .Select(seat => new SpotDisplayItem
+        var spots = await _seats.Where(spot => (spot.Registration!.EventId == query.EventId
+                                             || spot.Registration_Follower!.EventId == query.EventId)
+                                            && (spot.RegistrationId == query.RegistrationId
+                                             || spot.RegistrationId_Follower == query.RegistrationId))
+                                .Where(spot => !spot.IsCancelled)
+                                .OrderByDescending(spot => spot.Registrable!.IsCore)
+                                .ThenBy(spot => spot.Registrable!.ShowInMailListOrder)
+                                .Select(spot => new SpotDisplayItem
                                                 {
-                                                    Id = seat.Id,
-                                                    RegistrableId = seat.RegistrableId,
-                                                    RegistrableName = seat.Registrable.Name,
-                                                    RegistrableNameSecondary = seat.Registrable.NameSecondary,
-                                                    PartnerRegistrationId = seat.IsPartnerSpot
-                                                        ? seat.RegistrationId == query.RegistrationId
-                                                            ? seat.RegistrationId_Follower
-                                                            : seat.RegistrationId
+                                                    Id = spot.Id,
+                                                    RegistrableId = spot.RegistrableId,
+                                                    RegistrableName = spot.Registrable!.Name,
+                                                    RegistrableNameSecondary = spot.Registrable.NameSecondary,
+                                                    PartnerRegistrationId = spot.IsPartnerSpot
+                                                        ? spot.RegistrationId == query.RegistrationId
+                                                            ? spot.RegistrationId_Follower
+                                                            : spot.RegistrationId
                                                         : null,
-                                                    FirstPartnerJoined = seat.FirstPartnerJoined,
-                                                    IsCore = seat.Registrable.IsCore,
-                                                    Partner = seat.IsPartnerSpot ? seat.PartnerEmail : null,
-                                                    IsWaitingList = seat.IsWaitingList,
-                                                    Type = seat.Registrable.Type
+                                                    FirstPartnerJoined = spot.FirstPartnerJoined,
+                                                    IsCore = spot.Registrable.IsCore,
+                                                    RoleText = spot.Registrable.Type == RegistrableType.Double
+                                                        ? _enumTranslator.Translate(spot.RegistrationId == query.RegistrationId
+                                                            ? Role.Leader
+                                                            : Role.Follower)
+                                                        : null,
+                                                    PartnerName = spot.IsPartnerSpot
+                                                        ? spot.RegistrationId == query.RegistrationId
+                                                            ? $"{spot.Registration_Follower!.RespondentFirstName} {spot.Registration_Follower.RespondentLastName}"
+                                                            : $"{spot.Registration!.RespondentFirstName} {spot.Registration.RespondentLastName}"
+                                                        : null,
+                                                    IsWaitingList = spot.IsWaitingList,
+                                                    Type = spot.Registrable.Type
                                                 })
                                 .ToListAsync(cancellationToken);
-
-        foreach (var spot in spots.Where(spot => spot.PartnerRegistrationId != null))
-        {
-            var names = await _registrations.Where(reg => reg.Id == spot.PartnerRegistrationId)
-                                            .Select(reg => new { reg.RespondentFirstName, reg.RespondentLastName })
-                                            .FirstOrDefaultAsync(cancellationToken);
-            spot.Partner = $"{names.RespondentFirstName} {names.RespondentLastName}";
-        }
 
         return spots;
     }

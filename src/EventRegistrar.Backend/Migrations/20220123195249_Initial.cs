@@ -276,17 +276,20 @@ namespace EventRegistrar.Backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    NameSecondary = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     HasWaitingList = table.Column<bool>(type: "bit", nullable: false),
                     AutomaticPromotionFromWaitingList = table.Column<bool>(type: "bit", nullable: false),
                     IsCore = table.Column<bool>(type: "bit", nullable: false),
                     MaximumAllowedImbalance = table.Column<int>(type: "int", nullable: true),
                     MaximumDoubleSeats = table.Column<int>(type: "int", nullable: true),
                     MaximumSingleSeats = table.Column<int>(type: "int", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
                     ReducedPrice = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
                     ShowInMailListOrder = table.Column<int>(type: "int", nullable: true),
-                    CheckinListColumn = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CheckinListColumn = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Tag = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Type = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     Sequence = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
@@ -297,6 +300,31 @@ namespace EventRegistrar.Backend.Migrations
                         .Annotation("SqlServer:Clustered", false);
                     table.ForeignKey(
                         name: "FK_Registrables_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RegistrableTags",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Tag = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    FallbackText = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    SortKey = table.Column<int>(type: "int", nullable: false),
+                    Sequence = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RegistrableTags", x => x.Id)
+                        .Annotation("SqlServer:Clustered", false);
+                    table.ForeignKey(
+                        name: "FK_RegistrableTags_Events_EventId",
                         column: x => x.EventId,
                         principalTable: "Events",
                         principalColumn: "Id",
@@ -870,45 +898,6 @@ namespace EventRegistrar.Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Seats",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RegistrableId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RegistrationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    RegistrationId_Follower = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    FirstPartnerJoined = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsCancelled = table.Column<bool>(type: "bit", nullable: false),
-                    IsPartnerSpot = table.Column<bool>(type: "bit", nullable: false),
-                    IsWaitingList = table.Column<bool>(type: "bit", nullable: false),
-                    PartnerEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Sequence = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Seats", x => x.Id)
-                        .Annotation("SqlServer:Clustered", false);
-                    table.ForeignKey(
-                        name: "FK_Seats_Registrables_RegistrableId",
-                        column: x => x.RegistrableId,
-                        principalTable: "Registrables",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Seats_Registrations_RegistrationId",
-                        column: x => x.RegistrationId,
-                        principalTable: "Registrations",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Seats_Registrations_RegistrationId_Follower",
-                        column: x => x.RegistrationId_Follower,
-                        principalTable: "Registrations",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Sms",
                 columns: table => new
                 {
@@ -938,6 +927,45 @@ namespace EventRegistrar.Backend.Migrations
                     table.ForeignKey(
                         name: "FK_Sms_Registrations_RegistrationId",
                         column: x => x.RegistrationId,
+                        principalTable: "Registrations",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Spots",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RegistrableId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RegistrationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    RegistrationId_Follower = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    FirstPartnerJoined = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsCancelled = table.Column<bool>(type: "bit", nullable: false),
+                    IsPartnerSpot = table.Column<bool>(type: "bit", nullable: false),
+                    IsWaitingList = table.Column<bool>(type: "bit", nullable: false),
+                    PartnerEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Sequence = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Spots", x => x.Id)
+                        .Annotation("SqlServer:Clustered", false);
+                    table.ForeignKey(
+                        name: "FK_Spots_Registrables_RegistrableId",
+                        column: x => x.RegistrableId,
+                        principalTable: "Registrables",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Spots_Registrations_RegistrationId",
+                        column: x => x.RegistrationId,
+                        principalTable: "Registrations",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Spots_Registrations_RegistrationId_Follower",
+                        column: x => x.RegistrationId_Follower,
                         principalTable: "Registrations",
                         principalColumn: "Id");
                 });
@@ -1502,6 +1530,18 @@ namespace EventRegistrar.Backend.Migrations
                 .Annotation("SqlServer:Clustered", true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_RegistrableTags_EventId",
+                table: "RegistrableTags",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RegistrableTags_Sequence",
+                table: "RegistrableTags",
+                column: "Sequence",
+                unique: true)
+                .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_RegistrationCancellations_RegistrationId",
                 table: "RegistrationCancellations",
                 column: "RegistrationId");
@@ -1570,28 +1610,6 @@ namespace EventRegistrar.Backend.Migrations
                 .Annotation("SqlServer:Clustered", true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Seats_RegistrableId",
-                table: "Seats",
-                column: "RegistrableId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Seats_RegistrationId",
-                table: "Seats",
-                column: "RegistrationId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Seats_RegistrationId_Follower",
-                table: "Seats",
-                column: "RegistrationId_Follower");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Seats_Sequence",
-                table: "Seats",
-                column: "Sequence",
-                unique: true)
-                .Annotation("SqlServer:Clustered", true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Sms_RegistrationId",
                 table: "Sms",
                 column: "RegistrationId");
@@ -1611,6 +1629,28 @@ namespace EventRegistrar.Backend.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_SpotMailLines_Sequence",
                 table: "SpotMailLines",
+                column: "Sequence",
+                unique: true)
+                .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Spots_RegistrableId",
+                table: "Spots",
+                column: "RegistrableId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Spots_RegistrationId",
+                table: "Spots",
+                column: "RegistrationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Spots_RegistrationId_Follower",
+                table: "Spots",
+                column: "RegistrationId_Follower");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Spots_Sequence",
+                table: "Spots",
                 column: "Sequence",
                 unique: true)
                 .Annotation("SqlServer:Clustered", true);
@@ -1691,19 +1731,22 @@ namespace EventRegistrar.Backend.Migrations
                 name: "RegistrableCompositions");
 
             migrationBuilder.DropTable(
+                name: "RegistrableTags");
+
+            migrationBuilder.DropTable(
                 name: "RegistrationCancellations");
 
             migrationBuilder.DropTable(
                 name: "Responses");
 
             migrationBuilder.DropTable(
-                name: "Seats");
-
-            migrationBuilder.DropTable(
                 name: "Sms");
 
             migrationBuilder.DropTable(
                 name: "SpotMailLines");
+
+            migrationBuilder.DropTable(
+                name: "Spots");
 
             migrationBuilder.DropTable(
                 name: "UsersInEvents");

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, combineLatest, merge, Observable, throwError } from 'rxjs';
+import { PaymentsService } from './payments/payments.service';
 import { RegistrationService } from './registration.service';
 import { SpotsService } from './spots/spots.service';
 
@@ -11,7 +12,8 @@ export class RegistrationResolver implements Resolve<any>
 {
     constructor(private router: Router,
         private registrationService: RegistrationService,
-        private spotService: SpotsService)
+        private spotService: SpotsService,
+        private paymentService: PaymentsService)
     {
     }
 
@@ -20,7 +22,8 @@ export class RegistrationResolver implements Resolve<any>
         const id = route.paramMap.get('id');
         return combineLatest(
             this.registrationService.fetchRegistration(id),
-            this.spotService.fetchSpotsOfRegistration(id)
+            this.spotService.fetchSpotsOfRegistration(id),
+            this.paymentService.fetchPaymentsOfRegistration(id)
         )
             .pipe(
                 // Error here means the requested task is not available
