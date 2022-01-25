@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Payments.Files;
 
 using MediatR;
 
@@ -13,9 +14,9 @@ internal class IgnorePaymentCommand : IRequest, IEventBoundRequest
 
 internal class IgnorePaymentCommandHandler : IRequestHandler<IgnorePaymentCommand>
 {
-    private readonly IRepository<ReceivedPayment> _payments;
+    private readonly IRepository<BankAccountBooking> _payments;
 
-    public IgnorePaymentCommandHandler(IRepository<ReceivedPayment> payments)
+    public IgnorePaymentCommandHandler(IRepository<BankAccountBooking> payments)
     {
         _payments = payments;
     }
@@ -23,7 +24,7 @@ internal class IgnorePaymentCommandHandler : IRequestHandler<IgnorePaymentComman
     public async Task<Unit> Handle(IgnorePaymentCommand request, CancellationToken cancellationToken)
     {
         var payment = await _payments.FirstAsync(pmt => pmt.Id == request.PaymentId
-                                                     && pmt.PaymentFile.EventId == request.EventId);
+                                                     && pmt.BankAccountStatementsFile.EventId == request.EventId);
         if (payment.Ignore)
         {
             return Unit.Value;

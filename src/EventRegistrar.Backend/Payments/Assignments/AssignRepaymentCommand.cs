@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Payments.Files;
 
 using MediatR;
 
@@ -18,9 +19,9 @@ public class AssignRepaymentCommandHandler : IRequestHandler<AssignRepaymentComm
 {
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IEventBus _eventBus;
-    private readonly IQueryable<ReceivedPayment> _payments;
+    private readonly IQueryable<BankAccountBooking> _payments;
 
-    public AssignRepaymentCommandHandler(IQueryable<ReceivedPayment> payments,
+    public AssignRepaymentCommandHandler(IQueryable<BankAccountBooking> payments,
                                          IRepository<PaymentAssignment> assignments,
                                          IEventBus eventBus)
     {
@@ -32,10 +33,10 @@ public class AssignRepaymentCommandHandler : IRequestHandler<AssignRepaymentComm
     public async Task<Unit> Handle(AssignRepaymentCommand command, CancellationToken cancellationToken)
     {
         var paymentIncoming = await _payments.FirstAsync(pmt => pmt.Id == command.PaymentId_Incoming
-                                                             && pmt.PaymentFile.EventId == command.EventId,
+                                                             && pmt.BankAccountStatementsFile.EventId == command.EventId,
             cancellationToken);
         var paymentOutgoing = await _payments.FirstAsync(pmt => pmt.Id == command.PaymentId_Outgoing
-                                                             && pmt.PaymentFile.EventId == command.EventId,
+                                                             && pmt.BankAccountStatementsFile.EventId == command.EventId,
             cancellationToken);
 
         var assignment = new PaymentAssignment

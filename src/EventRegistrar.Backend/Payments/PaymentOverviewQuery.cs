@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments;
@@ -13,11 +14,11 @@ public class PaymentOverviewQuery : IRequest<PaymentOverview>, IEventBoundReques
 
 public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery, PaymentOverview>
 {
-    private readonly IQueryable<PaymentFile> _paymentFiles;
+    private readonly IQueryable<BankAccountStatementsFile> _paymentFiles;
     private readonly IQueryable<Registrable> _registrables;
     private readonly IQueryable<Registration> _registrations;
 
-    public PaymentOverviewQueryHandler(IQueryable<PaymentFile> paymentFiles,
+    public PaymentOverviewQueryHandler(IQueryable<BankAccountStatementsFile> paymentFiles,
                                        IQueryable<Registration> registrations,
                                        IQueryable<Registrable> registrables)
     {
@@ -65,16 +66,16 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
                                                                  rbl.Name,
                                                                  Price = rbl.Price.Value,
                                                                  SpotsAvailable = rbl.MaximumSingleSeats ??
-                                                                     rbl.MaximumDoubleSeats.Value * 2,
+                                                                                  rbl.MaximumDoubleSeats.Value * 2,
                                                                  LeaderCount = rbl.Spots
-                                                                     .Where(seat =>
-                                                                         !seat.IsCancelled && !seat.IsWaitingList)
-                                                                     .Count(seat => seat.RegistrationId != null),
+                                                                                  .Where(seat =>
+                                                                                      !seat.IsCancelled && !seat.IsWaitingList)
+                                                                                  .Count(seat => seat.RegistrationId != null),
                                                                  FollowerCount = rbl.Spots
-                                                                     .Where(seat =>
-                                                                         !seat.IsCancelled && !seat.IsWaitingList)
-                                                                     .Count(seat =>
-                                                                         seat.RegistrationId_Follower != null)
+                                                                                    .Where(seat =>
+                                                                                        !seat.IsCancelled && !seat.IsWaitingList)
+                                                                                    .Count(seat =>
+                                                                                        seat.RegistrationId_Follower != null)
                                                              })
                                               .ToListAsync(cancellationToken);
 

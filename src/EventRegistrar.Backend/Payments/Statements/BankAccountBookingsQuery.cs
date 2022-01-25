@@ -1,29 +1,30 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Unassigned;
 
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Statements;
 
-public class PaymentStatementsQuery : IRequest<IEnumerable<PaymentDisplayItem>>, IEventBoundRequest
+public class BankAccountBookingsQuery : IRequest<IEnumerable<PaymentDisplayItem>>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
 }
 
-public class PaymentStatementsQueryHandler : IRequestHandler<PaymentStatementsQuery, IEnumerable<PaymentDisplayItem>>
+public class BankAccountBookingsQueryHandler : IRequestHandler<BankAccountBookingsQuery, IEnumerable<PaymentDisplayItem>>
 {
-    private readonly IQueryable<ReceivedPayment> _payments;
+    private readonly IQueryable<BankAccountBooking> _payments;
 
-    public PaymentStatementsQueryHandler(IQueryable<ReceivedPayment> payments)
+    public BankAccountBookingsQueryHandler(IQueryable<BankAccountBooking> payments)
     {
         _payments = payments;
     }
 
-    public async Task<IEnumerable<PaymentDisplayItem>> Handle(PaymentStatementsQuery query,
+    public async Task<IEnumerable<PaymentDisplayItem>> Handle(BankAccountBookingsQuery query,
                                                               CancellationToken cancellationToken)
     {
         var payments = await _payments
-                             .Where(rpy => rpy.PaymentFile!.EventId == query.EventId)
+                             .Where(rpy => rpy.BankAccountStatementsFile!.EventId == query.EventId)
                              .Select(rpy => new PaymentDisplayItem
                                             {
                                                 Id = rpy.Id,

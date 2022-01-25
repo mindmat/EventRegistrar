@@ -23,7 +23,7 @@ public class AssignedPaymentsOfRegistrationQueryHandler : IRequestHandler<Assign
     public async Task<IEnumerable<AssignedPaymentDisplayItem>> Handle(AssignedPaymentsOfRegistrationQuery query,
                                                                       CancellationToken cancellationToken)
     {
-        return await _paymentsAssignments.Where(pya => pya.ReceivedPayment!.PaymentFile!.EventId == query.EventId
+        return await _paymentsAssignments.Where(pya => pya.ReceivedPayment!.BankAccountStatementsFile!.EventId == query.EventId
                                                     && pya.RegistrationId == query.RegistrationId
                                                     && pya.ReceivedPayment.CreditDebitType == CreditDebit.CRDT)
                                          .Select(pya => new AssignedPaymentDisplayItem

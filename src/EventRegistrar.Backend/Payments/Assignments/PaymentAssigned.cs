@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
@@ -15,10 +16,10 @@ public class PaymentAssigned : DomainEvent
 
 public class PaymentAssignedUserTranslation : IEventToUserTranslation<PaymentAssigned>
 {
-    private readonly IQueryable<ReceivedPayment> _payments;
+    private readonly IQueryable<BankAccountBooking> _payments;
     private readonly IQueryable<Registration> _registrations;
 
-    public PaymentAssignedUserTranslation(IQueryable<ReceivedPayment> payments,
+    public PaymentAssignedUserTranslation(IQueryable<BankAccountBooking> payments,
                                           IQueryable<Registration> registrations)
     {
         _payments = payments;

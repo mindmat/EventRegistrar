@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Registrations;
 
@@ -11,11 +12,11 @@ public class PaymentAssignment : Entity
     public Guid? RegistrationId { get; set; }
     public Registration? Registration { get; set; }
     public Guid ReceivedPaymentId { get; set; }
-    public ReceivedPayment? ReceivedPayment { get; set; }
+    public BankAccountBooking? ReceivedPayment { get; set; }
     public Guid? PaymentAssignmentId_Counter { get; set; }
     public PaymentAssignment? PaymentAssignment_Counter { get; set; }
     public Guid? PaymentId_Repayment { get; set; }
-    public ReceivedPayment? ReceivedPayment_Repayment { get; set; }
+    public BankAccountBooking? ReceivedPayment_Repayment { get; set; }
     public Guid? PayoutRequestId { get; set; }
     public PayoutRequest? PayoutRequest { get; set; }
 

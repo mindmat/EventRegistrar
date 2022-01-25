@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrations;
 
 using MediatR;
@@ -14,10 +15,10 @@ public class PossibleAssignmentsQuery : IRequest<IEnumerable<PossibleAssignment>
 public class
     PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmentsQuery, IEnumerable<PossibleAssignment>>
 {
-    private readonly IQueryable<ReceivedPayment> _payments;
+    private readonly IQueryable<BankAccountBooking> _payments;
     private readonly IQueryable<Registration> _registrations;
 
-    public PossibleAssignmentsQueryHandler(IQueryable<ReceivedPayment> payments,
+    public PossibleAssignmentsQueryHandler(IQueryable<BankAccountBooking> payments,
                                            IQueryable<Registration> registrations)
     {
         _payments = payments;
@@ -28,7 +29,7 @@ public class
                                                               CancellationToken cancellationToken)
     {
         var payment = await _payments.Where(pmt => pmt.Id == query.PaymentId
-                                                && pmt.PaymentFile.EventId == query.EventId)
+                                                && pmt.BankAccountStatementsFile.EventId == query.EventId)
                                      .Include(pmt => pmt.Assignments)
                                      .FirstAsync(cancellationToken);
         var info = payment.Info;

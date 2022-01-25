@@ -1,17 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Payments.Files;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Payments.Files.Camt;
 using EventRegistrar.Backend.Payments.Files.Slips;
 
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EventRegistrar.Backend.Payments;
+namespace EventRegistrar.Backend.Payments.Files;
 
-public class ReceivedPayment : Entity
+public class BankAccountBooking : Entity
 {
-    public Guid PaymentFileId { get; set; }
-    public PaymentFile? PaymentFile { get; set; }
+    public Guid BankAccountStatementsFileId { get; set; }
+    public BankAccountStatementsFile? BankAccountStatementsFile { get; set; }
     public Guid? PaymentSlipId { get; set; }
     public PaymentSlip? PaymentSlip { get; set; }
 
@@ -39,15 +37,15 @@ public class ReceivedPayment : Entity
     public string? CreditorIban { get; set; }
 }
 
-public class ReceivedPaymentMap : EntityMap<ReceivedPayment>
+public class AccountStatementMap : EntityMap<BankAccountBooking>
 {
-    protected override void ConfigureEntity(EntityTypeBuilder<ReceivedPayment> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<BankAccountBooking> builder)
     {
-        builder.ToTable("ReceivedPayments");
+        builder.ToTable("BankAccountBookings");
 
-        builder.HasOne(pmt => pmt.PaymentFile)
+        builder.HasOne(pmt => pmt.BankAccountStatementsFile)
                .WithMany()
-               .HasForeignKey(pmt => pmt.PaymentFileId);
+               .HasForeignKey(pmt => pmt.BankAccountStatementsFileId);
 
         builder.HasOne(pmt => pmt.PaymentSlip)
                .WithMany()
@@ -70,13 +68,5 @@ public class ReceivedPaymentMap : EntityMap<ReceivedPayment>
 
         builder.Property(pmt => pmt.InstructionIdentification)
                .HasMaxLength(200);
-
-        builder.HasOne(pmt => pmt.PaymentFile)
-               .WithMany()
-               .HasForeignKey(pmt => pmt.PaymentFileId);
-
-        builder.HasOne(psl => psl.PaymentSlip)
-               .WithMany()
-               .HasForeignKey(psl => psl.PaymentSlipId);
     }
 }

@@ -34,12 +34,12 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
     private readonly IEventBus _eventBus;
     private readonly IQueryable<Event> _events;
     private readonly ILogger _log;
-    private readonly IRepository<PaymentFile> _paymentFiles;
-    private readonly IRepository<ReceivedPayment> _payments;
+    private readonly IRepository<BankAccountStatementsFile> _paymentFiles;
+    private readonly IRepository<BankAccountBooking> _payments;
     private readonly IRepository<PaymentSlip> _paymentSlips;
 
-    public SavePaymentFileCommandHandler(IRepository<PaymentFile> paymentFiles,
-                                         IRepository<ReceivedPayment> payments,
+    public SavePaymentFileCommandHandler(IRepository<BankAccountStatementsFile> paymentFiles,
+                                         IRepository<BankAccountBooking> payments,
                                          IRepository<PaymentSlip> paymentSlips,
                                          IQueryable<Event> events,
                                          CamtParser camtParser,
@@ -99,10 +99,10 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
         }
     }
 
-    private async Task<IEnumerable<ReceivedPayment>> SaveCamt(Guid eventId, Stream stream,
-                                                              CancellationToken cancellationToken)
+    private async Task<IEnumerable<BankAccountBooking>> SaveCamt(Guid eventId, Stream stream,
+                                                                 CancellationToken cancellationToken)
     {
-        var newPayments = new List<ReceivedPayment>();
+        var newPayments = new List<BankAccountBooking>();
         stream.Position = 0;
         var xml = XDocument.Load(stream);
 
@@ -118,7 +118,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
 
         var @event = await _events.FirstOrDefaultAsync(evt => evt.AccountIban == camt.Account, cancellationToken);
 
-        var paymentFile = new PaymentFile
+        var paymentFile = new BankAccountStatementsFile
                           {
                               Id = Guid.NewGuid(),
                               EventId = eventId,
@@ -140,10 +140,10 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                 continue;
             }
 
-            var newPayment = new ReceivedPayment
+            var newPayment = new BankAccountBooking
                              {
                                  Id = Guid.NewGuid(),
-                                 PaymentFileId = paymentFile.Id,
+                                 BankAccountStatementsFileId = paymentFile.Id,
                                  Info = camtEntry.Info,
                                  Message = camtEntry.Message,
                                  Amount = camtEntry.Amount,
@@ -180,7 +180,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
         await using var zipStream = new GZipStream(stream, CompressionMode.Decompress);
         await using var tarStream = new TarInputStream(zipStream);
         TarEntry entry;
-        var newLines = new List<ReceivedPayment>();
+        var newLines = new List<BankAccountBooking>();
 
         while ((entry = tarStream.GetNextEntry()) != null)
         {

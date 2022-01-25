@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
 
@@ -24,12 +25,12 @@ public class AssignPaymentCommandHandler : IRequestHandler<AssignPaymentCommand>
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IEventBus _eventBus;
     private readonly IRepository<IndividualReduction> _individualReductions;
-    private readonly IQueryable<ReceivedPayment> _payments;
+    private readonly IQueryable<BankAccountBooking> _payments;
     private readonly IQueryable<Registration> _registrations;
     private readonly AuthenticatedUserId _userId;
 
     public AssignPaymentCommandHandler(IQueryable<Registration> registrations,
-                                       IQueryable<ReceivedPayment> payments,
+                                       IQueryable<BankAccountBooking> payments,
                                        IRepository<PaymentAssignment> assignments,
                                        IRepository<IndividualReduction> individualReductions,
                                        IEventBus eventBus,

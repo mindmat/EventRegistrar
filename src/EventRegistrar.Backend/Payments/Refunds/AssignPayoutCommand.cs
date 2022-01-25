@@ -3,6 +3,7 @@ using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Assignments;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
 
 using MediatR;
@@ -25,11 +26,11 @@ public class AssignPayoutCommandHandler : IRequestHandler<AssignPayoutCommand>
     private readonly IEventBus _eventBus;
     private readonly IRepository<IndividualReduction> _individualReductions;
     private readonly IQueryable<PayoutRequest> _payoutRequests;
-    private readonly IQueryable<ReceivedPayment> _payments;
+    private readonly IQueryable<BankAccountBooking> _payments;
     private readonly AuthenticatedUserId _userId;
 
     public AssignPayoutCommandHandler(IQueryable<PayoutRequest> payoutRequests,
-                                      IQueryable<ReceivedPayment> payments,
+                                      IQueryable<BankAccountBooking> payments,
                                       IRepository<PaymentAssignment> assignments,
                                       IRepository<IndividualReduction> individualReductions,
                                       IEventBus eventBus,

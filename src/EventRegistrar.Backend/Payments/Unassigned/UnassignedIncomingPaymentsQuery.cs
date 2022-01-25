@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Files.Camt;
 
 using MediatR;
@@ -15,9 +16,9 @@ public class
     UnassignedIncomingPaymentsQueryHandler : IRequestHandler<UnassignedIncomingPaymentsQuery,
         IEnumerable<PaymentDisplayItem>>
 {
-    private readonly IQueryable<ReceivedPayment> _payments;
+    private readonly IQueryable<BankAccountBooking> _payments;
 
-    public UnassignedIncomingPaymentsQueryHandler(IQueryable<ReceivedPayment> payments)
+    public UnassignedIncomingPaymentsQueryHandler(IQueryable<BankAccountBooking> payments)
     {
         _payments = payments;
     }
@@ -26,7 +27,7 @@ public class
                                                               CancellationToken cancellationToken)
     {
         var payments = await _payments
-                             .Where(rpy => rpy.PaymentFile.EventId == query.EventId
+                             .Where(rpy => rpy.BankAccountStatementsFile.EventId == query.EventId
                                         && !rpy.Settled
                                         && !rpy.Ignore
                                         && rpy.CreditDebitType == CreditDebit.CRDT)

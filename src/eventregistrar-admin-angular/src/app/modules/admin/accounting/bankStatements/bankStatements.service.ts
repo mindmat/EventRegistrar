@@ -7,21 +7,21 @@ import { ListByIdService } from '../../infrastructure/listByIdService';
 })
 export class BankStatementsService
 {
-  constructor(private service: ListByIdService<BankStatement>) { }
+  constructor(private service: ListByIdService<BankAccountBooking>) { }
 
-  get payments$(): Observable<BankStatement>
+  get payments$(): Observable<BankAccountBooking[]>
   {
     return this.service.list$;
   }
 
-  fetchAllBankStatements(id: string): Observable<BankStatement>
+  fetchAllBankStatements(id: string): Observable<BankAccountBooking[]>
   {
     return this.service.fetchItemsOf(id, 'bank-statements');
   }
 }
 
 
-export class BankStatement
+export class BankAccountBooking
 {
   id: string;
   amount: number;

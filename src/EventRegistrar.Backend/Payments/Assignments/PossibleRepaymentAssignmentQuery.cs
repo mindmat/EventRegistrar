@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Files.Camt;
 
 using MediatR;
@@ -14,9 +15,9 @@ public class PossibleRepaymentAssignmentQuery : IRequest<IEnumerable<PossibleRep
 public class PossibleRepaymentAssignmentQueryHandler : IRequestHandler<PossibleRepaymentAssignmentQuery,
     IEnumerable<PossibleRepaymentAssignment>>
 {
-    private readonly IQueryable<ReceivedPayment> _payments;
+    private readonly IQueryable<BankAccountBooking> _payments;
 
-    public PossibleRepaymentAssignmentQueryHandler(IQueryable<ReceivedPayment> payments)
+    public PossibleRepaymentAssignmentQueryHandler(IQueryable<BankAccountBooking> payments)
     {
         _payments = payments;
     }
@@ -25,11 +26,11 @@ public class PossibleRepaymentAssignmentQueryHandler : IRequestHandler<PossibleR
                                                                        CancellationToken cancellationToken)
     {
         var payment = await _payments.Where(pmt => pmt.Id == query.PaymentId
-                                                && pmt.PaymentFile.EventId == query.EventId)
+                                                && pmt.BankAccountStatementsFile.EventId == query.EventId)
                                      .Include(pmt => pmt.Assignments)
                                      .FirstAsync(cancellationToken);
 
-        var payments = await _payments.Where(pmt => pmt.PaymentFile.EventId == query.EventId
+        var payments = await _payments.Where(pmt => pmt.BankAccountStatementsFile.EventId == query.EventId
                                                  && !pmt.Settled
                                                  && pmt.CreditDebitType == CreditDebit.DBIT)
                                       .Select(pmt => new PossibleRepaymentAssignment
@@ -53,7 +54,7 @@ public class PossibleRepaymentAssignmentQueryHandler : IRequestHandler<PossibleR
                .OrderByDescending(mtc => mtc.MatchScore);
     }
 
-    private static int CalculateMatchScore(PossibleRepaymentAssignment paymentCandidate, ReceivedPayment openPayment)
+    private static int CalculateMatchScore(PossibleRepaymentAssignment paymentCandidate, BankAccountBooking openPayment)
     {
         var debitorParts =
             paymentCandidate.DebitorName?.Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)

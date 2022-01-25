@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { BankAccountBooking, BankStatementsService } from './bankStatements.service';
 
 @Component({
   selector: 'app-bankStatements',
@@ -6,11 +8,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BankStatementsComponent implements OnInit
 {
+  private unsubscribeAll: Subject<any> = new Subject<any>();
+  bookings: BankAccountBooking[];
 
-  constructor() { }
+  constructor(private service: BankStatementsService, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
   {
+    this.service.payments$
+      .pipe(takeUntil(this.unsubscribeAll))
+      .subscribe((bookings: BankAccountBooking[]) =>
+      {
+        this.bookings = bookings;
+
+        // Mark for check
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
 }

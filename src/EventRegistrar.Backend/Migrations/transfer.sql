@@ -169,7 +169,7 @@ SELECT [Id]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[Seats]
 
 -- Payments
-INSERT INTO [dbo].[PaymentFiles]
+INSERT INTO [dbo].BankAccountStatementsFiles
            ([Id]
            ,[EventId]
            ,[AccountIban]
@@ -221,9 +221,9 @@ SELECT [Id]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[PaymentSlips]
   WHERE EventId IN (SELECT Id FROM dbo.[Events])
 
-INSERT INTO [dbo].[ReceivedPayments]
+INSERT INTO [dbo].BankAccountBookings
            ([Id]
-           ,[PaymentFileId]
+           ,BankAccountStatementsFileId
            ,[PaymentSlipId]
            ,[Amount]
            ,[BookingDate]
@@ -265,7 +265,7 @@ SELECT [Id]
       ,[CreditorName]
       ,[CreditorIban]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[ReceivedPayments]
-  WHERE PaymentFileId IN (SELECT Id FROM dbo.PaymentFiles)
+  WHERE [PaymentFileId] IN (SELECT Id FROM dbo.BankAccountStatementsFiles)
     AND (PaymentSlipId IS NULL OR PaymentSlipId IN (SELECT Id FROM dbo.PaymentSlips))
 
 INSERT INTO [dbo].[PaymentAssignments]
@@ -286,7 +286,7 @@ SELECT [Id]
       ,[Amount]
       ,[Created]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[PaymentAssignments]
-  WHERE [ReceivedPaymentId] IN (SELECT Id FROM dbo.ReceivedPayments)
+  WHERE [ReceivedPaymentId] IN (SELECT Id FROM dbo.BankAccountBookings)
 
 ROLLBACK
 --COMMIT

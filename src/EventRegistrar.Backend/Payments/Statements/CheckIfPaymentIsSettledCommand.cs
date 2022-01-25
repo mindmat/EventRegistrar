@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Files.Camt;
 
 using MediatR;
@@ -12,9 +13,9 @@ public class CheckIfPaymentIsSettledCommand : IRequest
 
 public class CheckIfPaymentIsSettledCommandHandler : IRequestHandler<CheckIfPaymentIsSettledCommand>
 {
-    private readonly IRepository<ReceivedPayment> _payments;
+    private readonly IRepository<BankAccountBooking> _payments;
 
-    public CheckIfPaymentIsSettledCommandHandler(IRepository<ReceivedPayment> payments)
+    public CheckIfPaymentIsSettledCommandHandler(IRepository<BankAccountBooking> payments)
     {
         _payments = payments;
     }

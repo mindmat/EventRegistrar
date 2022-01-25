@@ -8,19 +8,19 @@ import { EventService } from '../events/event.service';
 })
 export class ListByIdService<TListItem>
 {
-    private list: BehaviorSubject<TListItem | null> = new BehaviorSubject(null);
+    private list: BehaviorSubject<TListItem[] | null> = new BehaviorSubject(null);
 
     constructor(private httpClient: HttpClient, private eventService: EventService) { }
 
-    get list$(): Observable<TListItem>
+    get list$(): Observable<TListItem[]>
     {
         return this.list.asObservable();
     }
 
-    fetchItemsOf(id: string, urlInEvent?: string, url?: string): Observable<TListItem>
+    fetchItemsOf(id: string, urlInEvent?: string, url?: string): Observable<TListItem[]>
     {
         url = url ?? `api/events/${this.eventService.selected}/${urlInEvent}`;
-        return this.httpClient.get<TListItem>(url).pipe(
+        return this.httpClient.get<TListItem[]>(url).pipe(
             map(newItems =>
             {
                 // Update the course

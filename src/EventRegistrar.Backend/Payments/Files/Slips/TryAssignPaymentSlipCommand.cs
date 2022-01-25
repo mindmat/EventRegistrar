@@ -15,16 +15,16 @@ public class TryAssignPaymentSlipCommand : IRequest, IQueueBoundMessage
 
 public class TryAssignPaymentSlipCommandHandler : IRequestHandler<TryAssignPaymentSlipCommand>
 {
-    private readonly IRepository<ReceivedPayment> _payments;
+    private readonly IRepository<BankAccountBooking> _payments;
 
-    public TryAssignPaymentSlipCommandHandler(IRepository<ReceivedPayment> payments)
+    public TryAssignPaymentSlipCommandHandler(IRepository<BankAccountBooking> payments)
     {
         _payments = payments;
     }
 
     public async Task<Unit> Handle(TryAssignPaymentSlipCommand command, CancellationToken cancellationToken)
     {
-        var payment = await _payments.Where(pmt => pmt.PaymentFile!.EventId == command.EventId
+        var payment = await _payments.Where(pmt => pmt.BankAccountStatementsFile!.EventId == command.EventId
                                                 && pmt.InstructionIdentification == command.Reference)
                                      .ToListAsync(cancellationToken);
 

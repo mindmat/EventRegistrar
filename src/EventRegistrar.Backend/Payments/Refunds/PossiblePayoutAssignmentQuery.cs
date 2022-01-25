@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Files.Camt;
 
 using MediatR;
@@ -15,10 +16,10 @@ public class
     PossiblePayoutAssignmentQueryHandler : IRequestHandler<PossiblePayoutAssignmentQuery,
         IEnumerable<PossiblePayoutAssignment>>
 {
-    private readonly IQueryable<ReceivedPayment> _payments;
+    private readonly IQueryable<BankAccountBooking> _payments;
     private readonly IQueryable<PayoutRequest> _payoutRequests;
 
-    public PossiblePayoutAssignmentQueryHandler(IQueryable<ReceivedPayment> payments,
+    public PossiblePayoutAssignmentQueryHandler(IQueryable<BankAccountBooking> payments,
                                                 IQueryable<PayoutRequest> payoutRequests)
     {
         _payments = payments;
@@ -29,7 +30,7 @@ public class
                                                                     CancellationToken cancellationToken)
     {
         var payment = await _payments.Where(pmt => pmt.Id == query.PaymentId
-                                                && pmt.PaymentFile.EventId == query.EventId
+                                                && pmt.BankAccountStatementsFile.EventId == query.EventId
                                                 && pmt.CreditDebitType == CreditDebit.DBIT)
                                      .Include(por => por.Assignments)
                                      .ThenInclude(asn => asn.ReceivedPayment)
@@ -65,7 +66,7 @@ public class
                .OrderByDescending(mtc => mtc.MatchScore);
     }
 
-    private static int CalculateMatchScore(PossiblePayoutAssignment payoutRequestCandidate, ReceivedPayment openPayment)
+    private static int CalculateMatchScore(PossiblePayoutAssignment payoutRequestCandidate, BankAccountBooking openPayment)
     {
         var participantParts =
             payoutRequestCandidate.Participant?.Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)
