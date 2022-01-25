@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Assignments;

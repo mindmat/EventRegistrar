@@ -2,7 +2,9 @@
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unassigned;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Payments;
@@ -46,7 +48,7 @@ public class PaymentController : Controller
                                     });
     }
 
-    [HttpGet("api/events/{eventAcronym}/payments")]
+    [HttpGet("api/events/{eventAcronym}/bank-statements")]
     public async Task<IEnumerable<PaymentDisplayItem>> GetPayments(string eventAcronym)
     {
         return await _mediator.Send(new PaymentStatementsQuery

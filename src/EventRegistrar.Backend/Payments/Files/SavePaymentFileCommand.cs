@@ -3,13 +3,16 @@ using System.Drawing.Imaging;
 using System.IO.Compression;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
+
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Files.Camt;
 using EventRegistrar.Backend.Payments.Files.Slips;
+
 using ICSharpCode.SharpZipLib.Tar;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Files;
@@ -132,7 +135,10 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
         foreach (var camtEntry in camt.Entries)
         {
             // dedup
-            if (await _payments.AnyAsync(pmt => pmt.Reference == camtEntry.Reference, cancellationToken)) continue;
+            if (await _payments.AnyAsync(pmt => pmt.Reference == camtEntry.Reference, cancellationToken))
+            {
+                continue;
+            }
 
             var newPayment = new ReceivedPayment
                              {
@@ -158,11 +164,13 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
         }
 
         if (@event != null)
+        {
             _eventBus.Publish(new PaymentFileProcessed
                               {
                                   EventId = eventId, Account = camt.Account, Balance = camt.Balance,
                                   EntriesCount = camt.Entries.Count
                               });
+        }
 
         return newPayments;
     }

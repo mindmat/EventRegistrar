@@ -10,6 +10,8 @@ import { ParticipantsResolver } from './modules/admin/participants/participants.
 import { ParticipantsSingleComponent } from './modules/admin/participants/participants-single/participants-single.component';
 import { RegistrationComponent } from './modules/admin/registration/registration.component';
 import { RegistrationResolver } from './modules/admin/registration/registration.resolvers';
+import { BankStatementsComponent } from './modules/admin/accounting/bankStatements/bankStatements.component';
+import { BankStatementsResolver } from './modules/admin/accounting/bankStatements/bankStatements.resolvers';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -91,6 +93,18 @@ export const appRoutes: Route[] = [
             },
             {
                 path: 'registration/:id', canActivate: [AuthGuard], component: RegistrationComponent, resolve: { initialData: RegistrationResolver }
+            }
+        ]
+    },
+    {
+        path: 'accounting',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: { initialData: InitialDataResolver },
+        children: [
+            {
+                path: 'bank-statements', canActivate: [AuthGuard], component: BankStatementsComponent, resolve: { initialData: BankStatementsResolver }
             }
         ]
     },

@@ -36,6 +36,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
 import { FuseCardComponent } from '@fuse/components/card/card.component';
 import { FuseCardModule } from '@fuse/components/card';
+import { BankStatementsComponent } from './modules/admin/accounting/bankStatements/bankStatements.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -49,7 +50,8 @@ const routerConfig: ExtraOptions = {
         ParticipantsDoubleComponent,
         ParticipantComponent,
         ParticipantsSingleComponent,
-        RegistrationComponent
+        RegistrationComponent,
+        BankStatementsComponent
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },

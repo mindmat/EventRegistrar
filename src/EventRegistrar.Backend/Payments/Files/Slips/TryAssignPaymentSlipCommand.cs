@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Files.Slips;
@@ -27,7 +28,10 @@ public class TryAssignPaymentSlipCommandHandler : IRequestHandler<TryAssignPayme
                                                 && pmt.InstructionIdentification == command.Reference)
                                      .ToListAsync(cancellationToken);
 
-        if (payment.Count == 1) payment[0].PaymentSlipId = command.PaymentSlipId;
+        if (payment.Count == 1)
+        {
+            payment[0].PaymentSlipId = command.PaymentSlipId;
+        }
 
         return Unit.Value;
     }

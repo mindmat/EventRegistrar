@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Assignments;

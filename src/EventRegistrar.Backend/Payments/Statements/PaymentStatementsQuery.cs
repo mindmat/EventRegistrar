@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Payments.Unassigned;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Statements;
@@ -22,12 +23,12 @@ public class PaymentStatementsQueryHandler : IRequestHandler<PaymentStatementsQu
                                                               CancellationToken cancellationToken)
     {
         var payments = await _payments
-                             .Where(rpy => rpy.PaymentFile.EventId == query.EventId)
+                             .Where(rpy => rpy.PaymentFile!.EventId == query.EventId)
                              .Select(rpy => new PaymentDisplayItem
                                             {
                                                 Id = rpy.Id,
                                                 Amount = rpy.Amount,
-                                                AmountAssigned = rpy.Assignments.Sum(asn =>
+                                                AmountAssigned = rpy.Assignments!.Sum(asn =>
                                                     asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                                                 BookingDate = rpy.BookingDate,
                                                 Currency = rpy.Currency,

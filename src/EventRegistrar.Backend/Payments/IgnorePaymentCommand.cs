@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments;
@@ -23,7 +24,11 @@ internal class IgnorePaymentCommandHandler : IRequestHandler<IgnorePaymentComman
     {
         var payment = await _payments.FirstAsync(pmt => pmt.Id == request.PaymentId
                                                      && pmt.PaymentFile.EventId == request.EventId);
-        if (payment.Ignore) return Unit.Value;
+        if (payment.Ignore)
+        {
+            return Unit.Value;
+        }
+
         payment.Ignore = true;
 
         return Unit.Value;

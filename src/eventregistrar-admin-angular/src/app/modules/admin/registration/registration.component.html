@@ -12,9 +12,9 @@
         <div class="flex flex-col flex-0 lg:flex-row items-center max-w-5xl w-full mx-auto px-8 lg:h-18 bg-card">
 
             <!-- Avatar -->
-            <div class="-mt-26 lg:-mt-22 rounded-full">
+            <!-- <div class="-mt-26 lg:-mt-22 rounded-full">
                 <img class="w-32 h-32 rounded-full ring-4 ring-bg-card" src="assets/images/avatars/male-04.jpg" alt="User avatar">
-            </div>
+            </div> -->
 
             <!-- Details -->
             <div class="flex flex-col items-center lg:items-start mt-4 lg:mt-0 lg:ml-8">
@@ -112,7 +112,6 @@
                     <ng-container *ngFor="let payment of payments">
                         <div class="flex flex-col rounded-xl bg-default shadow p-3">
                             <div class="flex items-center">
-                                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                                 <div class="flex items-baseline">
                                     <div>{{ payment.amount | number : '1.2-2' }}</div>
                                     <div class="text-sm text-secondary ml-1">{{ payment.bookingDate | date: 'dd.MM.yy' }}</div>

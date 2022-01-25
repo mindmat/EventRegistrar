@@ -37,8 +37,11 @@ public class PaymentAssignedUserTranslation : IEventToUserTranslation<PaymentAss
         }
 
         if (domainEvent.PayoutRequestId != null)
+        {
             return
                 $"Rückerstattung über {domainEvent.Amount} an {payment?.CreditorName} zugeordnet. Anmeldung {registration?.RespondentFirstName} {registration?.RespondentLastName} zugeordnet";
+        }
+
         return
             $"Zahlungseingang über {domainEvent.Amount} von {payment?.DebitorName} zu Anmeldung {registration?.RespondentFirstName} {registration?.RespondentLastName} zugeordnet";
     }

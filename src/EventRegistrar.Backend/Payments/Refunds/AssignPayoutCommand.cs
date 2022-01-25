@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Refunds;

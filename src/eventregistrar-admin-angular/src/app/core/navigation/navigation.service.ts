@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, ReplaySubject, tap } from 'rxjs';
+import { Observable, of, ReplaySubject, tap } from 'rxjs';
 import { Navigation } from 'app/core/navigation/navigation.types';
+import { FuseNavigationItem } from '@fuse/components/navigation';
 
 @Injectable({
     providedIn: 'root'
@@ -9,6 +10,24 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 export class NavigationService
 {
     private _navigation: ReplaySubject<Navigation> = new ReplaySubject<Navigation>(1);
+
+    private _staticMenu: FuseNavigationItem[] =
+        [
+            {
+                id: 'overview',
+                title: 'Übersicht',
+                type: 'basic',
+                icon: 'heroicons_outline:clipboard-check',
+                link: '/overview',
+            },
+            {
+                id: 'bank-statements',
+                title: 'Kontobewegungen',
+                type: 'basic',
+                icon: 'heroicons_outline:currency-dollar',
+                link: '/accounting/bank-statements',
+            },
+        ];
 
     /**
      * Constructor
@@ -26,7 +45,14 @@ export class NavigationService
      */
     get navigation$(): Observable<Navigation>
     {
-        return this._navigation.asObservable();
+        return of({
+            default: this._staticMenu,
+            compact: this._staticMenu,
+            horizontal: this._staticMenu,
+            futuristic: this._staticMenu
+        } as Navigation);
+
+        // return this._navigation.asObservable();
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -38,10 +64,18 @@ export class NavigationService
      */
     get(): Observable<Navigation>
     {
-        return this._httpClient.get<Navigation>('api/common/navigation').pipe(
-            tap((navigation) => {
-                this._navigation.next(navigation);
-            })
-        );
+        return of({
+            default: this._staticMenu,
+            compact: this._staticMenu,
+            horizontal: this._staticMenu,
+            futuristic: this._staticMenu
+        } as Navigation);
+
+        // return this._httpClient.get<Navigation>('api/common/navigation').pipe(
+        //     tap((navigation) =>
+        //     {
+        //         this._navigation.next(navigation);
+        //     })
+        // );
     }
 }

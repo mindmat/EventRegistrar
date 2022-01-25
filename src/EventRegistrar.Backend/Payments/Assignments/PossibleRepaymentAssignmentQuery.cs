@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Payments.Files.Camt;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
@@ -38,8 +39,8 @@ public class PossibleRepaymentAssignmentQueryHandler : IRequestHandler<PossibleR
                                                          BookingDate = pmt.BookingDate,
                                                          Amount = pmt.Amount,
                                                          AmountUnsettled = pmt.Amount - pmt.Assignments.Select(asn =>
-                                                                 asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
-                                                             .Sum(),
+                                                                                               asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
+                                                                                           .Sum(),
                                                          Settled = pmt.Settled,
                                                          Currency = pmt.Currency,
                                                          Info = pmt.Info,
