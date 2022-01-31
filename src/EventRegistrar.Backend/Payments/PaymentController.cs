@@ -49,7 +49,7 @@ public class PaymentController : Controller
     }
 
     [HttpGet("api/events/{eventAcronym}/bank-statements")]
-    public async Task<IEnumerable<PaymentDisplayItem>> GetPayments(string eventAcronym)
+    public async Task<IEnumerable<BookingsOfDay>> GetPayments(string eventAcronym)
     {
         return await _mediator.Send(new BankAccountBookingsQuery
                                     {

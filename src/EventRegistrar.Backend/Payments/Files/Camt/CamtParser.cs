@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Xml;
 using System.Xml.Linq;
+
 using EventRegistrar.Backend.Infrastructure;
 
 namespace EventRegistrar.Backend.Payments.Files.Camt;
@@ -18,7 +19,9 @@ public class CamtParser
         XNamespace ns = "urn:iso:std:iso:20022:tech:xsd:camt.053.001.04";
         if (xml.NodeType != XmlNodeType.Document ||
             ((XElement)xml.FirstNode).GetDefaultNamespace().NamespaceName != ns)
+        {
             throw new Exception("invalid xml");
+        }
 
         var statement = xml.Descendants(ns + "Stmt").ToList();
         var entries = statement.Descendants(ns + "Ntry")
@@ -50,13 +53,20 @@ public class CamtParser
                                                    Charges = ntry.Descendants(ns + "Chrgs")
                                                                  .Descendants(ns + "TtlChrgsAndTaxAmt")
                                                                  .FirstOrDefault()
+                                                                 ?.Value.TryToDecimal()
+                                                          ?? ntry.Descendants(ns + "NtryDtls")
+                                                                 .Descendants(ns + "TxDtls")
+                                                                 .Descendants(ns + "Chrgs")
+                                                                 .Descendants(ns + "Rcrd")
+                                                                 .Descendants(ns + "Amt")
+                                                                 .FirstOrDefault()
                                                                  ?.Value.TryToDecimal(),
                                                    InstructionIdentification = ntry.Descendants(ns + "NtryDtls")
-                                                       .Descendants(ns + "TxDtls")
-                                                       .Descendants(ns + "Refs")
-                                                       .Descendants(ns + "InstrId")
-                                                       .FirstOrDefault()
-                                                       ?.Value,
+                                                                                   .Descendants(ns + "TxDtls")
+                                                                                   .Descendants(ns + "Refs")
+                                                                                   .Descendants(ns + "InstrId")
+                                                                                   .FirstOrDefault()
+                                                                                   ?.Value,
                                                    DebitorName = ntry.Descendants(ns + "NtryDtls")
                                                                      .Descendants(ns + "TxDtls")
                                                                      .Descendants(ns + "RltdPties")
@@ -126,9 +136,14 @@ public class CamtParser
         if (filePeriod != null)
         {
             if (DateTime.TryParse(filePeriod.Descendants(ns + "FrDtTm").FirstOrDefault()?.Value, out var from))
+            {
                 camt.BookingsFrom = @from;
+            }
+
             if (DateTime.TryParse(filePeriod.Descendants(ns + "ToDtTm").FirstOrDefault()?.Value, out var to))
+            {
                 camt.BookingsTo = to;
+            }
         }
 
         return camt;

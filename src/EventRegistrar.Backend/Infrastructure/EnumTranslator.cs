@@ -10,4 +10,12 @@ public class EnumTranslator
         var key = $"{typeof(TEnum).Name}_{value}";
         return Resources.ResourceManager.GetString(key) ?? value.ToString() ?? "??";
     }
+
+    public string? Translate<TEnum>(TEnum? value)
+        where TEnum : struct
+    {
+        return value == null
+            ? null
+            : Translate(value.Value);
+    }
 }

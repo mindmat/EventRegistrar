@@ -7,24 +7,38 @@ import { ListByIdService } from '../../infrastructure/listByIdService';
 })
 export class BankStatementsService
 {
-  constructor(private service: ListByIdService<BankAccountBooking>) { }
+  constructor(private service: ListByIdService<BookingsOfDay>) { }
 
-  get payments$(): Observable<BankAccountBooking[]>
+  get payments$(): Observable<BookingsOfDay[]>
   {
     return this.service.list$;
   }
 
-  fetchAllBankStatements(id: string): Observable<BankAccountBooking[]>
+  fetchAllBankStatements(id: string): Observable<BookingsOfDay[]>
   {
     return this.service.fetchItemsOf(id, 'bank-statements');
   }
 }
 
+export enum CreditDebit
+{
+  CRDT = 1,
+  DBIT = 2
+}
+
+export class BookingsOfDay
+{
+  bookingDate: Date;
+  balanceAfter: number;
+  bookings: BankAccountBooking[];
+}
 
 export class BankAccountBooking
 {
   id: string;
+  typ: CreditDebit;
   amount: number;
+  charges: number;
   amountAssigned: number;
   bookingDate: Date;
   currency: string;

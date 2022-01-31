@@ -288,6 +288,10 @@ SELECT [Id]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[PaymentAssignments]
   WHERE [ReceivedPaymentId] IN (SELECT Id FROM dbo.BankAccountBookings)
 
+UPDATE BankAccountbookings
+SET Charges = 12
+WHERE Id = '4B15D3EA-3317-4921-AE6A-1DD373E6DB9E'
+
 ROLLBACK
 --COMMIT
 
