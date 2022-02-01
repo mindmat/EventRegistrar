@@ -37,12 +37,14 @@ export class BankAccountBooking
 {
   id: string;
   typ: CreditDebit;
+  debitorName: string;
+  creditorName: string;
   amount: number;
   charges: number;
   amountAssigned: number;
   bookingDate: Date;
   currency: string;
-  info: string;
+  message: string;
   reference: string;
   amountRepaid: number;
   settled: boolean;

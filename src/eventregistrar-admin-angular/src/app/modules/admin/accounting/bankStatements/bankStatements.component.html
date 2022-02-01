@@ -2,18 +2,23 @@
 
     <!-- Header -->
     <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <!-- Title -->
         <div class="flex-1 min-w-0">
-            <!-- Title -->
             <div class="text-4xl font-extrabold tracking-tight leading-none">Kontoauszug</div>
-            <!-- <div class="mt-1.5 text-lg text-secondary">{{registrable.nameSecondary}}</div> -->
+            <!-- <div class="mt-1.5 text-lg text-secondary">{{filteredBookingDays.length}}</div> -->
         </div>
+        <!-- Filters -->
+        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input (input)="filterByQuery(query.value)" placeholder="Search by title or description" matInput #query>
+        </mat-form-field>
     </div>
 
     <!-- Main -->
     <div class="flex flex-col p-6 sm:p-8 sm:pt-4 overflow-y-auto">
 
         <!-- Days -->
-        <ng-container *ngFor="let bookingDay of bookingDays">
+        <ng-container *ngFor="let bookingDay of filteredBookingDays">
 
             <div class="p-2 rounded-xl bg-default">
 

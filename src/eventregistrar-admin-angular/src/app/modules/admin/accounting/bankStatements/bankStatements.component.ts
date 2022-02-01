@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
 import { BankAccountBooking, BankStatementsService, BookingsOfDay, CreditDebit } from './bankStatements.service';
 
 @Component({
@@ -10,7 +10,17 @@ export class BankStatementsComponent implements OnInit
 {
   private unsubscribeAll: Subject<any> = new Subject<any>();
   bookingDays: BookingsOfDay[];
+  filteredBookingDays: BookingsOfDay[];
   CreditDebit = CreditDebit;
+  filters: {
+    // categoryTag$: BehaviorSubject<string>;
+    query$: BehaviorSubject<string>;
+    // hideCompleted$: BehaviorSubject<boolean>;
+  } = {
+      // categoryTag$: new BehaviorSubject('all'),
+      query$: new BehaviorSubject(''),
+      // hideCompleted$: new BehaviorSubject(false)
+    };
 
   constructor(private service: BankStatementsService, private changeDetectorRef: ChangeDetectorRef) { }
 
@@ -25,6 +35,47 @@ export class BankStatementsComponent implements OnInit
         // Mark for check
         this.changeDetectorRef.markForCheck();
       });
+
+    // Filter the courses
+    combineLatest([this.filters.query$]).pipe(debounceTime(200))
+      .subscribe(([query]) =>
+      {
+        query = query.toLowerCase();
+
+        // Reset
+        this.filteredBookingDays = this.bookingDays;
+
+        // // Filter by category
+        // if (categoryTag !== 'all')
+        // {
+        //   this.filteredSingleRegistrables = this.filteredSingleRegistrables.filter(course => course.tag === categoryTag);
+        //   this.filteredDoubleRegistrables = this.filteredDoubleRegistrables.filter(course => course.tag === categoryTag);
+        // }
+
+        // Filter by search query
+        if (query !== '')
+        {
+          this.filteredBookingDays = this.filteredBookingDays.map(day =>
+          ({
+            ...day,
+            bookings: day.bookings.filter(bok => bok.debitorName.toLowerCase().includes(query)
+              || bok.creditorName.toLowerCase().includes(query)
+              || bok.message.toLowerCase().includes(query))
+          } as BookingsOfDay))
+            .filter(day => day.bookings.length > 0);
+        };
+
+
+        // // Filter by completed
+        // if (hideCompleted)
+        // {
+        //   // this.filteredCourses = this.filteredCourses.filter(course => course.progress.completed === 0);
+        // }
+      });
   }
 
+  filterByQuery(query: string): void
+  {
+    this.filters.query$.next(query);
+  }
 }
