@@ -37,6 +37,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { FuseCardComponent } from '@fuse/components/card/card.component';
 import { FuseCardModule } from '@fuse/components/card';
 import { BankStatementsComponent } from './modules/admin/accounting/bankStatements/bankStatements.component';
+import { SearchRegistrationComponent } from './modules/admin/registrations/search-registration/search-registration.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -51,7 +52,8 @@ const routerConfig: ExtraOptions = {
         ParticipantComponent,
         ParticipantsSingleComponent,
         RegistrationComponent,
-        BankStatementsComponent
+        BankStatementsComponent,
+        SearchRegistrationComponent
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },

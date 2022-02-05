@@ -1,0 +1,85 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-auto">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <!-- Title -->
+        <div class="flex min-w-0 flex-row items-baseline gap-2">
+            <div class="text-4xl font-extrabold tracking-tight leading-none">Teilnehmer</div>
+            <div *ngIf="matches?.length > 0" class="mt-1.5 text-lg text-secondary">({{matches.length}})</div>
+        </div>
+        <!-- Filters -->
+        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input (input)="filterByQuery(query.value)" placeholder="Search by name, mail, phone" matInput #query [value]="filters.searchString$.value">
+        </mat-form-field>
+    </div>
+
+    <!-- Matches -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-10">
+
+        <ng-container *ngFor="let match of matches">
+            <!-- Match -->
+            <a class="flex flex-col min-h-64 shadow rounded-2xl overflow-hidden bg-card" [routerLink]="['/registration', match.registrationId]">
+                <div class="flex m-4">
+                    <div class="grow flex-col w-full">
+                        <!-- <div class="flex items-center justify-between">
+                        
+                        <ng-container *ngIf="(doubleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
+                            <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
+                                                                            'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.sortKey === 2,
+                                                                            'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.sortKey === 3,
+                                                                            'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.sortKey === 4}">
+                                {{category.text}}
+                            </div>
+                        </ng-container>
+                    </div> -->
+
+                        <!-- Registrable title & description -->
+                        <div class="text-lg font-medium">{{ match.firstName }} {{ match.lastName }}</div>
+                        <div class="line-clamp-2 text-secondary">{{ match.receivedAt | date : 'dd.MM.yy HH:mm:ss' }}</div>
+                        <!-- <div class="w-12 h-1 my-6 border-t-2"></div> -->
+
+                    </div>
+                    <mat-icon class="none icon-size-5 justify-middle" *ngIf="match.isWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon>
+
+                </div>
+
+                <!-- payment completion -->
+                <div class="relative h-0.5">
+                    <div class="z-10 absolute inset-x-0 h-6" matTooltip="{{ match.amountPaid | number: '1.2-2' }} von {{ match.amount | number : '1.2-2' }} bezahlt" [matTooltipPosition]="'above'"
+                        [matTooltipClass]="'-mb-0.5'">
+                    </div>
+                    <mat-progress-bar class="h-0.5" [value]="100 * match.amountPaid / match.amount">
+                    </mat-progress-bar>
+                </div>
+
+                <!-- Spots -->
+                <div class="flex flex-col space-y-4 mb-4 rounded-xl bg-default shadow p-3 m-4">
+                    <ng-container *ngFor="let spot of match.spots">
+                        <div class="flex align-top relative">
+                            <a class="leading-tight">
+                                <div>{{ spot.name }}</div>
+                                <div class="text-md leading-none text-secondary mt-1" *ngIf="spot.secondary">{{ spot.secondary }}</div>
+                            </a>
+                            <mat-icon class="icon-size-5 absolute right-0" *ngIf="spot.isWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon>
+                        </div>
+                        <!-- <div class="flex items-center mt-4" *ngIf="spot.roleText">
+                                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:user'"></mat-icon>
+                                <div>{{ spot.roleText }}</div>
+                            </div>
+                            <div class="flex items-center mt-4" *ngIf="spot.partnerName">
+                                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
+                                <span class="leading-none">
+                                    <a *ngIf="registration.partnerId" class="hover:underline" [routerLink]="['/registration', spot.partnerRegistrationId]">{{ spot.partnerName }}</a>
+                                    <span *ngIf="!registration.partnerId" class="italic">{{ spot.partnerName }}</span>
+                                </span>
+                            </div> -->
+                        <!-- <div class="text-md leading-none text-secondary mt-2">{{spot.firstPartnerJoined | date: 'dd.MM.yy HH:mm:ss'}}</div> -->
+                    </ng-container>
+                </div>
+            </a>
+
+        </ng-container>
+
+    </div>
+</div>

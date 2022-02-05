@@ -12,6 +12,7 @@ import { RegistrationComponent } from './modules/admin/registration/registration
 import { RegistrationResolver } from './modules/admin/registration/registration.resolvers';
 import { BankStatementsComponent } from './modules/admin/accounting/bankStatements/bankStatements.component';
 import { BankStatementsResolver } from './modules/admin/accounting/bankStatements/bankStatements.resolvers';
+import { SearchRegistrationComponent } from './modules/admin/registrations/search-registration/search-registration.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -105,6 +106,18 @@ export const appRoutes: Route[] = [
         children: [
             {
                 path: 'bank-statements', canActivate: [AuthGuard], component: BankStatementsComponent, resolve: { initialData: BankStatementsResolver }
+            }
+        ]
+    },
+    {
+        path: 'registrations',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: { initialData: InitialDataResolver },
+        children: [
+            {
+                path: 'search-registration', canActivate: [AuthGuard], component: SearchRegistrationComponent
             }
         ]
     },

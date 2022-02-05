@@ -27,6 +27,13 @@ export class NavigationService
                 icon: 'heroicons_outline:currency-dollar',
                 link: '/accounting/bank-statements',
             },
+            {
+                id: 'search-registration',
+                title: 'Teilnehmer suchen',
+                type: 'basic',
+                icon: 'heroicons_outline:user',
+                link: '/registrations/search-registration',
+            },
         ];
 
     /**
