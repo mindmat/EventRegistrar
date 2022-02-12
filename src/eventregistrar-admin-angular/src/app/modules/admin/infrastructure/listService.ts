@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { EventService } from '../events/event.service';
@@ -6,7 +6,7 @@ import { EventService } from '../events/event.service';
 @Injectable({
     providedIn: 'root'
 })
-export class ListByIdService<TListItem>
+export class ListService<TListItem>
 {
     private list: BehaviorSubject<TListItem[] | null> = new BehaviorSubject(null);
 
@@ -17,10 +17,11 @@ export class ListByIdService<TListItem>
         return this.list.asObservable();
     }
 
-    fetchItemsOf(id: string, urlInEvent?: string, url?: string): Observable<TListItem[]>
+    fetchItems(urlInEvent?: string, url?: string, params?: any): Observable<TListItem[]>
     {
         url = url ?? `api/events/${this.eventService.selected}/${urlInEvent}`;
-        return this.httpClient.get<TListItem[]>(url).pipe(
+        const options = params ? { params } : {};
+        return this.httpClient.get<TListItem[]>(url, options).pipe(
             map(newItems =>
             {
                 // Update the course
@@ -33,7 +34,7 @@ export class ListByIdService<TListItem>
             {
                 if (!newItems)
                 {
-                    return throwError(() => `Could not find items with id of ${id}!`);
+                    return throwError(() => 'Could not find any items!');
                 }
 
                 return of(newItems);

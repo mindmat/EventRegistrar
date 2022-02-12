@@ -30,7 +30,7 @@ export class SearchRegistrationComponent implements OnInit
     // use search string from url
     this.route.queryParams.subscribe(params => 
     {
-      this.filters.searchString$.next(params.search);
+      this.filters.searchString$.next(params.search ?? '');
     });
 
 

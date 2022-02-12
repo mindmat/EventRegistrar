@@ -36,7 +36,7 @@ export class BankStatementsComponent implements OnInit
         this.changeDetectorRef.markForCheck();
       });
 
-    // Filter the courses
+    // Filter
     combineLatest([this.filters.query$]).pipe(debounceTime(200))
       .subscribe(([query]) =>
       {

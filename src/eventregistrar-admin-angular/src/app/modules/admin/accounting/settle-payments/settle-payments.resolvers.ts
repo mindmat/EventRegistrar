@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, merge, Observable, throwError } from 'rxjs';
-import { BankStatementsService } from './bankStatements.service';
+import { SettlePaymentsService } from './settle-payments.service';
 
 
 @Injectable({
     providedIn: 'root'
 })
-export class BankStatementsResolver implements Resolve<any>
+export class SettlePaymentsResolver implements Resolve<any>
 {
-    constructor(private router: Router, private bankStatementsService: BankStatementsService)
+    constructor(private router: Router, private service: SettlePaymentsService)
     {
     }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {
-        return this.bankStatementsService.fetchAllBankStatements()
+        return this.service.fetchBankStatements()
             .pipe(
                 // Error here means the requested task is not available
                 catchError((error) =>

@@ -21,6 +21,13 @@ export class NavigationService
                 link: '/overview',
             },
             {
+                id: 'search-registration',
+                title: 'Teilnehmer suchen',
+                type: 'basic',
+                icon: 'heroicons_outline:user',
+                link: '/registrations/search-registration',
+            },
+            {
                 id: 'bank-statements',
                 title: 'Kontobewegungen',
                 type: 'basic',
@@ -28,11 +35,11 @@ export class NavigationService
                 link: '/accounting/bank-statements',
             },
             {
-                id: 'search-registration',
-                title: 'Teilnehmer suchen',
+                id: 'settle-bookings',
+                title: 'Kontobewegungen zuordnen',
                 type: 'basic',
-                icon: 'heroicons_outline:user',
-                link: '/registrations/search-registration',
+                icon: 'heroicons_outline:check',
+                link: '/accounting/settle-payments',
             },
         ];
 

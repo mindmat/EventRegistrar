@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ListByIdService } from '../../infrastructure/listByIdService';
+import { ListService } from '../../infrastructure/listService';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BankStatementsService
 {
-  constructor(private service: ListByIdService<BookingsOfDay>) { }
+  constructor(private service: ListService<BookingsOfDay>) { }
 
   get payments$(): Observable<BookingsOfDay[]>
   {
     return this.service.list$;
   }
 
-  fetchAllBankStatements(id: string): Observable<BookingsOfDay[]>
+  fetchAllBankStatements(): Observable<BookingsOfDay[]>
   {
-    return this.service.fetchItemsOf(id, 'bank-statements');
+    return this.service.fetchItems('accounting/bank-statements', null, { hideIncoming: false, hideOutgoing: false, hideSettled: false, hideIgnored: true });
   }
 }
 
@@ -37,17 +37,19 @@ export class BankAccountBooking
 {
   id: string;
   typ: CreditDebit;
-  debitorName: string;
-  creditorName: string;
+  bookingDate: Date;
   amount: number;
   charges: number;
-  amountAssigned: number;
-  bookingDate: Date;
   currency: string;
+  debitorName: string;
+  creditorName: string;
+  creditorIban: string;
   message: string;
   reference: string;
+  paymentSlipId: string;
+
+  amountAssigned: number;
   amountRepaid: number;
   settled: boolean;
-  locked: boolean;
   ignore: boolean;
 }

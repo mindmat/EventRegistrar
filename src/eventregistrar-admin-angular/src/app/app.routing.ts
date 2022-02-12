@@ -13,6 +13,8 @@ import { RegistrationResolver } from './modules/admin/registration/registration.
 import { BankStatementsComponent } from './modules/admin/accounting/bankStatements/bankStatements.component';
 import { BankStatementsResolver } from './modules/admin/accounting/bankStatements/bankStatements.resolvers';
 import { SearchRegistrationComponent } from './modules/admin/registrations/search-registration/search-registration.component';
+import { SettlePaymentsComponent } from './modules/admin/accounting/settle-payments/settle-payments.component';
+import { SettlePaymentsResolver } from './modules/admin/accounting/settle-payments/settle-payments.resolvers';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -105,7 +107,16 @@ export const appRoutes: Route[] = [
         resolve: { initialData: InitialDataResolver },
         children: [
             {
-                path: 'bank-statements', canActivate: [AuthGuard], component: BankStatementsComponent, resolve: { initialData: BankStatementsResolver }
+                path: 'bank-statements',
+                canActivate: [AuthGuard],
+                component: BankStatementsComponent,
+                resolve: { initialData: BankStatementsResolver }
+            },
+            {
+                path: 'settle-payments',
+                canActivate: [AuthGuard],
+                component: SettlePaymentsComponent,
+                resolve: { initialData: SettlePaymentsResolver }
             }
         ]
     },

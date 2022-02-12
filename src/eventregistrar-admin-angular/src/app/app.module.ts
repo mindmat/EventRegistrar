@@ -23,6 +23,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FuseFindByKeyPipeModule } from '@fuse/pipes/find-by-key';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressBar, MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ParticipantsDoubleComponent } from './modules/admin/participants/participants-double/participants-double.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -38,6 +39,7 @@ import { FuseCardComponent } from '@fuse/components/card/card.component';
 import { FuseCardModule } from '@fuse/components/card';
 import { BankStatementsComponent } from './modules/admin/accounting/bankStatements/bankStatements.component';
 import { SearchRegistrationComponent } from './modules/admin/registrations/search-registration/search-registration.component';
+import { SettlePaymentsComponent } from './modules/admin/accounting/settle-payments/settle-payments.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -53,7 +55,8 @@ const routerConfig: ExtraOptions = {
         ParticipantsSingleComponent,
         RegistrationComponent,
         BankStatementsComponent,
-        SearchRegistrationComponent
+        SearchRegistrationComponent,
+        SettlePaymentsComponent
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },
@@ -103,6 +106,7 @@ const routerConfig: ExtraOptions = {
         MatTooltipModule,
         MatDividerModule,
         MatMenuModule,
+        MatSidenavModule,
 
         AuthModule.forRoot({
             domain: 'eventregistrar.eu.auth0.com',

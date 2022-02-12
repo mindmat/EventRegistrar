@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Payments.Due;
+using EventRegistrar.Backend.Payments.Settlements;
 using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unassigned;
 
@@ -48,12 +49,20 @@ public class PaymentController : Controller
                                     });
     }
 
-    [HttpGet("api/events/{eventAcronym}/bank-statements")]
-    public async Task<IEnumerable<BookingsOfDay>> GetPayments(string eventAcronym)
+    [HttpGet("api/events/{eventAcronym}/accounting/bank-statements")]
+    public async Task<IEnumerable<BookingsOfDay>> GetPayments(string eventAcronym,
+                                                              bool hideIncoming = false,
+                                                              bool hideOutgoing = false,
+                                                              bool hideIgnored = true,
+                                                              bool hideSettled = true)
     {
         return await _mediator.Send(new BankAccountBookingsQuery
                                     {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                                        HideIncoming = hideIncoming,
+                                        HideOutgoing = hideOutgoing,
+                                        HideIgnored = hideIgnored,
+                                        HideSettled = hideSettled
                                     });
     }
 
@@ -92,6 +101,24 @@ public class PaymentController : Controller
         return await _mediator.Send(new UnassignedPayoutsQuery
                                     {
                                         EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+                                    });
+    }
+
+
+    [HttpGet("api/events/{eventAcronym}/accounting/bookings-query")]
+    public async Task<IEnumerable<BankBookingDisplayItem>> GetBookingsByState(string eventAcronym,
+                                                                              bool hideIncoming = false,
+                                                                              bool hideOutgoing = false,
+                                                                              bool hideIgnored = true,
+                                                                              bool hideSettled = true)
+    {
+        return await _mediator.Send(new BookingsByStateQuery
+                                    {
+                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                                        HideIncoming = hideIncoming,
+                                        HideOutgoing = hideOutgoing,
+                                        HideIgnored = hideIgnored,
+                                        HideSettled = hideSettled
                                     });
     }
 }

@@ -19,6 +19,7 @@ using EventRegistrar.Backend.Payments.Files.Fetch;
 using EventRegistrar.Backend.Payments.Files.Slips;
 using EventRegistrar.Backend.Payments.PayAtCheckin;
 using EventRegistrar.Backend.Payments.Refunds;
+using EventRegistrar.Backend.Payments.Settlements;
 using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unassigned;
 using EventRegistrar.Backend.PhoneMessages;
@@ -100,6 +101,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(UnassignedPayoutsQuery);
             yield return nameof(PossiblePayoutAssignmentQuery);
             yield return nameof(DomainEventsQuery);
+            yield return nameof(BookingsByStateQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||

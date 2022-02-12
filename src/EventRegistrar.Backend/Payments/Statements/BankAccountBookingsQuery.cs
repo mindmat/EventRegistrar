@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Files.Camt;
 
@@ -9,46 +10,57 @@ namespace EventRegistrar.Backend.Payments.Statements;
 public class BankAccountBookingsQuery : IRequest<IEnumerable<BookingsOfDay>>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
+    public bool HideIgnored { get; set; }
+    public bool HideSettled { get; set; }
+    public bool HideIncoming { get; set; }
+    public bool HideOutgoing { get; set; }
 }
 
 public class BankAccountBookingsQueryHandler : IRequestHandler<BankAccountBookingsQuery, IEnumerable<BookingsOfDay>>
 {
-    private readonly IQueryable<BankAccountBooking> _payments;
+    private readonly IQueryable<BankAccountBooking> _bankBookings;
 
-    public BankAccountBookingsQueryHandler(IQueryable<BankAccountBooking> payments)
+    public BankAccountBookingsQueryHandler(IQueryable<BankAccountBooking> bankBookings)
     {
-        _payments = payments;
+        _bankBookings = bankBookings;
     }
 
     public async Task<IEnumerable<BookingsOfDay>> Handle(BankAccountBookingsQuery query,
                                                          CancellationToken cancellationToken)
     {
-        var payments = await _payments.Where(rpy => rpy.BankAccountStatementsFile!.EventId == query.EventId)
-                                      .GroupBy(rpy => new { rpy.BookingDate, rpy.BankAccountStatementsFile!.Balance })
-                                      .Select(grp => new BookingsOfDay
-                                                     {
-                                                         BookingDate = grp.Key.BookingDate,
-                                                         BalanceAfter = grp.Key.Balance,
-                                                         Bookings = grp.Select(rpy => new BankAccountBookingDisplayItem
-                                                                                      {
-                                                                                          Id = rpy.Id,
-                                                                                          Typ = rpy.CreditDebitType,
-                                                                                          Amount = rpy.Amount,
-                                                                                          Charges = rpy.Charges,
-                                                                                          AmountAssigned = rpy.Assignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
-                                                                                          BookingDate = rpy.BookingDate,
-                                                                                          Currency = rpy.Currency,
-                                                                                          DebitorName = rpy.DebitorName,
-                                                                                          CreditorName = rpy.CreditorName,
-                                                                                          Message = rpy.Message,
-                                                                                          Reference = rpy.Reference,
-                                                                                          AmountRepaid = rpy.Repaid,
-                                                                                          Ignore = rpy.Ignore,
-                                                                                          Settled = rpy.Settled
-                                                                                      })
-                                                     })
-                                      .OrderByDescending(rpy => rpy.BookingDate)
-                                      .ToListAsync(cancellationToken);
+        var payments = await _bankBookings.Where(bbk => bbk.BankAccountStatementsFile!.EventId == query.EventId)
+                                          .WhereIf(query.HideIgnored, bbk => !bbk.Ignore)
+                                          .WhereIf(query.HideSettled, bbk => !bbk.Settled)
+                                          .WhereIf(query.HideIncoming, bbk => bbk.CreditDebitType != CreditDebit.CRDT)
+                                          .WhereIf(query.HideOutgoing, bbk => bbk.CreditDebitType != CreditDebit.DBIT)
+                                          .GroupBy(bbk => new { bbk.BookingDate, bbk.BankAccountStatementsFile!.Balance })
+                                          .Select(day => new BookingsOfDay
+                                                         {
+                                                             BookingDate = day.Key.BookingDate,
+                                                             BalanceAfter = day.Key.Balance,
+                                                             Bookings = day.Select(bbk => new BankAccountBookingDisplayItem
+                                                                                          {
+                                                                                              Id = bbk.Id,
+                                                                                              BookingDate = bbk.BookingDate,
+                                                                                              Typ = bbk.CreditDebitType,
+                                                                                              Currency = bbk.Currency,
+                                                                                              Amount = bbk.Amount,
+                                                                                              Charges = bbk.Charges,
+                                                                                              Message = bbk.Message,
+                                                                                              DebitorName = bbk.DebitorName,
+                                                                                              CreditorName = bbk.CreditorName,
+                                                                                              CreditorIban = bbk.CreditorIban,
+                                                                                              Reference = bbk.Reference,
+                                                                                              PaymentSlipId = bbk.PaymentSlipId,
+
+                                                                                              AmountAssigned = bbk.Assignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
+                                                                                              AmountRepaid = bbk.Repaid,
+                                                                                              Ignore = bbk.Ignore,
+                                                                                              Settled = bbk.Settled
+                                                                                          })
+                                                         })
+                                          .OrderByDescending(day => day.BookingDate)
+                                          .ToListAsync(cancellationToken);
         return payments;
     }
 }
@@ -77,4 +89,5 @@ public class BankAccountBookingDisplayItem
     public string? DebitorName { get; set; }
     public string? CreditorName { get; set; }
     public string? CreditorIban { get; set; }
+    public Guid? PaymentSlipId { get; set; }
 }

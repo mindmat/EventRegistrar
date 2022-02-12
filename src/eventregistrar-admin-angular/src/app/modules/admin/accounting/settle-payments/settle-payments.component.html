@@ -1,0 +1,122 @@
+<div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+
+    <mat-drawer-container class="flex-auto h-full" [hasBackdrop]="false">
+
+        <!-- Drawer -->
+        <mat-drawer class="w-full sm:w-100 lg:border-r lg:shadow-none dark:bg-gray-900" [autoFocus]="false" #drawer>
+
+            <!-- Profile -->
+            <!-- <ng-container *ngIf="drawerComponent === 'profile'">
+                <chat-profile [drawer]="drawer"></chat-profile>
+            </ng-container> -->
+
+        </mat-drawer>
+
+        <!-- Drawer content -->
+        <mat-drawer-content class="flex overflow-hidden">
+
+            <!-- Bookings list -->
+            <div class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100 bg-card dark:bg-transparent">
+
+                <!-- Header -->
+                <div class="flex flex-col flex-0 py-4 px-8 border-b bg-gray-50 dark:bg-transparent">
+                    <!-- <div class="flex items-center">
+                        <button class="ml-auto" mat-icon-button (click)="openNewChat()">
+                            <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                        </button>
+                    </div> -->
+                    <!-- Search -->
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full" [floatLabel]="'always'">
+                            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                            <input matInput [autocomplete]="'off'" placeholder="Search by name, IBAN, message" (input)="filterByQuery(searchField.value)" #searchField>
+                        </mat-form-field>
+
+                        <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" (change)="toggleIncoming($event)">
+                            Hide incoming
+                        </mat-slide-toggle>
+
+                        <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" (change)="toggleOutgoing($event)">
+                            Hide outgoing
+                        </mat-slide-toggle>
+
+                        <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" (change)="toggleSettled($event)">
+                            Hide settled
+                        </mat-slide-toggle>
+
+                        <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" (change)="toggleIgnored($event)">
+                            Hide ignored
+                        </mat-slide-toggle>
+                    </div>
+                </div>
+
+                <!-- Bookings -->
+                <div class="flex-auto overflow-y-auto">
+                    <ng-container *ngIf="daysWithBookings.length > 0; else noBookings">
+                        <ng-container *ngFor="let dayWithBookings of daysWithBookings">
+                            <div class="flex items-center justify-center my-3 -mx-6">
+                                <div class="flex-auto border-b"></div>
+                                <div class="flex-0 mx-4 text-sm font-medium leading-5 text-secondary">
+                                    {{ dayWithBookings.bookingDate | date: 'longDate' }}
+                                </div>
+                                <div class="flex-auto border-b"></div>
+                            </div>
+                            <ng-container *ngFor="let booking of dayWithBookings.bookings">
+                                <div class="z-20 flex items-center py-5 px-8 cursor-pointer border-t border-b" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedBooking || selectedBooking.id !== booking.id,
+                                                'bg-primary-50 dark:bg-hover': selectedBooking && selectedBooking.id === booking.id}" [routerLink]="[booking.id]" (click)="selectBooking(booking)">
+                                    <!-- <div class="relative flex flex-0 items-center justify-center w-10 h-10">
+                                        <ng-container *ngIf="booking.unreadCount > 0">
+                                            <div class="absolute bottom-0 right-0 flex-0 w-2 h-2 -ml-0.5 rounded-full ring-2 ring-bg-card dark:ring-gray-900 bg-primary dark:bg-primary-500 text-on-primary"
+                                                [class.ring-primary-50]="selectedBooking && selectedBooking.id === booking.id"></div>
+                                        </ng-container>
+                                        <ng-container *ngIf="booking.contact.avatar">
+                                            <img class="w-full h-full rounded-full object-cover" [src]="booking.contact.avatar" alt="Contact avatar" />
+                                        </ng-container>
+                                        <ng-container *ngIf="!booking.contact.avatar">
+                                            <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
+                                                {{booking.contact.name.charAt(0)}}
+                                            </div>
+                                        </ng-container>
+                                    </div> -->
+
+                                    <div class="min-w-0 ml-4">
+                                        <div class="font-medium leading-5 truncate">{{ booking.amount | number: '1.2-2' }}</div>
+                                        <div class="leading-5 truncate text-secondary" [class.text-primary]="!booking.settled" [class.dark:text-primary-500]="booking.settled">
+                                            <div *ngIf="booking.typ === CreditDebit.CRDT">von {{ booking.debitorName }}</div>
+                                            <div *ngIf="booking.typ === CreditDebit.DBIT">an {{ booking.creditorName }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col items-end self-start ml-auto pl-2">
+                                        <ng-container *ngIf="booking.ignored">
+                                            <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:volume-off'"></mat-icon>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </div>
+
+            </div>
+
+            <!-- No bookings template -->
+            <ng-template #noBookings>
+                <div class="flex flex-auto flex-col items-center justify-center h-full">
+                    <mat-icon class="icon-size-24" [svgIcon]="'iconsmind:speach_bubble'"></mat-icon>
+                    <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">Keine Kontobewegungen</div>
+                </div>
+            </ng-template>
+
+            <!-- Conversation -->
+            <!-- <ng-container *ngIf="chats && chats.length > 0">
+                <div class="flex-auto border-l" [ngClass]="{'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedBooking && selectedBooking.id,
+                                'hidden lg:flex': !selectedBooking || !selectedBooking.id}">
+                    <router-outlet></router-outlet>
+                </div>
+            </ng-container> -->
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>
