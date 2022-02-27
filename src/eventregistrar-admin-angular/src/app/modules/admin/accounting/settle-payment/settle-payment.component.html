@@ -31,7 +31,7 @@
                 <ng-container *ngFor="let candidate of candidates">
                     <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
                         <div class="flex flex-row items-baseline gap-x-2">
-                            <div class="text-xl font-semibold leading-tight">{{ candidate.amountToAssign | number: '1.2-2' }}</div>
+                            <div class="text-xl font-semibold leading-tight">{{ candidate.price - candidate.amountPaid | number: '1.2-2' }}</div>
                             <div class="text-secondary leading-tight">{{ candidate.firstName }} {{ candidate.lastName }}</div>
                         </div>
                         <!-- <div *ngIf="booking.charges" class="flex flex-row items-baseline gap-x-2">

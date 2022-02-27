@@ -62,8 +62,8 @@
                                 <div class="flex-auto border-b"></div>
                             </div>
                             <ng-container *ngFor="let booking of dayWithBookings.bookings">
-                                <div class="z-20 flex items-center py-5 px-8 cursor-pointer border-t border-b" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedBooking || selectedBooking.id !== booking.id,
-                                                'bg-primary-50 dark:bg-hover': selectedBooking && selectedBooking.id === booking.id}" [routerLink]="[booking.id]" (click)="selectBooking(booking)">
+                                <div class="z-20 flex items-center py-5 px-8 cursor-pointer border-t border-b" [routerLink]="[booking.id]" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedBooking || selectedBooking.id !== booking.id,
+                                                'bg-primary-50 dark:bg-hover': selectedBooking && selectedBooking.id === booking.id}">
                                     <!-- <div class="relative flex flex-0 items-center justify-center w-10 h-10">
                                         <ng-container *ngIf="booking.unreadCount > 0">
                                             <div class="absolute bottom-0 right-0 flex-0 w-2 h-2 -ml-0.5 rounded-full ring-2 ring-bg-card dark:ring-gray-900 bg-primary dark:bg-primary-500 text-on-primary"

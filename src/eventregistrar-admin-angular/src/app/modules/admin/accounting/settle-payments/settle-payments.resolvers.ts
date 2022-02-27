@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, merge, Observable, throwError } from 'rxjs';
-import { BankStatementsService } from '../bankStatements/bankStatements.service';
 import { SettlePaymentsService } from './settle-payments.service';
 
 

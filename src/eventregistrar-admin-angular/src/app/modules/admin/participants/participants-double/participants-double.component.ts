@@ -30,7 +30,6 @@ export class ParticipantsDoubleComponent implements OnInit
 
   participantsDropped(event: CdkDragDrop<Spot | Participant>): void
   {
-    console.log(event);
     // Move or transfer the item
     if (event.previousContainer === event.container)
     {

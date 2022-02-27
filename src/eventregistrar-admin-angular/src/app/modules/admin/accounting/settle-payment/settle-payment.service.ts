@@ -1,22 +1,24 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { EventService } from '../../events/event.service';
 import { ListService } from '../../infrastructure/listService';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SettlePaymentService
+export class SettlePaymentService extends ListService<AssignmentCandidate>
 {
-  constructor(private service: ListService<AssignmentCandidate>) { }
+  constructor(httpClient: HttpClient, eventService: EventService) { super(httpClient, eventService); }
 
   get candidates$(): Observable<AssignmentCandidate[]>
   {
-    return this.service.list$;
+    return this.list$;
   }
 
   fetchCandidates(id: string)
   {
-    return this.service.fetchItems(`accounting/bankAccountBookingId/${id}/assignmentCandidates`);
+    return this.fetchItems(`accounting/bankAccountBookingId/${id}/assignmentCandidates`);
   }
 }
 

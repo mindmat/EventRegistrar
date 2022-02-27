@@ -1,21 +1,20 @@
+import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { EventService } from '../../events/event.service';
 import { ListService } from '../../infrastructure/listService';
 import { BookingsOfDay, CreditDebit } from '../bankStatements/bankStatements.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SettlePaymentsService
+export class SettlePaymentsService extends ListService<BookingsOfDay>
 {
-  constructor(private service: ListService<BookingsOfDay>)
-  // private candidatesService: ListService<AssignmentCandidate>)
-  {
-  }
+  constructor(httpClient: HttpClient, eventService: EventService) { super(httpClient, eventService); }
 
   get payments$(): Observable<BookingsOfDay[]>
   {
-    return this.service.list$;
+    return this.list$;
   }
 
   // get candidates$(): Observable<AssignmentCandidate[]>
@@ -25,15 +24,13 @@ export class SettlePaymentsService
 
   fetchBankStatements(hideIncoming: boolean = false, hideOutgoing: boolean = false, hideSettled: boolean = true, hideIgnored: boolean = true): Observable<BookingsOfDay[]>
   {
-    console.log('fetchBankStatements');
-    return this.service.fetchItems('accounting/bank-statements', null, { hideIncoming, hideOutgoing, hideSettled, hideIgnored });
+    return this.fetchItems('accounting/bank-statements', null, { hideIncoming, hideOutgoing, hideSettled, hideIgnored });
   }
 
   // fetchCandidates(id?: string): Observable<AssignmentCandidate[]>
   // {
   //   if (!id)
   //   {
-  //     console.log('fetchCandidates');
   //     return of(null);
   //   }
   //   return this.candidatesService.fetchItems(`accounting/bankAccountBookingId/${id}/assignmentCandidates`);

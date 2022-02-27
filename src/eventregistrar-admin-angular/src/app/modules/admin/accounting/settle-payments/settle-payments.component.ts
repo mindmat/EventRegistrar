@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
-import { BankAccountBooking, BankStatementsService, BookingsOfDay, CreditDebit } from '../bankStatements/bankStatements.service';
-import { AssignmentCandidate, BankBookingDisplayItem, SettlePaymentsService } from './settle-payments.service';
+import { BankAccountBooking, BookingsOfDay, CreditDebit } from '../bankStatements/bankStatements.service';
+import { SettlePaymentsService } from './settle-payments.service';
 
 @Component({
   selector: 'app-settle-payments',
@@ -31,11 +31,11 @@ export class SettlePaymentsComponent implements OnInit
       hideIgnored$: new BehaviorSubject(true),
     };
 
-  constructor(private service: SettlePaymentsService, private statementService: BankStatementsService, private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private service: SettlePaymentsService, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
   {
-    this.statementService.payments$
+    this.service.payments$
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe((daysWithBookings: BookingsOfDay[]) =>
       {
@@ -60,8 +60,7 @@ export class SettlePaymentsComponent implements OnInit
       .subscribe(([query, hideIncoming, hideOutgoing, hideSettled, hideIgnored]) =>
       {
         query = query.toLowerCase();
-        console.log('filter');
-        this.statementService.fetchBankStatements(hideIncoming, hideOutgoing, hideSettled, hideIgnored).subscribe();
+        this.service.fetchBankStatements(hideIncoming, hideOutgoing, hideSettled, hideIgnored).subscribe();
       });
   }
 
