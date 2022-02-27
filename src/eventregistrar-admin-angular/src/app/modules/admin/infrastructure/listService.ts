@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { EventService } from '../events/event.service';
@@ -24,10 +24,11 @@ export class ListService<TListItem>
         return this.httpClient.get<TListItem[]>(url, options).pipe(
             map(newItems =>
             {
-                // Update the course
+
+                // Update the list
                 this.list.next(newItems);
 
-                // Return the course
+                // Return the list
                 return newItems;
             }),
             switchMap(newItems =>

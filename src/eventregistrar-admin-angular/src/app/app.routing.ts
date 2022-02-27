@@ -15,6 +15,8 @@ import { BankStatementsResolver } from './modules/admin/accounting/bankStatement
 import { SearchRegistrationComponent } from './modules/admin/registrations/search-registration/search-registration.component';
 import { SettlePaymentsComponent } from './modules/admin/accounting/settle-payments/settle-payments.component';
 import { SettlePaymentsResolver } from './modules/admin/accounting/settle-payments/settle-payments.resolvers';
+import { SettlePaymentComponent } from './modules/admin/accounting/settle-payment/settle-payment.component';
+import { SettlePaymentResolver } from './modules/admin/accounting/settle-payment/settle-payment.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -116,8 +118,22 @@ export const appRoutes: Route[] = [
                 path: 'settle-payments',
                 canActivate: [AuthGuard],
                 component: SettlePaymentsComponent,
-                resolve: { initialData: SettlePaymentsResolver }
-            }
+                resolve: { initialData: SettlePaymentsResolver },
+                children: [
+                    {
+                        path: ':id',
+                        component: SettlePaymentComponent,
+                        resolve: { initialData: SettlePaymentResolver }
+                    }
+                ]
+            },
+            // {
+            //     path: 'settle-payments/:id',
+            //     canActivate: [AuthGuard],
+            //     component: SettlePaymentsComponent,
+            //     // resolve: { initialData: SettlePaymentsResolver }
+            // }
+
         ]
     },
     {

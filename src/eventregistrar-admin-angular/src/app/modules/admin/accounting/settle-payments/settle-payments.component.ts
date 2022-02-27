@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
-import { BankAccountBooking, BookingsOfDay, CreditDebit } from '../bankStatements/bankStatements.service';
-import { BankBookingDisplayItem, SettlePaymentsService } from './settle-payments.service';
+import { BankAccountBooking, BankStatementsService, BookingsOfDay, CreditDebit } from '../bankStatements/bankStatements.service';
+import { AssignmentCandidate, BankBookingDisplayItem, SettlePaymentsService } from './settle-payments.service';
 
 @Component({
   selector: 'app-settle-payments',
@@ -14,6 +14,8 @@ export class SettlePaymentsComponent implements OnInit
   daysWithBookings: BookingsOfDay[];
   CreditDebit = CreditDebit;
   selectedBooking: BankAccountBooking;
+
+  // candidates: AssignmentCandidate[];
 
   filters: {
     query$: BehaviorSubject<string>;
@@ -29,11 +31,11 @@ export class SettlePaymentsComponent implements OnInit
       hideIgnored$: new BehaviorSubject(true),
     };
 
-  constructor(private service: SettlePaymentsService, private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private service: SettlePaymentsService, private statementService: BankStatementsService, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
   {
-    this.service.payments$
+    this.statementService.payments$
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe((daysWithBookings: BookingsOfDay[]) =>
       {
@@ -43,25 +45,35 @@ export class SettlePaymentsComponent implements OnInit
         this.changeDetectorRef.markForCheck();
       });
 
+    // this.service.candidates$
+    //   .pipe(takeUntil(this.unsubscribeAll))
+    //   .subscribe((candidates: AssignmentCandidate[]) =>
+    //   {
+    //     this.candidates = candidates;
+
+    //     // Mark for check
+    //     this.changeDetectorRef.markForCheck();
+    //   });
+
     // Filter
     combineLatest([this.filters.query$, this.filters.hideIncoming$, this.filters.hideOutgoing$, this.filters.hideSettled$, this.filters.hideIgnored$]).pipe(debounceTime(200))
       .subscribe(([query, hideIncoming, hideOutgoing, hideSettled, hideIgnored]) =>
       {
         query = query.toLowerCase();
-        console.log('x');
-        this.service.fetchBankStatements(hideIncoming, hideOutgoing, hideSettled, hideIgnored).subscribe(
-
-        );
+        console.log('filter');
+        this.statementService.fetchBankStatements(hideIncoming, hideOutgoing, hideSettled, hideIgnored).subscribe();
       });
   }
 
-  selectBooking(booking: BankAccountBooking)
-  {
-    this.selectedBooking = booking;
+  // selectBooking(booking: BankAccountBooking)
+  // {
+  //   this.selectedBooking = booking;
 
-    // Mark for check
-    this.changeDetectorRef.markForCheck();
-  }
+  //   this.service.fetchCandidates(booking.id).subscribe();
+
+  //   // Mark for check
+  //   this.changeDetectorRef.markForCheck();
+  // }
 
   filterByQuery(query: string): void
   {

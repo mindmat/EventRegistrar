@@ -14,9 +14,9 @@ export class BankStatementsService
     return this.service.list$;
   }
 
-  fetchAllBankStatements(): Observable<BookingsOfDay[]>
+  fetchBankStatements(hideIncoming: boolean = false, hideOutgoing: boolean = false, hideSettled: boolean = true, hideIgnored: boolean = true): Observable<BookingsOfDay[]>
   {
-    return this.service.fetchItems('accounting/bank-statements', null, { hideIncoming: false, hideOutgoing: false, hideSettled: false, hideIgnored: true });
+    return this.service.fetchItems('accounting/bank-statements', null, { hideIncoming, hideOutgoing, hideSettled, hideIgnored });
   }
 }
 

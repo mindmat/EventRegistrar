@@ -31,14 +31,7 @@ export class OverviewComponent implements OnInit, OnDestroy
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    constructor(
-        private _activatedRoute: ActivatedRoute,
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _router: Router,
-        private overviewService: OverviewService
-    )
-    {
-    }
+    constructor(private _changeDetectorRef: ChangeDetectorRef, private overviewService: OverviewService) { }
 
     ngOnInit(): void
     {

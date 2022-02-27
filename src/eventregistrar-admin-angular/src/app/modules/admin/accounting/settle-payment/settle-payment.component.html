@@ -1,0 +1,50 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <!-- Title -->
+        <div class="flex-1 min-w-0">
+            <div class="text-4xl font-extrabold tracking-tight leading-none">Ausgleich</div>
+            <!-- <div class="mt-1.5 text-lg text-secondary">{{filteredBookingDays.length}}</div> -->
+        </div>
+        <!-- Filters -->
+        <!-- <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input (input)="filterByQuery(query.value)" placeholder="Search by title or description" matInput #query>
+        </mat-form-field> -->
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-col p-6 sm:p-8 sm:pt-4 overflow-y-auto">
+
+        <!-- Days -->
+        <div class="p-2 rounded-xl bg-default">
+
+            <div class="flex flex-row items-baseline gap-x-2 ml-6">
+                <div class="font-medium">Anmeldungen</div>
+                <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
+            </div>
+
+            <!-- Bookings -->
+            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+                <!-- Booking -->
+                <ng-container *ngFor="let candidate of candidates">
+                    <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
+                        <div class="flex flex-row items-baseline gap-x-2">
+                            <div class="text-xl font-semibold leading-tight">{{ candidate.amountToAssign | number: '1.2-2' }}</div>
+                            <div class="text-secondary leading-tight">{{ candidate.firstName }} {{ candidate.lastName }}</div>
+                        </div>
+                        <!-- <div *ngIf="booking.charges" class="flex flex-row items-baseline gap-x-2">
+                                <div class="text-xl font-semibold leading-tight">{{ booking.charges | number: '1.2-2' }}</div>
+                                <div class="text-secondary leading-tight">Fremdspesen</div>
+                            </div> -->
+                        <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
+                                <span class="leading-none">{{ candidate.message }}</span>
+                            </div> -->
+                    </fuse-card>
+                </ng-container>
+            </div>
+        </div>
+
+    </div>
+</div>

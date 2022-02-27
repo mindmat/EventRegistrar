@@ -40,6 +40,7 @@ import { FuseCardModule } from '@fuse/components/card';
 import { BankStatementsComponent } from './modules/admin/accounting/bankStatements/bankStatements.component';
 import { SearchRegistrationComponent } from './modules/admin/registrations/search-registration/search-registration.component';
 import { SettlePaymentsComponent } from './modules/admin/accounting/settle-payments/settle-payments.component';
+import { SettlePaymentComponent } from './modules/admin/accounting/settle-payment/settle-payment.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -56,7 +57,8 @@ const routerConfig: ExtraOptions = {
         RegistrationComponent,
         BankStatementsComponent,
         SearchRegistrationComponent,
-        SettlePaymentsComponent
+        SettlePaymentsComponent,
+        SettlePaymentComponent
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },

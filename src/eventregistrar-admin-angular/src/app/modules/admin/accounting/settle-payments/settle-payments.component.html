@@ -108,12 +108,12 @@
             </ng-template>
 
             <!-- Conversation -->
-            <!-- <ng-container *ngIf="chats && chats.length > 0">
+            <ng-container *ngIf="daysWithBookings && daysWithBookings.length > 0">
                 <div class="flex-auto border-l" [ngClass]="{'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedBooking && selectedBooking.id,
                                 'hidden lg:flex': !selectedBooking || !selectedBooking.id}">
                     <router-outlet></router-outlet>
                 </div>
-            </ng-container> -->
+            </ng-container>
 
         </mat-drawer-content>
 
