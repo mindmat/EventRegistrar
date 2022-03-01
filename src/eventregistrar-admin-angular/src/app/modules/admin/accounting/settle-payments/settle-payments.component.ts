@@ -40,6 +40,10 @@ export class SettlePaymentsComponent implements OnInit
       .subscribe((daysWithBookings: BookingsOfDay[]) =>
       {
         this.daysWithBookings = daysWithBookings;
+        if (!this.selectedBooking && daysWithBookings.length > 0 && daysWithBookings[0].bookings.length > 0)        
+        {
+          this.selectBooking(daysWithBookings[0].bookings[0]);
+        }
 
         // Mark for check
         this.changeDetectorRef.markForCheck();
@@ -64,15 +68,13 @@ export class SettlePaymentsComponent implements OnInit
       });
   }
 
-  // selectBooking(booking: BankAccountBooking)
-  // {
-  //   this.selectedBooking = booking;
+  selectBooking(booking: BankAccountBooking)
+  {
+    this.selectedBooking = booking;
 
-  //   this.service.fetchCandidates(booking.id).subscribe();
-
-  //   // Mark for check
-  //   this.changeDetectorRef.markForCheck();
-  // }
+    // Mark for check
+    this.changeDetectorRef.markForCheck();
+  }
 
   filterByQuery(query: string): void
   {
@@ -98,5 +100,4 @@ export class SettlePaymentsComponent implements OnInit
   {
     this.filters.hideIgnored$.next(change.checked);
   }
-
 }

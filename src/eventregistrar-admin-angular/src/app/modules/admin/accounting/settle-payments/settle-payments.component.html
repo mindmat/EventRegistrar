@@ -62,9 +62,10 @@
                                 <div class="flex-auto border-b"></div>
                             </div>
                             <ng-container *ngFor="let booking of dayWithBookings.bookings">
-                                <div class="z-20 flex items-center py-5 px-8 cursor-pointer border-t border-b" [routerLink]="[booking.id]" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedBooking || selectedBooking.id !== booking.id,
-                                                'bg-primary-50 dark:bg-hover': selectedBooking && selectedBooking.id === booking.id}">
-                                    <!-- <div class="relative flex flex-0 items-center justify-center w-10 h-10">
+                                <div class="z-20 flex items-center py-5 px-4 cursor-pointer border-t border-b" [routerLink]="[booking.id]" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedBooking || selectedBooking.id !== booking.id,
+                                                'bg-primary-50 dark:bg-hover': selectedBooking && selectedBooking.id === booking.id}" (click)="selectBooking(booking)">
+                                    <div class="flex flex-col pl-2">
+                                        <!-- <div class="relative flex flex-0 items-center justify-center w-10 h-10">
                                         <ng-container *ngIf="booking.unreadCount > 0">
                                             <div class="absolute bottom-0 right-0 flex-0 w-2 h-2 -ml-0.5 rounded-full ring-2 ring-bg-card dark:ring-gray-900 bg-primary dark:bg-primary-500 text-on-primary"
                                                 [class.ring-primary-50]="selectedBooking && selectedBooking.id === booking.id"></div>
@@ -79,17 +80,22 @@
                                         </ng-container>
                                     </div> -->
 
-                                    <div class="min-w-0 ml-4">
-                                        <div class="font-medium leading-5 truncate">{{ booking.amount | number: '1.2-2' }}</div>
-                                        <div class="leading-5 truncate text-secondary" [class.text-primary]="!booking.settled" [class.dark:text-primary-500]="booking.settled">
-                                            <div *ngIf="booking.typ === CreditDebit.CRDT">von {{ booking.debitorName }}</div>
-                                            <div *ngIf="booking.typ === CreditDebit.DBIT">an {{ booking.creditorName }}</div>
+                                        <div class="min-w-0">
+                                            <div class="font-medium leading-5 truncate">{{ booking.amount | number: '1.2-2' }}</div>
+                                            <div class="leading-5 truncate text-secondary" [class.text-primary]="!booking.settled" [class.dark:text-primary-500]="booking.settled">
+                                                <div *ngIf="booking.typ === CreditDebit.CRDT">von {{ booking.debitorName }}</div>
+                                                <div *ngIf="booking.typ === CreditDebit.DBIT">an {{ booking.creditorName }}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="flex flex-col items-end self-start ml-auto pl-2">
-                                        <ng-container *ngIf="booking.ignored">
-                                            <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:volume-off'"></mat-icon>
-                                        </ng-container>
+                                        <div class="flex flex-col items-end self-start ml-auto pl-2">
+                                            <ng-container *ngIf="booking.ignored">
+                                                <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:volume-off'"></mat-icon>
+                                            </ng-container>
+                                        </div>
+                                        <div *ngIf="selectedBooking && selectedBooking.id === booking.id && booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
+                                            <span class="leading-none">{{ booking.message }}</span>
+                                        </div>
+
                                     </div>
                                 </div>
                             </ng-container>
