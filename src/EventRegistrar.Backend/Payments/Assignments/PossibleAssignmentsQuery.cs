@@ -29,11 +29,37 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
     {
         var booking = await _bookings.Where(pmt => pmt.Id == query.BankAccountBookingId
                                                 && pmt.BankAccountStatementsFile!.EventId == query.EventId)
-                                     .Include(pmt => pmt.Assignments)
+                                     .Include(pmt => pmt.Assignments!)
+                                     .ThenInclude(pas => pas.Registration)
                                      .FirstAsync(cancellationToken);
         var info = booking.Info;
-        var openAmount = booking.Amount -
-                         booking.Assignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
+        var openAmount = booking.Amount
+                       - booking.Assignments!.Sum(asn => asn.PayoutRequestId == null
+                             ? asn.Amount
+                             : -asn.Amount);
+
+        var existingAssignments = booking.Assignments!
+                                         .Where(pas => pas.Registration != null
+                                                    && pas.PaymentAssignmentId_Counter == null)
+                                         .Select(pas => new PossibleAssignment
+                                                        {
+                                                            PaymentAssignmentId_Existing = pas.Id,
+                                                            BankAccountBookingId = booking.Id,
+                                                            RegistrationId = pas.RegistrationId!.Value,
+                                                            FirstName = pas.Registration!.RespondentFirstName,
+                                                            LastName = pas.Registration.RespondentLastName,
+                                                            Email = pas.Registration.RespondentEmail,
+                                                            IsWaitingList = pas.Registration.IsWaitingList == true,
+                                                            Price = pas.Registration.Price ?? 0m,
+                                                            IsExistingAssignment = true,
+                                                            ExistingAssignedAmount = pas.Amount,
+                                                            MatchScore = 1000
+                                                        })
+                                         .ToList();
+        if (openAmount == 0)
+        {
+            return existingAssignments;
+        }
 
         var registrations = await _registrations.Where(reg => reg.EventId == query.EventId
                                                            && reg.State == RegistrationState.Received)
@@ -63,14 +89,15 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
         registrations.ForEach(reg => reg.MatchScore = CalculateMatchScore(reg, wordsInPayment, openAmount));
         registrations.ForEach(reg => reg.AmountMatch = openAmount == reg.Price - reg.AmountPaid);
         return registrations.Where(mat => mat.MatchScore > 0)
+                            .Concat(existingAssignments)
                             .OrderByDescending(mtc => mtc.MatchScore);
     }
 
     private static int CalculateMatchScore(PossibleAssignment reg, HashSet<string>? wordsInPayment, decimal openAmount)
     {
         // names can contain multiple words, e.g. 'de Luca'
-        var nameWords = reg.FirstName.Split(' ')
-                           .Union(reg.LastName.Split(' '))
+        var nameWords = reg.FirstName?.Split(' ')
+                           .Union(reg.LastName?.Split(' '))
                            .Select(nmw => nmw.ToLowerInvariant())
                            .ToList();
         var nameScore = nameWords.Sum(nmw => wordsInPayment.Count(wrd => wrd == nmw));
@@ -82,6 +109,10 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
 public class PossibleAssignment
 {
     public Guid RegistrationId { get; set; }
+    public bool IsExistingAssignment { get; set; }
+    public Guid? PaymentAssignmentId_Existing { get; set; }
+    public decimal? ExistingAssignedAmount { get; set; }
+
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }

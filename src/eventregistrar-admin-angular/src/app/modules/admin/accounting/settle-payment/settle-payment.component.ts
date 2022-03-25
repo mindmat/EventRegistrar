@@ -26,5 +26,8 @@ export class SettlePaymentComponent implements OnInit
       });
 
   }
-
+  unassign(paymentAssignmentId: string)
+  {
+    this.service.unassign(paymentAssignmentId);
+  }
 }

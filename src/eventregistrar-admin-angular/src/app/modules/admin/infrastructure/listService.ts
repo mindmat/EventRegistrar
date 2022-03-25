@@ -6,7 +6,7 @@ export class ListService<TListItem>
 {
     private list: BehaviorSubject<TListItem[] | null> = new BehaviorSubject(null);
 
-    constructor(private httpClient: HttpClient, private eventService: EventService) { }
+    constructor(protected httpClient: HttpClient, private eventService: EventService) { }
 
     protected get list$(): Observable<TListItem[]>
     {
@@ -15,7 +15,7 @@ export class ListService<TListItem>
 
     protected fetchItems(urlInEvent?: string, url?: string, params?: any): Observable<TListItem[]>
     {
-        url = url ?? `api/events/${this.eventService.selected}/${urlInEvent}`;
+        url = url ?? this.getEventUrl(urlInEvent);
         const options = params ? { params } : {};
         return this.httpClient.get<TListItem[]>(url, options).pipe(
             map(newItems =>
@@ -37,6 +37,11 @@ export class ListService<TListItem>
                 return of(newItems);
             })
         );
+    }
+
+    protected getEventUrl(urlInEvent: string)
+    {
+        return `api/events/${this.eventService.selected}/${urlInEvent}`;
     }
 }
 

@@ -20,12 +20,22 @@ export class SettlePaymentService extends ListService<AssignmentCandidate>
   {
     return this.fetchItems(`accounting/bankAccountBookingId/${id}/assignmentCandidates`);
   }
+
+  unassign(paymentAssignmentId: string)
+  {
+    this.httpClient.delete(this.getEventUrl(`paymentAssignments/${paymentAssignmentId}`))
+      .subscribe(x => console.log(x));
+  }
 }
 
 
 export class AssignmentCandidate
 {
   registrationId: string;
+  isExistingAssignment: boolean;
+  existingAssignmentAmount: number;
+  paymentAssignmentId_Existing: string;
+
   firstName: string;
   lastName: string;
   email: string;

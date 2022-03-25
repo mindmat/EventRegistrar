@@ -12,9 +12,7 @@ public class UnassignedIncomingPaymentsQuery : IRequest<IEnumerable<PaymentDispl
     public Guid PaymentId { get; set; }
 }
 
-public class
-    UnassignedIncomingPaymentsQueryHandler : IRequestHandler<UnassignedIncomingPaymentsQuery,
-        IEnumerable<PaymentDisplayItem>>
+public class UnassignedIncomingPaymentsQueryHandler : IRequestHandler<UnassignedIncomingPaymentsQuery, IEnumerable<PaymentDisplayItem>>
 {
     private readonly IQueryable<BankAccountBooking> _payments;
 
@@ -26,30 +24,31 @@ public class
     public async Task<IEnumerable<PaymentDisplayItem>> Handle(UnassignedIncomingPaymentsQuery query,
                                                               CancellationToken cancellationToken)
     {
-        var payments = await _payments
-                             .Where(rpy => rpy.BankAccountStatementsFile.EventId == query.EventId
-                                        && !rpy.Settled
-                                        && !rpy.Ignore
-                                        && rpy.CreditDebitType == CreditDebit.CRDT)
-                             .Select(rpy => new PaymentDisplayItem
-                                            {
-                                                Id = rpy.Id,
-                                                Amount = rpy.Amount,
-                                                AmountAssigned = rpy.Assignments.Sum(asn =>
-                                                    asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
-                                                BookingDate = rpy.BookingDate,
-                                                Currency = rpy.Currency,
-                                                Info = rpy.Info,
-                                                Reference = rpy.Reference,
-                                                AmountRepaid = rpy.Repaid,
-                                                Settled = rpy.Settled,
-                                                PaymentSlipId = rpy.PaymentSlipId,
-                                                Message = rpy.Message,
-                                                DebitorName = rpy.DebitorName
-                                            })
-                             .OrderByDescending(rpy => rpy.BookingDate)
-                             .ThenByDescending(rpy => rpy.Amount)
-                             .ToListAsync(cancellationToken);
+        var payments = await _payments.Where(rpy => rpy.BankAccountStatementsFile!.EventId == query.EventId
+                                                 && !rpy.Settled
+                                                 && !rpy.Ignore
+                                                 && rpy.CreditDebitType == CreditDebit.CRDT)
+                                      .Select(rpy => new PaymentDisplayItem
+                                                     {
+                                                         Id = rpy.Id,
+                                                         Amount = rpy.Amount,
+                                                         AmountAssigned = rpy.Assignments!.Sum(asn =>
+                                                             asn.PayoutRequestId == null
+                                                                 ? asn.Amount
+                                                                 : -asn.Amount),
+                                                         BookingDate = rpy.BookingDate,
+                                                         Currency = rpy.Currency,
+                                                         Info = rpy.Info,
+                                                         Reference = rpy.Reference,
+                                                         AmountRepaid = rpy.Repaid,
+                                                         Settled = rpy.Settled,
+                                                         PaymentSlipId = rpy.PaymentSlipId,
+                                                         Message = rpy.Message,
+                                                         DebitorName = rpy.DebitorName
+                                                     })
+                                      .OrderByDescending(rpy => rpy.BookingDate)
+                                      .ThenByDescending(rpy => rpy.Amount)
+                                      .ToListAsync(cancellationToken);
         return payments;
     }
 }

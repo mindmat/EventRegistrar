@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
@@ -23,12 +24,14 @@ public class UnassignPaymentCommandHandler : IRequestHandler<UnassignPaymentComm
         _eventBus = eventBus;
     }
 
-    public async Task<Unit> Handle(UnassignPaymentCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UnassignPaymentCommand command, CancellationToken cancellationToken)
     {
-        var assignment = await _assignments.FirstAsync(ass => ass.Id == request.PaymentAssignmentId, cancellationToken);
+        var assignment = await _assignments.FirstAsync(ass => ass.Id == command.PaymentAssignmentId, cancellationToken);
         if (assignment.PaymentAssignmentId_Counter != null)
+        {
             throw new ArgumentException(
                 $"Assignment {assignment.Id} already has a counter assignment: {assignment.PaymentAssignmentId_Counter}");
+        }
 
         var counterAssignment = new PaymentAssignment
                                 {
@@ -43,8 +46,8 @@ public class UnassignPaymentCommandHandler : IRequestHandler<UnassignPaymentComm
         await _assignments.InsertOrUpdateEntity(counterAssignment, cancellationToken);
         _eventBus.Publish(new PaymentUnassigned
                           {
-                              EventId = request.EventId,
-                              PaymentAssignmentId = request.PaymentAssignmentId,
+                              EventId = command.EventId,
+                              PaymentAssignmentId = command.PaymentAssignmentId,
                               PaymentAssignmentId_Counter = counterAssignment.Id,
                               PaymentId = assignment.ReceivedPaymentId,
                               RegistrationId = assignment.RegistrationId

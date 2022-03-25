@@ -22,9 +22,9 @@ export class SettlePaymentsService extends ListService<BookingsOfDay>
   //   return this.candidatesService.list$;
   // }
 
-  fetchBankStatements(hideIncoming: boolean = false, hideOutgoing: boolean = false, hideSettled: boolean = true, hideIgnored: boolean = true): Observable<BookingsOfDay[]>
+  fetchBankStatements(searchString: string = null, hideIncoming: boolean = false, hideOutgoing: boolean = false, hideSettled: boolean = true, hideIgnored: boolean = true): Observable<BookingsOfDay[]>
   {
-    return this.fetchItems('accounting/bank-statements', null, { hideIncoming, hideOutgoing, hideSettled, hideIgnored });
+    return this.fetchItems('accounting/bank-statements', null, { searchString, hideIncoming, hideOutgoing, hideSettled, hideIgnored });
   }
 
   // fetchCandidates(id?: string): Observable<AssignmentCandidate[]>

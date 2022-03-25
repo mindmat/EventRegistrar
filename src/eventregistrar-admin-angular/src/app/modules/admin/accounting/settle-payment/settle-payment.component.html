@@ -17,7 +17,7 @@
     <!-- Main -->
     <div class="flex flex-col p-6 sm:p-8 sm:pt-4 overflow-y-auto">
 
-        <!-- Days -->
+        <!-- Assignment to registrations -->
         <div class="p-2 rounded-xl bg-default">
 
             <div class="flex flex-row items-baseline gap-x-2 ml-6">
@@ -31,8 +31,12 @@
                 <ng-container *ngFor="let candidate of candidates">
                     <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
                         <div class="flex flex-row items-baseline gap-x-2">
-                            <div class="text-xl font-semibold leading-tight">{{ candidate.price - candidate.amountPaid | number: '1.2-2' }}</div>
+                            <div *ngIf="candidate.isExistingAssignment" class="text-xl font-semibold leading-tight">{{ candidate.existingAssignedAmount | number: '1.2-2' }}</div>
+                            <div *ngIf="!candidate.isExistingAssignment" class="text-xl font-semibold leading-tight">{{ candidate.price - candidate.amountPaid | number: '1.2-2' }}</div>
                             <div class="text-secondary leading-tight">{{ candidate.firstName }} {{ candidate.lastName }}</div>
+                            <button *ngIf="candidate.paymentAssignmentId_Existing" class="ml-auto" mat-icon-button (click)="unassign(candidate.paymentAssignmentId_Existing)">
+                                <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                            </button>
                         </div>
                         <!-- <div *ngIf="booking.charges" class="flex flex-row items-baseline gap-x-2">
                                 <div class="text-xl font-semibold leading-tight">{{ booking.charges | number: '1.2-2' }}</div>

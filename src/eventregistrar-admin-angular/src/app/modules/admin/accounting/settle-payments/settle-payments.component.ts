@@ -64,7 +64,7 @@ export class SettlePaymentsComponent implements OnInit
       .subscribe(([query, hideIncoming, hideOutgoing, hideSettled, hideIgnored]) =>
       {
         query = query.toLowerCase();
-        this.service.fetchBankStatements(hideIncoming, hideOutgoing, hideSettled, hideIgnored).subscribe();
+        this.service.fetchBankStatements(query, hideIncoming, hideOutgoing, hideSettled, hideIgnored).subscribe();
       });
   }
 

@@ -54,7 +54,7 @@
                 <div class="flex-auto overflow-y-auto">
                     <ng-container *ngIf="daysWithBookings.length > 0; else noBookings">
                         <ng-container *ngFor="let dayWithBookings of daysWithBookings">
-                            <div class="flex items-center justify-center my-3 -mx-6">
+                            <div class="z-20 flex items-center justify-center my-3 -mx-6">
                                 <div class="flex-auto border-b"></div>
                                 <div class="flex-0 mx-4 text-sm font-medium leading-5 text-secondary">
                                     {{ dayWithBookings.bookingDate | date: 'longDate' }}

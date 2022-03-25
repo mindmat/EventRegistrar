@@ -14,6 +14,7 @@ public class BankAccountBookingsQuery : IRequest<IEnumerable<BookingsOfDay>>, IE
     public bool HideSettled { get; set; }
     public bool HideIncoming { get; set; }
     public bool HideOutgoing { get; set; }
+    public string? SearchString { get; set; }
 }
 
 public class BankAccountBookingsQueryHandler : IRequestHandler<BankAccountBookingsQuery, IEnumerable<BookingsOfDay>>
@@ -33,6 +34,9 @@ public class BankAccountBookingsQueryHandler : IRequestHandler<BankAccountBookin
                                           .WhereIf(query.HideSettled, bbk => !bbk.Settled)
                                           .WhereIf(query.HideIncoming, bbk => bbk.CreditDebitType != CreditDebit.CRDT)
                                           .WhereIf(query.HideOutgoing, bbk => bbk.CreditDebitType != CreditDebit.DBIT)
+                                          .WhereIf(query.SearchString != null, bbk => EF.Functions.Like(bbk.Message!, $"%{query.SearchString}%")
+                                                                                   || EF.Functions.Like(bbk.CreditorName!, $"%{query.SearchString}%")
+                                                                                   || EF.Functions.Like(bbk.DebitorName!, $"%{query.SearchString}%"))
                                           .GroupBy(bbk => new { bbk.BookingDate, bbk.BankAccountStatementsFile!.Balance })
                                           .Select(day => new BookingsOfDay
                                                          {
