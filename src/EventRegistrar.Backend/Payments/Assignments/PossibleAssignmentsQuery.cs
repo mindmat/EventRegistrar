@@ -6,13 +6,19 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
 
-public class PossibleAssignmentsQuery : IRequest<IEnumerable<PossibleAssignment>>, IEventBoundRequest
+public class PossibleAssignmentsQuery : IRequest<BookingAssignments>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
     public Guid BankAccountBookingId { get; set; }
 }
 
-public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmentsQuery, IEnumerable<PossibleAssignment>>
+public class BookingAssignments
+{
+    public IEnumerable<AssignmentCandidateRegistration>? RegistrationCandidates { get; set; }
+    public IEnumerable<ExistingAssignment>? ExistingAssignments { get; set; }
+}
+
+public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmentsQuery, BookingAssignments>
 {
     private readonly IQueryable<BankAccountBooking> _bookings;
     private readonly IQueryable<Registration> _registrations;
@@ -24,9 +30,10 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
         _registrations = registrations;
     }
 
-    public async Task<IEnumerable<PossibleAssignment>> Handle(PossibleAssignmentsQuery query,
-                                                              CancellationToken cancellationToken)
+    public async Task<BookingAssignments> Handle(PossibleAssignmentsQuery query,
+                                                 CancellationToken cancellationToken)
     {
+        var result = new BookingAssignments();
         var booking = await _bookings.Where(pmt => pmt.Id == query.BankAccountBookingId
                                                 && pmt.BankAccountStatementsFile!.EventId == query.EventId)
                                      .Include(pmt => pmt.Assignments!)
@@ -38,27 +45,25 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
                              ? asn.Amount
                              : -asn.Amount);
 
-        var existingAssignments = booking.Assignments!
-                                         .Where(pas => pas.Registration != null
-                                                    && pas.PaymentAssignmentId_Counter == null)
-                                         .Select(pas => new PossibleAssignment
-                                                        {
-                                                            PaymentAssignmentId_Existing = pas.Id,
-                                                            BankAccountBookingId = booking.Id,
-                                                            RegistrationId = pas.RegistrationId!.Value,
-                                                            FirstName = pas.Registration!.RespondentFirstName,
-                                                            LastName = pas.Registration.RespondentLastName,
-                                                            Email = pas.Registration.RespondentEmail,
-                                                            IsWaitingList = pas.Registration.IsWaitingList == true,
-                                                            Price = pas.Registration.Price ?? 0m,
-                                                            IsExistingAssignment = true,
-                                                            ExistingAssignedAmount = pas.Amount,
-                                                            MatchScore = 1000
-                                                        })
-                                         .ToList();
+        result.ExistingAssignments = booking.Assignments!
+                                            .Where(pas => pas.Registration != null
+                                                       && pas.PaymentAssignmentId_Counter == null)
+                                            .Select(pas => new ExistingAssignment
+                                                           {
+                                                               PaymentAssignmentId_Existing = pas.Id,
+                                                               BankAccountBookingId = booking.Id,
+                                                               RegistrationId = pas.RegistrationId!.Value,
+                                                               FirstName = pas.Registration!.RespondentFirstName,
+                                                               LastName = pas.Registration.RespondentLastName,
+                                                               Email = pas.Registration.RespondentEmail,
+                                                               IsWaitingList = pas.Registration.IsWaitingList == true,
+                                                               Price = pas.Registration.Price ?? 0m,
+                                                               AssignedAmount = pas.Amount
+                                                           })
+                                            .ToList();
         if (openAmount == 0)
         {
-            return existingAssignments;
+            return result;
         }
 
         var registrations = await _registrations.Where(reg => reg.EventId == query.EventId
@@ -66,7 +71,7 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
                                                 .Where(reg => info!.Contains(reg.RespondentFirstName!)
                                                            || info.Contains(reg.RespondentLastName!)
                                                            || info.Contains(reg.RespondentEmail!))
-                                                .Select(reg => new PossibleAssignment
+                                                .Select(reg => new AssignmentCandidateRegistration
                                                                {
                                                                    BankAccountBookingId = booking.Id,
                                                                    RegistrationId = reg.Id,
@@ -86,14 +91,17 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
                                  .Select(wrd => wrd.ToLowerInvariant())
                                  .ToHashSet();
 
-        registrations.ForEach(reg => reg.MatchScore = CalculateMatchScore(reg, wordsInPayment, openAmount));
-        registrations.ForEach(reg => reg.AmountMatch = openAmount == reg.Price - reg.AmountPaid);
-        return registrations.Where(mat => mat.MatchScore > 0)
-                            .Concat(existingAssignments)
-                            .OrderByDescending(mtc => mtc.MatchScore);
+        registrations.ForEach(reg =>
+        {
+            reg.MatchScore = CalculateMatchScore(reg, wordsInPayment, openAmount);
+            reg.AmountMatch = openAmount == reg.Price - reg.AmountPaid;
+        });
+        result.RegistrationCandidates = registrations.Where(mat => mat.MatchScore > 0)
+                                                     .OrderByDescending(mtc => mtc.MatchScore);
+        return result;
     }
 
-    private static int CalculateMatchScore(PossibleAssignment reg, HashSet<string>? wordsInPayment, decimal openAmount)
+    private static int CalculateMatchScore(AssignmentCandidateRegistration reg, HashSet<string>? wordsInPayment, decimal openAmount)
     {
         // names can contain multiple words, e.g. 'de Luca'
         var nameWords = reg.FirstName?.Split(' ')
@@ -106,13 +114,9 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
     }
 }
 
-public class PossibleAssignment
+public class AssignmentCandidateRegistration
 {
     public Guid RegistrationId { get; set; }
-    public bool IsExistingAssignment { get; set; }
-    public Guid? PaymentAssignmentId_Existing { get; set; }
-    public decimal? ExistingAssignedAmount { get; set; }
-
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
@@ -122,5 +126,20 @@ public class PossibleAssignment
     public bool AmountMatch { get; set; }
     public decimal AmountPaid { get; set; }
     public int MatchScore { get; set; }
+    public Guid BankAccountBookingId { get; set; }
+}
+
+public class ExistingAssignment
+{
+    public Guid RegistrationId { get; set; }
+    public Guid? PaymentAssignmentId_Existing { get; set; }
+    public decimal? AssignedAmount { get; set; }
+
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? Email { get; set; }
+    public decimal Price { get; set; }
+    public bool IsWaitingList { get; set; }
+
     public Guid BankAccountBookingId { get; set; }
 }

@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Mailing;
@@ -32,13 +33,14 @@ public class ReleaseMailCommandHandler : IRequestHandler<ReleaseMailCommand>
 
     public async Task<Unit> Handle(ReleaseMailCommand command, CancellationToken cancellationToken)
     {
-        var withheldMail = await _mails
-                                 .Where(mail => mail.Id == command.MailId)
-                                 .Include(mail => mail.Registrations)
-                                 .ThenInclude(map => map.Registration)
-                                 .FirstAsync(cancellationToken);
+        var withheldMail = await _mails.Where(mail => mail.Id == command.MailId)
+                                       .Include(mail => mail.Registrations!)
+                                       .ThenInclude(map => map.Registration)
+                                       .FirstAsync(cancellationToken);
         if (withheldMail.Discarded)
+        {
             throw new ArgumentException($"Mail {withheldMail.Id} is discarded and thus cannot be sent");
+        }
 
         var sendMailCommand = new SendMailCommand
                               {
@@ -54,9 +56,9 @@ public class ReleaseMailCommandHandler : IRequestHandler<ReleaseMailCommand>
                                                                   {
                                                                       Email = grp.Key,
                                                                       Name = grp.Select(reg =>
-                                                                              reg.Registration.RespondentFirstName)
-                                                                          .StringJoin(
-                                                                              " & ") // avoid ',' obviously SendGrid interprets commas
+                                                                                    reg.Registration.RespondentFirstName)
+                                                                                .StringJoin(
+                                                                                    " & ") // avoid ',' obviously SendGrid interprets commas
                                                                   })
                                                    .ToList()
                               };

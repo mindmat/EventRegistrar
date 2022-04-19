@@ -1,8 +1,12 @@
 ﻿using System.Reflection;
 using System.Text;
+
 using MediatR;
+
 using Microsoft.Azure.ServiceBus;
+
 using Newtonsoft.Json;
+
 using SimpleInjector;
 
 namespace EventRegistrar.Backend.Infrastructure.ServiceBus;
@@ -15,11 +19,13 @@ public class MessageQueueReceiver : IDisposable
     private readonly IList<QueueClient> _queueClients = new List<QueueClient>();
     private readonly IDictionary<string, ServiceBusConsumer> _serviceBusConsumers;
     private readonly MethodInfo _typedProcessMethod;
+    private readonly string _serviceBusEndpoint;
 
     public MessageQueueReceiver(IEnumerable<ServiceBusConsumer> serviceBusConsumers,
                                 IMediator mediator,
                                 ILogger logger,
-                                Container container)
+                                Container container,
+                                IConfiguration configuration)
     {
         _serviceBusConsumers = serviceBusConsumers.ToDictionary(sbc => sbc.QueueName);
         _mediator = mediator;
@@ -27,6 +33,8 @@ public class MessageQueueReceiver : IDisposable
         _container = container;
         _typedProcessMethod = typeof(MessageQueueReceiver).GetMethod(nameof(ProcessTypedMessage),
             BindingFlags.NonPublic | BindingFlags.Instance);
+        _serviceBusEndpoint = Environment.GetEnvironmentVariable("ServiceBusEndpoint")
+                           ?? configuration.GetValue<string>("ServiceBusEndpoint");
     }
 
     public void Dispose()
@@ -36,14 +44,13 @@ public class MessageQueueReceiver : IDisposable
 
     public void RegisterMessageHandlers()
     {
-        var serviceBusEndpoint = Environment.GetEnvironmentVariable("ServiceBusEndpoint");
-        if (string.IsNullOrEmpty(serviceBusEndpoint))
+        if (string.IsNullOrEmpty(_serviceBusEndpoint))
         {
             _logger.LogWarning("No ServiceBusEndpoint configured");
             return;
         }
 
-        var genericQueueClient = new QueueClient(serviceBusEndpoint, ServiceBusClient.CommandQueueName);
+        var genericQueueClient = new QueueClient(_serviceBusEndpoint, ServiceBusClient.CommandQueueName);
 
         // Configure the MessageHandler Options in terms of exception handling, number of concurrent messages to deliver etc.
         var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
@@ -64,7 +71,7 @@ public class MessageQueueReceiver : IDisposable
         foreach (var serviceBusConsumer in _serviceBusConsumers)
         {
             var queueName = serviceBusConsumer.Value.QueueName;
-            var queueClient = new QueueClient(serviceBusEndpoint, queueName);
+            var queueClient = new QueueClient(_serviceBusEndpoint, queueName);
 
             //// Configure the MessageHandler Options in terms of exception handling, number of concurrent messages to deliver etc.
             //var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)

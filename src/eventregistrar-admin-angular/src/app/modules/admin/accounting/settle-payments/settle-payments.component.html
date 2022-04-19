@@ -32,19 +32,19 @@
                             <input matInput [autocomplete]="'off'" placeholder="Search by name, IBAN, message" (input)="filterByQuery(searchField.value)" #searchField>
                         </mat-form-field>
 
-                        <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" (change)="toggleIncoming($event)">
+                        <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" [checked]="filters.hideIncoming$.value" (change)="toggleIncoming($event)">
                             Hide incoming
                         </mat-slide-toggle>
 
-                        <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" (change)="toggleOutgoing($event)">
+                        <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" [checked]="filters.hideOutgoing$.value" (change)="toggleOutgoing($event)">
                             Hide outgoing
                         </mat-slide-toggle>
 
-                        <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" (change)="toggleSettled($event)">
+                        <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" [checked]="filters.hideSettled$.value" (change)="toggleSettled($event)">
                             Hide settled
                         </mat-slide-toggle>
 
-                        <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" (change)="toggleIgnored($event)">
+                        <mat-slide-toggle class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" [checked]="filters.hideIgnored$.value" (change)="toggleIgnored($event)">
                             Hide ignored
                         </mat-slide-toggle>
                     </div>

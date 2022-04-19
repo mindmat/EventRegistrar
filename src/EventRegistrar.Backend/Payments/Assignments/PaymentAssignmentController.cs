@@ -58,7 +58,7 @@ public class PaymentAssignmentController : Controller
     }
 
     [HttpGet("accounting/bankAccountBookingId/{bankAccountBookingId:guid}/assignmentCandidates")]
-    public async Task<IEnumerable<PossibleAssignment>> GetPossibleAssignments(string eventAcronym, Guid bankAccountBookingId)
+    public async Task<BookingAssignments> GetPossibleAssignments(string eventAcronym, Guid bankAccountBookingId)
     {
         return await _mediator.Send(new PossibleAssignmentsQuery
                                     {

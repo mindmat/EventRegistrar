@@ -2,18 +2,18 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
-import { ListService } from '../../infrastructure/listService';
+import { FetchService } from '../../infrastructure/fetchService';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SettlePaymentService extends ListService<AssignmentCandidate>
+export class SettlePaymentService extends FetchService<BookingAssignments>
 {
   constructor(httpClient: HttpClient, eventService: EventService) { super(httpClient, eventService); }
 
-  get candidates$(): Observable<AssignmentCandidate[]>
+  get candidates$(): Observable<BookingAssignments>
   {
-    return this.list$;
+    return this.result$;
   }
 
   fetchCandidates(id: string)
@@ -26,30 +26,60 @@ export class SettlePaymentService extends ListService<AssignmentCandidate>
     this.httpClient.delete(this.getEventUrl(`paymentAssignments/${paymentAssignmentId}`))
       .subscribe(x => console.log(x));
   }
+
+  assign(bankAccountBookingId: string, registrationId: string, amount: number,
+    acceptDifference: boolean, acceptDifferenceReason: string)
+  {
+    this.httpClient.post(this.getEventUrl(`payments/${bankAccountBookingId}/assign/${registrationId}`),
+      { amount, acceptDifference, acceptDifferenceReason })
+      .subscribe(x => console.log(x));
+  }
 }
 
+export class BookingAssignments
+{
+  registrationCandidates: AssignmentCandidateRegistration[];
+  existingAssignments: ExistingAssignment[];
+}
 
-export class AssignmentCandidate
+export class AssignmentCandidateRegistration
 {
   registrationId: string;
-  isExistingAssignment: boolean;
-  existingAssignmentAmount: number;
-  paymentAssignmentId_Existing: string;
 
   firstName: string;
   lastName: string;
   email: string;
-  bankAccountBookingId: string;
   price: number;
   isWaitingList: boolean;
 
+  amountMatch: boolean;
   amountPaid: number;
+  matchScore: number;
+
+  bankAccountBookingId: string;
+
   amountToAssign: number;
+  difference: number;
   acceptDifference: boolean;
   acceptDifferenceReason: string;
   locked: boolean;
-  matchScore: number;
-  amountMatch: boolean;
+}
+
+export class ExistingAssignment
+{
+  registrationId: string;
+  paymentAssignmentId_Existing: string;
+  assignedAmount: number;
+
+  firstName: string;
+  lastName: string;
+  email: string;
+  price: number;
+  isWaitingList: boolean;
+
+  bankAccountBookingId: string;
+
+  locked: boolean;
 }
 
 export class PossibleRepaymentAssignment

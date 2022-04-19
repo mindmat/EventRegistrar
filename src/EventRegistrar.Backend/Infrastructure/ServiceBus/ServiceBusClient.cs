@@ -1,5 +1,7 @@
 ﻿using System.Text;
+
 using Microsoft.Azure.ServiceBus;
+
 using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.Infrastructure.ServiceBus;
@@ -10,14 +12,18 @@ public class ServiceBusClient
     private readonly List<CommandMessage> _messages = new();
     private readonly string _serviceBusEndpoint;
 
-    public ServiceBusClient()
+    public ServiceBusClient(IConfiguration configuration)
     {
-        _serviceBusEndpoint = Environment.GetEnvironmentVariable("ServiceBusEndpoint");
+        _serviceBusEndpoint = Environment.GetEnvironmentVariable("ServiceBusEndpoint")
+                           ?? configuration.GetValue<string>("ServiceBusEndpoint");
     }
 
     public async Task Release()
     {
-        if (!_messages.Any()) return;
+        if (!_messages.Any())
+        {
+            return;
+        }
 
         var queueClient = new QueueClient(_serviceBusEndpoint, CommandQueueName);
         foreach (var message in _messages)
