@@ -1,0 +1,36 @@
+<fuse-card class="flex flex-col w-80 p-4 rounded-xl {{ candidate.amountMatch ? 'bg-green-300':'' }}">
+    <div class="flex flex-row items-baseline gap-x-2">
+        <div class="text-xl font-semibold leading-tight">{{ candidate.price - candidate.amountPaid | number:
+            '1.2-2' }}</div>
+        <div class="text-secondary leading-tight">{{ candidate.firstName }} {{ candidate.lastName }}</div>
+    </div>
+
+    <div class="flex flex-row items-baseline gap-x-2">
+        <mat-form-field class="fuse-mat-no-subscript w-24">
+            <input type="number" class="font-large" [(value)]="candidate.amountToAssign" [placeholder]="'Zuordnen'" matInput #amountToAssign>
+        </mat-form-field>
+
+        <div *ngIf="candidate.difference > 0" class="flex items-center justify-between">
+            <div class="flex-auto cursor-pointer" (click)="securityToggle.toggle()">
+                <div class="leading-6 font-medium">Differenz akzeptieren</div>
+                <div class="text-md text-secondary">
+                    Damit gilt die Anmeldung trotz unvollständiger Zahlung als bezahlt
+                </div>
+            </div>
+            <mat-slide-toggle class="ml-2" [color]="'primary'" #securityToggle>
+            </mat-slide-toggle>
+        </div>
+
+
+        <button *ngIf="!candidate.locked" class="ml-auto" mat-icon-button (click)="assign(candidate)">
+            <mat-icon [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+        </button>
+    </div>
+    <!-- <div *ngIf="booking.charges" class="flex flex-row items-baseline gap-x-2">
+                                                <div class="text-xl font-semibold leading-tight">{{ booking.charges | number: '1.2-2' }}</div>
+                                                <div class="text-secondary leading-tight">Fremdspesen</div>
+                                            </div> -->
+    <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
+                                                <span class="leading-none">{{ candidate.message }}</span>
+                                            </div> -->
+</fuse-card>
