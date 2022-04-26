@@ -42,6 +42,7 @@ import { SearchRegistrationComponent } from './modules/admin/registrations/searc
 import { SettlePaymentsComponent } from './modules/admin/accounting/settle-payments/settle-payments.component';
 import { SettlePaymentComponent } from './modules/admin/accounting/settle-payment/settle-payment.component';
 import { AssignmentCandidateRegistrationComponent } from './modules/admin/accounting/settle-payment/assignment-candidate-registration/assignment-candidate-registration.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -99,6 +100,8 @@ const routerConfig: ExtraOptions = {
         MarkdownModule.forRoot({}),
 
         CommonModule,
+        ReactiveFormsModule,
+
         DragDropModule,
         MatFormFieldModule,
         MatSelectModule,

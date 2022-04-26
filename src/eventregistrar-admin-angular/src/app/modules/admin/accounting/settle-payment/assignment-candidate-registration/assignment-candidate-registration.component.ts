@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { AssignmentCandidateRegistration } from '../settle-payment.service';
 
 @Component({
@@ -8,13 +8,14 @@ import { AssignmentCandidateRegistration } from '../settle-payment.service';
 })
 export class AssignmentCandidateRegistrationComponent implements OnInit, OnChanges
 {
-  candidateForm: FormGroup;
+  public candidateForm: FormGroup;
   @Input() candidate?: AssignmentCandidateRegistration;
 
-  constructor(private formBuilder: FormBuilder) { }
+  constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void
   {
+    this.fb.group({});
   }
 
   ngOnChanges(changes: SimpleChanges): void
@@ -24,15 +25,9 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
     // Active item id
     if ('candidate' in changes)
     {
-      // Mark if active
-      this.candidateForm = this.formBuilder.group({
-        communication: [true],
-        security: [true],
-        meetups: [false],
-        comments: [false],
-        mention: [true],
-        follow: [true],
-        inquiry: [true]
+      var amount = this.candidate.price - this.candidate.amountPaid;
+      this.candidateForm = this.fb.group({
+        amountAssigned: [amount, [Validators.required, Validators.min(0.01), Validators.max(amount)]],
       });
     }
   }
