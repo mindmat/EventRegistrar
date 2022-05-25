@@ -7,12 +7,12 @@ using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.Mediator;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 using MediatR;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
@@ -79,6 +79,9 @@ var app = builder.Build();
 
 var assemblies = new[] { typeof(Program).Assembly };
 
+var requestTypes = container.GetTypesToRegister(typeof(IRequest<>), assemblies);
+container.RegisterSingleton(() => new RequestRegistry(requestTypes));
+
 container.Register(typeof(IRequestHandler<>), assemblies);
 container.Register(typeof(IRequestHandler<,>), assemblies);
 container.Collection.Register(typeof(IEventToCommandTranslation<>), assemblies);
@@ -125,9 +128,7 @@ container.RegisterSingleton(() => new DomainEventCatalog(domainEventTypes));
 
 var configTypes = container.GetTypesToRegister<IConfigurationItem>(assemblies)
                            .Except(defaultConfigItemTypes);
-foreach (var configType in configTypes)
-    container.Register(configType,
-        () => container.GetInstance<ConfigurationResolver>().GetConfigurationTypeless(configType));
+foreach (var configType in configTypes) container.Register(configType, () => container.GetInstance<ConfigurationResolver>().GetConfigurationTypeless(configType));
 
 var serviceBusConsumers = container.GetTypesToRegister<IQueueBoundMessage>(assemblies)
                                    .Select(type => new ServiceBusConsumer
@@ -174,6 +175,8 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
+    endpoints.MapRequests(container);
+
     endpoints.MapControllerRoute(
         "default",
         "{controller}/{action=Index}/{id?}");

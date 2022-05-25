@@ -1,10 +1,17 @@
 using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 
-namespace EventRegistrar.Backend;
+namespace EventRegistrar.Backend.Test;
 
 public class Startup
 {
