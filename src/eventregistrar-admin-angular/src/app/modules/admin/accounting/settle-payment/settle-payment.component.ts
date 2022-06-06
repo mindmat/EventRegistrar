@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, combineLatestWith, filter, fromEvent, merge, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { AssignmentRequest } from './assignment-candidate-registration/assignment-candidate-registration.component';
 import { AssignmentCandidateRegistration, BookingAssignments, SettlePaymentService } from './settle-payment.service';
 
 @Component({
@@ -11,6 +12,8 @@ export class SettlePaymentComponent implements OnInit
 {
   private unsubscribeAll: Subject<any> = new Subject<any>();
   private bankAccountBookingId$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  private assignmentRequests: BehaviorSubject<AssignmentRequest | null> = new BehaviorSubject(null);
+
   candidates: BookingAssignments;
 
   constructor(private service: SettlePaymentService, private changeDetectorRef: ChangeDetectorRef, private route: ActivatedRoute) { }
@@ -21,7 +24,7 @@ export class SettlePaymentComponent implements OnInit
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe((candidates: BookingAssignments) =>
       {
-        candidates.registrationCandidates.forEach(candidate => candidate.amountToAssign = candidate.price - candidate.amountPaid);
+        candidates.registrationCandidates?.forEach(candidate => candidate.amountToAssign = candidate.price - candidate.amountPaid);
         this.candidates = candidates;
 
         // Mark for check
@@ -32,11 +35,23 @@ export class SettlePaymentComponent implements OnInit
     {
       this.bankAccountBookingId$.next(params.search ?? '');
     });
+
+    this.assignmentRequests.asObservable()
+      .pipe(
+        takeUntil(this.unsubscribeAll),
+        filter(request => !!request))
+      .subscribe((request) => this.service.assign(
+        request.bankAccountBookingId,
+        request.registrationId,
+        request.amount,
+        request.acceptDifference,
+        request.acceptDifferenceReason));
   }
 
-  assign(registrationId: string)
+  assign(request: AssignmentRequest): void
   {
-    this.service.assign(this.bankAccountBookingId$.value, registrationId, 0, false, '');
+    console.log(request);
+    this.assignmentRequests.next(request);
   }
 
   unassign(paymentAssignmentId: string)

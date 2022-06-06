@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Register;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Spots;
@@ -33,24 +34,28 @@ public class AddSpotCommandHandler : IRequestHandler<AddSpotCommand>
     {
         var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId
                                                                && reg.EventId == command.EventId,
-            cancellationToken);
+                                                           cancellationToken);
         var registrable = await _registrables.Where(rbl => rbl.Id == command.RegistrableId
                                                         && rbl.EventId == command.EventId)
                                              .Include(rbl => rbl.Spots)
                                              .FirstAsync(cancellationToken);
         if (registrable.MaximumDoubleSeats.HasValue)
+        {
             await _spotManager.ReserveSinglePartOfPartnerSpot(command.EventId,
-                registrable.Id,
-                registration.Id,
-                new RegistrationIdentification(registration),
-                null,
-                command.AsFollower ? Role.Follower : Role.Leader,
-                false);
+                                                              registrable.Id,
+                                                              registration.Id,
+                                                              new RegistrationIdentification(registration),
+                                                              null,
+                                                              command.AsFollower ? Role.Follower : Role.Leader,
+                                                              false);
+        }
         else
+        {
             await _spotManager.ReserveSingleSpot(command.EventId,
-                registrable.Id,
-                registration.Id,
-                false);
+                                                 registrable.Id,
+                                                 registration.Id,
+                                                 false);
+        }
 
         return Unit.Value;
     }

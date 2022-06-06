@@ -1,11 +1,14 @@
-﻿namespace EventRegistrar.Backend.Infrastructure.Mediator;
+﻿using MediatR;
+
+namespace EventRegistrar.Backend.Infrastructure.Mediator;
 
 public class RequestRegistry
 {
-    public IEnumerable<Type> RequestTypes { get; }
+    public IEnumerable<(Type Request, Type RequestHandler)> RequestTypes { get; }
 
-    public RequestRegistry(IEnumerable<Type> requestTypes)
+    public RequestRegistry(IEnumerable<Type> requestHandlerTypes)
     {
-        RequestTypes = requestTypes;
+        RequestTypes = requestHandlerTypes.Select(rht => (rht.GetInterface(typeof(IRequestHandler<,>).Name)!.GetGenericArguments()[0], rht))
+                                          .ToList();
     }
 }

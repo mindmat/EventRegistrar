@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AssignmentCandidateRegistration } from '../settle-payment.service';
 
 @Component({
@@ -10,25 +10,49 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
 {
   public candidateForm: FormGroup;
   @Input() candidate?: AssignmentCandidateRegistration;
+  @Output() assign = new EventEmitter<AssignmentRequest>();
 
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void
   {
-    this.fb.group({});
+
   }
 
   ngOnChanges(changes: SimpleChanges): void
   {
-    console.log(changes);
-
     // Active item id
     if ('candidate' in changes)
     {
       var amount = this.candidate.price - this.candidate.amountPaid;
       this.candidateForm = this.fb.group({
         amountAssigned: [amount, [Validators.required, Validators.min(0.01), Validators.max(amount)]],
+        acceptDifference: [false, Validators.required],
+        acceptDifferenceReason: ['']
       });
     }
   }
+
+  public emitAssign(): void
+  {
+    if (!this.candidate.locked)
+    {
+      this.assign.emit({
+        bankAccountBookingId: this.candidate.bankAccountBookingId,
+        registrationId: this.candidate.registrationId,
+        amount: this.candidateForm.get('amountAssigned').value,
+        acceptDifference: this.candidateForm.get('acceptDifference').value,
+        acceptDifferenceReason: this.candidateForm.get('acceptDifferenceReason').value,
+      } as AssignmentRequest);
+    }
+  }
+}
+
+export interface AssignmentRequest
+{
+  bankAccountBookingId: string;
+  registrationId: string;
+  amount: number;
+  acceptDifference: boolean;
+  acceptDifferenceReason: string;
 }

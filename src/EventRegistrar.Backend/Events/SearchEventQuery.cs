@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Events;
@@ -8,7 +9,7 @@ public class SearchEventQuery : IRequest<IEnumerable<EventSearchResult>>
 {
     public bool IncludeAuthorizedEvents { get; set; }
     public bool IncludeRequestedEvents { get; set; }
-    public string SearchString { get; set; }
+    public string? SearchString { get; set; }
 }
 
 public class SearchEventQueryHandler : IRequestHandler<SearchEventQuery, IEnumerable<EventSearchResult>>
@@ -30,15 +31,14 @@ public class SearchEventQueryHandler : IRequestHandler<SearchEventQuery, IEnumer
                                                              CancellationToken cancellationToken)
     {
         return await _events.WhereIf(!string.IsNullOrEmpty(query.SearchString),
-                                evt => evt.Name.Contains(query.SearchString,
-                                    StringComparison.InvariantCultureIgnoreCase))
+                                     evt => EF.Functions.Like(evt.Name, $"%{query.SearchString}%"))
                             .WhereIf(!query.IncludeAuthorizedEvents && _userId.UserId.HasValue,
-                                evt => evt.Users.All(usr => usr.UserId != _userId.UserId))
+                                     evt => evt.Users!.All(usr => usr.UserId != _userId.UserId))
                             .WhereIf(!query.IncludeRequestedEvents && _userId.UserId.HasValue,
-                                evt => evt.AccessRequests.All(usr => usr.UserId_Requestor != _userId.UserId))
+                                     evt => evt.AccessRequests!.All(usr => usr.UserId_Requestor != _userId.UserId))
                             .WhereIf(!query.IncludeRequestedEvents && !_userId.UserId.HasValue, evt =>
-                                !evt.AccessRequests.Any(usr => usr.IdentityProvider == _user.IdentityProvider
-                                                            && usr.Identifier == _user.IdentityProviderUserIdentifier))
+                                         !evt.AccessRequests!.Any(usr => usr.IdentityProvider == _user.IdentityProvider
+                                                                      && usr.Identifier == _user.IdentityProviderUserIdentifier))
                             .OrderBy(evt => evt.State)
                             .Take(20)
                             .Select(evt => new EventSearchResult
@@ -47,13 +47,15 @@ public class SearchEventQueryHandler : IRequestHandler<SearchEventQuery, IEnumer
                                                Name = evt.Name,
                                                Acronym = evt.Acronym,
                                                State = evt.State,
-                                               RequestSent = _userId.UserId.HasValue && evt.AccessRequests.Any(req =>
-                                                                 req.UserId_Requestor == _userId.UserId.Value
-                                                              && !req.Response.HasValue) ||
-                                                             !_userId.UserId.HasValue && evt.AccessRequests.Any(req =>
-                                                                 req.IdentityProvider == _user.IdentityProvider
-                                                              && req.Identifier == _user.IdentityProviderUserIdentifier
-                                                              && !req.Response.HasValue)
+                                               RequestSent = (_userId.UserId.HasValue
+                                                           && evt.AccessRequests!.Any(req =>
+                                                                                          req.UserId_Requestor == _userId.UserId.Value
+                                                                                       && !req.Response.HasValue))
+                                                          || (!_userId.UserId.HasValue
+                                                           && evt.AccessRequests!.Any(req =>
+                                                                                          req.IdentityProvider == _user.IdentityProvider
+                                                                                       && req.Identifier == _user.IdentityProviderUserIdentifier
+                                                                                       && !req.Response.HasValue))
                                            })
                             .ToListAsync(cancellationToken);
     }

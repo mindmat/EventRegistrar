@@ -1,6 +1,9 @@
 ﻿using System.Reflection;
 using System.Text.Json;
 
+using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
+
 using MediatR;
 
 using Microsoft.AspNetCore.Routing.Patterns;
@@ -18,13 +21,13 @@ public static class EndpointRouteBuilderExtensions
     {
         var requests = container.GetInstance<RequestRegistry>();
 
-        foreach (var commandType in requests.RequestTypes)
+        foreach (var request in requests.RequestTypes)
         {
-            var routePattern = RoutePatternFactory.Parse(commandType.Name);
+            var routePattern = RoutePatternFactory.Parse(request.Request.Name);
 
-            var builder = endpointsBuilder.Map(routePattern, CreateProcessRequest(commandType, container));
-            builder.WithDisplayName(commandType.Name);
-            builder.WithMetadata(commandType);
+            var builder = endpointsBuilder.Map(routePattern, CreateProcessRequest(request.Request, container));
+            builder.WithDisplayName(request.Request.Name);
+            builder.WithMetadata(request);
             //for (var i = 0; i < endpoint.Metadata.Count; i++) builder.WithMetadata(endpoint.Metadata[i]);
         }
     }
@@ -76,8 +79,24 @@ public static class EndpointRouteBuilderExtensions
             //MapRouteData(requestMetadata, context.GetRouteData(), model);
         }
 
+        using var scope = new EnsureExecutionScope(container);
+        var authorizationChecker = container.GetInstance<IAuthorizationChecker>();
+        if (request is IEventBoundRequest eventBoundRequest)
+        {
+            await authorizationChecker.ThrowIfUserHasNotRight(eventBoundRequest.EventId, requestType.Name);
+        }
+
         var mediator = container.GetInstance<IMediator>();
         var response = await mediator.Send(request, context.RequestAborted);
+        var dbContext = container.GetInstance<DbContext>();
+        if (dbContext.ChangeTracker.HasChanges())
+        {
+            await dbContext.SaveChangesAsync(context.RequestAborted);
+        }
+
+        // "transaction": only release messages to event bus if db commit succeeds
+        await container.GetInstance<ServiceBusClient>().Release();
+
 
         context.Response.Headers.Add("content-type", "application/json");
 

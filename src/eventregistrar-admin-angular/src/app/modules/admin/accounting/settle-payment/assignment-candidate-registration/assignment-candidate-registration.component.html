@@ -1,5 +1,5 @@
 <fuse-card class="flex flex-col w-80 p-4 rounded-xl {{ candidate.amountMatch ? 'bg-green-300':'' }}">
-    <form>
+    <div>
         <div class="flex flex-row items-baseline gap-x-2">
             <div class="text-xl font-semibold leading-tight">{{ candidate.price - candidate.amountPaid | number:
                 '1.2-2' }}</div>
@@ -22,8 +22,7 @@
                 </mat-slide-toggle>
             </div>
 
-
-            <button *ngIf="!candidate.locked" [disabled]="!candidateForm.valid" class="ml-auto" mat-icon-button (click)="assign(candidate)">
+            <button type="submit" *ngIf="!candidate.locked" [disabled]="!candidateForm.valid" class="ml-auto" mat-icon-button (click)="emitAssign()">
                 <mat-icon [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
             </button>
         </div>
@@ -34,5 +33,5 @@
         <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
                                                 <span class="leading-none">{{ candidate.message }}</span>
                                             </div> -->
-    </form>
+    </div>
 </fuse-card>
