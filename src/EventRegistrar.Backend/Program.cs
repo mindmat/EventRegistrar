@@ -1,12 +1,11 @@
 using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Events.UsersInEvents;
-using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.ErrorHandling;
 using EventRegistrar.Backend.Infrastructure.Mediator;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
@@ -16,15 +15,14 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
 using SimpleInjector;
-using SimpleInjector.Lifestyles;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 var container = new Container();
-container.Options.DefaultScopedLifestyle = new AsyncScopedLifestyle();
 container.Options.ResolveUnregisteredConcreteTypes = true;
 container.Options.DefaultLifestyle = Lifestyle.Scoped;
+//container.Options.EnableAutoVerification = false;
 
 // Add services to the container.
 //builder.Services.AddMvc() //.SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
@@ -124,6 +122,13 @@ container.Register<IAuthorizationChecker, AuthorizationChecker>();
 container.Register<IAuthenticatedUserProvider, AuthenticatedUserProvider>();
 container.Register<IRightsOfEventRoleProvider, RightsOfEventRoleProvider>();
 
+// Error handling
+container.RegisterSingleton<ExceptionTranslator>();
+
+//var exceptionTranslation = assemblies.GetTypes<IExceptionTranslation>().ToArray();
+//exceptionTranslation.DoForEach(ext => container.RegisterSingleton(ext, ext));
+container.Collection.Register<IExceptionTranslation>(assemblies);
+
 //container.Register(() => container.GetInstance<IHttpContextAccessor>().HttpContext?.Request ?? new DefaultHttpRequest(new DefaultHttpContext()));
 
 // Configuration
@@ -181,6 +186,8 @@ app.UseRequestLocalization();
 app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin()
                                       .AllowAnyHeader()
                                       .AllowAnyMethod());
+
+//app.UseMiddleware<ExceptionMiddleware>(container);
 
 app.UseAuthentication();
 app.UseHttpsRedirection();

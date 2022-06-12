@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class EventService
 {
   private selectedEventAcronymSubject: BehaviorSubject<string | null> = new BehaviorSubject('ll22');
+  private selectedEventIdSubject: BehaviorSubject<string | null> = new BehaviorSubject('40EB7B32-696E-41D5-9A57-AE9A45344E2B');
 
   constructor() { }
 
@@ -22,5 +23,19 @@ export class EventService
   set selected(eventAcronym: string)
   {
     this.selectedEventAcronymSubject.next(eventAcronym);
+  }
+
+  get selectedId$(): Observable<string>
+  {
+    return this.selectedEventIdSubject.asObservable();
+  }
+  get selectedId(): string | null
+  {
+    return this.selectedEventIdSubject.value;
+  }
+
+  set selectedId(eventAcronym: string)
+  {
+    this.selectedEventIdSubject.next(eventAcronym);
   }
 }

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Api } from 'app/api/api';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDisplayItem';
@@ -13,7 +14,7 @@ export class OverviewService
   private singleRegistrables: BehaviorSubject<SingleRegistrable[] | null> = new BehaviorSubject(null);
   private doubleRegistrables: BehaviorSubject<DoubleRegistrable[] | null> = new BehaviorSubject(null);
 
-  constructor(private http: HttpClient, private eventService: EventService) { }
+  constructor(private http: HttpClient, private eventService: EventService, private api: Api) { }
 
   get registrableTags$(): Observable<RegistrableTagDisplayItem[]>
   {
@@ -32,7 +33,7 @@ export class OverviewService
 
   fetchRegistrableTags(): Observable<RegistrableTagDisplayItem[]>
   {
-    return this.http.get<RegistrableTagDisplayItem[]>(`api/events/${this.eventService.selected}/RegistrableTags`)
+    return this.api.registrableTags_Query({ eventId: this.eventService.selectedId })
       .pipe(
         tap((response: any) =>
         {
@@ -43,7 +44,7 @@ export class OverviewService
 
   fetchSingleRegistrables(): Observable<SingleRegistrable[]>
   {
-    return this.http.get<SingleRegistrable[]>(`api/events/${this.eventService.selected}/SingleRegistrableOverview`)
+    return this.api.singleRegistrablesOverview_Query({ eventId: this.eventService.selectedId })
       .pipe(
         tap((response: any) =>
         {
@@ -54,7 +55,7 @@ export class OverviewService
 
   fetchDoubleRegistrables(): Observable<DoubleRegistrable[]>
   {
-    return this.http.get<DoubleRegistrable[]>(`api/events/${this.eventService.selected}/DoubleRegistrableOverview`)
+    return this.api.doubleRegistrablesOverview_Query({ eventId: this.eventService.selectedId })
       .pipe(
         tap((response: any) =>
         {

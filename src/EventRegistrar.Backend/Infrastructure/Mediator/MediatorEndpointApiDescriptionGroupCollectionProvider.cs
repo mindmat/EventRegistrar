@@ -1,12 +1,11 @@
 ﻿using System.Reflection;
 
-using MediatR;
+using EventRegistrar.Backend.Properties;
 
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 
 namespace EventRegistrar.Backend.Infrastructure.Mediator;
 
@@ -26,14 +25,14 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider : IApiDescrip
         get
         {
             var apis = new List<ApiDescription>();
-            var openGenericRequestHandlerType = typeof(IRequestHandler<,>);
             foreach (var requestType in _requestRegistry.RequestTypes)
             {
+                var (request, suffix) = Split(requestType.Request.Name);
                 var controllerActionDescriptor = new ControllerActionDescriptor
                                                  {
-                                                     DisplayName = requestType.Request.Name + "-D",
-                                                     ActionName = requestType.Request.Name + "-A",
-                                                     ControllerName = requestType.Request.Name + "-C",
+                                                     DisplayName = Resources.ResourceManager.GetString(requestType.Request.Name) ?? requestType.Request.Name,
+                                                     ControllerName = request,
+                                                     ActionName = suffix,
                                                      ControllerTypeInfo = requestType.RequestHandler.GetTypeInfo(),
                                                      MethodInfo = requestType.RequestHandler.GetMethod("Handle")!,
                                                      Parameters = new List<ParameterDescriptor>
@@ -45,17 +44,6 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider : IApiDescrip
                                                                       }
                                                                   }
                                                  };
-                //var desc = new ActionDescriptor
-                //           {
-                //               DisplayName = requestType.Name + "-D",
-                //               Parameters = requestType.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                //                                       .Select(prp => new ParameterDescriptor
-                //                                       {
-                //                                           Name = prp.Name,
-                //                                           ParameterType = prp.PropertyType
-                //                                       })
-                //                                       .ToList()
-                //};
 
                 var apiDescription = new ApiDescription
                                      {
@@ -73,7 +61,6 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider : IApiDescrip
                                              }
                                          },
                                          SupportedRequestFormats = { new ApiRequestFormat { MediaType = "application/json" } }
-                                         //SupportedResponseTypes = { new ApiResponseType { Type = typeof(string), IsDefaultResponse = true } }
                                      };
 
                 var responseTypes = new ApiResponseTypeProvider().GetApiResponseTypes(apiDescription, requestType.Request);
@@ -90,5 +77,22 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider : IApiDescrip
 
             return new ApiDescriptionGroupCollection(new[] { group }, 1);
         }
+    }
+
+    private (string Request, string Suffix) Split(string requestName)
+    {
+        var commandIndex = requestName.LastIndexOf("Command", StringComparison.InvariantCulture);
+        if (commandIndex > 0)
+        {
+            return (requestName[..commandIndex], requestName[commandIndex..]);
+        }
+
+        var queryIndex = requestName.LastIndexOf("Query", StringComparison.InvariantCulture);
+        if (queryIndex > 0)
+        {
+            return (requestName[..queryIndex], requestName[queryIndex..]);
+        }
+
+        return (requestName, string.Empty);
     }
 }
