@@ -49,7 +49,7 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider : IApiDescrip
                                      {
                                          GroupName = "Mediator",
                                          HttpMethod = "Post",
-                                         RelativePath = "/" + requestType.Request.Name,
+                                         RelativePath = "/api/" + requestType.Request.Name,
                                          ActionDescriptor = controllerActionDescriptor,
                                          ParameterDescriptions =
                                          {

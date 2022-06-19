@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/AddSpotCommand": {
+    "/api/AddSpotCommand": {
       "post": {
         "tags": [
           "AddSpot"
@@ -43,7 +43,7 @@
         }
       }
     },
-    "/RemoveSpotCommand": {
+    "/api/RemoveSpotCommand": {
       "post": {
         "tags": [
           "RemoveSpot"
@@ -75,7 +75,7 @@
         }
       }
     },
-    "/SpotsOfRegistrationQuery": {
+    "/api/SpotsOfRegistrationQuery": {
       "post": {
         "tags": [
           "SpotsOfRegistration"
@@ -110,7 +110,7 @@
         }
       }
     },
-    "/RegistrationQuery": {
+    "/api/RegistrationQuery": {
       "post": {
         "tags": [
           "Registration"
@@ -142,7 +142,7 @@
         }
       }
     },
-    "/SwapFirstLastNameCommand": {
+    "/api/SwapFirstLastNameCommand": {
       "post": {
         "tags": [
           "SwapFirstLastName"
@@ -174,7 +174,7 @@
         }
       }
     },
-    "/SearchRegistrationQuery": {
+    "/api/SearchRegistrationQuery": {
       "post": {
         "tags": [
           "SearchRegistration"
@@ -209,7 +209,7 @@
         }
       }
     },
-    "/ProcessRawRegistrationCommand": {
+    "/api/ProcessRawRegistrationCommand": {
       "post": {
         "tags": [
           "ProcessRawRegistration"
@@ -241,7 +241,7 @@
         }
       }
     },
-    "/SetReductionCommand": {
+    "/api/SetReductionCommand": {
       "post": {
         "tags": [
           "SetReduction"
@@ -273,7 +273,7 @@
         }
       }
     },
-    "/AllExternalRegistrationIdentifiersQuery": {
+    "/api/AllExternalRegistrationIdentifiersQuery": {
       "post": {
         "tags": [
           "AllExternalRegistrationIdentifiers"
@@ -308,7 +308,7 @@
         }
       }
     },
-    "/RecalculatePriceCommand": {
+    "/api/RecalculatePriceCommand": {
       "post": {
         "tags": [
           "RecalculatePrice"
@@ -340,7 +340,7 @@
         }
       }
     },
-    "/CheckinQuery": {
+    "/api/CheckinQuery": {
       "post": {
         "tags": [
           "Checkin"
@@ -372,7 +372,7 @@
         }
       }
     },
-    "/PartyOverviewQuery": {
+    "/api/PartyOverviewQuery": {
       "post": {
         "tags": [
           "PartyOverview"
@@ -407,7 +407,7 @@
         }
       }
     },
-    "/ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand": {
+    "/api/ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand": {
       "post": {
         "tags": [
           "ChangeUnmatchedPartnerRegistrationToSingleRegistration"
@@ -439,7 +439,7 @@
         }
       }
     },
-    "/MatchPartnerRegistrationsCommand": {
+    "/api/MatchPartnerRegistrationsCommand": {
       "post": {
         "tags": [
           "MatchPartnerRegistrations"
@@ -471,7 +471,7 @@
         }
       }
     },
-    "/PotentialPartnersQuery": {
+    "/api/PotentialPartnersQuery": {
       "post": {
         "tags": [
           "PotentialPartners"
@@ -506,7 +506,7 @@
         }
       }
     },
-    "/RegistrationsWithUnmatchedPartnerQuery": {
+    "/api/RegistrationsWithUnmatchedPartnerQuery": {
       "post": {
         "tags": [
           "RegistrationsWithUnmatchedPartner"
@@ -541,7 +541,7 @@
         }
       }
     },
-    "/UnbindPartnerRegistrationCommand": {
+    "/api/UnbindPartnerRegistrationCommand": {
       "post": {
         "tags": [
           "UnbindPartnerRegistration"
@@ -573,7 +573,7 @@
         }
       }
     },
-    "/AddIndividualReductionCommand": {
+    "/api/AddIndividualReductionCommand": {
       "post": {
         "tags": [
           "AddIndividualReduction"
@@ -605,7 +605,7 @@
         }
       }
     },
-    "/CheckRegistrationAfterPaymentCommand": {
+    "/api/CheckRegistrationAfterPaymentCommand": {
       "post": {
         "tags": [
           "CheckRegistrationAfterPayment"
@@ -637,7 +637,7 @@
         }
       }
     },
-    "/CancelRegistrationCommand": {
+    "/api/CancelRegistrationCommand": {
       "post": {
         "tags": [
           "CancelRegistration"
@@ -669,7 +669,7 @@
         }
       }
     },
-    "/RegistrationFormTypesQuery": {
+    "/api/RegistrationFormTypesQuery": {
       "post": {
         "tags": [
           "RegistrationFormTypes"
@@ -704,7 +704,7 @@
         }
       }
     },
-    "/AvailableQuestionMappingsQuery": {
+    "/api/AvailableQuestionMappingsQuery": {
       "post": {
         "tags": [
           "AvailableQuestionMappings"
@@ -739,7 +739,7 @@
         }
       }
     },
-    "/AvailableQuestionOptionMappingsQuery": {
+    "/api/AvailableQuestionOptionMappingsQuery": {
       "post": {
         "tags": [
           "AvailableQuestionOptionMappings"
@@ -774,7 +774,7 @@
         }
       }
     },
-    "/SaveRegistrationFormMappingsCommand": {
+    "/api/SaveRegistrationFormMappingsCommand": {
       "post": {
         "tags": [
           "SaveRegistrationFormMappings"
@@ -806,7 +806,7 @@
         }
       }
     },
-    "/DeleteRegistrationFormCommand": {
+    "/api/DeleteRegistrationFormCommand": {
       "post": {
         "tags": [
           "DeleteRegistrationForm"
@@ -838,7 +838,7 @@
         }
       }
     },
-    "/PendingRegistrationFormQuery": {
+    "/api/PendingRegistrationFormQuery": {
       "post": {
         "tags": [
           "PendingRegistrationForm"
@@ -873,7 +873,7 @@
         }
       }
     },
-    "/SaveRegistrationFormDefinitionCommand": {
+    "/api/SaveRegistrationFormDefinitionCommand": {
       "post": {
         "tags": [
           "SaveRegistrationFormDefinition"
@@ -905,7 +905,7 @@
         }
       }
     },
-    "/FormPathsQuery": {
+    "/api/FormPathsQuery": {
       "post": {
         "tags": [
           "FormPaths"
@@ -940,7 +940,7 @@
         }
       }
     },
-    "/CreateRegistrableCommand": {
+    "/api/CreateRegistrableCommand": {
       "post": {
         "tags": [
           "CreateRegistrable"
@@ -972,7 +972,7 @@
         }
       }
     },
-    "/DeleteRegistrableCommand": {
+    "/api/DeleteRegistrableCommand": {
       "post": {
         "tags": [
           "DeleteRegistrable"
@@ -1004,7 +1004,7 @@
         }
       }
     },
-    "/DoubleRegistrablesOverviewQuery": {
+    "/api/DoubleRegistrablesOverviewQuery": {
       "post": {
         "tags": [
           "DoubleRegistrablesOverview"
@@ -1039,7 +1039,7 @@
         }
       }
     },
-    "/RegistrablesQuery": {
+    "/api/RegistrablesQuery": {
       "post": {
         "tags": [
           "Registrables"
@@ -1074,7 +1074,7 @@
         }
       }
     },
-    "/SetDoubleRegistrableLimitsCommand": {
+    "/api/SetDoubleRegistrableLimitsCommand": {
       "post": {
         "tags": [
           "SetDoubleRegistrableLimits"
@@ -1106,7 +1106,7 @@
         }
       }
     },
-    "/SetSingleRegistrableLimitsCommand": {
+    "/api/SetSingleRegistrableLimitsCommand": {
       "post": {
         "tags": [
           "SetSingleRegistrableLimits"
@@ -1138,7 +1138,7 @@
         }
       }
     },
-    "/SingleRegistrablesOverviewQuery": {
+    "/api/SingleRegistrablesOverviewQuery": {
       "post": {
         "tags": [
           "SingleRegistrablesOverview"
@@ -1173,7 +1173,7 @@
         }
       }
     },
-    "/CheckIfRegistrationIsPromotedCommand": {
+    "/api/CheckIfRegistrationIsPromotedCommand": {
       "post": {
         "tags": [
           "CheckIfRegistrationIsPromoted"
@@ -1205,7 +1205,7 @@
         }
       }
     },
-    "/TryPromoteFromWaitingListCommand": {
+    "/api/TryPromoteFromWaitingListCommand": {
       "post": {
         "tags": [
           "TryPromoteFromWaitingList"
@@ -1237,7 +1237,7 @@
         }
       }
     },
-    "/RegistrationsOnWaitingListQuery": {
+    "/api/RegistrationsOnWaitingListQuery": {
       "post": {
         "tags": [
           "RegistrationsOnWaitingList"
@@ -1272,7 +1272,7 @@
         }
       }
     },
-    "/SetFallbackToPartyPassCommand": {
+    "/api/SetFallbackToPartyPassCommand": {
       "post": {
         "tags": [
           "SetFallbackToPartyPass"
@@ -1304,7 +1304,7 @@
         }
       }
     },
-    "/ActivateAutomaticPromotionCommand": {
+    "/api/ActivateAutomaticPromotionCommand": {
       "post": {
         "tags": [
           "ActivateAutomaticPromotion"
@@ -1336,7 +1336,7 @@
         }
       }
     },
-    "/DeactivateAutomaticPromotionCommand": {
+    "/api/DeactivateAutomaticPromotionCommand": {
       "post": {
         "tags": [
           "DeactivateAutomaticPromotion"
@@ -1368,7 +1368,7 @@
         }
       }
     },
-    "/RegistrableTagsQuery": {
+    "/api/RegistrableTagsQuery": {
       "post": {
         "tags": [
           "RegistrableTags"
@@ -1403,7 +1403,7 @@
         }
       }
     },
-    "/DeleteReductionCommand": {
+    "/api/DeleteReductionCommand": {
       "post": {
         "tags": [
           "DeleteReduction"
@@ -1435,7 +1435,7 @@
         }
       }
     },
-    "/SaveReductionCommand": {
+    "/api/SaveReductionCommand": {
       "post": {
         "tags": [
           "SaveReduction"
@@ -1467,7 +1467,7 @@
         }
       }
     },
-    "/PricingQuery": {
+    "/api/PricingQuery": {
       "post": {
         "tags": [
           "Pricing"
@@ -1502,7 +1502,7 @@
         }
       }
     },
-    "/SetRegistrablesPricesCommand": {
+    "/api/SetRegistrablesPricesCommand": {
       "post": {
         "tags": [
           "SetRegistrablesPrices"
@@ -1534,7 +1534,7 @@
         }
       }
     },
-    "/ParticipantsOfRegistrableQuery": {
+    "/api/ParticipantsOfRegistrableQuery": {
       "post": {
         "tags": [
           "ParticipantsOfRegistrable"
@@ -1566,7 +1566,7 @@
         }
       }
     },
-    "/ProcessReceivedSmsCommand": {
+    "/api/ProcessReceivedSmsCommand": {
       "post": {
         "tags": [
           "ProcessReceivedSms"
@@ -1598,7 +1598,7 @@
         }
       }
     },
-    "/SendSmsCommand": {
+    "/api/SendSmsCommand": {
       "post": {
         "tags": [
           "SendSms"
@@ -1630,7 +1630,7 @@
         }
       }
     },
-    "/SmsConversationQuery": {
+    "/api/SmsConversationQuery": {
       "post": {
         "tags": [
           "SmsConversation"
@@ -1665,7 +1665,7 @@
         }
       }
     },
-    "/IgnorePaymentCommand": {
+    "/api/IgnorePaymentCommand": {
       "post": {
         "tags": [
           "IgnorePayment"
@@ -1697,7 +1697,7 @@
         }
       }
     },
-    "/PaymentOverviewQuery": {
+    "/api/PaymentOverviewQuery": {
       "post": {
         "tags": [
           "PaymentOverview"
@@ -1729,7 +1729,7 @@
         }
       }
     },
-    "/UnassignedIncomingPaymentsQuery": {
+    "/api/UnassignedIncomingPaymentsQuery": {
       "post": {
         "tags": [
           "UnassignedIncomingPayments"
@@ -1764,7 +1764,7 @@
         }
       }
     },
-    "/UnassignedPayoutsQuery": {
+    "/api/UnassignedPayoutsQuery": {
       "post": {
         "tags": [
           "UnassignedPayouts"
@@ -1799,7 +1799,7 @@
         }
       }
     },
-    "/BankAccountBookingsQuery": {
+    "/api/BankAccountBookingsQuery": {
       "post": {
         "tags": [
           "BankAccountBookings"
@@ -1834,7 +1834,7 @@
         }
       }
     },
-    "/CheckIfPaymentIsSettledCommand": {
+    "/api/CheckIfPaymentIsSettledCommand": {
       "post": {
         "tags": [
           "CheckIfPaymentIsSettled"
@@ -1866,7 +1866,7 @@
         }
       }
     },
-    "/BookingsByStateQuery": {
+    "/api/BookingsByStateQuery": {
       "post": {
         "tags": [
           "BookingsByState"
@@ -1901,7 +1901,7 @@
         }
       }
     },
-    "/AssignPayoutCommand": {
+    "/api/AssignPayoutCommand": {
       "post": {
         "tags": [
           "AssignPayout"
@@ -1933,7 +1933,7 @@
         }
       }
     },
-    "/CheckIfPayoutIsConfirmedCommand": {
+    "/api/CheckIfPayoutIsConfirmedCommand": {
       "post": {
         "tags": [
           "CheckIfPayoutIsConfirmed"
@@ -1965,7 +1965,7 @@
         }
       }
     },
-    "/PayoutQuery": {
+    "/api/PayoutQuery": {
       "post": {
         "tags": [
           "Payout"
@@ -2000,7 +2000,7 @@
         }
       }
     },
-    "/PossiblePayoutAssignmentQuery": {
+    "/api/PossiblePayoutAssignmentQuery": {
       "post": {
         "tags": [
           "PossiblePayoutAssignment"
@@ -2035,7 +2035,7 @@
         }
       }
     },
-    "/RefundsQuery": {
+    "/api/RefundsQuery": {
       "post": {
         "tags": [
           "Refunds"
@@ -2070,7 +2070,7 @@
         }
       }
     },
-    "/WillPayAtCheckinCommand": {
+    "/api/WillPayAtCheckinCommand": {
       "post": {
         "tags": [
           "WillPayAtCheckin"
@@ -2102,7 +2102,7 @@
         }
       }
     },
-    "/SavePaymentFileCommand": {
+    "/api/SavePaymentFileCommand": {
       "post": {
         "tags": [
           "SavePaymentFile"
@@ -2134,7 +2134,7 @@
         }
       }
     },
-    "/PaymentSlipImageQuery": {
+    "/api/PaymentSlipImageQuery": {
       "post": {
         "tags": [
           "PaymentSlipImage"
@@ -2167,7 +2167,7 @@
         }
       }
     },
-    "/TryAssignPaymentSlipCommand": {
+    "/api/TryAssignPaymentSlipCommand": {
       "post": {
         "tags": [
           "TryAssignPaymentSlip"
@@ -2199,7 +2199,7 @@
         }
       }
     },
-    "/FetchBankStamentsFileCommand": {
+    "/api/FetchBankStamentsFileCommand": {
       "post": {
         "tags": [
           "FetchBankStamentsFile"
@@ -2231,7 +2231,7 @@
         }
       }
     },
-    "/ProcessFetchedBankStatementsFileCommand": {
+    "/api/ProcessFetchedBankStatementsFileCommand": {
       "post": {
         "tags": [
           "ProcessFetchedBankStatementsFile"
@@ -2263,7 +2263,7 @@
         }
       }
     },
-    "/DuePaymentsQuery": {
+    "/api/DuePaymentsQuery": {
       "post": {
         "tags": [
           "DuePayments"
@@ -2298,7 +2298,7 @@
         }
       }
     },
-    "/SendReminderCommand": {
+    "/api/SendReminderCommand": {
       "post": {
         "tags": [
           "SendReminder"
@@ -2330,7 +2330,7 @@
         }
       }
     },
-    "/DifferencesQuery": {
+    "/api/DifferencesQuery": {
       "post": {
         "tags": [
           "Differences"
@@ -2365,7 +2365,7 @@
         }
       }
     },
-    "/RefundDifferenceCommand": {
+    "/api/RefundDifferenceCommand": {
       "post": {
         "tags": [
           "RefundDifference"
@@ -2397,7 +2397,7 @@
         }
       }
     },
-    "/SendPaymentDueMailCommand": {
+    "/api/SendPaymentDueMailCommand": {
       "post": {
         "tags": [
           "SendPaymentDueMail"
@@ -2429,7 +2429,7 @@
         }
       }
     },
-    "/AssignedPaymentsOfRegistrationQuery": {
+    "/api/AssignedPaymentsOfRegistrationQuery": {
       "post": {
         "tags": [
           "AssignedPaymentsOfRegistration"
@@ -2464,7 +2464,7 @@
         }
       }
     },
-    "/AssignPaymentCommand": {
+    "/api/AssignPaymentCommand": {
       "post": {
         "tags": [
           "AssignPayment"
@@ -2496,7 +2496,7 @@
         }
       }
     },
-    "/AssignRepaymentCommand": {
+    "/api/AssignRepaymentCommand": {
       "post": {
         "tags": [
           "AssignRepayment"
@@ -2528,7 +2528,7 @@
         }
       }
     },
-    "/PossibleAssignmentsQuery": {
+    "/api/PossibleAssignmentsQuery": {
       "post": {
         "tags": [
           "PossibleAssignments"
@@ -2560,7 +2560,7 @@
         }
       }
     },
-    "/PossibleRepaymentAssignmentQuery": {
+    "/api/PossibleRepaymentAssignmentQuery": {
       "post": {
         "tags": [
           "PossibleRepaymentAssignment"
@@ -2595,7 +2595,7 @@
         }
       }
     },
-    "/UnassignPaymentCommand": {
+    "/api/UnassignPaymentCommand": {
       "post": {
         "tags": [
           "UnassignPayment"
@@ -2627,7 +2627,7 @@
         }
       }
     },
-    "/DeleteMailCommand": {
+    "/api/DeleteMailCommand": {
       "post": {
         "tags": [
           "DeleteMail"
@@ -2659,7 +2659,7 @@
         }
       }
     },
-    "/GetPendingMailsQuery": {
+    "/api/GetPendingMailsQuery": {
       "post": {
         "tags": [
           "GetPendingMails"
@@ -2694,7 +2694,7 @@
         }
       }
     },
-    "/MailsOfRegistrationQuery": {
+    "/api/MailsOfRegistrationQuery": {
       "post": {
         "tags": [
           "MailsOfRegistration"
@@ -2729,7 +2729,7 @@
         }
       }
     },
-    "/ReleaseAllPendingMailsCommand": {
+    "/api/ReleaseAllPendingMailsCommand": {
       "post": {
         "tags": [
           "ReleaseAllPendingMails"
@@ -2761,7 +2761,7 @@
         }
       }
     },
-    "/ReleaseMailCommand": {
+    "/api/ReleaseMailCommand": {
       "post": {
         "tags": [
           "ReleaseMail"
@@ -2793,7 +2793,7 @@
         }
       }
     },
-    "/DeleteMailTemplateCommand": {
+    "/api/DeleteMailTemplateCommand": {
       "post": {
         "tags": [
           "DeleteMailTemplate"
@@ -2825,7 +2825,7 @@
         }
       }
     },
-    "/LanguagesQuery": {
+    "/api/LanguagesQuery": {
       "post": {
         "tags": [
           "Languages"
@@ -2860,7 +2860,7 @@
         }
       }
     },
-    "/MailTemplatesQuery": {
+    "/api/MailTemplatesQuery": {
       "post": {
         "tags": [
           "MailTemplates"
@@ -2895,7 +2895,7 @@
         }
       }
     },
-    "/MailTypesQuery": {
+    "/api/MailTypesQuery": {
       "post": {
         "tags": [
           "MailTypes"
@@ -2930,7 +2930,7 @@
         }
       }
     },
-    "/SaveMailTemplateCommand": {
+    "/api/SaveMailTemplateCommand": {
       "post": {
         "tags": [
           "SaveMailTemplate"
@@ -2962,7 +2962,7 @@
         }
       }
     },
-    "/SendMailCommand": {
+    "/api/SendMailCommand": {
       "post": {
         "tags": [
           "SendMail"
@@ -2994,7 +2994,7 @@
         }
       }
     },
-    "/PossibleMailTypesQuery": {
+    "/api/PossibleMailTypesQuery": {
       "post": {
         "tags": [
           "PossibleMailTypes"
@@ -3029,7 +3029,7 @@
         }
       }
     },
-    "/FixInvalidAddressCommand": {
+    "/api/FixInvalidAddressCommand": {
       "post": {
         "tags": [
           "FixInvalidAddress"
@@ -3061,7 +3061,7 @@
         }
       }
     },
-    "/InvalidAddressesQuery": {
+    "/api/InvalidAddressesQuery": {
       "post": {
         "tags": [
           "InvalidAddresses"
@@ -3096,7 +3096,7 @@
         }
       }
     },
-    "/NotReceivedMailsQuery": {
+    "/api/NotReceivedMailsQuery": {
       "post": {
         "tags": [
           "NotReceivedMails"
@@ -3131,7 +3131,7 @@
         }
       }
     },
-    "/ImportMailsFromImapCommand": {
+    "/api/ImportMailsFromImapCommand": {
       "post": {
         "tags": [
           "ImportMailsFromImap"
@@ -3163,7 +3163,7 @@
         }
       }
     },
-    "/ImportMailsFromImapForAllActiveEventsCommand": {
+    "/api/ImportMailsFromImapForAllActiveEventsCommand": {
       "post": {
         "tags": [
           "ImportMailsFromImapForAllActiveEvents"
@@ -3195,7 +3195,7 @@
         }
       }
     },
-    "/TryAssignImportedMailCommand": {
+    "/api/TryAssignImportedMailCommand": {
       "post": {
         "tags": [
           "TryAssignImportedMail"
@@ -3227,7 +3227,7 @@
         }
       }
     },
-    "/ProcessMailEventsCommand": {
+    "/api/ProcessMailEventsCommand": {
       "post": {
         "tags": [
           "ProcessMailEvents"
@@ -3259,7 +3259,7 @@
         }
       }
     },
-    "/ComposeAndSendMailCommand": {
+    "/api/ComposeAndSendMailCommand": {
       "post": {
         "tags": [
           "ComposeAndSendMail"
@@ -3291,7 +3291,7 @@
         }
       }
     },
-    "/CreateBulkMailsCommand": {
+    "/api/CreateBulkMailsCommand": {
       "post": {
         "tags": [
           "CreateBulkMails"
@@ -3323,7 +3323,7 @@
         }
       }
     },
-    "/PossibleAudiencesQuery": {
+    "/api/PossibleAudiencesQuery": {
       "post": {
         "tags": [
           "PossibleAudiences"
@@ -3358,7 +3358,7 @@
         }
       }
     },
-    "/ReleaseBulkMailsCommand": {
+    "/api/ReleaseBulkMailsCommand": {
       "post": {
         "tags": [
           "ReleaseBulkMails"
@@ -3390,7 +3390,7 @@
         }
       }
     },
-    "/DomainEventCatalogQuery": {
+    "/api/DomainEventCatalogQuery": {
       "post": {
         "tags": [
           "DomainEventCatalog"
@@ -3425,7 +3425,7 @@
         }
       }
     },
-    "/DomainEventsQuery": {
+    "/api/DomainEventsQuery": {
       "post": {
         "tags": [
           "DomainEvents"
@@ -3460,7 +3460,7 @@
         }
       }
     },
-    "/SaveDomainEventCommand": {
+    "/api/SaveDomainEventCommand": {
       "post": {
         "tags": [
           "SaveDomainEvent"
@@ -3492,7 +3492,7 @@
         }
       }
     },
-    "/HostingOffersQuery": {
+    "/api/HostingOffersQuery": {
       "post": {
         "tags": [
           "HostingOffers"
@@ -3524,7 +3524,7 @@
         }
       }
     },
-    "/HostingRequestsQuery": {
+    "/api/HostingRequestsQuery": {
       "post": {
         "tags": [
           "HostingRequests"
@@ -3556,7 +3556,7 @@
         }
       }
     },
-    "/CreateEventCommand": {
+    "/api/CreateEventCommand": {
       "post": {
         "tags": [
           "CreateEvent"
@@ -3588,7 +3588,7 @@
         }
       }
     },
-    "/EventQuery": {
+    "/api/EventQuery": {
       "post": {
         "tags": [
           "Event"
@@ -3620,7 +3620,7 @@
         }
       }
     },
-    "/OpenRegistrationCommand": {
+    "/api/OpenRegistrationCommand": {
       "post": {
         "tags": [
           "OpenRegistration"
@@ -3652,7 +3652,7 @@
         }
       }
     },
-    "/SearchEventQuery": {
+    "/api/SearchEventQuery": {
       "post": {
         "tags": [
           "SearchEvent"
@@ -3687,7 +3687,7 @@
         }
       }
     },
-    "/AddUserToRoleInEventCommand": {
+    "/api/AddUserToRoleInEventCommand": {
       "post": {
         "tags": [
           "AddUserToRoleInEvent"
@@ -3720,7 +3720,7 @@
         }
       }
     },
-    "/EventsOfUserQuery": {
+    "/api/EventsOfUserQuery": {
       "post": {
         "tags": [
           "EventsOfUser"
@@ -3755,7 +3755,7 @@
         }
       }
     },
-    "/RemoveUserFromRoleInEventCommand": {
+    "/api/RemoveUserFromRoleInEventCommand": {
       "post": {
         "tags": [
           "RemoveUserFromRoleInEvent"
@@ -3787,7 +3787,7 @@
         }
       }
     },
-    "/UsersOfEventQuery": {
+    "/api/UsersOfEventQuery": {
       "post": {
         "tags": [
           "UsersOfEvent"
@@ -3822,7 +3822,7 @@
         }
       }
     },
-    "/AccessRequestsOfEventQuery": {
+    "/api/AccessRequestsOfEventQuery": {
       "post": {
         "tags": [
           "AccessRequestsOfEvent"
@@ -3857,7 +3857,7 @@
         }
       }
     },
-    "/RequestAccessCommand": {
+    "/api/RequestAccessCommand": {
       "post": {
         "tags": [
           "RequestAccess"
@@ -3890,7 +3890,7 @@
         }
       }
     },
-    "/RespondToRequestCommand": {
+    "/api/RespondToRequestCommand": {
       "post": {
         "tags": [
           "RespondToRequest"

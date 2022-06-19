@@ -6,8 +6,6 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 using MediatR;
 
-using Microsoft.AspNetCore.Routing.Patterns;
-
 using SimpleInjector;
 
 
@@ -23,11 +21,11 @@ public static class EndpointRouteBuilderExtensions
 
         foreach (var request in requests.RequestTypes)
         {
-            var routePattern = RoutePatternFactory.Parse(request.Request.Name);
-
-            var builder = endpointsBuilder.Map(routePattern, CreateProcessRequest(request.Request, container));
-            builder.WithDisplayName(request.Request.Name);
-            builder.WithMetadata(request);
+            endpointsBuilder.MapPost($"/api/{request.Request.Name}", CreateProcessRequest(request.Request, container))
+                            .RequireAuthorization()
+                            //.RequireCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyHeader())
+                            .WithDisplayName(request.Request.Name)
+                            .WithMetadata(request);
             //for (var i = 0; i < endpoint.Metadata.Count; i++) builder.WithMetadata(endpoint.Metadata[i]);
         }
     }
@@ -80,6 +78,7 @@ public static class EndpointRouteBuilderExtensions
         }
 
         using var scope = new EnsureExecutionScope(container);
+        container.GetInstance<IHttpContextAccessor>().HttpContext = context;
         var authorizationChecker = container.GetInstance<IAuthorizationChecker>();
         if (request is IEventBoundRequest eventBoundRequest)
         {

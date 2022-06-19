@@ -7,11 +7,10 @@ public class ExceptionMiddleware : IMiddleware
     private readonly ExceptionTranslator _exceptionTranslator;
     private const string TranslatedExceptionKey = "TranslatedException";
 
-    public ExceptionMiddleware() { }
-    //public ExceptionMiddleware(ExceptionTranslator exceptionTranslator)
-    //{
-    //    _exceptionTranslator = exceptionTranslator;
-    //}
+    public ExceptionMiddleware(ExceptionTranslator exceptionTranslator)
+    {
+        _exceptionTranslator = exceptionTranslator;
+    }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {

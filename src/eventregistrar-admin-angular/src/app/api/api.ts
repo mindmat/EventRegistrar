@@ -29,7 +29,7 @@ export class Api {
     }
 
     addSpot_Command(addSpotCommand: AddSpotCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/AddSpotCommand";
+        let url_ = this.baseUrl + "/api/AddSpotCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(addSpotCommand);
@@ -80,7 +80,7 @@ export class Api {
     }
 
     removeSpot_Command(removeSpotCommand: RemoveSpotCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/RemoveSpotCommand";
+        let url_ = this.baseUrl + "/api/RemoveSpotCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(removeSpotCommand);
@@ -131,7 +131,7 @@ export class Api {
     }
 
     spotsOfRegistration_Query(spotsOfRegistrationQuery: SpotsOfRegistrationQuery | undefined): Observable<SpotDisplayItem[]> {
-        let url_ = this.baseUrl + "/SpotsOfRegistrationQuery";
+        let url_ = this.baseUrl + "/api/SpotsOfRegistrationQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(spotsOfRegistrationQuery);
@@ -182,7 +182,7 @@ export class Api {
     }
 
     registration_Query(registrationQuery: RegistrationQuery | undefined): Observable<RegistrationDisplayItem> {
-        let url_ = this.baseUrl + "/RegistrationQuery";
+        let url_ = this.baseUrl + "/api/RegistrationQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(registrationQuery);
@@ -233,7 +233,7 @@ export class Api {
     }
 
     swapFirstLastName_Command(swapFirstLastNameCommand: SwapFirstLastNameCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SwapFirstLastNameCommand";
+        let url_ = this.baseUrl + "/api/SwapFirstLastNameCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(swapFirstLastNameCommand);
@@ -284,7 +284,7 @@ export class Api {
     }
 
     searchRegistration_Query(searchRegistrationQuery: SearchRegistrationQuery | undefined): Observable<RegistrationMatch[]> {
-        let url_ = this.baseUrl + "/SearchRegistrationQuery";
+        let url_ = this.baseUrl + "/api/SearchRegistrationQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(searchRegistrationQuery);
@@ -335,7 +335,7 @@ export class Api {
     }
 
     processRawRegistration_Command(processRawRegistrationCommand: ProcessRawRegistrationCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/ProcessRawRegistrationCommand";
+        let url_ = this.baseUrl + "/api/ProcessRawRegistrationCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(processRawRegistrationCommand);
@@ -386,7 +386,7 @@ export class Api {
     }
 
     setReduction_Command(setReductionCommand: SetReductionCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SetReductionCommand";
+        let url_ = this.baseUrl + "/api/SetReductionCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(setReductionCommand);
@@ -437,7 +437,7 @@ export class Api {
     }
 
     allExternalRegistrationIdentifiers_Query(allExternalRegistrationIdentifiersQuery: AllExternalRegistrationIdentifiersQuery | undefined): Observable<string[]> {
-        let url_ = this.baseUrl + "/AllExternalRegistrationIdentifiersQuery";
+        let url_ = this.baseUrl + "/api/AllExternalRegistrationIdentifiersQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(allExternalRegistrationIdentifiersQuery);
@@ -488,7 +488,7 @@ export class Api {
     }
 
     recalculatePrice_Command(recalculatePriceCommand: RecalculatePriceCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/RecalculatePriceCommand";
+        let url_ = this.baseUrl + "/api/RecalculatePriceCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(recalculatePriceCommand);
@@ -539,7 +539,7 @@ export class Api {
     }
 
     checkin_Query(checkinQuery: CheckinQuery | undefined): Observable<CheckinView> {
-        let url_ = this.baseUrl + "/CheckinQuery";
+        let url_ = this.baseUrl + "/api/CheckinQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(checkinQuery);
@@ -590,7 +590,7 @@ export class Api {
     }
 
     partyOverview_Query(partyOverviewQuery: PartyOverviewQuery | undefined): Observable<PartyItem[]> {
-        let url_ = this.baseUrl + "/PartyOverviewQuery";
+        let url_ = this.baseUrl + "/api/PartyOverviewQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(partyOverviewQuery);
@@ -641,7 +641,7 @@ export class Api {
     }
 
     changeUnmatchedPartnerRegistrationToSingleRegistration_Command(changeUnmatchedPartnerRegistrationToSingleRegistrationCommand: ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand";
+        let url_ = this.baseUrl + "/api/ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(changeUnmatchedPartnerRegistrationToSingleRegistrationCommand);
@@ -692,7 +692,7 @@ export class Api {
     }
 
     matchPartnerRegistrations_Command(matchPartnerRegistrationsCommand: MatchPartnerRegistrationsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/MatchPartnerRegistrationsCommand";
+        let url_ = this.baseUrl + "/api/MatchPartnerRegistrationsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(matchPartnerRegistrationsCommand);
@@ -743,7 +743,7 @@ export class Api {
     }
 
     potentialPartners_Query(potentialPartnersQuery: PotentialPartnersQuery | undefined): Observable<PotentialPartnerMatch[]> {
-        let url_ = this.baseUrl + "/PotentialPartnersQuery";
+        let url_ = this.baseUrl + "/api/PotentialPartnersQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(potentialPartnersQuery);
@@ -794,7 +794,7 @@ export class Api {
     }
 
     registrationsWithUnmatchedPartner_Query(registrationsWithUnmatchedPartnerQuery: RegistrationsWithUnmatchedPartnerQuery | undefined): Observable<PotentialPartnerMatch[]> {
-        let url_ = this.baseUrl + "/RegistrationsWithUnmatchedPartnerQuery";
+        let url_ = this.baseUrl + "/api/RegistrationsWithUnmatchedPartnerQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(registrationsWithUnmatchedPartnerQuery);
@@ -845,7 +845,7 @@ export class Api {
     }
 
     unbindPartnerRegistration_Command(unbindPartnerRegistrationCommand: UnbindPartnerRegistrationCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/UnbindPartnerRegistrationCommand";
+        let url_ = this.baseUrl + "/api/UnbindPartnerRegistrationCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(unbindPartnerRegistrationCommand);
@@ -896,7 +896,7 @@ export class Api {
     }
 
     addIndividualReduction_Command(addIndividualReductionCommand: AddIndividualReductionCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/AddIndividualReductionCommand";
+        let url_ = this.baseUrl + "/api/AddIndividualReductionCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(addIndividualReductionCommand);
@@ -947,7 +947,7 @@ export class Api {
     }
 
     checkRegistrationAfterPayment_Command(checkRegistrationAfterPaymentCommand: CheckRegistrationAfterPaymentCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/CheckRegistrationAfterPaymentCommand";
+        let url_ = this.baseUrl + "/api/CheckRegistrationAfterPaymentCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(checkRegistrationAfterPaymentCommand);
@@ -998,7 +998,7 @@ export class Api {
     }
 
     cancelRegistration_Command(cancelRegistrationCommand: CancelRegistrationCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/CancelRegistrationCommand";
+        let url_ = this.baseUrl + "/api/CancelRegistrationCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(cancelRegistrationCommand);
@@ -1049,7 +1049,7 @@ export class Api {
     }
 
     registrationFormTypes_Query(registrationFormTypesQuery: RegistrationFormTypesQuery | undefined): Observable<RegistrationFormType[]> {
-        let url_ = this.baseUrl + "/RegistrationFormTypesQuery";
+        let url_ = this.baseUrl + "/api/RegistrationFormTypesQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(registrationFormTypesQuery);
@@ -1100,7 +1100,7 @@ export class Api {
     }
 
     availableQuestionMappings_Query(availableQuestionMappingsQuery: AvailableQuestionMappingsQuery | undefined): Observable<AvailableQuestionMapping[]> {
-        let url_ = this.baseUrl + "/AvailableQuestionMappingsQuery";
+        let url_ = this.baseUrl + "/api/AvailableQuestionMappingsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(availableQuestionMappingsQuery);
@@ -1151,7 +1151,7 @@ export class Api {
     }
 
     availableQuestionOptionMappings_Query(availableQuestionOptionMappingsQuery: AvailableQuestionOptionMappingsQuery | undefined): Observable<AvailableQuestionOptionMapping[]> {
-        let url_ = this.baseUrl + "/AvailableQuestionOptionMappingsQuery";
+        let url_ = this.baseUrl + "/api/AvailableQuestionOptionMappingsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(availableQuestionOptionMappingsQuery);
@@ -1202,7 +1202,7 @@ export class Api {
     }
 
     saveRegistrationFormMappings_Command(saveRegistrationFormMappingsCommand: SaveRegistrationFormMappingsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SaveRegistrationFormMappingsCommand";
+        let url_ = this.baseUrl + "/api/SaveRegistrationFormMappingsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(saveRegistrationFormMappingsCommand);
@@ -1253,7 +1253,7 @@ export class Api {
     }
 
     deleteRegistrationForm_Command(deleteRegistrationFormCommand: DeleteRegistrationFormCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/DeleteRegistrationFormCommand";
+        let url_ = this.baseUrl + "/api/DeleteRegistrationFormCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(deleteRegistrationFormCommand);
@@ -1304,7 +1304,7 @@ export class Api {
     }
 
     pendingRegistrationForm_Query(pendingRegistrationFormQuery: PendingRegistrationFormQuery | undefined): Observable<RegistrationFormItem[]> {
-        let url_ = this.baseUrl + "/PendingRegistrationFormQuery";
+        let url_ = this.baseUrl + "/api/PendingRegistrationFormQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(pendingRegistrationFormQuery);
@@ -1355,7 +1355,7 @@ export class Api {
     }
 
     saveRegistrationFormDefinition_Command(saveRegistrationFormDefinitionCommand: SaveRegistrationFormDefinitionCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SaveRegistrationFormDefinitionCommand";
+        let url_ = this.baseUrl + "/api/SaveRegistrationFormDefinitionCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(saveRegistrationFormDefinitionCommand);
@@ -1406,7 +1406,7 @@ export class Api {
     }
 
     formPaths_Query(formPathsQuery: FormPathsQuery | undefined): Observable<RegistrationFormGroup[]> {
-        let url_ = this.baseUrl + "/FormPathsQuery";
+        let url_ = this.baseUrl + "/api/FormPathsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(formPathsQuery);
@@ -1457,7 +1457,7 @@ export class Api {
     }
 
     createRegistrable_Command(createRegistrableCommand: CreateRegistrableCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/CreateRegistrableCommand";
+        let url_ = this.baseUrl + "/api/CreateRegistrableCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(createRegistrableCommand);
@@ -1508,7 +1508,7 @@ export class Api {
     }
 
     deleteRegistrable_Command(deleteRegistrableCommand: DeleteRegistrableCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/DeleteRegistrableCommand";
+        let url_ = this.baseUrl + "/api/DeleteRegistrableCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(deleteRegistrableCommand);
@@ -1559,7 +1559,7 @@ export class Api {
     }
 
     doubleRegistrablesOverview_Query(doubleRegistrablesOverviewQuery: DoubleRegistrablesOverviewQuery | undefined): Observable<DoubleRegistrableDisplayItem[]> {
-        let url_ = this.baseUrl + "/DoubleRegistrablesOverviewQuery";
+        let url_ = this.baseUrl + "/api/DoubleRegistrablesOverviewQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(doubleRegistrablesOverviewQuery);
@@ -1610,7 +1610,7 @@ export class Api {
     }
 
     registrables_Query(registrablesQuery: RegistrablesQuery | undefined): Observable<RegistrableDisplayItem[]> {
-        let url_ = this.baseUrl + "/RegistrablesQuery";
+        let url_ = this.baseUrl + "/api/RegistrablesQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(registrablesQuery);
@@ -1661,7 +1661,7 @@ export class Api {
     }
 
     setDoubleRegistrableLimits_Command(setDoubleRegistrableLimitsCommand: SetDoubleRegistrableLimitsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SetDoubleRegistrableLimitsCommand";
+        let url_ = this.baseUrl + "/api/SetDoubleRegistrableLimitsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(setDoubleRegistrableLimitsCommand);
@@ -1712,7 +1712,7 @@ export class Api {
     }
 
     setSingleRegistrableLimits_Command(setSingleRegistrableLimitsCommand: SetSingleRegistrableLimitsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SetSingleRegistrableLimitsCommand";
+        let url_ = this.baseUrl + "/api/SetSingleRegistrableLimitsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(setSingleRegistrableLimitsCommand);
@@ -1763,7 +1763,7 @@ export class Api {
     }
 
     singleRegistrablesOverview_Query(singleRegistrablesOverviewQuery: SingleRegistrablesOverviewQuery | undefined): Observable<SingleRegistrableDisplayItem[]> {
-        let url_ = this.baseUrl + "/SingleRegistrablesOverviewQuery";
+        let url_ = this.baseUrl + "/api/SingleRegistrablesOverviewQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(singleRegistrablesOverviewQuery);
@@ -1814,7 +1814,7 @@ export class Api {
     }
 
     checkIfRegistrationIsPromoted_Command(checkIfRegistrationIsPromotedCommand: CheckIfRegistrationIsPromotedCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/CheckIfRegistrationIsPromotedCommand";
+        let url_ = this.baseUrl + "/api/CheckIfRegistrationIsPromotedCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(checkIfRegistrationIsPromotedCommand);
@@ -1865,7 +1865,7 @@ export class Api {
     }
 
     tryPromoteFromWaitingList_Command(tryPromoteFromWaitingListCommand: TryPromoteFromWaitingListCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/TryPromoteFromWaitingListCommand";
+        let url_ = this.baseUrl + "/api/TryPromoteFromWaitingListCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(tryPromoteFromWaitingListCommand);
@@ -1916,7 +1916,7 @@ export class Api {
     }
 
     registrationsOnWaitingList_Query(registrationsOnWaitingListQuery: RegistrationsOnWaitingListQuery | undefined): Observable<WaitingListSpot[]> {
-        let url_ = this.baseUrl + "/RegistrationsOnWaitingListQuery";
+        let url_ = this.baseUrl + "/api/RegistrationsOnWaitingListQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(registrationsOnWaitingListQuery);
@@ -1967,7 +1967,7 @@ export class Api {
     }
 
     setFallbackToPartyPass_Command(setFallbackToPartyPassCommand: SetFallbackToPartyPassCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SetFallbackToPartyPassCommand";
+        let url_ = this.baseUrl + "/api/SetFallbackToPartyPassCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(setFallbackToPartyPassCommand);
@@ -2018,7 +2018,7 @@ export class Api {
     }
 
     activateAutomaticPromotion_Command(activateAutomaticPromotionCommand: ActivateAutomaticPromotionCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/ActivateAutomaticPromotionCommand";
+        let url_ = this.baseUrl + "/api/ActivateAutomaticPromotionCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(activateAutomaticPromotionCommand);
@@ -2069,7 +2069,7 @@ export class Api {
     }
 
     deactivateAutomaticPromotion_Command(deactivateAutomaticPromotionCommand: DeactivateAutomaticPromotionCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/DeactivateAutomaticPromotionCommand";
+        let url_ = this.baseUrl + "/api/DeactivateAutomaticPromotionCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(deactivateAutomaticPromotionCommand);
@@ -2120,7 +2120,7 @@ export class Api {
     }
 
     registrableTags_Query(registrableTagsQuery: RegistrableTagsQuery | undefined): Observable<RegistrableTagDisplayItem[]> {
-        let url_ = this.baseUrl + "/RegistrableTagsQuery";
+        let url_ = this.baseUrl + "/api/RegistrableTagsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(registrableTagsQuery);
@@ -2171,7 +2171,7 @@ export class Api {
     }
 
     deleteReduction_Command(deleteReductionCommand: DeleteReductionCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/DeleteReductionCommand";
+        let url_ = this.baseUrl + "/api/DeleteReductionCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(deleteReductionCommand);
@@ -2222,7 +2222,7 @@ export class Api {
     }
 
     saveReduction_Command(saveReductionCommand: SaveReductionCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SaveReductionCommand";
+        let url_ = this.baseUrl + "/api/SaveReductionCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(saveReductionCommand);
@@ -2273,7 +2273,7 @@ export class Api {
     }
 
     pricing_Query(pricingQuery: PricingQuery | undefined): Observable<RegistrablePricing[]> {
-        let url_ = this.baseUrl + "/PricingQuery";
+        let url_ = this.baseUrl + "/api/PricingQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(pricingQuery);
@@ -2324,7 +2324,7 @@ export class Api {
     }
 
     setRegistrablesPrices_Command(setRegistrablesPricesCommand: SetRegistrablesPricesCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SetRegistrablesPricesCommand";
+        let url_ = this.baseUrl + "/api/SetRegistrablesPricesCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(setRegistrablesPricesCommand);
@@ -2375,7 +2375,7 @@ export class Api {
     }
 
     participantsOfRegistrable_Query(participantsOfRegistrableQuery: ParticipantsOfRegistrableQuery | undefined): Observable<RegistrableDisplayInfo> {
-        let url_ = this.baseUrl + "/ParticipantsOfRegistrableQuery";
+        let url_ = this.baseUrl + "/api/ParticipantsOfRegistrableQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(participantsOfRegistrableQuery);
@@ -2426,7 +2426,7 @@ export class Api {
     }
 
     processReceivedSms_Command(processReceivedSmsCommand: ProcessReceivedSmsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/ProcessReceivedSmsCommand";
+        let url_ = this.baseUrl + "/api/ProcessReceivedSmsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(processReceivedSmsCommand);
@@ -2477,7 +2477,7 @@ export class Api {
     }
 
     sendSms_Command(sendSmsCommand: SendSmsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SendSmsCommand";
+        let url_ = this.baseUrl + "/api/SendSmsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(sendSmsCommand);
@@ -2528,7 +2528,7 @@ export class Api {
     }
 
     smsConversation_Query(smsConversationQuery: SmsConversationQuery | undefined): Observable<SmsDisplayItem[]> {
-        let url_ = this.baseUrl + "/SmsConversationQuery";
+        let url_ = this.baseUrl + "/api/SmsConversationQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(smsConversationQuery);
@@ -2579,7 +2579,7 @@ export class Api {
     }
 
     ignorePayment_Command(ignorePaymentCommand: IgnorePaymentCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/IgnorePaymentCommand";
+        let url_ = this.baseUrl + "/api/IgnorePaymentCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(ignorePaymentCommand);
@@ -2630,7 +2630,7 @@ export class Api {
     }
 
     paymentOverview_Query(paymentOverviewQuery: PaymentOverviewQuery | undefined): Observable<PaymentOverview> {
-        let url_ = this.baseUrl + "/PaymentOverviewQuery";
+        let url_ = this.baseUrl + "/api/PaymentOverviewQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(paymentOverviewQuery);
@@ -2681,7 +2681,7 @@ export class Api {
     }
 
     unassignedIncomingPayments_Query(unassignedIncomingPaymentsQuery: UnassignedIncomingPaymentsQuery | undefined): Observable<PaymentDisplayItem[]> {
-        let url_ = this.baseUrl + "/UnassignedIncomingPaymentsQuery";
+        let url_ = this.baseUrl + "/api/UnassignedIncomingPaymentsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(unassignedIncomingPaymentsQuery);
@@ -2732,7 +2732,7 @@ export class Api {
     }
 
     unassignedPayouts_Query(unassignedPayoutsQuery: UnassignedPayoutsQuery | undefined): Observable<PaymentDisplayItem[]> {
-        let url_ = this.baseUrl + "/UnassignedPayoutsQuery";
+        let url_ = this.baseUrl + "/api/UnassignedPayoutsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(unassignedPayoutsQuery);
@@ -2783,7 +2783,7 @@ export class Api {
     }
 
     bankAccountBookings_Query(bankAccountBookingsQuery: BankAccountBookingsQuery | undefined): Observable<BookingsOfDay[]> {
-        let url_ = this.baseUrl + "/BankAccountBookingsQuery";
+        let url_ = this.baseUrl + "/api/BankAccountBookingsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(bankAccountBookingsQuery);
@@ -2834,7 +2834,7 @@ export class Api {
     }
 
     checkIfPaymentIsSettled_Command(checkIfPaymentIsSettledCommand: CheckIfPaymentIsSettledCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/CheckIfPaymentIsSettledCommand";
+        let url_ = this.baseUrl + "/api/CheckIfPaymentIsSettledCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(checkIfPaymentIsSettledCommand);
@@ -2885,7 +2885,7 @@ export class Api {
     }
 
     bookingsByState_Query(bookingsByStateQuery: BookingsByStateQuery | undefined): Observable<BankBookingDisplayItem[]> {
-        let url_ = this.baseUrl + "/BookingsByStateQuery";
+        let url_ = this.baseUrl + "/api/BookingsByStateQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(bookingsByStateQuery);
@@ -2936,7 +2936,7 @@ export class Api {
     }
 
     assignPayout_Command(assignPayoutCommand: AssignPayoutCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/AssignPayoutCommand";
+        let url_ = this.baseUrl + "/api/AssignPayoutCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(assignPayoutCommand);
@@ -2987,7 +2987,7 @@ export class Api {
     }
 
     checkIfPayoutIsConfirmed_Command(checkIfPayoutIsConfirmedCommand: CheckIfPayoutIsConfirmedCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/CheckIfPayoutIsConfirmedCommand";
+        let url_ = this.baseUrl + "/api/CheckIfPayoutIsConfirmedCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(checkIfPayoutIsConfirmedCommand);
@@ -3038,7 +3038,7 @@ export class Api {
     }
 
     payout_Query(payoutQuery: PayoutQuery | undefined): Observable<PayoutDisplayItem[]> {
-        let url_ = this.baseUrl + "/PayoutQuery";
+        let url_ = this.baseUrl + "/api/PayoutQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(payoutQuery);
@@ -3089,7 +3089,7 @@ export class Api {
     }
 
     possiblePayoutAssignment_Query(possiblePayoutAssignmentQuery: PossiblePayoutAssignmentQuery | undefined): Observable<PossiblePayoutAssignment[]> {
-        let url_ = this.baseUrl + "/PossiblePayoutAssignmentQuery";
+        let url_ = this.baseUrl + "/api/PossiblePayoutAssignmentQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(possiblePayoutAssignmentQuery);
@@ -3140,7 +3140,7 @@ export class Api {
     }
 
     refunds_Query(refundsQuery: RefundsQuery | undefined): Observable<RefundDisplayItem[]> {
-        let url_ = this.baseUrl + "/RefundsQuery";
+        let url_ = this.baseUrl + "/api/RefundsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(refundsQuery);
@@ -3191,7 +3191,7 @@ export class Api {
     }
 
     willPayAtCheckin_Command(willPayAtCheckinCommand: WillPayAtCheckinCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/WillPayAtCheckinCommand";
+        let url_ = this.baseUrl + "/api/WillPayAtCheckinCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(willPayAtCheckinCommand);
@@ -3242,7 +3242,7 @@ export class Api {
     }
 
     savePaymentFile_Command(savePaymentFileCommand: SavePaymentFileCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SavePaymentFileCommand";
+        let url_ = this.baseUrl + "/api/SavePaymentFileCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(savePaymentFileCommand);
@@ -3293,7 +3293,7 @@ export class Api {
     }
 
     paymentSlipImage_Query(paymentSlipImageQuery: PaymentSlipImageQuery | undefined): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/PaymentSlipImageQuery";
+        let url_ = this.baseUrl + "/api/PaymentSlipImageQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(paymentSlipImageQuery);
@@ -3343,7 +3343,7 @@ export class Api {
     }
 
     tryAssignPaymentSlip_Command(tryAssignPaymentSlipCommand: TryAssignPaymentSlipCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/TryAssignPaymentSlipCommand";
+        let url_ = this.baseUrl + "/api/TryAssignPaymentSlipCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(tryAssignPaymentSlipCommand);
@@ -3394,7 +3394,7 @@ export class Api {
     }
 
     fetchBankStamentsFile_Command(fetchBankStamentsFileCommand: FetchBankStamentsFileCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/FetchBankStamentsFileCommand";
+        let url_ = this.baseUrl + "/api/FetchBankStamentsFileCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(fetchBankStamentsFileCommand);
@@ -3445,7 +3445,7 @@ export class Api {
     }
 
     processFetchedBankStatementsFile_Command(processFetchedBankStatementsFileCommand: ProcessFetchedBankStatementsFileCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/ProcessFetchedBankStatementsFileCommand";
+        let url_ = this.baseUrl + "/api/ProcessFetchedBankStatementsFileCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(processFetchedBankStatementsFileCommand);
@@ -3496,7 +3496,7 @@ export class Api {
     }
 
     duePayments_Query(duePaymentsQuery: DuePaymentsQuery | undefined): Observable<DuePaymentItem[]> {
-        let url_ = this.baseUrl + "/DuePaymentsQuery";
+        let url_ = this.baseUrl + "/api/DuePaymentsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(duePaymentsQuery);
@@ -3547,7 +3547,7 @@ export class Api {
     }
 
     sendReminder_Command(sendReminderCommand: SendReminderCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SendReminderCommand";
+        let url_ = this.baseUrl + "/api/SendReminderCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(sendReminderCommand);
@@ -3598,7 +3598,7 @@ export class Api {
     }
 
     differences_Query(differencesQuery: DifferencesQuery | undefined): Observable<DifferencesDisplayItem[]> {
-        let url_ = this.baseUrl + "/DifferencesQuery";
+        let url_ = this.baseUrl + "/api/DifferencesQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(differencesQuery);
@@ -3649,7 +3649,7 @@ export class Api {
     }
 
     refundDifference_Command(refundDifferenceCommand: RefundDifferenceCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/RefundDifferenceCommand";
+        let url_ = this.baseUrl + "/api/RefundDifferenceCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(refundDifferenceCommand);
@@ -3700,7 +3700,7 @@ export class Api {
     }
 
     sendPaymentDueMail_Command(sendPaymentDueMailCommand: SendPaymentDueMailCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SendPaymentDueMailCommand";
+        let url_ = this.baseUrl + "/api/SendPaymentDueMailCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(sendPaymentDueMailCommand);
@@ -3751,7 +3751,7 @@ export class Api {
     }
 
     assignedPaymentsOfRegistration_Query(assignedPaymentsOfRegistrationQuery: AssignedPaymentsOfRegistrationQuery | undefined): Observable<AssignedPaymentDisplayItem[]> {
-        let url_ = this.baseUrl + "/AssignedPaymentsOfRegistrationQuery";
+        let url_ = this.baseUrl + "/api/AssignedPaymentsOfRegistrationQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(assignedPaymentsOfRegistrationQuery);
@@ -3802,7 +3802,7 @@ export class Api {
     }
 
     assignPayment_Command(assignPaymentCommand: AssignPaymentCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/AssignPaymentCommand";
+        let url_ = this.baseUrl + "/api/AssignPaymentCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(assignPaymentCommand);
@@ -3853,7 +3853,7 @@ export class Api {
     }
 
     assignRepayment_Command(assignRepaymentCommand: AssignRepaymentCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/AssignRepaymentCommand";
+        let url_ = this.baseUrl + "/api/AssignRepaymentCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(assignRepaymentCommand);
@@ -3904,7 +3904,7 @@ export class Api {
     }
 
     possibleAssignments_Query(possibleAssignmentsQuery: PossibleAssignmentsQuery | undefined): Observable<BookingAssignments> {
-        let url_ = this.baseUrl + "/PossibleAssignmentsQuery";
+        let url_ = this.baseUrl + "/api/PossibleAssignmentsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(possibleAssignmentsQuery);
@@ -3955,7 +3955,7 @@ export class Api {
     }
 
     possibleRepaymentAssignment_Query(possibleRepaymentAssignmentQuery: PossibleRepaymentAssignmentQuery | undefined): Observable<PossibleRepaymentAssignment[]> {
-        let url_ = this.baseUrl + "/PossibleRepaymentAssignmentQuery";
+        let url_ = this.baseUrl + "/api/PossibleRepaymentAssignmentQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(possibleRepaymentAssignmentQuery);
@@ -4006,7 +4006,7 @@ export class Api {
     }
 
     unassignPayment_Command(unassignPaymentCommand: UnassignPaymentCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/UnassignPaymentCommand";
+        let url_ = this.baseUrl + "/api/UnassignPaymentCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(unassignPaymentCommand);
@@ -4057,7 +4057,7 @@ export class Api {
     }
 
     deleteMail_Command(deleteMailCommand: DeleteMailCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/DeleteMailCommand";
+        let url_ = this.baseUrl + "/api/DeleteMailCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(deleteMailCommand);
@@ -4108,7 +4108,7 @@ export class Api {
     }
 
     getPendingMails_Query(getPendingMailsQuery: GetPendingMailsQuery | undefined): Observable<Mail[]> {
-        let url_ = this.baseUrl + "/GetPendingMailsQuery";
+        let url_ = this.baseUrl + "/api/GetPendingMailsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(getPendingMailsQuery);
@@ -4159,7 +4159,7 @@ export class Api {
     }
 
     mailsOfRegistration_Query(mailsOfRegistrationQuery: MailsOfRegistrationQuery | undefined): Observable<MailDisplayItem[]> {
-        let url_ = this.baseUrl + "/MailsOfRegistrationQuery";
+        let url_ = this.baseUrl + "/api/MailsOfRegistrationQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(mailsOfRegistrationQuery);
@@ -4210,7 +4210,7 @@ export class Api {
     }
 
     releaseAllPendingMails_Command(releaseAllPendingMailsCommand: ReleaseAllPendingMailsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/ReleaseAllPendingMailsCommand";
+        let url_ = this.baseUrl + "/api/ReleaseAllPendingMailsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(releaseAllPendingMailsCommand);
@@ -4261,7 +4261,7 @@ export class Api {
     }
 
     releaseMail_Command(releaseMailCommand: ReleaseMailCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/ReleaseMailCommand";
+        let url_ = this.baseUrl + "/api/ReleaseMailCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(releaseMailCommand);
@@ -4312,7 +4312,7 @@ export class Api {
     }
 
     deleteMailTemplate_Command(deleteMailTemplateCommand: DeleteMailTemplateCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/DeleteMailTemplateCommand";
+        let url_ = this.baseUrl + "/api/DeleteMailTemplateCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(deleteMailTemplateCommand);
@@ -4363,7 +4363,7 @@ export class Api {
     }
 
     languages_Query(languagesQuery: LanguagesQuery | undefined): Observable<LanguageItem[]> {
-        let url_ = this.baseUrl + "/LanguagesQuery";
+        let url_ = this.baseUrl + "/api/LanguagesQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(languagesQuery);
@@ -4414,7 +4414,7 @@ export class Api {
     }
 
     mailTemplates_Query(mailTemplatesQuery: MailTemplatesQuery | undefined): Observable<MailTemplateItem[]> {
-        let url_ = this.baseUrl + "/MailTemplatesQuery";
+        let url_ = this.baseUrl + "/api/MailTemplatesQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(mailTemplatesQuery);
@@ -4465,7 +4465,7 @@ export class Api {
     }
 
     mailTypes_Query(mailTypesQuery: MailTypesQuery | undefined): Observable<MailTypeItem[]> {
-        let url_ = this.baseUrl + "/MailTypesQuery";
+        let url_ = this.baseUrl + "/api/MailTypesQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(mailTypesQuery);
@@ -4516,7 +4516,7 @@ export class Api {
     }
 
     saveMailTemplate_Command(saveMailTemplateCommand: SaveMailTemplateCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SaveMailTemplateCommand";
+        let url_ = this.baseUrl + "/api/SaveMailTemplateCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(saveMailTemplateCommand);
@@ -4567,7 +4567,7 @@ export class Api {
     }
 
     sendMail_Command(sendMailCommand: SendMailCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SendMailCommand";
+        let url_ = this.baseUrl + "/api/SendMailCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(sendMailCommand);
@@ -4618,7 +4618,7 @@ export class Api {
     }
 
     possibleMailTypes_Query(possibleMailTypesQuery: PossibleMailTypesQuery | undefined): Observable<MailTypeItem[]> {
-        let url_ = this.baseUrl + "/PossibleMailTypesQuery";
+        let url_ = this.baseUrl + "/api/PossibleMailTypesQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(possibleMailTypesQuery);
@@ -4669,7 +4669,7 @@ export class Api {
     }
 
     fixInvalidAddress_Command(fixInvalidAddressCommand: FixInvalidAddressCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/FixInvalidAddressCommand";
+        let url_ = this.baseUrl + "/api/FixInvalidAddressCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(fixInvalidAddressCommand);
@@ -4720,7 +4720,7 @@ export class Api {
     }
 
     invalidAddresses_Query(invalidAddressesQuery: InvalidAddressesQuery | undefined): Observable<InvalidAddress[]> {
-        let url_ = this.baseUrl + "/InvalidAddressesQuery";
+        let url_ = this.baseUrl + "/api/InvalidAddressesQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(invalidAddressesQuery);
@@ -4771,7 +4771,7 @@ export class Api {
     }
 
     notReceivedMails_Query(notReceivedMailsQuery: NotReceivedMailsQuery | undefined): Observable<NotReceivedMail[]> {
-        let url_ = this.baseUrl + "/NotReceivedMailsQuery";
+        let url_ = this.baseUrl + "/api/NotReceivedMailsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(notReceivedMailsQuery);
@@ -4822,7 +4822,7 @@ export class Api {
     }
 
     importMailsFromImap_Command(importMailsFromImapCommand: ImportMailsFromImapCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/ImportMailsFromImapCommand";
+        let url_ = this.baseUrl + "/api/ImportMailsFromImapCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(importMailsFromImapCommand);
@@ -4873,7 +4873,7 @@ export class Api {
     }
 
     importMailsFromImapForAllActiveEvents_Command(importMailsFromImapForAllActiveEventsCommand: ImportMailsFromImapForAllActiveEventsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/ImportMailsFromImapForAllActiveEventsCommand";
+        let url_ = this.baseUrl + "/api/ImportMailsFromImapForAllActiveEventsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(importMailsFromImapForAllActiveEventsCommand);
@@ -4924,7 +4924,7 @@ export class Api {
     }
 
     tryAssignImportedMail_Command(tryAssignImportedMailCommand: TryAssignImportedMailCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/TryAssignImportedMailCommand";
+        let url_ = this.baseUrl + "/api/TryAssignImportedMailCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(tryAssignImportedMailCommand);
@@ -4975,7 +4975,7 @@ export class Api {
     }
 
     processMailEvents_Command(processMailEventsCommand: ProcessMailEventsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/ProcessMailEventsCommand";
+        let url_ = this.baseUrl + "/api/ProcessMailEventsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(processMailEventsCommand);
@@ -5026,7 +5026,7 @@ export class Api {
     }
 
     composeAndSendMail_Command(composeAndSendMailCommand: ComposeAndSendMailCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/ComposeAndSendMailCommand";
+        let url_ = this.baseUrl + "/api/ComposeAndSendMailCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(composeAndSendMailCommand);
@@ -5077,7 +5077,7 @@ export class Api {
     }
 
     createBulkMails_Command(createBulkMailsCommand: CreateBulkMailsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/CreateBulkMailsCommand";
+        let url_ = this.baseUrl + "/api/CreateBulkMailsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(createBulkMailsCommand);
@@ -5128,7 +5128,7 @@ export class Api {
     }
 
     possibleAudiences_Query(possibleAudiencesQuery: PossibleAudiencesQuery | undefined): Observable<PossibleAudience[]> {
-        let url_ = this.baseUrl + "/PossibleAudiencesQuery";
+        let url_ = this.baseUrl + "/api/PossibleAudiencesQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(possibleAudiencesQuery);
@@ -5179,7 +5179,7 @@ export class Api {
     }
 
     releaseBulkMails_Command(releaseBulkMailsCommand: ReleaseBulkMailsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/ReleaseBulkMailsCommand";
+        let url_ = this.baseUrl + "/api/ReleaseBulkMailsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(releaseBulkMailsCommand);
@@ -5230,7 +5230,7 @@ export class Api {
     }
 
     domainEventCatalog_Query(domainEventCatalogQuery: DomainEventCatalogQuery | undefined): Observable<DomainEventCatalogItem[]> {
-        let url_ = this.baseUrl + "/DomainEventCatalogQuery";
+        let url_ = this.baseUrl + "/api/DomainEventCatalogQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(domainEventCatalogQuery);
@@ -5281,7 +5281,7 @@ export class Api {
     }
 
     domainEvents_Query(domainEventsQuery: DomainEventsQuery | undefined): Observable<DomainEventDisplayItem[]> {
-        let url_ = this.baseUrl + "/DomainEventsQuery";
+        let url_ = this.baseUrl + "/api/DomainEventsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(domainEventsQuery);
@@ -5332,7 +5332,7 @@ export class Api {
     }
 
     saveDomainEvent_Command(saveDomainEventCommand: SaveDomainEventCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/SaveDomainEventCommand";
+        let url_ = this.baseUrl + "/api/SaveDomainEventCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(saveDomainEventCommand);
@@ -5383,7 +5383,7 @@ export class Api {
     }
 
     hostingOffers_Query(hostingOffersQuery: HostingOffersQuery | undefined): Observable<HostingOffers> {
-        let url_ = this.baseUrl + "/HostingOffersQuery";
+        let url_ = this.baseUrl + "/api/HostingOffersQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(hostingOffersQuery);
@@ -5434,7 +5434,7 @@ export class Api {
     }
 
     hostingRequests_Query(hostingRequestsQuery: HostingRequestsQuery | undefined): Observable<HostingRequests> {
-        let url_ = this.baseUrl + "/HostingRequestsQuery";
+        let url_ = this.baseUrl + "/api/HostingRequestsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(hostingRequestsQuery);
@@ -5485,7 +5485,7 @@ export class Api {
     }
 
     createEvent_Command(createEventCommand: CreateEventCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/CreateEventCommand";
+        let url_ = this.baseUrl + "/api/CreateEventCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(createEventCommand);
@@ -5536,7 +5536,7 @@ export class Api {
     }
 
     event_Query(eventQuery: EventQuery | undefined): Observable<EventDetails> {
-        let url_ = this.baseUrl + "/EventQuery";
+        let url_ = this.baseUrl + "/api/EventQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(eventQuery);
@@ -5587,7 +5587,7 @@ export class Api {
     }
 
     openRegistration_Command(openRegistrationCommand: OpenRegistrationCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/OpenRegistrationCommand";
+        let url_ = this.baseUrl + "/api/OpenRegistrationCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(openRegistrationCommand);
@@ -5638,7 +5638,7 @@ export class Api {
     }
 
     searchEvent_Query(searchEventQuery: SearchEventQuery | undefined): Observable<EventSearchResult[]> {
-        let url_ = this.baseUrl + "/SearchEventQuery";
+        let url_ = this.baseUrl + "/api/SearchEventQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(searchEventQuery);
@@ -5689,7 +5689,7 @@ export class Api {
     }
 
     addUserToRoleInEvent_Command(addUserToRoleInEventCommand: AddUserToRoleInEventCommand | undefined): Observable<string> {
-        let url_ = this.baseUrl + "/AddUserToRoleInEventCommand";
+        let url_ = this.baseUrl + "/api/AddUserToRoleInEventCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(addUserToRoleInEventCommand);
@@ -5740,7 +5740,7 @@ export class Api {
     }
 
     eventsOfUser_Query(eventsOfUserQuery: EventsOfUserQuery | undefined): Observable<UserInEventDisplayItem[]> {
-        let url_ = this.baseUrl + "/EventsOfUserQuery";
+        let url_ = this.baseUrl + "/api/EventsOfUserQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(eventsOfUserQuery);
@@ -5791,7 +5791,7 @@ export class Api {
     }
 
     removeUserFromRoleInEvent_Command(removeUserFromRoleInEventCommand: RemoveUserFromRoleInEventCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/RemoveUserFromRoleInEventCommand";
+        let url_ = this.baseUrl + "/api/RemoveUserFromRoleInEventCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(removeUserFromRoleInEventCommand);
@@ -5842,7 +5842,7 @@ export class Api {
     }
 
     usersOfEvent_Query(usersOfEventQuery: UsersOfEventQuery | undefined): Observable<UserInEventDisplayItem[]> {
-        let url_ = this.baseUrl + "/UsersOfEventQuery";
+        let url_ = this.baseUrl + "/api/UsersOfEventQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(usersOfEventQuery);
@@ -5893,7 +5893,7 @@ export class Api {
     }
 
     accessRequestsOfEvent_Query(accessRequestsOfEventQuery: AccessRequestsOfEventQuery | undefined): Observable<AccessRequestOfEvent[]> {
-        let url_ = this.baseUrl + "/AccessRequestsOfEventQuery";
+        let url_ = this.baseUrl + "/api/AccessRequestsOfEventQuery";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(accessRequestsOfEventQuery);
@@ -5944,7 +5944,7 @@ export class Api {
     }
 
     requestAccess_Command(requestAccessCommand: RequestAccessCommand | undefined): Observable<string> {
-        let url_ = this.baseUrl + "/RequestAccessCommand";
+        let url_ = this.baseUrl + "/api/RequestAccessCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(requestAccessCommand);
@@ -5995,7 +5995,7 @@ export class Api {
     }
 
     respondToRequest_Command(respondToRequestCommand: RespondToRequestCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/RespondToRequestCommand";
+        let url_ = this.baseUrl + "/api/RespondToRequestCommand";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(respondToRequestCommand);

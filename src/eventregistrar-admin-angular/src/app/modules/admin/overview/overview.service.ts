@@ -1,9 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Api } from 'app/api/api';
+import { Api, RegistrableTagDisplayItem } from 'app/api/api';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
-import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDisplayItem';
 
 @Injectable({
   providedIn: 'root'

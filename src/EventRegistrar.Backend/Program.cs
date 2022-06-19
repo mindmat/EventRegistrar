@@ -38,14 +38,14 @@ builder.Services.AddSimpleInjector(container, options =>
 {
     // AddAspNetCore() wraps web requests in a Simple Injector scope and
     // allows request-scoped framework services to be resolved.
-    //options.AddAspNetCore()
+    options.AddAspNetCore();
 
     //       // Ensure activation of a specific framework type to be created by
     //       // Simple Injector instead of the built-in configuration system.
     //       // All calls are optional. You can enable what you need. For instance,
     //       // ViewComponents, PageModels, and TagHelpers are not needed when you
     //       // build a Web API.
-    //       .AddControllerActivation();
+    //.AddControllerActivation();
     //.AddViewComponentActivation()
     //.AddPageModelActivation()
     //.AddTagHelperActivation();
@@ -69,7 +69,7 @@ builder.Services.AddAuthentication(options =>
            options.Authority = "https://eventregistrar.eu.auth0.com/";
            options.Audience = "https://eventregistrar.azurewebsites.net/api";
        });
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(o => o.AddPolicy("api", p => p.RequireAuthenticatedUser()));
 builder.Services.AddCors();
 
 //builder.Services.AddSwaggerDocument();
@@ -187,14 +187,20 @@ app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin()
                                       .AllowAnyHeader()
                                       .AllowAnyMethod());
 
-//app.UseMiddleware<ExceptionMiddleware>(container);
+app.UseMiddleware<ExceptionMiddleware>(container);
 
-app.UseAuthentication();
+
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseEndpoints(endpoints => { endpoints.MapRequests(container); });
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapRequests(container);
+    //endpoints.MapControllers();
+});
 
 
 app.Run();

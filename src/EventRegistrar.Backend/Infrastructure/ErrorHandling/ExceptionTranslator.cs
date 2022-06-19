@@ -4,11 +4,11 @@ namespace EventRegistrar.Backend.Infrastructure.ErrorHandling;
 
 public class ExceptionTranslator
 {
-    private readonly ILookup<Type, IExceptionTranslation> _exceptionTranslations;
+    private readonly Lazy<ILookup<Type, IExceptionTranslation>> _exceptionTranslations;
 
     public ExceptionTranslator(IEnumerable<IExceptionTranslation> exceptionTranslations)
     {
-        _exceptionTranslations = exceptionTranslations.ToLookup(ext => ext.ExceptionType);
+        _exceptionTranslations = new Lazy<ILookup<Type, IExceptionTranslation>>(() => exceptionTranslations.ToLookup(ext => ext.ExceptionType));
     }
 
     public (object result, HttpStatusCode? httpCode) TranslateExceptionToUserText(Exception ex)
@@ -31,7 +31,7 @@ public class ExceptionTranslator
             return null;
         }
 
-        var translations = _exceptionTranslations[ex.GetType()];
+        var translations = _exceptionTranslations.Value[ex.GetType()];
         var translation = translations.FirstOrDefault(trs => trs.Filter(ex));
         if (translation == null)
         {
