@@ -31,7 +31,8 @@
                     <fuse-card class="flex flex-col w-80 p-4 rounded-xl {{ existingAssignment.amountMatch && !existingAssignment.isExistingAssignment ? 'bg-green-300':'' }}">
                         <div class="flex flex-row items-baseline gap-x-2">
                             <div class="text-xl font-semibold leading-tight">{{ existingAssignment.assignedAmount | number: '1.2-2' }}</div>
-                            <div class="text-secondary leading-tight">{{ existingAssignment.firstName }} {{ existingAssignment.lastName }}</div>
+                            <a class="hover:underline text-secondary leading-tight" [routerLink]="['/registration', existingAssignment.registrationId]">
+                                {{ existingAssignment.firstName }} {{ existingAssignment.lastName }}</a>
                             <button *ngIf="existingAssignment.paymentAssignmentId_Existing" class="ml-auto" mat-icon-button (click)="unassign(candidate.paymentAssignmentId_Existing)">
                                 <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                             </button>
