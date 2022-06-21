@@ -1,6 +1,4 @@
-import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, map, Observable, of, switchMap, throwError } from 'rxjs';
-import { EventService } from '../events/event.service';
 
 export class ListService<TListItem>
 {

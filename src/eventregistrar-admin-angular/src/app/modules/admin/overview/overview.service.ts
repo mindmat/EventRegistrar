@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Api, RegistrableTagDisplayItem } from 'app/api/api';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
@@ -13,7 +12,7 @@ export class OverviewService
   private singleRegistrables: BehaviorSubject<SingleRegistrable[] | null> = new BehaviorSubject(null);
   private doubleRegistrables: BehaviorSubject<DoubleRegistrable[] | null> = new BehaviorSubject(null);
 
-  constructor(private http: HttpClient, private eventService: EventService, private api: Api) { }
+  constructor(private api: Api, private eventService: EventService) { }
 
   get registrableTags$(): Observable<RegistrableTagDisplayItem[]>
   {

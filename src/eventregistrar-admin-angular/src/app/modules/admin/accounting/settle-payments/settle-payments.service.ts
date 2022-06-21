@@ -1,7 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Api, BookingsOfDay } from 'app/api/api';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { ListService } from '../../infrastructure/listService';
 

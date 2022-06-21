@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, switchMap } from 'rxjs';
+import { Api, RegistrationDisplayItem } from 'app/api/api';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { EventService } from '../events/event.service';
 
 @Injectable({
@@ -8,18 +8,18 @@ import { EventService } from '../events/event.service';
 })
 export class RegistrationService
 {
-  private registration: BehaviorSubject<Registration | null> = new BehaviorSubject(null);
+  private registration: BehaviorSubject<RegistrationDisplayItem | null> = new BehaviorSubject(null);
 
-  constructor(private httpClient: HttpClient, private eventService: EventService) { }
+  constructor(private api: Api, private eventService: EventService) { }
 
-  get registration$(): Observable<Registration>
+  get registration$(): Observable<RegistrationDisplayItem>
   {
     return this.registration.asObservable();
   }
 
-  fetchRegistration(registrationId: string): Observable<Registration>
+  fetchRegistration(registrationId: string): Observable<RegistrationDisplayItem>
   {
-    return this.httpClient.get<Registration>(`api/events/${this.eventService.selected}/registrations/${registrationId}`).pipe(
+    return this.api.registration_Query({ eventId: this.eventService.selectedId, registrationId: registrationId }).pipe(
       map(reg =>
       {
         this.registration.next(reg);
@@ -27,31 +27,4 @@ export class RegistrationService
       })
     );
   }
-}
-
-
-export class Registration
-{
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  language: string;
-  isWaitingList: boolean;
-  price: number;
-  paid: number;
-  status: number;
-  statusText: string;
-  receivedAt: Date;
-  reminderLevel: number;
-  soldOutMessage: string;
-  fallbackToPartyPass: boolean;
-  smsCount: number;
-  remarks: string;
-  phoneNormalized: string;
-  partnerOriginal: string;
-  partnerName: string;
-  partnerId: string;
-  isReduced: boolean;
-  willPayAtCheckin: boolean;
 }

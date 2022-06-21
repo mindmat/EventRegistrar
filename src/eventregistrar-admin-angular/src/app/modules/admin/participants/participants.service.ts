@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Api, RegistrableDisplayInfo } from 'app/api/api';
 import { BehaviorSubject, map, Observable, of, switchMap, throwError } from 'rxjs';

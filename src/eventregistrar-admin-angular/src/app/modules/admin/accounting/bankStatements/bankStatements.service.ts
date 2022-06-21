@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Api, BookingsOfDay } from 'app/api/api';
 import { Observable } from 'rxjs';

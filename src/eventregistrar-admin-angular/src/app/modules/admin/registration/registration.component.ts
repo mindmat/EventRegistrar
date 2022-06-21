@@ -1,8 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { SpotDisplayItem } from 'app/api/api';
+import { Registration, SpotDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { PaymentOfRegistration, PaymentsService } from './payments/payments.service';
-import { RegistrationService, Registration } from './registration.service';
+import { RegistrationService } from './registration.service';
 import { SpotsService } from './spots/spots.service';
 
 @Component({
