@@ -39,11 +39,16 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
                                      .Include(pmt => pmt.Assignments!)
                                      .ThenInclude(pas => pas.Registration)
                                      .FirstAsync(cancellationToken);
-        var info = booking.Info;
+        var message = booking.Message;
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            message = booking.Info;
+        }
+
         var openAmount = booking.Amount
                        - booking.Assignments!.Sum(asn => asn.PayoutRequestId == null
-                             ? asn.Amount
-                             : -asn.Amount);
+                                                             ? asn.Amount
+                                                             : -asn.Amount);
 
         result.ExistingAssignments = booking.Assignments!
                                             .Where(pas => pas.Registration != null
@@ -68,9 +73,9 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
 
         var registrations = await _registrations.Where(reg => reg.EventId == query.EventId
                                                            && reg.State == RegistrationState.Received)
-                                                .Where(reg => info!.Contains(reg.RespondentFirstName!)
-                                                           || info.Contains(reg.RespondentLastName!)
-                                                           || info.Contains(reg.RespondentEmail!))
+                                                .Where(reg => message!.Contains(reg.RespondentFirstName!)
+                                                           || message.Contains(reg.RespondentLastName!)
+                                                           || message.Contains(reg.RespondentEmail!))
                                                 .Select(reg => new AssignmentCandidateRegistration
                                                                {
                                                                    BankAccountBookingId = booking.Id,
@@ -80,16 +85,16 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
                                                                    Email = reg.RespondentEmail,
                                                                    Price = reg.Price ?? 0m,
                                                                    AmountPaid = reg.Payments!.Sum(asn =>
-                                                                       asn.PayoutRequestId == null
-                                                                           ? asn.Amount
-                                                                           : -asn.Amount),
+                                                                                                      asn.PayoutRequestId == null
+                                                                                                          ? asn.Amount
+                                                                                                          : -asn.Amount),
                                                                    IsWaitingList = reg.IsWaitingList == true
                                                                })
                                                 .ToListAsync(cancellationToken);
 
-        var wordsInPayment = info?.Split(' ', StringSplitOptions.RemoveEmptyEntries)
-                                 .Select(wrd => wrd.ToLowerInvariant())
-                                 .ToHashSet();
+        var wordsInPayment = message?.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                                    .Select(wrd => wrd.ToLowerInvariant())
+                                    .ToHashSet();
 
         registrations.ForEach(reg =>
         {
