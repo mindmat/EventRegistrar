@@ -45,6 +45,8 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
             message = booking.Info;
         }
 
+        var debitorName = booking.DebitorName;
+
         var openAmount = booking.Amount
                        - booking.Assignments!.Sum(asn => asn.PayoutRequestId == null
                                                              ? asn.Amount
@@ -66,16 +68,19 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
                                                                AssignedAmount = pas.Amount
                                                            })
                                             .ToList();
-        if (openAmount == 0)
+        if (openAmount == 0
+         || (string.IsNullOrWhiteSpace(message) && string.IsNullOrWhiteSpace(debitorName)))
         {
             return result;
         }
 
         var registrations = await _registrations.Where(reg => reg.EventId == query.EventId
                                                            && reg.State == RegistrationState.Received)
-                                                .Where(reg => message!.Contains(reg.RespondentFirstName!)
-                                                           || message.Contains(reg.RespondentLastName!)
-                                                           || message.Contains(reg.RespondentEmail!))
+                                                .Where(reg => (message != null && reg.RespondentFirstName != null && message.Contains(reg.RespondentFirstName!))
+                                                           || (message != null && reg.RespondentLastName != null && message.Contains(reg.RespondentLastName!))
+                                                           || (message != null && reg.RespondentEmail != null && message.Contains(reg.RespondentEmail!))
+                                                           || (debitorName != null && reg.RespondentFirstName != null && debitorName.Contains(reg.RespondentFirstName!))
+                                                           || (debitorName != null && reg.RespondentLastName != null && debitorName.Contains(reg.RespondentLastName!)))
                                                 .Select(reg => new AssignmentCandidateRegistration
                                                                {
                                                                    BankAccountBookingId = booking.Id,
@@ -84,10 +89,9 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
                                                                    LastName = reg.RespondentLastName,
                                                                    Email = reg.RespondentEmail,
                                                                    Price = reg.Price ?? 0m,
-                                                                   AmountPaid = reg.Payments!.Sum(asn =>
-                                                                                                      asn.PayoutRequestId == null
-                                                                                                          ? asn.Amount
-                                                                                                          : -asn.Amount),
+                                                                   AmountPaid = reg.Payments!.Sum(asn => asn.PayoutRequestId == null
+                                                                                                             ? asn.Amount
+                                                                                                             : -asn.Amount),
                                                                    IsWaitingList = reg.IsWaitingList == true
                                                                })
                                                 .ToListAsync(cancellationToken);
@@ -98,7 +102,7 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
 
         registrations.ForEach(reg =>
         {
-            reg.MatchScore = CalculateMatchScore(reg, wordsInPayment, openAmount);
+            reg.MatchScore = CalculateMatchScore(reg, wordsInPayment, booking.DebitorName, openAmount);
             reg.AmountMatch = openAmount == reg.Price - reg.AmountPaid;
         });
         result.RegistrationCandidates = registrations.Where(mat => mat.MatchScore > 0)
@@ -106,16 +110,37 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
         return result;
     }
 
-    private static int CalculateMatchScore(AssignmentCandidateRegistration reg, HashSet<string>? wordsInPayment, decimal openAmount)
+    private static int CalculateMatchScore(AssignmentCandidateRegistration reg,
+                                           IReadOnlySet<string>? wordsInPayment,
+                                           string? debitorName,
+                                           decimal openAmount)
     {
+        if (wordsInPayment == null)
+        {
+            return 0;
+        }
+
         // names can contain multiple words, e.g. 'de Luca'
-        var nameWords = reg.FirstName?.Split(' ')
-                           .Union(reg.LastName?.Split(' '))
-                           .Select(nmw => nmw.ToLowerInvariant())
-                           .ToList();
-        var nameScore = nameWords.Sum(nmw => wordsInPayment.Count(wrd => wrd == nmw));
-        var mailaddressScore = wordsInPayment.Contains(reg.Email) ? 5 : 0;
-        return nameScore + mailaddressScore;
+        var nameWords = (reg.FirstName?.Split(' ') ?? Enumerable.Empty<string>())
+                        .Union(reg.LastName?.Split(' ') ?? Enumerable.Empty<string>())
+                        .Select(nmw => nmw.ToLowerInvariant())
+                        .ToList();
+        var score = nameWords.Sum(nmw => wordsInPayment.Count(wrd => wrd == nmw));
+        if (reg.Email != null)
+        {
+            score += wordsInPayment.Contains(reg.Email) ? 5 : 0;
+        }
+
+        if (debitorName != null)
+        {
+            var wordsInDebitor = debitorName.Split(' ')
+                                            .Select(nmw => nmw.ToLowerInvariant())
+                                            .ToList();
+
+            score += nameWords.Sum(nmw => wordsInDebitor.Count(wrd => wrd == nmw));
+        }
+
+        return score;
     }
 }
 
