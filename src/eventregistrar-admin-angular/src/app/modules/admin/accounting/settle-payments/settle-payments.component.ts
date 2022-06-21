@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { BankAccountBooking, BookingsOfDay, CreditDebit } from 'app/api/api';
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
-import { BankAccountBooking, BookingsOfDay, CreditDebit } from '../bankStatements/bankStatements.service';
 import { SettlePaymentsService } from './settle-payments.service';
 
 @Component({

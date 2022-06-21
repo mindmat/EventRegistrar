@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { SpotDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { PaymentOfRegistration, PaymentsService } from './payments/payments.service';
 import { RegistrationService, Registration } from './registration.service';
-import { SpotOfRegistration, SpotsService } from './spots/spots.service';
+import { SpotsService } from './spots/spots.service';
 
 @Component({
   selector: 'app-registration',
@@ -11,7 +12,7 @@ import { SpotOfRegistration, SpotsService } from './spots/spots.service';
 export class RegistrationComponent implements OnInit
 {
   public registration: Registration;
-  public spots: SpotOfRegistration[];
+  public spots: SpotDisplayItem[];
   public payments: PaymentOfRegistration[];
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -35,7 +36,7 @@ export class RegistrationComponent implements OnInit
 
     this.spotService.spots$
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe((spots: SpotOfRegistration[]) =>
+      .subscribe((spots: SpotDisplayItem[]) =>
       {
         this.spots = spots;
 

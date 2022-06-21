@@ -1,16 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Injectable } from '@angular/core';
+import { Api, BookingsOfDay } from 'app/api/api';
 import { Observable, of } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { ListService } from '../../infrastructure/listService';
-import { BookingsOfDay, CreditDebit } from '../bankStatements/bankStatements.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SettlePaymentsService extends ListService<BookingsOfDay>
 {
-  constructor(httpClient: HttpClient, eventService: EventService) { super(httpClient, eventService); }
+  constructor(private api: Api, private eventService: EventService) { super(); }
 
   get payments$(): Observable<BookingsOfDay[]>
   {
@@ -24,7 +24,7 @@ export class SettlePaymentsService extends ListService<BookingsOfDay>
 
   fetchBankStatements(searchString: string = null, hideIncoming: boolean = false, hideOutgoing: boolean = false, hideSettled: boolean = true, hideIgnored: boolean = true): Observable<BookingsOfDay[]>
   {
-    return this.fetchItems('accounting/bank-statements', null, { searchString, hideIncoming, hideOutgoing, hideSettled, hideIgnored });
+    return this.fetchItems(this.api.bankAccountBookings_Query({ eventId: this.eventService.selectedId, searchString, hideIncoming, hideOutgoing, hideSettled, hideIgnored }));
   }
 
   // fetchCandidates(id?: string): Observable<AssignmentCandidate[]>
@@ -37,40 +37,3 @@ export class SettlePaymentsService extends ListService<BookingsOfDay>
   // }
 }
 
-
-export class BankBookingDisplayItem
-{
-  id: string;
-  typ: CreditDebit;
-  amount: number;
-  amountAssigned: number;
-  //amountUnassigned: number;
-  bookingDate: Date;
-  currency: string;
-  info: string;
-  reference: string;
-  repaid: number;
-  settled: boolean;
-  locked: boolean;
-  paymentSlipId: string;
-}
-
-
-export class AssignmentCandidate
-{
-  registrationId: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  bankAccountBookingId: string;
-  price: number;
-  isWaitingList: boolean;
-
-  amountPaid: number;
-  amountToAssign: number;
-  acceptDifference: boolean;
-  acceptDifferenceReason: string;
-  locked: boolean;
-  matchScore: number;
-  amountMatch: boolean;
-}

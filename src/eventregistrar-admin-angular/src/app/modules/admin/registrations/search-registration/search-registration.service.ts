@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { Api, RegistrationMatch, RegistrationState } from 'app/api/api';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 
 @Injectable({
@@ -10,7 +10,7 @@ export class SearchRegistrationService
 {
   private list: BehaviorSubject<RegistrationMatch[] | null> = new BehaviorSubject(null);
 
-  constructor(private httpClient: HttpClient, private eventService: EventService) { }
+  constructor(private api: Api, private eventService: EventService) { }
 
   get list$(): Observable<RegistrationMatch[]>
   {
@@ -19,34 +19,10 @@ export class SearchRegistrationService
 
   fetchItemsOf(searchString: string)
   {
-    const url = `api/events/${this.eventService.selected}/registrations?searchstring=${searchString}&states=received&states=paid&states=cancelled`;
-    this.httpClient.get<RegistrationMatch[]>(url).subscribe(newItems =>
-    {
-      this.list.next(newItems);
-    });
+    this.api.searchRegistration_Query({ eventId: this.eventService.selectedId, searchString, states: [RegistrationState.Received, RegistrationState.Paid, RegistrationState.Cancelled] })
+      .subscribe(newItems =>
+      {
+        this.list.next(newItems);
+      });
   }
-}
-
-
-export class RegistrationMatch
-{
-  registrationId: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  receivedAt: Date;
-  language: string;
-  price: number;
-  amountPaid: number;
-  state: number;
-  stateText: string;
-  isWaitingList: boolean;
-  spots: RegistrableName[];
-}
-
-export class RegistrableName
-{
-  name: string;
-  secondary?: string;
-  isWaitingList: boolean;
 }

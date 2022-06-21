@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { BookingsOfDay, CreditDebit } from 'app/api/api';
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
-import { BankAccountBooking, BankStatementsService, BookingsOfDay, CreditDebit } from './bankStatements.service';
+import { BankStatementsService } from './bankStatements.service';
 
 @Component({
   selector: 'app-bankStatements',

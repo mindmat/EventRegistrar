@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AssignmentCandidateRegistration } from '../settle-payment.service';
+import { AssignmentCandidateRegistration } from 'app/api/api';
+import { AssignmentCandidateRegistrationEditItem } from '../settle-payment.component';
 
 @Component({
   selector: 'app-assignment-candidate-registration',
@@ -9,7 +10,7 @@ import { AssignmentCandidateRegistration } from '../settle-payment.service';
 export class AssignmentCandidateRegistrationComponent implements OnInit, OnChanges
 {
   public candidateForm: FormGroup;
-  @Input() candidate?: AssignmentCandidateRegistration;
+  @Input() candidate?: AssignmentCandidateRegistrationEditItem;
   @Output() assign = new EventEmitter<AssignmentRequest>();
 
   constructor(private fb: FormBuilder) { }

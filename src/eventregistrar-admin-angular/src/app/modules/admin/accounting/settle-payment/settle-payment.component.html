@@ -17,7 +17,7 @@
     <div class="flex flex-col p-6 sm:p-8 sm:pt-4 overflow-y-auto">
 
         <!-- Assignment to registrations -->
-        <div *ngIf="candidates.existingAssignments?.length > 0" class="p-2 rounded-xl bg-default">
+        <div *ngIf="existingAssignments?.length > 0" class="p-2 rounded-xl bg-default">
 
             <div class="flex flex-row items-baseline gap-x-2 ml-6">
                 <div class="font-medium">Bestehende Zuordnungen</div>
@@ -27,12 +27,12 @@
             <!-- Bookings -->
             <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <!-- Booking -->
-                <ng-container *ngFor="let candidate of candidates.existingAssignments">
-                    <fuse-card class="flex flex-col w-80 p-4 rounded-xl {{ candidate.amountMatch && !candidate.isExistingAssignment ? 'bg-green-300':'' }}">
+                <ng-container *ngFor="let existingAssignment of existingAssignments">
+                    <fuse-card class="flex flex-col w-80 p-4 rounded-xl {{ existingAssignment.amountMatch && !existingAssignment.isExistingAssignment ? 'bg-green-300':'' }}">
                         <div class="flex flex-row items-baseline gap-x-2">
-                            <div class="text-xl font-semibold leading-tight">{{ candidate.assignedAmount | number: '1.2-2' }}</div>
-                            <div class="text-secondary leading-tight">{{ candidate.firstName }} {{ candidate.lastName }}</div>
-                            <button *ngIf="candidate.paymentAssignmentId_Existing" class="ml-auto" mat-icon-button (click)="unassign(candidate.paymentAssignmentId_Existing)">
+                            <div class="text-xl font-semibold leading-tight">{{ existingAssignment.assignedAmount | number: '1.2-2' }}</div>
+                            <div class="text-secondary leading-tight">{{ existingAssignment.firstName }} {{ existingAssignment.lastName }}</div>
+                            <button *ngIf="existingAssignment.paymentAssignmentId_Existing" class="ml-auto" mat-icon-button (click)="unassign(candidate.paymentAssignmentId_Existing)">
                                 <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                             </button>
                         </div>
@@ -49,7 +49,7 @@
         </div>
 
         <!-- Registration candidates -->
-        <div *ngIf="candidates.registrationCandidates?.length > 0" class="p-2 rounded-xl bg-default">
+        <div *ngIf="candidates?.length > 0" class="p-2 rounded-xl bg-default">
 
             <div class="flex flex-row items-baseline gap-x-2 ml-6">
                 <div class="font-medium">Mögliche Anmeldungen</div>
@@ -59,7 +59,7 @@
             <!-- Bookings -->
             <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <!-- Booking -->
-                <ng-container *ngFor="let candidate of candidates.registrationCandidates">
+                <ng-container *ngFor="let candidate of candidates">
                     <app-assignment-candidate-registration [candidate]="candidate" (assign)="assign($event)"></app-assignment-candidate-registration>
                 </ng-container>
             </div>

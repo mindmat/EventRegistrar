@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Api, RegistrableDisplayInfo } from 'app/api/api';
 import { BehaviorSubject, map, Observable, of, switchMap, throwError } from 'rxjs';
 import { EventService } from '../events/event.service';
 
@@ -8,18 +9,18 @@ import { EventService } from '../events/event.service';
 })
 export class ParticipantsService
 {
-  private registrable: BehaviorSubject<RegistrableWithParticipants | null> = new BehaviorSubject(null);
+  private registrable: BehaviorSubject<RegistrableDisplayInfo | null> = new BehaviorSubject(null);
 
-  constructor(private httpClient: HttpClient, private eventService: EventService) { }
+  constructor(private api: Api, private eventService: EventService) { }
 
-  get registrable$(): Observable<RegistrableWithParticipants>
+  get registrable$(): Observable<RegistrableDisplayInfo>
   {
     return this.registrable.asObservable();
   }
 
-  fetchParticipantsOf(registrableId: string): Observable<RegistrableWithParticipants>
+  fetchParticipantsOf(registrableId: string): Observable<RegistrableDisplayInfo>
   {
-    return this.httpClient.get<RegistrableWithParticipants>(`api/events/${this.eventService.selected}/registrables/${registrableId}/participants`).pipe(
+    return this.api.participantsOfRegistrable_Query({ eventId: this.eventService.selectedId, registrableId }).pipe(
       map(registrable =>
       {
         // Update the course
@@ -39,41 +40,4 @@ export class ParticipantsService
       })
     );
   }
-}
-
-
-export class RegistrableWithParticipants
-{
-  name: string;
-  nameSecondary: string;
-  maximumSingleSeats: number;
-  maximumDoubleSeats: number;
-  maximumAllowedImbalance: number;
-  hasWaitingList: boolean;
-  automaticPromotionFromWaitingList: boolean;
-  participants: Spot[];
-  waitingList: Spot[];
-  acceptedLeaders: number;
-  acceptedFollowers: number;
-  leadersOnWaitingList: number;
-  followersOnWaitingList: number;
-}
-
-export class Spot
-{
-  leader?: Participant;
-  follower?: Participant;
-  isOnWaitingList: boolean;
-  isPartnerRegistration: boolean;
-  placeholderPartner?: string;
-  joined: Date;
-}
-
-export class Participant
-{
-  id: string;
-  firstName: string;
-  lastName: string;
-  state: number;
-  email: string;
 }

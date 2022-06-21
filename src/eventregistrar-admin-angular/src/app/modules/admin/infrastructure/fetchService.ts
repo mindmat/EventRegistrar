@@ -6,18 +6,14 @@ export class FetchService<TItem>
 {
     private result: BehaviorSubject<TItem | null> = new BehaviorSubject(null);
 
-    constructor(protected httpClient: HttpClient, private eventService: EventService) { }
-
     protected get result$(): Observable<TItem>
     {
         return this.result.asObservable();
     }
 
-    protected fetchItems(urlInEvent?: string, url?: string, params?: any): Observable<TItem>
+    protected fetchItems(fetch: Observable<TItem>): Observable<TItem>
     {
-        url = url ?? this.getEventUrl(urlInEvent);
-        const options = params ? { params } : {};
-        return this.httpClient.get<TItem>(url, options).pipe(
+        return fetch.pipe(
             map(newItems =>
             {
 
@@ -37,11 +33,6 @@ export class FetchService<TItem>
                 return of(newItems);
             })
         );
-    }
-
-    protected getEventUrl(urlInEvent: string)
-    {
-        return `api/events/${this.eventService.selected}/${urlInEvent}`;
     }
 }
 

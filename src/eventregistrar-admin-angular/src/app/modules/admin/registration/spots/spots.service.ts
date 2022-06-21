@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Api, SpotDisplayItem } from 'app/api/api';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 
@@ -8,18 +8,18 @@ import { EventService } from '../../events/event.service';
 })
 export class SpotsService
 {
-  private spots: BehaviorSubject<SpotOfRegistration[] | null> = new BehaviorSubject(null);
+  private spots: BehaviorSubject<SpotDisplayItem[] | null> = new BehaviorSubject(null);
 
-  constructor(private httpClient: HttpClient, private eventService: EventService) { }
+  constructor(private api: Api, private eventService: EventService) { }
 
-  get spots$(): Observable<SpotOfRegistration[]>
+  get spots$(): Observable<SpotDisplayItem[]>
   {
     return this.spots.asObservable();
   }
 
-  fetchSpotsOfRegistration(registrationId: string): Observable<SpotOfRegistration[]>
+  fetchSpotsOfRegistration(registrationId: string): Observable<SpotDisplayItem[]>
   {
-    return this.httpClient.get<SpotOfRegistration[]>(`api/events/${this.eventService.selected}/registrations/${registrationId}/spots`).pipe(
+    return this.api.spotsOfRegistration_Query({ eventId: this.eventService.selectedId, registrationId }).pipe(
       map(reg =>
       {
         this.spots.next(reg);
@@ -27,21 +27,4 @@ export class SpotsService
       })
     );
   }
-}
-
-export type RegistrableType = 'single' | 'double';
-
-export class SpotOfRegistration
-{
-  id: string;
-  registrableId: string;
-  registrableName: string;
-  registrableNameSecondary: string;
-  roleText: string;
-  partnerRegistrationId: string;
-  firstPartnerJoined: Date;
-  partnerName: string;
-  isCore: boolean;
-  isWaitingList: boolean;
-  type: RegistrableType;
 }

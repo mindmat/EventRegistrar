@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RegistrationMatch } from 'app/api/api';
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
-import { RegistrationMatch, SearchRegistrationService } from './search-registration.service';
+import { SearchRegistrationService } from './search-registration.service';
 
 @Component({
   selector: 'app-search-registration',

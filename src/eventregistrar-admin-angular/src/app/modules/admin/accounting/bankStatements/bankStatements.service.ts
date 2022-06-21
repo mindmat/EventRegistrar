@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Api, BookingsOfDay } from 'app/api/api';
 import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { ListService } from '../../infrastructure/listService';
@@ -9,7 +10,7 @@ import { ListService } from '../../infrastructure/listService';
 })
 export class BankStatementsService extends ListService<BookingsOfDay>
 {
-  constructor(httpClient: HttpClient, eventService: EventService) { super(httpClient, eventService); }
+  constructor(private api: Api, private eventService: EventService) { super(); }
 
   get payments$(): Observable<BookingsOfDay[]>
   {
@@ -18,40 +19,6 @@ export class BankStatementsService extends ListService<BookingsOfDay>
 
   fetchBankStatements(hideIncoming: boolean = false, hideOutgoing: boolean = false, hideSettled: boolean = false, hideIgnored: boolean = false): Observable<BookingsOfDay[]>
   {
-    return this.fetchItems('accounting/bank-statements', null, { hideIncoming, hideOutgoing, hideSettled, hideIgnored });
+    return this.fetchItems(this.api.bankAccountBookings_Query({ eventId: this.eventService.selectedId, hideIncoming, hideOutgoing, hideSettled, hideIgnored }));
   }
-}
-
-export enum CreditDebit
-{
-  CRDT = 1,
-  DBIT = 2
-}
-
-export class BookingsOfDay
-{
-  bookingDate: Date;
-  balanceAfter: number;
-  bookings: BankAccountBooking[];
-}
-
-export class BankAccountBooking
-{
-  id: string;
-  typ: CreditDebit;
-  bookingDate: Date;
-  amount: number;
-  charges: number;
-  currency: string;
-  debitorName: string;
-  creditorName: string;
-  creditorIban: string;
-  message: string;
-  reference: string;
-  paymentSlipId: string;
-
-  amountAssigned: number;
-  amountRepaid: number;
-  settled: boolean;
-  ignore: boolean;
 }

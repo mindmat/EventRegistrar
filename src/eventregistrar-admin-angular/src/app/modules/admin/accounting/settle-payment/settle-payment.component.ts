@@ -1,8 +1,9 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
+import { AssignmentCandidateRegistration, BookingAssignments, ExistingAssignment } from 'app/api/api';
 import { BehaviorSubject, combineLatest, combineLatestWith, filter, fromEvent, merge, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { AssignmentRequest } from './assignment-candidate-registration/assignment-candidate-registration.component';
-import { AssignmentCandidateRegistration, BookingAssignments, SettlePaymentService } from './settle-payment.service';
+import { SettlePaymentService } from './settle-payment.service';
 
 @Component({
   selector: 'app-settle-payment',
@@ -14,7 +15,8 @@ export class SettlePaymentComponent implements OnInit
   private bankAccountBookingId$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   private assignmentRequests: BehaviorSubject<AssignmentRequest | null> = new BehaviorSubject(null);
 
-  candidates: BookingAssignments;
+  existingAssignments: ExistingAssignment[];
+  candidates: AssignmentCandidateRegistrationEditItem[];
 
   constructor(private service: SettlePaymentService, private changeDetectorRef: ChangeDetectorRef, private route: ActivatedRoute) { }
 
@@ -22,10 +24,14 @@ export class SettlePaymentComponent implements OnInit
   {
     this.service.candidates$
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe((candidates: BookingAssignments) =>
+      .subscribe((assignments: BookingAssignments) =>
       {
-        candidates.registrationCandidates?.forEach(candidate => candidate.amountToAssign = candidate.price - candidate.amountPaid);
-        this.candidates = candidates;
+        this.existingAssignments = assignments.existingAssignments;
+        this.candidates = assignments.registrationCandidates?.map(candidate => (
+          {
+            ...candidate,
+            amountToAssign: candidate.price - candidate.amountPaid,
+          } as AssignmentCandidateRegistrationEditItem));
 
         // Mark for check
         this.changeDetectorRef.markForCheck();
@@ -59,12 +65,18 @@ export class SettlePaymentComponent implements OnInit
     this.service.unassign(paymentAssignmentId);
   }
 
-  amountChanged(candidate: AssignmentCandidateRegistration, amountToAssign: number): void
+  amountChanged(candidate: AssignmentCandidateRegistrationEditItem, amountToAssign: number): void
   {
     candidate.amountToAssign = amountToAssign;
     candidate.difference = candidate.price - candidate.amountPaid - candidate.amountToAssign;
-    console.log(candidate.difference);
-    console.log(amountToAssign);
   }
 
+}
+
+
+export interface AssignmentCandidateRegistrationEditItem extends AssignmentCandidateRegistration
+{
+  amountToAssign: number;
+  difference: number;
+  locked: boolean;
 }

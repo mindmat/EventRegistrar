@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { RegistrableDisplayInfo } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { EventService } from '../../events/event.service';
-import { ParticipantsService, RegistrableWithParticipants } from '../participants.service';
+import { ParticipantsService } from '../participants.service';
 
 @Component({
   selector: 'app-participants-single',
@@ -9,19 +10,17 @@ import { ParticipantsService, RegistrableWithParticipants } from '../participant
 })
 export class ParticipantsSingleComponent implements OnInit
 {
-  registrable: RegistrableWithParticipants;
+  registrable: RegistrableDisplayInfo;
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
-  constructor(private service: ParticipantsService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private eventService: EventService) { }
+  constructor(private service: ParticipantsService, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
   {
     // Get the participants
     this.service.registrable$
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe((registrable: RegistrableWithParticipants) =>
+      .subscribe((registrable: RegistrableDisplayInfo) =>
       {
         this.registrable = registrable;
 

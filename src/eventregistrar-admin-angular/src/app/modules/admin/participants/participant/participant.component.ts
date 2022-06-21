@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Participant } from '../participants.service';
+import { RegistrationDisplayInfo } from 'app/api/api';
 
 @Component({
   selector: 'app-participant',
@@ -8,7 +8,7 @@ import { Participant } from '../participants.service';
 export class ParticipantComponent implements OnInit
 {
 
-  @Input() registration?: Participant;
+  @Input() registration?: RegistrationDisplayInfo;
   @Input() placeholderPartner?: string;
 
   constructor() { }
