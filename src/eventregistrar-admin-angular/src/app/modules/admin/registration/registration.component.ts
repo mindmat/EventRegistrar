@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { Registration, SpotDisplayItem } from 'app/api/api';
+import { AssignedPaymentDisplayItem, RegistrationDisplayItem, SpotDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
-import { PaymentOfRegistration, PaymentsService } from './payments/payments.service';
+import { PaymentsService } from './payments/payments.service';
 import { RegistrationService } from './registration.service';
 import { SpotsService } from './spots/spots.service';
 
@@ -11,9 +11,9 @@ import { SpotsService } from './spots/spots.service';
 })
 export class RegistrationComponent implements OnInit
 {
-  public registration: Registration;
+  public registration: RegistrationDisplayItem;
   public spots: SpotDisplayItem[];
-  public payments: PaymentOfRegistration[];
+  public payments: AssignedPaymentDisplayItem[];
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(private service: RegistrationService,
@@ -26,7 +26,7 @@ export class RegistrationComponent implements OnInit
     // Get the participants
     this.service.registration$
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe((registration: Registration) =>
+      .subscribe((registration: RegistrationDisplayItem) =>
       {
         this.registration = registration;
 
@@ -46,7 +46,7 @@ export class RegistrationComponent implements OnInit
 
     this.paymentService.payments$
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe((payments: PaymentOfRegistration[]) =>
+      .subscribe((payments: AssignedPaymentDisplayItem[]) =>
       {
         this.payments = payments;
 

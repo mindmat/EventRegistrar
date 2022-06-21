@@ -1,5 +1,5 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Api, AssignedPaymentDisplayItem } from 'app/api/api';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 
@@ -8,18 +8,18 @@ import { EventService } from '../../events/event.service';
 })
 export class PaymentsService
 {
-  private payments: BehaviorSubject<PaymentOfRegistration[] | null> = new BehaviorSubject(null);
+  private payments: BehaviorSubject<AssignedPaymentDisplayItem[] | null> = new BehaviorSubject(null);
 
-  constructor(private httpClient: HttpClient, private eventService: EventService) { }
+  constructor(private api: Api, private eventService: EventService) { }
 
-  get payments$(): Observable<PaymentOfRegistration[]>
+  get payments$(): Observable<AssignedPaymentDisplayItem[]>
   {
     return this.payments.asObservable();
   }
 
-  fetchPaymentsOfRegistration(registrationId: string): Observable<PaymentOfRegistration[]>
+  fetchPaymentsOfRegistration(registrationId: string): Observable<AssignedPaymentDisplayItem[]>
   {
-    return this.httpClient.get<PaymentOfRegistration[]>(`api/events/${this.eventService.selected}/registrations/${registrationId}/assignedPayments`).pipe(
+    return this.api.assignedPaymentsOfRegistration_Query({ eventId: this.eventService.selectedId, registrationId }).pipe(
       map(reg =>
       {
         this.payments.next(reg);
@@ -27,14 +27,4 @@ export class PaymentsService
       })
     );
   }
-}
-
-
-export class PaymentOfRegistration
-{
-  paymentAssignmentId: string;
-  amount: number;
-  bookingDate: Date;
-  currency: string;
-  paymentAssignmentId_Counter: string;
 }

@@ -26,7 +26,7 @@ export class SettlePaymentsComponent implements OnInit
   } = {
       query$: new BehaviorSubject(''),
       hideIncoming$: new BehaviorSubject(false),
-      hideOutgoing$: new BehaviorSubject(false),
+      hideOutgoing$: new BehaviorSubject(true),
       hideSettled$: new BehaviorSubject(true),
       hideIgnored$: new BehaviorSubject(true),
     };
