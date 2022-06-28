@@ -80,9 +80,11 @@
                         <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:phone'"></mat-icon>
                         <span class="leading-none">{{ registration.phoneNormalized }}</span>
                     </div>
-                    <div class="flex items-center mt-4">
+                    <div class="flex items-center mt-4" *ngIf="!registration.isWaitingList">
                         <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
-                        <span class="leading-none">{{ registration.paid | number : '1.2-2' }} / {{ registration.price | number : '1.2-2' }}</span>
+                        <span class="leading-none">{{ registration.paid | number : '1.2-2' }}</span>
+                        <span *ngIf="registration.price != registration.paid">&nbsp;/&nbsp;{{ registration.price | number : '1.2-2' }}</span>
+                        <mat-icon *ngIf="registration.price == registration.paid" class="icon-size-5 ml-1 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
                     </div>
                     <div class="flex items-center mt-4" *ngIf="registration.partnerOriginal">
                         <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
