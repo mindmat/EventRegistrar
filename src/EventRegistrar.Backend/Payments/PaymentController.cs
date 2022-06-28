@@ -49,25 +49,6 @@ public class PaymentController : Controller
                                     });
     }
 
-    [HttpGet("api/events/{eventAcronym}/accounting/bank-statements")]
-    public async Task<IEnumerable<BookingsOfDay>> GetPayments(string eventAcronym,
-                                                              string? searchString = null,
-                                                              bool hideIncoming = false,
-                                                              bool hideOutgoing = false,
-                                                              bool hideIgnored = true,
-                                                              bool hideSettled = true)
-    {
-        return await _mediator.Send(new BankAccountBookingsQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                        SearchString = searchString,
-                                        HideIncoming = hideIncoming,
-                                        HideOutgoing = hideOutgoing,
-                                        HideIgnored = hideIgnored,
-                                        HideSettled = hideSettled
-                                    });
-    }
-
     [HttpGet("api/events/{eventAcronym}/payments/unassigned")]
     public async Task<IEnumerable<PaymentDisplayItem>> GetUnassignedPayments(string eventAcronym)
     {

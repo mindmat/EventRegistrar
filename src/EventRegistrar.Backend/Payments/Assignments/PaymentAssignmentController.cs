@@ -19,23 +19,12 @@ public class PaymentAssignmentController : Controller
         _eventAcronymResolver = eventAcronymResolver;
     }
 
-    [HttpPost("payments/{paymentId:guid}/assign/{registrationId:guid}")]
-    public async Task AssignPayment(string eventAcronym, Guid paymentId, Guid registrationId, decimal amount,
-                                    bool acceptDifference, string acceptDifferenceReason)
-    {
-        await _mediator.Send(new AssignPaymentCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 PaymentId = paymentId,
-                                 RegistrationId = registrationId,
-                                 Amount = amount,
-                                 AcceptDifference = acceptDifference,
-                                 AcceptDifferenceReason = acceptDifferenceReason
-                             });
-    }
 
     [HttpPost("payments/{paymentId:guid}/assignToRepayment/{paymentIdOutgoing:guid}")]
-    public async Task AssignRepayment(string eventAcronym, Guid paymentId, Guid paymentIdOutgoing, decimal amount)
+    public async Task AssignRepayment(string eventAcronym,
+                                      Guid paymentId,
+                                      Guid paymentIdOutgoing,
+                                      decimal amount)
     {
         await _mediator.Send(new AssignRepaymentCommand
                              {
@@ -46,45 +35,15 @@ public class PaymentAssignmentController : Controller
                              });
     }
 
-    [HttpGet("registrations/{registrationId:guid}/assignedPayments")]
-    public async Task<IEnumerable<AssignedPaymentDisplayItem>> GetAssignedPaymentsOfRegistration(
-        string eventAcronym, Guid registrationId)
-    {
-        return await _mediator.Send(new AssignedPaymentsOfRegistrationQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                        RegistrationId = registrationId
-                                    });
-    }
-
-    [HttpGet("accounting/bankAccountBookingId/{bankAccountBookingId:guid}/assignmentCandidates")]
-    public async Task<BookingAssignments> GetPossibleAssignments(string eventAcronym, Guid bankAccountBookingId)
-    {
-        return await _mediator.Send(new PossibleAssignmentsQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                        BankAccountBookingId = bankAccountBookingId
-                                    });
-    }
-
     [HttpGet("payments/{paymentId:guid}/possibleOutgoingAssignments")]
     public async Task<IEnumerable<PossibleRepaymentAssignment>> GetPossibleOutgoingPaymentsAssignments(
-        string eventAcronym, Guid paymentId)
+        string eventAcronym,
+        Guid paymentId)
     {
         return await _mediator.Send(new PossibleRepaymentAssignmentQuery
                                     {
                                         EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                                         PaymentId = paymentId
                                     });
-    }
-
-    [HttpDelete("paymentAssignments/{paymentAssignmentId:guid}")]
-    public async Task UnassignPayment(string eventAcronym, Guid paymentAssignmentId)
-    {
-        await _mediator.Send(new UnassignPaymentCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 PaymentAssignmentId = paymentAssignmentId
-                             });
     }
 }

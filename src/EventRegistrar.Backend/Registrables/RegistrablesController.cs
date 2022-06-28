@@ -24,38 +24,11 @@ public class RegistrablesController : Controller
         _eventAcronymResolver = eventAcronymResolver;
     }
 
-    [HttpGet("api/events/{eventAcronym}/DoubleRegistrableOverview")]
-    public async Task<IEnumerable<DoubleRegistrableDisplayItem>> GetDoubleRegistrablesOverivew(string eventAcronym)
-    {
-        return await _mediator.Send(new DoubleRegistrablesOverviewQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
-
-    [HttpGet("api/events/{eventAcronym}/registrables/{registrableId:guid}/participants")]
-    public async Task<RegistrableDisplayInfo> GetParticipants(string eventAcronym, Guid registrableId)
-    {
-        return await _mediator.Send(new ParticipantsOfRegistrableQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                        RegistrableId = registrableId
-                                    });
-    }
 
     [HttpGet("api/events/{eventAcronym}/registrables")]
     public async Task<IEnumerable<RegistrableDisplayItem>> GetRegistrables(string eventAcronym)
     {
         return await _mediator.Send(new RegistrablesQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
-
-    [HttpGet("api/events/{eventAcronym}/registrableTags")]
-    public async Task<IEnumerable<RegistrableTagDisplayItem>> GetRegistrableTags(string eventAcronym)
-    {
-        return await _mediator.Send(new RegistrableTagsQuery
                                     {
                                         EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
                                     });
@@ -71,17 +44,9 @@ public class RegistrablesController : Controller
                                     });
     }
 
-    [HttpGet("api/events/{eventAcronym}/SingleRegistrableOverview")]
-    public async Task<IEnumerable<SingleRegistrableDisplayItem>> GetSingleRegistrablesOverivew(string eventAcronym)
-    {
-        return await _mediator.Send(new SingleRegistrablesOverviewQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
-
     [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/coupleLimits")]
-    public async Task SetCoupleLimits(string eventAcronym, Guid registrableId,
+    public async Task SetCoupleLimits(string eventAcronym,
+                                      Guid registrableId,
                                       [FromBody] SetDoubleRegistrableLimitsCommand limits)
     {
         await _mediator.Send(new SetDoubleRegistrableLimitsCommand
@@ -94,7 +59,8 @@ public class RegistrablesController : Controller
     }
 
     [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/singleLimits")]
-    public async Task SetSingleLimits(string eventAcronym, Guid registrableId,
+    public async Task SetSingleLimits(string eventAcronym,
+                                      Guid registrableId,
                                       [FromBody] SetSingleRegistrableLimitsCommand limits)
     {
         await _mediator.Send(new SetSingleRegistrableLimitsCommand
@@ -156,7 +122,9 @@ public class RegistrablesController : Controller
     }
 
     [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/prices")]
-    public async Task SetRegistrablePrices(string eventAcronym, Guid registrableId, [FromQuery] decimal? price,
+    public async Task SetRegistrablePrices(string eventAcronym,
+                                           Guid registrableId,
+                                           [FromQuery] decimal? price,
                                            [FromQuery] decimal? reducedPrice)
     {
         await _mediator.Send(new SetRegistrablesPricesCommand
@@ -170,7 +138,9 @@ public class RegistrablesController : Controller
 
 
     [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/reductions/{reductionId:guid}")]
-    public async Task SaveReduction(string eventAcronym, Guid registrableId, Guid reductionId,
+    public async Task SaveReduction(string eventAcronym,
+                                    Guid registrableId,
+                                    Guid reductionId,
                                     [FromBody] Reduction reduction)
     {
         await _mediator.Send(new SaveReductionCommand

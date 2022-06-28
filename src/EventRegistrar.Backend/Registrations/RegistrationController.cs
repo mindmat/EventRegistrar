@@ -63,29 +63,7 @@ public class RegistrationController : Controller
                                  RawRegistrationId = rawRegistrationId
                              });
     }
-
-    [HttpGet("api/events/{eventAcronym}/registrations")]
-    public async Task<IEnumerable<RegistrationMatch>> SearchRegistration(
-        string eventAcronym, string searchString, IEnumerable<RegistrationState> states)
-    {
-        return await _mediator.Send(new SearchRegistrationQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                        SearchString = searchString,
-                                        States = states
-                                    });
-    }
-
-    [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}")]
-    public async Task<RegistrationDisplayItem> SearchRegistration(string eventAcronym, Guid registrationId)
-    {
-        return await _mediator.Send(new RegistrationQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                        RegistrationId = registrationId
-                                    });
-    }
-
+    
     [HttpPut("api/events/{eventAcronym}/registrations/{registrationId:guid}/setReducedPrice")]
     public async Task SetReducedPrice(string eventAcronym, Guid registrationId)
     {
