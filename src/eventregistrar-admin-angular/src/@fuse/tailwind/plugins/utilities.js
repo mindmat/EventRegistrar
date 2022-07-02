@@ -1,6 +1,6 @@
 const plugin = require('tailwindcss/plugin');
 
-const utilities = plugin(({
+module.exports = plugin(({
     addComponents
 }) =>
 {
@@ -54,9 +54,6 @@ const utilities = plugin(({
                 '--tw-ring-opacity': '1 !important',
                 '--tw-ring-color'  : 'rgba(var(--fuse-bg-card-rgb), var(--tw-ring-opacity)) !important'
             }
-        },
-        {
-            variants: ['dark', 'responsive', 'group-hover', 'hover']
         }
     );
 
@@ -65,11 +62,6 @@ const utilities = plugin(({
             '.bg-hover': {
                 backgroundColor: 'var(--fuse-bg-hover) !important'
             }
-        },
-        {
-            variants: ['dark', 'group-hover', 'hover']
         }
     );
 });
-
-module.exports = utilities;

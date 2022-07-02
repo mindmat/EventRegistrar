@@ -48,10 +48,12 @@ export class FuseVerticalNavigationCollapsableItemComponent implements OnInit, O
      */
     @HostBinding('class') get classList(): any
     {
+        /* eslint-disable @typescript-eslint/naming-convention */
         return {
             'fuse-vertical-navigation-item-collapsed': this.isCollapsed,
             'fuse-vertical-navigation-item-expanded' : this.isExpanded
         };
+        /* eslint-enable @typescript-eslint/naming-convention */
     }
 
     // -----------------------------------------------------------------------------------------------------

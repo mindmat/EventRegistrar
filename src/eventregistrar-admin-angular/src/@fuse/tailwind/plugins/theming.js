@@ -102,7 +102,7 @@ const theming = plugin.withOptions((options) => ({
         // @ Map variable colors
         // -----------------------------------------------------------------------------------------------------
         const mapVariableColors = _.fromPairs(_.map(options.themes, (theme, themeName) => [
-            themeName === 'default' ? 'body' : `body.theme-${e(themeName)}`,
+            themeName === 'default' ? 'body, .theme-default' : `.theme-${e(themeName)}`,
             _.fromPairs(_.flatten(_.map(flattenColorPalette(_.fromPairs(_.flatten(_.map(normalizeTheme(theme), (palette, paletteName) => [
                     [
                         e(paletteName),
@@ -185,47 +185,46 @@ const theming = plugin.withOptions((options) => ({
                             light: {
                                 'bg-app-bar'   : '#FFFFFF',
                                 'bg-card'      : '#FFFFFF',
-                                'bg-default'   : colors.blueGray[100],
+                                'bg-default'   : colors.slate[100],
                                 'bg-dialog'    : '#FFFFFF',
-                                'bg-hover'     : chroma(colors.blueGray[400]).alpha(0.12).css(),
-                                'bg-status-bar': colors.blueGray[300]
+                                'bg-hover'     : chroma(colors.slate[400]).alpha(0.12).css(),
+                                'bg-status-bar': colors.slate[300]
                             },
                             dark : {
-                                'bg-app-bar'   : colors.blueGray[900],
-                                'bg-card'      : colors.blueGray[800],
-                                'bg-default'   : colors.blueGray[900],
-                                'bg-dialog'    : colors.blueGray[800],
+                                'bg-app-bar'   : colors.slate[900],
+                                'bg-card'      : colors.slate[800],
+                                'bg-default'   : colors.slate[900],
+                                'bg-dialog'    : colors.slate[800],
                                 'bg-hover'     : 'rgba(255, 255, 255, 0.05)',
-                                'bg-status-bar': colors.blueGray[900]
+                                'bg-status-bar': colors.slate[900]
                             }
                         },
                         foreground: {
                             light: {
-                                'text-default'  : colors.blueGray[800],
-                                'text-secondary': colors.blueGray[500],
-                                'text-hint'     : colors.blueGray[400],
-                                'text-disabled' : colors.blueGray[400],
-                                'border'        : colors.blueGray[200],
-                                'divider'       : colors.blueGray[200],
-                                'icon'          : colors.blueGray[500],
-                                'mat-icon'      : colors.blueGray[500]
+                                'text-default'  : colors.slate[800],
+                                'text-secondary': colors.slate[500],
+                                'text-hint'     : colors.slate[400],
+                                'text-disabled' : colors.slate[400],
+                                'border'        : colors.slate[200],
+                                'divider'       : colors.slate[200],
+                                'icon'          : colors.slate[500],
+                                'mat-icon'      : colors.slate[500]
                             },
                             dark : {
                                 'text-default'  : '#FFFFFF',
-                                'text-secondary': colors.blueGray[400],
-                                'text-hint'     : colors.blueGray[500],
-                                'text-disabled' : colors.blueGray[600],
-                                'border'        : chroma(colors.blueGray[100]).alpha(0.12).css(),
-                                'divider'       : chroma(colors.blueGray[100]).alpha(0.12).css(),
-                                'icon'          : colors.blueGray[400],
-                                'mat-icon'      : colors.blueGray[400]
+                                'text-secondary': colors.slate[400],
+                                'text-hint'     : colors.slate[500],
+                                'text-disabled' : colors.slate[600],
+                                'border'        : chroma(colors.slate[100]).alpha(0.12).css(),
+                                'divider'       : chroma(colors.slate[100]).alpha(0.12).css(),
+                                'icon'          : colors.slate[400],
+                                'mat-icon'      : colors.slate[400]
                             }
                         }
                     },
                     themes     : generateThemesObject(options.themes)
                 }
-            },
-            variants: {}
+            }
         };
     }
 );

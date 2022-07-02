@@ -27,7 +27,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ParticipantsDoubleComponent } from './modules/admin/participants/participants-double/participants-double.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { BaseUrlInterceptor } from '@fuse/services/utils/baseUrl.interceptor';
 import { AuthService as AuthServiceFuse } from './core/auth/auth.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ParticipantComponent } from './modules/admin/participants/participant/participant.component';
@@ -67,11 +66,11 @@ const routerConfig: ExtraOptions = {
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },
-        {
-            provide: HTTP_INTERCEPTORS,
-            useClass: BaseUrlInterceptor,
-            multi: true
-        },
+        // {
+        //     provide: HTTP_INTERCEPTORS,
+        //     useClass: BaseUrlInterceptor,
+        //     multi: true
+        // },
         AuthServiceFuse,
         AuthService,
         {

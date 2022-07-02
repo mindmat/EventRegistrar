@@ -1,6 +1,6 @@
 <div class="fixed lg:sticky top-0 bottom-0 lg:left-full w-full sm:w-96 lg:w-16 lg:h-screen lg:shadow">
     <div
-        class="flex flex-col w-full sm:w-96 h-full transform transition-transform duration-400 ease-drawer bg-card"
+        class="flex flex-col w-full sm:w-96 h-full transition-transform duration-400 ease-drawer bg-card"
         [ngClass]="{'-translate-x-full sm:-translate-x-96 lg:-translate-x-80 shadow': opened, 'translate-x-0': !opened}">
 
         <!-- Header -->
@@ -93,7 +93,7 @@
             <div class="flex flex-col flex-auto border-l overflow-hidden bg-gray-50 dark:bg-transparent">
                 <ng-container *ngIf="chat; else selectChatOrStartNew">
                     <div class="flex flex-col-reverse overflow-y-auto overscroll-y-contain">
-                        <div class="flex flex-col flex-auto flex-shrink p-6">
+                        <div class="flex flex-col flex-auto shrink p-6">
                             <ng-container *ngFor="let message of chat.messages; let i = index; let first = first; let last = last; trackBy: trackByFn">
                                 <!-- Start of the day -->
                                 <ng-container *ngIf="first || (chat.messages[i - 1].createdAt | date:'d') !== (message.createdAt | date:'d')">
@@ -108,20 +108,20 @@
                                 <div
                                     class="flex flex-col"
                                     [ngClass]="{'items-end': message.isMine,
-                                        'items-start': !message.isMine,
-                                        'mt-0.5': i > 0 && chat.messages[i - 1].isMine === message.isMine,
-                                        'mt-3': i > 0 && chat.messages[i - 1].isMine !== message.isMine}">
+                                                'items-start': !message.isMine,
+                                                'mt-0.5': i > 0 && chat.messages[i - 1].isMine === message.isMine,
+                                                'mt-3': i > 0 && chat.messages[i - 1].isMine !== message.isMine}">
                                     <!-- Bubble -->
                                     <div
                                         class="relative max-w-3/4 px-3 py-2 rounded-lg"
                                         [ngClass]="{'bg-blue-500 text-blue-50': message.isMine,
-                                            'bg-gray-500 text-gray-50': !message.isMine}">
+                                                    'bg-gray-500 text-gray-50': !message.isMine}">
                                         <!-- Speech bubble tail -->
                                         <ng-container *ngIf="last || chat.messages[i + 1].isMine !== message.isMine">
                                             <div
-                                                class="absolute bottom-0 w-3 transform"
+                                                class="absolute bottom-0 w-3"
                                                 [ngClass]="{'text-blue-500 -right-1 -mr-px mb-px': message.isMine,
-                                                    'text-gray-500 -left-1 -ml-px mb-px -scale-x-1': !message.isMine}">
+                                                            'text-gray-500 -left-1 -ml-px mb-px -scale-x-1': !message.isMine}">
                                                 <ng-container *ngTemplateOutlet="speechBubbleExtension"></ng-container>
                                             </div>
                                         </ng-container>
@@ -140,7 +140,7 @@
                                         <div
                                             class="my-0.5 text-sm font-medium text-secondary"
                                             [ngClass]="{'mr-3': message.isMine,
-                                                'ml-3': !message.isMine}">
+                                                        'ml-3': !message.isMine}">
                                             {{message.createdAt | date:'HH:mm'}}
                                         </div>
                                     </ng-container>
@@ -163,7 +163,7 @@
                             <button
                                 mat-icon-button>
                                 <mat-icon
-                                    class="transform rotate-90"
+                                    class="rotate-90"
                                     [svgIcon]="'heroicons_outline:paper-airplane'"></mat-icon>
                             </button>
                         </div>
@@ -178,8 +178,8 @@
 <ng-template #selectChatOrStartNew>
     <div class="flex flex-col flex-auto items-center justify-center w-full h-full p-4">
         <mat-icon
-            class="icon-size-20"
-            [svgIcon]="'iconsmind:speach_bubble'"></mat-icon>
+            class="icon-size-24"
+            [svgIcon]="'heroicons_outline:chat'"></mat-icon>
         <div class="mt-4 text-xl text-center font-medium tracking-tight text-secondary">Select a conversation</div>
     </div>
 </ng-template>

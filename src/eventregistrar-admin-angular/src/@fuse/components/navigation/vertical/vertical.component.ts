@@ -89,6 +89,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
      */
     @HostBinding('class') get classList(): any
     {
+        /* eslint-disable @typescript-eslint/naming-convention */
         return {
             'fuse-vertical-navigation-animations-enabled'             : this._animationsEnabled,
             [`fuse-vertical-navigation-appearance-${this.appearance}`]: true,
@@ -100,6 +101,7 @@ export class FuseVerticalNavigationComponent implements OnChanges, OnInit, After
             'fuse-vertical-navigation-position-left'                  : this.position === 'left',
             'fuse-vertical-navigation-position-right'                 : this.position === 'right'
         };
+        /* eslint-enable @typescript-eslint/naming-convention */
     }
 
     /**

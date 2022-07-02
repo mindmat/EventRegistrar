@@ -1,19 +1,21 @@
 /* Variables */
-$fuse-vertical-navigation-thin-width: 80px;
+:root {
+    --fuse-vertical-navigation-thin-width: 80px;
+}
 
 fuse-vertical-navigation {
 
     /* Thin appearance overrides */
     &.fuse-vertical-navigation-appearance-thin {
-        width: $fuse-vertical-navigation-thin-width;
-        min-width: $fuse-vertical-navigation-thin-width;
-        max-width: $fuse-vertical-navigation-thin-width;
+        width: var(--fuse-vertical-navigation-thin-width);
+        min-width: var(--fuse-vertical-navigation-thin-width);
+        max-width: var(--fuse-vertical-navigation-thin-width);
 
         /* Left positioned */
         &.fuse-vertical-navigation-position-left {
 
             &.fuse-vertical-navigation-mode-side {
-                margin-left: -$fuse-vertical-navigation-thin-width;
+                margin-left: calc(var(--fuse-vertical-navigation-thin-width) * -1);
             }
 
             &.fuse-vertical-navigation-opened {
@@ -25,7 +27,7 @@ fuse-vertical-navigation {
         &.fuse-vertical-navigation-position-right {
 
             &.fuse-vertical-navigation-mode-side {
-                margin-right: -$fuse-vertical-navigation-thin-width;
+                margin-right: calc(var(--fuse-vertical-navigation-thin-width) * -1);
             }
 
             &.fuse-vertical-navigation-opened {
@@ -34,7 +36,7 @@ fuse-vertical-navigation {
 
             .fuse-vertical-navigation-aside-wrapper {
                 left: auto;
-                right: $fuse-vertical-navigation-thin-width;
+                right: var(--fuse-vertical-navigation-thin-width);
             }
         }
 
@@ -91,7 +93,7 @@ fuse-vertical-navigation {
 
         /* Aside wrapper */
         .fuse-vertical-navigation-aside-wrapper {
-            left: $fuse-vertical-navigation-thin-width;
+            left: var(--fuse-vertical-navigation-thin-width);
         }
     }
 }

@@ -35,6 +35,7 @@ export class FuseConfigService
         this._config.next(config);
     }
 
+    // eslint-disable-next-line @typescript-eslint/member-ordering
     get config$(): Observable<any>
     {
         return this._config.asObservable();

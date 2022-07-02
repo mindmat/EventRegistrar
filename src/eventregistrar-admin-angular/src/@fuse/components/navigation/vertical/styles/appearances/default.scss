@@ -1,5 +1,7 @@
 /* Variables */
-$fuse-vertical-navigation-width: 280px;
+:root {
+    --fuse-vertical-navigation-width: 280px;
+}
 
 fuse-vertical-navigation {
     position: sticky;
@@ -7,9 +9,9 @@ fuse-vertical-navigation {
     flex-direction: column;
     flex: 1 0 auto;
     top: 0;
-    width: $fuse-vertical-navigation-width;
-    min-width: $fuse-vertical-navigation-width;
-    max-width: $fuse-vertical-navigation-width;
+    width: var(--fuse-vertical-navigation-width);
+    min-width: var(--fuse-vertical-navigation-width);
+    max-width: var(--fuse-vertical-navigation-width);
     height: 100vh;
     min-height: 100vh;
     max-height: 100vh;
@@ -45,7 +47,7 @@ fuse-vertical-navigation {
 
         /* Side mode */
         &.fuse-vertical-navigation-mode-side {
-            margin-left: -$fuse-vertical-navigation-width;
+            margin-left: calc(#{var(--fuse-vertical-navigation-width)} * -1);
 
             &.fuse-vertical-navigation-opened {
                 margin-left: 0;
@@ -73,7 +75,7 @@ fuse-vertical-navigation {
 
         /* Side mode */
         &.fuse-vertical-navigation-mode-side {
-            margin-right: -$fuse-vertical-navigation-width;
+            margin-right: calc(var(--fuse-vertical-navigation-width) * -1);
 
             &.fuse-vertical-navigation-opened {
                 margin-right: 0;
@@ -170,8 +172,8 @@ fuse-vertical-navigation {
         flex-direction: column;
         top: 0;
         bottom: 0;
-        left: $fuse-vertical-navigation-width;
-        width: $fuse-vertical-navigation-width;
+        left: var(--fuse-vertical-navigation-width);
+        width: var(--fuse-vertical-navigation-width);
         height: 100%;
         z-index: 5;
         overflow-x: hidden;
@@ -196,7 +198,7 @@ fuse-vertical-navigation {
 
         .fuse-vertical-navigation-aside-wrapper {
             left: auto;
-            right: $fuse-vertical-navigation-width;
+            right: var(--fuse-vertical-navigation-width);
         }
     }
 
@@ -335,7 +337,10 @@ fuse-vertical-navigation {
         }
 
         > .fuse-vertical-navigation-item-children {
-            margin-top: 6px;
+
+            > *:first-child {
+                margin-top: 6px;
+            }
 
             > *:last-child {
                 padding-bottom: 6px;

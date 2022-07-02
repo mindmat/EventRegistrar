@@ -72,38 +72,38 @@ body .light {
             is-dark: map.get(map.get($base-light-theme, color), is-dark),
             foreground: (
                 base: #000000,
-                divider: #E2E8F0, /* blueGray.200 */
-                dividers: #E2E8F0, /* blueGray.200 */
-                disabled: #94A3B8, /* blueGray.400 */
-                disabled-button: #94A3B8, /* blueGray.400 */
-                disabled-text: #94A3B8, /* blueGray.400 */
+                divider: #E2E8F0, /* slate.200 */
+                dividers: #E2E8F0, /* slate.200 */
+                disabled: #94A3B8, /* slate.400 */
+                disabled-button: #94A3B8, /* slate.400 */
+                disabled-text: #94A3B8, /* slate.400 */
                 elevation: #000000,
-                hint-text: #94A3B8, /* blueGray.400 */
-                secondary-text: #64748B, /* blueGray.500 */
-                icon: #64748B, /* blueGray.500 */
-                icons: #64748B, /* blueGray.500 */
-                mat-icon: #64748B, /* blueGray.500 */
-                text: #1E293B, /* blueGray.800 */
-                slider-min: #1E293B, /* blueGray.800 */
-                slider-off: #CBD5E1, /* blueGray.300 */
-                slider-off-active: #94A3B8 /* blueGray.400 */
+                hint-text: #94A3B8, /* slate.400 */
+                secondary-text: #64748B, /* slate.500 */
+                icon: #64748B, /* slate.500 */
+                icons: #64748B, /* slate.500 */
+                mat-icon: #64748B, /* slate.500 */
+                text: #1E293B, /* slate.800 */
+                slider-min: #1E293B, /* slate.800 */
+                slider-off: #CBD5E1, /* slate.300 */
+                slider-off-active: #94A3B8 /* slate.400 */
             ),
             background: (
-                status-bar: #CBD5E1, /* blueGray.300 */
+                status-bar: #CBD5E1, /* slate.300 */
                 app-bar: #FFFFFF,
-                background: #F1F5F9, /* blueGray.100 */
-                hover: rgba(148, 163, 184, 0.12), /* blueGray.400 + opacity */
+                background: #F1F5F9, /* slate.100 */
+                hover: rgba(148, 163, 184, 0.12), /* slate.400 + opacity */
                 card: #FFFFFF,
                 dialog: #FFFFFF,
-                disabled-button: rgba(148, 163, 184, 0.38), /* blueGray.400 + opacity */
+                disabled-button: rgba(148, 163, 184, 0.38), /* slate.400 + opacity */
                 raised-button: #FFFFFF,
-                focused-button: #64748B, /* blueGray.500 */
-                selected-button: #E2E8F0, /* blueGray.200 */
-                selected-disabled-button: #E2E8F0, /* blueGray.200 */
-                disabled-button-toggle: #CBD5E1, /* blueGray.300 */
-                unselected-chip: #E2E8F0, /* blueGray.200 */
-                disabled-list-option: #CBD5E1, /* blueGray.300 */
-                tooltip: #1E293B /* blueGray.800 */
+                focused-button: #64748B, /* slate.500 */
+                selected-button: #E2E8F0, /* slate.200 */
+                selected-disabled-button: #E2E8F0, /* slate.200 */
+                disabled-button-toggle: #CBD5E1, /* slate.300 */
+                unselected-chip: #E2E8F0, /* slate.200 */
+                disabled-list-option: #CBD5E1, /* slate.300 */
+                tooltip: #1E293B /* slate.800 */
             )
         )
     );
@@ -126,38 +126,38 @@ body .dark {
             is-dark: map.get(map.get($base-dark-theme, color), is-dark),
             foreground: (
                 base: #FFFFFF,
-                divider: rgba(241, 245, 249, 0.12), /* blueGray.100 + opacity */
-                dividers: rgba(241, 245, 249, 0.12), /* blueGray.100 + opacity */
-                disabled: #475569, /* blueGray.600 */
-                disabled-button: #1E293B, /* blueGray.800 */
-                disabled-text: #475569, /* blueGray.600 */
+                divider: rgba(241, 245, 249, 0.12), /* slate.100 + opacity */
+                dividers: rgba(241, 245, 249, 0.12), /* slate.100 + opacity */
+                disabled: #475569, /* slate.600 */
+                disabled-button: #1E293B, /* slate.800 */
+                disabled-text: #475569, /* slate.600 */
                 elevation: #000000,
-                hint-text: #64748B, /* blueGray.500 */
-                secondary-text: #94A3B8, /* blueGray.400 */
-                icon: #F1F5F9, /* blueGray.100 */
-                icons: #F1F5F9, /* blueGray.100 */
-                mat-icon: #94A3B8, /* blueGray.400 */
+                hint-text: #64748B, /* slate.500 */
+                secondary-text: #94A3B8, /* slate.400 */
+                icon: #F1F5F9, /* slate.100 */
+                icons: #F1F5F9, /* slate.100 */
+                mat-icon: #94A3B8, /* slate.400 */
                 text: #FFFFFF,
                 slider-min: #FFFFFF,
-                slider-off: #64748B, /* blueGray.500 */
-                slider-off-active: #94A3B8 /* blueGray.400 */
+                slider-off: #64748B, /* slate.500 */
+                slider-off-active: #94A3B8 /* slate.400 */
             ),
             background: (
-                status-bar: #0F172A, /* blueGray.900 */
-                app-bar: #0F172A, /* blueGray.900 */
-                background: #0F172A, /* blueGray.900 */
+                status-bar: #0F172A, /* slate.900 */
+                app-bar: #0F172A, /* slate.900 */
+                background: #0F172A, /* slate.900 */
                 hover: rgba(255, 255, 255, 0.05),
-                card: #1E293B, /* blueGray.800 */
-                dialog: #1E293B, /* blueGray.800 */
-                disabled-button: rgba(15, 23, 42, 0.38), /* blueGray.900 + opacity */
-                raised-button: #0F172A, /* blueGray.900 */
-                focused-button: #E2E8F0, /* blueGray.200 */
+                card: #1E293B, /* slate.800 */
+                dialog: #1E293B, /* slate.800 */
+                disabled-button: rgba(15, 23, 42, 0.38), /* slate.900 + opacity */
+                raised-button: #0F172A, /* slate.900 */
+                focused-button: #E2E8F0, /* slate.200 */
                 selected-button: rgba(255, 255, 255, 0.05),
-                selected-disabled-button: #1E293B, /* blueGray.800 */
-                disabled-button-toggle: #0F172A, /* blueGray.900 */
-                unselected-chip: #475569, /* blueGray.600 */
-                disabled-list-option: #E2E8F0, /* blueGray.200 */
-                tooltip: #64748B /* blueGray.500 */
+                selected-disabled-button: #1E293B, /* slate.800 */
+                disabled-button-toggle: #0F172A, /* slate.900 */
+                unselected-chip: #475569, /* slate.600 */
+                disabled-list-option: #E2E8F0, /* slate.200 */
+                tooltip: #64748B /* slate.500 */
             )
         )
     );

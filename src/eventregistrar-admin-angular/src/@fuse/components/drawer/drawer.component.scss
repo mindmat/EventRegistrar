@@ -1,14 +1,16 @@
 /* Variables */
-$fuse-drawer-width: 320;
+:root {
+    --fuse-drawer-width: 320px;
+}
 
 fuse-drawer {
     position: relative;
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
-    width: #{$fuse-drawer-width}px;
-    min-width: #{$fuse-drawer-width}px;
-    max-width: #{$fuse-drawer-width}px;
+    width: var(--fuse-drawer-width);
+    min-width: var(--fuse-drawer-width);
+    max-width: var(--fuse-drawer-width);
     z-index: 300;
     box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .35);
     @apply bg-card;
@@ -43,7 +45,7 @@ fuse-drawer {
 
         /* Side mode */
         &.fuse-drawer-mode-side {
-            margin-left: -#{$fuse-drawer-width}px;
+            margin-left: calc(var(--fuse-drawer-width) * -1);
 
             &.fuse-drawer-opened {
                 margin-left: 0;
@@ -71,7 +73,7 @@ fuse-drawer {
 
         /* Side mode */
         &.fuse-drawer-mode-side {
-            margin-right: -#{$fuse-drawer-width}px;
+            margin-right: calc(var(--fuse-drawer-width) * -1);
 
             &.fuse-drawer-opened {
                 margin-right: 0;

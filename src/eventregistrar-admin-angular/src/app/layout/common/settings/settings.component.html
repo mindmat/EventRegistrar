@@ -1,5 +1,5 @@
 <div
-    class="fixed flex items-center justify-center right-0 w-10 h-10 shadow-lg rounded-l-lg z-90 cursor-pointer bg-red-600 bg-opacity-90 print:hidden"
+    class="settings-cog fixed flex items-center justify-center right-0 w-10 h-10 shadow-lg rounded-l-lg z-90 cursor-pointer bg-red-600 bg-opacity-90 print:hidden"
     [class.lg:right-0]="config.layout === 'centered' || config.layout === 'material'"
     [class.lg:right-16]="config.layout !== 'centered' && config.layout !== 'material'"
     style="top: 275px"
@@ -38,18 +38,19 @@
             <!-- Theme -->
             <div class="text-md font-semibold text-secondary">THEME</div>
             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mt-6">
-                <ng-container *ngFor="let theme of themes">
+                <ng-container *ngFor="let theme of config.themes">
                     <div
                         class="flex items-center justify-center px-4 py-3 rounded-full cursor-pointer ring-inset ring-primary bg-hover"
-                        [class.ring-2]="config.theme === theme[0]"
-                        (click)="setTheme(theme[0])">
+                        [class.ring-2]="config.theme === theme.id"
+                        [ngClass]="theme.id"
+                        (click)="setTheme(theme.id)">
                         <div
-                            class="flex-0 w-3 h-3 rounded-full"
-                            [style.background-color]="theme[1].primary"></div>
+                            class="flex-0 w-3 h-3 rounded-full bg-primary"
+                        ></div>
                         <div
                             class="ml-2.5 font-medium leading-5 truncate"
-                            [class.text-secondary]="config.theme !== theme[0]">
-                            {{theme[0] | titlecase}}
+                            [class.text-secondary]="config.theme !== theme.id">
+                            {{theme.name}}
                         </div>
                     </div>
                 </ng-container>

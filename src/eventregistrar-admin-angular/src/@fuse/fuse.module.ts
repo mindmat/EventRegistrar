@@ -4,8 +4,8 @@ import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { FuseConfirmationModule } from '@fuse/services/confirmation';
 import { FuseLoadingModule } from '@fuse/services/loading';
 import { FuseMediaWatcherModule } from '@fuse/services/media-watcher/media-watcher.module';
+import { FusePlatformModule } from '@fuse/services/platform/platform.module';
 import { FuseSplashScreenModule } from '@fuse/services/splash-screen/splash-screen.module';
-import { FuseTailwindConfigModule } from '@fuse/services/tailwind/tailwind.module';
 import { FuseUtilsModule } from '@fuse/services/utils/utils.module';
 
 @NgModule({
@@ -13,8 +13,8 @@ import { FuseUtilsModule } from '@fuse/services/utils/utils.module';
         FuseConfirmationModule,
         FuseLoadingModule,
         FuseMediaWatcherModule,
+        FusePlatformModule,
         FuseSplashScreenModule,
-        FuseTailwindConfigModule,
         FuseUtilsModule
     ],
     providers: [

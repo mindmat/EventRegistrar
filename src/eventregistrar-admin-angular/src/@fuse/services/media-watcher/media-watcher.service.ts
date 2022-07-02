@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BreakpointObserver, BreakpointState } from '@angular/cdk/layout';
 import { map, Observable, ReplaySubject, switchMap } from 'rxjs';
-import { FuseTailwindService } from '@fuse/services/tailwind/tailwind.service';
+import { fromPairs } from 'lodash-es';
+import { FuseConfigService } from '@fuse/services/config';
 
 @Injectable()
 export class FuseMediaWatcherService
@@ -13,11 +14,12 @@ export class FuseMediaWatcherService
      */
     constructor(
         private _breakpointObserver: BreakpointObserver,
-        private _fuseTailwindConfigService: FuseTailwindService
+        private _fuseConfigService: FuseConfigService
     )
     {
-        this._fuseTailwindConfigService.tailwindConfig$.pipe(
-            switchMap(config => this._breakpointObserver.observe(Object.values(config.breakpoints)).pipe(
+        this._fuseConfigService.config$.pipe(
+            map(config => fromPairs(Object.entries(config.screens).map(([alias, screen]) => ([alias, `(min-width: ${screen})`])))),
+            switchMap(screens => this._breakpointObserver.observe(Object.values(screens)).pipe(
                 map((state) => {
 
                     // Prepare the observable values and set their defaults
@@ -29,7 +31,7 @@ export class FuseMediaWatcherService
                     for ( const [query] of matchingBreakpoints )
                     {
                         // Find the alias of the matching query
-                        const matchingAlias = Object.entries(config.breakpoints).find(([alias, q]) => q === query)[0];
+                        const matchingAlias = Object.entries(screens).find(([alias, q]) => q === query)[0];
 
                         // Add the matching query to the observable values
                         if ( matchingAlias )

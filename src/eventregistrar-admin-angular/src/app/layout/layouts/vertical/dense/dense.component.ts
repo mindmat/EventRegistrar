@@ -66,6 +66,9 @@ export class DenseLayoutComponent implements OnInit, OnDestroy
 
                 // Check if the screen is small
                 this.isScreenSmall = !matchingAliases.includes('md');
+
+                // Change the navigation appearance
+                this.navigationAppearance = this.isScreenSmall ? 'default' : 'dense';
             });
     }
 

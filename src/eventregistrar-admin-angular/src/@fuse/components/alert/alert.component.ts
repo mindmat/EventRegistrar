@@ -53,6 +53,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
      */
     @HostBinding('class') get classList(): any
     {
+        /* eslint-disable @typescript-eslint/naming-convention */
         return {
             'fuse-alert-appearance-border' : this.appearance === 'border',
             'fuse-alert-appearance-fill'   : this.appearance === 'fill',
@@ -70,6 +71,7 @@ export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
             'fuse-alert-type-warning'      : this.type === 'warning',
             'fuse-alert-type-error'        : this.type === 'error'
         };
+        /* eslint-enable @typescript-eslint/naming-convention */
     }
 
     // -----------------------------------------------------------------------------------------------------

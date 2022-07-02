@@ -32,6 +32,7 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy
     @Output() readonly positionChanged: EventEmitter<FuseDrawerPosition> = new EventEmitter<FuseDrawerPosition>();
 
     private _animationsEnabled: boolean = false;
+    private readonly _handleOverlayClick: any;
     private _hovered: boolean = false;
     private _overlay: HTMLElement;
     private _player: AnimationPlayer;
@@ -47,6 +48,9 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy
         private _fuseUtilsService: FuseUtilsService
     )
     {
+        this._handleOverlayClick = (): void => {
+            this.close();
+        };
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -58,6 +62,7 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy
      */
     @HostBinding('class') get classList(): any
     {
+        /* eslint-disable @typescript-eslint/naming-convention */
         return {
             'fuse-drawer-animations-enabled'         : this._animationsEnabled,
             'fuse-drawer-fixed'                      : this.fixed,
@@ -66,6 +71,7 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy
             'fuse-drawer-opened'                     : this.opened,
             [`fuse-drawer-position-${this.position}`]: true
         };
+        /* eslint-enable @typescript-eslint/naming-convention */
     }
 
     /**
@@ -318,12 +324,6 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy
         // Create the backdrop element
         this._overlay = this._renderer2.createElement('div');
 
-        // Return if overlay couldn't be create for some reason
-        if ( !this._overlay )
-        {
-            return;
-        }
-
         // Add a class to the backdrop element
         this._overlay.classList.add('fuse-drawer-overlay');
 
@@ -342,27 +342,17 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy
         // Append the backdrop to the parent of the drawer
         this._renderer2.appendChild(this._elementRef.nativeElement.parentElement, this._overlay);
 
-        // Create the enter animation and attach it to the player
+        // Create enter animation and attach it to the player
         this._player = this._animationBuilder.build([
             style({opacity: 0}),
             animate('300ms cubic-bezier(0.25, 0.8, 0.25, 1)', style({opacity: 1}))
         ]).create(this._overlay);
 
-        // Once the animation is done...
-        this._player.onDone(() => {
-
-            // Destroy the player
-            this._player.destroy();
-            this._player = null;
-        });
-
         // Play the animation
         this._player.play();
 
         // Add an event listener to the overlay
-        this._overlay.addEventListener('click', () => {
-            this.close();
-        });
+        this._overlay.addEventListener('click', this._handleOverlayClick);
     }
 
     /**
@@ -388,14 +378,13 @@ export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy
         // Once the animation is done...
         this._player.onDone(() => {
 
-            // Destroy the player
-            this._player.destroy();
-            this._player = null;
-
-            // If the backdrop still exists...
+            // If the overlay still exists...
             if ( this._overlay )
             {
-                // Remove the backdrop
+                // Remove the event listener
+                this._overlay.removeEventListener('click', this._handleOverlayClick);
+
+                // Remove the overlay
                 this._overlay.parentNode.removeChild(this._overlay);
                 this._overlay = null;
             }

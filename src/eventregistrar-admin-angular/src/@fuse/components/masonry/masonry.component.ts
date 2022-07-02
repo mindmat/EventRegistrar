@@ -5,7 +5,6 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 @Component({
     selector     : 'fuse-masonry',
     templateUrl  : './masonry.component.html',
-    styleUrls    : ['./masonry.component.scss'],
     encapsulation: ViewEncapsulation.None,
     animations   : fuseAnimations,
     exportAs     : 'fuseMasonry'

@@ -38,12 +38,14 @@ export class FuseCardComponent implements OnChanges
      */
     @HostBinding('class') get classList(): any
     {
+        /* eslint-disable @typescript-eslint/naming-convention */
         return {
             'fuse-card-expanded'  : this.expanded,
             'fuse-card-face-back' : this.flippable && this.face === 'back',
             'fuse-card-face-front': this.flippable && this.face === 'front',
             'fuse-card-flippable' : this.flippable
         };
+        /* eslint-enable @typescript-eslint/naming-convention */
     }
 
     // -----------------------------------------------------------------------------------------------------

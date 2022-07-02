@@ -1,6 +1,8 @@
 /* Variables */
-$fuse-vertical-navigation-width: 280px;
-$fuse-vertical-navigation-dense-width: 80px;
+:root {
+    --fuse-vertical-navigation-width: 280px;
+    --fuse-vertical-navigation-dense-width: 80px;
+}
 
 fuse-vertical-navigation {
 
@@ -8,16 +10,16 @@ fuse-vertical-navigation {
     &.fuse-vertical-navigation-appearance-dense {
 
         &:not(.fuse-vertical-navigation-mode-over) {
-            width: $fuse-vertical-navigation-dense-width;
-            min-width: $fuse-vertical-navigation-dense-width;
-            max-width: $fuse-vertical-navigation-dense-width;
+            width: var(--fuse-vertical-navigation-dense-width);
+            min-width: var(--fuse-vertical-navigation-dense-width);
+            max-width: var(--fuse-vertical-navigation-dense-width);
 
             /* Left positioned */
             &.fuse-vertical-navigation-position-left {
 
                 /* Side mode */
                 &.fuse-vertical-navigation-mode-side {
-                    margin-left: -$fuse-vertical-navigation-dense-width;
+                    margin-left: calc(var(--fuse-vertical-navigation-dense-width) * -1);
                 }
 
                 /* Opened */
@@ -31,7 +33,7 @@ fuse-vertical-navigation {
 
                 /* Side mode */
                 &.fuse-vertical-navigation-mode-side {
-                    margin-right: -$fuse-vertical-navigation-dense-width;
+                    margin-right: calc(var(--fuse-vertical-navigation-dense-width) * -1);
                 }
 
                 /* Opened */
@@ -42,14 +44,14 @@ fuse-vertical-navigation {
                 /* Aside wrapper */
                 .fuse-vertical-navigation-aside-wrapper {
                     left: auto;
-                    right: $fuse-vertical-navigation-dense-width;
+                    right: var(--fuse-vertical-navigation-dense-width);
                 }
 
                 &.fuse-vertical-navigation-hover {
 
                     .fuse-vertical-navigation-aside-wrapper {
                         left: auto;
-                        right: $fuse-vertical-navigation-width;
+                        right: var(--fuse-vertical-navigation-width);
                     }
                 }
             }
@@ -69,9 +71,9 @@ fuse-vertical-navigation {
                     .fuse-vertical-navigation-item-wrapper {
 
                         .fuse-vertical-navigation-item {
-                            width: $fuse-vertical-navigation-dense-width - 24px;
-                            min-width: $fuse-vertical-navigation-dense-width - 24px;
-                            max-width: $fuse-vertical-navigation-dense-width - 24px;
+                            width: calc(var(--fuse-vertical-navigation-dense-width) - 24px);
+                            min-width: calc(var(--fuse-vertical-navigation-dense-width) - 24px);
+                            max-width: calc(var(--fuse-vertical-navigation-dense-width) - 24px);
 
                             .fuse-vertical-navigation-item-arrow,
                             .fuse-vertical-navigation-item-badge,
@@ -142,23 +144,23 @@ fuse-vertical-navigation {
 
         /* Aside wrapper */
         .fuse-vertical-navigation-aside-wrapper {
-            left: $fuse-vertical-navigation-dense-width;
+            left: var(--fuse-vertical-navigation-dense-width);
         }
 
         /* Hover */
         &.fuse-vertical-navigation-hover {
 
             .fuse-vertical-navigation-wrapper {
-                width: $fuse-vertical-navigation-width;
+                width: var(--fuse-vertical-navigation-width);
 
                 .fuse-vertical-navigation-content {
 
                     .fuse-vertical-navigation-item-wrapper {
 
                         .fuse-vertical-navigation-item {
-                            width: $fuse-vertical-navigation-width - 24px;
-                            min-width: $fuse-vertical-navigation-width - 24px;
-                            max-width: $fuse-vertical-navigation-width - 24px;
+                            width: calc(var(--fuse-vertical-navigation-width) - 24px);
+                            min-width: calc(var(--fuse-vertical-navigation-width) - 24px);
+                            max-width: calc(var(--fuse-vertical-navigation-width) - 24px);
 
                             .fuse-vertical-navigation-item-arrow,
                             .fuse-vertical-navigation-item-badge,
@@ -173,7 +175,7 @@ fuse-vertical-navigation {
             }
 
             .fuse-vertical-navigation-aside-wrapper {
-                left: $fuse-vertical-navigation-width;
+                left: var(--fuse-vertical-navigation-width);
             }
         }
     }
