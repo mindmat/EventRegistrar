@@ -31,9 +31,10 @@ public class RegistrationQueryHandler : IRequestHandler<RegistrationQuery, Regis
                                                                   Status = reg.State,
                                                                   StatusText = reg.State.ToString(),
                                                                   Paid = (decimal?)reg.Payments!.Sum(asn =>
-                                                                      asn.PayoutRequestId == null
-                                                                          ? asn.Amount
-                                                                          : -asn.Amount) ?? 0m,
+                                                                                                         asn.PayoutRequestId == null
+                                                                                                             ? asn.Amount
+                                                                                                             : -asn.Amount)
+                                                                      ?? 0m,
                                                                   Language = reg.Language,
                                                                   ReceivedAt = reg.ReceivedAt,
                                                                   ReminderLevel = reg.ReminderLevel,
@@ -45,12 +46,13 @@ public class RegistrationQueryHandler : IRequestHandler<RegistrationQuery, Regis
                                                                   FallbackToPartyPass = reg.FallbackToPartyPass,
                                                                   SmsCount = reg.Sms!.Count,
                                                                   PhoneNormalized = reg.PhoneNormalized,
+                                                                  PhoneFormatted = reg.PhoneNormalized,
                                                                   PartnerOriginal = reg.PartnerNormalized == null
-                                                                      ? null
-                                                                      : reg.PartnerOriginal,
+                                                                                        ? null
+                                                                                        : reg.PartnerOriginal,
                                                                   PartnerName = reg.RegistrationId_Partner == null
-                                                                      ? null
-                                                                      : $"{reg.Registration_Partner!.RespondentFirstName} {reg.Registration_Partner.RespondentLastName}",
+                                                                                    ? null
+                                                                                    : $"{reg.Registration_Partner!.RespondentFirstName} {reg.Registration_Partner.RespondentLastName}",
                                                                   PartnerId = reg.RegistrationId_Partner,
                                                                   IsReduced = reg.IsReduced,
                                                                   WillPayAtCheckin = reg.WillPayAtCheckin

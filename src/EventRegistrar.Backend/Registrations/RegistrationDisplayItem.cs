@@ -14,6 +14,7 @@ public class RegistrationDisplayItem
     public string? PartnerOriginal { get; set; }
     public string? PartnerName { get; set; }
     public string? PhoneNormalized { get; set; }
+    public string? PhoneFormatted { get; internal set; }
     public decimal? Price { get; set; }
     public DateTime ReceivedAt { get; set; }
     public string? Remarks { get; set; }

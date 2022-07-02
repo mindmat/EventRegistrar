@@ -3390,6 +3390,41 @@
         }
       }
     },
+    "/api/TranslationQuery": {
+      "post": {
+        "tags": [
+          "Translation"
+        ],
+        "operationId": "Translation_Query",
+        "requestBody": {
+          "x-name": "TranslationQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslationQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/DomainEventCatalogQuery": {
       "post": {
         "tags": [
@@ -4091,6 +4126,10 @@
             "nullable": true
           },
           "phoneNormalized": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneFormatted": {
             "type": "string",
             "nullable": true
           },
@@ -10167,6 +10206,16 @@
           "eventId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "TranslationQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "language": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

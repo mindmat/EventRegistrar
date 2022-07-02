@@ -43,6 +43,8 @@ import { SettlePaymentsComponent } from './modules/admin/accounting/settle-payme
 import { SettlePaymentComponent } from './modules/admin/accounting/settle-payment/settle-payment.component';
 import { AssignmentCandidateRegistrationComponent } from './modules/admin/accounting/settle-payment/assignment-candidate-registration/assignment-candidate-registration.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslationLoaderService } from './core/i18n/translation-loader.service';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -98,6 +100,12 @@ const routerConfig: ExtraOptions = {
 
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),
+
+        TranslateModule.forRoot({
+            defaultLanguage: 'default',
+            isolate: false,
+            loader: { provide: TranslateLoader, useFactory: TranslationLoaderFactory, deps: [TranslationLoaderService] },
+        }),
 
         CommonModule,
         ReactiveFormsModule,
@@ -160,4 +168,9 @@ const routerConfig: ExtraOptions = {
 })
 export class AppModule
 {
+}
+
+export function TranslationLoaderFactory(service: TranslationLoaderService)
+{
+    return service.createLoader();
 }
