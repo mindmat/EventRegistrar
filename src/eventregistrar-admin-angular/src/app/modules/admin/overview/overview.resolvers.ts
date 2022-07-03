@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
-import { merge, Observable } from 'rxjs';
-import { OverviewService, SingleRegistrable } from './overview.service';
+import { merge, Observable, zip } from 'rxjs';
+import { OverviewService } from './overview.service';
 
 @Injectable({
     providedIn: 'root'
@@ -14,7 +14,7 @@ export class OverviewResolver implements Resolve<any>
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {
-        return merge(
+        return zip(
             this.overviewService.fetchRegistrableTags(),
             this.overviewService.fetchSingleRegistrables(),
             this.overviewService.fetchDoubleRegistrables());

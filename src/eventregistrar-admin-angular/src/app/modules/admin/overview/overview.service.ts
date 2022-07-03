@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, RegistrableTagDisplayItem } from 'app/api/api';
+import { Api, DoubleRegistrableDisplayItem, RegistrableTagDisplayItem, SingleRegistrableDisplayItem } from 'app/api/api';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
 
@@ -9,8 +9,8 @@ import { EventService } from '../events/event.service';
 export class OverviewService
 {
   private registrableTags: BehaviorSubject<RegistrableTagDisplayItem[] | null> = new BehaviorSubject(null);
-  private singleRegistrables: BehaviorSubject<SingleRegistrable[] | null> = new BehaviorSubject(null);
-  private doubleRegistrables: BehaviorSubject<DoubleRegistrable[] | null> = new BehaviorSubject(null);
+  private singleRegistrables: BehaviorSubject<SingleRegistrableDisplayItem[] | null> = new BehaviorSubject(null);
+  private doubleRegistrables: BehaviorSubject<DoubleRegistrableDisplayItem[] | null> = new BehaviorSubject(null);
 
   constructor(private api: Api, private eventService: EventService) { }
 
@@ -19,12 +19,12 @@ export class OverviewService
     return this.registrableTags.asObservable();
   }
 
-  get singleRegistrables$(): Observable<SingleRegistrable[]>
+  get singleRegistrables$(): Observable<SingleRegistrableDisplayItem[]>
   {
     return this.singleRegistrables.asObservable();
   }
 
-  get doubleRegistrables$(): Observable<DoubleRegistrable[]>
+  get doubleRegistrables$(): Observable<DoubleRegistrableDisplayItem[]>
   {
     return this.doubleRegistrables.asObservable();
   }
@@ -40,7 +40,7 @@ export class OverviewService
       );
   }
 
-  fetchSingleRegistrables(): Observable<SingleRegistrable[]>
+  fetchSingleRegistrables(): Observable<SingleRegistrableDisplayItem[]>
   {
     return this.api.singleRegistrablesOverview_Query({ eventId: this.eventService.selectedId })
       .pipe(
@@ -51,7 +51,7 @@ export class OverviewService
       );
   }
 
-  fetchDoubleRegistrables(): Observable<DoubleRegistrable[]>
+  fetchDoubleRegistrables(): Observable<DoubleRegistrableDisplayItem[]>
   {
     return this.api.doubleRegistrablesOverview_Query({ eventId: this.eventService.selectedId })
       .pipe(
@@ -61,51 +61,4 @@ export class OverviewService
         })
       );
   }
-}
-
-export class Registrable
-{
-  id: string;
-  name: string;
-  nameSecondary?: string;
-  isDeletable: boolean;
-  hasWaitingList: boolean;
-  automaticPromotionFromWaitingList: boolean;
-  tag: string;
-}
-
-export class DoubleRegistrable extends Registrable
-{
-  spotsAvailable: number;
-  leadersAccepted: number;
-  followersAccepted: number;
-  leadersOnWaitingList: number;
-  followersOnWaitingList: number;
-  maximumAllowedImbalance: number;
-  class: DoubleSpotState[];
-  waitingList: DoubleSpotState[];
-}
-
-export class SingleRegistrable extends Registrable
-{
-  spotsAvailable: number;
-  accepted: number;
-  onWaitingList: number;
-  class: SpotState[];
-  waitingList: SpotState[];
-}
-
-export class SpotState
-{
-  available = 1;
-  reserved = 2;
-  registered = 3;
-  paid = 4;
-}
-
-export class DoubleSpotState
-{
-  leader: SpotState;
-  follower: SpotState;
-  linked: boolean;
 }

@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
-import { DoubleRegistrable, OverviewService, SingleRegistrable } from './overview.service';
+import { OverviewService } from './overview.service';
 import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDisplayItem';
+import { DoubleRegistrableDisplayItem, SingleRegistrableDisplayItem } from 'app/api/api';
 
 @Component({
     selector: 'app-overview',
@@ -15,10 +15,10 @@ import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDi
 export class OverviewComponent implements OnInit, OnDestroy
 {
     tags: RegistrableTagDisplayItem[];
-    singleRegistrables: SingleRegistrable[];
-    doubleRegistrables: DoubleRegistrable[];
-    filteredSingleRegistrables: SingleRegistrable[];
-    filteredDoubleRegistrables: DoubleRegistrable[];
+    singleRegistrables: SingleRegistrableDisplayItem[];
+    doubleRegistrables: DoubleRegistrableDisplayItem[];
+    filteredSingleRegistrables: SingleRegistrableDisplayItem[];
+    filteredDoubleRegistrables: DoubleRegistrableDisplayItem[];
     filters: {
         categoryTag$: BehaviorSubject<string>;
         query$: BehaviorSubject<string>;
@@ -49,7 +49,7 @@ export class OverviewComponent implements OnInit, OnDestroy
         // Get the registrables
         this.overviewService.singleRegistrables$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((singleRegistrables: SingleRegistrable[]) =>
+            .subscribe((singleRegistrables: SingleRegistrableDisplayItem[]) =>
             {
                 this.singleRegistrables = this.filteredSingleRegistrables = singleRegistrables;
 
@@ -59,7 +59,7 @@ export class OverviewComponent implements OnInit, OnDestroy
 
         this.overviewService.doubleRegistrables$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((doubleRegistrables: DoubleRegistrable[]) =>
+            .subscribe((doubleRegistrables: DoubleRegistrableDisplayItem[]) =>
             {
                 this.doubleRegistrables = this.filteredDoubleRegistrables = doubleRegistrables;
 

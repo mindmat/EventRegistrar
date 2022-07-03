@@ -21,10 +21,10 @@
             </div>
 
             <!-- Registrables -->
-            <ng-container *ngIf="this.filteredDoubleRegistrables.length">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-8 sm:mt-10">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-8 sm:mt-10">
 
-                    <!-- Double Registrables -->
+                <!-- Double Registrables -->
+                <ng-container *ngIf="this.filteredDoubleRegistrables?.length">
                     <ng-container *ngFor="let doubleRegistrable of filteredDoubleRegistrables; trackBy: trackByFn">
                         <!-- Double Registrable -->
                         <div class="flex flex-col h-96 shadow rounded-2xl overflow-hidden bg-card">
@@ -164,8 +164,10 @@
                             </div>
                         </div>
                     </ng-container>
+                </ng-container>
 
-                    <!-- Single Registrables -->
+                <!-- Single Registrables -->
+                <ng-container *ngIf="this.filteredDoubleRegistrables?.length">
                     <ng-container *ngFor="let singleRegistrable of filteredSingleRegistrables; trackBy: trackByFn">
                         <!-- Single Registrable -->
                         <div class="flex flex-col h-96 shadow rounded-2xl overflow-hidden bg-card">
@@ -267,13 +269,13 @@
                             </div>
                         </div>
                     </ng-container>
-                </div>
-            </ng-container>
+                </ng-container>
+            </div>
 
             <!-- No courses -->
-            <ng-container *ngIf="!this.filteredDoubleRegistrables.length && !this.filteredSingleRegistrables.length">
+            <ng-container *ngIf="!this.filteredDoubleRegistrables?.length && !this.filteredSingleRegistrables?.length">
                 <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
-                    <mat-icon class="icon-size-20" [svgIcon]="'iconsmind:file_search'"></mat-icon>
+                    <mat-icon class="icon-size-20" svgIcon="heroicons_solid:search"></mat-icon>
                     <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">No Items found!</div>
                 </div>
             </ng-container>

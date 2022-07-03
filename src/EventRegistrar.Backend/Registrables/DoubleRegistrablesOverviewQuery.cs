@@ -76,7 +76,8 @@ public class DoubleRegistrablesOverviewQueryHandler : IRequestHandler<DoubleRegi
                                                                .OrderBy(spt => spt.FirstPartnerJoined)
                                                                .Select(GetSpotState)
                                                                .ToList()
-                                          });
+                                          })
+                           .ToList();
     }
 
     private static DoubleSpotState GetSpotState(Seat spot)
@@ -84,19 +85,19 @@ public class DoubleRegistrablesOverviewQueryHandler : IRequestHandler<DoubleRegi
         return new DoubleSpotState
                {
                    Leader = spot.Registration == null
-                       ? spot.IsPartnerSpot
-                           ? SpotState.Reserved
-                           : SpotState.Available
-                       : spot.Registration.State == RegistrationState.Paid
-                           ? SpotState.Paid
-                           : SpotState.Registered,
+                                ? spot.IsPartnerSpot
+                                      ? SpotState.Reserved
+                                      : SpotState.Available
+                                : spot.Registration.State == RegistrationState.Paid
+                                    ? SpotState.Paid
+                                    : SpotState.Registered,
                    Follower = spot.Registration_Follower == null
-                       ? spot.IsPartnerSpot
-                           ? SpotState.Reserved
-                           : SpotState.Available
-                       : spot.Registration_Follower.State == RegistrationState.Paid
-                           ? SpotState.Paid
-                           : SpotState.Registered,
+                                  ? spot.IsPartnerSpot
+                                        ? SpotState.Reserved
+                                        : SpotState.Available
+                                  : spot.Registration_Follower.State == RegistrationState.Paid
+                                      ? SpotState.Paid
+                                      : SpotState.Registered,
                    Linked = spot.IsPartnerSpot
                };
     }
