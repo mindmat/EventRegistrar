@@ -244,6 +244,9 @@
   <data name="Role_Leader" xml:space="preserve">
     <value>Leader</value>
   </data>
+  <data name="SearchByName" xml:space="preserve">
+    <value>Suche nach Namen</value>
+  </data>
   <data name="Town" xml:space="preserve">
     <value>Wohnort</value>
   </data>

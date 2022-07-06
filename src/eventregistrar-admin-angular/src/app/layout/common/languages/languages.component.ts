@@ -1,18 +1,18 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { take } from 'rxjs';
-import { AvailableLangs, TranslocoService } from '@ngneat/transloco';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-    selector       : 'languages',
-    templateUrl    : './languages.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'languages',
+    templateUrl: './languages.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'languages'
+    exportAs: 'languages'
 })
 export class LanguagesComponent implements OnInit, OnDestroy
 {
-    availableLangs: AvailableLangs;
+    availableLangs: AvailableLanguage[];
     activeLang: string;
     flagCodes: any;
 
@@ -22,7 +22,7 @@ export class LanguagesComponent implements OnInit, OnDestroy
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseNavigationService: FuseNavigationService,
-        private _translocoService: TranslocoService
+        private translateService: TranslateService
     )
     {
     }
@@ -36,24 +36,44 @@ export class LanguagesComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        // Get the available languages from transloco
-        this.availableLangs = this._translocoService.getAvailableLangs();
+        // // Get the available languages from transloco
+        // this.availableLangs = this._translocoService.getAvailableLangs();
 
-        // Subscribe to language changes
-        this._translocoService.langChanges$.subscribe((activeLang) => {
+        // // Subscribe to language changes
+        // this._translocoService.langChanges$.subscribe((activeLang) =>
+        // {
 
-            // Get the active lang
-            this.activeLang = activeLang;
+        //     // Get the active lang
+        //     this.activeLang = activeLang;
 
-            // Update the navigation
-            this._updateNavigation(activeLang);
-        });
+        //     // Update the navigation
+        //     this._updateNavigation(activeLang);
+        // });
 
         // Set the country iso codes for languages for flags
         this.flagCodes = {
-            'en': 'us',
-            'tr': 'tr'
+            'de': 'de',
+            'en': 'us'
         };
+
+        this.availableLangs = [
+            { id: 'de', label: 'Deutsch' },
+            { id: 'en', label: 'English' }
+        ];
+        this.activeLang = this.translateService.currentLang;
+
+        // Subscribe to language changes
+        this.translateService.onLangChange.subscribe(lang =>
+        {
+            // Get the active lang
+            this.activeLang = lang.lang;
+            window.localStorage.setItem('language', lang.lang);
+
+            // Update the navigation
+            this._updateNavigation(this.activeLang);
+        });
+
+
     }
 
     /**
@@ -75,7 +95,8 @@ export class LanguagesComponent implements OnInit, OnDestroy
     setActiveLang(lang: string): void
     {
         // Set the active lang
-        this._translocoService.setActiveLang(lang);
+        // this._translocoService.setActiveLang(lang);
+        this.translateService.use(lang);
     }
 
     /**
@@ -112,7 +133,7 @@ export class LanguagesComponent implements OnInit, OnDestroy
         const navComponent = this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>('mainNavigation');
 
         // Return if the navigation component does not exist
-        if ( !navComponent )
+        if (!navComponent)
         {
             return null;
         }
@@ -122,32 +143,41 @@ export class LanguagesComponent implements OnInit, OnDestroy
 
         // Get the Project dashboard item and update its title
         const projectDashboardItem = this._fuseNavigationService.getItem('dashboards.project', navigation);
-        if ( projectDashboardItem )
-        {
-            this._translocoService.selectTranslate('Project').pipe(take(1))
-                .subscribe((translation) => {
+        // if (projectDashboardItem)
+        // {
+        //     this._translocoService.selectTranslate('Project').pipe(take(1))
+        //         .subscribe((translation) =>
+        //         {
 
-                    // Set the title
-                    projectDashboardItem.title = translation;
+        //             // Set the title
+        //             projectDashboardItem.title = translation;
 
-                    // Refresh the navigation component
-                    navComponent.refresh();
-                });
-        }
+        //             // Refresh the navigation component
+        //             navComponent.refresh();
+        //         });
+        // }
 
-        // Get the Analytics dashboard item and update its title
-        const analyticsDashboardItem = this._fuseNavigationService.getItem('dashboards.analytics', navigation);
-        if ( analyticsDashboardItem )
-        {
-            this._translocoService.selectTranslate('Analytics').pipe(take(1))
-                .subscribe((translation) => {
+        // // Get the Analytics dashboard item and update its title
+        // const analyticsDashboardItem = this._fuseNavigationService.getItem('dashboards.analytics', navigation);
+        // if (analyticsDashboardItem)
+        // {
+        //     this._translocoService.selectTranslate('Analytics').pipe(take(1))
+        //         .subscribe((translation) =>
+        //         {
 
-                    // Set the title
-                    analyticsDashboardItem.title = translation;
+        //             // Set the title
+        //             analyticsDashboardItem.title = translation;
 
-                    // Refresh the navigation component
-                    navComponent.refresh();
-                });
-        }
+        //             // Refresh the navigation component
+        //             navComponent.refresh();
+        //         });
+        // }
     }
+}
+
+
+export class AvailableLanguage
+{
+    id: string;
+    label: string;
 }

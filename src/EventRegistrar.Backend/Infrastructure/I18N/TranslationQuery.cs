@@ -17,15 +17,18 @@ public class TranslationQueryHandler : RequestHandler<TranslationQuery, IDiction
 {
     protected override IDictionary<string, string> Handle(TranslationQuery query)
     {
-        var dict = GetTranslations(Resources.ResourceManager, CultureInfo.CurrentCulture)
-            .ToDictionary(entry => entry.Key, entry => entry.Value);
+        var culture = query.Language == null ? CultureInfo.InvariantCulture : new CultureInfo(query.Language);
+        var dict = GetTranslations(Resources.ResourceManager, culture)
+            .ToDictionary(entry => entry.Key,
+                          entry => entry.Value);
         return dict;
     }
 
     private static IEnumerable<KeyValuePair<string, string>> GetTranslations(ResourceManager resourceManager, CultureInfo culture)
     {
-        var keys = resourceManager.GetResourceSet(CultureInfo.InvariantCulture, true, true)
+        var keys = resourceManager.GetResourceSet(CultureInfo.InvariantCulture, false, true)
                                   ?.OfType<DictionaryEntry>()
+                                  .ToDictionary(entry => entry.Key, entry => entry.Value)
                                   .Select(entry => entry.Key)
                                   .OfType<string>()
                 ?? Enumerable.Empty<string>();

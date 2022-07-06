@@ -16,7 +16,7 @@
                 </mat-form-field>
                 <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
                     <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                    <input (input)="filterByQuery(query.value)" placeholder="Search by title or description" matInput #query>
+                    <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByName' | translate" matInput #query>
                 </mat-form-field>
             </div>
 

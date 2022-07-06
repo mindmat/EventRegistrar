@@ -444,6 +444,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Suche nach Namen.
+        /// </summary>
+        internal static string SearchByName {
+            get {
+                return ResourceManager.GetString("SearchByName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Wohnort.
         /// </summary>
         internal static string Town {

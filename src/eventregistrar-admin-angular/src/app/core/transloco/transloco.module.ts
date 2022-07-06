@@ -4,45 +4,46 @@ import { environment } from 'environments/environment';
 import { TranslocoHttpLoader } from 'app/core/transloco/transloco.http-loader';
 
 @NgModule({
-    exports  : [
+    exports: [
         TranslocoModule
     ],
     providers: [
         {
             // Provide the default Transloco configuration
-            provide : TRANSLOCO_CONFIG,
+            provide: TRANSLOCO_CONFIG,
             useValue: translocoConfig({
-                availableLangs      : [
+                availableLangs: [
                     {
-                        id   : 'en',
+                        id: 'en',
                         label: 'English'
                     },
                     {
-                        id   : 'tr',
-                        label: 'Turkish'
+                        id: 'de',
+                        label: 'Deutsch'
                     }
                 ],
-                defaultLang         : 'en',
-                fallbackLang        : 'en',
+                defaultLang: 'de',
+                fallbackLang: 'de',
                 reRenderOnLangChange: true,
-                prodMode            : environment.production
+                prodMode: environment.production
             })
         },
         {
             // Provide the default Transloco loader
-            provide : TRANSLOCO_LOADER,
+            provide: TRANSLOCO_LOADER,
             useClass: TranslocoHttpLoader
         },
         {
             // Preload the default language before the app starts to prevent empty/jumping content
-            provide   : APP_INITIALIZER,
-            deps      : [TranslocoService],
-            useFactory: (translocoService: TranslocoService): any => (): Promise<Translation> => {
+            provide: APP_INITIALIZER,
+            deps: [TranslocoService],
+            useFactory: (translocoService: TranslocoService): any => (): Promise<Translation> =>
+            {
                 const defaultLang = translocoService.getDefaultLang();
                 translocoService.setActiveLang(defaultLang);
                 return translocoService.load(defaultLang).toPromise();
             },
-            multi     : true
+            multi: true
         }
     ]
 })
