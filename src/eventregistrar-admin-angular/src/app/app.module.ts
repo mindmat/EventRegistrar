@@ -45,6 +45,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslationLoaderService } from './core/i18n/translation-loader.service';
 import { MissingTranslationService } from './core/i18n/missing-translation.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -115,6 +116,7 @@ const routerConfig: ExtraOptions = {
         MatFormFieldModule,
         MatSelectModule,
         MatButtonModule,
+        MatCheckboxModule,
         MatIconModule,
         MatSlideToggleModule,
         MatInputModule,

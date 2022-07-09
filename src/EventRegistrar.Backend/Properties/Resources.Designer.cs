@@ -61,6 +61,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Einzahlungen.
+        /// </summary>
+        internal static string Deposits {
+            get {
+                return ResourceManager.GetString("Deposits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to E-Mail.
         /// </summary>
         internal static string EMail {
@@ -345,6 +354,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ausblenden:.
+        /// </summary>
+        internal static string Hide {
+            get {
+                return ResourceManager.GetString("Hide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignorierte.
+        /// </summary>
+        internal static string Ignored {
+            get {
+                return ResourceManager.GetString("Ignored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sprache.
         /// </summary>
         internal static string Language {
@@ -377,6 +404,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Partner {
             get {
                 return ResourceManager.GetString("Partner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auszahlungen.
+        /// </summary>
+        internal static string Payouts {
+            get {
+                return ResourceManager.GetString("Payouts", resourceCulture);
             }
         }
         
@@ -449,6 +485,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string SearchByName {
             get {
                 return ResourceManager.GetString("SearchByName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suche nach Namen, IBAN, Mitteilung.
+        /// </summary>
+        internal static string SearchByNameIbanMessage {
+            get {
+                return ResourceManager.GetString("SearchByNameIbanMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ausgeglichene.
+        /// </summary>
+        internal static string Settled {
+            get {
+                return ResourceManager.GetString("Settled", resourceCulture);
             }
         }
         
