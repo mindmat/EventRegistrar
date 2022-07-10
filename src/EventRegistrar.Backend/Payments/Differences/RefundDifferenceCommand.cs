@@ -5,6 +5,7 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Differences;
@@ -13,7 +14,7 @@ public class RefundDifferenceCommand : IRequest, IEventBoundRequest
 {
     public Guid RegistrationId { get; set; }
     public Guid EventId { get; set; }
-    public string Reason { get; set; }
+    public string? Reason { get; set; }
 }
 
 public class RefundDifferenceCommandHandler : IRequestHandler<RefundDifferenceCommand>
@@ -39,11 +40,13 @@ public class RefundDifferenceCommandHandler : IRequestHandler<RefundDifferenceCo
         var data = new TooMuchPaidMailData
                    {
                        Price = registration.Price ?? 0m,
-                       AmountPaid =
-                           registration.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
+                       AmountPaid = registration.Payments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
                    };
         data.RefundAmount = data.AmountPaid - data.Price;
-        if (data.RefundAmount <= 0m) throw new Exception("Not too much paid");
+        if (data.RefundAmount <= 0m)
+        {
+            throw new Exception("Not too much paid");
+        }
 
         var payoutRequest = new PayoutRequest
                             {
@@ -61,7 +64,7 @@ public class RefundDifferenceCommandHandler : IRequestHandler<RefundDifferenceCo
                                   RegistrationId = command.RegistrationId,
                                   Data = data
                               };
-        _serviceBusClient.SendMessage(sendMailCommand);
+        _serviceBusClient.ExecuteCommand(sendMailCommand);
 
         return Unit.Value;
     }

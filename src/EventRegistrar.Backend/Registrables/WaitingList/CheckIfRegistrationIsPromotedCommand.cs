@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList;
@@ -32,36 +33,42 @@ public class CheckIfRegistrationIsPromotedCommandHandler : IRequestHandler<Check
                                                .FirstAsync(cancellationToken);
 
         var isWaitingListBefore = registration.IsWaitingList == true;
-        registration.IsWaitingList = registration.Seats_AsLeader.Any(spt =>
-                                         (spt.RegistrableId == command.RegistrationId ||
-                                          spt.RegistrationId_Follower == command.RegistrationId)
-                                      && spt.IsWaitingList
-                                      && !spt.IsCancelled)
-                                  || registration.Seats_AsFollower.Any(spt =>
-                                         (spt.RegistrableId == command.RegistrationId ||
-                                          spt.RegistrationId_Follower == command.RegistrationId)
-                                      && spt.IsWaitingList
-                                      && !spt.IsCancelled);
+        registration.IsWaitingList = registration.Seats_AsLeader!.Any(spt =>
+                                                                          (spt.RegistrableId == command.RegistrationId || spt.RegistrationId_Follower == command.RegistrationId)
+                                                                       && spt.IsWaitingList
+                                                                       && !spt.IsCancelled)
+                                  || registration.Seats_AsFollower!.Any(spt =>
+                                                                            (spt.RegistrableId == command.RegistrationId || spt.RegistrationId_Follower == command.RegistrationId)
+                                                                         && spt.IsWaitingList
+                                                                         && !spt.IsCancelled);
         if (isWaitingListBefore && registration.IsWaitingList == false)
         {
             // non-core spots are also not on waiting list anymore
-            foreach (var spot in registration.Seats_AsLeader.Where(st => !st.IsCancelled && st.IsWaitingList))
+            foreach (var spot in registration.Seats_AsLeader!.Where(st => !st.IsCancelled && st.IsWaitingList))
+            {
                 spot.IsWaitingList = false;
-            foreach (var spt in registration.Seats_AsFollower.Where(st => !st.IsCancelled && st.IsWaitingList))
-                spt.IsWaitingList = false;
+            }
 
-            if (registration.AdmittedAt == null) registration.AdmittedAt = DateTime.UtcNow;
+            foreach (var spt in registration.Seats_AsFollower!.Where(st => !st.IsCancelled && st.IsWaitingList))
+            {
+                spt.IsWaitingList = false;
+            }
+
+            if (registration.AdmittedAt == null)
+            {
+                registration.AdmittedAt = DateTime.UtcNow;
+            }
 
             // registration is now accepted, send Mail
             var sendMailCommand = new ComposeAndSendMailCommand
                                   {
                                       MailType = registration.RegistrationId_Partner.HasValue
-                                          ? MailType.PartnerRegistrationMatchedAndAccepted
-                                          : MailType.SingleRegistrationAccepted,
+                                                     ? MailType.PartnerRegistrationMatchedAndAccepted
+                                                     : MailType.SingleRegistrationAccepted,
                                       //Withhold = true,
                                       RegistrationId = registration.Id
                                   };
-            _serviceBusClient.SendMessage(sendMailCommand);
+            _serviceBusClient.ExecuteCommand(sendMailCommand);
         }
 
         return Unit.Value;

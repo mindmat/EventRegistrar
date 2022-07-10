@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Spots;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Matching;
@@ -48,45 +49,62 @@ public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPart
                                                 .FirstAsync(cancellationToken);
 
         if (registration1.RegistrationId_Partner.HasValue)
+        {
             throw new ArgumentException($"Registration {registration1.Id} is already assigned to a partner");
+        }
+
         if (registration2.RegistrationId_Partner.HasValue)
+        {
             throw new ArgumentException($"Registration {registration2.Id} is already assigned to a partner");
+        }
 
         var registrationLeader = registration1;
         var registrationFollower = registration2;
         if (registrationLeader.Seats_AsFollower.Any(seat =>
-                !seat.IsCancelled && seat.Registrable.MaximumDoubleSeats.HasValue))
+                                                        !seat.IsCancelled && seat.Registrable.MaximumDoubleSeats.HasValue))
         {
             registrationLeader = registration2;
             registrationFollower = registration1;
         }
 
         if (registrationLeader.Seats_AsFollower.Any(seat =>
-                !seat.IsCancelled && seat.Registrable.MaximumDoubleSeats.HasValue))
+                                                        !seat.IsCancelled && seat.Registrable.MaximumDoubleSeats.HasValue))
+        {
             throw new ArgumentException(
                 $"Unexpected situation: leader registration {registrationLeader.Id} has partner spots as follower");
+        }
+
         if (registrationFollower.Seats_AsLeader.Any(seat =>
-                !seat.IsCancelled && seat.Registrable.MaximumDoubleSeats.HasValue))
+                                                        !seat.IsCancelled && seat.Registrable.MaximumDoubleSeats.HasValue))
+        {
             throw new ArgumentException(
                 $"Unexpected situation: follower registration {registrationFollower.Id} has partner spots as leader");
+        }
 
         var partnerSpotsOfLeader = registrationLeader.Seats_AsLeader
                                                      .Where(seat =>
-                                                         !seat.IsCancelled && seat.Registrable.MaximumDoubleSeats
-                                                             .HasValue)
+                                                                !seat.IsCancelled
+                                                             && seat.Registrable.MaximumDoubleSeats
+                                                                    .HasValue)
                                                      .ToList();
         var partnerSpotsOfFollower = registrationFollower.Seats_AsFollower
                                                          .Where(seat =>
-                                                             !seat.IsCancelled && seat.Registrable.MaximumDoubleSeats
-                                                                 .HasValue)
+                                                                    !seat.IsCancelled
+                                                                 && seat.Registrable.MaximumDoubleSeats
+                                                                        .HasValue)
                                                          .ToList();
 
         if (partnerSpotsOfLeader.Any(spt => spt.RegistrationId_Follower.HasValue))
+        {
             throw new ArgumentException(
                 $"Unexpected situation: leader registration {registrationLeader.Id} has partner spot with a follower set");
+        }
+
         if (partnerSpotsOfFollower.Any(spt => spt.RegistrationId.HasValue))
+        {
             throw new ArgumentException(
                 $"Unexpected situation: follower registration {registrationFollower.Id} has partner spot with a leader set");
+        }
 
         // ok, everything seems to be fine, let's match
         registrationLeader.RegistrationId_Partner = registrationFollower.Id;
@@ -104,8 +122,7 @@ public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPart
             var followerSpot = partnerSpotsOfFollower.Single(spt => spt.RegistrableId == registrableId);
             Seat mergedSpot;
             Seat spotToCancel;
-            if (leaderSpot.FirstPartnerJoined < followerSpot.FirstPartnerJoined ||
-                !leaderSpot.IsWaitingList && followerSpot.IsWaitingList)
+            if (leaderSpot.FirstPartnerJoined < followerSpot.FirstPartnerJoined || (!leaderSpot.IsWaitingList && followerSpot.IsWaitingList))
             {
                 mergedSpot = leaderSpot;
                 mergedSpot.RegistrationId_Follower = registrationFollower.Id;
@@ -133,15 +150,15 @@ public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPart
                                    || registration2.Seats_AsLeader.Any(spt => !spt.IsCancelled && spt.IsWaitingList);
 
         var mailType = isWaitingList
-            ? MailType.PartnerRegistrationMatchedOnWaitingList
-            : MailType.PartnerRegistrationMatchedAndAccepted;
-        _serviceBusClient.SendMessage(new ComposeAndSendMailCommand
-                                      {
-                                          EventId = command.EventId,
-                                          RegistrationId = registrationLeader.Id,
-                                          //Withhold = true,
-                                          MailType = mailType
-                                      });
+                           ? MailType.PartnerRegistrationMatchedOnWaitingList
+                           : MailType.PartnerRegistrationMatchedAndAccepted;
+        _serviceBusClient.ExecuteCommand(new ComposeAndSendMailCommand
+                                         {
+                                             EventId = command.EventId,
+                                             RegistrationId = registrationLeader.Id,
+                                             //Withhold = true,
+                                             MailType = mailType
+                                         });
 
         return Unit.Value;
     }

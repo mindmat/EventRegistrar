@@ -49,16 +49,17 @@ public class ReleaseMailCommandHandler : IRequestHandler<ReleaseMailCommand>
                                   ContentPlainText = withheldMail.ContentPlainText,
                                   Subject = withheldMail.Subject,
                                   Sender = new EmailAddress
-                                           { Email = withheldMail.SenderMail, Name = withheldMail.SenderName },
+                                           {
+                                               Email = withheldMail.SenderMail,
+                                               Name = withheldMail.SenderName
+                                           },
                                   To = withheldMail.Registrations
                                                    .GroupBy(reg => reg.Registration.RespondentEmail?.ToLowerInvariant())
                                                    .Select(grp => new EmailAddress
                                                                   {
                                                                       Email = grp.Key,
-                                                                      Name = grp.Select(reg =>
-                                                                                    reg.Registration.RespondentFirstName)
-                                                                                .StringJoin(
-                                                                                    " & ") // avoid ',' obviously SendGrid interprets commas
+                                                                      Name = grp.Select(reg => reg.Registration.RespondentFirstName)
+                                                                                .StringJoin(" & ") // avoid ',' obviously SendGrid interprets commas
                                                                   })
                                                    .ToList()
                               };
@@ -66,7 +67,7 @@ public class ReleaseMailCommandHandler : IRequestHandler<ReleaseMailCommand>
         withheldMail.Withhold = false;
         withheldMail.Sent = DateTime.UtcNow;
 
-        _serviceBusClient.SendMessage(sendMailCommand);
+        _serviceBusClient.ExecuteCommand(sendMailCommand);
 
         _eventBus.Publish(new MailReleased
                           {

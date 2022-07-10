@@ -46,7 +46,10 @@ public class SingleRegistrationProcessor
                                .ThenInclude(qst => qst.QuestionOptions)
                                .ThenInclude(qop => qop.Mappings)
                                .FirstOrDefaultAsync();
-        if (form?.Questions == null) return Enumerable.Empty<Seat>();
+        if (form?.Questions == null)
+        {
+            return Enumerable.Empty<Seat>();
+        }
 
         var partnerRegistrableRequests = new List<PartnerRegistrableRequest>();
         Role? defaultRole = null;
@@ -55,139 +58,165 @@ public class SingleRegistrationProcessor
         foreach (var question in form.Questions)
         {
             var response = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == question.Id);
-            if (response == null) continue;
+            if (response == null)
+            {
+                continue;
+            }
 
             if (question.Mapping != null)
             {
                 switch (question.Mapping)
                 {
                     case QuestionMappingType.FirstName:
-                    {
-                        registration.RespondentFirstName = response.ResponseString;
-                        break;
-                    }
+                        {
+                            registration.RespondentFirstName = response.ResponseString;
+                            break;
+                        }
                     case QuestionMappingType.LastName:
-                    {
-                        registration.RespondentLastName = response.ResponseString;
-                        break;
-                    }
+                        {
+                            registration.RespondentLastName = response.ResponseString;
+                            break;
+                        }
                     case QuestionMappingType.EMail:
-                    {
-                        registration.RespondentEmail = response.ResponseString;
-                        break;
-                    }
+                        {
+                            registration.RespondentEmail = response.ResponseString;
+                            break;
+                        }
                     case QuestionMappingType.Phone:
-                    {
-                        registration.Phone = response.ResponseString;
-                        registration.PhoneNormalized = _phoneNormalizer.NormalizePhone(registration.Phone);
-                        break;
-                    }
+                        {
+                            registration.Phone = response.ResponseString;
+                            registration.PhoneNormalized = _phoneNormalizer.NormalizePhone(registration.Phone);
+                            break;
+                        }
                     //case QuestionMappingType.Town:
                     //    {
                     //        registration.RespondentEmail = response.ResponseString;
                     //        break;
                     //    }
                     case QuestionMappingType.Remarks:
-                    {
-                        registration.Remarks = response.ResponseString;
-                        if (string.IsNullOrEmpty(registration.Remarks)) registration.Remarks = null;
-                        break;
-                    }
-                    case QuestionMappingType.Partner:
-                    {
-                        registration.PartnerOriginal = response.ResponseString;
-                        if (string.IsNullOrWhiteSpace(registration.PartnerOriginal))
-                            registration.PartnerOriginal = null;
+                        {
+                            registration.Remarks = response.ResponseString;
+                            if (string.IsNullOrEmpty(registration.Remarks))
+                            {
+                                registration.Remarks = null;
+                            }
 
-                        registration.PartnerNormalized = registration.PartnerOriginal?.ToLowerInvariant();
-                        break;
-                    }
+                            break;
+                        }
+                    case QuestionMappingType.Partner:
+                        {
+                            registration.PartnerOriginal = response.ResponseString;
+                            if (string.IsNullOrWhiteSpace(registration.PartnerOriginal))
+                            {
+                                registration.PartnerOriginal = null;
+                            }
+
+                            registration.PartnerNormalized = registration.PartnerOriginal?.ToLowerInvariant();
+                            break;
+                        }
                     case null:
                         break;
                 }
             }
             else if (response.QuestionOptionId != null)
             {
-                var questionOption =
-                    question.QuestionOptions.FirstOrDefault(qop => qop.Id == response.QuestionOptionId);
-                if (questionOption?.Mappings == null) continue;
+                var questionOption = question.QuestionOptions.FirstOrDefault(qop => qop.Id == response.QuestionOptionId);
+                if (questionOption?.Mappings == null)
+                {
+                    continue;
+                }
 
                 foreach (var questionOptionMapping in questionOption.Mappings)
+                {
                     switch (questionOptionMapping.Type)
                     {
                         case MappingType.SingleRegistrable:
-                        {
-                            if (questionOptionMapping.RegistrableId != null)
                             {
-                                var spot = await _spotManager.ReserveSingleSpot(registration.EventId,
-                                    questionOptionMapping.RegistrableId.Value, registration.Id, true);
-                                if (spot == null)
-                                    soldOutRegistrableIds.Add(questionOptionMapping.RegistrableId.Value);
-                                else
-                                    spots.Add(spot);
+                                if (questionOptionMapping.RegistrableId != null)
+                                {
+                                    var spot = await _spotManager.ReserveSingleSpot(registration.EventId,
+                                                                                    questionOptionMapping.RegistrableId.Value, registration.Id, true);
+                                    if (spot == null)
+                                    {
+                                        soldOutRegistrableIds.Add(questionOptionMapping.RegistrableId.Value);
+                                    }
+                                    else
+                                    {
+                                        spots.Add(spot);
+                                    }
+                                }
+
+                                break;
+                            }
+                        case MappingType.PartnerRegistrableLeader:
+                            {
+                                if (questionOptionMapping.RegistrableId != null)
+                                {
+                                    partnerRegistrableRequests.Add(new PartnerRegistrableRequest
+                                                                   {
+                                                                       RegistrableId = questionOptionMapping.RegistrableId
+                                                                                                            .Value,
+                                                                       Role = Role.Leader
+                                                                   });
+                                }
+
+                                break;
                             }
 
-                            break;
-                        }
-                        case MappingType.PartnerRegistrableLeader:
-                        {
-                            if (questionOptionMapping.RegistrableId != null)
-                                partnerRegistrableRequests.Add(new PartnerRegistrableRequest
-                                                               {
-                                                                   RegistrableId = questionOptionMapping.RegistrableId
-                                                                       .Value,
-                                                                   Role = Role.Leader
-                                                               });
-                            break;
-                        }
-
                         case MappingType.PartnerRegistrableFollower:
-                        {
-                            if (questionOptionMapping.RegistrableId != null)
-                                partnerRegistrableRequests.Add(new PartnerRegistrableRequest
-                                                               {
-                                                                   RegistrableId = questionOptionMapping.RegistrableId
-                                                                       .Value,
-                                                                   Role = Role.Follower
-                                                               });
-                            break;
-                        }
+                            {
+                                if (questionOptionMapping.RegistrableId != null)
+                                {
+                                    partnerRegistrableRequests.Add(new PartnerRegistrableRequest
+                                                                   {
+                                                                       RegistrableId = questionOptionMapping.RegistrableId
+                                                                                                            .Value,
+                                                                       Role = Role.Follower
+                                                                   });
+                                }
+
+                                break;
+                            }
 
                         case MappingType.PartnerRegistrable:
-                        {
-                            if (questionOptionMapping.RegistrableId != null)
-                                partnerRegistrableRequests.Add(new PartnerRegistrableRequest
-                                                               {
-                                                                   RegistrableId = questionOptionMapping.RegistrableId
-                                                                       .Value
-                                                               });
-                            break;
-                        }
+                            {
+                                if (questionOptionMapping.RegistrableId != null)
+                                {
+                                    partnerRegistrableRequests.Add(new PartnerRegistrableRequest
+                                                                   {
+                                                                       RegistrableId = questionOptionMapping.RegistrableId
+                                                                                                            .Value
+                                                                   });
+                                }
+
+                                break;
+                            }
 
                         case MappingType.Language:
-                        {
-                            registration.Language = questionOptionMapping.Language;
-                            break;
-                        }
+                            {
+                                registration.Language = questionOptionMapping.Language;
+                                break;
+                            }
 
                         case MappingType.Reduction:
-                        {
-                            registration.IsReduced = true;
-                            break;
-                        }
+                            {
+                                registration.IsReduced = true;
+                                break;
+                            }
 
                         case MappingType.RoleLeader:
-                        {
-                            defaultRole = Role.Leader;
-                            break;
-                        }
+                            {
+                                defaultRole = Role.Leader;
+                                break;
+                            }
 
                         case MappingType.RoleFollower:
-                        {
-                            defaultRole = Role.Follower;
-                            break;
-                        }
+                            {
+                                defaultRole = Role.Follower;
+                                break;
+                            }
                     }
+                }
             }
         }
 
@@ -196,8 +225,11 @@ public class SingleRegistrationProcessor
         if (requestsWithoutRole.Any())
         {
             if (defaultRole == null)
+            {
                 throw new InvalidOperationException(
                     $"Invalid mapping configuration: Mappings to partner registrable {requestsWithoutRole.Select(rwr => rwr.RegistrableId.ToString()).StringJoin()} but no role defined");
+            }
+
             requestsWithoutRole.ForEach(rwr => rwr.Role = defaultRole);
         }
 
@@ -206,12 +238,12 @@ public class SingleRegistrationProcessor
         {
             var ownIdentification = new RegistrationIdentification(registration);
             var spot = await _spotManager.ReserveSinglePartOfPartnerSpot(registration.EventId,
-                partnerRegistrableRequest.RegistrableId,
-                registration.Id,
-                ownIdentification,
-                registration.PartnerNormalized,
-                partnerRegistrableRequest.Role,
-                true);
+                                                                         partnerRegistrableRequest.RegistrableId,
+                                                                         registration.Id,
+                                                                         ownIdentification,
+                                                                         registration.PartnerNormalized,
+                                                                         partnerRegistrableRequest.Role,
+                                                                         true);
             if (spot == null)
             {
                 soldOutRegistrableIds.Add(partnerRegistrableRequest.RegistrableId);
@@ -225,7 +257,10 @@ public class SingleRegistrationProcessor
                     // set own id as partner id of partner registration
                     var partnerRegistration =
                         await _registrations.FirstOrDefaultAsync(reg => reg.Id == registration.RegistrationId_Partner);
-                    if (partnerRegistration != null) partnerRegistration.RegistrationId_Partner = registration.Id;
+                    if (partnerRegistration != null)
+                    {
+                        partnerRegistration.RegistrationId_Partner = registration.Id;
+                    }
                 }
 
                 spots.Add(spot);
@@ -241,14 +276,19 @@ public class SingleRegistrationProcessor
             registration.SoldOutMessage = soldOutRegistrableNames
                                           .Select(rbn => string.Format(Properties.Resources.RegistrableSoldOut, rbn))
                                           .StringJoin(Environment.NewLine);
-            if (string.IsNullOrEmpty(registration.SoldOutMessage)) registration.SoldOutMessage = null;
+            if (string.IsNullOrEmpty(registration.SoldOutMessage))
+            {
+                registration.SoldOutMessage = null;
+            }
         }
 
         var isOnWaitingList = spots.Any(seat => seat.IsWaitingList);
         registration.IsWaitingList = isOnWaitingList;
         if (registration.IsWaitingList == false
          && registration.AdmittedAt == null)
+        {
             registration.AdmittedAt = DateTime.UtcNow;
+        }
 
         registration.OriginalPrice = await _priceCalculator.CalculatePrice(registration, spots);
         registration.Price = registration.OriginalPrice;
@@ -259,8 +299,7 @@ public class SingleRegistrationProcessor
         var isPartnerRegistration = registration.PartnerNormalized != null;
         var isUnmatchedPartnerRegistration = isPartnerRegistration
                                           && spots.Any(spot => spot.PartnerEmail != null
-                                                            && (spot.RegistrationId == null ||
-                                                                spot.RegistrationId_Follower == null));
+                                                            && (spot.RegistrationId == null || spot.RegistrationId_Follower == null));
         MailType mailToSend;
         if (registration.OriginalPrice == 0m && !string.IsNullOrEmpty(registration.SoldOutMessage))
         {
@@ -269,25 +308,31 @@ public class SingleRegistrationProcessor
         else
         {
             if (!isPartnerRegistration)
+            {
                 mailToSend = isOnWaitingList
-                    ? MailType.SingleRegistrationOnWaitingList
-                    : MailType.SingleRegistrationAccepted;
+                                 ? MailType.SingleRegistrationOnWaitingList
+                                 : MailType.SingleRegistrationAccepted;
+            }
             else if (isUnmatchedPartnerRegistration)
+            {
                 mailToSend = isOnWaitingList
-                    ? MailType.PartnerRegistrationFirstPartnerOnWaitingList
-                    : MailType.PartnerRegistrationFirstPartnerAccepted;
+                                 ? MailType.PartnerRegistrationFirstPartnerOnWaitingList
+                                 : MailType.PartnerRegistrationFirstPartnerAccepted;
+            }
             else
+            {
                 mailToSend = isOnWaitingList
-                    ? MailType.PartnerRegistrationMatchedOnWaitingList
-                    : MailType.PartnerRegistrationMatchedAndAccepted;
+                                 ? MailType.PartnerRegistrationMatchedOnWaitingList
+                                 : MailType.PartnerRegistrationMatchedAndAccepted;
+            }
         }
 
-        _serviceBusClient.SendMessage(new ComposeAndSendMailCommand
-                                      {
-                                          MailType = mailToSend,
-                                          RegistrationId = registration.Id,
-                                          AllowDuplicate = false
-                                      });
+        _serviceBusClient.ExecuteCommand(new ComposeAndSendMailCommand
+                                         {
+                                             MailType = mailToSend,
+                                             RegistrationId = registration.Id,
+                                             AllowDuplicate = false
+                                         });
 
         return spots;
     }

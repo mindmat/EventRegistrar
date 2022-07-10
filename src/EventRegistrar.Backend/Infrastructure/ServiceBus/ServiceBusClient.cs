@@ -33,10 +33,13 @@ public class ServiceBusClient
         }
     }
 
-    public void SendMessage<T>(T command)
+    public void ExecuteCommand<T>(T command)
     {
         var commandSerialized = JsonConvert.SerializeObject(command);
         _messages.Add(new CommandMessage
-                      { CommandType = command.GetType().FullName, CommandSerialized = commandSerialized });
+                      {
+                          CommandType = command.GetType().FullName,
+                          CommandSerialized = commandSerialized
+                      });
     }
 }

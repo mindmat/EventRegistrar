@@ -36,28 +36,25 @@ public class PartnerRegistrationProcessor
                                                  PartnerRegistrationProcessConfiguration config)
     {
         registration.RespondentFirstName = registration.Responses
-                                                       .FirstOrDefault(rsp =>
-                                                           rsp.QuestionId == config.QuestionId_Leader_FirstName)
+                                                       .FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_FirstName)
                                                        ?.ResponseString;
         registration.RespondentLastName = registration.Responses
-                                                      .FirstOrDefault(rsp =>
-                                                          rsp.QuestionId == config.QuestionId_Leader_LastName)
+                                                      .FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_LastName)
                                                       ?.ResponseString;
         registration.RespondentEmail = registration.Responses
-                                                   .FirstOrDefault(rsp =>
-                                                       rsp.QuestionId == config.QuestionId_Leader_Email)
+                                                   .FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_Email)
                                                    ?.ResponseString;
         if (config.LanguageMappings != null)
-            registration.Language = config.LanguageMappings.FirstOrDefault(map =>
-                                              registration.Responses.Any(rsp =>
-                                                  rsp.QuestionOptionId == map.QuestionOptionId))
+        {
+            registration.Language = config.LanguageMappings.FirstOrDefault(map => registration.Responses.Any(rsp => rsp.QuestionOptionId == map.QuestionOptionId))
                                           .Language;
+        }
 
         if (config.QuestionId_Leader_Phone.HasValue)
         {
             registration.Phone = registration.Responses
                                              .FirstOrDefault(rsp =>
-                                                 rsp.QuestionId == config.QuestionId_Leader_Phone.Value)
+                                                                 rsp.QuestionId == config.QuestionId_Leader_Phone.Value)
                                              ?.ResponseString;
             registration.PhoneNormalized = _phoneNormalizer.NormalizePhone(registration.Phone);
         }
@@ -69,18 +66,15 @@ public class PartnerRegistrationProcessor
                                        ExternalTimestamp = registration.ExternalTimestamp,
                                        RespondentFirstName = registration.Responses
                                                                          .FirstOrDefault(rsp =>
-                                                                             rsp.QuestionId ==
-                                                                             config.QuestionId_Follower_FirstName)
+                                                                                             rsp.QuestionId == config.QuestionId_Follower_FirstName)
                                                                          ?.ResponseString,
                                        RespondentLastName = registration.Responses
                                                                         .FirstOrDefault(rsp =>
-                                                                            rsp.QuestionId ==
-                                                                            config.QuestionId_Follower_LastName)
+                                                                                            rsp.QuestionId == config.QuestionId_Follower_LastName)
                                                                         ?.ResponseString,
                                        RespondentEmail = registration.Responses
                                                                      .FirstOrDefault(rsp =>
-                                                                         rsp.QuestionId ==
-                                                                         config.QuestionId_Follower_Email)
+                                                                                         rsp.QuestionId == config.QuestionId_Follower_Email)
                                                                      ?.ResponseString,
                                        ExternalIdentifier = registration.ExternalIdentifier,
                                        ReceivedAt = registration.ReceivedAt,
@@ -92,8 +86,7 @@ public class PartnerRegistrationProcessor
         if (config.QuestionId_Follower_Phone.HasValue)
         {
             followerRegistration.Phone = registration.Responses
-                                                     .FirstOrDefault(rsp =>
-                                                         rsp.QuestionId == config.QuestionId_Follower_Phone.Value)
+                                                     .FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Follower_Phone.Value)
                                                      ?.ResponseString;
             followerRegistration.PhoneNormalized = _phoneNormalizer.NormalizePhone(followerRegistration.Phone);
         }
@@ -108,56 +101,69 @@ public class PartnerRegistrationProcessor
         var registrables = await _optionToRegistrableMappings
                                  .Where(map => map.Registrable.EventId == registration.EventId
                                             && (questionOptionIds.Contains(map.QuestionOptionId)
-                                             || roleSpecificRegistrableIds != null
-                                             && map.RegistrableId != null
-                                             && roleSpecificRegistrableIds.Contains(map.RegistrableId.Value)))
+                                             || (roleSpecificRegistrableIds != null
+                                              && map.RegistrableId != null
+                                              && roleSpecificRegistrableIds.Contains(map.RegistrableId.Value))))
                                  .Include(map => map.Registrable)
                                  .Include(map => map.Registrable.Spots)
                                  .ToListAsync();
         foreach (var response in registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue))
-        foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
         {
-            var seat = registrable.Registrable.MaximumDoubleSeats.HasValue
-                ? await _spotManager.ReservePartnerSpot(registration.EventId, registrable.Registrable, registration.Id,
-                    followerRegistration.Id, true)
-                : await _spotManager.ReserveSingleSpot(registration.EventId, registrable.Id, registration.Id, true);
+            foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
+            {
+                var seat = registrable.Registrable.MaximumDoubleSeats.HasValue
+                               ? await _spotManager.ReservePartnerSpot(registration.EventId, registrable.Registrable, registration.Id,
+                                                                       followerRegistration.Id, true)
+                               : await _spotManager.ReserveSingleSpot(registration.EventId, registrable.Id, registration.Id, true);
 
-            if (seat == null)
-                registration.SoldOutMessage = (registration.SoldOutMessage == null
-                                                  ? string.Empty
-                                                  : registration.SoldOutMessage + Environment.NewLine) +
-                                              string.Format(Properties.Resources.RegistrableSoldOut,
-                                                  registrable.Registrable.Name);
-            else
-                spots.Add(seat);
+                if (seat == null)
+                {
+                    registration.SoldOutMessage = (registration.SoldOutMessage == null
+                                                       ? string.Empty
+                                                       : registration.SoldOutMessage + Environment.NewLine)
+                                                + string.Format(Properties.Resources.RegistrableSoldOut,
+                                                                registrable.Registrable.Name);
+                }
+                else
+                {
+                    spots.Add(seat);
+                }
+            }
         }
 
         if (config.RoleSpecificMappings != null)
-            foreach (var roleSpecificMapping in config.RoleSpecificMappings.Where(rsm =>
-                         registration.Responses.Any(rsp => rsp.QuestionOptionId == rsm.QuestionOptionId)))
+        {
+            foreach (var roleSpecificMapping in config.RoleSpecificMappings.Where(rsm => registration.Responses.Any(rsp => rsp.QuestionOptionId == rsm.QuestionOptionId)))
             {
                 var registrable = registrables.First(rbl => rbl.RegistrableId == roleSpecificMapping.RegistrableId);
                 var registrationId = roleSpecificMapping.Role == Role.Leader
-                    ? registration.Id
-                    : followerRegistration.Id;
+                                         ? registration.Id
+                                         : followerRegistration.Id;
                 var seat = await _spotManager.ReserveSingleSpot(registration.EventId, registrable.Id, registrationId,
-                    false);
+                                                                false);
                 if (seat == null)
+                {
                     registration.SoldOutMessage = (registration.SoldOutMessage == null
-                                                      ? string.Empty
-                                                      : registration.SoldOutMessage + Environment.NewLine) +
-                                                  string.Format(Properties.Resources.RegistrableSoldOut,
-                                                      registrable.Registrable.Name);
+                                                       ? string.Empty
+                                                       : registration.SoldOutMessage + Environment.NewLine)
+                                                + string.Format(Properties.Resources.RegistrableSoldOut,
+                                                                registrable.Registrable.Name);
+                }
                 else
+                {
                     spots.Add(seat);
+                }
             }
+        }
 
         var isOnWaitingList = spots.Any(seat => seat.IsWaitingList);
 
         // finalize follower registration
         followerRegistration.IsWaitingList = isOnWaitingList;
         if (followerRegistration.IsWaitingList == false && !followerRegistration.AdmittedAt.HasValue)
+        {
             followerRegistration.AdmittedAt = DateTime.UtcNow;
+        }
 
         followerRegistration.OriginalPrice = await _priceCalculator.CalculatePrice(followerRegistration, spots);
         followerRegistration.Price = followerRegistration.OriginalPrice;
@@ -167,7 +173,9 @@ public class PartnerRegistrationProcessor
         // finalize leader registration
         registration.IsWaitingList = isOnWaitingList;
         if (registration.IsWaitingList == false && !registration.AdmittedAt.HasValue)
+        {
             registration.AdmittedAt = DateTime.UtcNow;
+        }
 
         registration.OriginalPrice = await _priceCalculator.CalculatePrice(registration, spots);
         registration.Price = registration.OriginalPrice;
@@ -176,15 +184,15 @@ public class PartnerRegistrationProcessor
 
         // send mail
         var mailType = isOnWaitingList
-            ? MailType.PartnerRegistrationMatchedOnWaitingList
-            : MailType.PartnerRegistrationMatchedAndAccepted;
-        _serviceBusClient.SendMessage(new ComposeAndSendMailCommand
-                                      {
-                                          MailType = mailType,
-                                          RegistrationId = registration.Id,
-                                          //Withhold = true,
-                                          AllowDuplicate = false
-                                      });
+                           ? MailType.PartnerRegistrationMatchedOnWaitingList
+                           : MailType.PartnerRegistrationMatchedAndAccepted;
+        _serviceBusClient.ExecuteCommand(new ComposeAndSendMailCommand
+                                         {
+                                             MailType = mailType,
+                                             RegistrationId = registration.Id,
+                                             //Withhold = true,
+                                             AllowDuplicate = false
+                                         });
 
         return spots;
     }

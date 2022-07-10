@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Mailing;
@@ -24,18 +25,23 @@ public class ReleaseAllPendingMailsCommandHandler : IRequestHandler<ReleaseAllPe
 
     public async Task<Unit> Handle(ReleaseAllPendingMailsCommand command, CancellationToken cancellationToken)
     {
-        var withheldMails = await _mails
-                                  .Where(mail => mail.EventId == command.EventId
-                                              && !mail.Discarded
-                                              && mail.State == null
-                                              && mail.Sent == null)
-                                  .Include(mail => mail.Registrations)
-                                  .ThenInclude(map => map.Registration)
-                                  .OrderByDescending(mail => mail.Created)
-                                  .ToListAsync(cancellationToken);
+        var withheldMails = await _mails.Where(mail => mail.EventId == command.EventId
+                                                    && !mail.Discarded
+                                                    && mail.State == null
+                                                    && mail.Sent == null)
+                                        .Include(mail => mail.Registrations)
+                                        .ThenInclude(map => map.Registration)
+                                        .OrderByDescending(mail => mail.Created)
+                                        .ToListAsync(cancellationToken);
         foreach (var withheldMail in withheldMails)
-            _serviceBusClient.SendMessage(
-                new ReleaseMailCommand { EventId = command.EventId, MailId = withheldMail.Id });
+        {
+            _serviceBusClient.ExecuteCommand(new ReleaseMailCommand
+                                             {
+                                                 EventId = command.EventId,
+                                                 MailId = withheldMail.Id
+                                             });
+        }
+
         return Unit.Value;
     }
 }

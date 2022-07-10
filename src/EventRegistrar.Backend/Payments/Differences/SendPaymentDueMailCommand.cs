@@ -3,6 +3,7 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Differences;
@@ -33,10 +34,12 @@ public class SendPaymentDueMailCommandHandler : IRequestHandler<SendPaymentDueMa
         var data = new PaymentDueMailData
                    {
                        Price = registration.Price ?? 0m,
-                       AmountPaid =
-                           registration.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
+                       AmountPaid = registration.Payments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
                    };
-        if (data.Price <= data.AmountPaid) throw new Exception("No money owed");
+        if (data.Price <= data.AmountPaid)
+        {
+            throw new Exception("No money owed");
+        }
 
         var sendMailCommand = new ComposeAndSendMailCommand
                               {
@@ -44,7 +47,7 @@ public class SendPaymentDueMailCommandHandler : IRequestHandler<SendPaymentDueMa
                                   RegistrationId = command.RegistrationId,
                                   Data = data
                               };
-        _serviceBusClient.SendMessage(sendMailCommand);
+        _serviceBusClient.ExecuteCommand(sendMailCommand);
 
         return Unit.Value;
     }
