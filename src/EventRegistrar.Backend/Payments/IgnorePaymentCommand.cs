@@ -14,9 +14,9 @@ internal class IgnorePaymentCommand : IRequest, IEventBoundRequest
 
 internal class IgnorePaymentCommandHandler : IRequestHandler<IgnorePaymentCommand>
 {
-    private readonly IRepository<BankAccountBooking> _payments;
+    private readonly IRepository<Payment> _payments;
 
-    public IgnorePaymentCommandHandler(IRepository<BankAccountBooking> payments)
+    public IgnorePaymentCommandHandler(IRepository<Payment> payments)
     {
         _payments = payments;
     }

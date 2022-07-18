@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Payments.Files.Camt;
 
 using MediatR;
 
@@ -13,28 +12,27 @@ public class AssignedPaymentsOfRegistrationQuery : IRequest<IEnumerable<Assigned
 
 public class AssignedPaymentsOfRegistrationQueryHandler : IRequestHandler<AssignedPaymentsOfRegistrationQuery, IEnumerable<AssignedPaymentDisplayItem>>
 {
-    private readonly IQueryable<PaymentAssignment> _paymentsAssignments;
+    private readonly IQueryable<PaymentAssignment> _assignments;
 
-    public AssignedPaymentsOfRegistrationQueryHandler(IQueryable<PaymentAssignment> paymentsAssignments)
+    public AssignedPaymentsOfRegistrationQueryHandler(IQueryable<PaymentAssignment> assignments)
     {
-        _paymentsAssignments = paymentsAssignments;
+        _assignments = assignments;
     }
 
     public async Task<IEnumerable<AssignedPaymentDisplayItem>> Handle(AssignedPaymentsOfRegistrationQuery query,
                                                                       CancellationToken cancellationToken)
     {
-        return await _paymentsAssignments.Where(pya => pya.ReceivedPayment!.BankAccountStatementsFile!.EventId == query.EventId
-                                                    && pya.RegistrationId == query.RegistrationId
-                                                    && pya.ReceivedPayment.CreditDebitType == CreditDebit.CRDT)
-                                         .Select(pya => new AssignedPaymentDisplayItem
-                                                        {
-                                                            PaymentAssignmentId = pya.Id,
-                                                            Amount = pya.Amount,
-                                                            Currency = pya.ReceivedPayment!.Currency,
-                                                            BookingDate = pya.ReceivedPayment.BookingDate,
-                                                            PaymentAssignmentId_Counter = pya.PaymentAssignmentId_Counter,
-                                                            PaymentId_Repayment = pya.PaymentId_Repayment
-                                                        })
-                                         .ToListAsync(cancellationToken);
+        return await _assignments.Where(ass => ass.IncomingPayment!.BankAccountStatementsFile!.EventId == query.EventId
+                                            && ass.RegistrationId == query.RegistrationId)
+                                 .Select(ass => new AssignedPaymentDisplayItem
+                                                {
+                                                    PaymentAssignmentId = ass.Id,
+                                                    Amount = ass.Amount,
+                                                    Currency = ass.IncomingPayment!.Currency,
+                                                    BookingDate = ass.IncomingPayment.BookingDate,
+                                                    PaymentAssignmentId_Counter = ass.PaymentAssignmentId_Counter,
+                                                    OutgoingPaymentId = ass.OutgoingPaymentId
+                                                })
+                                 .ToListAsync(cancellationToken);
     }
 }

@@ -20,10 +20,10 @@ public class BookingAssignments
 
 public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmentsQuery, BookingAssignments>
 {
-    private readonly IQueryable<BankAccountBooking> _bookings;
+    private readonly IQueryable<IncomingPayment> _bookings;
     private readonly IQueryable<Registration> _registrations;
 
-    public PossibleAssignmentsQueryHandler(IQueryable<BankAccountBooking> bookings,
+    public PossibleAssignmentsQueryHandler(IQueryable<IncomingPayment> bookings,
                                            IQueryable<Registration> registrations)
     {
         _bookings = bookings;
@@ -33,7 +33,6 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
     public async Task<BookingAssignments> Handle(PossibleAssignmentsQuery query,
                                                  CancellationToken cancellationToken)
     {
-        var result = new BookingAssignments();
         var booking = await _bookings.Where(pmt => pmt.Id == query.BankAccountBookingId
                                                 && pmt.BankAccountStatementsFile!.EventId == query.EventId)
                                      .Include(pmt => pmt.Assignments!)
@@ -52,22 +51,25 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
                                                              ? asn.Amount
                                                              : -asn.Amount);
 
-        result.ExistingAssignments = booking.Assignments!
-                                            .Where(pas => pas.Registration != null
-                                                       && pas.PaymentAssignmentId_Counter == null)
-                                            .Select(pas => new ExistingAssignment
-                                                           {
-                                                               PaymentAssignmentId_Existing = pas.Id,
-                                                               BankAccountBookingId = booking.Id,
-                                                               RegistrationId = pas.RegistrationId!.Value,
-                                                               FirstName = pas.Registration!.RespondentFirstName,
-                                                               LastName = pas.Registration.RespondentLastName,
-                                                               Email = pas.Registration.RespondentEmail,
-                                                               IsWaitingList = pas.Registration.IsWaitingList == true,
-                                                               Price = pas.Registration.Price ?? 0m,
-                                                               AssignedAmount = pas.Amount
-                                                           })
-                                            .ToList();
+        var result = new BookingAssignments
+                     {
+                         ExistingAssignments = booking.Assignments!
+                                                      .Where(pas => pas.Registration != null
+                                                                 && pas.PaymentAssignmentId_Counter == null)
+                                                      .Select(pas => new ExistingAssignment
+                                                                     {
+                                                                         PaymentAssignmentId_Existing = pas.Id,
+                                                                         BankAccountBookingId = booking.Id,
+                                                                         RegistrationId = pas.RegistrationId!.Value,
+                                                                         FirstName = pas.Registration!.RespondentFirstName,
+                                                                         LastName = pas.Registration.RespondentLastName,
+                                                                         Email = pas.Registration.RespondentEmail,
+                                                                         IsWaitingList = pas.Registration.IsWaitingList == true,
+                                                                         Price = pas.Registration.Price ?? 0m,
+                                                                         AssignedAmount = pas.Amount
+                                                                     })
+                                                      .ToList()
+                     };
         if (openAmount == 0
          || (string.IsNullOrWhiteSpace(message) && string.IsNullOrWhiteSpace(debitorName)))
         {
@@ -89,9 +91,9 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
                                                                    LastName = reg.RespondentLastName,
                                                                    Email = reg.RespondentEmail,
                                                                    Price = reg.Price ?? 0m,
-                                                                   AmountPaid = reg.Payments!.Sum(asn => asn.PayoutRequestId == null
-                                                                                                             ? asn.Amount
-                                                                                                             : -asn.Amount),
+                                                                   AmountPaid = reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null
+                                                                                                                       ? asn.Amount
+                                                                                                                       : -asn.Amount),
                                                                    IsWaitingList = reg.IsWaitingList == true
                                                                })
                                                 .ToListAsync(cancellationToken);

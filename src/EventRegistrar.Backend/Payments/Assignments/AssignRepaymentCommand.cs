@@ -19,9 +19,9 @@ public class AssignRepaymentCommandHandler : IRequestHandler<AssignRepaymentComm
 {
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IEventBus _eventBus;
-    private readonly IQueryable<BankAccountBooking> _payments;
+    private readonly IQueryable<Payment> _payments;
 
-    public AssignRepaymentCommandHandler(IQueryable<BankAccountBooking> payments,
+    public AssignRepaymentCommandHandler(IQueryable<Payment> payments,
                                          IRepository<PaymentAssignment> assignments,
                                          IEventBus eventBus)
     {
@@ -33,11 +33,11 @@ public class AssignRepaymentCommandHandler : IRequestHandler<AssignRepaymentComm
     public async Task<Unit> Handle(AssignRepaymentCommand command, CancellationToken cancellationToken)
     {
         var paymentIncoming = await _payments.FirstAsync(pmt => pmt.Id == command.PaymentId_Incoming
-                                                             && pmt.BankAccountStatementsFile.EventId == command.EventId,
-            cancellationToken);
+                                                             && pmt.BankAccountStatementsFile!.EventId == command.EventId,
+                                                         cancellationToken);
         var paymentOutgoing = await _payments.FirstAsync(pmt => pmt.Id == command.PaymentId_Outgoing
-                                                             && pmt.BankAccountStatementsFile.EventId == command.EventId,
-            cancellationToken);
+                                                             && pmt.BankAccountStatementsFile!.EventId == command.EventId,
+                                                         cancellationToken);
 
         var assignment = new PaymentAssignment
                          {

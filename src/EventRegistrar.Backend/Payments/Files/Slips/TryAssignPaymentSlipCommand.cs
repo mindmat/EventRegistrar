@@ -15,9 +15,9 @@ public class TryAssignPaymentSlipCommand : IRequest, IQueueBoundMessage
 
 public class TryAssignPaymentSlipCommandHandler : IRequestHandler<TryAssignPaymentSlipCommand>
 {
-    private readonly IRepository<BankAccountBooking> _payments;
+    private readonly IRepository<IncomingPayment> _payments;
 
-    public TryAssignPaymentSlipCommandHandler(IRepository<BankAccountBooking> payments)
+    public TryAssignPaymentSlipCommandHandler(IRepository<IncomingPayment> payments)
     {
         _payments = payments;
     }

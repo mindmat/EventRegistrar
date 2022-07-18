@@ -30,10 +30,10 @@ public class RegistrationQueryHandler : IRequestHandler<RegistrationQuery, Regis
                                                                   Price = reg.Price,
                                                                   Status = reg.State,
                                                                   StatusText = reg.State.ToString(),
-                                                                  Paid = (decimal?)reg.Payments!.Sum(asn =>
-                                                                                                         asn.PayoutRequestId == null
-                                                                                                             ? asn.Amount
-                                                                                                             : -asn.Amount)
+                                                                  Paid = (decimal?)reg.PaymentAssignments!.Sum(asn =>
+                                                                                                                   asn.PayoutRequestId == null
+                                                                                                                       ? asn.Amount
+                                                                                                                       : -asn.Amount)
                                                                       ?? 0m,
                                                                   Language = reg.Language,
                                                                   ReceivedAt = reg.ReceivedAt,

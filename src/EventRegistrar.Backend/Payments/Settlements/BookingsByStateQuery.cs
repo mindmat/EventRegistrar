@@ -18,9 +18,9 @@ public class BookingsByStateQuery : IRequest<IEnumerable<BankBookingDisplayItem>
 
 public class BookingsByStateQueryHandler : IRequestHandler<BookingsByStateQuery, IEnumerable<BankBookingDisplayItem>>
 {
-    private readonly IQueryable<BankAccountBooking> _bankBookings;
+    private readonly IQueryable<Payment> _bankBookings;
 
-    public BookingsByStateQueryHandler(IQueryable<BankAccountBooking> bankBookings)
+    public BookingsByStateQueryHandler(IQueryable<Payment> bankBookings)
     {
         _bankBookings = bankBookings;
     }

@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO.Compression;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
@@ -35,11 +36,11 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
     private readonly IQueryable<Event> _events;
     private readonly ILogger _log;
     private readonly IRepository<BankAccountStatementsFile> _paymentFiles;
-    private readonly IRepository<BankAccountBooking> _payments;
+    private readonly IRepository<Payment> _payments;
     private readonly IRepository<PaymentSlip> _paymentSlips;
 
     public SavePaymentFileCommandHandler(IRepository<BankAccountStatementsFile> paymentFiles,
-                                         IRepository<BankAccountBooking> payments,
+                                         IRepository<Payment> payments,
                                          IRepository<PaymentSlip> paymentSlips,
                                          IQueryable<Event> events,
                                          CamtParser camtParser,
@@ -62,17 +63,23 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
         {
             case "text/xml":
             case "application/xml":
-                await SaveCamt(command.EventId, command.FileStream, cancellationToken);
+                await SaveCamt(command.EventId,
+                               command.FileStream,
+                               cancellationToken);
                 break;
 
             case "image/jpeg":
             case "image/png":
-                await TrySavePaymentSlipImage(command.EventId, command.FileStream, command.Filename,
-                    command.ContentType);
+                await TrySavePaymentSlipImage(command.EventId,
+                                              command.FileStream,
+                                              command.Filename,
+                                              command.ContentType);
                 break;
 
             case "application/x-gzip":
-                await SaveCamtWithPaymentSlips(command.EventId, command.FileStream, cancellationToken);
+                await SaveCamtWithPaymentSlips(command.EventId,
+                                               command.FileStream,
+                                               cancellationToken);
                 break;
         }
 
@@ -81,28 +88,22 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
 
     private static string ConvertExtensionToContentType(string extension)
     {
-        switch (extension)
+        return extension switch
         {
-            case ".tiff":
-            case ".tif":
-                return "image/tiff";
-
-            case ".jpg":
-            case ".jpeg":
-                return "image/jpeg";
-
-            case ".png":
-                return "image/png";
-
-            default:
-                return extension;
-        }
+            ".tiff" => "image/tiff",
+            ".tif"  => "image/tiff",
+            ".jpg"  => "image/jpeg",
+            ".jpeg" => "image/jpeg",
+            ".png"  => "image/png",
+            _       => extension
+        };
     }
 
-    private async Task<IEnumerable<BankAccountBooking>> SaveCamt(Guid eventId, Stream stream,
-                                                                 CancellationToken cancellationToken)
+    private async Task<IEnumerable<Payment>> SaveCamt(Guid eventId,
+                                                      Stream stream,
+                                                      CancellationToken cancellationToken)
     {
-        var newPayments = new List<BankAccountBooking>();
+        var newPayments = new List<Payment>();
         stream.Position = 0;
         var xml = XDocument.Load(stream);
 
@@ -140,25 +141,41 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                 continue;
             }
 
-            var newPayment = new BankAccountBooking
-                             {
-                                 Id = Guid.NewGuid(),
-                                 BankAccountStatementsFileId = paymentFile.Id,
-                                 Info = camtEntry.Info,
-                                 Message = camtEntry.Message,
-                                 Amount = camtEntry.Amount,
-                                 BookingDate = camtEntry.BookingDate,
-                                 Currency = camtEntry.Currency,
-                                 Reference = camtEntry.Reference,
-                                 CreditDebitType = camtEntry.Type,
-                                 Charges = camtEntry.Charges,
-                                 DebitorName = camtEntry.DebitorName,
-                                 DebitorIban = camtEntry.DebitorIban,
-                                 InstructionIdentification = camtEntry.InstructionIdentification,
-                                 RawXml = camtEntry.Xml,
-                                 CreditorName = camtEntry.CreditorName,
-                                 CreditorIban = camtEntry.CreditorIban
-                             };
+            Payment newPayment = camtEntry.Type == CreditDebit.DBIT
+                                     ? new OutgoingPayment
+                                       {
+                                           Id = Guid.NewGuid(),
+                                           BankAccountStatementsFileId = paymentFile.Id,
+                                           Info = camtEntry.Info,
+                                           Message = camtEntry.Message,
+                                           Amount = camtEntry.Amount,
+                                           BookingDate = camtEntry.BookingDate,
+                                           Currency = camtEntry.Currency,
+                                           Reference = camtEntry.Reference,
+                                           //CreditDebitType = camtEntry.Type,
+                                           Charges = camtEntry.Charges,
+                                           InstructionIdentification = camtEntry.InstructionIdentification,
+                                           RawXml = camtEntry.Xml,
+                                           CreditorName = camtEntry.CreditorName,
+                                           CreditorIban = camtEntry.CreditorIban
+                                       }
+                                     : new IncomingPayment
+                                       {
+                                           Id = Guid.NewGuid(),
+                                           BankAccountStatementsFileId = paymentFile.Id,
+                                           Info = camtEntry.Info,
+                                           Message = camtEntry.Message,
+                                           Amount = camtEntry.Amount,
+                                           BookingDate = camtEntry.BookingDate,
+                                           Currency = camtEntry.Currency,
+                                           Reference = camtEntry.Reference,
+                                           //CreditDebitType = camtEntry.Type,
+                                           Charges = camtEntry.Charges,
+                                           DebitorName = camtEntry.DebitorName,
+                                           DebitorIban = camtEntry.DebitorIban,
+                                           InstructionIdentification = camtEntry.InstructionIdentification,
+                                           RawXml = camtEntry.Xml
+                                       };
             await _payments.InsertOrUpdateEntity(newPayment, cancellationToken);
             newPayments.Add(newPayment);
         }
@@ -178,11 +195,10 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
     private async Task SaveCamtWithPaymentSlips(Guid eventId, MemoryStream stream, CancellationToken cancellationToken)
     {
         await using var zipStream = new GZipStream(stream, CompressionMode.Decompress);
-        await using var tarStream = new TarInputStream(zipStream);
-        TarEntry entry;
-        var newLines = new List<BankAccountBooking>();
+        await using var tarStream = new TarInputStream(zipStream, Encoding.UTF8);
+        var newLines = new List<Payment>();
 
-        while ((entry = tarStream.GetNextEntry()) != null)
+        while (tarStream.GetNextEntry() is { } entry)
         {
             var outStream = new MemoryStream();
 
@@ -202,7 +218,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                 var iban = matches.Groups["IBAN"].Value;
                 byte[] binary;
                 string extension;
-                if (fileInfo.Extension == ".tiff" || fileInfo.Extension == ".tif")
+                if (fileInfo.Extension is ".tiff" or ".tif")
                 {
                     // chrome doesn't support tiff, so convert it to png
                     extension = "image/png";

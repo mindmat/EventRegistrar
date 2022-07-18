@@ -29,12 +29,12 @@ public class SendPaymentDueMailCommandHandler : IRequestHandler<SendPaymentDueMa
     public async Task<Unit> Handle(SendPaymentDueMailCommand command, CancellationToken cancellationToken)
     {
         var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
-                                               .Include(reg => reg.Payments)
+                                               .Include(reg => reg.PaymentAssignments)
                                                .FirstAsync(cancellationToken);
         var data = new PaymentDueMailData
                    {
                        Price = registration.Price ?? 0m,
-                       AmountPaid = registration.Payments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
+                       AmountPaid = registration.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
                    };
         if (data.Price <= data.AmountPaid)
         {

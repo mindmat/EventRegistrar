@@ -1,5 +1,7 @@
 ﻿using EventRegistrar.Backend.Events;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Payments.Refunds;
@@ -17,13 +19,17 @@ public class PayoutAssignmentController : Controller
     }
 
     [HttpPost("api/events/{eventAcronym}/payouts/{paymentId:guid}/assign/{payoutRequestId:guid}")]
-    public async Task AssignPayment(string eventAcronym, Guid paymentId, Guid payoutRequestId, decimal amount,
-                                    bool acceptDifference, string acceptDifferenceReason)
+    public async Task AssignPayment(string eventAcronym,
+                                    Guid paymentId,
+                                    Guid payoutRequestId,
+                                    decimal amount,
+                                    bool acceptDifference,
+                                    string acceptDifferenceReason)
     {
         await _mediator.Send(new AssignPayoutCommand
                              {
                                  EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 PaymentId = paymentId,
+                                 OutgoingPaymentId = paymentId,
                                  PayoutRequestId = payoutRequestId,
                                  Amount = amount,
                                  AcceptDifference = acceptDifference,

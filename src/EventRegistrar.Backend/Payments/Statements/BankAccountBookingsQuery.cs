@@ -19,9 +19,9 @@ public class BankAccountBookingsQuery : IRequest<IEnumerable<BookingsOfDay>>, IE
 
 public class BankAccountBookingsQueryHandler : IRequestHandler<BankAccountBookingsQuery, IEnumerable<BookingsOfDay>>
 {
-    private readonly IQueryable<BankAccountBooking> _bankBookings;
+    private readonly IQueryable<Payment> _bankBookings;
 
-    public BankAccountBookingsQueryHandler(IQueryable<BankAccountBooking> bankBookings)
+    public BankAccountBookingsQueryHandler(IQueryable<Payment> bankBookings)
     {
         _bankBookings = bankBookings;
     }

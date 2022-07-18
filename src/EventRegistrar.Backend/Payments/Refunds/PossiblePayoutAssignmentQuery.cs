@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Payments.Files;
-using EventRegistrar.Backend.Payments.Files.Camt;
 
 using MediatR;
 
@@ -12,14 +11,12 @@ public class PossiblePayoutAssignmentQuery : IRequest<IEnumerable<PossiblePayout
     public Guid PaymentId { get; set; }
 }
 
-public class
-    PossiblePayoutAssignmentQueryHandler : IRequestHandler<PossiblePayoutAssignmentQuery,
-        IEnumerable<PossiblePayoutAssignment>>
+public class PossiblePayoutAssignmentQueryHandler : IRequestHandler<PossiblePayoutAssignmentQuery, IEnumerable<PossiblePayoutAssignment>>
 {
-    private readonly IQueryable<BankAccountBooking> _payments;
+    private readonly IQueryable<OutgoingPayment> _payments;
     private readonly IQueryable<PayoutRequest> _payoutRequests;
 
-    public PossiblePayoutAssignmentQueryHandler(IQueryable<BankAccountBooking> payments,
+    public PossiblePayoutAssignmentQueryHandler(IQueryable<OutgoingPayment> payments,
                                                 IQueryable<PayoutRequest> payoutRequests)
     {
         _payments = payments;
@@ -30,15 +27,14 @@ public class
                                                                     CancellationToken cancellationToken)
     {
         var payment = await _payments.Where(pmt => pmt.Id == query.PaymentId
-                                                && pmt.BankAccountStatementsFile.EventId == query.EventId
-                                                && pmt.CreditDebitType == CreditDebit.DBIT)
-                                     .Include(por => por.Assignments)
-                                     .ThenInclude(asn => asn.ReceivedPayment)
+                                                && pmt.BankAccountStatementsFile!.EventId == query.EventId)
+                                     .Include(por => por.Assignments!)
+                                     .ThenInclude(asn => asn.IncomingPayment)
                                      .FirstAsync(cancellationToken);
-        var openAmount = payment.Amount -
-                         payment.Assignments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
 
-        var payouts = await _payoutRequests.Where(por => por.Registration.EventId == query.EventId
+        var openAmount = payment.Amount - payment.Assignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
+
+        var payouts = await _payoutRequests.Where(por => por.Registration!.EventId == query.EventId
                                                       && por.State != PayoutState.Confirmed)
                                            .Select(por => new PossiblePayoutAssignment
                                                           {
@@ -47,38 +43,39 @@ public class
                                                               PayoutRequestId = por.Id,
                                                               Created = por.Created,
                                                               Amount = por.Amount,
-                                                              AmountAssigned = por.Assignments.Select(asn => asn.Amount)
+                                                              AmountAssigned = por.Assignments!
+                                                                                  .Select(asn => asn.Amount)
                                                                                   .Sum(),
                                                               IsOpen = por.State == PayoutState.Sent,
                                                               Info = por.Reason,
-                                                              Participant = por.Registration.RespondentFirstName + " " +
-                                                                            por.Registration.RespondentLastName,
-                                                              Ibans = por.Registration.Payments
-                                                                         .Select(pmt => pmt.ReceivedPayment.DebitorIban)
+                                                              Participant = por.Registration!.RespondentFirstName + " " + por.Registration.RespondentLastName,
+                                                              Ibans = por.Registration.PaymentAssignments!
+                                                                         .Select(pmt => pmt.IncomingPayment!.DebitorIban)
                                                                          .Where(ibn => ibn != null)
+                                                                         .Select(ibn => ibn!)
                                                                          .ToArray()
                                                           })
                                            .ToListAsync(cancellationToken);
         payouts.ForEach(por => por.AmountMatch = openAmount == por.Amount - por.AmountAssigned);
         payouts.ForEach(pmt => pmt.MatchScore = CalculateMatchScore(pmt, payment));
-        return payouts
-               .Where(mat => mat.MatchScore > 1)
-               .OrderByDescending(mtc => mtc.MatchScore);
+        return payouts.Where(mat => mat.MatchScore > 1)
+                      .OrderByDescending(mtc => mtc.MatchScore);
     }
 
-    private static int CalculateMatchScore(PossiblePayoutAssignment payoutRequestCandidate, BankAccountBooking openPayment)
+    private static int CalculateMatchScore(PossiblePayoutAssignment payoutRequestCandidate, OutgoingPayment openPayment)
     {
         var participantParts =
             payoutRequestCandidate.Participant?.Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)
-                                  ?.Select(wrd => wrd.ToLowerInvariant()) ?? new List<string>();
+                                  ?.Select(wrd => wrd.ToLowerInvariant())
+         ?? new List<string>();
 
         var wordsInOpenPayment = openPayment.Info.Split(' ').Select(nmw => nmw.ToLowerInvariant()).ToList();
 
         return payoutRequestCandidate.Ibans.Contains(openPayment.CreditorIban)
-            ? 50
-            : 0
-            + (payoutRequestCandidate.AmountMatch ? 20 : 0)
-            + wordsInOpenPayment.Sum(opw => participantParts.Count(cdw => cdw == opw)) * 5;
+                   ? 50
+                   : 0
+                   + (payoutRequestCandidate.AmountMatch ? 20 : 0)
+                   + (wordsInOpenPayment.Sum(opw => participantParts.Count(cdw => cdw == opw)) * 5);
     }
 }
 
@@ -90,11 +87,11 @@ public class PossiblePayoutAssignment
     public DateTimeOffset Created { get; set; }
     public string Currency { get; set; }
     public string Participant { get; set; }
-    public string Info { get; set; }
+    public string? Info { get; set; }
     public int MatchScore { get; set; }
     public Guid PayoutRequestId { get; set; }
     public Guid PaymentId_OpenPosition { get; set; }
     public bool IsOpen { get; set; }
-    public string[] Ibans { get; set; }
+    public IEnumerable<string> Ibans { get; set; }
     public Guid RegistrationId { get; set; }
 }

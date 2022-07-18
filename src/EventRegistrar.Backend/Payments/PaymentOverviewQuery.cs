@@ -48,48 +48,42 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
                                                                          reg.Id,
                                                                          reg.State,
                                                                          reg.Price,
-                                                                         Paid = (decimal?)reg.Payments.Sum(asn =>
-                                                                             asn.PayoutRequestId == null
-                                                                                 ? asn.Amount
-                                                                                 : -asn.Amount)
+                                                                         Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null
+                                                                                                                                 ? asn.Amount
+                                                                                                                                 : -asn.Amount)
                                                                      })
                                                       .ToListAsync(cancellationToken);
 
         var registrables = await _registrables.Where(rbl => rbl.EventId == query.EventId
-                                                         && (rbl.MaximumDoubleSeats.HasValue ||
-                                                             rbl.MaximumSingleSeats.HasValue)
-                                                         && rbl.Price.HasValue)
+                                                         && (rbl.MaximumDoubleSeats != null || rbl.MaximumSingleSeats != null)
+                                                         && rbl.Price != null)
                                               .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
                                               .Select(rbl => new
                                                              {
                                                                  RegistrableId = rbl.Id,
                                                                  rbl.Name,
-                                                                 Price = rbl.Price.Value,
-                                                                 SpotsAvailable = rbl.MaximumSingleSeats ??
-                                                                                  rbl.MaximumDoubleSeats.Value * 2,
-                                                                 LeaderCount = rbl.Spots
-                                                                                  .Where(seat =>
-                                                                                      !seat.IsCancelled && !seat.IsWaitingList)
+                                                                 Price = rbl.Price!.Value,
+                                                                 SpotsAvailable = rbl.MaximumSingleSeats ?? rbl.MaximumDoubleSeats.Value * 2,
+                                                                 LeaderCount = rbl.Spots!
+                                                                                  .Where(seat => !seat.IsCancelled && !seat.IsWaitingList)
                                                                                   .Count(seat => seat.RegistrationId != null),
                                                                  FollowerCount = rbl.Spots
-                                                                                    .Where(seat =>
-                                                                                        !seat.IsCancelled && !seat.IsWaitingList)
-                                                                                    .Count(seat =>
-                                                                                        seat.RegistrationId_Follower != null)
+                                                                                    .Where(seat => !seat.IsCancelled && !seat.IsWaitingList)
+                                                                                    .Count(seat => seat.RegistrationId_Follower != null)
                                                              })
                                               .ToListAsync(cancellationToken);
 
         return new PaymentOverview
                {
                    Balance = balance == null
-                       ? null
-                       : new BalanceDto
-                         {
-                             Balance = balance.Balance,
-                             Currency = balance.Currency,
-                             AccountIban = balance.AccountIban,
-                             Date = balance.Date?.Date
-                         },
+                                 ? null
+                                 : new BalanceDto
+                                   {
+                                       Balance = balance.Balance,
+                                       Currency = balance.Currency,
+                                       AccountIban = balance.AccountIban,
+                                       Date = balance.Date?.Date
+                                   },
                    ReceivedMoney = activeRegistrations.Sum(reg => reg.Paid ?? 0m),
                    PaidRegistrations = activeRegistrations.Count(reg => reg.State == RegistrationState.Paid),
                    OutstandingAmount = activeRegistrations.Where(reg => reg.State == RegistrationState.Received)
@@ -100,12 +94,9 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
                                                                      {
                                                                          RegistrableId = rbl.RegistrableId,
                                                                          Name = rbl.Name,
-                                                                         SpotsAvailable = Math.Max(0,
-                                                                             rbl.SpotsAvailable - rbl.LeaderCount -
-                                                                             rbl.FollowerCount),
-                                                                         PotentialIncome = Math.Max(0,
-                                                                             rbl.SpotsAvailable - rbl.LeaderCount -
-                                                                             rbl.FollowerCount) * rbl.Price
+                                                                         SpotsAvailable = Math.Max(0, rbl.SpotsAvailable - rbl.LeaderCount - rbl.FollowerCount),
+                                                                         PotentialIncome = Math.Max(0, rbl.SpotsAvailable - rbl.LeaderCount - rbl.FollowerCount)
+                                                                                         * rbl.Price
                                                                      })
                };
     }

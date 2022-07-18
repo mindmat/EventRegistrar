@@ -7,5 +7,5 @@ public class AssignedPaymentDisplayItem
     public string? Currency { get; set; }
     public Guid PaymentAssignmentId { get; set; }
     public Guid? PaymentAssignmentId_Counter { get; set; }
-    public Guid? PaymentId_Repayment { get; set; }
+    public Guid? OutgoingPaymentId { get; set; }
 }

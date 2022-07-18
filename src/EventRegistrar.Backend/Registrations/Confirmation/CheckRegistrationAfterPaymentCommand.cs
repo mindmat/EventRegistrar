@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Confirmation;
@@ -24,13 +25,16 @@ public class CheckRegistrationAfterPaymentCommandHandler : IRequestHandler<Check
     public async Task<Unit> Handle(CheckRegistrationAfterPaymentCommand command, CancellationToken cancellationToken)
     {
         var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
-                                               .Include(reg => reg.Payments)
+                                               .Include(reg => reg.PaymentAssignments)
                                                .Include(reg => reg.IndividualReductions)
                                                .FirstAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
-        if (registration.IsWaitingList == true) return Unit.Value;
+        if (registration.IsWaitingList == true)
+        {
+            return Unit.Value;
+        }
 
         var difference = registration.Price
-                       - registration.Payments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
+                       - registration.PaymentAssignments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
         if (registration.State == RegistrationState.Received
          && (difference <= 0m || registration.WillPayAtCheckin))
         {
@@ -50,12 +54,12 @@ public class CheckRegistrationAfterPaymentCommandHandler : IRequestHandler<Check
             {
                 var partnerRegistration = await _registrations
                                                 .Where(reg => reg.Id == registration.RegistrationId_Partner.Value)
-                                                .Include(reg => reg.Payments)
+                                                .Include(reg => reg.PaymentAssignments)
                                                 .Include(reg => reg.IndividualReductions)
                                                 .FirstAsync(cancellationToken);
-                var partnerRegistrationAccepted = partnerRegistration.State == RegistrationState.Paid &&
-                                                  registration.IsWaitingList == false;
+                var partnerRegistrationAccepted = partnerRegistration.State == RegistrationState.Paid && registration.IsWaitingList == false;
                 if (partnerRegistrationAccepted)
+                {
                     _eventBus.Publish(new PartnerRegistrationPaid
                                       {
                                           Id = Guid.NewGuid(),
@@ -64,7 +68,9 @@ public class CheckRegistrationAfterPaymentCommandHandler : IRequestHandler<Check
                                           RegistrationId2 = partnerRegistration.Id,
                                           WillPayAtCheckin = difference > 0m && registration.WillPayAtCheckin
                                       });
+                }
                 else
+                {
                     _eventBus.Publish(new PartnerRegistrationPartiallyPaid
                                       {
                                           Id = Guid.NewGuid(),
@@ -72,6 +78,7 @@ public class CheckRegistrationAfterPaymentCommandHandler : IRequestHandler<Check
                                           RegistrationId1 = registration.Id,
                                           RegistrationId2 = partnerRegistration.Id
                                       });
+                }
             }
         }
         else if (difference > 0

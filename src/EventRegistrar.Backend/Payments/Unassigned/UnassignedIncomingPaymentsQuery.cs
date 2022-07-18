@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Payments.Files;
-using EventRegistrar.Backend.Payments.Files.Camt;
 
 using MediatR;
 
@@ -14,9 +13,9 @@ public class UnassignedIncomingPaymentsQuery : IRequest<IEnumerable<PaymentDispl
 
 public class UnassignedIncomingPaymentsQueryHandler : IRequestHandler<UnassignedIncomingPaymentsQuery, IEnumerable<PaymentDisplayItem>>
 {
-    private readonly IQueryable<BankAccountBooking> _payments;
+    private readonly IQueryable<IncomingPayment> _payments;
 
-    public UnassignedIncomingPaymentsQueryHandler(IQueryable<BankAccountBooking> payments)
+    public UnassignedIncomingPaymentsQueryHandler(IQueryable<IncomingPayment> payments)
     {
         _payments = payments;
     }
@@ -26,16 +25,14 @@ public class UnassignedIncomingPaymentsQueryHandler : IRequestHandler<Unassigned
     {
         var payments = await _payments.Where(rpy => rpy.BankAccountStatementsFile!.EventId == query.EventId
                                                  && !rpy.Settled
-                                                 && !rpy.Ignore
-                                                 && rpy.CreditDebitType == CreditDebit.CRDT)
+                                                 && !rpy.Ignore)
                                       .Select(rpy => new PaymentDisplayItem
                                                      {
                                                          Id = rpy.Id,
                                                          Amount = rpy.Amount,
-                                                         AmountAssigned = rpy.Assignments!.Sum(asn =>
-                                                             asn.PayoutRequestId == null
-                                                                 ? asn.Amount
-                                                                 : -asn.Amount),
+                                                         AmountAssigned = rpy.Assignments!.Sum(asn => asn.PayoutRequestId == null
+                                                                                                          ? asn.Amount
+                                                                                                          : -asn.Amount),
                                                          BookingDate = rpy.BookingDate,
                                                          Currency = rpy.Currency,
                                                          Info = rpy.Info,

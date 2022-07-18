@@ -5,14 +5,14 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Statements;
 
-public class CheckIfPaymentIsSettledAfterAssignment : IEventToCommandTranslation<PaymentAssigned>
+public class CheckIfPaymentIsSettledAfterAssignment : IEventToCommandTranslation<IncomingPaymentAssigned>
 {
-    public IEnumerable<IRequest> Translate(PaymentAssigned e)
+    public IEnumerable<IRequest> Translate(IncomingPaymentAssigned e)
     {
-        yield return new CheckIfPaymentIsSettledCommand { PaymentId = e.PaymentId };
-        if (e.PaymentId_Counter != null)
-        {
-            yield return new CheckIfPaymentIsSettledCommand { PaymentId = e.PaymentId_Counter.Value };
-        }
+        yield return new CheckIfIncomingPaymentIsSettledCommand { IncomingPaymentId = e.IncomingPaymentId };
+        //if (e.PaymentId_Counter != null)
+        //{
+        //    yield return new CheckIfIncomingPaymentIsSettledCommand { IncomingPaymentId = e.PaymentId_Counter.Value };
+        //}
     }
 }

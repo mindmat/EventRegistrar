@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrables;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Overview;
@@ -44,10 +45,10 @@ public class CheckinQueryHandler : IRequestHandler<CheckinQuery, CheckinView>
                                                      reg.State,
                                                      reg.AdmittedAt,
                                                      Price = reg.Price ?? 0m,
-                                                     Payments = reg.Payments.Select(asn =>
-                                                                       asn.PayoutRequestId == null
-                                                                           ? asn.Amount
-                                                                           : -asn.Amount)
+                                                     Payments = reg.PaymentAssignments.Select(asn =>
+                                                                                                  asn.PayoutRequestId == null
+                                                                                                      ? asn.Amount
+                                                                                                      : -asn.Amount)
                                                                    .ToList(),
                                                      SeatsAsLeader = reg.Seats_AsLeader.Where(seat => !seat.IsCancelled)
                                                                         .ToList(),
@@ -68,12 +69,12 @@ public class CheckinQueryHandler : IRequestHandler<CheckinQuery, CheckinView>
                                        UnsettledAmount = reg.Price - reg.Payments.Sum(),
                                        Columns = columns
                                            .ToDictionary(col => col.Key,
-                                               col => col.Value.Where(rbl =>
-                                                             reg.SeatsAsLeader.Any(seat => seat.RegistrableId == rbl.Id)
-                                                          || reg.SeatsAsFollower.Any(seat =>
-                                                                 seat.RegistrableId == rbl.Id))
-                                                         .Select(rbl => rbl.Name)
-                                                         .StringJoin())
+                                                         col => col.Value.Where(rbl =>
+                                                                                    reg.SeatsAsLeader.Any(seat => seat.RegistrableId == rbl.Id)
+                                                                                 || reg.SeatsAsFollower.Any(seat =>
+                                                                                                                seat.RegistrableId == rbl.Id))
+                                                                   .Select(rbl => rbl.Name)
+                                                                   .StringJoin())
                                    })
                     .OrderBy(reg => reg.LastName)
                     .ThenBy(reg => reg.FirstName)

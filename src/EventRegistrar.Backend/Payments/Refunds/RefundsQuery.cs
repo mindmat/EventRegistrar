@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Registrations.Cancel;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Refunds;
@@ -21,17 +22,17 @@ public class RefundsQueryHandler : IRequestHandler<RefundsQuery, IEnumerable<Ref
     public async Task<IEnumerable<RefundDisplayItem>> Handle(RefundsQuery query, CancellationToken cancellationToken)
     {
         var refunds = await _cancellations
-                            .Where(cnc => cnc.Registration.EventId == query.EventId
+                            .Where(cnc => cnc.Registration!.EventId == query.EventId
                                        && cnc.Refund > 0m)
                             .Select(cnc => new RefundDisplayItem
                                            {
                                                RegistrationId = cnc.RegistrationId,
                                                FirstName = cnc.Registration.RespondentFirstName,
                                                LastName = cnc.Registration.RespondentLastName,
-                                               Price = (cnc.Registration.Price ?? 0m) -
-                                                       cnc.Registration.IndividualReductions.Sum(red => red.Amount),
-                                               Paid = cnc.Registration.Payments.Sum(asn =>
-                                                   asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
+                                               Price = (cnc.Registration.Price ?? 0m) - cnc.Registration.IndividualReductions.Sum(red => red.Amount),
+                                               Paid = cnc.Registration.PaymentAssignments.Sum(asn => asn.PayoutRequestId == null
+                                                                                                         ? asn.Amount
+                                                                                                         : -asn.Amount),
                                                RefundPercentage = cnc.RefundPercentage,
                                                Refund = cnc.Refund,
                                                CancellationDate = cnc.Received ?? cnc.Created,

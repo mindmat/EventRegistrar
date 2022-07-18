@@ -12,10 +12,10 @@ public class SingleRegistrationPaid : DomainEvent
 
 public class SingleRegistrationPaidUserTranslation : IEventToUserTranslation<SingleRegistrationPaid>
 {
-    private readonly IQueryable<BankAccountBooking> _payments;
+    private readonly IQueryable<Payment> _payments;
     private readonly IQueryable<Registration> _registrations;
 
-    public SingleRegistrationPaidUserTranslation(IQueryable<BankAccountBooking> payments,
+    public SingleRegistrationPaidUserTranslation(IQueryable<Payment> payments,
                                                  IQueryable<Registration> registrations)
     {
         _payments = payments;

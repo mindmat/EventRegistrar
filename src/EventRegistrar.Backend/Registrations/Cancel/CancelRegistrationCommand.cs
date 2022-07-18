@@ -3,6 +3,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Spots;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Cancel;
@@ -44,21 +45,29 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
     public async Task<Unit> Handle(CancelRegistrationCommand command, CancellationToken cancellationToken)
     {
         var refundPercentage = command.RefundPercentage > 1m
-            ? command.RefundPercentage / 100m
-            : command.RefundPercentage;
+                                   ? command.RefundPercentage / 100m
+                                   : command.RefundPercentage;
         refundPercentage = Math.Max(Math.Min(refundPercentage, 1m), 0m);
 
-        var registration = await _registrations.Include(reg => reg.Payments)
+        var registration = await _registrations.Include(reg => reg.PaymentAssignments)
                                                .Include(reg => reg.RegistrationForm)
                                                .FirstAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
 
-        if (registration.Payments.Any() && !command.IgnorePayments)
+        if (registration.PaymentAssignments.Any() && !command.IgnorePayments)
+        {
             throw new ApplicationException($"There are already payments for registration {command.RegistrationId}");
+        }
+
         if (registration.State == RegistrationState.Cancelled)
+        {
             throw new ApplicationException($"Registration {command.RegistrationId} is already cancelled");
+        }
+
         if (registration.State == RegistrationState.Paid && !command.IgnorePayments)
+        {
             throw new ApplicationException(
                 $"Registration {command.RegistrationId} is already paid and cannot be cancelled anymore");
+        }
 
         registration.State = RegistrationState.Cancelled;
         registration.RegistrationId_Partner = null; // remove reference to partner
@@ -66,7 +75,9 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
                                            || plc.RegistrationId_Follower == command.RegistrationId)
                                 .ToListAsync(cancellationToken);
         foreach (var spot in spots)
+        {
             _spotRemover.RemoveSpot(spot, command.RegistrationId, RemoveSpotReason.CancellationOfRegistration);
+        }
 
         var cancellation = new RegistrationCancellation
                            {
@@ -75,8 +86,9 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
                                Reason = command.Reason,
                                Created = DateTime.UtcNow,
                                RefundPercentage = refundPercentage,
-                               Refund = refundPercentage * registration.Payments.Sum(asn =>
-                                   asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
+                               Refund = refundPercentage
+                                      * registration.PaymentAssignments.Sum(asn =>
+                                                                                asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                                Received = command.Received
                            };
         await _cancellations.InsertOrUpdateEntity(cancellation, cancellationToken);

@@ -55,9 +55,9 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
     /// <returns></returns>
     public IEnumerable<string> GetRightsOfEventRoles(Guid eventId, ICollection<UserInEventRole> usersRolesInEvent)
     {
-        if (usersRolesInEvent.Contains(UserInEventRole.Reader) ||
-            usersRolesInEvent.Contains(UserInEventRole.Writer) ||
-            usersRolesInEvent.Contains(UserInEventRole.Admin))
+        if (usersRolesInEvent.Contains(UserInEventRole.Reader)
+         || usersRolesInEvent.Contains(UserInEventRole.Writer)
+         || usersRolesInEvent.Contains(UserInEventRole.Admin))
         {
             yield return nameof(SingleRegistrablesOverviewQuery);
             yield return nameof(DoubleRegistrablesOverviewQuery);
@@ -104,8 +104,8 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(BookingsByStateQuery);
         }
 
-        if (usersRolesInEvent.Contains(UserInEventRole.Writer) ||
-            usersRolesInEvent.Contains(UserInEventRole.Admin))
+        if (usersRolesInEvent.Contains(UserInEventRole.Writer)
+         || usersRolesInEvent.Contains(UserInEventRole.Admin))
         {
             yield return nameof(SaveMailTemplateCommand);
             yield return nameof(ReleaseMailCommand);
@@ -119,14 +119,14 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(CreateBulkMailsCommand);
             yield return nameof(ReleaseBulkMailsCommand);
             yield return nameof(TryPromoteFromWaitingListCommand);
-            yield return nameof(AssignPaymentCommand);
+            yield return nameof(AssignIncomingPaymentCommand);
             yield return nameof(ComposeAndSendMailCommand);
             yield return nameof(CancelRegistrationCommand);
             yield return nameof(SendSmsCommand);
             yield return nameof(SwapFirstLastNameCommand);
             yield return nameof(MatchPartnerRegistrationsCommand);
             yield return nameof(ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand);
-            yield return nameof(UnassignPaymentCommand);
+            yield return nameof(UnassignIncomingPaymentCommand);
             yield return nameof(AssignRepaymentCommand);
             yield return nameof(FixInvalidAddressCommand);
             yield return nameof(AddIndividualReductionCommand);

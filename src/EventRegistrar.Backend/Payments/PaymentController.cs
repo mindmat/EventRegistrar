@@ -25,9 +25,9 @@ public class PaymentController : Controller
     [HttpPost("api/events/{eventAcronym}/payments/{paymentId:guid}/checkIfPaymentIsSettled")]
     public async Task CheckIfPaymentIsSettled(string eventAcronym, Guid paymentId)
     {
-        await _mediator.Send(new CheckIfPaymentIsSettledCommand
+        await _mediator.Send(new CheckIfIncomingPaymentIsSettledCommand
                              {
-                                 PaymentId = paymentId
+                                 IncomingPaymentId = paymentId
                              });
     }
 

@@ -29,7 +29,7 @@ public class Registration : Entity
     public ICollection<RegistrationCancellation>? Cancellations { get; set; }
     public ICollection<ImportedMailToRegistration>? ImportedMails { get; set; }
     public ICollection<IndividualReduction>? IndividualReductions { get; set; }
-    public ICollection<PaymentAssignment>? Payments { get; set; }
+    public ICollection<PaymentAssignment>? PaymentAssignments { get; set; }
     public ICollection<Response>? Responses { get; set; }
     public ICollection<Seat>? Seats_AsFollower { get; set; }
     public ICollection<Seat>? Seats_AsLeader { get; set; }

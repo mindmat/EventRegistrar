@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Due;
@@ -48,17 +49,17 @@ public class DuePaymentsQueryHandler : IRequestHandler<DuePaymentsQuery, IEnumer
                                                           reg.ReceivedAt,
                                                           reg.PhoneNormalized,
                                                           reg.ReminderLevel,
-                                                          Paid = (decimal?)reg.Payments.Sum(asn =>
-                                                              asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
+                                                          Paid = (decimal?)reg.PaymentAssignments.Sum(asn =>
+                                                                                                          asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                                                           Mails = reg.Mails.Select(rml =>
-                                                              new
-                                                              {
-                                                                  rml.Mail!.Id, Sent = rml.Mail.Created,
-                                                                  rml.Mail.Type, rml.Mail.Withhold,
-                                                                  rml.Mail.Discarded
-                                                              }),
+                                                                                       new
+                                                                                       {
+                                                                                           rml.Mail!.Id, Sent = rml.Mail.Created,
+                                                                                           rml.Mail.Type, rml.Mail.Withhold,
+                                                                                           rml.Mail.Discarded
+                                                                                       }),
                                                           ReminderSms = reg.Sms.Where(sms =>
-                                                              sms.Type == SmsType.Reminder)
+                                                                                          sms.Type == SmsType.Reminder)
                                                       })
                                        .ToListAsync(cancellationToken);
         var dueRegistrations = data.Select(tmp => new
@@ -73,33 +74,33 @@ public class DuePaymentsQueryHandler : IRequestHandler<DuePaymentsQuery, IEnumer
                                                       tmp.ReminderLevel,
                                                       tmp.Paid,
                                                       AcceptedMail = tmp.Mails.Where(mail => !mail.Withhold
-                                                                         && !mail.Discarded
-                                                                         && MailTypes_Accepted.Contains(mail.Type))
+                                                                                          && !mail.Discarded
+                                                                                          && MailTypes_Accepted.Contains(mail.Type))
                                                                         .Select(mail => new SentMailDto
-                                                                            {
-                                                                                Id = mail.Id,
-                                                                                Sent = mail.Sent
-                                                                            })
+                                                                                        {
+                                                                                            Id = mail.Id,
+                                                                                            Sent = mail.Sent
+                                                                                        })
                                                                         .OrderByDescending(mail => mail.Sent)
                                                                         .FirstOrDefault(),
                                                       Reminder1Mail = tmp.Mails.Where(mail => !mail.Withhold
-                                                                          && !mail.Discarded
-                                                                          && MailTypes_Reminder1.Contains(mail.Type))
+                                                                                           && !mail.Discarded
+                                                                                           && MailTypes_Reminder1.Contains(mail.Type))
                                                                          .Select(mail => new SentMailDto
-                                                                             {
-                                                                                 Id = mail.Id,
-                                                                                 Sent = mail.Sent
-                                                                             })
+                                                                                         {
+                                                                                             Id = mail.Id,
+                                                                                             Sent = mail.Sent
+                                                                                         })
                                                                          .OrderByDescending(mail => mail.Sent)
                                                                          .FirstOrDefault(),
                                                       Reminder2Mail = tmp.Mails.Where(mail => !mail.Withhold
-                                                                          && !mail.Discarded
-                                                                          && MailTypes_Reminder2.Contains(mail.Type))
+                                                                                           && !mail.Discarded
+                                                                                           && MailTypes_Reminder2.Contains(mail.Type))
                                                                          .Select(mail => new SentMailDto
-                                                                             {
-                                                                                 Id = mail.Id,
-                                                                                 Sent = mail.Sent
-                                                                             })
+                                                                                         {
+                                                                                             Id = mail.Id,
+                                                                                             Sent = mail.Sent
+                                                                                         })
                                                                          .OrderByDescending(mail => mail.Sent)
                                                                          .FirstOrDefault(),
 
@@ -120,18 +121,14 @@ public class DuePaymentsQueryHandler : IRequestHandler<DuePaymentsQuery, IEnumer
                                                       Reminder1Mail = reg.Reminder1Mail,
                                                       Reminder2Mail = reg.Reminder2Mail,
                                                       ReminderLevel = reg.ReminderLevel,
-                                                      Reminder1Due = reg.Reminder1Mail == null &&
-                                                                     reg.AcceptedMail != null &&
-                                                                     reg.AcceptedMail.Sent < reminderDueFrom,
-                                                      Reminder2Due = reg.Reminder2Mail == null &&
-                                                                     reg.Reminder1Mail != null &&
-                                                                     reg.Reminder1Mail.Sent < reminderDueFrom,
+                                                      Reminder1Due = reg.Reminder1Mail == null && reg.AcceptedMail != null && reg.AcceptedMail.Sent < reminderDueFrom,
+                                                      Reminder2Due = reg.Reminder2Mail == null && reg.Reminder1Mail != null && reg.Reminder1Mail.Sent < reminderDueFrom,
                                                       ReminderSmsSent = reg.ReminderSmsSent,
                                                       PhoneNormalized = reg.PhoneNormalized,
-                                                      ReminderSmsPossible = !reg.ReminderSmsSent.HasValue &&
-                                                                            reg.AcceptedMail != null &&
-                                                                            reg.AcceptedMail.Sent < reminderDueFrom &&
-                                                                            reg.PhoneNormalized != null
+                                                      ReminderSmsPossible = !reg.ReminderSmsSent.HasValue
+                                                                         && reg.AcceptedMail != null
+                                                                         && reg.AcceptedMail.Sent < reminderDueFrom
+                                                                         && reg.PhoneNormalized != null
                                                   })
                                    .ToList();
 

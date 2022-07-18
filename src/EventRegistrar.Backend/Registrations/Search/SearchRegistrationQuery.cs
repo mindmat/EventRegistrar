@@ -44,10 +44,10 @@ public class SearchRegistrationQueryHandler : IRequestHandler<SearchRegistration
                                                                    Email = reg.RespondentEmail,
                                                                    ReceivedAt = reg.ReceivedAt,
                                                                    Amount = reg.Price ?? 0m,
-                                                                   AmountPaid = reg.Payments!.Select(asn =>
-                                                                                       asn.PayoutRequestId == null
-                                                                                           ? asn.Amount
-                                                                                           : -asn.Amount)
+                                                                   AmountPaid = reg.PaymentAssignments!.Select(asn =>
+                                                                                                                   asn.PayoutRequestId == null
+                                                                                                                       ? asn.Amount
+                                                                                                                       : -asn.Amount)
                                                                                    .Sum(),
                                                                    State = reg.State,
                                                                    StateText = reg.State.ToString(),

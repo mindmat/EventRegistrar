@@ -14,9 +14,9 @@ public class UnassignedPayoutsQuery : IRequest<IEnumerable<PaymentDisplayItem>>,
 
 public class UnassignedPayoutsQueryHandler : IRequestHandler<UnassignedPayoutsQuery, IEnumerable<PaymentDisplayItem>>
 {
-    private readonly IQueryable<BankAccountBooking> _payments;
+    private readonly IQueryable<OutgoingPayment> _payments;
 
-    public UnassignedPayoutsQueryHandler(IQueryable<BankAccountBooking> payments)
+    public UnassignedPayoutsQueryHandler(IQueryable<OutgoingPayment> payments)
     {
         _payments = payments;
     }
@@ -24,30 +24,29 @@ public class UnassignedPayoutsQueryHandler : IRequestHandler<UnassignedPayoutsQu
     public async Task<IEnumerable<PaymentDisplayItem>> Handle(UnassignedPayoutsQuery query,
                                                               CancellationToken cancellationToken)
     {
-        var payments = await _payments
-                             .Where(rpy => rpy.BankAccountStatementsFile.EventId == query.EventId
-                                        && !rpy.Settled
-                                        && !rpy.Ignore
-                                        && rpy.CreditDebitType == CreditDebit.DBIT)
-                             .Select(pmo => new PaymentDisplayItem
-                                            {
-                                                Id = pmo.Id,
-                                                Amount = pmo.Amount,
-                                                AmountAssigned = pmo.Assignments.Sum(asn =>
-                                                    asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
-                                                BookingDate = pmo.BookingDate,
-                                                Currency = pmo.Currency,
-                                                Info = pmo.Info,
-                                                Reference = pmo.Reference,
-                                                AmountRepaid = pmo.Repaid,
-                                                Settled = pmo.Settled,
-                                                Message = pmo.Message,
-                                                CreditorName = pmo.CreditorName,
-                                                CreditorIban = pmo.CreditorIban
-                                            })
-                             .OrderByDescending(rpy => rpy.BookingDate)
-                             .ThenByDescending(rpy => rpy.Amount)
-                             .ToListAsync(cancellationToken);
+        var payments = await _payments.Where(rpy => rpy.BankAccountStatementsFile!.EventId == query.EventId
+                                                 && !rpy.Settled
+                                                 && !rpy.Ignore)
+                                      .Select(pmo => new PaymentDisplayItem
+                                                     {
+                                                         Id = pmo.Id,
+                                                         Amount = pmo.Amount,
+                                                         AmountAssigned = pmo.Assignments!.Sum(asn => asn.PayoutRequestId == null
+                                                                                                          ? asn.Amount
+                                                                                                          : -asn.Amount),
+                                                         BookingDate = pmo.BookingDate,
+                                                         Currency = pmo.Currency,
+                                                         Info = pmo.Info,
+                                                         Reference = pmo.Reference,
+                                                         AmountRepaid = pmo.Repaid,
+                                                         Settled = pmo.Settled,
+                                                         Message = pmo.Message,
+                                                         CreditorName = pmo.CreditorName,
+                                                         CreditorIban = pmo.CreditorIban
+                                                     })
+                                      .OrderByDescending(rpy => rpy.BookingDate)
+                                      .ThenByDescending(rpy => rpy.Amount)
+                                      .ToListAsync(cancellationToken);
         return payments;
     }
 }
