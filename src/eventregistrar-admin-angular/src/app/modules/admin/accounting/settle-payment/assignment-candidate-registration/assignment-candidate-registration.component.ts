@@ -10,6 +10,7 @@ import { AssignmentCandidateRegistrationEditItem } from '../settle-payment.compo
 export class AssignmentCandidateRegistrationComponent implements OnInit, OnChanges
 {
   public candidateForm: FormGroup;
+  public possibleAmount: number;
   @Input() candidate?: AssignmentCandidateRegistrationEditItem;
   @Output() assign = new EventEmitter<AssignmentRequest>();
 
@@ -25,9 +26,9 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
     // Active item id
     if ('candidate' in changes)
     {
-      var amount = this.candidate.price - this.candidate.amountPaid;
+      this.possibleAmount = Math.max(0, this.candidate.price - this.candidate.amountPaid);
       this.candidateForm = this.fb.group({
-        amountAssigned: [amount, [Validators.required, Validators.min(0.01), Validators.max(amount)]],
+        amountAssigned: [this.possibleAmount, [Validators.required, Validators.min(0.01), Validators.max(this.possibleAmount)]],
         acceptDifference: [false, Validators.required],
         acceptDifferenceReason: ['']
       });
@@ -39,7 +40,7 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
     if (!this.candidate.locked)
     {
       this.assign.emit({
-        bankAccountBookingId: this.candidate.bankAccountBookingId,
+        paymentId: this.candidate.paymentId,
         registrationId: this.candidate.registrationId,
         amount: this.candidateForm.get('amountAssigned').value,
         acceptDifference: this.candidateForm.get('acceptDifference').value,
@@ -51,7 +52,7 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
 
 export interface AssignmentRequest
 {
-  bankAccountBookingId: string;
+  paymentId: string;
   registrationId: string;
   amount: number;
   acceptDifference: boolean;

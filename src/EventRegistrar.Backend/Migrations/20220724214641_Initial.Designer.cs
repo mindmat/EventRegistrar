@@ -12,14 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventRegistrar.Backend.Migrations
 {
     [DbContext(typeof(EventRegistratorDbContext))]
-    [Migration("20220125222339_Initial")]
+    [Migration("20220724214641_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.1")
+                .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -743,7 +743,136 @@ namespace EventRegistrar.Backend.Migrations
                     b.ToTable("MailTemplates", (string)null);
                 });
 
-            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.BankAccountBooking", b =>
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.Fetch.RawBankStatementsFile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("Content")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("ContractIdentifier")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Filename")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTimeOffset?>("Imported")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<DateTimeOffset?>("Processed")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("Sequence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
+
+                    b.Property<string>("Server")
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("Sequence")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
+
+                    b.ToTable("RawBankStatementsFiles", (string)null);
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.IncomingPayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DebitorIban")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("DebitorName")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<Guid?>("PaymentSlipId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("Sequence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("PaymentSlipId");
+
+                    b.HasIndex("Sequence")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
+
+                    b.ToTable("IncomingPayments", (string)null);
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.OutgoingPayment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CreditorIban")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("CreditorName")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<byte[]>("RowVersion")
+                        .IsConcurrencyToken()
+                        .IsRequired()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
+
+                    b.Property<int>("Sequence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
+
+                    b.HasKey("Id");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
+
+                    b.HasIndex("Sequence")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
+
+                    b.ToTable("OutgoingPayments", (string)null);
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.Payment", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -753,9 +882,6 @@ namespace EventRegistrar.Backend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("BankAccountStatementsFileId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("BookingDate")
                         .HasColumnType("datetime2");
 
@@ -763,25 +889,8 @@ namespace EventRegistrar.Backend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("CreditDebitType")
-                        .HasColumnType("int");
-
-                    b.Property<string>("CreditorIban")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CreditorName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Currency")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DebitorIban")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("DebitorName")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
 
                     b.Property<bool>("Ignore")
                         .HasColumnType("bit");
@@ -797,7 +906,7 @@ namespace EventRegistrar.Backend.Migrations
                     b.Property<string>("Message")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("PaymentSlipId")
+                    b.Property<Guid>("PaymentsFileId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("RawXml")
@@ -830,23 +939,24 @@ namespace EventRegistrar.Backend.Migrations
                     b.Property<bool>("Settled")
                         .HasColumnType("bit");
 
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
 
-                    b.HasIndex("BankAccountStatementsFileId");
-
-                    b.HasIndex("PaymentSlipId");
+                    b.HasIndex("PaymentsFileId");
 
                     b.HasIndex("Sequence")
                         .IsUnique();
 
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
 
-                    b.ToTable("BankAccountBookings", (string)null);
+                    b.ToTable("Payments", (string)null);
                 });
 
-            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.BankAccountStatementsFile", b =>
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.PaymentsFile", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -900,57 +1010,7 @@ namespace EventRegistrar.Backend.Migrations
 
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
 
-                    b.ToTable("BankAccountStatementsFiles", (string)null);
-                });
-
-            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.Fetch.RawBankStatementsFile", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<byte[]>("Content")
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("ContractIdentifier")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("Filename")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTimeOffset?>("Imported")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<DateTimeOffset?>("Processed")
-                        .HasColumnType("datetimeoffset");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<int>("Sequence")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
-
-                    b.Property<string>("Server")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.HasKey("Id");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
-
-                    b.HasIndex("Sequence")
-                        .IsUnique();
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
-
-                    b.ToTable("RawBankStatementsFiles", (string)null);
+                    b.ToTable("PaymentsFiles", (string)null);
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.Slips.PaymentSlip", b =>
@@ -1016,16 +1076,16 @@ namespace EventRegistrar.Backend.Migrations
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("IncomingPaymentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("OutgoingPaymentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid?>("PaymentAssignmentId_Counter")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("PaymentId_Repayment")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid?>("PayoutRequestId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("ReceivedPaymentId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("RegistrationId")
@@ -1047,13 +1107,13 @@ namespace EventRegistrar.Backend.Migrations
 
                     SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
 
+                    b.HasIndex("IncomingPaymentId");
+
+                    b.HasIndex("OutgoingPaymentId");
+
                     b.HasIndex("PaymentAssignmentId_Counter");
 
-                    b.HasIndex("PaymentId_Repayment");
-
                     b.HasIndex("PayoutRequestId");
-
-                    b.HasIndex("ReceivedPaymentId");
 
                     b.HasIndex("RegistrationId");
 
@@ -2296,11 +2356,11 @@ namespace EventRegistrar.Backend.Migrations
                     b.Navigation("Registrable");
                 });
 
-            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.BankAccountBooking", b =>
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.IncomingPayment", b =>
                 {
-                    b.HasOne("EventRegistrar.Backend.Payments.Files.BankAccountStatementsFile", "BankAccountStatementsFile")
-                        .WithMany()
-                        .HasForeignKey("BankAccountStatementsFileId")
+                    b.HasOne("EventRegistrar.Backend.Payments.Files.Payment", "Payment")
+                        .WithOne("Incoming")
+                        .HasForeignKey("EventRegistrar.Backend.Payments.Files.IncomingPayment", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -2308,12 +2368,34 @@ namespace EventRegistrar.Backend.Migrations
                         .WithMany()
                         .HasForeignKey("PaymentSlipId");
 
-                    b.Navigation("BankAccountStatementsFile");
+                    b.Navigation("Payment");
 
                     b.Navigation("PaymentSlip");
                 });
 
-            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.BankAccountStatementsFile", b =>
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.OutgoingPayment", b =>
+                {
+                    b.HasOne("EventRegistrar.Backend.Payments.Files.Payment", "Payment")
+                        .WithOne("Outgoing")
+                        .HasForeignKey("EventRegistrar.Backend.Payments.Files.OutgoingPayment", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Payment");
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.Payment", b =>
+                {
+                    b.HasOne("EventRegistrar.Backend.Payments.Files.PaymentsFile", "PaymentsFile")
+                        .WithMany()
+                        .HasForeignKey("PaymentsFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PaymentsFile");
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.PaymentsFile", b =>
                 {
                     b.HasOne("EventRegistrar.Backend.Events.Event", "Event")
                         .WithMany()
@@ -2335,35 +2417,33 @@ namespace EventRegistrar.Backend.Migrations
 
             modelBuilder.Entity("EventRegistrar.Backend.Payments.PaymentAssignment", b =>
                 {
+                    b.HasOne("EventRegistrar.Backend.Payments.Files.IncomingPayment", "IncomingPayment")
+                        .WithMany("Assignments")
+                        .HasForeignKey("IncomingPaymentId");
+
+                    b.HasOne("EventRegistrar.Backend.Payments.Files.OutgoingPayment", "OutgoingPayment")
+                        .WithMany("Assignments")
+                        .HasForeignKey("OutgoingPaymentId");
+
                     b.HasOne("EventRegistrar.Backend.Payments.PaymentAssignment", "PaymentAssignment_Counter")
                         .WithMany()
                         .HasForeignKey("PaymentAssignmentId_Counter");
-
-                    b.HasOne("EventRegistrar.Backend.Payments.Files.BankAccountBooking", "ReceivedPayment_Repayment")
-                        .WithMany("RepaymentAssignments")
-                        .HasForeignKey("PaymentId_Repayment");
 
                     b.HasOne("EventRegistrar.Backend.Payments.Refunds.PayoutRequest", "PayoutRequest")
                         .WithMany("Assignments")
                         .HasForeignKey("PayoutRequestId");
 
-                    b.HasOne("EventRegistrar.Backend.Payments.Files.BankAccountBooking", "ReceivedPayment")
-                        .WithMany("Assignments")
-                        .HasForeignKey("ReceivedPaymentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EventRegistrar.Backend.Registrations.Registration", "Registration")
-                        .WithMany("Payments")
+                        .WithMany("PaymentAssignments")
                         .HasForeignKey("RegistrationId");
+
+                    b.Navigation("IncomingPayment");
+
+                    b.Navigation("OutgoingPayment");
 
                     b.Navigation("PaymentAssignment_Counter");
 
                     b.Navigation("PayoutRequest");
-
-                    b.Navigation("ReceivedPayment");
-
-                    b.Navigation("ReceivedPayment_Repayment");
 
                     b.Navigation("Registration");
                 });
@@ -2660,11 +2740,21 @@ namespace EventRegistrar.Backend.Migrations
                     b.Navigation("Mails");
                 });
 
-            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.BankAccountBooking", b =>
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.IncomingPayment", b =>
                 {
                     b.Navigation("Assignments");
+                });
 
-                    b.Navigation("RepaymentAssignments");
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.OutgoingPayment", b =>
+                {
+                    b.Navigation("Assignments");
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.Payment", b =>
+                {
+                    b.Navigation("Incoming");
+
+                    b.Navigation("Outgoing");
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Payments.Refunds.PayoutRequest", b =>
@@ -2710,7 +2800,7 @@ namespace EventRegistrar.Backend.Migrations
 
                     b.Navigation("Mails");
 
-                    b.Navigation("Payments");
+                    b.Navigation("PaymentAssignments");
 
                     b.Navigation("Responses");
 

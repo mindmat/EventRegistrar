@@ -7,7 +7,7 @@ public class EventRegistratorDbContextFactory : IDesignTimeDbContextFactory<Even
     public EventRegistratorDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<EventRegistratorDbContext>()
-                             .UseSqlServer("Server=.\\SQL2016STD;Database=Test;Trusted_Connection=true;Encrypt=True;TrustServerCertificate=true")
+                             .UseSqlServer("Server=.\\SQL2016STD;Database=Test2;Trusted_Connection=true;Encrypt=True;TrustServerCertificate=true")
                              .EnableSensitiveDataLogging();
 
         return new EventRegistratorDbContext(optionsBuilder.Options);

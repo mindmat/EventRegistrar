@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Payments.Refunds;
 
 using MediatR;
 
@@ -20,20 +21,20 @@ public class PaymentAssignmentController : Controller
     }
 
 
-    [HttpPost("payments/{paymentId:guid}/assignToRepayment/{paymentIdOutgoing:guid}")]
-    public async Task AssignRepayment(string eventAcronym,
-                                      Guid paymentId,
-                                      Guid paymentIdOutgoing,
-                                      decimal amount)
-    {
-        await _mediator.Send(new AssignRepaymentCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 PaymentId_Incoming = paymentId,
-                                 PaymentId_Outgoing = paymentIdOutgoing,
-                                 Amount = amount
-                             });
-    }
+    //[HttpPost("payments/{paymentId:guid}/assignToRepayment/{paymentIdOutgoing:guid}")]
+    //public async Task AssignRepayment(string eventAcronym,
+    //                                  Guid paymentId,
+    //                                  Guid paymentIdOutgoing,
+    //                                  decimal amount)
+    //{
+    //    await _mediator.Send(new AssignOutgoingPaymentCommand
+    //                         {
+    //                             EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+    //                             IncomingPaymentId = paymentId,
+    //                             PaymentId_Outgoing = paymentIdOutgoing,
+    //                             Amount = amount
+    //                         });
+    //}
 
     [HttpGet("payments/{paymentId:guid}/possibleOutgoingAssignments")]
     public async Task<IEnumerable<PossibleRepaymentAssignment>> GetPossibleOutgoingPaymentsAssignments(

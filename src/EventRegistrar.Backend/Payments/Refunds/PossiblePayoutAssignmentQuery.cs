@@ -27,12 +27,13 @@ public class PossiblePayoutAssignmentQueryHandler : IRequestHandler<PossiblePayo
                                                                     CancellationToken cancellationToken)
     {
         var payment = await _payments.Where(pmt => pmt.Id == query.PaymentId
-                                                && pmt.BankAccountStatementsFile!.EventId == query.EventId)
+                                                && pmt.Payment!.PaymentsFile!.EventId == query.EventId)
+                                     .Include(pmt => pmt.Payment)
                                      .Include(por => por.Assignments!)
                                      .ThenInclude(asn => asn.IncomingPayment)
                                      .FirstAsync(cancellationToken);
 
-        var openAmount = payment.Amount - payment.Assignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
+        var openAmount = payment.Payment!.Amount - payment.Assignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
 
         var payouts = await _payoutRequests.Where(por => por.Registration!.EventId == query.EventId
                                                       && por.State != PayoutState.Confirmed)
@@ -69,7 +70,7 @@ public class PossiblePayoutAssignmentQueryHandler : IRequestHandler<PossiblePayo
                                   ?.Select(wrd => wrd.ToLowerInvariant())
          ?? new List<string>();
 
-        var wordsInOpenPayment = openPayment.Info.Split(' ').Select(nmw => nmw.ToLowerInvariant()).ToList();
+        var wordsInOpenPayment = openPayment.Payment.Info.Split(' ').Select(nmw => nmw.ToLowerInvariant()).ToList();
 
         return payoutRequestCandidate.Ibans.Contains(openPayment.CreditorIban)
                    ? 50

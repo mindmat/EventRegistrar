@@ -24,23 +24,23 @@ public class UnassignedPayoutsQueryHandler : IRequestHandler<UnassignedPayoutsQu
     public async Task<IEnumerable<PaymentDisplayItem>> Handle(UnassignedPayoutsQuery query,
                                                               CancellationToken cancellationToken)
     {
-        var payments = await _payments.Where(rpy => rpy.BankAccountStatementsFile!.EventId == query.EventId
-                                                 && !rpy.Settled
-                                                 && !rpy.Ignore)
+        var payments = await _payments.Where(rpy => rpy.Payment!.PaymentsFile!.EventId == query.EventId
+                                                 && !rpy.Payment!.Settled
+                                                 && !rpy.Payment!.Ignore)
                                       .Select(pmo => new PaymentDisplayItem
                                                      {
                                                          Id = pmo.Id,
-                                                         Amount = pmo.Amount,
+                                                         Amount = pmo.Payment!.Amount,
                                                          AmountAssigned = pmo.Assignments!.Sum(asn => asn.PayoutRequestId == null
                                                                                                           ? asn.Amount
                                                                                                           : -asn.Amount),
-                                                         BookingDate = pmo.BookingDate,
-                                                         Currency = pmo.Currency,
-                                                         Info = pmo.Info,
-                                                         Reference = pmo.Reference,
-                                                         AmountRepaid = pmo.Repaid,
-                                                         Settled = pmo.Settled,
-                                                         Message = pmo.Message,
+                                                         BookingDate = pmo.Payment.BookingDate,
+                                                         Currency = pmo.Payment.Currency,
+                                                         Info = pmo.Payment.Info,
+                                                         Reference = pmo.Payment.Reference,
+                                                         AmountRepaid = pmo.Payment.Repaid,
+                                                         Settled = pmo.Payment.Settled,
+                                                         Message = pmo.Payment.Message,
                                                          CreditorName = pmo.CreditorName,
                                                          CreditorIban = pmo.CreditorIban
                                                      })

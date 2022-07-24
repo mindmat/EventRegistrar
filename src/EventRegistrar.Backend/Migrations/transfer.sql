@@ -169,7 +169,7 @@ SELECT [Id]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[Seats]
 
 -- Payments
-INSERT INTO [dbo].BankAccountStatementsFiles
+INSERT INTO [dbo].[PaymentsFiles]
            ([Id]
            ,[EventId]
            ,[AccountIban]
@@ -221,17 +221,14 @@ SELECT [Id]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[PaymentSlips]
   WHERE EventId IN (SELECT Id FROM dbo.[Events])
 
-INSERT INTO [dbo].BankAccountBookings
+
+INSERT INTO [dbo].Payments
            ([Id]
-           ,BankAccountStatementsFileId
-           ,[PaymentSlipId]
+           ,PaymentsFileId
            ,[Amount]
            ,[BookingDate]
            ,[Charges]
-           ,[CreditDebitType]
            ,[Currency]
-           ,[DebitorIban]
-           ,[DebitorName]
            ,[Info]
            ,[InstructionIdentification]
            ,[RawXml]
@@ -241,18 +238,13 @@ INSERT INTO [dbo].BankAccountBookings
            ,[Settled]
            ,[Ignore]
            ,[Message]
-           ,[CreditorName]
-           ,[CreditorIban])
+		   ,[Type])
 SELECT [Id]
       ,[PaymentFileId]
-      ,[PaymentSlipId]
       ,[Amount]
       ,[BookingDate]
       ,[Charges]
-      ,[CreditDebitType]
       ,[Currency]
-      ,[DebitorIban]
-      ,[DebitorName]
       ,[Info]
       ,[InstructionIdentification]
       ,[RawXml]
@@ -262,18 +254,42 @@ SELECT [Id]
       ,[Settled]
       ,[Ignore]
       ,[Message]
+	  ,[CreditDebitType]
+  FROM [AZURE_ER].[EventRegistrator].[dbo].[ReceivedPayments]
+  WHERE [PaymentFileId] IN (SELECT Id FROM dbo.PaymentsFiles)
+    AND (PaymentSlipId IS NULL OR PaymentSlipId IN (SELECT Id FROM dbo.PaymentSlips))
+
+INSERT INTO [dbo].IncomingPayments
+           ([Id]
+           ,[PaymentSlipId]
+           ,[DebitorIban]
+           ,[DebitorName])
+SELECT [Id]
+      ,[PaymentSlipId]
+      ,[DebitorIban]
+      ,[DebitorName]
+  FROM [AZURE_ER].[EventRegistrator].[dbo].[ReceivedPayments]
+  WHERE [PaymentFileId] IN (SELECT Id FROM dbo.PaymentsFiles)
+    AND (PaymentSlipId IS NULL OR PaymentSlipId IN (SELECT Id FROM dbo.PaymentSlips))
+	AND [CreditDebitType] = 1
+INSERT INTO [dbo].OutgoingPayments
+           ([Id]
+           ,[CreditorName]
+           ,[CreditorIban])
+SELECT [Id]
       ,[CreditorName]
       ,[CreditorIban]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[ReceivedPayments]
-  WHERE [PaymentFileId] IN (SELECT Id FROM dbo.BankAccountStatementsFiles)
+  WHERE [PaymentFileId] IN (SELECT Id FROM dbo.PaymentsFiles)
     AND (PaymentSlipId IS NULL OR PaymentSlipId IN (SELECT Id FROM dbo.PaymentSlips))
+	AND [CreditDebitType] = 2
 
 INSERT INTO [dbo].[PaymentAssignments]
            ([Id]
            ,[RegistrationId]
-           ,[ReceivedPaymentId]
+           ,IncomingPaymentId
            ,[PaymentAssignmentId_Counter]
-           ,[PaymentId_Repayment]
+           ,OutgoingPaymentId
            ,[PayoutRequestId]
            ,[Amount]
            ,[Created])
@@ -286,11 +302,34 @@ SELECT [Id]
       ,[Amount]
       ,[Created]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[PaymentAssignments]
-  WHERE [ReceivedPaymentId] IN (SELECT Id FROM dbo.BankAccountBookings)
+  WHERE [ReceivedPaymentId] IN (SELECT Id FROM dbo.Payments)
+    AND [ReceivedPaymentId] IN (SELECT Id FROM dbo.IncomingPayments)
 
-UPDATE BankAccountbookings
-SET Charges = 12
-WHERE Id = '4B15D3EA-3317-4921-AE6A-1DD373E6DB9E'
+INSERT INTO [dbo].[PaymentAssignments]
+           ([Id]
+           ,[RegistrationId]
+           ,IncomingPaymentId
+           ,[PaymentAssignmentId_Counter]
+           ,OutgoingPaymentId
+           ,[PayoutRequestId]
+           ,[Amount]
+           ,[Created])
+SELECT [Id]
+      ,[RegistrationId]
+      ,null
+      ,[PaymentAssignmentId_Counter]
+      ,[ReceivedPaymentId]
+      ,[PayoutRequestId]
+      ,[Amount]
+      ,[Created]
+  FROM [AZURE_ER].[EventRegistrator].[dbo].[PaymentAssignments]
+  WHERE [ReceivedPaymentId] IN (SELECT Id FROM dbo.Payments)
+    AND [ReceivedPaymentId] IN (SELECT Id FROM dbo.OutgoingPayments)
+
+
+--UPDATE BankAccountbookings
+--SET Charges = 12
+--WHERE Id = '4B15D3EA-3317-4921-AE6A-1DD373E6DB9E'
 
 ROLLBACK
 --COMMIT

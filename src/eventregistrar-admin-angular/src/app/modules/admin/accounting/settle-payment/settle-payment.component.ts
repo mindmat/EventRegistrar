@@ -12,7 +12,7 @@ import { SettlePaymentService } from './settle-payment.service';
 export class SettlePaymentComponent implements OnInit
 {
   private unsubscribeAll: Subject<any> = new Subject<any>();
-  private bankAccountBookingId$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  private paymentId$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   private assignmentRequests: BehaviorSubject<AssignmentRequest | null> = new BehaviorSubject(null);
 
   existingAssignments: ExistingAssignment[];
@@ -39,7 +39,7 @@ export class SettlePaymentComponent implements OnInit
 
     this.route.queryParams.subscribe(params => 
     {
-      this.bankAccountBookingId$.next(params.search ?? '');
+      this.paymentId$.next(params.search ?? '');
     });
 
     this.assignmentRequests.asObservable()
@@ -47,7 +47,7 @@ export class SettlePaymentComponent implements OnInit
         takeUntil(this.unsubscribeAll),
         filter(request => !!request))
       .subscribe((request) => this.service.assign(
-        request.bankAccountBookingId,
+        request.paymentId,
         request.registrationId,
         request.amount,
         request.acceptDifference,
@@ -70,7 +70,6 @@ export class SettlePaymentComponent implements OnInit
     candidate.amountToAssign = amountToAssign;
     candidate.difference = candidate.price - candidate.amountPaid - candidate.amountToAssign;
   }
-
 }
 
 

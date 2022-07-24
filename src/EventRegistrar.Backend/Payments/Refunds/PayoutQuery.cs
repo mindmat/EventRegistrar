@@ -37,12 +37,12 @@ public class PayoutQueryHandler : IRequestHandler<PayoutQuery, IEnumerable<Payou
                                                                             .Select(pmt => new PaymentDisplayItem
                                                                                            {
                                                                                                Assigned = pmt.Amount,
-                                                                                               PaymentAmount = pmt.IncomingPayment!.Amount,
-                                                                                               PaymentBookingDate = pmt.IncomingPayment.BookingDate,
+                                                                                               PaymentAmount = pmt.IncomingPayment!.Payment!.Amount,
+                                                                                               PaymentBookingDate = pmt.IncomingPayment.Payment.BookingDate,
                                                                                                PaymentDebitorIban = pmt.IncomingPayment.DebitorIban,
                                                                                                PaymentDebitorName = pmt.IncomingPayment.DebitorName,
-                                                                                               PaymentMessage = pmt.IncomingPayment.Message,
-                                                                                               PaymentInfo = pmt.IncomingPayment.Info
+                                                                                               PaymentMessage = pmt.IncomingPayment.Payment.Message,
+                                                                                               PaymentInfo = pmt.IncomingPayment.Payment.Info
                                                                                            }),
                                                               Reason = por.Reason,
                                                               StateText = por.State.ToString(),

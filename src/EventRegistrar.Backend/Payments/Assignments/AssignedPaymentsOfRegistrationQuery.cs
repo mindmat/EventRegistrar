@@ -22,14 +22,14 @@ public class AssignedPaymentsOfRegistrationQueryHandler : IRequestHandler<Assign
     public async Task<IEnumerable<AssignedPaymentDisplayItem>> Handle(AssignedPaymentsOfRegistrationQuery query,
                                                                       CancellationToken cancellationToken)
     {
-        return await _assignments.Where(ass => ass.IncomingPayment!.BankAccountStatementsFile!.EventId == query.EventId
+        return await _assignments.Where(ass => ass.IncomingPayment!.Payment!.PaymentsFile!.EventId == query.EventId
                                             && ass.RegistrationId == query.RegistrationId)
                                  .Select(ass => new AssignedPaymentDisplayItem
                                                 {
                                                     PaymentAssignmentId = ass.Id,
                                                     Amount = ass.Amount,
-                                                    Currency = ass.IncomingPayment!.Currency,
-                                                    BookingDate = ass.IncomingPayment.BookingDate,
+                                                    Currency = ass.IncomingPayment!.Payment!.Currency,
+                                                    BookingDate = ass.IncomingPayment.Payment.BookingDate,
                                                     PaymentAssignmentId_Counter = ass.PaymentAssignmentId_Counter,
                                                     OutgoingPaymentId = ass.OutgoingPaymentId
                                                 })

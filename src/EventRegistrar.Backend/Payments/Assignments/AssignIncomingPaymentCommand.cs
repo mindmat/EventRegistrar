@@ -88,7 +88,7 @@ public class AssignIncomingPaymentCommandHandler : IRequestHandler<AssignIncomin
                               PaymentAssignmentId = assignment.Id,
                               Amount = assignment.Amount,
                               RegistrationId = registration.Id,
-                              IncomingPaymentId = assignment.IncomingPaymentId
+                              IncomingPaymentId = incomingPayment.Id
                           });
 
         return Unit.Value;

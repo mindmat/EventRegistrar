@@ -21,14 +21,15 @@ public class CheckIfOutgoingPaymentIsSettledCommandHandler : IRequestHandler<Che
 
     public async Task<Unit> Handle(CheckIfOutgoingPaymentIsSettledCommand command, CancellationToken cancellationToken)
     {
-        var outgoingPayment = await _outgoingPayments.Where(pmt => pmt.Id == command.OutgoingPaymentId)
+        var outgoingPayment = await _outgoingPayments.AsTracking()
+                                                     .Where(pmt => pmt.Id == command.OutgoingPaymentId)
+                                                     .Include(pmt => pmt.Payment)
                                                      .Include(pmt => pmt.Assignments)
-                                                     .Include(pmt => pmt.RepaymentAssignments)
                                                      .FirstAsync(cancellationToken);
-        var balance = -outgoingPayment.Amount
-                    - outgoingPayment.Assignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
-                    + outgoingPayment.RepaymentAssignments!.Sum(asn => asn.Amount);
-        outgoingPayment.Settled = balance == 0m;
+        var balance = -outgoingPayment.Payment!.Amount
+                    - outgoingPayment.Assignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
+        //+ outgoingPayment.RepaymentAssignments!.Sum(asn => asn.Amount);
+        outgoingPayment.Payment.Settled = balance == 0m;
         return Unit.Value;
     }
 }

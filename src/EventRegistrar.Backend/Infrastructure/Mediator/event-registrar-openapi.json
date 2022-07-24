@@ -1834,19 +1834,51 @@
         }
       }
     },
-    "/api/CheckIfPaymentIsSettledCommand": {
+    "/api/CheckIfIncomingPaymentIsSettledCommand": {
       "post": {
         "tags": [
-          "CheckIfPaymentIsSettled"
+          "CheckIfIncomingPaymentIsSettled"
         ],
-        "operationId": "CheckIfPaymentIsSettled_Command",
+        "operationId": "CheckIfIncomingPaymentIsSettled_Command",
         "requestBody": {
-          "x-name": "CheckIfPaymentIsSettledCommand",
+          "x-name": "CheckIfIncomingPaymentIsSettledCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CheckIfPaymentIsSettledCommand"
+                "$ref": "#/components/schemas/CheckIfIncomingPaymentIsSettledCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CheckIfOutgoingPaymentIsSettledCommand": {
+      "post": {
+        "tags": [
+          "CheckIfOutgoingPaymentIsSettled"
+        ],
+        "operationId": "CheckIfOutgoingPaymentIsSettled_Command",
+        "requestBody": {
+          "x-name": "CheckIfOutgoingPaymentIsSettledCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckIfOutgoingPaymentIsSettledCommand"
               }
             }
           },
@@ -1892,7 +1924,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/BankBookingDisplayItem"
+                    "$ref": "#/components/schemas/PaymentDisplayItem3"
                   }
                 }
               }
@@ -1901,19 +1933,19 @@
         }
       }
     },
-    "/api/AssignPayoutCommand": {
+    "/api/AssignOutgoingPaymentCommand": {
       "post": {
         "tags": [
-          "AssignPayout"
+          "AssignOutgoingPayment"
         ],
-        "operationId": "AssignPayout_Command",
+        "operationId": "AssignOutgoingPayment_Command",
         "requestBody": {
-          "x-name": "AssignPayoutCommand",
+          "x-name": "AssignOutgoingPaymentCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AssignPayoutCommand"
+                "$ref": "#/components/schemas/AssignOutgoingPaymentCommand"
               }
             }
           },
@@ -2464,19 +2496,19 @@
         }
       }
     },
-    "/api/AssignPaymentCommand": {
+    "/api/AssignIncomingPaymentCommand": {
       "post": {
         "tags": [
-          "AssignPayment"
+          "AssignIncomingPayment"
         ],
-        "operationId": "AssignPayment_Command",
+        "operationId": "AssignIncomingPayment_Command",
         "requestBody": {
-          "x-name": "AssignPaymentCommand",
+          "x-name": "AssignIncomingPaymentCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AssignPaymentCommand"
+                "$ref": "#/components/schemas/AssignIncomingPaymentCommand"
               }
             }
           },
@@ -2595,19 +2627,19 @@
         }
       }
     },
-    "/api/UnassignPaymentCommand": {
+    "/api/UnassignIncomingPaymentCommand": {
       "post": {
         "tags": [
-          "UnassignPayment"
+          "UnassignIncomingPayment"
         ],
-        "operationId": "UnassignPayment_Command",
+        "operationId": "UnassignIncomingPayment_Command",
         "requestBody": {
-          "x-name": "UnassignPaymentCommand",
+          "x-name": "UnassignIncomingPaymentCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UnassignPaymentCommand"
+                "$ref": "#/components/schemas/UnassignIncomingPaymentCommand"
               }
             }
           },
@@ -5949,7 +5981,12 @@
         "additionalProperties": false,
         "properties": {
           "balance": {
-            "$ref": "#/components/schemas/BalanceDto"
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BalanceDto"
+              }
+            ]
           },
           "notFullyPaidRegistrations": {
             "type": "integer",
@@ -6133,7 +6170,7 @@
           "bookings": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/BankAccountBookingDisplayItem"
+              "$ref": "#/components/schemas/PaymentDisplayItem2"
             }
           },
           "balanceAfter": {
@@ -6143,7 +6180,7 @@
           }
         }
       },
-      "BankAccountBookingDisplayItem": {
+      "PaymentDisplayItem2": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -6215,6 +6252,11 @@
             "type": "string",
             "format": "guid",
             "nullable": true
+          },
+          "balance": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
           }
         }
       },
@@ -6256,17 +6298,27 @@
           }
         }
       },
-      "CheckIfPaymentIsSettledCommand": {
+      "CheckIfIncomingPaymentIsSettledCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "paymentId": {
+          "incomingPaymentId": {
             "type": "string",
             "format": "guid"
           }
         }
       },
-      "BankBookingDisplayItem": {
+      "CheckIfOutgoingPaymentIsSettledCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "outgoingPaymentId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "PaymentDisplayItem3": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -6363,31 +6415,32 @@
           }
         }
       },
-      "AssignPayoutCommand": {
+      "AssignOutgoingPaymentCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "acceptDifference": {
-            "type": "boolean"
-          },
-          "acceptDifferenceReason": {
-            "type": "string"
-          },
-          "amount": {
-            "type": "number",
-            "format": "decimal"
-          },
           "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "paymentId": {
             "type": "string",
             "format": "guid"
           },
           "payoutRequestId": {
             "type": "string",
             "format": "guid"
+          },
+          "outgoingPaymentId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "acceptDifference": {
+            "type": "boolean"
+          },
+          "acceptDifferenceReason": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -6410,10 +6463,12 @@
             "format": "guid"
           },
           "firstName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "lastName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "price": {
             "type": "number",
@@ -6424,7 +6479,8 @@
             "format": "decimal"
           },
           "reason": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "created": {
             "type": "string",
@@ -6433,7 +6489,7 @@
           "payments": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PaymentDisplayItem2"
+              "$ref": "#/components/schemas/PaymentDisplayItem4"
             }
           },
           "amount": {
@@ -6448,7 +6504,7 @@
           }
         }
       },
-      "PaymentDisplayItem2": {
+      "PaymentDisplayItem4": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -6465,16 +6521,20 @@
             "format": "date-time"
           },
           "paymentDebitorIban": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "paymentDebitorName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "paymentMessage": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "paymentInfo": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -6528,7 +6588,8 @@
             "type": "string"
           },
           "info": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "matchScore": {
             "type": "integer",
@@ -6639,12 +6700,12 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "contentType": {
-            "type": "string"
-          },
           "eventId": {
             "type": "string",
             "format": "guid"
+          },
+          "contentType": {
+            "type": "string"
           },
           "filename": {
             "type": "string"
@@ -6944,7 +7005,8 @@
             "format": "guid"
           },
           "reason": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -6987,7 +7049,7 @@
             "format": "guid",
             "nullable": true
           },
-          "paymentId_Repayment": {
+          "outgoingPaymentId": {
             "type": "string",
             "format": "guid",
             "nullable": true
@@ -7008,7 +7070,7 @@
           }
         }
       },
-      "AssignPaymentCommand": {
+      "AssignIncomingPaymentCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -7027,7 +7089,7 @@
             "type": "string",
             "format": "guid"
           },
-          "paymentId": {
+          "paymentIncomingId": {
             "type": "string",
             "format": "guid"
           },
@@ -7049,11 +7111,11 @@
             "type": "string",
             "format": "guid"
           },
-          "paymentId_Incoming": {
+          "incomingPaymentId": {
             "type": "string",
             "format": "guid"
           },
-          "paymentId_Outgoing": {
+          "outgoingPaymentId": {
             "type": "string",
             "format": "guid"
           }
@@ -7063,6 +7125,13 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "openAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PaymentType"
+          },
           "registrationCandidates": {
             "type": "array",
             "nullable": true,
@@ -7078,6 +7147,18 @@
             }
           }
         }
+      },
+      "PaymentType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Incoming",
+          "Outgoing"
+        ],
+        "enum": [
+          1,
+          2
+        ]
       },
       "AssignmentCandidateRegistration": {
         "type": "object",
@@ -7117,9 +7198,12 @@
             "type": "integer",
             "format": "int32"
           },
-          "bankAccountBookingId": {
+          "paymentId": {
             "type": "string",
             "format": "guid"
+          },
+          "state": {
+            "$ref": "#/components/schemas/RegistrationState"
           }
         }
       },
@@ -7160,7 +7244,7 @@
           "isWaitingList": {
             "type": "boolean"
           },
-          "bankAccountBookingId": {
+          "paymentId": {
             "type": "string",
             "format": "guid"
           }
@@ -7174,7 +7258,7 @@
             "type": "string",
             "format": "guid"
           },
-          "bankAccountBookingId": {
+          "paymentId": {
             "type": "string",
             "format": "guid"
           }
@@ -7197,13 +7281,16 @@
             "format": "date-time"
           },
           "currency": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "debitorName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "info": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "matchScore": {
             "type": "integer",
@@ -7236,7 +7323,7 @@
           }
         }
       },
-      "UnassignPaymentCommand": {
+      "UnassignIncomingPaymentCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -8530,7 +8617,7 @@
                   "$ref": "#/components/schemas/IndividualReduction"
                 }
               },
-              "payments": {
+              "paymentAssignments": {
                 "type": "array",
                 "nullable": true,
                 "items": {
@@ -8958,15 +9045,29 @@
                   }
                 ]
               },
-              "receivedPaymentId": {
+              "incomingPaymentId": {
                 "type": "string",
-                "format": "guid"
+                "format": "guid",
+                "nullable": true
               },
-              "receivedPayment": {
+              "incomingPayment": {
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/BankAccountBooking"
+                    "$ref": "#/components/schemas/IncomingPayment"
+                  }
+                ]
+              },
+              "outgoingPaymentId": {
+                "type": "string",
+                "format": "guid",
+                "nullable": true
+              },
+              "outgoingPayment": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/OutgoingPayment"
                   }
                 ]
               },
@@ -8980,19 +9081,6 @@
                 "oneOf": [
                   {
                     "$ref": "#/components/schemas/PaymentAssignment"
-                  }
-                ]
-              },
-              "paymentId_Repayment": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "receivedPayment_Repayment": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/BankAccountBooking"
                   }
                 ]
               },
@@ -9022,7 +9110,7 @@
           }
         ]
       },
-      "BankAccountBooking": {
+      "IncomingPayment": {
         "allOf": [
           {
             "$ref": "#/components/schemas/Entity"
@@ -9031,17 +9119,21 @@
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "bankAccountStatementsFileId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "bankAccountStatementsFile": {
+              "payment": {
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/BankAccountStatementsFile"
+                    "$ref": "#/components/schemas/Payment"
                   }
                 ]
+              },
+              "debitorIban": {
+                "type": "string",
+                "nullable": true
+              },
+              "debitorName": {
+                "type": "string",
+                "nullable": true
               },
               "paymentSlipId": {
                 "type": "string",
@@ -9062,32 +9154,29 @@
                 "items": {
                   "$ref": "#/components/schemas/PaymentAssignment"
                 }
-              },
-              "repaymentAssignments": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/PaymentAssignment"
-                }
-              },
-              "amount": {
-                "type": "number",
-                "format": "decimal"
-              },
-              "bookingDate": {
+              }
+            }
+          }
+        ]
+      },
+      "Payment": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Entity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "paymentsFileId": {
                 "type": "string",
-                "format": "date-time"
+                "format": "guid"
               },
-              "charges": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "creditDebitType": {
+              "paymentsFile": {
                 "nullable": true,
                 "oneOf": [
                   {
-                    "$ref": "#/components/schemas/CreditDebit"
+                    "$ref": "#/components/schemas/PaymentsFile"
                   }
                 ]
               },
@@ -9095,15 +9184,24 @@
                 "type": "string",
                 "nullable": true
               },
-              "debitorIban": {
-                "type": "string",
+              "amount": {
+                "type": "number",
+                "format": "decimal"
+              },
+              "charges": {
+                "type": "number",
+                "format": "decimal",
                 "nullable": true
               },
-              "debitorName": {
+              "bookingDate": {
                 "type": "string",
-                "nullable": true
+                "format": "date-time"
               },
               "info": {
+                "type": "string",
+                "nullable": true
+              },
+              "message": {
                 "type": "string",
                 "nullable": true
               },
@@ -9134,23 +9232,30 @@
               "ignore": {
                 "type": "boolean"
               },
-              "message": {
-                "type": "string",
-                "nullable": true
+              "incoming": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/IncomingPayment"
+                  }
+                ]
               },
-              "creditorName": {
-                "type": "string",
-                "nullable": true
+              "outgoing": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/OutgoingPayment"
+                  }
+                ]
               },
-              "creditorIban": {
-                "type": "string",
-                "nullable": true
+              "type": {
+                "$ref": "#/components/schemas/PaymentType"
               }
             }
           }
         ]
       },
-      "BankAccountStatementsFile": {
+      "PaymentsFile": {
         "allOf": [
           {
             "$ref": "#/components/schemas/Entity"
@@ -9202,6 +9307,42 @@
               "content": {
                 "type": "string",
                 "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "OutgoingPayment": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Entity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "payment": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Payment"
+                  }
+                ]
+              },
+              "creditorName": {
+                "type": "string",
+                "nullable": true
+              },
+              "creditorIban": {
+                "type": "string",
+                "nullable": true
+              },
+              "assignments": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/PaymentAssignment"
+                }
               }
             }
           }

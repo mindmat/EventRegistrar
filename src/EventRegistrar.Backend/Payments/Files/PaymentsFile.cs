@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Payments.Files;
 
-public class BankAccountStatementsFile : Entity
+public class PaymentsFile : Entity
 {
     public Guid? EventId { get; set; }
     public Event? Event { get; set; }
@@ -19,11 +19,11 @@ public class BankAccountStatementsFile : Entity
     public string? Content { get; set; }
 }
 
-public class BankAccountStatementsFileMap : EntityMap<BankAccountStatementsFile>
+public class PaymentsFileMap : EntityMap<PaymentsFile>
 {
-    protected override void ConfigureEntity(EntityTypeBuilder<BankAccountStatementsFile> builder)
+    protected override void ConfigureEntity(EntityTypeBuilder<PaymentsFile> builder)
     {
-        builder.ToTable("BankAccountStatementsFiles");
+        builder.ToTable("PaymentsFiles");
 
         builder.HasOne(bbf => bbf.Event)
                .WithMany()

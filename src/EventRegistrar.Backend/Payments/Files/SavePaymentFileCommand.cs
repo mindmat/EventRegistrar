@@ -20,8 +20,8 @@ namespace EventRegistrar.Backend.Payments.Files;
 
 public class SavePaymentFileCommand : IRequest, IEventBoundRequest
 {
-    public string ContentType { get; set; }
     public Guid EventId { get; set; }
+    public string ContentType { get; set; }
     public string Filename { get; set; }
     public MemoryStream FileStream { get; set; }
 }
@@ -35,11 +35,11 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
     private readonly IEventBus _eventBus;
     private readonly IQueryable<Event> _events;
     private readonly ILogger _log;
-    private readonly IRepository<BankAccountStatementsFile> _paymentFiles;
+    private readonly IRepository<PaymentsFile> _paymentFiles;
     private readonly IRepository<Payment> _payments;
     private readonly IRepository<PaymentSlip> _paymentSlips;
 
-    public SavePaymentFileCommandHandler(IRepository<BankAccountStatementsFile> paymentFiles,
+    public SavePaymentFileCommandHandler(IRepository<PaymentsFile> paymentFiles,
                                          IRepository<Payment> payments,
                                          IRepository<PaymentSlip> paymentSlips,
                                          IQueryable<Event> events,
@@ -119,7 +119,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
 
         var @event = await _events.FirstOrDefaultAsync(evt => evt.AccountIban == camt.Account, cancellationToken);
 
-        var paymentFile = new BankAccountStatementsFile
+        var paymentFile = new PaymentsFile
                           {
                               Id = Guid.NewGuid(),
                               EventId = eventId,
@@ -141,41 +141,48 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                 continue;
             }
 
-            Payment newPayment = camtEntry.Type == CreditDebit.DBIT
-                                     ? new OutgoingPayment
-                                       {
-                                           Id = Guid.NewGuid(),
-                                           BankAccountStatementsFileId = paymentFile.Id,
-                                           Info = camtEntry.Info,
-                                           Message = camtEntry.Message,
-                                           Amount = camtEntry.Amount,
-                                           BookingDate = camtEntry.BookingDate,
-                                           Currency = camtEntry.Currency,
-                                           Reference = camtEntry.Reference,
-                                           //CreditDebitType = camtEntry.Type,
-                                           Charges = camtEntry.Charges,
-                                           InstructionIdentification = camtEntry.InstructionIdentification,
-                                           RawXml = camtEntry.Xml,
-                                           CreditorName = camtEntry.CreditorName,
-                                           CreditorIban = camtEntry.CreditorIban
-                                       }
-                                     : new IncomingPayment
-                                       {
-                                           Id = Guid.NewGuid(),
-                                           BankAccountStatementsFileId = paymentFile.Id,
-                                           Info = camtEntry.Info,
-                                           Message = camtEntry.Message,
-                                           Amount = camtEntry.Amount,
-                                           BookingDate = camtEntry.BookingDate,
-                                           Currency = camtEntry.Currency,
-                                           Reference = camtEntry.Reference,
-                                           //CreditDebitType = camtEntry.Type,
-                                           Charges = camtEntry.Charges,
-                                           DebitorName = camtEntry.DebitorName,
-                                           DebitorIban = camtEntry.DebitorIban,
-                                           InstructionIdentification = camtEntry.InstructionIdentification,
-                                           RawXml = camtEntry.Xml
-                                       };
+            var newPayment = camtEntry.Type == CreditDebit.DBIT
+                                 ? new Payment
+                                   {
+                                       Id = Guid.NewGuid(),
+                                       Type = PaymentType.Outgoing,
+                                       PaymentsFileId = paymentFile.Id,
+                                       Info = camtEntry.Info,
+                                       Message = camtEntry.Message,
+                                       Amount = camtEntry.Amount,
+                                       BookingDate = camtEntry.BookingDate,
+                                       Currency = camtEntry.Currency,
+                                       Reference = camtEntry.Reference,
+                                       InstructionIdentification = camtEntry.InstructionIdentification,
+                                       RawXml = camtEntry.Xml,
+                                       Charges = camtEntry.Charges,
+
+                                       Outgoing = new OutgoingPayment
+                                                  {
+                                                      CreditorName = camtEntry.CreditorName,
+                                                      CreditorIban = camtEntry.CreditorIban
+                                                  }
+                                   }
+                                 : new Payment
+                                   {
+                                       Id = Guid.NewGuid(),
+                                       Type = PaymentType.Incoming,
+                                       PaymentsFileId = paymentFile.Id,
+                                       Info = camtEntry.Info,
+                                       Message = camtEntry.Message,
+                                       Amount = camtEntry.Amount,
+                                       BookingDate = camtEntry.BookingDate,
+                                       Currency = camtEntry.Currency,
+                                       Reference = camtEntry.Reference,
+                                       Charges = camtEntry.Charges,
+                                       InstructionIdentification = camtEntry.InstructionIdentification,
+                                       RawXml = camtEntry.Xml,
+                                       Incoming = new IncomingPayment
+                                                  {
+                                                      DebitorName = camtEntry.DebitorName,
+                                                      DebitorIban = camtEntry.DebitorIban
+                                                  }
+                                   };
             await _payments.InsertOrUpdateEntity(newPayment, cancellationToken);
             newPayments.Add(newPayment);
         }

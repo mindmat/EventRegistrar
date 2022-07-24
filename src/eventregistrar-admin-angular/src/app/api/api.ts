@@ -2833,11 +2833,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    checkIfPaymentIsSettled_Command(checkIfPaymentIsSettledCommand: CheckIfPaymentIsSettledCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/CheckIfPaymentIsSettledCommand";
+    checkIfIncomingPaymentIsSettled_Command(checkIfIncomingPaymentIsSettledCommand: CheckIfIncomingPaymentIsSettledCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/CheckIfIncomingPaymentIsSettledCommand";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(checkIfPaymentIsSettledCommand);
+        const content_ = JSON.stringify(checkIfIncomingPaymentIsSettledCommand);
 
         let options_ : any = {
             body: content_,
@@ -2850,11 +2850,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCheckIfPaymentIsSettled_Command(response_);
+            return this.processCheckIfIncomingPaymentIsSettled_Command(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCheckIfPaymentIsSettled_Command(response_ as any);
+                    return this.processCheckIfIncomingPaymentIsSettled_Command(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<Unit>;
                 }
@@ -2863,7 +2863,7 @@ export class Api {
         }));
     }
 
-    protected processCheckIfPaymentIsSettled_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processCheckIfIncomingPaymentIsSettled_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2884,7 +2884,58 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    bookingsByState_Query(bookingsByStateQuery: BookingsByStateQuery | undefined): Observable<BankBookingDisplayItem[]> {
+    checkIfOutgoingPaymentIsSettled_Command(checkIfOutgoingPaymentIsSettledCommand: CheckIfOutgoingPaymentIsSettledCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/CheckIfOutgoingPaymentIsSettledCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(checkIfOutgoingPaymentIsSettledCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCheckIfOutgoingPaymentIsSettled_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCheckIfOutgoingPaymentIsSettled_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processCheckIfOutgoingPaymentIsSettled_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    bookingsByState_Query(bookingsByStateQuery: BookingsByStateQuery | undefined): Observable<PaymentDisplayItem3[]> {
         let url_ = this.baseUrl + "/api/BookingsByStateQuery";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2907,14 +2958,14 @@ export class Api {
                 try {
                     return this.processBookingsByState_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<BankBookingDisplayItem[]>;
+                    return _observableThrow(e) as any as Observable<PaymentDisplayItem3[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<BankBookingDisplayItem[]>;
+                return _observableThrow(response_) as any as Observable<PaymentDisplayItem3[]>;
         }));
     }
 
-    protected processBookingsByState_Query(response: HttpResponseBase): Observable<BankBookingDisplayItem[]> {
+    protected processBookingsByState_Query(response: HttpResponseBase): Observable<PaymentDisplayItem3[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2924,7 +2975,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BankBookingDisplayItem[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PaymentDisplayItem3[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2935,11 +2986,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    assignPayout_Command(assignPayoutCommand: AssignPayoutCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/AssignPayoutCommand";
+    assignOutgoingPayment_Command(assignOutgoingPaymentCommand: AssignOutgoingPaymentCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/AssignOutgoingPaymentCommand";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(assignPayoutCommand);
+        const content_ = JSON.stringify(assignOutgoingPaymentCommand);
 
         let options_ : any = {
             body: content_,
@@ -2952,11 +3003,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAssignPayout_Command(response_);
+            return this.processAssignOutgoingPayment_Command(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processAssignPayout_Command(response_ as any);
+                    return this.processAssignOutgoingPayment_Command(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<Unit>;
                 }
@@ -2965,7 +3016,7 @@ export class Api {
         }));
     }
 
-    protected processAssignPayout_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processAssignOutgoingPayment_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3801,11 +3852,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    assignPayment_Command(assignPaymentCommand: AssignPaymentCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/AssignPaymentCommand";
+    assignIncomingPayment_Command(assignIncomingPaymentCommand: AssignIncomingPaymentCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/AssignIncomingPaymentCommand";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(assignPaymentCommand);
+        const content_ = JSON.stringify(assignIncomingPaymentCommand);
 
         let options_ : any = {
             body: content_,
@@ -3818,11 +3869,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAssignPayment_Command(response_);
+            return this.processAssignIncomingPayment_Command(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processAssignPayment_Command(response_ as any);
+                    return this.processAssignIncomingPayment_Command(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<Unit>;
                 }
@@ -3831,7 +3882,7 @@ export class Api {
         }));
     }
 
-    protected processAssignPayment_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processAssignIncomingPayment_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4005,11 +4056,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    unassignPayment_Command(unassignPaymentCommand: UnassignPaymentCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/UnassignPaymentCommand";
+    unassignIncomingPayment_Command(unassignIncomingPaymentCommand: UnassignIncomingPaymentCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/UnassignIncomingPaymentCommand";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(unassignPaymentCommand);
+        const content_ = JSON.stringify(unassignIncomingPaymentCommand);
 
         let options_ : any = {
             body: content_,
@@ -4022,11 +4073,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUnassignPayment_Command(response_);
+            return this.processUnassignIncomingPayment_Command(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processUnassignPayment_Command(response_ as any);
+                    return this.processUnassignIncomingPayment_Command(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<Unit>;
                 }
@@ -4035,7 +4086,7 @@ export class Api {
         }));
     }
 
-    protected processUnassignPayment_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processUnassignIncomingPayment_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6757,7 +6808,7 @@ export interface IgnorePaymentCommand {
 }
 
 export interface PaymentOverview {
-    balance?: BalanceDto;
+    balance?: BalanceDto | null;
     notFullyPaidRegistrations?: number;
     outstandingAmount?: number;
     paidRegistrations?: number;
@@ -6813,11 +6864,11 @@ export interface UnassignedPayoutsQuery {
 
 export interface BookingsOfDay {
     bookingDate?: Date;
-    bookings?: BankAccountBookingDisplayItem[];
+    bookings?: PaymentDisplayItem2[];
     balanceAfter?: number | null;
 }
 
-export interface BankAccountBookingDisplayItem {
+export interface PaymentDisplayItem2 {
     id?: string;
     typ?: CreditDebit | null;
     amount?: number;
@@ -6834,6 +6885,7 @@ export interface BankAccountBookingDisplayItem {
     creditorName?: string | null;
     creditorIban?: string | null;
     paymentSlipId?: string | null;
+    balance?: number | null;
 }
 
 export enum CreditDebit {
@@ -6850,11 +6902,15 @@ export interface BankAccountBookingsQuery {
     searchString?: string | null;
 }
 
-export interface CheckIfPaymentIsSettledCommand {
-    paymentId?: string;
+export interface CheckIfIncomingPaymentIsSettledCommand {
+    incomingPaymentId?: string;
 }
 
-export interface BankBookingDisplayItem {
+export interface CheckIfOutgoingPaymentIsSettledCommand {
+    outgoingPaymentId?: string;
+}
+
+export interface PaymentDisplayItem3 {
     id?: string;
     typ?: CreditDebit | null;
     bookingDate?: Date;
@@ -6881,13 +6937,13 @@ export interface BookingsByStateQuery {
     hideOutgoing?: boolean;
 }
 
-export interface AssignPayoutCommand {
-    acceptDifference?: boolean;
-    acceptDifferenceReason?: string;
-    amount?: number;
+export interface AssignOutgoingPaymentCommand {
     eventId?: string;
-    paymentId?: string;
     payoutRequestId?: string;
+    outgoingPaymentId?: string;
+    amount?: number;
+    acceptDifference?: boolean;
+    acceptDifferenceReason?: string | null;
 }
 
 export interface CheckIfPayoutIsConfirmedCommand {
@@ -6896,26 +6952,26 @@ export interface CheckIfPayoutIsConfirmedCommand {
 
 export interface PayoutDisplayItem {
     registrationId?: string;
-    firstName?: string;
-    lastName?: string;
+    firstName?: string | null;
+    lastName?: string | null;
     price?: number;
     paid?: number;
-    reason?: string;
+    reason?: string | null;
     created?: Date;
-    payments?: PaymentDisplayItem2[];
+    payments?: PaymentDisplayItem4[];
     amount?: number;
     stateText?: string;
     state?: PayoutState;
 }
 
-export interface PaymentDisplayItem2 {
+export interface PaymentDisplayItem4 {
     assigned?: number;
     paymentAmount?: number;
     paymentBookingDate?: Date;
-    paymentDebitorIban?: string;
-    paymentDebitorName?: string;
-    paymentMessage?: string;
-    paymentInfo?: string;
+    paymentDebitorIban?: string | null;
+    paymentDebitorName?: string | null;
+    paymentMessage?: string | null;
+    paymentInfo?: string | null;
 }
 
 export enum PayoutState {
@@ -6935,7 +6991,7 @@ export interface PossiblePayoutAssignment {
     created?: Date;
     currency?: string;
     participant?: string;
-    info?: string;
+    info?: string | null;
     matchScore?: number;
     payoutRequestId?: string;
     paymentId_OpenPosition?: string;
@@ -6971,8 +7027,8 @@ export interface WillPayAtCheckinCommand {
 }
 
 export interface SavePaymentFileCommand {
-    contentType?: string;
     eventId?: string;
+    contentType?: string;
     filename?: string;
     fileStream?: MemoryStream;
 }
@@ -7069,7 +7125,7 @@ export interface DifferencesQuery {
 export interface RefundDifferenceCommand {
     registrationId?: string;
     eventId?: string;
-    reason?: string;
+    reason?: string | null;
 }
 
 export interface SendPaymentDueMailCommand {
@@ -7083,7 +7139,7 @@ export interface AssignedPaymentDisplayItem {
     currency?: string | null;
     paymentAssignmentId?: string;
     paymentAssignmentId_Counter?: string | null;
-    paymentId_Repayment?: string | null;
+    outgoingPaymentId?: string | null;
 }
 
 export interface AssignedPaymentsOfRegistrationQuery {
@@ -7091,25 +7147,32 @@ export interface AssignedPaymentsOfRegistrationQuery {
     registrationId?: string;
 }
 
-export interface AssignPaymentCommand {
+export interface AssignIncomingPaymentCommand {
     acceptDifference?: boolean;
     acceptDifferenceReason?: string | null;
     amount?: number;
     eventId?: string;
-    paymentId?: string;
+    paymentIncomingId?: string;
     registrationId?: string;
 }
 
 export interface AssignRepaymentCommand {
     amount?: number;
     eventId?: string;
-    paymentId_Incoming?: string;
-    paymentId_Outgoing?: string;
+    incomingPaymentId?: string;
+    outgoingPaymentId?: string;
 }
 
 export interface BookingAssignments {
+    openAmount?: number;
+    type?: PaymentType;
     registrationCandidates?: AssignmentCandidateRegistration[] | null;
     existingAssignments?: ExistingAssignment[] | null;
+}
+
+export enum PaymentType {
+    Incoming = 1,
+    Outgoing = 2,
 }
 
 export interface AssignmentCandidateRegistration {
@@ -7122,7 +7185,8 @@ export interface AssignmentCandidateRegistration {
     amountMatch?: boolean;
     amountPaid?: number;
     matchScore?: number;
-    bankAccountBookingId?: string;
+    paymentId?: string;
+    state?: RegistrationState;
 }
 
 export interface ExistingAssignment {
@@ -7134,21 +7198,21 @@ export interface ExistingAssignment {
     email?: string | null;
     price?: number;
     isWaitingList?: boolean;
-    bankAccountBookingId?: string;
+    paymentId?: string;
 }
 
 export interface PossibleAssignmentsQuery {
     eventId?: string;
-    bankAccountBookingId?: string;
+    paymentId?: string;
 }
 
 export interface PossibleRepaymentAssignment {
     amount?: number;
     amountUnsettled?: number;
     bookingDate?: Date;
-    currency?: string;
-    debitorName?: string;
-    info?: string;
+    currency?: string | null;
+    debitorName?: string | null;
+    info?: string | null;
     matchScore?: number;
     paymentId_Counter?: string;
     paymentId_OpenPosition?: string;
@@ -7160,7 +7224,7 @@ export interface PossibleRepaymentAssignmentQuery {
     paymentId?: string;
 }
 
-export interface UnassignPaymentCommand {
+export interface UnassignIncomingPaymentCommand {
     eventId?: string;
     paymentAssignmentId?: string;
 }
@@ -7447,7 +7511,7 @@ export interface Registration extends Entity {
     cancellations?: RegistrationCancellation[] | null;
     importedMails?: ImportedMailToRegistration[] | null;
     individualReductions?: IndividualReduction[] | null;
-    payments?: PaymentAssignment[] | null;
+    paymentAssignments?: PaymentAssignment[] | null;
     responses?: Response[] | null;
     seats_AsFollower?: Seat[] | null;
     seats_AsLeader?: Seat[] | null;
@@ -7545,33 +7609,36 @@ export interface IndividualReduction extends Entity {
 export interface PaymentAssignment extends Entity {
     registrationId?: string | null;
     registration?: Registration | null;
-    receivedPaymentId?: string;
-    receivedPayment?: BankAccountBooking | null;
+    incomingPaymentId?: string | null;
+    incomingPayment?: IncomingPayment | null;
+    outgoingPaymentId?: string | null;
+    outgoingPayment?: OutgoingPayment | null;
     paymentAssignmentId_Counter?: string | null;
     paymentAssignment_Counter?: PaymentAssignment | null;
-    paymentId_Repayment?: string | null;
-    receivedPayment_Repayment?: BankAccountBooking | null;
     payoutRequestId?: string | null;
     payoutRequest?: PayoutRequest | null;
     amount?: number;
     created?: Date | null;
 }
 
-export interface BankAccountBooking extends Entity {
-    bankAccountStatementsFileId?: string;
-    bankAccountStatementsFile?: BankAccountStatementsFile | null;
+export interface IncomingPayment extends Entity {
+    payment?: Payment | null;
+    debitorIban?: string | null;
+    debitorName?: string | null;
     paymentSlipId?: string | null;
     paymentSlip?: PaymentSlip | null;
     assignments?: PaymentAssignment[] | null;
-    repaymentAssignments?: PaymentAssignment[] | null;
-    amount?: number;
-    bookingDate?: Date;
-    charges?: number | null;
-    creditDebitType?: CreditDebit | null;
+}
+
+export interface Payment extends Entity {
+    paymentsFileId?: string;
+    paymentsFile?: PaymentsFile | null;
     currency?: string | null;
-    debitorIban?: string | null;
-    debitorName?: string | null;
+    amount?: number;
+    charges?: number | null;
+    bookingDate?: Date;
     info?: string | null;
+    message?: string | null;
     instructionIdentification?: string | null;
     rawXml?: string | null;
     recognizedEmail?: string | null;
@@ -7579,12 +7646,12 @@ export interface BankAccountBooking extends Entity {
     repaid?: number | null;
     settled?: boolean;
     ignore?: boolean;
-    message?: string | null;
-    creditorName?: string | null;
-    creditorIban?: string | null;
+    incoming?: IncomingPayment | null;
+    outgoing?: OutgoingPayment | null;
+    type?: PaymentType;
 }
 
-export interface BankAccountStatementsFile extends Entity {
+export interface PaymentsFile extends Entity {
     eventId?: string | null;
     event?: Event | null;
     accountIban?: string | null;
@@ -7594,6 +7661,13 @@ export interface BankAccountStatementsFile extends Entity {
     bookingsTo?: Date | null;
     currency?: string | null;
     content?: string | null;
+}
+
+export interface OutgoingPayment extends Entity {
+    payment?: Payment | null;
+    creditorName?: string | null;
+    creditorIban?: string | null;
+    assignments?: PaymentAssignment[] | null;
 }
 
 export interface PaymentSlip extends Entity {

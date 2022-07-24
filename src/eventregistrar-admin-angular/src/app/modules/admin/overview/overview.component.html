@@ -57,16 +57,16 @@
                                         <ng-container *ngFor="let spotState of doubleRegistrable.class; let i = index; trackBy: trackByFn">
                                             <div class="flex flex-col pb-1 ml-0.5 w-1 rounded overflow-hidden">
                                                 <!-- Leader: available -->
-                                                <div class="h-4 bg-gray-200" *ngIf="spotState.leader == 1">
+                                                <div class="h-4 bg-gray-200" *ngIf="spotState.leader === 1">
                                                 </div>
                                                 <!-- Leader: reserved -->
-                                                <div class="h-4 bg-warn-400" *ngIf="spotState.leader == 2">
+                                                <div class="h-4 bg-warn-400" *ngIf="spotState.leader === 2">
                                                 </div>
                                                 <!-- Leader: registered -->
-                                                <div class="h-4 bg-primary-400" *ngIf="spotState.leader == 3">
+                                                <div class="h-4 bg-primary-400" *ngIf="spotState.leader === 3">
                                                 </div>
                                                 <!-- Leader: paid -->
-                                                <div class="h-4 bg-primary-600" *ngIf="spotState.leader == 4">
+                                                <div class="h-4 bg-primary-600" *ngIf="spotState.leader === 4">
                                                 </div>
 
                                                 <!-- Connection -->
@@ -74,20 +74,20 @@
                                                 </div>
 
                                                 <!-- Follower: available -->
-                                                <div class="h-4 bg-gray-200 rounded-b" *ngIf="spotState.follower == 1">
+                                                <div class="h-4 bg-gray-200 rounded-b" *ngIf="spotState.follower === 1">
                                                 </div>
                                                 <!-- Follower: reserved -->
-                                                <div class="h-4 bg-warn-400 rounded-b" *ngIf="spotState.follower == 2">
+                                                <div class="h-4 bg-warn-400 rounded-b" *ngIf="spotState.follower === 2">
                                                 </div>
                                                 <!-- Follower: registered -->
-                                                <div class="h-4 bg-primary-400 rounded-b" *ngIf="spotState.follower == 3">
+                                                <div class="h-4 bg-primary-400 rounded-b" *ngIf="spotState.follower === 3">
                                                 </div>
                                                 <!-- Follower: paid -->
-                                                <div class="h-4 bg-primary-600 rounded-b" *ngIf="spotState.follower == 4">
+                                                <div class="h-4 bg-primary-600 rounded-b" *ngIf="spotState.follower === 4">
                                                 </div>
                                             </div>
 
-                                            <div class="-mt-0.5 ml-1 mr-0.5 mb-0.5 w-0.5 h-9 bg-gray-600 " *ngIf="doubleRegistrable.spotsAvailable == i + 1"
+                                            <div class="-mt-0.5 ml-1 mr-0.5 mb-0.5 w-0.5 h-9 bg-gray-600 " *ngIf="doubleRegistrable.spotsAvailable === i + 1"
                                                 [matTooltip]="'max: ' + doubleRegistrable.spotsAvailable" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                             </div>
                                         </ng-container>
@@ -106,16 +106,16 @@
 
                                             <div class="flex flex-col pb-1 ml-0.5 w-1 rounded overflow-hidden">
                                                 <!-- Leader: available -->
-                                                <div class="h-4 bg-gray-200" *ngIf="spotState.leader == 1">
+                                                <div class="h-4 bg-gray-200" *ngIf="spotState.leader === 1">
                                                 </div>
                                                 <!-- Leader: reserved -->
-                                                <div class="h-4 bg-warn-400" *ngIf="spotState.leader == 2">
+                                                <div class="h-4 bg-warn-400" *ngIf="spotState.leader === 2">
                                                 </div>
                                                 <!-- Leader: registered -->
-                                                <div class="h-4 bg-primary-400" *ngIf="spotState.leader == 3">
+                                                <div class="h-4 bg-primary-400" *ngIf="spotState.leader === 3">
                                                 </div>
                                                 <!-- Leader: paid -->
-                                                <div class="h-4 bg-primary-600" *ngIf="spotState.leader == 4">
+                                                <div class="h-4 bg-primary-600" *ngIf="spotState.leader === 4">
                                                 </div>
 
                                                 <!-- Connection -->
@@ -123,16 +123,16 @@
                                                 </div>
 
                                                 <!-- Follower: available -->
-                                                <div class="h-4 bg-gray-200 rounded-b" *ngIf="spotState.follower == 1">
+                                                <div class="h-4 bg-gray-200 rounded-b" *ngIf="spotState.follower === 1">
                                                 </div>
                                                 <!-- Follower: reserved -->
-                                                <div class="h-4 bg-warn-400 rounded-b" *ngIf="spotState.follower == 2">
+                                                <div class="h-4 bg-warn-400 rounded-b" *ngIf="spotState.follower === 2">
                                                 </div>
                                                 <!-- Follower: registered -->
-                                                <div class="h-4 bg-primary-400 rounded-b" *ngIf="spotState.follower == 3">
+                                                <div class="h-4 bg-primary-400 rounded-b" *ngIf="spotState.follower === 3">
                                                 </div>
                                                 <!-- Follower: paid -->
-                                                <div class="h-4 bg-primary-600 rounded-b" *ngIf="spotState.follower == 4">
+                                                <div class="h-4 bg-primary-600 rounded-b" *ngIf="spotState.follower === 4">
                                                 </div>
 
                                             </div>
@@ -200,16 +200,16 @@
                                         <ng-container *ngFor="let spotState of singleRegistrable.class; let i=index;trackBy: trackByFn">
                                             <div class="flex flex-col ml-0.5 w-1 pt-0.5 pb-0.5">
                                                 <!-- Leader: available -->
-                                                <div class="h-4 bg-gray-200 rounded overflow-hidden" *ngIf="spotState == 1">
+                                                <div class="h-4 bg-gray-200 rounded overflow-hidden" *ngIf="spotState === 1">
                                                 </div>
                                                 <!-- Leader: reserved -->
-                                                <div class="h-4 bg-warn-400 rounded overflow-hidden" *ngIf="spotState == 2">
+                                                <div class="h-4 bg-warn-400 rounded overflow-hidden" *ngIf="spotState === 2">
                                                 </div>
                                                 <!-- Leader: registered -->
-                                                <div class="h-4 bg-primary-400 rounded overflow-hidden" *ngIf="spotState == 3">
+                                                <div class="h-4 bg-primary-400 rounded overflow-hidden" *ngIf="spotState === 3">
                                                 </div>
                                                 <!-- Leader: paid -->
-                                                <div class="h-4 bg-primary-600 rounded overflow-hidden" *ngIf="spotState == 4">
+                                                <div class="h-4 bg-primary-600 rounded overflow-hidden" *ngIf="spotState === 4">
                                                 </div>
                                             </div>
 
@@ -229,16 +229,16 @@
                                         <ng-container *ngFor="let spotState of singleRegistrable.waitingList; trackBy: trackByFn">
                                             <div class="flex flex-col ml-0.5 w-1 pt-0.5 pb-0.5">
                                                 <!-- Leader: available -->
-                                                <div class="h-4 bg-gray-200 rounded overflow-hidden" *ngIf="spotState == 1">
+                                                <div class="h-4 bg-gray-200 rounded overflow-hidden" *ngIf="spotState === 1">
                                                 </div>
                                                 <!-- Leader: reserved -->
-                                                <div class="h-4 bg-warn-400 rounded overflow-hidden" *ngIf="spotState == 2">
+                                                <div class="h-4 bg-warn-400 rounded overflow-hidden" *ngIf="spotState === 2">
                                                 </div>
                                                 <!-- Leader: registered -->
-                                                <div class="h-4 bg-primary-400 rounded overflow-hidden" *ngIf="spotState == 3">
+                                                <div class="h-4 bg-primary-400 rounded overflow-hidden" *ngIf="spotState === 3">
                                                 </div>
                                                 <!-- Leader: paid -->
-                                                <div class="h-4 bg-primary-600 rounded overflow-hidden" *ngIf="spotState == 4">
+                                                <div class="h-4 bg-primary-600 rounded overflow-hidden" *ngIf="spotState === 4">
                                                 </div>
                                             </div>
                                         </ng-container>

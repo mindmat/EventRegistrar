@@ -24,8 +24,8 @@ public class TryAssignPaymentSlipCommandHandler : IRequestHandler<TryAssignPayme
 
     public async Task<Unit> Handle(TryAssignPaymentSlipCommand command, CancellationToken cancellationToken)
     {
-        var payment = await _payments.Where(pmt => pmt.BankAccountStatementsFile!.EventId == command.EventId
-                                                && pmt.InstructionIdentification == command.Reference)
+        var payment = await _payments.Where(pmt => pmt.Payment!.PaymentsFile!.EventId == command.EventId
+                                                && pmt.Payment.InstructionIdentification == command.Reference)
                                      .ToListAsync(cancellationToken);
 
         if (payment.Count == 1)

@@ -19,64 +19,120 @@ public class BankAccountBookingsQuery : IRequest<IEnumerable<BookingsOfDay>>, IE
 
 public class BankAccountBookingsQueryHandler : IRequestHandler<BankAccountBookingsQuery, IEnumerable<BookingsOfDay>>
 {
-    private readonly IQueryable<Payment> _bankBookings;
+    private readonly IQueryable<IncomingPayment> _incomingBookings;
+    private readonly IQueryable<OutgoingPayment> _outgoingBookings;
 
-    public BankAccountBookingsQueryHandler(IQueryable<Payment> bankBookings)
+    public BankAccountBookingsQueryHandler(IQueryable<IncomingPayment> incomingBookings,
+                                           IQueryable<OutgoingPayment> outgoingBookings)
     {
-        _bankBookings = bankBookings;
+        _incomingBookings = incomingBookings;
+        _outgoingBookings = outgoingBookings;
     }
 
     public async Task<IEnumerable<BookingsOfDay>> Handle(BankAccountBookingsQuery query,
                                                          CancellationToken cancellationToken)
     {
-        var payments = await _bankBookings.Where(bbk => bbk.BankAccountStatementsFile!.EventId == query.EventId)
-                                          .WhereIf(query.HideIgnored, bbk => !bbk.Ignore)
-                                          .WhereIf(query.HideSettled, bbk => !bbk.Settled)
-                                          .WhereIf(query.HideIncoming, bbk => bbk.CreditDebitType != CreditDebit.CRDT)
-                                          .WhereIf(query.HideOutgoing, bbk => bbk.CreditDebitType != CreditDebit.DBIT)
-                                          .WhereIf(query.SearchString != null, bbk => EF.Functions.Like(bbk.Message!, $"%{query.SearchString}%")
-                                                                                   || EF.Functions.Like(bbk.CreditorName!, $"%{query.SearchString}%")
-                                                                                   || EF.Functions.Like(bbk.DebitorName!, $"%{query.SearchString}%"))
-                                          .GroupBy(bbk => new { bbk.BookingDate, bbk.BankAccountStatementsFile!.Balance })
-                                          .Select(day => new BookingsOfDay
-                                                         {
-                                                             BookingDate = day.Key.BookingDate,
-                                                             BalanceAfter = day.Key.Balance,
-                                                             Bookings = day.Select(bbk => new BankAccountBookingDisplayItem
-                                                                                          {
-                                                                                              Id = bbk.Id,
-                                                                                              BookingDate = bbk.BookingDate,
-                                                                                              Typ = bbk.CreditDebitType,
-                                                                                              Currency = bbk.Currency,
-                                                                                              Amount = bbk.Amount,
-                                                                                              Charges = bbk.Charges,
-                                                                                              Message = bbk.Message,
-                                                                                              DebitorName = bbk.DebitorName,
-                                                                                              CreditorName = bbk.CreditorName,
-                                                                                              CreditorIban = bbk.CreditorIban,
-                                                                                              Reference = bbk.Reference,
-                                                                                              PaymentSlipId = bbk.PaymentSlipId,
+        var payments = Enumerable.Empty<PaymentDisplayItem>();
+        if (!query.HideIncoming)
+        {
+            payments = payments.Concat(await _incomingBookings.Where(bbk => bbk.Payment!.PaymentsFile!.EventId == query.EventId)
+                                                              .WhereIf(query.HideIgnored, bbk => !bbk.Payment!.Ignore)
+                                                              .WhereIf(query.HideSettled, bbk => !bbk.Payment!.Settled)
+                                                              .WhereIf(!string.IsNullOrWhiteSpace(query.SearchString), bbk => EF.Functions.Like(bbk.Payment!.Message!, $"%{query.SearchString}%")
+                                                                                                                           || EF.Functions.Like(bbk.DebitorName!, $"%{query.SearchString}%"))
+                                                              .Select(bbk => new PaymentDisplayItem
+                                                                             {
+                                                                                 Id = bbk.Id,
+                                                                                 Typ = CreditDebit.CRDT,
+                                                                                 Amount = bbk.Payment!.Amount,
+                                                                                 Charges = bbk.Payment!.Charges,
+                                                                                 Message = bbk.Payment!.Message,
+                                                                                 DebitorName = bbk.DebitorName,
+                                                                                 Currency = bbk.Payment!.Currency,
+                                                                                 Reference = bbk.Payment!.Reference,
 
-                                                                                              AmountAssigned = bbk.Assignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
-                                                                                              AmountRepaid = bbk.Repaid,
-                                                                                              Ignore = bbk.Ignore,
-                                                                                              Settled = bbk.Settled
-                                                                                          })
-                                                         })
-                                          .OrderByDescending(day => day.BookingDate)
-                                          .ToListAsync(cancellationToken);
-        return payments;
+                                                                                 AmountAssigned = bbk.Assignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
+                                                                                 BookingDate = bbk.Payment!.BookingDate,
+                                                                                 AmountRepaid = bbk.Payment!.Repaid,
+                                                                                 Settled = bbk.Payment!.Settled,
+                                                                                 PaymentSlipId = bbk.PaymentSlipId,
+                                                                                 Ignore = bbk.Payment!.Ignore,
+                                                                                 Balance = bbk.Payment!.PaymentsFile!.Balance
+                                                                             })
+                                                              .OrderByDescending(bbk => bbk.BookingDate)
+                                                              .ThenByDescending(bbk => bbk.Amount)
+                                                              .ToListAsync(cancellationToken));
+        }
+
+        if (!query.HideOutgoing)
+        {
+            payments = payments.Concat(await _outgoingBookings.Where(bbk => bbk.Payment!.PaymentsFile!.EventId == query.EventId)
+                                                              .WhereIf(query.HideIgnored, bbk => !bbk.Payment!.Ignore)
+                                                              .WhereIf(query.HideSettled, bbk => !bbk.Payment!.Settled)
+                                                              .WhereIf(!string.IsNullOrWhiteSpace(query.SearchString), bbk => EF.Functions.Like(bbk.Payment!.Message!, $"%{query.SearchString}%")
+                                                                                                                           || EF.Functions.Like(bbk.CreditorName!, $"%{query.SearchString}%"))
+                                                              .Select(bbk => new PaymentDisplayItem
+                                                                             {
+                                                                                 Id = bbk.Id,
+                                                                                 Typ = CreditDebit.DBIT,
+                                                                                 Amount = bbk.Payment!.Amount,
+                                                                                 Charges = bbk.Payment.Charges,
+                                                                                 Message = bbk.Payment.Message,
+                                                                                 CreditorName = bbk.CreditorName,
+                                                                                 CreditorIban = bbk.CreditorIban,
+                                                                                 Currency = bbk.Payment.Currency,
+                                                                                 Reference = bbk.Payment.Reference,
+
+                                                                                 AmountAssigned = bbk.Assignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
+                                                                                 BookingDate = bbk.Payment.BookingDate,
+                                                                                 AmountRepaid = bbk.Payment.Repaid,
+                                                                                 Settled = bbk.Payment.Settled,
+                                                                                 Ignore = bbk.Payment.Ignore,
+                                                                                 Balance = bbk.Payment.PaymentsFile!.Balance
+                                                                             })
+                                                              .OrderByDescending(bbk => bbk.BookingDate)
+                                                              .ThenByDescending(bbk => bbk.Amount)
+                                                              .ToListAsync(cancellationToken));
+        }
+
+        return payments.GroupBy(pmt => new { pmt.BookingDate, pmt.Balance })
+                       .Select(day => new BookingsOfDay
+                                      {
+                                          BookingDate = day.Key.BookingDate,
+                                          BalanceAfter = day.Key.Balance,
+                                          Bookings = day.Select(pmt => new PaymentDisplayItem
+                                                                       {
+                                                                           Id = pmt.Id,
+                                                                           BookingDate = pmt.BookingDate,
+                                                                           Typ = pmt.Typ,
+                                                                           Currency = pmt.Currency,
+                                                                           Amount = pmt.Amount,
+                                                                           Charges = pmt.Charges,
+                                                                           Message = pmt.Message,
+                                                                           DebitorName = pmt.DebitorName,
+                                                                           CreditorName = pmt.CreditorName,
+                                                                           CreditorIban = pmt.CreditorIban,
+                                                                           Reference = pmt.Reference,
+                                                                           PaymentSlipId = pmt.PaymentSlipId,
+
+                                                                           AmountAssigned = pmt.AmountAssigned,
+                                                                           AmountRepaid = pmt.AmountRepaid,
+                                                                           Ignore = pmt.Ignore,
+                                                                           Settled = pmt.Settled
+                                                                       })
+                                      })
+                       .OrderByDescending(day => day.BookingDate);
     }
 }
 
 public class BookingsOfDay
 {
     public DateTime BookingDate { get; set; }
-    public IEnumerable<BankAccountBookingDisplayItem> Bookings { get; set; } = null!;
+    public IEnumerable<PaymentDisplayItem> Bookings { get; set; } = null!;
     public decimal? BalanceAfter { get; set; }
 }
 
-public class BankAccountBookingDisplayItem
+public class PaymentDisplayItem
 {
     public Guid Id { get; set; }
     public CreditDebit? Typ { get; set; }
@@ -94,4 +150,5 @@ public class BankAccountBookingDisplayItem
     public string? CreditorName { get; set; }
     public string? CreditorIban { get; set; }
     public Guid? PaymentSlipId { get; set; }
+    public decimal? Balance { get; set; }
 }

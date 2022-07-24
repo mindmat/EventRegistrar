@@ -24,7 +24,7 @@ internal class IgnorePaymentCommandHandler : IRequestHandler<IgnorePaymentComman
     public async Task<Unit> Handle(IgnorePaymentCommand request, CancellationToken cancellationToken)
     {
         var payment = await _payments.FirstAsync(pmt => pmt.Id == request.PaymentId
-                                                     && pmt.BankAccountStatementsFile.EventId == request.EventId);
+                                                     && pmt.PaymentsFile.EventId == request.EventId);
         if (payment.Ignore)
         {
             return Unit.Value;

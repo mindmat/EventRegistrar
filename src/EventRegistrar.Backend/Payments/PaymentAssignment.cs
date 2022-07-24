@@ -11,7 +11,7 @@ public class PaymentAssignment : Entity
 {
     public Guid? RegistrationId { get; set; }
     public Registration? Registration { get; set; }
-    public Guid IncomingPaymentId { get; set; }
+    public Guid? IncomingPaymentId { get; set; }
     public IncomingPayment? IncomingPayment { get; set; }
     public Guid? OutgoingPaymentId { get; set; }
     public OutgoingPayment? OutgoingPayment { get; set; }
@@ -31,7 +31,7 @@ public class PaymentAssignmentMap : EntityMap<PaymentAssignment>
         builder.ToTable("PaymentAssignments");
 
         builder.HasOne(pas => pas.Registration)
-               .WithMany(pmt => pmt.PaymentAssignments)
+               .WithMany(reg => reg.PaymentAssignments)
                .HasForeignKey(pas => pas.RegistrationId);
 
         builder.HasOne(pas => pas.IncomingPayment)
@@ -39,7 +39,7 @@ public class PaymentAssignmentMap : EntityMap<PaymentAssignment>
                .HasForeignKey(pas => pas.IncomingPaymentId);
 
         builder.HasOne(pas => pas.OutgoingPayment)
-               .WithMany(pmt => pmt.RepaymentAssignments)
+               .WithMany(pmt => pmt.Assignments)
                .HasForeignKey(pas => pas.OutgoingPaymentId);
 
         builder.HasOne(pas => pas.PayoutRequest)

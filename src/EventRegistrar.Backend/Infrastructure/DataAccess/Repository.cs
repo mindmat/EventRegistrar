@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess;
@@ -14,12 +15,12 @@ public class Repository<TEntity> : Queryable<TEntity>, IRepository<TEntity>
         _dbContext = dbContext;
     }
 
-    public Task<TEntity> Get(Expression<Func<TEntity, bool>> predicate)
+    public Task<TEntity?> Get(Expression<Func<TEntity, bool>> predicate)
     {
         return DbSet.FirstOrDefaultAsync(predicate);
     }
 
-    public Task<TEntity> GetById(Guid id)
+    public Task<TEntity?> GetById(Guid id)
     {
         return DbSet.FirstOrDefaultAsync(entity => entity.Id == id);
     }
@@ -31,12 +32,11 @@ public class Repository<TEntity> : Queryable<TEntity>, IRepository<TEntity>
 
     public async Task InsertOrUpdateEntity(TEntity entity, CancellationToken cancellationToken = default)
     {
-        if (entity == null)
-            return;
-        //return EntityState.Unchanged;
-
         // prevent empty Guid
-        if (entity.Id == Guid.Empty) entity.Id = Guid.NewGuid();
+        if (entity.Id == Guid.Empty)
+        {
+            entity.Id = Guid.NewGuid();
+        }
 
         // add entity to context
         DbSet.Attach(entity);
@@ -65,7 +65,6 @@ public class Repository<TEntity> : Queryable<TEntity>, IRepository<TEntity>
 
     public EntityEntry<TEntity> Remove(TEntity entityToDelete)
     {
-        if (entityToDelete == null) return null;
         // make sure the entity is in the context
         entityToDelete = DbSet.Find(entityToDelete.Id);
 
@@ -75,6 +74,9 @@ public class Repository<TEntity> : Queryable<TEntity>, IRepository<TEntity>
     public void Remove(Expression<Func<TEntity, bool>> predicate)
     {
         var entitiesToDelete = DbSet.Where(predicate);
-        foreach (var entityToDelete in entitiesToDelete) DbSet.Remove(entityToDelete);
+        foreach (var entityToDelete in entitiesToDelete)
+        {
+            DbSet.Remove(entityToDelete);
+        }
     }
 }

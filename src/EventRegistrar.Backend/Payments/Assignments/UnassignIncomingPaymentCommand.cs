@@ -45,14 +45,18 @@ public class UnassignIncomingPaymentCommandHandler : IRequestHandler<UnassignInc
         existingAssignment.PaymentAssignmentId_Counter = counterAssignment.Id;
         await _assignments.InsertOrUpdateEntity(counterAssignment, cancellationToken);
 
-        _eventBus.Publish(new IncomingPaymentUnassigned
-                          {
-                              EventId = command.EventId,
-                              PaymentAssignmentId = command.PaymentAssignmentId,
-                              PaymentAssignmentId_Counter = counterAssignment.Id,
-                              IncomingPaymentId = existingAssignment.IncomingPaymentId,
-                              RegistrationId = existingAssignment.RegistrationId
-                          });
+        if (existingAssignment.IncomingPaymentId != null)
+        {
+            _eventBus.Publish(new IncomingPaymentUnassigned
+                              {
+                                  EventId = command.EventId,
+                                  PaymentAssignmentId = command.PaymentAssignmentId,
+                                  PaymentAssignmentId_Counter = counterAssignment.Id,
+                                  IncomingPaymentId = existingAssignment.IncomingPaymentId!.Value,
+                                  RegistrationId = existingAssignment.RegistrationId
+                              });
+        }
+
         return Unit.Value;
     }
 }

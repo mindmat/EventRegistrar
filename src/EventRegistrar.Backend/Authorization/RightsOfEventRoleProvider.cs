@@ -127,7 +127,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(MatchPartnerRegistrationsCommand);
             yield return nameof(ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand);
             yield return nameof(UnassignIncomingPaymentCommand);
-            yield return nameof(AssignRepaymentCommand);
+            yield return nameof(AssignOutgoingPaymentCommand);
             yield return nameof(FixInvalidAddressCommand);
             yield return nameof(AddIndividualReductionCommand);
             yield return nameof(ImportMailsFromImapCommand);
@@ -148,7 +148,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(ProcessFetchedBankStatementsFileCommand);
             yield return nameof(SendPaymentDueMailCommand);
             yield return nameof(RefundDifferenceCommand);
-            yield return nameof(AssignPayoutCommand);
+            yield return nameof(AssignOutgoingPaymentCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

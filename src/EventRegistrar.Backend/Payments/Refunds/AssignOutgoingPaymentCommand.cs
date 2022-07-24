@@ -8,27 +8,28 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Refunds;
 
-public class AssignPayoutCommand : IRequest, IEventBoundRequest
+public class AssignOutgoingPaymentCommand : IRequest, IEventBoundRequest
 {
+    public Guid EventId { get; set; }
+    public Guid PayoutRequestId { get; set; }
+    public Guid OutgoingPaymentId { get; set; }
+    public decimal Amount { get; set; }
+
     public bool AcceptDifference { get; set; }
     public string? AcceptDifferenceReason { get; set; }
-    public decimal Amount { get; set; }
-    public Guid EventId { get; set; }
-    public Guid OutgoingPaymentId { get; set; }
-    public Guid PayoutRequestId { get; set; }
 }
 
-public class AssignPayoutCommandHandler : IRequestHandler<AssignPayoutCommand>
+public class AssignOutgoingPaymentCommandHandler : IRequestHandler<AssignOutgoingPaymentCommand>
 {
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IEventBus _eventBus;
     private readonly IQueryable<PayoutRequest> _payoutRequests;
     private readonly IQueryable<OutgoingPayment> _outgoingPayments;
 
-    public AssignPayoutCommandHandler(IQueryable<PayoutRequest> payoutRequests,
-                                      IQueryable<OutgoingPayment> outgoingPayments,
-                                      IRepository<PaymentAssignment> assignments,
-                                      IEventBus eventBus)
+    public AssignOutgoingPaymentCommandHandler(IQueryable<PayoutRequest> payoutRequests,
+                                               IQueryable<OutgoingPayment> outgoingPayments,
+                                               IRepository<PaymentAssignment> assignments,
+                                               IEventBus eventBus)
     {
         _payoutRequests = payoutRequests;
         _outgoingPayments = outgoingPayments;
@@ -36,7 +37,7 @@ public class AssignPayoutCommandHandler : IRequestHandler<AssignPayoutCommand>
         _eventBus = eventBus;
     }
 
-    public async Task<Unit> Handle(AssignPayoutCommand command, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(AssignOutgoingPaymentCommand command, CancellationToken cancellationToken)
     {
         var payoutRequest = await _payoutRequests.Where(reg => reg.Id == command.PayoutRequestId
                                                             && reg.Registration!.EventId == command.EventId)
@@ -58,10 +59,10 @@ public class AssignPayoutCommandHandler : IRequestHandler<AssignPayoutCommand>
         _eventBus.Publish(new OutgoingPaymentAssigned
                           {
                               PaymentAssignmentId = assignment.Id,
-                              Amount = assignment.Amount,
+                              RegistrationId = payoutRequest.RegistrationId,
                               PayoutRequestId = assignment.PayoutRequestId,
                               OutgoingPaymentId = outgoingPayment.Id,
-                              RegistrationId = payoutRequest.RegistrationId
+                              Amount = assignment.Amount
                           });
 
         return Unit.Value;

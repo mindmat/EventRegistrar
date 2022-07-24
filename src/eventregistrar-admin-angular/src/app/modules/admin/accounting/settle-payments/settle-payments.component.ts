@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { BankAccountBooking, BookingsOfDay, CreditDebit } from 'app/api/api';
+import { Payment, BookingsOfDay, CreditDebit } from 'app/api/api';
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
 import { SettlePaymentsService } from './settle-payments.service';
 
@@ -13,7 +13,7 @@ export class SettlePaymentsComponent implements OnInit
   private unsubscribeAll: Subject<any> = new Subject<any>();
   daysWithBookings: BookingsOfDay[];
   CreditDebit = CreditDebit;
-  selectedBooking: BankAccountBooking;
+  selectedBooking: Payment;
 
   // candidates: AssignmentCandidate[];
 
@@ -68,7 +68,7 @@ export class SettlePaymentsComponent implements OnInit
       });
   }
 
-  selectBooking(booking: BankAccountBooking)
+  selectBooking(booking: Payment)
   {
     this.selectedBooking = booking;
 

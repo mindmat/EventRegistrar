@@ -59,9 +59,9 @@ export class BankStatementsComponent implements OnInit
           this.filteredBookingDays = this.filteredBookingDays.map(day =>
           ({
             ...day,
-            bookings: day.bookings.filter(bok => bok.debitorName.toLowerCase().includes(query)
-              || bok.creditorName.toLowerCase().includes(query)
-              || bok.message.toLowerCase().includes(query))
+            bookings: day.bookings.filter(bok => bok.debitorName?.toLowerCase().includes(query)
+              || bok.creditorName?.toLowerCase().includes(query)
+              || bok.message?.toLowerCase().includes(query))
           } as BookingsOfDay))
             .filter(day => day.bookings.length > 0);
         };

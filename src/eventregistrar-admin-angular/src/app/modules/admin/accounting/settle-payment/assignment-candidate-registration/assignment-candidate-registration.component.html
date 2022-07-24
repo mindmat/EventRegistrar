@@ -1,8 +1,7 @@
 <fuse-card class="flex flex-col w-80 p-4 rounded-xl {{ candidate.amountMatch ? 'bg-green-300':'' }}">
     <div>
         <div class="flex flex-row items-baseline gap-x-2">
-            <div class="text-xl font-semibold leading-tight">{{ candidate.price - candidate.amountPaid | number:
-                '1.2-2' }}</div>
+            <div class="text-xl font-semibold leading-tight">{{ possibleAmount | number:'1.2-2' }}</div>
             <a class="hover:underline text-secondary leading-tight" [routerLink]="['/registration', candidate.registrationId]">{{ candidate.firstName }} {{ candidate.lastName }}</a>
         </div>
 

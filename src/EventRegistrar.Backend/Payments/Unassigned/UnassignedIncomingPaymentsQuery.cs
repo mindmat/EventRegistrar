@@ -23,24 +23,24 @@ public class UnassignedIncomingPaymentsQueryHandler : IRequestHandler<Unassigned
     public async Task<IEnumerable<PaymentDisplayItem>> Handle(UnassignedIncomingPaymentsQuery query,
                                                               CancellationToken cancellationToken)
     {
-        var payments = await _payments.Where(rpy => rpy.BankAccountStatementsFile!.EventId == query.EventId
-                                                 && !rpy.Settled
-                                                 && !rpy.Ignore)
+        var payments = await _payments.Where(rpy => rpy.Payment!.PaymentsFile!.EventId == query.EventId
+                                                 && !rpy.Payment.Settled
+                                                 && !rpy.Payment.Ignore)
                                       .Select(rpy => new PaymentDisplayItem
                                                      {
                                                          Id = rpy.Id,
-                                                         Amount = rpy.Amount,
+                                                         Amount = rpy.Payment!.Amount,
                                                          AmountAssigned = rpy.Assignments!.Sum(asn => asn.PayoutRequestId == null
                                                                                                           ? asn.Amount
                                                                                                           : -asn.Amount),
-                                                         BookingDate = rpy.BookingDate,
-                                                         Currency = rpy.Currency,
-                                                         Info = rpy.Info,
-                                                         Reference = rpy.Reference,
-                                                         AmountRepaid = rpy.Repaid,
-                                                         Settled = rpy.Settled,
+                                                         BookingDate = rpy.Payment.BookingDate,
+                                                         Currency = rpy.Payment.Currency,
+                                                         Info = rpy.Payment.Info,
+                                                         Reference = rpy.Payment.Reference,
+                                                         AmountRepaid = rpy.Payment.Repaid,
+                                                         Settled = rpy.Payment.Settled,
                                                          PaymentSlipId = rpy.PaymentSlipId,
-                                                         Message = rpy.Message,
+                                                         Message = rpy.Payment.Message,
                                                          DebitorName = rpy.DebitorName
                                                      })
                                       .OrderByDescending(rpy => rpy.BookingDate)

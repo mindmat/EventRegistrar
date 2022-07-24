@@ -26,7 +26,7 @@ public class PayoutAssignmentController : Controller
                                     bool acceptDifference,
                                     string acceptDifferenceReason)
     {
-        await _mediator.Send(new AssignPayoutCommand
+        await _mediator.Send(new AssignOutgoingPaymentCommand
                              {
                                  EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                                  OutgoingPaymentId = paymentId,

@@ -14,11 +14,11 @@ public class PaymentOverviewQuery : IRequest<PaymentOverview>, IEventBoundReques
 
 public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery, PaymentOverview>
 {
-    private readonly IQueryable<BankAccountStatementsFile> _paymentFiles;
+    private readonly IQueryable<PaymentsFile> _paymentFiles;
     private readonly IQueryable<Registrable> _registrables;
     private readonly IQueryable<Registration> _registrations;
 
-    public PaymentOverviewQueryHandler(IQueryable<BankAccountStatementsFile> paymentFiles,
+    public PaymentOverviewQueryHandler(IQueryable<PaymentsFile> paymentFiles,
                                        IQueryable<Registration> registrations,
                                        IQueryable<Registrable> registrables)
     {

@@ -136,34 +136,6 @@ namespace EventRegistrar.Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BankAccountStatementsFiles",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    AccountIban = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FileId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Balance = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
-                    BookingsFrom = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    BookingsTo = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Currency = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Sequence = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BankAccountStatementsFiles", x => x.Id)
-                        .Annotation("SqlServer:Clustered", false);
-                    table.ForeignKey(
-                        name: "FK_BankAccountStatementsFiles_Events_EventId",
-                        column: x => x.EventId,
-                        principalTable: "Events",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "DomainEvents",
                 columns: table => new
                 {
@@ -242,6 +214,34 @@ namespace EventRegistrar.Backend.Migrations
                         principalTable: "Events",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PaymentsFiles",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    AccountIban = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileId = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    BookingsFrom = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    BookingsTo = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Currency = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Sequence = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PaymentsFiles", x => x.Id)
+                        .Annotation("SqlServer:Clustered", false);
+                    table.ForeignKey(
+                        name: "FK_PaymentsFiles_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -430,20 +430,17 @@ namespace EventRegistrar.Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BankAccountBookings",
+                name: "Payments",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    BankAccountStatementsFileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PaymentSlipId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Charges = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
-                    CreditDebitType = table.Column<int>(type: "int", nullable: true),
+                    PaymentsFileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Currency = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DebitorIban = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    DebitorName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
+                    Charges = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    BookingDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Info = table.Column<string>(type: "nvarchar(400)", maxLength: 400, nullable: true),
+                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InstructionIdentification = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     RawXml = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RecognizedEmail = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
@@ -451,28 +448,21 @@ namespace EventRegistrar.Backend.Migrations
                     Repaid = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
                     Settled = table.Column<bool>(type: "bit", nullable: false),
                     Ignore = table.Column<bool>(type: "bit", nullable: false),
-                    Message = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreditorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreditorIban = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<int>(type: "int", nullable: false),
                     Sequence = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BankAccountBookings", x => x.Id)
+                    table.PrimaryKey("PK_Payments", x => x.Id)
                         .Annotation("SqlServer:Clustered", false);
                     table.ForeignKey(
-                        name: "FK_BankAccountBookings_BankAccountStatementsFiles_BankAccountStatementsFileId",
-                        column: x => x.BankAccountStatementsFileId,
-                        principalTable: "BankAccountStatementsFiles",
+                        name: "FK_Payments_PaymentsFiles_PaymentsFileId",
+                        column: x => x.PaymentsFileId,
+                        principalTable: "PaymentsFiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BankAccountBookings_PaymentSlips_PaymentSlipId",
-                        column: x => x.PaymentSlipId,
-                        principalTable: "PaymentSlips",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -716,6 +706,58 @@ namespace EventRegistrar.Backend.Migrations
                         column: x => x.RegistrationId_Partner,
                         principalTable: "Registrations",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IncomingPayments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DebitorIban = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    DebitorName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    PaymentSlipId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Sequence = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IncomingPayments", x => x.Id)
+                        .Annotation("SqlServer:Clustered", false);
+                    table.ForeignKey(
+                        name: "FK_IncomingPayments_Payments_Id",
+                        column: x => x.Id,
+                        principalTable: "Payments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_IncomingPayments_PaymentSlips_PaymentSlipId",
+                        column: x => x.PaymentSlipId,
+                        principalTable: "PaymentSlips",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "OutgoingPayments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreditorName = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    CreditorIban = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    Sequence = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_OutgoingPayments", x => x.Id)
+                        .Annotation("SqlServer:Clustered", false);
+                    table.ForeignKey(
+                        name: "FK_OutgoingPayments_Payments_Id",
+                        column: x => x.Id,
+                        principalTable: "Payments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -1098,9 +1140,9 @@ namespace EventRegistrar.Backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RegistrationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    ReceivedPaymentId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IncomingPaymentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    OutgoingPaymentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PaymentAssignmentId_Counter = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    PaymentId_Repayment = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PayoutRequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -1113,16 +1155,15 @@ namespace EventRegistrar.Backend.Migrations
                     table.PrimaryKey("PK_PaymentAssignments", x => x.Id)
                         .Annotation("SqlServer:Clustered", false);
                     table.ForeignKey(
-                        name: "FK_PaymentAssignments_BankAccountBookings_PaymentId_Repayment",
-                        column: x => x.PaymentId_Repayment,
-                        principalTable: "BankAccountBookings",
+                        name: "FK_PaymentAssignments_IncomingPayments_IncomingPaymentId",
+                        column: x => x.IncomingPaymentId,
+                        principalTable: "IncomingPayments",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_PaymentAssignments_BankAccountBookings_ReceivedPaymentId",
-                        column: x => x.ReceivedPaymentId,
-                        principalTable: "BankAccountBookings",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_PaymentAssignments_OutgoingPayments_OutgoingPaymentId",
+                        column: x => x.OutgoingPaymentId,
+                        principalTable: "OutgoingPayments",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_PaymentAssignments_PaymentAssignments_PaymentAssignmentId_Counter",
                         column: x => x.PaymentAssignmentId_Counter,
@@ -1161,35 +1202,6 @@ namespace EventRegistrar.Backend.Migrations
                 name: "IX_AccessToEventRequests_UserId_Responder",
                 table: "AccessToEventRequests",
                 column: "UserId_Responder");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BankAccountBookings_BankAccountStatementsFileId",
-                table: "BankAccountBookings",
-                column: "BankAccountStatementsFileId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BankAccountBookings_PaymentSlipId",
-                table: "BankAccountBookings",
-                column: "PaymentSlipId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BankAccountBookings_Sequence",
-                table: "BankAccountBookings",
-                column: "Sequence",
-                unique: true)
-                .Annotation("SqlServer:Clustered", true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BankAccountStatementsFiles_EventId",
-                table: "BankAccountStatementsFiles",
-                column: "EventId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_BankAccountStatementsFiles_Sequence",
-                table: "BankAccountStatementsFiles",
-                column: "Sequence",
-                unique: true)
-                .Annotation("SqlServer:Clustered", true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DomainEvents_EventId",
@@ -1269,6 +1281,18 @@ namespace EventRegistrar.Backend.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ImportedMailsToRegistrations_Sequence",
                 table: "ImportedMailsToRegistrations",
+                column: "Sequence",
+                unique: true)
+                .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IncomingPayments_PaymentSlipId",
+                table: "IncomingPayments",
+                column: "PaymentSlipId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IncomingPayments_Sequence",
+                table: "IncomingPayments",
                 column: "Sequence",
                 unique: true)
                 .Annotation("SqlServer:Clustered", true);
@@ -1354,24 +1378,31 @@ namespace EventRegistrar.Backend.Migrations
                 .Annotation("SqlServer:Clustered", true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_OutgoingPayments_Sequence",
+                table: "OutgoingPayments",
+                column: "Sequence",
+                unique: true)
+                .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentAssignments_IncomingPaymentId",
+                table: "PaymentAssignments",
+                column: "IncomingPaymentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentAssignments_OutgoingPaymentId",
+                table: "PaymentAssignments",
+                column: "OutgoingPaymentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PaymentAssignments_PaymentAssignmentId_Counter",
                 table: "PaymentAssignments",
                 column: "PaymentAssignmentId_Counter");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PaymentAssignments_PaymentId_Repayment",
-                table: "PaymentAssignments",
-                column: "PaymentId_Repayment");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_PaymentAssignments_PayoutRequestId",
                 table: "PaymentAssignments",
                 column: "PayoutRequestId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_PaymentAssignments_ReceivedPaymentId",
-                table: "PaymentAssignments",
-                column: "ReceivedPaymentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentAssignments_RegistrationId",
@@ -1381,6 +1412,30 @@ namespace EventRegistrar.Backend.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_PaymentAssignments_Sequence",
                 table: "PaymentAssignments",
+                column: "Sequence",
+                unique: true)
+                .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payments_PaymentsFileId",
+                table: "Payments",
+                column: "PaymentsFileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payments_Sequence",
+                table: "Payments",
+                column: "Sequence",
+                unique: true)
+                .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsFiles_EventId",
+                table: "PaymentsFiles",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PaymentsFiles_Sequence",
+                table: "PaymentsFiles",
                 column: "Sequence",
                 unique: true)
                 .Annotation("SqlServer:Clustered", true);
@@ -1758,7 +1813,10 @@ namespace EventRegistrar.Backend.Migrations
                 name: "Mails");
 
             migrationBuilder.DropTable(
-                name: "BankAccountBookings");
+                name: "IncomingPayments");
+
+            migrationBuilder.DropTable(
+                name: "OutgoingPayments");
 
             migrationBuilder.DropTable(
                 name: "PayoutRequests");
@@ -1773,10 +1831,10 @@ namespace EventRegistrar.Backend.Migrations
                 name: "MailTemplates");
 
             migrationBuilder.DropTable(
-                name: "BankAccountStatementsFiles");
+                name: "PaymentSlips");
 
             migrationBuilder.DropTable(
-                name: "PaymentSlips");
+                name: "Payments");
 
             migrationBuilder.DropTable(
                 name: "Registrations");
@@ -1786,6 +1844,9 @@ namespace EventRegistrar.Backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "Registrables");
+
+            migrationBuilder.DropTable(
+                name: "PaymentsFiles");
 
             migrationBuilder.DropTable(
                 name: "RegistrationForms");

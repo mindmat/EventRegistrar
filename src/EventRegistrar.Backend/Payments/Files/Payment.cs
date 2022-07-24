@@ -7,20 +7,14 @@ namespace EventRegistrar.Backend.Payments.Files;
 
 public class Payment : Entity
 {
-    public Guid BankAccountStatementsFileId { get; set; }
-    public BankAccountStatementsFile? BankAccountStatementsFile { get; set; }
-
-    public ICollection<PaymentAssignment>? Assignments { get; set; }
-    public ICollection<PaymentAssignment>? RepaymentAssignments { get; set; }
+    public Guid PaymentsFileId { get; set; }
+    public PaymentsFile? PaymentsFile { get; set; }
 
     public string? Currency { get; set; }
     public decimal Amount { get; set; }
     public decimal? Charges { get; set; }
     public DateTime BookingDate { get; set; }
 
-
-    //[Obsolete("Not necessary anymore?")]
-    //public CreditDebit? CreditDebitType { get; set; }
 
     public string? Info { get; set; }
     public string? Message { get; set; }
@@ -32,6 +26,16 @@ public class Payment : Entity
     public decimal? Repaid { get; set; }
     public bool Settled { get; set; }
     public bool Ignore { get; set; }
+    public IncomingPayment? Incoming { get; set; }
+    public OutgoingPayment? Outgoing { get; set; }
+
+    public PaymentType Type { get; set; }
+}
+
+public enum PaymentType
+{
+    Incoming = 1,
+    Outgoing = 2
 }
 
 public class PaymentMap : EntityMap<Payment>
@@ -40,9 +44,9 @@ public class PaymentMap : EntityMap<Payment>
     {
         builder.ToTable("Payments");
 
-        builder.HasOne(pmt => pmt.BankAccountStatementsFile)
+        builder.HasOne(pmt => pmt.PaymentsFile)
                .WithMany()
-               .HasForeignKey(pmt => pmt.BankAccountStatementsFileId);
+               .HasForeignKey(pmt => pmt.PaymentsFileId);
 
         builder.Property(pmt => pmt.Info)
                .HasMaxLength(400);
@@ -58,10 +62,12 @@ public class PaymentMap : EntityMap<Payment>
     }
 }
 
-public class OutgoingPayment : Payment
+public class OutgoingPayment : Entity
 {
+    public Payment? Payment { get; set; }
     public string? CreditorName { get; set; }
     public string? CreditorIban { get; set; }
+    public ICollection<PaymentAssignment>? Assignments { get; set; }
 }
 
 public class OutgoingPaymentMap : EntityMap<OutgoingPayment>
@@ -70,20 +76,26 @@ public class OutgoingPaymentMap : EntityMap<OutgoingPayment>
     {
         builder.ToTable("OutgoingPayments");
 
-        builder.Property(pmt => pmt.CreditorName)
+        builder.HasOne(pmo => pmo.Payment)
+               .WithOne(pmt => pmt.Outgoing)
+               .HasForeignKey<OutgoingPayment>(pmo => pmo.Id);
+
+        builder.Property(pmo => pmo.CreditorName)
                .HasMaxLength(500);
 
-        builder.Property(pmt => pmt.CreditorIban)
+        builder.Property(pmo => pmo.CreditorIban)
                .HasMaxLength(50);
     }
 }
 
-public class IncomingPayment : Payment
+public class IncomingPayment : Entity
 {
+    public Payment? Payment { get; set; }
     public string? DebitorIban { get; set; }
     public string? DebitorName { get; set; }
     public Guid? PaymentSlipId { get; set; }
     public PaymentSlip? PaymentSlip { get; set; }
+    public ICollection<PaymentAssignment>? Assignments { get; set; }
 }
 
 public class IncomingPaymentMap : EntityMap<IncomingPayment>
@@ -92,14 +104,18 @@ public class IncomingPaymentMap : EntityMap<IncomingPayment>
     {
         builder.ToTable("IncomingPayments");
 
-        builder.HasOne(pmt => pmt.PaymentSlip)
-               .WithMany()
-               .HasForeignKey(pmt => pmt.PaymentSlipId);
+        builder.HasOne(pmi => pmi.Payment)
+               .WithOne(pmt => pmt.Incoming)
+               .HasForeignKey<IncomingPayment>(pmi => pmi.Id);
 
-        builder.Property(pmt => pmt.DebitorName)
+        builder.HasOne(pmi => pmi.PaymentSlip)
+               .WithMany()
+               .HasForeignKey(pmi => pmi.PaymentSlipId);
+
+        builder.Property(pmi => pmi.DebitorName)
                .HasMaxLength(500);
 
-        builder.Property(pmt => pmt.DebitorIban)
+        builder.Property(pmi => pmi.DebitorIban)
                .HasMaxLength(50);
     }
 }

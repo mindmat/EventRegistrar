@@ -24,27 +24,27 @@ public class PossibleRepaymentAssignmentQueryHandler : IRequestHandler<PossibleR
                                                                        CancellationToken cancellationToken)
     {
         var payment = await _payments.Where(pmt => pmt.Id == query.PaymentId
-                                                && pmt.BankAccountStatementsFile!.EventId == query.EventId)
+                                                && pmt.Payment!.PaymentsFile!.EventId == query.EventId)
                                      .Include(pmt => pmt.Assignments)
                                      .FirstAsync(cancellationToken);
 
-        var payments = await _payments.Where(pmt => pmt.BankAccountStatementsFile!.EventId == query.EventId
-                                                 && !pmt.Settled)
+        var payments = await _payments.Where(pmt => pmt.Payment!.PaymentsFile!.EventId == query.EventId
+                                                 && !pmt.Payment!.Settled)
                                       .Select(pmt => new PossibleRepaymentAssignment
                                                      {
                                                          PaymentId_OpenPosition = payment.Id,
                                                          PaymentId_Counter = pmt.Id,
-                                                         BookingDate = pmt.BookingDate,
-                                                         Amount = pmt.Amount,
-                                                         AmountUnsettled = pmt.Amount
+                                                         BookingDate = pmt.Payment!.BookingDate,
+                                                         Amount = pmt.Payment!.Amount,
+                                                         AmountUnsettled = pmt.Payment!.Amount
                                                                          - pmt.Assignments!
                                                                               .Select(asn => asn.PayoutRequestId == null
                                                                                                  ? asn.Amount
                                                                                                  : -asn.Amount)
                                                                               .Sum(),
-                                                         Settled = pmt.Settled,
-                                                         Currency = pmt.Currency,
-                                                         Info = pmt.Info,
+                                                         Settled = pmt.Payment!.Settled,
+                                                         Currency = pmt.Payment!.Currency,
+                                                         Info = pmt.Payment!.Info,
                                                          DebitorName = pmt.DebitorName
                                                      })
                                       .ToListAsync(cancellationToken);
@@ -53,7 +53,7 @@ public class PossibleRepaymentAssignmentQueryHandler : IRequestHandler<PossibleR
                        .OrderByDescending(mtc => mtc.MatchScore);
     }
 
-    private static int CalculateMatchScore(PossibleRepaymentAssignment paymentCandidate, Payment openPayment)
+    private static int CalculateMatchScore(PossibleRepaymentAssignment paymentCandidate, IncomingPayment openPayment)
     {
         var debitorParts = paymentCandidate.DebitorName?.Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)
                                            ?.Select(wrd => wrd.ToLowerInvariant())
@@ -64,11 +64,11 @@ public class PossibleRepaymentAssignmentQueryHandler : IRequestHandler<PossibleR
                                                ?.ToList()
                             ?? new List<string>();
 
-        var unsettledAmountInOpenPayment = openPayment.Amount
+        var unsettledAmountInOpenPayment = openPayment.Payment!.Amount
                                          - openPayment.Assignments!.Sum(asn => asn.PayoutRequestId == null
                                                                                    ? asn.Amount
                                                                                    : -asn.Amount);
-        var wordsInOpenPayment = openPayment.Info
+        var wordsInOpenPayment = openPayment.Payment!.Info!
                                             .Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)
                                             .Select(wrd => wrd.ToLowerInvariant())
                                             .ToHashSet();

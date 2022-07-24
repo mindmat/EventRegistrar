@@ -18,19 +18,19 @@ export class SettlePaymentService extends FetchService<BookingAssignments>
 
   fetchCandidates(id: string)
   {
-    return this.fetchItems(this.api.possibleAssignments_Query({ eventId: this.eventService.selectedId, bankAccountBookingId: id }));
+    return this.fetchItems(this.api.possibleAssignments_Query({ eventId: this.eventService.selectedId, paymentId: id }));
   }
 
   unassign(paymentAssignmentId: string)
   {
-    return this.api.unassignPayment_Command({ eventId: this.eventService.selectedId, paymentAssignmentId: paymentAssignmentId })
+    return this.api.unassignIncomingPayment_Command({ eventId: this.eventService.selectedId, paymentAssignmentId: paymentAssignmentId })
       .subscribe(x => console.log(x));
   }
 
-  assign(bankAccountBookingId: string, registrationId: string, amount: number,
+  assign(paymentId: string, registrationId: string, amount: number,
     acceptDifference: boolean, acceptDifferenceReason: string)
   {
-    this.api.assignPayment_Command({ eventId: this.eventService.selectedId, paymentId: bankAccountBookingId, registrationId: registrationId, amount: amount, acceptDifference: acceptDifference, acceptDifferenceReason: acceptDifferenceReason })
+    this.api.assignIncomingPayment_Command({ eventId: this.eventService.selectedId, paymentIncomingId: paymentId, registrationId: registrationId, amount: amount, acceptDifference: acceptDifference, acceptDifferenceReason: acceptDifferenceReason })
       .subscribe(x => console.log(x));
   }
 }
