@@ -7,7 +7,7 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Statements;
 
-public class BankAccountBookingsQuery : IRequest<IEnumerable<BookingsOfDay>>, IEventBoundRequest
+public class PaymentsByDayQuery : IRequest<IEnumerable<BookingsOfDay>>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
     public bool HideIgnored { get; set; }
@@ -17,19 +17,19 @@ public class BankAccountBookingsQuery : IRequest<IEnumerable<BookingsOfDay>>, IE
     public string? SearchString { get; set; }
 }
 
-public class BankAccountBookingsQueryHandler : IRequestHandler<BankAccountBookingsQuery, IEnumerable<BookingsOfDay>>
+public class PaymentsByDayQueryHandler : IRequestHandler<PaymentsByDayQuery, IEnumerable<BookingsOfDay>>
 {
     private readonly IQueryable<IncomingPayment> _incomingBookings;
     private readonly IQueryable<OutgoingPayment> _outgoingBookings;
 
-    public BankAccountBookingsQueryHandler(IQueryable<IncomingPayment> incomingBookings,
-                                           IQueryable<OutgoingPayment> outgoingBookings)
+    public PaymentsByDayQueryHandler(IQueryable<IncomingPayment> incomingBookings,
+                                     IQueryable<OutgoingPayment> outgoingBookings)
     {
         _incomingBookings = incomingBookings;
         _outgoingBookings = outgoingBookings;
     }
 
-    public async Task<IEnumerable<BookingsOfDay>> Handle(BankAccountBookingsQuery query,
+    public async Task<IEnumerable<BookingsOfDay>> Handle(PaymentsByDayQuery query,
                                                          CancellationToken cancellationToken)
     {
         var payments = Enumerable.Empty<PaymentDisplayItem>();

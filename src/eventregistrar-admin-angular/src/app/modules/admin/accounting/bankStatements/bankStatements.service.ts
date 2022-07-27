@@ -18,6 +18,6 @@ export class BankStatementsService extends ListService<BookingsOfDay>
 
   fetchBankStatements(hideIncoming: boolean = false, hideOutgoing: boolean = false, hideSettled: boolean = false, hideIgnored: boolean = false): Observable<BookingsOfDay[]>
   {
-    return this.fetchItems(this.api.bankAccountBookings_Query({ eventId: this.eventService.selectedId, hideIncoming, hideOutgoing, hideSettled, hideIgnored }));
+    return this.fetchItems(this.api.paymentsByDay_Query({ eventId: this.eventService.selectedId, hideIncoming, hideOutgoing, hideSettled, hideIgnored }));
   }
 }

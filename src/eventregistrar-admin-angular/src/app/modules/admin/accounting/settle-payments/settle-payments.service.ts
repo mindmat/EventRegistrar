@@ -23,7 +23,7 @@ export class SettlePaymentsService extends ListService<BookingsOfDay>
 
   fetchBankStatements(searchString: string = null, hideIncoming: boolean = false, hideOutgoing: boolean = false, hideSettled: boolean = true, hideIgnored: boolean = true): Observable<BookingsOfDay[]>
   {
-    return this.fetchItems(this.api.bankAccountBookings_Query({ eventId: this.eventService.selectedId, searchString, hideIncoming, hideOutgoing, hideSettled, hideIgnored }));
+    return this.fetchItems(this.api.paymentsByDay_Query({ eventId: this.eventService.selectedId, searchString, hideIncoming, hideOutgoing, hideSettled, hideIgnored }));
   }
 
   // fetchCandidates(id?: string): Observable<AssignmentCandidate[]>

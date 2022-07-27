@@ -1799,41 +1799,6 @@
         }
       }
     },
-    "/api/BankAccountBookingsQuery": {
-      "post": {
-        "tags": [
-          "BankAccountBookings"
-        ],
-        "operationId": "BankAccountBookings_Query",
-        "requestBody": {
-          "x-name": "BankAccountBookingsQuery",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/BankAccountBookingsQuery"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BookingsOfDay"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/CheckIfIncomingPaymentIsSettledCommand": {
       "post": {
         "tags": [
@@ -1891,6 +1856,41 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PaymentsByDayQuery": {
+      "post": {
+        "tags": [
+          "PaymentsByDay"
+        ],
+        "operationId": "PaymentsByDay_Query",
+        "requestBody": {
+          "x-name": "PaymentsByDayQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentsByDayQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BookingsOfDay"
+                  }
                 }
               }
             }
@@ -6159,6 +6159,26 @@
           }
         }
       },
+      "CheckIfIncomingPaymentIsSettledCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "incomingPaymentId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "CheckIfOutgoingPaymentIsSettledCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "outgoingPaymentId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "BookingsOfDay": {
         "type": "object",
         "additionalProperties": false,
@@ -6272,7 +6292,7 @@
           2
         ]
       },
-      "BankAccountBookingsQuery": {
+      "PaymentsByDayQuery": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -6295,26 +6315,6 @@
           "searchString": {
             "type": "string",
             "nullable": true
-          }
-        }
-      },
-      "CheckIfIncomingPaymentIsSettledCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "incomingPaymentId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "CheckIfOutgoingPaymentIsSettledCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "outgoingPaymentId": {
-            "type": "string",
-            "format": "guid"
           }
         }
       },
@@ -7049,16 +7049,6 @@
           "paymentAssignmentId": {
             "type": "string",
             "format": "guid"
-          },
-          "paymentAssignmentId_Counter": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "outgoingPaymentId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
           }
         }
       },

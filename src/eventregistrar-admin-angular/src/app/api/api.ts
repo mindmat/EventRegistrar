@@ -2782,57 +2782,6 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    bankAccountBookings_Query(bankAccountBookingsQuery: BankAccountBookingsQuery | undefined): Observable<BookingsOfDay[]> {
-        let url_ = this.baseUrl + "/api/BankAccountBookingsQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(bankAccountBookingsQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processBankAccountBookings_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processBankAccountBookings_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<BookingsOfDay[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<BookingsOfDay[]>;
-        }));
-    }
-
-    protected processBankAccountBookings_Query(response: HttpResponseBase): Observable<BookingsOfDay[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BookingsOfDay[];
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     checkIfIncomingPaymentIsSettled_Command(checkIfIncomingPaymentIsSettledCommand: CheckIfIncomingPaymentIsSettledCommand | undefined): Observable<Unit> {
         let url_ = this.baseUrl + "/api/CheckIfIncomingPaymentIsSettledCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -2925,6 +2874,57 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    paymentsByDay_Query(paymentsByDayQuery: PaymentsByDayQuery | undefined): Observable<BookingsOfDay[]> {
+        let url_ = this.baseUrl + "/api/PaymentsByDayQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(paymentsByDayQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPaymentsByDay_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPaymentsByDay_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BookingsOfDay[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BookingsOfDay[]>;
+        }));
+    }
+
+    protected processPaymentsByDay_Query(response: HttpResponseBase): Observable<BookingsOfDay[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BookingsOfDay[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -6862,6 +6862,14 @@ export interface UnassignedPayoutsQuery {
     paymentId?: string;
 }
 
+export interface CheckIfIncomingPaymentIsSettledCommand {
+    incomingPaymentId?: string;
+}
+
+export interface CheckIfOutgoingPaymentIsSettledCommand {
+    outgoingPaymentId?: string;
+}
+
 export interface BookingsOfDay {
     bookingDate?: Date;
     bookings?: PaymentDisplayItem2[];
@@ -6893,21 +6901,13 @@ export enum CreditDebit {
     DBIT = 2,
 }
 
-export interface BankAccountBookingsQuery {
+export interface PaymentsByDayQuery {
     eventId?: string;
     hideIgnored?: boolean;
     hideSettled?: boolean;
     hideIncoming?: boolean;
     hideOutgoing?: boolean;
     searchString?: string | null;
-}
-
-export interface CheckIfIncomingPaymentIsSettledCommand {
-    incomingPaymentId?: string;
-}
-
-export interface CheckIfOutgoingPaymentIsSettledCommand {
-    outgoingPaymentId?: string;
 }
 
 export interface PaymentDisplayItem3 {
@@ -7139,8 +7139,6 @@ export interface AssignedPaymentDisplayItem {
     bookingDate?: Date;
     currency?: string | null;
     paymentAssignmentId?: string;
-    paymentAssignmentId_Counter?: string | null;
-    outgoingPaymentId?: string | null;
 }
 
 export interface AssignedPaymentsOfRegistrationQuery {
