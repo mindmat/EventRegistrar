@@ -2627,19 +2627,19 @@
         }
       }
     },
-    "/api/UnassignIncomingPaymentCommand": {
+    "/api/UnassignPaymentCommand": {
       "post": {
         "tags": [
-          "UnassignIncomingPayment"
+          "UnassignPayment"
         ],
-        "operationId": "UnassignIncomingPayment_Command",
+        "operationId": "UnassignPayment_Command",
         "requestBody": {
-          "x-name": "UnassignIncomingPaymentCommand",
+          "x-name": "UnassignPaymentCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UnassignIncomingPaymentCommand"
+                "$ref": "#/components/schemas/UnassignPaymentCommand"
               }
             }
           },
@@ -6423,13 +6423,19 @@
             "type": "string",
             "format": "guid"
           },
-          "payoutRequestId": {
-            "type": "string",
-            "format": "guid"
-          },
           "outgoingPaymentId": {
             "type": "string",
             "format": "guid"
+          },
+          "payoutRequestId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
           },
           "amount": {
             "type": "number",
@@ -7323,7 +7329,7 @@
           }
         }
       },
-      "UnassignIncomingPaymentCommand": {
+      "UnassignPaymentCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {

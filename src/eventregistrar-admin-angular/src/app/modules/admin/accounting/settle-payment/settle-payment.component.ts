@@ -1,6 +1,6 @@
 import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { AssignmentCandidateRegistration, BookingAssignments, ExistingAssignment } from 'app/api/api';
+import { AssignmentCandidateRegistration, BookingAssignments, ExistingAssignment, PaymentType } from 'app/api/api';
 import { BehaviorSubject, combineLatest, combineLatestWith, filter, fromEvent, merge, Observable, Subject, takeUntil, tap } from 'rxjs';
 import { AssignmentRequest } from './assignment-candidate-registration/assignment-candidate-registration.component';
 import { SettlePaymentService } from './settle-payment.service';
@@ -17,6 +17,10 @@ export class SettlePaymentComponent implements OnInit
 
   existingAssignments: ExistingAssignment[];
   candidates: AssignmentCandidateRegistrationEditItem[];
+  openAmount?: number = null;
+  paymentType?: PaymentType = null;
+
+  PaymentType = PaymentType;
 
   constructor(private service: SettlePaymentService, private changeDetectorRef: ChangeDetectorRef, private route: ActivatedRoute) { }
 
@@ -26,6 +30,8 @@ export class SettlePaymentComponent implements OnInit
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe((assignments: BookingAssignments) =>
       {
+        this.openAmount = assignments.openAmount;
+        this.paymentType = assignments.type;
         this.existingAssignments = assignments.existingAssignments;
         this.candidates = assignments.registrationCandidates?.map(candidate => (
           {
@@ -47,6 +53,7 @@ export class SettlePaymentComponent implements OnInit
         takeUntil(this.unsubscribeAll),
         filter(request => !!request))
       .subscribe((request) => this.service.assign(
+        this.paymentType,
         request.paymentId,
         request.registrationId,
         request.amount,

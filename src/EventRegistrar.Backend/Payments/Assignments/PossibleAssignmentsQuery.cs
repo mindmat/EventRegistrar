@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrations;
 
@@ -85,9 +86,7 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
 
             result.Type = PaymentType.Outgoing;
             result.OpenAmount = payment.Amount
-                              - payment.Outgoing.Assignments!.Sum(asn => asn.PayoutRequestId == null && asn.OutgoingPaymentId == null
-                                                                             ? asn.Amount
-                                                                             : -asn.Amount);
+                              - payment.Outgoing.Assignments!.Sum(asn => asn.Amount);
 
             result.ExistingAssignments = payment.Outgoing.Assignments!
                                                 .Where(pas => pas.Registration != null
@@ -133,6 +132,8 @@ public class PossibleAssignmentsQueryHandler : IRequestHandler<PossibleAssignmen
                                                                    IsWaitingList = reg.IsWaitingList == true,
                                                                    State = reg.State
                                                                })
+                                                .WhereIf(result.Type == PaymentType.Incoming, reg => reg.Price > reg.AmountPaid)
+                                                .WhereIf(result.Type == PaymentType.Outgoing, reg => reg.AmountPaid > 0)
                                                 .ToListAsync(cancellationToken);
 
         var wordsInPayment = message?.Split(' ', StringSplitOptions.RemoveEmptyEntries)

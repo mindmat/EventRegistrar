@@ -126,7 +126,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SwapFirstLastNameCommand);
             yield return nameof(MatchPartnerRegistrationsCommand);
             yield return nameof(ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand);
-            yield return nameof(UnassignIncomingPaymentCommand);
+            yield return nameof(UnassignPaymentCommand);
             yield return nameof(AssignOutgoingPaymentCommand);
             yield return nameof(FixInvalidAddressCommand);
             yield return nameof(AddIndividualReductionCommand);

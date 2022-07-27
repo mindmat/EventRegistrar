@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AssignmentCandidateRegistration } from 'app/api/api';
+import { AssignmentCandidateRegistration, PaymentType } from 'app/api/api';
 import { AssignmentCandidateRegistrationEditItem } from '../settle-payment.component';
 
 @Component({
@@ -12,6 +12,7 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
   public candidateForm: FormGroup;
   public possibleAmount: number;
   @Input() candidate?: AssignmentCandidateRegistrationEditItem;
+  @Input() paymentType?: PaymentType;
   @Output() assign = new EventEmitter<AssignmentRequest>();
 
   constructor(private fb: FormBuilder) { }
@@ -26,7 +27,9 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
     // Active item id
     if ('candidate' in changes)
     {
-      this.possibleAmount = Math.max(0, this.candidate.price - this.candidate.amountPaid);
+      this.possibleAmount = this.paymentType == PaymentType.Incoming
+        ? Math.max(0, this.candidate.price - this.candidate.amountPaid)
+        : Math.max(0, this.candidate.amountPaid);
       this.candidateForm = this.fb.group({
         amountAssigned: [this.possibleAmount, [Validators.required, Validators.min(0.01), Validators.max(this.possibleAmount)]],
         acceptDifference: [false, Validators.required],

@@ -61,6 +61,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zahlungseingang zuordnen.
+        /// </summary>
+        internal static string AssignIncoming {
+            get {
+                return ResourceManager.GetString("AssignIncoming", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zahlungsausgang zuordnen.
+        /// </summary>
+        internal static string AssignOutgoing {
+            get {
+                return ResourceManager.GetString("AssignOutgoing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einzahlungen.
         /// </summary>
         internal static string Deposits {
@@ -440,6 +458,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string RegistrableSoldOut {
             get {
                 return ResourceManager.GetString("RegistrableSoldOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zahlungseingang für:.
+        /// </summary>
+        internal static string RegistrationCandidatesForIncomingPayment {
+            get {
+                return ResourceManager.GetString("RegistrationCandidatesForIncomingPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rückzahlung für:.
+        /// </summary>
+        internal static string RegistrationCandidatesForOutgoingPayment {
+            get {
+                return ResourceManager.GetString("RegistrationCandidatesForOutgoingPayment", resourceCulture);
             }
         }
         

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, BookingAssignments } from 'app/api/api';
+import { Api, BookingAssignments, PaymentType } from 'app/api/api';
 import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { FetchService } from '../../infrastructure/fetchService';
@@ -23,14 +23,22 @@ export class SettlePaymentService extends FetchService<BookingAssignments>
 
   unassign(paymentAssignmentId: string)
   {
-    return this.api.unassignIncomingPayment_Command({ eventId: this.eventService.selectedId, paymentAssignmentId: paymentAssignmentId })
+    return this.api.unassignPayment_Command({ eventId: this.eventService.selectedId, paymentAssignmentId: paymentAssignmentId })
       .subscribe(x => console.log(x));
   }
 
-  assign(paymentId: string, registrationId: string, amount: number,
+  assign(paymentType: PaymentType, paymentId: string, registrationId: string, amount: number,
     acceptDifference: boolean, acceptDifferenceReason: string)
   {
-    this.api.assignIncomingPayment_Command({ eventId: this.eventService.selectedId, paymentIncomingId: paymentId, registrationId: registrationId, amount: amount, acceptDifference: acceptDifference, acceptDifferenceReason: acceptDifferenceReason })
-      .subscribe(x => console.log(x));
+    if (paymentType === PaymentType.Incoming)
+    {
+      this.api.assignIncomingPayment_Command({ eventId: this.eventService.selectedId, paymentIncomingId: paymentId, registrationId: registrationId, amount: amount, acceptDifference: acceptDifference, acceptDifferenceReason: acceptDifferenceReason })
+        .subscribe(x => console.log(x));
+    }
+    else
+    {
+      this.api.assignOutgoingPayment_Command({ eventId: this.eventService.selectedId, outgoingPaymentId: paymentId, registrationId: registrationId, amount: amount, acceptDifference: acceptDifference, acceptDifferenceReason: acceptDifferenceReason })
+        .subscribe(x => console.log(x));
+    }
   }
 }

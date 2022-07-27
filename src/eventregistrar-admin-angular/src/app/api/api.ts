@@ -4056,11 +4056,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    unassignIncomingPayment_Command(unassignIncomingPaymentCommand: UnassignIncomingPaymentCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/UnassignIncomingPaymentCommand";
+    unassignPayment_Command(unassignPaymentCommand: UnassignPaymentCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/UnassignPaymentCommand";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(unassignIncomingPaymentCommand);
+        const content_ = JSON.stringify(unassignPaymentCommand);
 
         let options_ : any = {
             body: content_,
@@ -4073,11 +4073,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUnassignIncomingPayment_Command(response_);
+            return this.processUnassignPayment_Command(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processUnassignIncomingPayment_Command(response_ as any);
+                    return this.processUnassignPayment_Command(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<Unit>;
                 }
@@ -4086,7 +4086,7 @@ export class Api {
         }));
     }
 
-    protected processUnassignIncomingPayment_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processUnassignPayment_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6939,8 +6939,9 @@ export interface BookingsByStateQuery {
 
 export interface AssignOutgoingPaymentCommand {
     eventId?: string;
-    payoutRequestId?: string;
     outgoingPaymentId?: string;
+    payoutRequestId?: string | null;
+    registrationId?: string | null;
     amount?: number;
     acceptDifference?: boolean;
     acceptDifferenceReason?: string | null;
@@ -7224,7 +7225,7 @@ export interface PossibleRepaymentAssignmentQuery {
     paymentId?: string;
 }
 
-export interface UnassignIncomingPaymentCommand {
+export interface UnassignPaymentCommand {
     eventId?: string;
     paymentAssignmentId?: string;
 }

@@ -4,8 +4,8 @@
     <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
         <!-- Title -->
         <div class="flex-1 min-w-0">
-            <div class="text-4xl font-extrabold tracking-tight leading-none">Ausgleich</div>
-            <!-- <div class="mt-1.5 text-lg text-secondary">{{filteredBookingDays.length}}</div> -->
+            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ (paymentType === PaymentType.Incoming ? 'AssignIncoming' : 'AssignOutgoing') | translate }}</div>
+            <div *ngIf="openAmount !== null" class="mt-1.5 text-lg text-secondary">Offen {{ openAmount | number: '1.2-2' }}</div>
         </div>
         <!-- Filters -->
         <!-- <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
@@ -33,7 +33,7 @@
                             <div class="text-xl font-semibold leading-tight">{{ existingAssignment.assignedAmount | number: '1.2-2' }}</div>
                             <a class="hover:underline text-secondary leading-tight" [routerLink]="['/registration', existingAssignment.registrationId]">
                                 {{ existingAssignment.firstName }} {{ existingAssignment.lastName }}</a>
-                            <button *ngIf="existingAssignment.paymentAssignmentId_Existing" class="ml-auto" mat-icon-button (click)="unassign(candidate.paymentAssignmentId_Existing)">
+                            <button *ngIf="existingAssignment.paymentAssignmentId_Existing" class="ml-auto" mat-icon-button (click)="unassign(existingAssignment.paymentAssignmentId_Existing)">
                                 <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                             </button>
                         </div>
@@ -53,7 +53,7 @@
         <div *ngIf="candidates?.length > 0" class="p-2 rounded-xl bg-default">
 
             <div class="flex flex-row items-baseline gap-x-2 ml-6">
-                <div class="font-medium">Mögliche Anmeldungen</div>
+                <div class="font-medium">{{ (paymentType === PaymentType.Incoming ? 'RegistrationCandidatesForIncomingPayment' : 'RegistrationCandidatesForOutgoingPayment') | translate }}</div>
                 <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
             </div>
 
@@ -61,7 +61,7 @@
             <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <!-- Booking -->
                 <ng-container *ngFor="let candidate of candidates">
-                    <app-assignment-candidate-registration [candidate]="candidate" (assign)="assign($event)"></app-assignment-candidate-registration>
+                    <app-assignment-candidate-registration [paymentType]="paymentType" [candidate]="candidate" (assign)="assign($event)"></app-assignment-candidate-registration>
                 </ng-container>
             </div>
         </div>
