@@ -19,15 +19,15 @@ public class ReleaseMailCommand : IRequest, IEventBoundRequest, IQueueBoundMessa
 public class ReleaseMailCommandHandler : IRequestHandler<ReleaseMailCommand>
 {
     private readonly IRepository<Mail> _mails;
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
     private readonly IEventBus _eventBus;
 
     public ReleaseMailCommandHandler(IRepository<Mail> mails,
-                                     ServiceBusClient serviceBusClient,
+                                     CommandQueue commandQueue,
                                      IEventBus eventBus)
     {
         _mails = mails;
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
         _eventBus = eventBus;
     }
 
@@ -67,7 +67,7 @@ public class ReleaseMailCommandHandler : IRequestHandler<ReleaseMailCommand>
         withheldMail.Withhold = false;
         withheldMail.Sent = DateTime.UtcNow;
 
-        _serviceBusClient.ExecuteCommand(sendMailCommand);
+        _commandQueue.EnqueueCommand(sendMailCommand);
 
         _eventBus.Publish(new MailReleased
                           {

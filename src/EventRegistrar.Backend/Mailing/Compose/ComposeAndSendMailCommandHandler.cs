@@ -32,7 +32,7 @@ public class ComposeAndSendMailCommandHandler : IRequestHandler<ComposeAndSendMa
     private readonly IRepository<Mail> _mails;
     private readonly IRepository<MailToRegistration> _mailsToRegistrations;
     private readonly IQueryable<Registration> _registrations;
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
     private readonly IQueryable<MailTemplate> _templates;
 
     public ComposeAndSendMailCommandHandler(IQueryable<MailTemplate> templates,
@@ -40,7 +40,7 @@ public class ComposeAndSendMailCommandHandler : IRequestHandler<ComposeAndSendMa
                                             IRepository<Mail> mails,
                                             IRepository<MailToRegistration> mailsToRegistrations,
                                             MailComposer mailComposer,
-                                            ServiceBusClient serviceBusClient,
+                                            CommandQueue commandQueue,
                                             ILogger log)
     {
         _templates = templates;
@@ -48,7 +48,7 @@ public class ComposeAndSendMailCommandHandler : IRequestHandler<ComposeAndSendMa
         _mails = mails;
         _mailsToRegistrations = mailsToRegistrations;
         _mailComposer = mailComposer;
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
         _log = log;
     }
 
@@ -187,7 +187,7 @@ public class ComposeAndSendMailCommandHandler : IRequestHandler<ComposeAndSendMa
         if (!withhold)
         {
             mail.Sent = DateTime.UtcNow;
-            _serviceBusClient.ExecuteCommand(sendMailCommand);
+            _commandQueue.EnqueueCommand(sendMailCommand);
         }
 
         // ToDo

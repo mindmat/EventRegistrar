@@ -22,19 +22,19 @@ public class SendReminderCommandHandler : IRequestHandler<SendReminderCommand>
     private readonly IQueryable<MailToRegistration> _mailsToRegistrations;
     private readonly DuePaymentConfiguration _paymentConfiguration;
     private readonly IRepository<Registration> _registrations;
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
 
     public SendReminderCommandHandler(ILogger logger,
                                       IRepository<Registration> registrations,
                                       IQueryable<MailToRegistration> mailsToRegistrations,
                                       DuePaymentConfiguration paymentConfiguration,
-                                      ServiceBusClient serviceBusClient)
+                                      CommandQueue commandQueue)
     {
         _logger = logger;
         _registrations = registrations;
         _mailsToRegistrations = mailsToRegistrations;
         _paymentConfiguration = paymentConfiguration;
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
     }
 
     public async Task<Unit> Handle(SendReminderCommand command, CancellationToken cancellationToken)
@@ -117,13 +117,13 @@ public class SendReminderCommandHandler : IRequestHandler<SendReminderCommand>
 
                 if (mailType != null)
                 {
-                    _serviceBusClient.ExecuteCommand(new ComposeAndSendMailCommand
-                                                     {
-                                                         MailType = mailType.Value,
-                                                         RegistrationId = registration.Id,
-                                                         //Withhold = true,
-                                                         AllowDuplicate = false
-                                                     });
+                    _commandQueue.EnqueueCommand(new ComposeAndSendMailCommand
+                                                 {
+                                                     MailType = mailType.Value,
+                                                     RegistrationId = registration.Id,
+                                                     //Withhold = true,
+                                                     AllowDuplicate = false
+                                                 });
                 }
             }
         }

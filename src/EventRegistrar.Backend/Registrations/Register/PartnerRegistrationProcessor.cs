@@ -15,21 +15,21 @@ public class PartnerRegistrationProcessor
     private readonly PriceCalculator _priceCalculator;
     private readonly IRepository<Registration> _registrations;
     private readonly SpotManager _spotManager;
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
 
     public PartnerRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                         IQueryable<QuestionOptionMapping> optionToRegistrableMappings,
                                         SpotManager spotManager,
                                         IRepository<Registration> registrations,
                                         PriceCalculator priceCalculator,
-                                        ServiceBusClient serviceBusClient)
+                                        CommandQueue commandQueue)
     {
         _phoneNormalizer = phoneNormalizer;
         _optionToRegistrableMappings = optionToRegistrableMappings;
         _spotManager = spotManager;
         _registrations = registrations;
         _priceCalculator = priceCalculator;
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
     }
 
     public async Task<IEnumerable<Seat>> Process(Registration registration,
@@ -186,13 +186,13 @@ public class PartnerRegistrationProcessor
         var mailType = isOnWaitingList
                            ? MailType.PartnerRegistrationMatchedOnWaitingList
                            : MailType.PartnerRegistrationMatchedAndAccepted;
-        _serviceBusClient.ExecuteCommand(new ComposeAndSendMailCommand
-                                         {
-                                             MailType = mailType,
-                                             RegistrationId = registration.Id,
-                                             //Withhold = true,
-                                             AllowDuplicate = false
-                                         });
+        _commandQueue.EnqueueCommand(new ComposeAndSendMailCommand
+                                     {
+                                         MailType = mailType,
+                                         RegistrationId = registration.Id,
+                                         //Withhold = true,
+                                         AllowDuplicate = false
+                                     });
 
         return spots;
     }

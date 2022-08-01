@@ -20,15 +20,15 @@ public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPart
 {
     private readonly IRepository<Registration> _registrations;
     private readonly IRepository<Seat> _seats;
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
 
     public MatchPartnerRegistrationsCommandHandler(IRepository<Registration> registrations,
                                                    IRepository<Seat> seats,
-                                                   ServiceBusClient serviceBusClient)
+                                                   CommandQueue commandQueue)
     {
         _registrations = registrations;
         _seats = seats;
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
     }
 
     public async Task<Unit> Handle(MatchPartnerRegistrationsCommand command, CancellationToken cancellationToken)
@@ -152,13 +152,13 @@ public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPart
         var mailType = isWaitingList
                            ? MailType.PartnerRegistrationMatchedOnWaitingList
                            : MailType.PartnerRegistrationMatchedAndAccepted;
-        _serviceBusClient.ExecuteCommand(new ComposeAndSendMailCommand
-                                         {
-                                             EventId = command.EventId,
-                                             RegistrationId = registrationLeader.Id,
-                                             //Withhold = true,
-                                             MailType = mailType
-                                         });
+        _commandQueue.EnqueueCommand(new ComposeAndSendMailCommand
+                                     {
+                                         EventId = command.EventId,
+                                         RegistrationId = registrationLeader.Id,
+                                         //Withhold = true,
+                                         MailType = mailType
+                                     });
 
         return Unit.Value;
     }

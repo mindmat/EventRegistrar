@@ -19,15 +19,15 @@ public class RefundDifferenceCommand : IRequest, IEventBoundRequest
 
 public class RefundDifferenceCommandHandler : IRequestHandler<RefundDifferenceCommand>
 {
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
     private readonly IQueryable<Registration> _registrations;
     private readonly IRepository<PayoutRequest> _payoutRequests;
 
-    public RefundDifferenceCommandHandler(ServiceBusClient serviceBusClient,
+    public RefundDifferenceCommandHandler(CommandQueue commandQueue,
                                           IQueryable<Registration> registrations,
                                           IRepository<PayoutRequest> payoutRequests)
     {
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
         _registrations = registrations;
         _payoutRequests = payoutRequests;
     }
@@ -64,7 +64,7 @@ public class RefundDifferenceCommandHandler : IRequestHandler<RefundDifferenceCo
                                   RegistrationId = command.RegistrationId,
                                   Data = data
                               };
-        _serviceBusClient.ExecuteCommand(sendMailCommand);
+        _commandQueue.EnqueueCommand(sendMailCommand);
 
         return Unit.Value;
     }

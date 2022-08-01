@@ -16,13 +16,13 @@ public class CheckIfRegistrationIsPromotedCommand : IRequest, IQueueBoundMessage
 public class CheckIfRegistrationIsPromotedCommandHandler : IRequestHandler<CheckIfRegistrationIsPromotedCommand>
 {
     private readonly IQueryable<Registration> _registrations;
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
 
     public CheckIfRegistrationIsPromotedCommandHandler(IQueryable<Registration> registrations,
-                                                       ServiceBusClient serviceBusClient)
+                                                       CommandQueue commandQueue)
     {
         _registrations = registrations;
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
     }
 
     public async Task<Unit> Handle(CheckIfRegistrationIsPromotedCommand command, CancellationToken cancellationToken)
@@ -68,7 +68,7 @@ public class CheckIfRegistrationIsPromotedCommandHandler : IRequestHandler<Check
                                       //Withhold = true,
                                       RegistrationId = registration.Id
                                   };
-            _serviceBusClient.ExecuteCommand(sendMailCommand);
+            _commandQueue.EnqueueCommand(sendMailCommand);
         }
 
         return Unit.Value;

@@ -2,6 +2,7 @@ using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
@@ -95,11 +96,11 @@ container.RegisterSingleton<IMediator, Mediator>();
 container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
 container.Register<IHttpContextAccessor, HttpContextContainer>();
 
-container.Collection.Register(typeof(IPipelineBehavior<,>), new Type[]
+container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
                                                             {
                                                                 //typeof(ExtractEventIdDecorator<,>),
                                                                 //typeof(AuthorizationDecorator<,>),
-                                                                //typeof(CommitUnitOfWorkDecorator<,>)
+                                                                typeof(CommitUnitOfWorkDecorator<,>)
                                                             });
 
 container.Register(typeof(IQueryable<>), typeof(Queryable<>));
@@ -157,7 +158,7 @@ var serviceBusConsumers = container.GetTypesToRegister<IQueueBoundMessage>(assem
                                    .ToList();
 container.RegisterInstance<IEnumerable<ServiceBusConsumer>>(serviceBusConsumers);
 container.RegisterSingleton<MessageQueueReceiver>();
-container.Register<ServiceBusClient>();
+container.Register<CommandQueue>();
 container.Register<IEventBus, EventBus>();
 container.Register<SourceQueueProvider>();
 container.Register(typeof(IEventToUserTranslation<>), assemblies);

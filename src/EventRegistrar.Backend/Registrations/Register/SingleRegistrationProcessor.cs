@@ -18,7 +18,7 @@ public class SingleRegistrationProcessor
     private readonly PriceCalculator _priceCalculator;
     private readonly IRepository<Registration> _registrations;
     private readonly SpotManager _spotManager;
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
     private readonly IQueryable<RegistrationForm> _forms;
     private readonly IQueryable<Registrable> _registrables;
 
@@ -26,7 +26,7 @@ public class SingleRegistrationProcessor
                                        SpotManager spotManager,
                                        PriceCalculator priceCalculator,
                                        IRepository<Registration> registrations,
-                                       ServiceBusClient serviceBusClient,
+                                       CommandQueue commandQueue,
                                        IQueryable<RegistrationForm> forms,
                                        IQueryable<Registrable> registrables)
     {
@@ -34,7 +34,7 @@ public class SingleRegistrationProcessor
         _spotManager = spotManager;
         _priceCalculator = priceCalculator;
         _registrations = registrations;
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
         _forms = forms;
         _registrables = registrables;
     }
@@ -327,12 +327,12 @@ public class SingleRegistrationProcessor
             }
         }
 
-        _serviceBusClient.ExecuteCommand(new ComposeAndSendMailCommand
-                                         {
-                                             MailType = mailToSend,
-                                             RegistrationId = registration.Id,
-                                             AllowDuplicate = false
-                                         });
+        _commandQueue.EnqueueCommand(new ComposeAndSendMailCommand
+                                     {
+                                         MailType = mailToSend,
+                                         RegistrationId = registration.Id,
+                                         AllowDuplicate = false
+                                     });
 
         return spots;
     }

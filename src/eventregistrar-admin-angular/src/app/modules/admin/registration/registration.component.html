@@ -111,7 +111,7 @@
                 </div>
                 <hr class="w-full border-t my-6">
                 <div class="flex flex-col space-y-4 mb-4">
-                    <ng-container *ngFor="let payment of payments">
+                    <ng-container *ngFor="let payment of registration.payments">
                         <div class="flex flex-col rounded-xl bg-default shadow p-3">
                             <div class="flex items-center">
                                 <div class="flex items-baseline">
@@ -143,7 +143,7 @@
                 </div>
                 <hr class="w-full border-t my-6">
                 <div class="flex flex-col space-y-4 mb-4">
-                    <ng-container *ngFor="let spot of spots">
+                    <ng-container *ngFor="let spot of registration.spots">
                         <div class="flex flex-col rounded-xl bg-default shadow p-3">
                             <div class="flex align-top relative">
                                 <a class="leading-tight hover:underline" [routerLink]="['/overview', spot.registrableId, spot.type == 1?'single':'double', 'participants']">

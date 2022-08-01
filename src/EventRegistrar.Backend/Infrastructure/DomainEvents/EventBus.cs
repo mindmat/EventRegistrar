@@ -12,16 +12,16 @@ public class EventBus : IEventBus
 {
     private readonly Container _container;
     private readonly EventContext _eventContext;
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
     private readonly AuthenticatedUserId _user;
 
     public EventBus(Container container,
-                    ServiceBusClient serviceBusClient,
+                    CommandQueue commandQueue,
                     EventContext eventContext,
                     AuthenticatedUserId user)
     {
         _container = container;
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
         _eventContext = eventContext;
         _user = user;
     }
@@ -38,18 +38,18 @@ public class EventBus : IEventBus
         @event.UserId ??= _user.UserId;
         @event.EventId ??= _eventContext.EventId;
 
-        _serviceBusClient.ExecuteCommand(new SaveDomainEventCommand
-                                         {
-                                             DomainEventId = @event.Id,
-                                             DomainEventId_Parent = @event.DomainEventId_Parent,
-                                             EventId = @event.EventId ?? _eventContext.EventId,
-                                             EventType = @event.GetType().FullName!,
-                                             EventData = JsonConvert.SerializeObject(@event)
-                                         });
+        _commandQueue.EnqueueCommand(new SaveDomainEventCommand
+                                     {
+                                         DomainEventId = @event.Id,
+                                         DomainEventId_Parent = @event.DomainEventId_Parent,
+                                         EventId = @event.EventId ?? _eventContext.EventId,
+                                         EventType = @event.GetType().FullName!,
+                                         EventData = JsonConvert.SerializeObject(@event)
+                                     });
         var translations = _container.GetAllInstances<IEventToCommandTranslation<TEvent>>().ToList();
         foreach (var command in translations.SelectMany(trn => trn.Translate(@event)))
         {
-            _serviceBusClient.ExecuteCommand(command);
+            _commandQueue.EnqueueCommand(command);
         }
     }
 }

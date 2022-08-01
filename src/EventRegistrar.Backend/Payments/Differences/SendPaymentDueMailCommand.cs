@@ -16,13 +16,13 @@ public class SendPaymentDueMailCommand : IRequest, IEventBoundRequest
 
 public class SendPaymentDueMailCommandHandler : IRequestHandler<SendPaymentDueMailCommand>
 {
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
     private readonly IQueryable<Registration> _registrations;
 
-    public SendPaymentDueMailCommandHandler(ServiceBusClient serviceBusClient,
+    public SendPaymentDueMailCommandHandler(CommandQueue commandQueue,
                                             IQueryable<Registration> registrations)
     {
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
         _registrations = registrations;
     }
 
@@ -47,7 +47,7 @@ public class SendPaymentDueMailCommandHandler : IRequestHandler<SendPaymentDueMa
                                   RegistrationId = command.RegistrationId,
                                   Data = data
                               };
-        _serviceBusClient.ExecuteCommand(sendMailCommand);
+        _commandQueue.EnqueueCommand(sendMailCommand);
 
         return Unit.Value;
     }

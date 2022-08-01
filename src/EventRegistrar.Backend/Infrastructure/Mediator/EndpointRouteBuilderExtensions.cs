@@ -87,14 +87,14 @@ public static class EndpointRouteBuilderExtensions
 
         var mediator = container.GetInstance<IMediator>();
         var response = await mediator.Send(request, context.RequestAborted);
-        var dbContext = container.GetInstance<DbContext>();
-        if (dbContext.ChangeTracker.HasChanges())
-        {
-            await dbContext.SaveChangesAsync(context.RequestAborted);
-        }
+        //var dbContext = container.GetInstance<DbContext>();
+        //if (dbContext.ChangeTracker.HasChanges())
+        //{
+        //    await dbContext.SaveChangesAsync(context.RequestAborted);
+        //}
 
-        // "transaction": only release messages to event bus if db commit succeeds
-        await container.GetInstance<ServiceBusClient>().Release();
+        //// "transaction": only release messages to event bus if db commit succeeds
+        //await container.GetInstance<CommandQueue>().Release();
 
 
         context.Response.Headers.Add("content-type", "application/json");

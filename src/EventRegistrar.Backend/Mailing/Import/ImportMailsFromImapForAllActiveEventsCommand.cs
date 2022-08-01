@@ -11,10 +11,10 @@ public class ImportMailsFromImapForAllActiveEventsCommand : IRequest { }
 public class ImportMailsFromImapForAllActiveEventsCommandHandler : IRequestHandler<ImportMailsFromImapForAllActiveEventsCommand>
 {
     private readonly IQueryable<EventConfiguration> _configurations;
-    private readonly ServiceBusClient _serviceBus;
+    private readonly CommandQueue _serviceBus;
 
     public ImportMailsFromImapForAllActiveEventsCommandHandler(IQueryable<EventConfiguration> configurations,
-                                                               ServiceBusClient serviceBus)
+                                                               CommandQueue serviceBus)
     {
         _configurations = configurations;
         _serviceBus = serviceBus;
@@ -28,7 +28,7 @@ public class ImportMailsFromImapForAllActiveEventsCommandHandler : IRequestHandl
                                                               .ToListAsync(cancellationToken);
         foreach (var activeImportConfiguration in activeImportConfigurations)
         {
-            _serviceBus.ExecuteCommand(new ImportMailsFromImapCommand { EventId = activeImportConfiguration.EventId });
+            _serviceBus.EnqueueCommand(new ImportMailsFromImapCommand { EventId = activeImportConfiguration.EventId });
         }
 
         return Unit.Value;

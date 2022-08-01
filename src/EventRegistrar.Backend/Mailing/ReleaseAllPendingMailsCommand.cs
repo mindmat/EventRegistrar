@@ -14,13 +14,13 @@ public class ReleaseAllPendingMailsCommand : IRequest, IEventBoundRequest
 public class ReleaseAllPendingMailsCommandHandler : IRequestHandler<ReleaseAllPendingMailsCommand>
 {
     private readonly IRepository<Mail> _mails;
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
 
     public ReleaseAllPendingMailsCommandHandler(IRepository<Mail> mails,
-                                                ServiceBusClient serviceBusClient)
+                                                CommandQueue commandQueue)
     {
         _mails = mails;
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
     }
 
     public async Task<Unit> Handle(ReleaseAllPendingMailsCommand command, CancellationToken cancellationToken)
@@ -35,11 +35,11 @@ public class ReleaseAllPendingMailsCommandHandler : IRequestHandler<ReleaseAllPe
                                         .ToListAsync(cancellationToken);
         foreach (var withheldMail in withheldMails)
         {
-            _serviceBusClient.ExecuteCommand(new ReleaseMailCommand
-                                             {
-                                                 EventId = command.EventId,
-                                                 MailId = withheldMail.Id
-                                             });
+            _commandQueue.EnqueueCommand(new ReleaseMailCommand
+                                         {
+                                             EventId = command.EventId,
+                                             MailId = withheldMail.Id
+                                         });
         }
 
         return Unit.Value;

@@ -32,14 +32,17 @@ public class MessageQueueReceiver : IDisposable
         _logger = logger;
         _container = container;
         _typedProcessMethod = typeof(MessageQueueReceiver).GetMethod(nameof(ProcessTypedMessage),
-            BindingFlags.NonPublic | BindingFlags.Instance);
+                                                                     BindingFlags.NonPublic | BindingFlags.Instance)!;
         _serviceBusEndpoint = Environment.GetEnvironmentVariable("ServiceBusEndpoint")
                            ?? configuration.GetValue<string>("ServiceBusEndpoint");
     }
 
     public void Dispose()
     {
-        foreach (var queueClient in _queueClients) queueClient.CloseAsync().Wait();
+        foreach (var queueClient in _queueClients)
+        {
+            queueClient.CloseAsync().Wait();
+        }
     }
 
     public void RegisterMessageHandlers()
@@ -50,7 +53,7 @@ public class MessageQueueReceiver : IDisposable
             return;
         }
 
-        var genericQueueClient = new QueueClient(_serviceBusEndpoint, ServiceBusClient.CommandQueueName);
+        var genericQueueClient = new QueueClient(_serviceBusEndpoint, CommandQueue.CommandQueueName);
 
         // Configure the MessageHandler Options in terms of exception handling, number of concurrent messages to deliver etc.
         var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
@@ -87,7 +90,7 @@ public class MessageQueueReceiver : IDisposable
 
             // Register the function that will process messages
             queueClient.RegisterMessageHandler((message, token) => ProcessMessage(queueName, message, token),
-                messageHandlerOptions);
+                                               messageHandlerOptions);
             _queueClients.Add(queueClient);
         }
     }
@@ -95,11 +98,11 @@ public class MessageQueueReceiver : IDisposable
     private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs arg)
     {
         _logger.LogError(arg.Exception,
-            $"Error while processing a message from queue. Endpoint: {0}, Action: {1}, ClientId {2}, EntityPath {3}",
-            arg.ExceptionReceivedContext.Endpoint,
-            arg.ExceptionReceivedContext.Action,
-            arg.ExceptionReceivedContext.ClientId,
-            arg.ExceptionReceivedContext.EntityPath);
+                         $"Error while processing a message from queue. Endpoint: {0}, Action: {1}, ClientId {2}, EntityPath {3}",
+                         arg.ExceptionReceivedContext.Endpoint,
+                         arg.ExceptionReceivedContext.Action,
+                         arg.ExceptionReceivedContext.ClientId,
+                         arg.ExceptionReceivedContext.EntityPath);
         return Task.CompletedTask;
     }
 
@@ -111,7 +114,7 @@ public class MessageQueueReceiver : IDisposable
 
         var typedMethod = _typedProcessMethod.MakeGenericMethod(commandType);
         await (Task)typedMethod.Invoke(this,
-            new object[] { commandMessage.CommandSerialized, cancellationToken, ServiceBusClient.CommandQueueName });
+                                       new object[] { commandMessage.CommandSerialized, cancellationToken, CommandQueue.CommandQueueName });
     }
 
     private async Task ProcessMessage(string queueName, Message message, CancellationToken cancellationToken)
@@ -128,7 +131,8 @@ public class MessageQueueReceiver : IDisposable
         }
     }
 
-    private async Task ProcessTypedMessage<TRequest>(string commandSerialized, CancellationToken cancellationToken,
+    private async Task ProcessTypedMessage<TRequest>(string commandSerialized,
+                                                     CancellationToken cancellationToken,
                                                      string queueName)
         where TRequest : IRequest
     {

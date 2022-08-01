@@ -1,4 +1,7 @@
-﻿namespace EventRegistrar.Backend.Registrations;
+﻿using EventRegistrar.Backend.Payments.Assignments;
+using EventRegistrar.Backend.Spots;
+
+namespace EventRegistrar.Backend.Registrations;
 
 public class RegistrationDisplayItem
 {
@@ -25,4 +28,7 @@ public class RegistrationDisplayItem
     public string StatusText { get; set; }
     public bool WillPayAtCheckin { get; set; }
     public bool? FallbackToPartyPass { get; set; }
+
+    public IEnumerable<SpotDisplayItem>? Spots { get; set; }
+    public IEnumerable<AssignedPaymentDisplayItem>? Payments { get; set; }
 }

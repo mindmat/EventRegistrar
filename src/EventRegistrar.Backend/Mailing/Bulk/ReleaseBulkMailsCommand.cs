@@ -16,13 +16,13 @@ public class ReleaseBulkMailsCommand : IRequest, IEventBoundRequest
 public class ReleaseBulkMailsCommandHandler : IRequestHandler<ReleaseBulkMailsCommand>
 {
     private readonly IRepository<Mail> _mails;
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
 
     public ReleaseBulkMailsCommandHandler(IRepository<Mail> mails,
-                                          ServiceBusClient serviceBusClient)
+                                          CommandQueue commandQueue)
     {
         _mails = mails;
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
     }
 
     public async Task<Unit> Handle(ReleaseBulkMailsCommand command, CancellationToken cancellationToken)
@@ -57,7 +57,7 @@ public class ReleaseBulkMailsCommandHandler : IRequestHandler<ReleaseBulkMailsCo
             withheldMail.Withhold = false;
             withheldMail.Sent = DateTime.UtcNow;
 
-            _serviceBusClient.ExecuteCommand(sendMailCommand);
+            _commandQueue.EnqueueCommand(sendMailCommand);
         }
 
         return Unit.Value;

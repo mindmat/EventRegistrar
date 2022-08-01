@@ -1,18 +1,20 @@
 ﻿using System.Text;
 
+using MediatR;
+
 using Microsoft.Azure.ServiceBus;
 
 using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.Infrastructure.ServiceBus;
 
-public class ServiceBusClient
+public class CommandQueue
 {
     public const string CommandQueueName = "CommandQueue";
     private readonly List<CommandMessage> _messages = new();
     private readonly string _serviceBusEndpoint;
 
-    public ServiceBusClient(IConfiguration configuration)
+    public CommandQueue(IConfiguration configuration)
     {
         _serviceBusEndpoint = Environment.GetEnvironmentVariable("ServiceBusEndpoint")
                            ?? configuration.GetValue<string>("ServiceBusEndpoint");
@@ -33,12 +35,13 @@ public class ServiceBusClient
         }
     }
 
-    public void ExecuteCommand<T>(T command)
+    public void EnqueueCommand<T>(T command)
+        where T : IRequest
     {
         var commandSerialized = JsonConvert.SerializeObject(command);
         _messages.Add(new CommandMessage
                       {
-                          CommandType = command.GetType().FullName,
+                          CommandType = command.GetType().FullName!,
                           CommandSerialized = commandSerialized
                       });
     }

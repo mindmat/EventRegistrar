@@ -8,16 +8,17 @@ public class CommitUnitOfWorkDecorator<TRequest, TResponse> : IPipelineBehavior<
     where TRequest : IRequest<TResponse>
 {
     private readonly DbContext _dbContext;
-    private readonly ServiceBusClient _serviceBusClient;
+    private readonly CommandQueue _commandQueue;
 
     public CommitUnitOfWorkDecorator(DbContext dbContext,
-                                     ServiceBusClient serviceBusClient)
+                                     CommandQueue commandQueue)
     {
         _dbContext = dbContext;
-        _serviceBusClient = serviceBusClient;
+        _commandQueue = commandQueue;
     }
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+    public async Task<TResponse> Handle(TRequest request,
+                                        CancellationToken cancellationToken,
                                         RequestHandlerDelegate<TResponse> next)
     {
         var response = await next();
@@ -27,7 +28,7 @@ public class CommitUnitOfWorkDecorator<TRequest, TResponse> : IPipelineBehavior<
         }
 
         // "transaction": only release messages to event bus if db commit succeeds
-        await _serviceBusClient.Release();
+        await _commandQueue.Release();
 
         return response;
     }
