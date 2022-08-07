@@ -16,7 +16,7 @@ export class OverviewResolver implements Resolve<any>
     {
         return zip(
             this.overviewService.fetchRegistrableTags(),
-            this.overviewService.fetchSingleRegistrables(),
-            this.overviewService.fetchDoubleRegistrables());
+            this.overviewService.fetchRegistrables()
+        );
     }
 }

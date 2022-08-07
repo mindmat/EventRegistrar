@@ -59,8 +59,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
          || usersRolesInEvent.Contains(UserInEventRole.Writer)
          || usersRolesInEvent.Contains(UserInEventRole.Admin))
         {
-            yield return nameof(SingleRegistrablesOverviewQuery);
-            yield return nameof(DoubleRegistrablesOverviewQuery);
+            yield return nameof(RegistrablesOverviewQuery);
             yield return nameof(RegistrableTagsQuery);
             yield return nameof(PaymentOverviewQuery);
             yield return nameof(SearchRegistrationQuery);

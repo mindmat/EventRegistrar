@@ -4,7 +4,7 @@ import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
 import { OverviewService } from './overview.service';
 import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDisplayItem';
-import { DoubleRegistrableDisplayItem, SingleRegistrableDisplayItem } from 'app/api/api';
+import { DoubleRegistrableDisplayItem, RegistrablesOverview, SingleRegistrableDisplayItem } from 'app/api/api';
 
 @Component({
     selector: 'app-overview',
@@ -47,21 +47,12 @@ export class OverviewComponent implements OnInit, OnDestroy
             });
 
         // Get the registrables
-        this.overviewService.singleRegistrables$
+        this.overviewService.registrables$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((singleRegistrables: SingleRegistrableDisplayItem[]) =>
+            .subscribe((registrables: RegistrablesOverview) =>
             {
-                this.singleRegistrables = this.filteredSingleRegistrables = singleRegistrables;
-
-                // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
-
-        this.overviewService.doubleRegistrables$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((doubleRegistrables: DoubleRegistrableDisplayItem[]) =>
-            {
-                this.doubleRegistrables = this.filteredDoubleRegistrables = doubleRegistrables;
+                this.singleRegistrables = this.filteredSingleRegistrables = registrables.singleRegistrables;
+                this.doubleRegistrables = this.filteredDoubleRegistrables = registrables.doubleRegistrables;
 
                 // Mark for check
                 this._changeDetectorRef.markForCheck();

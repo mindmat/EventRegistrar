@@ -174,38 +174,6 @@
         }
       }
     },
-    "/api/UpdateRegistrationQueryReadModelCommand": {
-      "post": {
-        "tags": [
-          "UpdateRegistrationQueryReadModel"
-        ],
-        "operationId": "UpdateRegistrationQueryReadModel_Command",
-        "requestBody": {
-          "x-name": "UpdateRegistrationQueryReadModelCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRegistrationQueryReadModelCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/SearchRegistrationQuery": {
       "post": {
         "tags": [
@@ -286,6 +254,38 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SetReductionCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UpdateRegistrationQueryReadModelCommand": {
+      "post": {
+        "tags": [
+          "UpdateRegistrationQueryReadModel"
+        ],
+        "operationId": "UpdateRegistrationQueryReadModel_Command",
+        "requestBody": {
+          "x-name": "UpdateRegistrationQueryReadModelCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRegistrationQueryReadModelCommand"
               }
             }
           },
@@ -1071,6 +1071,38 @@
         }
       }
     },
+    "/api/RegistrablesOverviewQuery": {
+      "post": {
+        "tags": [
+          "RegistrablesOverview"
+        ],
+        "operationId": "RegistrablesOverview_Query",
+        "requestBody": {
+          "x-name": "RegistrablesOverviewQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrablesOverviewQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrablesOverview"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/RegistrablesQuery": {
       "post": {
         "tags": [
@@ -1480,6 +1512,38 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SaveReductionCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UpdateRegistrablesOverviewQueryReadModelCommand": {
+      "post": {
+        "tags": [
+          "UpdateRegistrablesOverviewQueryReadModel"
+        ],
+        "operationId": "UpdateRegistrablesOverviewQueryReadModel_Command",
+        "requestBody": {
+          "x-name": "UpdateRegistrablesOverviewQueryReadModelCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRegistrablesOverviewQueryReadModelCommand"
               }
             }
           },
@@ -4347,20 +4411,6 @@
           }
         }
       },
-      "UpdateRegistrationQueryReadModelCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "registrationId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
       "RegistrationMatch": {
         "type": "object",
         "additionalProperties": false,
@@ -4451,9 +4501,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "queueName": {
-            "type": "string"
-          },
           "rawRegistrationId": {
             "type": "string",
             "format": "guid"
@@ -4470,6 +4517,20 @@
           },
           "isReduced": {
             "type": "boolean"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "UpdateRegistrationQueryReadModelCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
           },
           "registrationId": {
             "type": "string",
@@ -5363,6 +5424,90 @@
           }
         }
       },
+      "RegistrablesOverview": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "singleRegistrables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SingleRegistrableDisplayItem"
+            }
+          },
+          "doubleRegistrables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DoubleRegistrableDisplayItem"
+            }
+          }
+        }
+      },
+      "SingleRegistrableDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "nameSecondary": {
+            "type": "string",
+            "nullable": true
+          },
+          "tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "accepted": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "onWaitingList": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "spotsAvailable": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hasWaitingList": {
+            "type": "boolean"
+          },
+          "isDeletable": {
+            "type": "boolean"
+          },
+          "automaticPromotionFromWaitingList": {
+            "type": "boolean"
+          },
+          "class": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpotState"
+            }
+          },
+          "waitingList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpotState"
+            }
+          }
+        }
+      },
+      "RegistrablesOverviewQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "RegistrableDisplayItem": {
         "type": "object",
         "additionalProperties": false,
@@ -5442,62 +5587,6 @@
           }
         }
       },
-      "SingleRegistrableDisplayItem": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "nameSecondary": {
-            "type": "string",
-            "nullable": true
-          },
-          "tag": {
-            "type": "string",
-            "nullable": true
-          },
-          "accepted": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "onWaitingList": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "spotsAvailable": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "hasWaitingList": {
-            "type": "boolean"
-          },
-          "isDeletable": {
-            "type": "boolean"
-          },
-          "automaticPromotionFromWaitingList": {
-            "type": "boolean"
-          },
-          "class": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SpotState"
-            }
-          },
-          "waitingList": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SpotState"
-            }
-          }
-        }
-      },
       "SingleRegistrablesOverviewQuery": {
         "type": "object",
         "additionalProperties": false,
@@ -5512,9 +5601,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "queueName": {
-            "type": "string"
-          },
           "registrationId": {
             "type": "string",
             "format": "guid"
@@ -5721,6 +5807,16 @@
             "format": "guid",
             "nullable": true
           },
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "UpdateRegistrablesOverviewQueryReadModelCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
           "eventId": {
             "type": "string",
             "format": "guid"
@@ -6924,9 +7020,6 @@
           "paymentSlipId": {
             "type": "string",
             "format": "guid"
-          },
-          "queueName": {
-            "type": "string"
           },
           "reference": {
             "type": "string"
@@ -9989,9 +10082,6 @@
           "mailId": {
             "type": "string",
             "format": "guid"
-          },
-          "queueName": {
-            "type": "string"
           }
         }
       },
@@ -10172,9 +10262,6 @@
           "mailId": {
             "type": "string",
             "format": "guid"
-          },
-          "queueName": {
-            "type": "string"
           },
           "sender": {
             "$ref": "#/components/schemas/EmailAddress"
@@ -10524,9 +10611,6 @@
             "nullable": true
           },
           "eventType": {
-            "type": "string"
-          },
-          "queueName": {
             "type": "string"
           }
         }

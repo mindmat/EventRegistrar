@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, DoubleRegistrableDisplayItem, RegistrableTagDisplayItem, SingleRegistrableDisplayItem } from 'app/api/api';
+import { Api, DoubleRegistrableDisplayItem, RegistrablesOverview, RegistrableTagDisplayItem, SingleRegistrableDisplayItem } from 'app/api/api';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
 
@@ -9,8 +9,7 @@ import { EventService } from '../events/event.service';
 export class OverviewService
 {
   private registrableTags: BehaviorSubject<RegistrableTagDisplayItem[] | null> = new BehaviorSubject(null);
-  private singleRegistrables: BehaviorSubject<SingleRegistrableDisplayItem[] | null> = new BehaviorSubject(null);
-  private doubleRegistrables: BehaviorSubject<DoubleRegistrableDisplayItem[] | null> = new BehaviorSubject(null);
+  private registrables: BehaviorSubject<RegistrablesOverview | null> = new BehaviorSubject(null);
 
   constructor(private api: Api, private eventService: EventService) { }
 
@@ -19,14 +18,9 @@ export class OverviewService
     return this.registrableTags.asObservable();
   }
 
-  get singleRegistrables$(): Observable<SingleRegistrableDisplayItem[]>
+  get registrables$(): Observable<RegistrablesOverview>
   {
-    return this.singleRegistrables.asObservable();
-  }
-
-  get doubleRegistrables$(): Observable<DoubleRegistrableDisplayItem[]>
-  {
-    return this.doubleRegistrables.asObservable();
+    return this.registrables.asObservable();
   }
 
   fetchRegistrableTags(): Observable<RegistrableTagDisplayItem[]>
@@ -40,24 +34,13 @@ export class OverviewService
       );
   }
 
-  fetchSingleRegistrables(): Observable<SingleRegistrableDisplayItem[]>
+  fetchRegistrables(): Observable<RegistrablesOverview>
   {
-    return this.api.singleRegistrablesOverview_Query({ eventId: this.eventService.selectedId })
+    return this.api.registrablesOverview_Query({ eventId: this.eventService.selectedId })
       .pipe(
         tap((response: any) =>
         {
-          this.singleRegistrables.next(response);
-        })
-      );
-  }
-
-  fetchDoubleRegistrables(): Observable<DoubleRegistrableDisplayItem[]>
-  {
-    return this.api.doubleRegistrablesOverview_Query({ eventId: this.eventService.selectedId })
-      .pipe(
-        tap((response: any) =>
-        {
-          this.doubleRegistrables.next(response);
+          this.registrables.next(response);
         })
       );
   }

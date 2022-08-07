@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using EventRegistrar.Backend.Registrables.ReadModels;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.ReadModels;
 
@@ -25,6 +26,8 @@ public class StartUpdateAllReadModelsOfEventCommandHandler : IRequestHandler<Sta
 
     public async Task<Unit> Handle(StartUpdateAllReadModelsOfEventCommand command, CancellationToken cancellationToken)
     {
+        _commandQueue.EnqueueCommand(new UpdateRegistrablesOverviewQueryReadModelCommand { EventId = command.EventId });
+
         var registrationIds = await _registrations.Where(reg => reg.EventId == command.EventId)
                                                   .Select(reg => reg.Id)
                                                   .ToListAsync(cancellationToken);
