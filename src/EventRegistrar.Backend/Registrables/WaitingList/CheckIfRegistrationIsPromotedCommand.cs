@@ -7,9 +7,8 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList;
 
-public class CheckIfRegistrationIsPromotedCommand : IRequest, IQueueBoundMessage
+public class CheckIfRegistrationIsPromotedCommand : IRequest
 {
-    public string QueueName => "CheckIfRegistrationIsPromotedCommandQueue";
     public Guid RegistrationId { get; set; }
 }
 

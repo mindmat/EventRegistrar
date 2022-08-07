@@ -1,8 +1,9 @@
-﻿namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
-public class ReadModelUpdated
+namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+
+public class ReadModelUpdated : DomainEvent
 {
-    public Guid EventId { get; set; }
-    public string ReadModelName { get; set; } = null!;
-    public Guid RowId { get; set; }
+    public string QueryName { get; set; } = null!;
+    public Guid? RowId { get; set; }
 }

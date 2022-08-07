@@ -1,7 +1,6 @@
 ﻿using System.Net;
 
 using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Feedback;
 
 using MediatR;
@@ -11,12 +10,11 @@ using SendGrid.Helpers.Mail;
 
 namespace EventRegistrar.Backend.Mailing.Send;
 
-public class SendMailCommand : IQueueBoundMessage
+public class SendMailCommand : IRequest
 {
     public string ContentHtml { get; set; }
     public string ContentPlainText { get; set; }
     public Guid MailId { get; set; }
-    public string QueueName => "sendmailcommandqueue";
     public EmailAddress Sender { get; set; }
     public string Subject { get; set; }
     public IEnumerable<EmailAddress> To { get; set; }

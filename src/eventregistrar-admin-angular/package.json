@@ -26,6 +26,7 @@
         "@angular/platform-browser-dynamic": "14.0.0",
         "@angular/router": "14.0.0",
         "@auth0/auth0-angular": "^1.10.0",
+        "@microsoft/signalr": "^6.0.7",
         "@ngneat/transloco": "4.0.0",
         "@ngx-translate/core": "^14.0.0",
         "apexcharts": "3.35.3",

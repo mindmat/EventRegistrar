@@ -1,15 +1,13 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Files.Slips;
 
-public class TryAssignPaymentSlipCommand : IRequest, IQueueBoundMessage
+public class TryAssignPaymentSlipCommand : IRequest
 {
     public Guid EventId { get; set; }
     public Guid PaymentSlipId { get; set; }
-    public string QueueName => "TryAssignPaymentSlipQueue";
     public string Reference { get; set; }
 }
 

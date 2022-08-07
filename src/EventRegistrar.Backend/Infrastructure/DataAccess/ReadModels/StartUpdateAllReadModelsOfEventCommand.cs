@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.ReadModels;
 
 using MediatR;
 

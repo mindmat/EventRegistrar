@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Registrations.ReadModels;
 
 using MediatR;
 

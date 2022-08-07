@@ -16,8 +16,7 @@ namespace EventRegistrar.Functions
     public static class ReceiveSendGridMailNotification
     {
         [FunctionName("ReceiveSendGridMailNotification")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "mails/state")]
-                                                    HttpRequest req,
+        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "mails/state")] HttpRequest req,
                                                     ILogger log)
         {
             var bodyJson = await req.ReadAsStringAsync();
@@ -29,19 +28,18 @@ namespace EventRegistrar.Functions
             var id = Guid.NewGuid();
             await using (var connection = new SqlConnection(connectionString))
             {
-                const string insertQuery = @"INSERT INTO dbo.RawMailEvents(Id, [Body], Created) " +
-                                           @"VALUES (@Id, @Body, @Created)";
+                const string insertQuery = @"INSERT INTO dbo.RawMailEvents(Id, [Body], Created) " + @"VALUES (@Id, @Body, @Created)";
                 var parameters = new
-                {
-                    Id = id,
-                    Body = bodyJson,
-                    Created = DateTime.UtcNow
-                };
+                                 {
+                                     Id = id,
+                                     Body = bodyJson,
+                                     Created = DateTime.UtcNow
+                                 };
 
                 await connection.ExecuteAsync(insertQuery, parameters);
             }
 
-            await ServiceBusClient.SendCommand(new { RawMailEventsId = id }, "processmailevents");
+            await ServiceBusClient.SendCommand(new { RawMailEventsId = id });
 
             return new OkResult();
         }

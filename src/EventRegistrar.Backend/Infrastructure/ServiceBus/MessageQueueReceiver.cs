@@ -17,17 +17,14 @@ public class MessageQueueReceiver : IDisposable
     private readonly ILogger _logger;
     private readonly IMediator _mediator;
     private readonly IList<QueueClient> _queueClients = new List<QueueClient>();
-    private readonly IDictionary<string, ServiceBusConsumer> _serviceBusConsumers;
     private readonly MethodInfo _typedProcessMethod;
     private readonly string _serviceBusEndpoint;
 
-    public MessageQueueReceiver(IEnumerable<ServiceBusConsumer> serviceBusConsumers,
-                                IMediator mediator,
+    public MessageQueueReceiver(IMediator mediator,
                                 ILogger logger,
                                 Container container,
                                 IConfiguration configuration)
     {
-        _serviceBusConsumers = serviceBusConsumers.ToDictionary(sbc => sbc.QueueName);
         _mediator = mediator;
         _logger = logger;
         _container = container;
@@ -70,29 +67,6 @@ public class MessageQueueReceiver : IDisposable
         // Register the function that will process messages
         genericQueueClient.RegisterMessageHandler(ProcessGenericMessage, messageHandlerOptions);
         _queueClients.Add(genericQueueClient);
-
-        foreach (var serviceBusConsumer in _serviceBusConsumers)
-        {
-            var queueName = serviceBusConsumer.Value.QueueName;
-            var queueClient = new QueueClient(_serviceBusEndpoint, queueName);
-
-            //// Configure the MessageHandler Options in terms of exception handling, number of concurrent messages to deliver etc.
-            //var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
-            //{
-            //    // Maximum number of Concurrent calls to the callback `ProcessMessagesAsync`, set to 1 for simplicity.
-            //    // Set it according to how many messages the application wants to process in parallel.
-            //    MaxConcurrentCalls = 1,
-
-            //    // Indicates whether MessagePump should automatically complete the messages after returning from User Callback.
-            //    // False value below indicates the Complete will be handled by the User Callback as seen in `ProcessMessagesAsync`.
-            //    AutoComplete = true
-            //};
-
-            // Register the function that will process messages
-            queueClient.RegisterMessageHandler((message, token) => ProcessMessage(queueName, message, token),
-                                               messageHandlerOptions);
-            _queueClients.Add(queueClient);
-        }
     }
 
     private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs arg)
@@ -115,20 +89,6 @@ public class MessageQueueReceiver : IDisposable
         var typedMethod = _typedProcessMethod.MakeGenericMethod(commandType);
         await (Task)typedMethod.Invoke(this,
                                        new object[] { commandMessage.CommandSerialized, cancellationToken, CommandQueue.CommandQueueName });
-    }
-
-    private async Task ProcessMessage(string queueName, Message message, CancellationToken cancellationToken)
-    {
-        if (_serviceBusConsumers.TryGetValue(queueName, out var consumer))
-        {
-            var typedMethod = _typedProcessMethod.MakeGenericMethod(consumer.RequestType);
-            var messageDecoded = Encoding.UTF8.GetString(message.Body);
-            await (Task)typedMethod.Invoke(this, new object[] { messageDecoded, cancellationToken, queueName });
-        }
-        else
-        {
-            throw new NotImplementedException($"No handler registered for queue {queueName}");
-        }
     }
 
     private async Task ProcessTypedMessage<TRequest>(string commandSerialized,

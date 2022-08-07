@@ -1,20 +1,21 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Responses;
+
 using MediatR;
+
 using Newtonsoft.Json;
+
 using QuestionType = EventRegistrar.Backend.RegistrationForms.Questions.QuestionType;
 
 namespace EventRegistrar.Backend.Registrations.Register;
 
-public class ProcessRawRegistrationCommand : IRequest, IQueueBoundMessage
+public class ProcessRawRegistrationCommand : IRequest
 {
-    public string QueueName => "processrawregistration";
     public Guid RawRegistrationId { get; set; }
 }
 
@@ -50,7 +51,9 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
         var rawRegistration =
             await _rawRegistrations.FirstOrDefaultAsync(reg => reg.Id == command.RawRegistrationId, cancellationToken);
         if (rawRegistration == null)
+        {
             throw new KeyNotFoundException($"Invalid RawRegistrationId received {command.RawRegistrationId}");
+        }
 
         var googleRegistration =
             JsonConvert.DeserializeObject<RegistrationForms.GoogleForms.Registration>(rawRegistration.ReceivedMessage);
@@ -60,22 +63,30 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
                                .ThenInclude(qst => qst.QuestionOptions)
                                .FirstOrDefaultAsync(cancellationToken);
         if (form == null)
+        {
             throw new KeyNotFoundException($"No form found with id '{rawRegistration.FormExternalIdentifier}'");
+        }
+
         _logger.LogInformation(
             $"Questions: {form.Questions?.Count}, Options: {form.Questions?.Sum(qst => qst.QuestionOptions?.Count)}");
 
         // check form state
-        if (form.State == State.RegistrationClosed) throw new ApplicationException("Registration is closed");
+        if (form.State == State.RegistrationClosed)
+        {
+            throw new ApplicationException("Registration is closed");
+        }
         //if (!form.EventId.HasValue)
         //{
         //    throw new ApplicationException("Registration form is not yet assigned to an event");
         //}
 
         var registration = await _registrations.FirstOrDefaultAsync(
-            reg => reg.ExternalIdentifier == rawRegistration.RegistrationExternalIdentifier, cancellationToken);
+                               reg => reg.ExternalIdentifier == rawRegistration.RegistrationExternalIdentifier, cancellationToken);
         if (registration != null)
+        {
             throw new ApplicationException(
                 $"Registration with external identifier '{rawRegistration.RegistrationExternalIdentifier}' already exists");
+        }
 
         registration = new Registration
                        {
@@ -103,8 +114,8 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
                                        Id = Guid.NewGuid(),
                                        RegistrationId = registration.Id,
                                        ResponseString = string.IsNullOrEmpty(rawResponse.Response)
-                                           ? string.Join(", ", rawResponse.Responses)
-                                           : rawResponse.Response,
+                                                            ? string.Join(", ", rawResponse.Responses)
+                                                            : rawResponse.Response,
                                        QuestionId = responseLookup.questionId,
                                        QuestionOptionId = questionOptionId
                                    };
@@ -119,8 +130,8 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
                                    Id = Guid.NewGuid(),
                                    RegistrationId = registration.Id,
                                    ResponseString = string.IsNullOrEmpty(rawResponse.Response)
-                                       ? string.Join(", ", rawResponse.Responses)
-                                       : rawResponse.Response,
+                                                        ? string.Join(", ", rawResponse.Responses)
+                                                        : rawResponse.Response,
                                    QuestionId = responseLookup.questionId
                                };
                 registration.Responses.Add(response);
@@ -144,7 +155,8 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
     }
 
     private static (Guid? questionId, IEnumerable<Guid> questionOptionId) LookupResponse(
-        ResponseData response, IEnumerable<Question> questions)
+        ResponseData response,
+        IEnumerable<Question> questions)
     {
         var question = questions?.FirstOrDefault(qst => qst.ExternalId == response.QuestionExternalId);
         if (question?.Type == QuestionType.Checkbox && response.Responses.Any())

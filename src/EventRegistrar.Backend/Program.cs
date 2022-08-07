@@ -1,6 +1,7 @@
 using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
@@ -57,6 +58,7 @@ builder.Services.AddSimpleInjector(container, options =>
     options.AddLogging();
     //options.AddLocalization();
 });
+builder.Services.AddSignalR();
 builder.Services.AddSingleton(container);
 //builder.Services.AddDbContext<EventRegistratorDbContext>(SetDbOptions);
 
@@ -95,10 +97,11 @@ container.Collection.Register(typeof(IEventToCommandTranslation<>), assemblies);
 container.RegisterSingleton<IMediator, Mediator>();
 container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
 container.Register<IHttpContextAccessor, HttpContextContainer>();
+container.Register<EventContext>();
 
 container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
                                                             {
-                                                                //typeof(ExtractEventIdDecorator<,>),
+                                                                typeof(ExtractEventIdDecorator<,>),
                                                                 //typeof(AuthorizationDecorator<,>),
                                                                 typeof(CommitUnitOfWorkDecorator<,>)
                                                             });
@@ -147,16 +150,6 @@ foreach (var configType in configTypes)
     container.Register(configType, () => container.GetInstance<ConfigurationResolver>().GetConfigurationTypeless(configType));
 }
 
-var serviceBusConsumers = container.GetTypesToRegister<IQueueBoundMessage>(assemblies)
-                                   .Select(type => new ServiceBusConsumer
-                                                   {
-                                                       QueueName =
-                                                           ((IQueueBoundMessage)Activator.CreateInstance(type)!)
-                                                           .QueueName,
-                                                       RequestType = type
-                                                   })
-                                   .ToList();
-container.RegisterInstance<IEnumerable<ServiceBusConsumer>>(serviceBusConsumers);
 container.RegisterSingleton<MessageQueueReceiver>();
 container.Register<CommandQueue>();
 container.Register<IEventBus, EventBus>();
@@ -184,23 +177,23 @@ app.UseOpenApi();
 app.UseSwaggerUi3();
 
 app.UseRequestLocalization();
-app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin()
-                                      .AllowAnyHeader()
-                                      .AllowAnyMethod());
-
 app.UseMiddleware<ExceptionMiddleware>(container);
 
 
 app.UseHttpsRedirection();
 app.UseRouting();
+app.UseCors(corsBuilder => corsBuilder.AllowAnyOrigin()
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod());
+
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
+    endpoints.MapHub<NotificationHub>("/notifications");
     endpoints.MapRequests(container);
-    //endpoints.MapControllers();
 });
 
 

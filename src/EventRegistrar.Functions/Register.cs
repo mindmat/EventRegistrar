@@ -17,12 +17,12 @@ namespace EventRegistrar.Functions
     public static class Register
     {
         [FunctionName("Register")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "events/{eventAcronym}/registrationforms/{formId}/registrations/{registrationId}")]
-                                                     HttpRequest req,
-                                                     ILogger log,
-                                                     string eventAcronym,
-                                                     string formId,
-                                                     string registrationId)
+        public static async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "events/{eventAcronym}/registrationforms/{formId}/registrations/{registrationId}")] HttpRequest req,
+            ILogger log,
+            string eventAcronym,
+            string formId,
+            string registrationId)
         {
             var config = new ConfigurationBuilder().AddEnvironmentVariables()
                                                    .Build();
@@ -33,22 +33,22 @@ namespace EventRegistrar.Functions
             var rawRegistrationId = Guid.NewGuid();
             await using (var connection = new SqlConnection(connectionString))
             {
-                const string insertQuery = @"INSERT INTO dbo.RawRegistrations(Id, EventAcronym, ReceivedMessage, FormExternalIdentifier, RegistrationExternalIdentifier, Created) " +
-                                           @"VALUES (@Id, @EventAcronym, @ReceivedMessage, @FormExternalIdentifier, @RegistrationExternalIdentifier, @Created)";
+                const string insertQuery = @"INSERT INTO dbo.RawRegistrations(Id, EventAcronym, ReceivedMessage, FormExternalIdentifier, RegistrationExternalIdentifier, Created) "
+                                         + @"VALUES (@Id, @EventAcronym, @ReceivedMessage, @FormExternalIdentifier, @RegistrationExternalIdentifier, @Created)";
                 var parameters = new
-                {
-                    Id = rawRegistrationId,
-                    EventAcronym = eventAcronym,
-                    ReceivedMessage = requestBody,
-                    FormExternalIdentifier = formId,
-                    RegistrationExternalIdentifier = registrationId,
-                    Created = DateTime.UtcNow
-                };
+                                 {
+                                     Id = rawRegistrationId,
+                                     EventAcronym = eventAcronym,
+                                     ReceivedMessage = requestBody,
+                                     FormExternalIdentifier = formId,
+                                     RegistrationExternalIdentifier = registrationId,
+                                     Created = DateTime.UtcNow
+                                 };
 
                 await connection.ExecuteAsync(insertQuery, parameters);
             }
 
-            await ServiceBusClient.SendCommand(new { RawRegistrationId = rawRegistrationId }, "processrawregistration");
+            await ServiceBusClient.SendCommand(new { RawRegistrationId = rawRegistrationId });
 
             return new OkResult();
         }

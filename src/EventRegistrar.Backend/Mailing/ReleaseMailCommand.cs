@@ -9,11 +9,10 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Mailing;
 
-public class ReleaseMailCommand : IRequest, IEventBoundRequest, IQueueBoundMessage
+public class ReleaseMailCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
     public Guid MailId { get; set; }
-    public string QueueName => "ReleaseMail";
 }
 
 public class ReleaseMailCommandHandler : IRequestHandler<ReleaseMailCommand>

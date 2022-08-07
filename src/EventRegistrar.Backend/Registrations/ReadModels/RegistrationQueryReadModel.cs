@@ -2,7 +2,7 @@
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EventRegistrar.Backend.Registrations;
+namespace EventRegistrar.Backend.Registrations.ReadModels;
 
 public class RegistrationQueryReadModel : ReadModel<RegistrationDisplayItem>
 {

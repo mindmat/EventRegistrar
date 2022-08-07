@@ -1,4 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Registrables;
@@ -6,7 +8,7 @@ using EventRegistrar.Backend.Spots;
 
 using MediatR;
 
-namespace EventRegistrar.Backend.Registrations;
+namespace EventRegistrar.Backend.Registrations.ReadModels;
 
 public class UpdateRegistrationQueryReadModelCommand : IRequest
 {
@@ -19,6 +21,7 @@ public class UpdateRegistrationQueryReadModelCommandHandler : IRequestHandler<Up
     private readonly IQueryable<Registration> _registrations;
     private readonly IQueryable<Seat> _spots;
     private readonly IQueryable<PaymentAssignment> _assignments;
+    private readonly IEventBus _eventBus;
 
     private readonly DbContext _dbContext;
     private readonly EnumTranslator _enumTranslator;
@@ -27,13 +30,15 @@ public class UpdateRegistrationQueryReadModelCommandHandler : IRequestHandler<Up
                                                           IQueryable<Seat> spots,
                                                           DbContext dbContext,
                                                           EnumTranslator enumTranslator,
-                                                          IQueryable<PaymentAssignment> assignments)
+                                                          IQueryable<PaymentAssignment> assignments,
+                                                          IEventBus eventBus)
     {
         _registrations = registrations;
         _spots = spots;
         _dbContext = dbContext;
         _enumTranslator = enumTranslator;
         _assignments = assignments;
+        _eventBus = eventBus;
     }
 
     public async Task<Unit> Handle(UpdateRegistrationQueryReadModelCommand command, CancellationToken cancellationToken)
@@ -119,9 +124,9 @@ public class UpdateRegistrationQueryReadModelCommandHandler : IRequestHandler<Up
                                                         ass.Amount,
                                                         ass.IncomingPaymentId,
                                                         ass.OutgoingPaymentId,
-                                                        Currency_Incoming = (string?)ass.IncomingPayment!.Payment!.Currency,
+                                                        Currency_Incoming = ass.IncomingPayment!.Payment!.Currency,
                                                         BookingDate_Incoming = (DateTime?)ass.IncomingPayment.Payment.BookingDate,
-                                                        Currency_Outgoing = (string?)ass.OutgoingPayment!.Payment!.Currency,
+                                                        Currency_Outgoing = ass.OutgoingPayment!.Payment!.Currency,
                                                         BookingDate_Outgoing = (DateTime?)ass.OutgoingPayment.Payment.BookingDate
                                                     })
                                      .ToListAsync(cancellationToken);
@@ -155,13 +160,31 @@ public class UpdateRegistrationQueryReadModelCommandHandler : IRequestHandler<Up
             readModel = new RegistrationQueryReadModel
                         {
                             EventId = command.EventId,
-                            RegistrationId = command.RegistrationId
+                            RegistrationId = command.RegistrationId,
+                            Content = content
                         };
             var entry = readModels.Attach(readModel);
             entry.State = EntityState.Added;
+            _eventBus.Publish(new ReadModelUpdated
+                              {
+                                  EventId = command.EventId,
+                                  QueryName = nameof(RegistrationQueryReadModel),
+                                  RowId = command.RegistrationId
+                              });
         }
-
-        readModel.Content = content;
+        else
+        {
+            readModel.Content = content;
+            if (_dbContext.Entry(readModel).State == EntityState.Modified)
+            {
+                _eventBus.Publish(new ReadModelUpdated
+                                  {
+                                      EventId = command.EventId,
+                                      QueryName = nameof(RegistrationQueryReadModel),
+                                      RowId = command.RegistrationId
+                                  });
+            }
+        }
 
         return Unit.Value;
     }

@@ -10,10 +10,12 @@ namespace EventRegistrar.Functions
 {
     public class ServiceBusClient
     {
-        public static Task SendCommand(object command, string queueName = "CommandQueue")
+        private const string _queueName = "CommandQueue";
+
+        public static Task SendCommand(object command)
         {
             var serviceBusEndpoint = Environment.GetEnvironmentVariable("ServiceBusEndpoint");
-            var queueClient = new QueueClient(serviceBusEndpoint, queueName);
+            var queueClient = new QueueClient(serviceBusEndpoint, _queueName);
             var serialized = JsonConvert.SerializeObject(command);
             var message = new Message(Encoding.UTF8.GetBytes(serialized));
             return queueClient.SendAsync(message);
