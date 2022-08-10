@@ -2656,19 +2656,19 @@
         }
       }
     },
-    "/api/PossibleAssignmentsQuery": {
+    "/api/PaymentAssignmentsQuery": {
       "post": {
         "tags": [
-          "PossibleAssignments"
+          "PaymentAssignments"
         ],
-        "operationId": "PossibleAssignments_Query",
+        "operationId": "PaymentAssignments_Query",
         "requestBody": {
-          "x-name": "PossibleAssignmentsQuery",
+          "x-name": "PaymentAssignmentsQuery",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PossibleAssignmentsQuery"
+                "$ref": "#/components/schemas/PaymentAssignmentsQuery"
               }
             }
           },
@@ -2680,7 +2680,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BookingAssignments"
+                  "$ref": "#/components/schemas/PaymentAssignments"
                 }
               }
             }
@@ -2736,6 +2736,38 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UnassignPaymentCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UpdatePaymentAssignmentsCommand": {
+      "post": {
+        "tags": [
+          "UpdatePaymentAssignments"
+        ],
+        "operationId": "UpdatePaymentAssignments_Command",
+        "requestBody": {
+          "x-name": "UpdatePaymentAssignmentsCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePaymentAssignmentsCommand"
               }
             }
           },
@@ -7302,7 +7334,7 @@
           }
         }
       },
-      "BookingAssignments": {
+      "PaymentAssignments": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -7431,7 +7463,7 @@
           }
         }
       },
-      "PossibleAssignmentsQuery": {
+      "PaymentAssignmentsQuery": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -7513,6 +7545,20 @@
             "format": "guid"
           },
           "paymentAssignmentId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "UpdatePaymentAssignmentsCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "paymentId": {
             "type": "string",
             "format": "guid"
           }

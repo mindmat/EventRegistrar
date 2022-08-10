@@ -10,13 +10,13 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.ReadModels;
 
-public class UpdateRegistrationQueryReadModelCommand : IRequest
+public class UpdateRegistrationReadModelCommand : IRequest
 {
     public Guid EventId { get; set; }
     public Guid RegistrationId { get; set; }
 }
 
-public class UpdateRegistrationQueryReadModelCommandHandler : IRequestHandler<UpdateRegistrationQueryReadModelCommand>
+public class UpdateRegistrationReadModelCommandHandler : IRequestHandler<UpdateRegistrationReadModelCommand>
 {
     private readonly IQueryable<Registration> _registrations;
     private readonly IQueryable<Seat> _spots;
@@ -26,12 +26,12 @@ public class UpdateRegistrationQueryReadModelCommandHandler : IRequestHandler<Up
     private readonly DbContext _dbContext;
     private readonly EnumTranslator _enumTranslator;
 
-    public UpdateRegistrationQueryReadModelCommandHandler(IQueryable<Registration> registrations,
-                                                          IQueryable<Seat> spots,
-                                                          DbContext dbContext,
-                                                          EnumTranslator enumTranslator,
-                                                          IQueryable<PaymentAssignment> assignments,
-                                                          IEventBus eventBus)
+    public UpdateRegistrationReadModelCommandHandler(IQueryable<Registration> registrations,
+                                                     IQueryable<Seat> spots,
+                                                     DbContext dbContext,
+                                                     EnumTranslator enumTranslator,
+                                                     IQueryable<PaymentAssignment> assignments,
+                                                     IEventBus eventBus)
     {
         _registrations = registrations;
         _spots = spots;
@@ -41,7 +41,7 @@ public class UpdateRegistrationQueryReadModelCommandHandler : IRequestHandler<Up
         _eventBus = eventBus;
     }
 
-    public async Task<Unit> Handle(UpdateRegistrationQueryReadModelCommand command, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateRegistrationReadModelCommand command, CancellationToken cancellationToken)
     {
         var content = await _registrations.Where(reg => reg.EventId == command.EventId
                                                      && reg.Id == command.RegistrationId)
@@ -148,6 +148,7 @@ public class UpdateRegistrationQueryReadModelCommandHandler : IRequestHandler<Up
                                                               BookingDate = ass.BookingDate_Outgoing!.Value
                                                           }))
                                .ToList();
+        content.Paid = content.Payments.Sum(pmt => pmt.Amount);
 
         var readModels = _dbContext.Set<RegistrationQueryReadModel>();
 
@@ -168,7 +169,7 @@ public class UpdateRegistrationQueryReadModelCommandHandler : IRequestHandler<Up
             _eventBus.Publish(new ReadModelUpdated
                               {
                                   EventId = command.EventId,
-                                  QueryName = nameof(RegistrationQueryReadModel),
+                                  QueryName = nameof(RegistrationQuery),
                                   RowId = command.RegistrationId
                               });
         }
@@ -180,7 +181,7 @@ public class UpdateRegistrationQueryReadModelCommandHandler : IRequestHandler<Up
                 _eventBus.Publish(new ReadModelUpdated
                                   {
                                       EventId = command.EventId,
-                                      QueryName = nameof(RegistrationQueryReadModel),
+                                      QueryName = nameof(RegistrationQuery),
                                       RowId = command.RegistrationId
                                   });
             }
@@ -196,7 +197,7 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
     {
         if (e.EventId != null && e.RegistrationId != null)
         {
-            yield return new UpdateRegistrationQueryReadModelCommand
+            yield return new UpdateRegistrationReadModelCommand
                          {
                              EventId = e.EventId.Value,
                              RegistrationId = e.RegistrationId.Value
@@ -211,7 +212,7 @@ public class UpdateRegistrationWhenOutgoingPaymentUnassigned : IEventToCommandTr
     {
         if (e.EventId != null && e.RegistrationId != null)
         {
-            yield return new UpdateRegistrationQueryReadModelCommand
+            yield return new UpdateRegistrationReadModelCommand
                          {
                              EventId = e.EventId.Value,
                              RegistrationId = e.RegistrationId.Value
@@ -226,7 +227,7 @@ public class UpdateRegistrationWhenIncomingPaymentUnassigned : IEventToCommandTr
     {
         if (e.EventId != null && e.RegistrationId != null)
         {
-            yield return new UpdateRegistrationQueryReadModelCommand
+            yield return new UpdateRegistrationReadModelCommand
                          {
                              EventId = e.EventId.Value,
                              RegistrationId = e.RegistrationId.Value
@@ -241,7 +242,7 @@ public class UpdateRegistrationWhenIncomingPaymentAssigned : IEventToCommandTran
     {
         if (e.EventId != null && e.RegistrationId != null)
         {
-            yield return new UpdateRegistrationQueryReadModelCommand
+            yield return new UpdateRegistrationReadModelCommand
                          {
                              EventId = e.EventId.Value,
                              RegistrationId = e.RegistrationId.Value

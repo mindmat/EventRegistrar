@@ -45,14 +45,6 @@ public class EventBus : IEventBus
         @event.UserId ??= _user.UserId;
         @event.EventId ??= _eventContext.EventId;
 
-        _commandQueue.EnqueueCommand(new SaveDomainEventCommand
-                                     {
-                                         DomainEventId = @event.Id,
-                                         DomainEventId_Parent = @event.DomainEventId_Parent,
-                                         EventId = @event.EventId ?? _eventContext.EventId,
-                                         EventType = @event.GetType().FullName!,
-                                         EventData = JsonConvert.SerializeObject(@event)
-                                     });
         var translations = _container.GetAllInstances<IEventToCommandTranslation<TEvent>>().ToList();
         foreach (var command in translations.SelectMany(trn => trn.Translate(@event)))
         {
@@ -62,6 +54,17 @@ public class EventBus : IEventBus
         if (@event is ReadModelUpdated readModelUpdatedEvent)
         {
             _notifications.Add(readModelUpdatedEvent);
+        }
+        else
+        {
+            _commandQueue.EnqueueCommand(new SaveDomainEventCommand
+                                         {
+                                             DomainEventId = @event.Id,
+                                             DomainEventId_Parent = @event.DomainEventId_Parent,
+                                             EventId = @event.EventId ?? _eventContext.EventId,
+                                             EventType = @event.GetType().FullName!,
+                                             EventData = JsonConvert.SerializeObject(@event)
+                                         });
         }
     }
 

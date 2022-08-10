@@ -75,7 +75,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(LanguagesQuery);
             yield return nameof(AllExternalRegistrationIdentifiersQuery);
             yield return nameof(PaymentsByDayQuery);
-            yield return nameof(PossibleAssignmentsQuery);
+            yield return nameof(PaymentAssignmentsQuery);
             yield return nameof(SmsConversationQuery);
             yield return nameof(CheckinQuery);
             yield return nameof(RegistrationsWithUnmatchedPartnerQuery);

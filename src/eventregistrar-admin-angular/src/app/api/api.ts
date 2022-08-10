@@ -4107,11 +4107,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    possibleAssignments_Query(possibleAssignmentsQuery: PossibleAssignmentsQuery | undefined): Observable<BookingAssignments> {
-        let url_ = this.baseUrl + "/api/PossibleAssignmentsQuery";
+    paymentAssignments_Query(paymentAssignmentsQuery: PaymentAssignmentsQuery | undefined): Observable<PaymentAssignments> {
+        let url_ = this.baseUrl + "/api/PaymentAssignmentsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(possibleAssignmentsQuery);
+        const content_ = JSON.stringify(paymentAssignmentsQuery);
 
         let options_ : any = {
             body: content_,
@@ -4124,20 +4124,20 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPossibleAssignments_Query(response_);
+            return this.processPaymentAssignments_Query(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPossibleAssignments_Query(response_ as any);
+                    return this.processPaymentAssignments_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<BookingAssignments>;
+                    return _observableThrow(e) as any as Observable<PaymentAssignments>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<BookingAssignments>;
+                return _observableThrow(response_) as any as Observable<PaymentAssignments>;
         }));
     }
 
-    protected processPossibleAssignments_Query(response: HttpResponseBase): Observable<BookingAssignments> {
+    protected processPaymentAssignments_Query(response: HttpResponseBase): Observable<PaymentAssignments> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4147,7 +4147,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BookingAssignments;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PaymentAssignments;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4240,6 +4240,57 @@ export class Api {
     }
 
     protected processUnassignPayment_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    updatePaymentAssignments_Command(updatePaymentAssignmentsCommand: UpdatePaymentAssignmentsCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/UpdatePaymentAssignmentsCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(updatePaymentAssignmentsCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdatePaymentAssignments_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdatePaymentAssignments_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processUpdatePaymentAssignments_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -7383,7 +7434,7 @@ export interface AssignRepaymentCommand {
     outgoingPaymentId?: string;
 }
 
-export interface BookingAssignments {
+export interface PaymentAssignments {
     openAmount?: number;
     type?: PaymentType;
     registrationCandidates?: AssignmentCandidateRegistration[] | null;
@@ -7421,7 +7472,7 @@ export interface ExistingAssignment {
     paymentId?: string;
 }
 
-export interface PossibleAssignmentsQuery {
+export interface PaymentAssignmentsQuery {
     eventId?: string;
     paymentId?: string;
 }
@@ -7447,6 +7498,11 @@ export interface PossibleRepaymentAssignmentQuery {
 export interface UnassignPaymentCommand {
     eventId?: string;
     paymentAssignmentId?: string;
+}
+
+export interface UpdatePaymentAssignmentsCommand {
+    eventId?: string;
+    paymentId?: string;
 }
 
 export interface DeleteMailCommand {

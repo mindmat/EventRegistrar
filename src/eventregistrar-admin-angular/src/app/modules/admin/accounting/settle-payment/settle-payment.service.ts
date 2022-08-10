@@ -1,24 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Api, BookingAssignments, PaymentType } from 'app/api/api';
-import { Observable } from 'rxjs';
+import { Api, PaymentAssignment, PaymentAssignments, PaymentType } from 'app/api/api';
+import { filter, Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { FetchService } from '../../infrastructure/fetchService';
+import { NotificationService } from '../../infrastructure/notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SettlePaymentService extends FetchService<BookingAssignments>
+export class SettlePaymentService extends FetchService<PaymentAssignments>
 {
-  constructor(private api: Api, private eventService: EventService) { super(); }
+  private paymentId: string;
 
-  get candidates$(): Observable<BookingAssignments>
+  constructor(private api: Api,
+    private eventService: EventService,
+    notificationService: NotificationService)
+  {
+    super('PaymentAssignmentsQuery', notificationService);
+  }
+
+  get candidates$(): Observable<PaymentAssignments>
   {
     return this.result$;
   }
 
-  fetchCandidates(id: string)
+  fetchCandidates(paymentId: string)
   {
-    return this.fetchItems(this.api.possibleAssignments_Query({ eventId: this.eventService.selectedId, paymentId: id }));
+    this.paymentId = paymentId;
+    return this.fetchItems(this.api.paymentAssignments_Query({ eventId: this.eventService.selectedId, paymentId }), this.paymentId);
   }
 
   unassign(paymentAssignmentId: string)
