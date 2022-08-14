@@ -1,0 +1,100 @@
+﻿using System.Text.Json;
+
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
+using MediatR;
+
+namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+
+public class UpdateReadModelCommand : IRequest
+{
+    public string QueryName { get; set; } = null!;
+    public Guid EventId { get; set; }
+    public Guid? RowId { get; set; }
+}
+
+public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelCommand>
+{
+    private readonly IEnumerable<IReadModelUpdater> _updaters;
+    private readonly DbContext _dbContext;
+    private readonly IEventBus _eventBus;
+    private static readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerDefaults.Web);
+
+    public UpdateReadModelCommandHandler(IEnumerable<IReadModelUpdater> updaters,
+                                         DbContext dbContext,
+                                         IEventBus eventBus)
+    {
+        _updaters = updaters;
+        _dbContext = dbContext;
+        _eventBus = eventBus;
+    }
+
+    public async Task<Unit> Handle(UpdateReadModelCommand command, CancellationToken cancellationToken)
+    {
+        var updater = _updaters.First(rmu => rmu.QueryName == command.QueryName);
+        var result = await updater.Calculate(command.EventId, command.RowId, cancellationToken);
+
+        var contentJson = JsonSerializer.Serialize(result, _serializerOptions);
+
+        var readModels = _dbContext.Set<ReadModel>();
+
+        var readModel = await readModels.AsTracking()
+                                        .Where(rdm => rdm.QueryName == command.QueryName
+                                                   && rdm.EventId == command.EventId
+                                                   && rdm.RowId == command.RowId)
+                                        .FirstOrDefaultAsync(cancellationToken);
+        if (readModel == null)
+        {
+            readModel = new ReadModel
+                        {
+                            QueryName = command.QueryName,
+                            EventId = command.EventId,
+                            RowId = command.RowId,
+                            ContentJson = contentJson,
+                            LastUpdate = DateTimeOffset.Now
+                        };
+            var entry = readModels.Attach(readModel);
+            entry.State = EntityState.Added;
+            _eventBus.Publish(new ReadModelUpdated
+                              {
+                                  QueryName = command.QueryName,
+                                  EventId = command.EventId,
+                                  RowId = command.RowId
+                              });
+        }
+        else
+        {
+            readModel.ContentJson = contentJson;
+            if (_dbContext.Entry(readModel).State == EntityState.Modified)
+            {
+                _eventBus.Publish(new ReadModelUpdated
+                                  {
+                                      QueryName = command.QueryName,
+                                      EventId = command.EventId,
+                                      RowId = command.RowId
+                                  });
+            }
+        }
+
+        return Unit.Value;
+    }
+}
+
+public interface IReadModelUpdater
+{
+    public string QueryName { get; }
+    Task<object> Calculate(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
+}
+
+public abstract class ReadModelUpdater<T> : IReadModelUpdater
+    where T : class
+{
+    public abstract string QueryName { get; }
+
+    public async Task<object> Calculate(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
+    {
+        return await CalculateTyped(eventId, rowId, cancellationToken);
+    }
+
+    public abstract Task<T> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
+}

@@ -1,7 +1,7 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
-using EventRegistrar.Backend.Registrables.ReadModels;
 
 using MediatR;
 
@@ -42,7 +42,11 @@ public class CreateRegistrableCommandHandler : IRequestHandler<CreateRegistrable
                               Name = command.Parameters.Name
                           };
         await _registrables.InsertOrUpdateEntity(registrable, cancellationToken);
-        _commandQueue.EnqueueCommand(new UpdateRegistrablesOverviewQueryReadModelCommand { EventId = command.EventId });
+        _commandQueue.EnqueueCommand(new UpdateReadModelCommand
+                                     {
+                                         QueryName = nameof(RegistrablesOverviewQuery),
+                                         EventId = command.EventId
+                                     });
         return Unit.Value;
     }
 }

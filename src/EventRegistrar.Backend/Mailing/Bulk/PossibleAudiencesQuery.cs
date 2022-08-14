@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Mailing.Bulk;
@@ -38,26 +39,23 @@ public class PossibleAudiencesQueryHandler : IRequestHandler<PossibleAudiencesQu
                                                                    reg.State,
                                                                    reg.IsWaitingList
                                                                })
-                                                .ToListAsync();
+                                                .ToListAsync(cancellationToken);
         var result = new List<PossibleAudience>
                      {
                          new()
                          {
                              Audience = MailingAudience.Paid,
-                             Name = Resources.MailingAudience_Paid +
-                                    $" ({registrations.Count(reg => reg.State == RegistrationState.Paid)})"
+                             Name = Resources.MailingAudience_Paid + $" ({registrations.Count(reg => reg.State == RegistrationState.Paid)})"
                          },
                          new()
                          {
                              Audience = MailingAudience.Unpaid,
-                             Name = Resources.MailingAudience_Unpaid +
-                                    $" ({registrations.Count(reg => reg.State == RegistrationState.Received && reg.IsWaitingList != true)})"
+                             Name = Resources.MailingAudience_Unpaid + $" ({registrations.Count(reg => reg.State == RegistrationState.Received && reg.IsWaitingList != true)})"
                          },
                          new()
                          {
                              Audience = MailingAudience.WaitingList,
-                             Name = Resources.MailingAudience_WaitingList +
-                                    $" ({registrations.Count(reg => reg.State == RegistrationState.Received && reg.IsWaitingList == true)})"
+                             Name = Resources.MailingAudience_WaitingList + $" ({registrations.Count(reg => reg.State == RegistrationState.Received && reg.IsWaitingList == true)})"
                          }
                      };
         var predecessorEvent = await _events.Where(evt => evt.Id == query.EventId)
@@ -78,16 +76,16 @@ public class PossibleAudiencesQueryHandler : IRequestHandler<PossibleAudiencesQu
             result.Add(new PossibleAudience
                        {
                            Audience = MailingAudience.PredecessorEvent,
-                           Name = predecessorEvent.PredecessorEvent.Name +
-                                  $" ({predecessorEvent.PredecessorEventRegistrationCount})"
+                           Name = predecessorEvent.PredecessorEvent.Name + $" ({predecessorEvent.PredecessorEventRegistrationCount})"
                        });
             if (predecessorEvent?.PrePredecessorEvent != null)
+            {
                 result.Add(new PossibleAudience
                            {
                                Audience = MailingAudience.PrePredecessorEvent,
-                               Name = predecessorEvent.PrePredecessorEvent.Name +
-                                      $" ({predecessorEvent.PrePredecessorEventRegistrationCount})"
+                               Name = predecessorEvent.PrePredecessorEvent.Name + $" ({predecessorEvent.PrePredecessorEventRegistrationCount})"
                            });
+            }
         }
 
         return result;

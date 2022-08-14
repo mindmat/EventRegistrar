@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventRegistrar.Backend.Migrations
 {
     [DbContext(typeof(EventRegistratorDbContext))]
-    [Migration("20220724214641_Initial")]
-    partial class Initial
+    [Migration("20220814212209_ReadModelKey")]
+    partial class ReadModelKey
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -282,6 +282,42 @@ namespace EventRegistrar.Backend.Migrations
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
 
                     b.ToTable("EventConfigurations", (string)null);
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels.ReadModel", b =>
+                {
+                    b.Property<int>("Sequence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
+
+                    b.Property<string>("ContentJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("LastUpdate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("QueryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("RowId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Sequence");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Sequence"));
+
+                    b.HasIndex("QueryName", "EventId", "RowId")
+                        .IsUnique()
+                        .HasFilter("[RowId] IS NOT NULL");
+
+                    b.ToTable("ReadModels", (string)null);
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Infrastructure.DomainEvents.PersistedDomainEvent", b =>

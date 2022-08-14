@@ -1,9 +1,9 @@
 ﻿using EventRegistrar.Backend.Infrastructure.ServiceBus;
-using EventRegistrar.Backend.Payments.Assignments.Candidates;
+using EventRegistrar.Backend.Payments.Assignments;
+using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Files;
-using EventRegistrar.Backend.Registrables.ReadModels;
+using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
-using EventRegistrar.Backend.Registrations.ReadModels;
 
 using MediatR;
 
@@ -31,7 +31,17 @@ public class StartUpdateAllReadModelsOfEventCommandHandler : IRequestHandler<Sta
 
     public async Task<Unit> Handle(StartUpdateAllReadModelsOfEventCommand command, CancellationToken cancellationToken)
     {
-        _commandQueue.EnqueueCommand(new UpdateRegistrablesOverviewQueryReadModelCommand { EventId = command.EventId });
+        _commandQueue.EnqueueCommand(new UpdateReadModelCommand
+                                     {
+                                         QueryName = nameof(RegistrablesOverviewQuery),
+                                         EventId = command.EventId
+                                     });
+
+        _commandQueue.EnqueueCommand(new UpdateReadModelCommand
+                                     {
+                                         QueryName = nameof(DuePaymentsQuery),
+                                         EventId = command.EventId
+                                     });
 
         var registrationIds = await _registrations.Where(reg => reg.EventId == command.EventId)
                                                   .Select(reg => reg.Id)
@@ -39,10 +49,11 @@ public class StartUpdateAllReadModelsOfEventCommandHandler : IRequestHandler<Sta
 
         foreach (var registrationId in registrationIds)
         {
-            _commandQueue.EnqueueCommand(new UpdateRegistrationReadModelCommand
+            _commandQueue.EnqueueCommand(new UpdateReadModelCommand
                                          {
+                                             QueryName = nameof(RegistrationQuery),
                                              EventId = command.EventId,
-                                             RegistrationId = registrationId
+                                             RowId = registrationId
                                          });
         }
 
@@ -52,10 +63,11 @@ public class StartUpdateAllReadModelsOfEventCommandHandler : IRequestHandler<Sta
 
         foreach (var paymentId in paymentIds)
         {
-            _commandQueue.EnqueueCommand(new UpdatePaymentAssignmentsCommand
+            _commandQueue.EnqueueCommand(new UpdateReadModelCommand
                                          {
+                                             QueryName = nameof(PaymentAssignmentsQuery),
                                              EventId = command.EventId,
-                                             PaymentId = paymentId
+                                             RowId = paymentId
                                          });
         }
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventRegistrar.Backend.Migrations
 {
     [DbContext(typeof(EventRegistratorDbContext))]
-    [Migration("20220801163113_RegistrationQueryReadModel")]
-    partial class RegistrationQueryReadModel
+    [Migration("20220814205501_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -282,6 +282,42 @@ namespace EventRegistrar.Backend.Migrations
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
 
                     b.ToTable("EventConfigurations", (string)null);
+                });
+
+            modelBuilder.Entity("EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels.ReadModel", b =>
+                {
+                    b.Property<string>("QueryName")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("RowId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("ContentJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("LastUpdate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Sequence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
+
+                    b.HasKey("QueryName", "EventId", "RowId");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("QueryName", "EventId", "RowId"), false);
+
+                    b.HasIndex("Sequence")
+                        .IsUnique();
+
+                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
+
+                    b.ToTable("ReadModels", (string)null);
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Infrastructure.DomainEvents.PersistedDomainEvent", b =>
@@ -2082,36 +2118,6 @@ namespace EventRegistrar.Backend.Migrations
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
 
                     b.ToTable("Registrations", (string)null);
-                });
-
-            modelBuilder.Entity("EventRegistrar.Backend.Registrations.RegistrationQueryReadModel", b =>
-                {
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RegistrationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Sequence")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
-
-                    b.HasKey("EventId", "RegistrationId");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("EventId", "RegistrationId"), false);
-
-                    b.HasIndex("Sequence")
-                        .IsUnique();
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
-
-                    b.ToTable("RegistrationQueryReadModel");
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Registrations.Responses.Response", b =>

@@ -1,31 +1,32 @@
 ﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Registrations.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.Mediator;
 
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrations;
 
-public class RegistrationQuery : IRequest<RegistrationDisplayItem?>, IEventBoundRequest
+public class RegistrationQuery : IRequest<SerializedJson<RegistrationDisplayItem>>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
     public Guid RegistrationId { get; set; }
 }
 
-public class RegistrationQueryHandler : IRequestHandler<RegistrationQuery, RegistrationDisplayItem?>
+public class RegistrationQueryHandler : IRequestHandler<RegistrationQuery, SerializedJson<RegistrationDisplayItem>>
 {
-    private readonly IQueryable<RegistrationQueryReadModel> _registrations;
+    private readonly ReadModelReader _readModelReader;
 
-    public RegistrationQueryHandler(IQueryable<RegistrationQueryReadModel> registrations)
+    public RegistrationQueryHandler(ReadModelReader readModelReader)
     {
-        _registrations = registrations;
+        _readModelReader = readModelReader;
     }
 
-    public async Task<RegistrationDisplayItem?> Handle(RegistrationQuery query, CancellationToken cancellationToken)
+
+    public async Task<SerializedJson<RegistrationDisplayItem>> Handle(RegistrationQuery query, CancellationToken cancellationToken)
     {
-        var registration = await _registrations.Where(reg => reg.EventId == query.EventId
-                                                          && reg.RegistrationId == query.RegistrationId)
-                                               .Select(reg => reg.Content)
-                                               .FirstAsync(cancellationToken);
-        return registration;
+        return await _readModelReader.Get<RegistrationDisplayItem>(nameof(RegistrationQuery),
+                                                                   query.EventId,
+                                                                   query.RegistrationId,
+                                                                   cancellationToken);
     }
 }

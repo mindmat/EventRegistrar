@@ -8,35 +8,22 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Assignments.Candidates;
 
-public class UpdatePaymentAssignmentsCommand : IRequest
-{
-    public Guid EventId { get; set; }
-    public Guid PaymentId { get; set; }
-}
-
-public class UpdatePaymentAssignmentsCommandHandler : IRequestHandler<UpdatePaymentAssignmentsCommand>
+public class PaymentAssignmentsUpdater : ReadModelUpdater<PaymentAssignments>
 {
     private readonly IQueryable<Payment> _payments;
     private readonly IQueryable<Registration> _registrations;
 
-    private readonly IEventBus _eventBus;
-    private readonly DbContext _dbContext;
-
-    public UpdatePaymentAssignmentsCommandHandler(IQueryable<Registration> registrations,
-                                                  DbContext dbContext,
-                                                  IEventBus eventBus,
-                                                  IQueryable<Payment> payments)
+    public PaymentAssignmentsUpdater(IQueryable<Registration> registrations,
+                                     IQueryable<Payment> payments)
     {
         _registrations = registrations;
-        _dbContext = dbContext;
-        _eventBus = eventBus;
         _payments = payments;
     }
 
-    public async Task<Unit> Handle(UpdatePaymentAssignmentsCommand command, CancellationToken cancellationToken)
+    public override async Task<PaymentAssignments> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
     {
-        var payment = await _payments.Where(pmt => pmt.Id == command.PaymentId
-                                                && pmt.PaymentsFile!.EventId == command.EventId)
+        var payment = await _payments.Where(pmt => pmt.Id == rowId
+                                                && pmt.PaymentsFile!.EventId == eventId)
                                      .Include(pmt => pmt.Incoming!.Assignments!)
                                      .ThenInclude(pas => pas.Registration)
                                      .Include(pmt => pmt.Outgoing!.Assignments!)
@@ -108,7 +95,7 @@ public class UpdatePaymentAssignmentsCommandHandler : IRequestHandler<UpdatePaym
          && (!string.IsNullOrWhiteSpace(message)
           || !string.IsNullOrWhiteSpace(otherParty)))
         {
-            var registrations = await _registrations.Where(reg => reg.EventId == command.EventId)
+            var registrations = await _registrations.Where(reg => reg.EventId == eventId)
                                                     .Where(reg => (message != null && reg.RespondentFirstName != null && message.Contains(reg.RespondentFirstName!))
                                                                || (message != null && reg.RespondentLastName != null && message.Contains(reg.RespondentLastName!))
                                                                || (message != null && reg.RespondentEmail != null && message.Contains(reg.RespondentEmail!))
@@ -145,44 +132,7 @@ public class UpdatePaymentAssignmentsCommandHandler : IRequestHandler<UpdatePaym
                                                          .OrderByDescending(mtc => mtc.MatchScore);
         }
 
-        var readModels = _dbContext.Set<PaymentAssignmentsReadModel>();
-
-        var readModel = await readModels.AsTracking()
-                                        .Where(rm => rm.EventId == command.EventId
-                                                  && rm.PaymentId == command.PaymentId)
-                                        .FirstOrDefaultAsync(cancellationToken);
-        if (readModel == null)
-        {
-            readModel = new PaymentAssignmentsReadModel
-                        {
-                            EventId = command.EventId,
-                            PaymentId = command.PaymentId,
-                            Content = result
-                        };
-            var entry = readModels.Attach(readModel);
-            entry.State = EntityState.Added;
-            _eventBus.Publish(new ReadModelUpdated
-                              {
-                                  EventId = command.EventId,
-                                  QueryName = nameof(PaymentAssignmentsQuery),
-                                  RowId = command.PaymentId
-                              });
-        }
-        else
-        {
-            readModel.Content = result;
-            if (_dbContext.Entry(readModel).State == EntityState.Modified)
-            {
-                _eventBus.Publish(new ReadModelUpdated
-                                  {
-                                      EventId = command.EventId,
-                                      QueryName = nameof(PaymentAssignmentsQuery),
-                                      RowId = command.PaymentId
-                                  });
-            }
-        }
-
-        return Unit.Value;
+        return result;
     }
 
     private static int CalculateMatchScore(AssignmentCandidateRegistration reg,
@@ -216,6 +166,8 @@ public class UpdatePaymentAssignmentsCommandHandler : IRequestHandler<UpdatePaym
 
         return score;
     }
+
+    public override string QueryName => nameof(PaymentAssignmentsQuery);
 }
 
 public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTranslation<OutgoingPaymentAssigned>,
@@ -229,10 +181,11 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
     {
         if (e.EventId != null)
         {
-            yield return new UpdatePaymentAssignmentsCommand
+            yield return new UpdateReadModelCommand
                          {
+                             QueryName = nameof(PaymentAssignmentsQuery),
                              EventId = e.EventId.Value,
-                             PaymentId = e.OutgoingPaymentId
+                             RowId = e.OutgoingPaymentId
                          };
         }
     }
@@ -241,10 +194,11 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
     {
         if (e.EventId != null)
         {
-            yield return new UpdatePaymentAssignmentsCommand
+            yield return new UpdateReadModelCommand
                          {
+                             QueryName = nameof(PaymentAssignmentsQuery),
                              EventId = e.EventId.Value,
-                             PaymentId = e.OutgoingPaymentId
+                             RowId = e.OutgoingPaymentId
                          };
         }
     }
@@ -253,10 +207,11 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
     {
         if (e.EventId != null)
         {
-            yield return new UpdatePaymentAssignmentsCommand
+            yield return new UpdateReadModelCommand
                          {
+                             QueryName = nameof(PaymentAssignmentsQuery),
                              EventId = e.EventId.Value,
-                             PaymentId = e.IncomingPaymentId
+                             RowId = e.IncomingPaymentId
                          };
         }
     }
@@ -265,11 +220,51 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
     {
         if (e.EventId != null)
         {
-            yield return new UpdatePaymentAssignmentsCommand
+            yield return new UpdateReadModelCommand
                          {
+                             QueryName = nameof(PaymentAssignmentsQuery),
                              EventId = e.EventId.Value,
-                             PaymentId = e.IncomingPaymentId
+                             RowId = e.IncomingPaymentId
                          };
         }
     }
+}
+
+public class PaymentAssignments
+{
+    public decimal OpenAmount { get; set; }
+    public PaymentType Type { get; set; }
+    public IEnumerable<AssignmentCandidateRegistration>? RegistrationCandidates { get; set; }
+    public IEnumerable<ExistingAssignment>? ExistingAssignments { get; set; }
+}
+
+public class AssignmentCandidateRegistration
+{
+    public Guid RegistrationId { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? Email { get; set; }
+    public decimal Price { get; set; }
+    public bool IsWaitingList { get; set; }
+
+    public bool AmountMatch { get; set; }
+    public decimal AmountPaid { get; set; }
+    public int MatchScore { get; set; }
+    public Guid PaymentId { get; set; }
+    public RegistrationState State { get; set; }
+}
+
+public class ExistingAssignment
+{
+    public Guid RegistrationId { get; set; }
+    public Guid? PaymentAssignmentId_Existing { get; set; }
+    public decimal? AssignedAmount { get; set; }
+
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? Email { get; set; }
+    public decimal Price { get; set; }
+    public bool IsWaitingList { get; set; }
+
+    public Guid PaymentId { get; set; }
 }

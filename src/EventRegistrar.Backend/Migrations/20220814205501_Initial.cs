@@ -116,6 +116,24 @@ namespace EventRegistrar.Backend.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ReadModels",
+                columns: table => new
+                {
+                    QueryName = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RowId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ContentJson = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Sequence = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReadModels", x => new { x.QueryName, x.EventId, x.RowId })
+                        .Annotation("SqlServer:Clustered", false);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -1534,6 +1552,13 @@ namespace EventRegistrar.Backend.Migrations
                 .Annotation("SqlServer:Clustered", true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_ReadModels_Sequence",
+                table: "ReadModels",
+                column: "Sequence",
+                unique: true)
+                .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reductions_RegistrableId",
                 table: "Reductions",
                 column: "RegistrableId");
@@ -1778,6 +1803,9 @@ namespace EventRegistrar.Backend.Migrations
 
             migrationBuilder.DropTable(
                 name: "RawRegistrations");
+
+            migrationBuilder.DropTable(
+                name: "ReadModels");
 
             migrationBuilder.DropTable(
                 name: "Reductions");

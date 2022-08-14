@@ -1,31 +1,33 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.Mediator;
 using EventRegistrar.Backend.Payments.Assignments.Candidates;
 
 using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
 
-public class PaymentAssignmentsQuery : IRequest<PaymentAssignments>, IEventBoundRequest
+public class PaymentAssignmentsQuery : IRequest<SerializedJson<PaymentAssignments>>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
     public Guid PaymentId { get; set; }
 }
 
-public class PaymentAssignmentsQueryHandler : IRequestHandler<PaymentAssignmentsQuery, PaymentAssignments>
+public class PaymentAssignmentsQueryHandler : IRequestHandler<PaymentAssignmentsQuery, SerializedJson<PaymentAssignments>>
 {
-    private readonly IQueryable<PaymentAssignmentsReadModel> _readModels;
+    private readonly ReadModelReader _readModelReader;
 
-    public PaymentAssignmentsQueryHandler(IQueryable<PaymentAssignmentsReadModel> readModels)
+    public PaymentAssignmentsQueryHandler(ReadModelReader readModelReader)
     {
-        _readModels = readModels;
+        _readModelReader = readModelReader;
     }
 
-    public async Task<PaymentAssignments> Handle(PaymentAssignmentsQuery query,
-                                                 CancellationToken cancellationToken)
+    public async Task<SerializedJson<PaymentAssignments>> Handle(PaymentAssignmentsQuery query,
+                                                                 CancellationToken cancellationToken)
     {
-        return await _readModels.Where(pmt => pmt.EventId == query.EventId
-                                           && pmt.PaymentId == query.PaymentId)
-                                .Select(pmt => pmt.Content)
-                                .FirstAsync(cancellationToken);
+        return await _readModelReader.Get<PaymentAssignments>(nameof(PaymentAssignmentsQuery),
+                                                              query.EventId,
+                                                              query.PaymentId,
+                                                              cancellationToken);
     }
 }

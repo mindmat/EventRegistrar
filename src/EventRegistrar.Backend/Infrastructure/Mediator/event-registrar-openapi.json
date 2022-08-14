@@ -273,38 +273,6 @@
         }
       }
     },
-    "/api/UpdateRegistrationQueryReadModelCommand": {
-      "post": {
-        "tags": [
-          "UpdateRegistrationQueryReadModel"
-        ],
-        "operationId": "UpdateRegistrationQueryReadModel_Command",
-        "requestBody": {
-          "x-name": "UpdateRegistrationQueryReadModelCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRegistrationQueryReadModelCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/AllExternalRegistrationIdentifiersQuery": {
       "post": {
         "tags": [
@@ -1036,41 +1004,6 @@
         }
       }
     },
-    "/api/DoubleRegistrablesOverviewQuery": {
-      "post": {
-        "tags": [
-          "DoubleRegistrablesOverview"
-        ],
-        "operationId": "DoubleRegistrablesOverview_Query",
-        "requestBody": {
-          "x-name": "DoubleRegistrablesOverviewQuery",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DoubleRegistrablesOverviewQuery"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DoubleRegistrableDisplayItem"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/RegistrablesOverviewQuery": {
       "post": {
         "tags": [
@@ -1195,41 +1128,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SingleRegistrablesOverviewQuery": {
-      "post": {
-        "tags": [
-          "SingleRegistrablesOverview"
-        ],
-        "operationId": "SingleRegistrablesOverview_Query",
-        "requestBody": {
-          "x-name": "SingleRegistrablesOverviewQuery",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SingleRegistrablesOverviewQuery"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/SingleRegistrableDisplayItem"
-                  }
                 }
               }
             }
@@ -1512,38 +1410,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SaveReductionCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/UpdateRegistrablesOverviewQueryReadModelCommand": {
-      "post": {
-        "tags": [
-          "UpdateRegistrablesOverviewQueryReadModel"
-        ],
-        "operationId": "UpdateRegistrablesOverviewQueryReadModel_Command",
-        "requestBody": {
-          "x-name": "UpdateRegistrablesOverviewQueryReadModelCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateRegistrablesOverviewQueryReadModelCommand"
               }
             }
           },
@@ -2755,38 +2621,6 @@
         }
       }
     },
-    "/api/UpdatePaymentAssignmentsCommand": {
-      "post": {
-        "tags": [
-          "UpdatePaymentAssignments"
-        ],
-        "operationId": "UpdatePaymentAssignments_Command",
-        "requestBody": {
-          "x-name": "UpdatePaymentAssignmentsCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdatePaymentAssignmentsCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/DeleteMailCommand": {
       "post": {
         "tags": [
@@ -3719,6 +3553,38 @@
         }
       }
     },
+    "/api/UpdateReadModelCommand": {
+      "post": {
+        "tags": [
+          "UpdateReadModel"
+        ],
+        "operationId": "UpdateReadModel_Command",
+        "requestBody": {
+          "x-name": "UpdateReadModelCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateReadModelCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/HostingOffersQuery": {
       "post": {
         "tags": [
@@ -4556,20 +4422,6 @@
           }
         }
       },
-      "UpdateRegistrationQueryReadModelCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "registrationId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
       "AllExternalRegistrationIdentifiersQuery": {
         "type": "object",
         "additionalProperties": false,
@@ -5343,6 +5195,96 @@
           }
         }
       },
+      "RegistrablesOverview": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "singleRegistrables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SingleRegistrableDisplayItem"
+            }
+          },
+          "doubleRegistrables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DoubleRegistrableDisplayItem"
+            }
+          }
+        }
+      },
+      "SingleRegistrableDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "nameSecondary": {
+            "type": "string",
+            "nullable": true
+          },
+          "tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "accepted": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "onWaitingList": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "spotsAvailable": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hasWaitingList": {
+            "type": "boolean"
+          },
+          "isDeletable": {
+            "type": "boolean"
+          },
+          "automaticPromotionFromWaitingList": {
+            "type": "boolean"
+          },
+          "class": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpotState"
+            }
+          },
+          "waitingList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpotState"
+            }
+          }
+        }
+      },
+      "SpotState": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Available",
+          "Reserved",
+          "Registered",
+          "Paid"
+        ],
+        "enum": [
+          1,
+          2,
+          3,
+          4
+        ]
+      },
       "DoubleRegistrableDisplayItem": {
         "type": "object",
         "additionalProperties": false,
@@ -5430,106 +5372,6 @@
           }
         }
       },
-      "SpotState": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Available",
-          "Reserved",
-          "Registered",
-          "Paid"
-        ],
-        "enum": [
-          1,
-          2,
-          3,
-          4
-        ]
-      },
-      "DoubleRegistrablesOverviewQuery": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "RegistrablesOverview": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "singleRegistrables": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SingleRegistrableDisplayItem"
-            }
-          },
-          "doubleRegistrables": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DoubleRegistrableDisplayItem"
-            }
-          }
-        }
-      },
-      "SingleRegistrableDisplayItem": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "nameSecondary": {
-            "type": "string",
-            "nullable": true
-          },
-          "tag": {
-            "type": "string",
-            "nullable": true
-          },
-          "accepted": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "onWaitingList": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "spotsAvailable": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "hasWaitingList": {
-            "type": "boolean"
-          },
-          "isDeletable": {
-            "type": "boolean"
-          },
-          "automaticPromotionFromWaitingList": {
-            "type": "boolean"
-          },
-          "class": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SpotState"
-            }
-          },
-          "waitingList": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SpotState"
-            }
-          }
-        }
-      },
       "RegistrablesOverviewQuery": {
         "type": "object",
         "additionalProperties": false,
@@ -5614,16 +5456,6 @@
             "format": "int32"
           },
           "registrableId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "SingleRegistrablesOverviewQuery": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
             "type": "string",
             "format": "guid"
           }
@@ -5839,16 +5671,6 @@
             "format": "guid",
             "nullable": true
           },
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "UpdateRegistrablesOverviewQueryReadModelCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
           "eventId": {
             "type": "string",
             "format": "guid"
@@ -7087,20 +6909,28 @@
         "additionalProperties": false,
         "properties": {
           "acceptedMail": {
-            "$ref": "#/components/schemas/SentMailDto"
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SentMailDto"
+              }
+            ]
           },
           "email": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "firstName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "id": {
             "type": "string",
             "format": "guid"
           },
           "lastName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "paid": {
             "type": "number",
@@ -7108,7 +6938,8 @@
             "nullable": true
           },
           "phoneNormalized": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "price": {
             "type": "number",
@@ -7123,13 +6954,23 @@
             "type": "boolean"
           },
           "reminder1Mail": {
-            "$ref": "#/components/schemas/SentMailDto"
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SentMailDto"
+              }
+            ]
           },
           "reminder2Due": {
             "type": "boolean"
           },
           "reminder2Mail": {
-            "$ref": "#/components/schemas/SentMailDto"
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SentMailDto"
+              }
+            ]
           },
           "reminderLevel": {
             "type": "integer",
@@ -7545,20 +7386,6 @@
             "format": "guid"
           },
           "paymentAssignmentId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "UpdatePaymentAssignmentsCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "paymentId": {
             "type": "string",
             "format": "guid"
           }
@@ -10668,6 +10495,24 @@
           "eventId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "UpdateReadModelCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "queryName": {
+            "type": "string"
+          },
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "rowId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
           }
         }
       },

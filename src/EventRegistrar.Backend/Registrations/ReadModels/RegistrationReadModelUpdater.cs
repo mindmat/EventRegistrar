@@ -10,41 +10,30 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.ReadModels;
 
-public class UpdateRegistrationReadModelCommand : IRequest
-{
-    public Guid EventId { get; set; }
-    public Guid RegistrationId { get; set; }
-}
-
-public class UpdateRegistrationReadModelCommandHandler : IRequestHandler<UpdateRegistrationReadModelCommand>
+public class RegistrationReadModelUpdater : ReadModelUpdater<RegistrationDisplayItem>
 {
     private readonly IQueryable<Registration> _registrations;
     private readonly IQueryable<Seat> _spots;
     private readonly IQueryable<PaymentAssignment> _assignments;
-    private readonly IEventBus _eventBus;
-
-    private readonly DbContext _dbContext;
     private readonly EnumTranslator _enumTranslator;
 
-    public UpdateRegistrationReadModelCommandHandler(IQueryable<Registration> registrations,
-                                                     IQueryable<Seat> spots,
-                                                     DbContext dbContext,
-                                                     EnumTranslator enumTranslator,
-                                                     IQueryable<PaymentAssignment> assignments,
-                                                     IEventBus eventBus)
+    public RegistrationReadModelUpdater(IQueryable<Registration> registrations,
+                                        IQueryable<Seat> spots,
+                                        EnumTranslator enumTranslator,
+                                        IQueryable<PaymentAssignment> assignments)
     {
         _registrations = registrations;
         _spots = spots;
-        _dbContext = dbContext;
         _enumTranslator = enumTranslator;
         _assignments = assignments;
-        _eventBus = eventBus;
     }
 
-    public async Task<Unit> Handle(UpdateRegistrationReadModelCommand command, CancellationToken cancellationToken)
+    public override string QueryName => nameof(RegistrationQuery);
+
+    public override async Task<RegistrationDisplayItem> CalculateTyped(Guid eventId, Guid? registrationId, CancellationToken cancellationToken)
     {
-        var content = await _registrations.Where(reg => reg.EventId == command.EventId
-                                                     && reg.Id == command.RegistrationId)
+        var content = await _registrations.Where(reg => reg.EventId == eventId
+                                                     && reg.Id == registrationId)
                                           .Select(reg => new RegistrationDisplayItem
                                                          {
                                                              Id = reg.Id,
@@ -80,10 +69,10 @@ public class UpdateRegistrationReadModelCommandHandler : IRequestHandler<UpdateR
                                                          })
                                           .FirstAsync(cancellationToken);
 
-        content.Spots = await _spots.Where(spot => (spot.Registration!.EventId == command.EventId
-                                                 || spot.Registration_Follower!.EventId == command.EventId)
-                                                && (spot.RegistrationId == command.RegistrationId
-                                                 || spot.RegistrationId_Follower == command.RegistrationId))
+        content.Spots = await _spots.Where(spot => (spot.Registration!.EventId == eventId
+                                                 || spot.Registration_Follower!.EventId == eventId)
+                                                && (spot.RegistrationId == registrationId
+                                                 || spot.RegistrationId_Follower == registrationId))
                                     .Where(spot => !spot.IsCancelled)
                                     .OrderByDescending(spot => spot.Registrable!.IsCore)
                                     .ThenBy(spot => spot.Registrable!.ShowInMailListOrder)
@@ -94,19 +83,19 @@ public class UpdateRegistrationReadModelCommandHandler : IRequestHandler<UpdateR
                                                         RegistrableName = spot.Registrable!.Name,
                                                         RegistrableNameSecondary = spot.Registrable.NameSecondary,
                                                         PartnerRegistrationId = spot.IsPartnerSpot
-                                                                                    ? spot.RegistrationId == command.RegistrationId
+                                                                                    ? spot.RegistrationId == registrationId
                                                                                           ? spot.RegistrationId_Follower
                                                                                           : spot.RegistrationId
                                                                                     : null,
                                                         FirstPartnerJoined = spot.FirstPartnerJoined,
                                                         IsCore = spot.Registrable.IsCore,
                                                         RoleText = spot.Registrable.Type == RegistrableType.Double
-                                                                       ? _enumTranslator.Translate(spot.RegistrationId == command.RegistrationId
+                                                                       ? _enumTranslator.Translate(spot.RegistrationId == registrationId
                                                                                                        ? Role.Leader
                                                                                                        : Role.Follower)
                                                                        : null,
                                                         PartnerName = spot.IsPartnerSpot
-                                                                          ? spot.RegistrationId == command.RegistrationId
+                                                                          ? spot.RegistrationId == registrationId
                                                                                 ? $"{spot.Registration_Follower!.RespondentFirstName} {spot.Registration_Follower.RespondentLastName}"
                                                                                 : $"{spot.Registration!.RespondentFirstName} {spot.Registration.RespondentLastName}"
                                                                           : null,
@@ -115,8 +104,8 @@ public class UpdateRegistrationReadModelCommandHandler : IRequestHandler<UpdateR
                                                     })
                                     .ToListAsync(cancellationToken);
 
-        var data = await _assignments.Where(ass => ass.Registration!.EventId == command.EventId
-                                                && ass.RegistrationId == command.RegistrationId
+        var data = await _assignments.Where(ass => ass.Registration!.EventId == eventId
+                                                && ass.RegistrationId == registrationId
                                                 && ass.PaymentAssignmentId_Counter == null)
                                      .Select(ass => new
                                                     {
@@ -149,103 +138,63 @@ public class UpdateRegistrationReadModelCommandHandler : IRequestHandler<UpdateR
                                                           }))
                                .ToList();
         content.Paid = content.Payments.Sum(pmt => pmt.Amount);
-
-        var readModels = _dbContext.Set<RegistrationQueryReadModel>();
-
-        var readModel = await readModels.AsTracking()
-                                        .Where(rm => rm.EventId == command.EventId
-                                                  && rm.RegistrationId == command.RegistrationId)
-                                        .FirstOrDefaultAsync(cancellationToken);
-        if (readModel == null)
-        {
-            readModel = new RegistrationQueryReadModel
-                        {
-                            EventId = command.EventId,
-                            RegistrationId = command.RegistrationId,
-                            Content = content
-                        };
-            var entry = readModels.Attach(readModel);
-            entry.State = EntityState.Added;
-            _eventBus.Publish(new ReadModelUpdated
-                              {
-                                  EventId = command.EventId,
-                                  QueryName = nameof(RegistrationQuery),
-                                  RowId = command.RegistrationId
-                              });
-        }
-        else
-        {
-            readModel.Content = content;
-            if (_dbContext.Entry(readModel).State == EntityState.Modified)
-            {
-                _eventBus.Publish(new ReadModelUpdated
-                                  {
-                                      EventId = command.EventId,
-                                      QueryName = nameof(RegistrationQuery),
-                                      RowId = command.RegistrationId
-                                  });
-            }
-        }
-
-        return Unit.Value;
+        return content;
     }
 }
 
-public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTranslation<OutgoingPaymentAssigned>
+public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTranslation<OutgoingPaymentAssigned>,
+                                                             IEventToCommandTranslation<OutgoingPaymentUnassigned>,
+                                                             IEventToCommandTranslation<IncomingPaymentUnassigned>,
+                                                             IEventToCommandTranslation<IncomingPaymentAssigned>
 {
     public IEnumerable<IRequest> Translate(OutgoingPaymentAssigned e)
     {
         if (e.EventId != null && e.RegistrationId != null)
         {
-            yield return new UpdateRegistrationReadModelCommand
+            yield return new UpdateReadModelCommand
                          {
+                             QueryName = nameof(RegistrationQuery),
                              EventId = e.EventId.Value,
-                             RegistrationId = e.RegistrationId.Value
+                             RowId = e.RegistrationId.Value
                          };
         }
     }
-}
 
-public class UpdateRegistrationWhenOutgoingPaymentUnassigned : IEventToCommandTranslation<OutgoingPaymentUnassigned>
-{
     public IEnumerable<IRequest> Translate(OutgoingPaymentUnassigned e)
     {
         if (e.EventId != null && e.RegistrationId != null)
         {
-            yield return new UpdateRegistrationReadModelCommand
+            yield return new UpdateReadModelCommand
                          {
+                             QueryName = nameof(RegistrationQuery),
                              EventId = e.EventId.Value,
-                             RegistrationId = e.RegistrationId.Value
+                             RowId = e.RegistrationId.Value
                          };
         }
     }
-}
 
-public class UpdateRegistrationWhenIncomingPaymentUnassigned : IEventToCommandTranslation<IncomingPaymentUnassigned>
-{
     public IEnumerable<IRequest> Translate(IncomingPaymentUnassigned e)
     {
         if (e.EventId != null && e.RegistrationId != null)
         {
-            yield return new UpdateRegistrationReadModelCommand
+            yield return new UpdateReadModelCommand
                          {
+                             QueryName = nameof(RegistrationQuery),
                              EventId = e.EventId.Value,
-                             RegistrationId = e.RegistrationId.Value
+                             RowId = e.RegistrationId.Value
                          };
         }
     }
-}
 
-public class UpdateRegistrationWhenIncomingPaymentAssigned : IEventToCommandTranslation<IncomingPaymentAssigned>
-{
     public IEnumerable<IRequest> Translate(IncomingPaymentAssigned e)
     {
         if (e.EventId != null && e.RegistrationId != null)
         {
-            yield return new UpdateRegistrationReadModelCommand
+            yield return new UpdateReadModelCommand
                          {
+                             QueryName = nameof(RegistrationQuery),
                              EventId = e.EventId.Value,
-                             RegistrationId = e.RegistrationId.Value
+                             RowId = e.RegistrationId.Value
                          };
         }
     }

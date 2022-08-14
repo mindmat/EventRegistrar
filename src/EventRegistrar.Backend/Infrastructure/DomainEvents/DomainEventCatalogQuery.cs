@@ -2,9 +2,7 @@
 
 namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
 
-public class DomainEventCatalogQuery : IRequest<IEnumerable<DomainEventCatalogItem>>
-{
-}
+public class DomainEventCatalogQuery : IRequest<IEnumerable<DomainEventCatalogItem>> { }
 
 public class
     DomainEventCatalogQueryHandler : IRequestHandler<DomainEventCatalogQuery, IEnumerable<DomainEventCatalogItem>>

@@ -282,6 +282,42 @@ namespace EventRegistrar.Backend.Migrations
                     b.ToTable("EventConfigurations", (string)null);
                 });
 
+            modelBuilder.Entity("EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels.ReadModel", b =>
+                {
+                    b.Property<int>("Sequence")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
+
+                    b.Property<string>("ContentJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("EventId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTimeOffset>("LastUpdate")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("QueryName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<Guid?>("RowId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Sequence");
+
+                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Sequence"));
+
+                    b.HasIndex("QueryName", "EventId", "RowId")
+                        .IsUnique()
+                        .HasFilter("[RowId] IS NOT NULL");
+
+                    b.ToTable("ReadModels", (string)null);
+                });
+
             modelBuilder.Entity("EventRegistrar.Backend.Infrastructure.DomainEvents.PersistedDomainEvent", b =>
                 {
                     b.Property<Guid>("Id")
@@ -739,36 +775,6 @@ namespace EventRegistrar.Backend.Migrations
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
 
                     b.ToTable("MailTemplates", (string)null);
-                });
-
-            modelBuilder.Entity("EventRegistrar.Backend.Payments.Assignments.Candidates.PaymentAssignmentsReadModel", b =>
-                {
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PaymentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Sequence")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
-
-                    b.HasKey("EventId", "PaymentId");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("EventId", "PaymentId"), false);
-
-                    b.HasIndex("Sequence")
-                        .IsUnique();
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
-
-                    b.ToTable("PaymentAssignmentsReadModel");
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Payments.Files.Fetch.RawBankStatementsFile", b =>
@@ -1313,34 +1319,6 @@ namespace EventRegistrar.Backend.Migrations
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
 
                     b.ToTable("RegistrableCompositions", (string)null);
-                });
-
-            modelBuilder.Entity("EventRegistrar.Backend.Registrables.ReadModels.RegistrablesOverviewQueryReadModel", b =>
-                {
-                    b.Property<Guid>("EventId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Sequence")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
-
-                    b.HasKey("EventId");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("EventId"), false);
-
-                    b.HasIndex("Sequence")
-                        .IsUnique();
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
-
-                    b.ToTable("RegistrablesOverviewQueryReadModel");
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Registrables.Reductions.Reduction", b =>
@@ -2012,36 +1990,6 @@ namespace EventRegistrar.Backend.Migrations
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
 
                     b.ToTable("RawRegistrations", (string)null);
-                });
-
-            modelBuilder.Entity("EventRegistrar.Backend.Registrations.ReadModels.RegistrationQueryReadModel", b =>
-                {
-                    b.Property<Guid>("EventId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("RegistrationId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Sequence")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
-
-                    b.HasKey("EventId", "RegistrationId");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("EventId", "RegistrationId"), false);
-
-                    b.HasIndex("Sequence")
-                        .IsUnique();
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
-
-                    b.ToTable("RegistrationQueryReadModel");
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Registrations.Registration", b =>

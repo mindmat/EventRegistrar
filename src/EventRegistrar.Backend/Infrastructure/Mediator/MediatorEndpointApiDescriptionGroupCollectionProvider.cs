@@ -79,7 +79,12 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider : IApiDescrip
         }
     }
 
-    private (string Request, string Suffix) Split(string requestName)
+    /// <summary>
+    /// RegistrablesOverviewQuery -> (RegistrablesOverview, Query)
+    /// </summary>
+    /// <param name="requestName"></param>
+    /// <returns></returns>
+    private static (string Request, string Suffix) Split(string requestName)
     {
         var commandIndex = requestName.LastIndexOf("Command", StringComparison.InvariantCulture);
         if (commandIndex > 0)

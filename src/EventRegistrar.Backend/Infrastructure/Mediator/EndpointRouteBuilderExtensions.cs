@@ -2,7 +2,6 @@
 using System.Text.Json;
 
 using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 using MediatR;
 
@@ -98,9 +97,15 @@ public static class EndpointRouteBuilderExtensions
 
 
         context.Response.Headers.Add("content-type", "application/json");
-
-        var objectType = response?.GetType() ?? requestType;
-        await JsonSerializer.SerializeAsync(context.Response.Body, response, objectType, _jsonSettings, context.RequestAborted);
+        if (response is ISerializedJson serializedJson)
+        {
+            await context.Response.WriteAsync(serializedJson.Content, context.RequestAborted);
+        }
+        else
+        {
+            var objectType = response?.GetType() ?? requestType;
+            await JsonSerializer.SerializeAsync(context.Response.Body, response, objectType, _jsonSettings, context.RequestAborted);
+        }
 
         await context.Response.Body.FlushAsync(context.RequestAborted);
     }

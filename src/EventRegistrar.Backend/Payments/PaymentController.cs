@@ -33,15 +33,6 @@ public class PaymentController : Controller
                              });
     }
 
-    [HttpGet("api/events/{eventAcronym}/duepayments")]
-    public async Task<IEnumerable<DuePaymentItem>> GetDuePayments(string eventAcronym)
-    {
-        return await _mediator.Send(new DuePaymentsQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
-
     [HttpGet("api/events/{eventAcronym}/payments/overview")]
     public async Task<PaymentOverview> GetPaymentOverview(string eventAcronym)
     {

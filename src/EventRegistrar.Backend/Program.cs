@@ -6,6 +6,7 @@ using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ErrorHandling;
 using EventRegistrar.Backend.Infrastructure.Mediator;
@@ -119,7 +120,9 @@ container.Register<IIdentityProvider, Auth0IdentityProvider>();
 container.Register(() => new AuthenticatedUserId(container.GetInstance<IAuthenticatedUserProvider>()
                                                           .GetAuthenticatedUserId()
                                                           .Result));
-container.Register(() => container.GetInstance<IAuthenticatedUserProvider>().GetAuthenticatedUser());
+container.Register(() => container.GetInstance<IAuthenticatedUserProvider>()
+                                  .GetAuthenticatedUser());
+container.Collection.Register(typeof(IReadModelUpdater), assemblies);
 
 container.Register<IEventAcronymResolver, EventAcronymResolver>();
 container.Register<IAuthorizationChecker, AuthorizationChecker>();
@@ -137,7 +140,8 @@ container.Collection.Register<IExceptionTranslation>(assemblies);
 
 // Configuration
 container.Register<ConfigurationResolver>();
-var defaultConfigItemTypes = container.GetTypesToRegister<IDefaultConfigurationItem>(assemblies).ToList();
+var defaultConfigItemTypes = container.GetTypesToRegister<IDefaultConfigurationItem>(assemblies)
+                                      .ToList();
 container.Collection.Register<IDefaultConfigurationItem>(defaultConfigItemTypes);
 
 var domainEventTypes = container.GetTypesToRegister<DomainEvent>(assemblies);

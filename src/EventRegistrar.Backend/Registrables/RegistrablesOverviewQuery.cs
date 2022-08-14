@@ -1,35 +1,37 @@
 ﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Registrables.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.Mediator;
 
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrables;
 
-public class RegistrablesOverviewQuery : IRequest<RegistrablesOverview>, IEventBoundRequest
+public class RegistrablesOverviewQuery : IRequest<SerializedJson<RegistrablesOverview>>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
 }
 
-public class RegistrablesOverviewQueryHandler : IRequestHandler<RegistrablesOverviewQuery, RegistrablesOverview>
+public class RegistrablesOverviewQueryHandler : IRequestHandler<RegistrablesOverviewQuery, SerializedJson<RegistrablesOverview>>
 {
-    private readonly IQueryable<RegistrablesOverviewQueryReadModel> _overviews;
+    private readonly ReadModelReader _readModelReader;
 
-    public RegistrablesOverviewQueryHandler(IQueryable<RegistrablesOverviewQueryReadModel> overviews)
+    public RegistrablesOverviewQueryHandler(ReadModelReader readModelReader)
     {
-        _overviews = overviews;
+        _readModelReader = readModelReader;
     }
 
-    public async Task<RegistrablesOverview> Handle(RegistrablesOverviewQuery query, CancellationToken cancellationToken)
+
+    public async Task<SerializedJson<RegistrablesOverview>> Handle(RegistrablesOverviewQuery query, CancellationToken cancellationToken)
     {
-        var overview = await _overviews.Where(reg => reg.EventId == query.EventId)
-                                       .Select(reg => reg.Content)
-                                       .FirstAsync(cancellationToken);
-        return overview;
+        return await _readModelReader.Get<RegistrablesOverview>(nameof(RegistrablesOverviewQuery),
+                                                                query.EventId,
+                                                                null,
+                                                                cancellationToken);
     }
 }
 
 public class RegistrablesOverview
 {
-    public IEnumerable<SingleRegistrableDisplayItem> SingleRegistrables { get; set; }
-    public IEnumerable<DoubleRegistrableDisplayItem> DoubleRegistrables { get; set; }
+    public IEnumerable<SingleRegistrableDisplayItem> SingleRegistrables { get; set; } = null!;
+    public IEnumerable<DoubleRegistrableDisplayItem> DoubleRegistrables { get; set; } = null!;
 }
