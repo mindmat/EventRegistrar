@@ -177,6 +177,13 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
 
 
 {
+    private readonly IDateTimeProvider _dateTimeProvider;
+
+    public UpdatePaymentAssignmentsCommandWhenAssigned(IDateTimeProvider dateTimeProvider)
+    {
+        _dateTimeProvider = dateTimeProvider;
+    }
+
     public IEnumerable<IRequest> Translate(OutgoingPaymentAssigned e)
     {
         if (e.EventId != null)
@@ -185,7 +192,8 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
                          {
                              QueryName = nameof(PaymentAssignmentsQuery),
                              EventId = e.EventId.Value,
-                             RowId = e.OutgoingPaymentId
+                             RowId = e.OutgoingPaymentId,
+                             DirtyMoment = _dateTimeProvider.Now
                          };
         }
     }
@@ -198,7 +206,8 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
                          {
                              QueryName = nameof(PaymentAssignmentsQuery),
                              EventId = e.EventId.Value,
-                             RowId = e.OutgoingPaymentId
+                             RowId = e.OutgoingPaymentId,
+                             DirtyMoment = _dateTimeProvider.Now
                          };
         }
     }
@@ -211,7 +220,8 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
                          {
                              QueryName = nameof(PaymentAssignmentsQuery),
                              EventId = e.EventId.Value,
-                             RowId = e.IncomingPaymentId
+                             RowId = e.IncomingPaymentId,
+                             DirtyMoment = _dateTimeProvider.Now
                          };
         }
     }
@@ -224,7 +234,8 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
                          {
                              QueryName = nameof(PaymentAssignmentsQuery),
                              EventId = e.EventId.Value,
-                             RowId = e.IncomingPaymentId
+                             RowId = e.IncomingPaymentId,
+                             DirtyMoment = _dateTimeProvider.Now
                          };
         }
     }

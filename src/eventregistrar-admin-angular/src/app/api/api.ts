@@ -436,57 +436,6 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    updateRegistrationReadModel_Command(updateRegistrationReadModelCommand: UpdateRegistrationReadModelCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/UpdateRegistrationReadModelCommand";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(updateRegistrationReadModelCommand);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdateRegistrationReadModel_Command(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdateRegistrationReadModel_Command(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Unit>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Unit>;
-        }));
-    }
-
-    protected processUpdateRegistrationReadModel_Command(response: HttpResponseBase): Observable<Unit> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     allExternalRegistrationIdentifiers_Query(allExternalRegistrationIdentifiersQuery: AllExternalRegistrationIdentifiersQuery | undefined): Observable<string[]> {
         let url_ = this.baseUrl + "/api/AllExternalRegistrationIdentifiersQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -1609,57 +1558,6 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    doubleRegistrablesOverview_Query(doubleRegistrablesOverviewQuery: DoubleRegistrablesOverviewQuery | undefined): Observable<DoubleRegistrableDisplayItem[]> {
-        let url_ = this.baseUrl + "/api/DoubleRegistrablesOverviewQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(doubleRegistrablesOverviewQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDoubleRegistrablesOverview_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDoubleRegistrablesOverview_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<DoubleRegistrableDisplayItem[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<DoubleRegistrableDisplayItem[]>;
-        }));
-    }
-
-    protected processDoubleRegistrablesOverview_Query(response: HttpResponseBase): Observable<DoubleRegistrableDisplayItem[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as DoubleRegistrableDisplayItem[];
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     registrablesOverview_Query(registrablesOverviewQuery: RegistrablesOverviewQuery | undefined): Observable<RegistrablesOverview> {
         let url_ = this.baseUrl + "/api/RegistrablesOverviewQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -1854,57 +1752,6 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    singleRegistrablesOverview_Query(singleRegistrablesOverviewQuery: SingleRegistrablesOverviewQuery | undefined): Observable<SingleRegistrableDisplayItem[]> {
-        let url_ = this.baseUrl + "/api/SingleRegistrablesOverviewQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(singleRegistrablesOverviewQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSingleRegistrablesOverview_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processSingleRegistrablesOverview_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<SingleRegistrableDisplayItem[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<SingleRegistrableDisplayItem[]>;
-        }));
-    }
-
-    protected processSingleRegistrablesOverview_Query(response: HttpResponseBase): Observable<SingleRegistrableDisplayItem[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as SingleRegistrableDisplayItem[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2354,57 +2201,6 @@ export class Api {
     }
 
     protected processSaveReduction_Command(response: HttpResponseBase): Observable<Unit> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    updateRegistrablesOverviewQueryReadModel_Command(updateRegistrablesOverviewQueryReadModelCommand: UpdateRegistrablesOverviewQueryReadModelCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/UpdateRegistrablesOverviewQueryReadModelCommand";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(updateRegistrablesOverviewQueryReadModelCommand);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdateRegistrablesOverviewQueryReadModel_Command(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdateRegistrablesOverviewQueryReadModel_Command(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Unit>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Unit>;
-        }));
-    }
-
-    protected processUpdateRegistrablesOverviewQueryReadModel_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -3801,57 +3597,6 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    updateDuePaymentsReadModel_Command(updateDuePaymentsReadModelCommand: UpdateDuePaymentsReadModelCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/UpdateDuePaymentsReadModelCommand";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(updateDuePaymentsReadModelCommand);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdateDuePaymentsReadModel_Command(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdateDuePaymentsReadModel_Command(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Unit>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Unit>;
-        }));
-    }
-
-    protected processUpdateDuePaymentsReadModel_Command(response: HttpResponseBase): Observable<Unit> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     differences_Query(differencesQuery: DifferencesQuery | undefined): Observable<DifferencesDisplayItem[]> {
         let url_ = this.baseUrl + "/api/DifferencesQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -4291,57 +4036,6 @@ export class Api {
     }
 
     protected processUnassignPayment_Command(response: HttpResponseBase): Observable<Unit> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    updatePaymentAssignments_Command(updatePaymentAssignmentsCommand: UpdatePaymentAssignmentsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/UpdatePaymentAssignmentsCommand";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(updatePaymentAssignmentsCommand);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processUpdatePaymentAssignments_Command(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processUpdatePaymentAssignments_Command(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Unit>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Unit>;
-        }));
-    }
-
-    protected processUpdatePaymentAssignments_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5790,6 +5484,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    updateReadModel_Command(updateReadModelCommand: UpdateReadModelCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/UpdateReadModelCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(updateReadModelCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateReadModel_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateReadModel_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processUpdateReadModel_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     hostingOffers_Query(hostingOffersQuery: HostingOffersQuery | undefined): Observable<HostingOffers> {
         let url_ = this.baseUrl + "/api/HostingOffersQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -6582,11 +6327,6 @@ export interface SetReductionCommand {
     registrationId?: string;
 }
 
-export interface UpdateRegistrationReadModelCommand {
-    eventId?: string;
-    registrationId?: string;
-}
-
 export interface AllExternalRegistrationIdentifiersQuery {
     registrationFormExternalIdentifier?: string;
 }
@@ -6857,6 +6597,33 @@ export interface DeleteRegistrableCommand {
     registrableId?: string;
 }
 
+export interface RegistrablesOverview {
+    singleRegistrables?: SingleRegistrableDisplayItem[];
+    doubleRegistrables?: DoubleRegistrableDisplayItem[];
+}
+
+export interface SingleRegistrableDisplayItem {
+    id?: string;
+    name?: string;
+    nameSecondary?: string | null;
+    tag?: string | null;
+    accepted?: number;
+    onWaitingList?: number | null;
+    spotsAvailable?: number | null;
+    hasWaitingList?: boolean;
+    isDeletable?: boolean;
+    automaticPromotionFromWaitingList?: boolean;
+    class?: SpotState[];
+    waitingList?: SpotState[];
+}
+
+export enum SpotState {
+    Available = 1,
+    Reserved = 2,
+    Registered = 3,
+    Paid = 4,
+}
+
 export interface DoubleRegistrableDisplayItem {
     id?: string;
     name?: string;
@@ -6880,37 +6647,6 @@ export interface DoubleSpotState {
     leader?: SpotState;
     follower?: SpotState;
     linked?: boolean;
-}
-
-export enum SpotState {
-    Available = 1,
-    Reserved = 2,
-    Registered = 3,
-    Paid = 4,
-}
-
-export interface DoubleRegistrablesOverviewQuery {
-    eventId?: string;
-}
-
-export interface RegistrablesOverview {
-    singleRegistrables?: SingleRegistrableDisplayItem[];
-    doubleRegistrables?: DoubleRegistrableDisplayItem[];
-}
-
-export interface SingleRegistrableDisplayItem {
-    id?: string;
-    name?: string;
-    nameSecondary?: string | null;
-    tag?: string | null;
-    accepted?: number;
-    onWaitingList?: number | null;
-    spotsAvailable?: number | null;
-    hasWaitingList?: boolean;
-    isDeletable?: boolean;
-    automaticPromotionFromWaitingList?: boolean;
-    class?: SpotState[];
-    waitingList?: SpotState[];
 }
 
 export interface RegistrablesOverviewQuery {
@@ -6941,10 +6677,6 @@ export interface SetSingleRegistrableLimitsCommand {
     eventId?: string;
     maximumParticipants?: number;
     registrableId?: string;
-}
-
-export interface SingleRegistrablesOverviewQuery {
-    eventId?: string;
 }
 
 export interface CheckIfRegistrationIsPromotedCommand {
@@ -7018,10 +6750,6 @@ export interface SaveReductionCommand {
     amount?: number;
     registrableId1_ReductionActivatedIfCombinedWith?: string | null;
     registrableId2_ReductionActivatedIfCombinedWith?: string | null;
-    eventId?: string;
-}
-
-export interface UpdateRegistrablesOverviewQueryReadModelCommand {
     eventId?: string;
 }
 
@@ -7405,12 +7133,12 @@ export interface ProcessFetchedBankStatementsFileCommand {
 
 export interface DuePaymentItem {
     acceptedMail?: SentMailDto | null;
-    email?: string;
-    firstName?: string;
+    email?: string | null;
+    firstName?: string | null;
     id?: string;
-    lastName?: string;
+    lastName?: string | null;
     paid?: number | null;
-    phoneNormalized?: string;
+    phoneNormalized?: string | null;
     price?: number | null;
     receivedAt?: Date;
     reminder1Due?: boolean;
@@ -7435,10 +7163,6 @@ export interface SendReminderCommand {
     eventId?: string;
     registrationId?: string;
     withhold?: boolean;
-}
-
-export interface UpdateDuePaymentsReadModelCommand {
-    eventId?: string;
 }
 
 export interface DifferencesDisplayItem {
@@ -7553,11 +7277,6 @@ export interface PossibleRepaymentAssignmentQuery {
 export interface UnassignPaymentCommand {
     eventId?: string;
     paymentAssignmentId?: string;
-}
-
-export interface UpdatePaymentAssignmentsCommand {
-    eventId?: string;
-    paymentId?: string;
 }
 
 export interface DeleteMailCommand {
@@ -8343,6 +8062,12 @@ export interface SaveDomainEventCommand {
 
 export interface StartUpdateAllReadModelsOfEventCommand {
     eventId?: string;
+}
+
+export interface UpdateReadModelCommand {
+    queryName?: string;
+    eventId?: string;
+    rowId?: string | null;
 }
 
 export interface HostingOffers {

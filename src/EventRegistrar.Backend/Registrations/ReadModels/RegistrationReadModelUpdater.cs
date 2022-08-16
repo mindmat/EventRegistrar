@@ -147,6 +147,13 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
                                                              IEventToCommandTranslation<IncomingPaymentUnassigned>,
                                                              IEventToCommandTranslation<IncomingPaymentAssigned>
 {
+    private IDateTimeProvider _dateTimeProvider;
+
+    public UpdateRegistrationWhenOutgoingPaymentAssigned(IDateTimeProvider dateTimeProvider)
+    {
+        _dateTimeProvider = dateTimeProvider;
+    }
+
     public IEnumerable<IRequest> Translate(OutgoingPaymentAssigned e)
     {
         if (e.EventId != null && e.RegistrationId != null)
@@ -155,7 +162,8 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
                          {
                              QueryName = nameof(RegistrationQuery),
                              EventId = e.EventId.Value,
-                             RowId = e.RegistrationId.Value
+                             RowId = e.RegistrationId.Value,
+                             DirtyMoment = _dateTimeProvider.Now
                          };
         }
     }
@@ -168,7 +176,8 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
                          {
                              QueryName = nameof(RegistrationQuery),
                              EventId = e.EventId.Value,
-                             RowId = e.RegistrationId.Value
+                             RowId = e.RegistrationId.Value,
+                             DirtyMoment = _dateTimeProvider.Now
                          };
         }
     }
@@ -181,7 +190,8 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
                          {
                              QueryName = nameof(RegistrationQuery),
                              EventId = e.EventId.Value,
-                             RowId = e.RegistrationId.Value
+                             RowId = e.RegistrationId.Value,
+                             DirtyMoment = _dateTimeProvider.Now
                          };
         }
     }
@@ -194,7 +204,8 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
                          {
                              QueryName = nameof(RegistrationQuery),
                              EventId = e.EventId.Value,
-                             RowId = e.RegistrationId.Value
+                             RowId = e.RegistrationId.Value,
+                             DirtyMoment = _dateTimeProvider.Now
                          };
         }
     }

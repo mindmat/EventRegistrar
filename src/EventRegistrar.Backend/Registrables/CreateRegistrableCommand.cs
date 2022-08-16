@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
@@ -25,12 +26,15 @@ public class CreateRegistrableCommandHandler : IRequestHandler<CreateRegistrable
 {
     private readonly IRepository<Registrable> _registrables;
     private readonly CommandQueue _commandQueue;
+    private IDateTimeProvider _dateTimeProvider;
 
     public CreateRegistrableCommandHandler(IRepository<Registrable> registrables,
-                                           CommandQueue commandQueue)
+                                           CommandQueue commandQueue,
+                                           IDateTimeProvider dateTimeProvider)
     {
         _registrables = registrables;
         _commandQueue = commandQueue;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(CreateRegistrableCommand command, CancellationToken cancellationToken)
@@ -45,7 +49,8 @@ public class CreateRegistrableCommandHandler : IRequestHandler<CreateRegistrable
         _commandQueue.EnqueueCommand(new UpdateReadModelCommand
                                      {
                                          QueryName = nameof(RegistrablesOverviewQuery),
-                                         EventId = command.EventId
+                                         EventId = command.EventId,
+                                         DirtyMoment = _dateTimeProvider.Now
                                      });
         return Unit.Value;
     }

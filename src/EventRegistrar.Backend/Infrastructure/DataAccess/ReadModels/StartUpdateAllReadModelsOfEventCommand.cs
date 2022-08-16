@@ -19,14 +19,17 @@ public class StartUpdateAllReadModelsOfEventCommandHandler : IRequestHandler<Sta
     private readonly CommandQueue _commandQueue;
     private readonly IQueryable<Registration> _registrations;
     private readonly IQueryable<Payment> _payments;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public StartUpdateAllReadModelsOfEventCommandHandler(CommandQueue commandQueue,
                                                          IQueryable<Registration> registrations,
-                                                         IQueryable<Payment> payments)
+                                                         IQueryable<Payment> payments,
+                                                         IDateTimeProvider dateTimeProvider)
     {
         _commandQueue = commandQueue;
         _registrations = registrations;
         _payments = payments;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(StartUpdateAllReadModelsOfEventCommand command, CancellationToken cancellationToken)
@@ -34,13 +37,15 @@ public class StartUpdateAllReadModelsOfEventCommandHandler : IRequestHandler<Sta
         _commandQueue.EnqueueCommand(new UpdateReadModelCommand
                                      {
                                          QueryName = nameof(RegistrablesOverviewQuery),
-                                         EventId = command.EventId
+                                         EventId = command.EventId,
+                                         DirtyMoment = _dateTimeProvider.Now
                                      });
 
         _commandQueue.EnqueueCommand(new UpdateReadModelCommand
                                      {
                                          QueryName = nameof(DuePaymentsQuery),
-                                         EventId = command.EventId
+                                         EventId = command.EventId,
+                                         DirtyMoment = _dateTimeProvider.Now
                                      });
 
         var registrationIds = await _registrations.Where(reg => reg.EventId == command.EventId)
@@ -53,7 +58,8 @@ public class StartUpdateAllReadModelsOfEventCommandHandler : IRequestHandler<Sta
                                          {
                                              QueryName = nameof(RegistrationQuery),
                                              EventId = command.EventId,
-                                             RowId = registrationId
+                                             RowId = registrationId,
+                                             DirtyMoment = _dateTimeProvider.Now
                                          });
         }
 
@@ -67,7 +73,8 @@ public class StartUpdateAllReadModelsOfEventCommandHandler : IRequestHandler<Sta
                                          {
                                              QueryName = nameof(PaymentAssignmentsQuery),
                                              EventId = command.EventId,
-                                             RowId = paymentId
+                                             RowId = paymentId,
+                                             DirtyMoment = _dateTimeProvider.Now
                                          });
         }
 

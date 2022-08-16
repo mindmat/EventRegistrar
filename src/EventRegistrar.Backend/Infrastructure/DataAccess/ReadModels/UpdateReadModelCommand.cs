@@ -11,6 +11,7 @@ public class UpdateReadModelCommand : IRequest
     public string QueryName { get; set; } = null!;
     public Guid EventId { get; set; }
     public Guid? RowId { get; set; }
+    public DateTimeOffset DirtyMoment { get; set; }
 }
 
 public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelCommand>
@@ -18,23 +19,24 @@ public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelComm
     private readonly IEnumerable<IReadModelUpdater> _updaters;
     private readonly DbContext _dbContext;
     private readonly IEventBus _eventBus;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private static readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerDefaults.Web);
 
     public UpdateReadModelCommandHandler(IEnumerable<IReadModelUpdater> updaters,
                                          DbContext dbContext,
-                                         IEventBus eventBus)
+                                         IEventBus eventBus,
+                                         IDateTimeProvider dateTimeProvider)
     {
         _updaters = updaters;
         _dbContext = dbContext;
         _eventBus = eventBus;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(UpdateReadModelCommand command, CancellationToken cancellationToken)
     {
+        var now = _dateTimeProvider.Now;
         var updater = _updaters.First(rmu => rmu.QueryName == command.QueryName);
-        var result = await updater.Calculate(command.EventId, command.RowId, cancellationToken);
-
-        var contentJson = JsonSerializer.Serialize(result, _serializerOptions);
 
         var readModels = _dbContext.Set<ReadModel>();
 
@@ -43,6 +45,16 @@ public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelComm
                                                    && rdm.EventId == command.EventId
                                                    && rdm.RowId == command.RowId)
                                         .FirstOrDefaultAsync(cancellationToken);
+        if (readModel?.LastUpdate >= command.DirtyMoment)
+        {
+            // Not perfect (time vs rowversion)
+            return Unit.Value;
+        }
+
+        var result = await updater.Calculate(command.EventId, command.RowId, cancellationToken);
+
+        var contentJson = JsonSerializer.Serialize(result, _serializerOptions);
+
         if (readModel == null)
         {
             readModel = new ReadModel
@@ -51,7 +63,7 @@ public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelComm
                             EventId = command.EventId,
                             RowId = command.RowId,
                             ContentJson = contentJson,
-                            LastUpdate = DateTimeOffset.Now
+                            LastUpdate = now
                         };
             var entry = readModels.Attach(readModel);
             entry.State = EntityState.Added;

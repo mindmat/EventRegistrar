@@ -129,6 +129,8 @@ container.Register<IAuthorizationChecker, AuthorizationChecker>();
 container.Register<IAuthenticatedUserProvider, AuthenticatedUserProvider>();
 container.Register<IRightsOfEventRoleProvider, RightsOfEventRoleProvider>();
 
+container.RegisterSingleton<IDateTimeProvider, DateTimeProvider>();
+
 // Error handling
 container.RegisterSingleton<ExceptionTranslator>();
 
