@@ -25,7 +25,7 @@ export class FetchService<TItem>
         return this.result.asObservable();
     }
 
-    protected fetchItems(fetch: Observable<TItem>, rowId?: string): Observable<TItem>
+    protected fetchItems(fetch: Observable<TItem>, rowId: string | null = null): Observable<TItem>
     {
         this.rowId = rowId;
         this.fetch = fetch;

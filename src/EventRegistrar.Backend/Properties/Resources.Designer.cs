@@ -61,6 +61,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bestätigungsmail.
+        /// </summary>
+        internal static string AcceptedMail {
+            get {
+                return ResourceManager.GetString("AcceptedMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zahlungseingang zuordnen.
         /// </summary>
         internal static string AssignIncoming {
@@ -399,6 +408,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Letzte Nachricht: {{type}} vor {{daysAgo}} Tagen.
+        /// </summary>
+        internal static string LastMessageTS {
+            get {
+                return ResourceManager.GetString("LastMessageTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nachname.
         /// </summary>
         internal static string LastName {
@@ -417,11 +435,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fehlbetrag.
+        /// </summary>
+        internal static string MissingAmount {
+            get {
+                return ResourceManager.GetString("MissingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Partner.
         /// </summary>
         internal static string Partner {
             get {
                 return ResourceManager.GetString("Partner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {{ paid }} von {{ total }} bezahlt.
+        /// </summary>
+        internal static string PaymentProgressTS {
+            get {
+                return ResourceManager.GetString("PaymentProgressTS", resourceCulture);
             }
         }
         
@@ -489,6 +525,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mail Zahlungserinnerung 1.
+        /// </summary>
+        internal static string ReminderMail1 {
+            get {
+                return ResourceManager.GetString("ReminderMail1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mail Zahlungserinnerung 2.
+        /// </summary>
+        internal static string ReminderMail2 {
+            get {
+                return ResourceManager.GetString("ReminderMail2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rolle.
         /// </summary>
         internal static string Role {
@@ -539,6 +593,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Settled {
             get {
                 return ResourceManager.GetString("Settled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SMS.
+        /// </summary>
+        internal static string SMS {
+            get {
+                return ResourceManager.GetString("SMS", resourceCulture);
             }
         }
         

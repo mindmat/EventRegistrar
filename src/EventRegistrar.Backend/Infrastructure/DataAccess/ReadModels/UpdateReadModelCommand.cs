@@ -94,7 +94,8 @@ public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelComm
 
 public interface IReadModelUpdater
 {
-    public string QueryName { get; }
+    string QueryName { get; }
+    bool IsDateDependent { get; }
     Task<object> Calculate(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
 }
 
@@ -102,11 +103,13 @@ public abstract class ReadModelUpdater<T> : IReadModelUpdater
     where T : class
 {
     public abstract string QueryName { get; }
+    public abstract bool IsDateDependent { get; }
 
     public async Task<object> Calculate(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
     {
         return await CalculateTyped(eventId, rowId, cancellationToken);
     }
+
 
     public abstract Task<T> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
 }

@@ -46,6 +46,7 @@ import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ng
 import { TranslationLoaderService } from './core/i18n/translation-loader.service';
 import { MissingTranslationService } from './core/i18n/missing-translation.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { DuePaymentsComponent } from './modules/admin/accounting/due-payments/due-payments.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -64,7 +65,8 @@ const routerConfig: ExtraOptions = {
         SearchRegistrationComponent,
         SettlePaymentsComponent,
         SettlePaymentComponent,
-        AssignmentCandidateRegistrationComponent
+        AssignmentCandidateRegistrationComponent,
+        DuePaymentsComponent
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },

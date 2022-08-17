@@ -7148,6 +7148,8 @@ export interface DuePaymentItem {
     reminderLevel?: number;
     reminderSmsPossible?: boolean;
     reminderSmsSent?: Date | null;
+    daysSinceLastNotification?: number | null;
+    lastNotificationType?: string | null;
 }
 
 export interface SentMailDto {
@@ -8068,6 +8070,7 @@ export interface UpdateReadModelCommand {
     queryName?: string;
     eventId?: string;
     rowId?: string | null;
+    dirtyMoment?: Date;
 }
 
 export interface HostingOffers {

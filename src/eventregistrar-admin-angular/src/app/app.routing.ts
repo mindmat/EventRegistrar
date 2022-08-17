@@ -17,6 +17,8 @@ import { SettlePaymentsComponent } from './modules/admin/accounting/settle-payme
 import { SettlePaymentsResolver } from './modules/admin/accounting/settle-payments/settle-payments.resolvers';
 import { SettlePaymentComponent } from './modules/admin/accounting/settle-payment/settle-payment.component';
 import { SettlePaymentResolver } from './modules/admin/accounting/settle-payment/settle-payment.resolver';
+import { DuePaymentsComponent } from './modules/admin/accounting/due-payments/due-payments.component';
+import { DuePaymentsResolver } from './modules/admin/accounting/due-payments/due-payments.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -126,6 +128,12 @@ export const appRoutes: Route[] = [
                         resolve: { initialData: SettlePaymentResolver }
                     }
                 ]
+            },
+            {
+                path: 'due-payments',
+                canActivate: [AuthGuard],
+                component: DuePaymentsComponent,
+                resolve: { initialData: DuePaymentsResolver }
             },
             // {
             //     path: 'settle-payments/:id',

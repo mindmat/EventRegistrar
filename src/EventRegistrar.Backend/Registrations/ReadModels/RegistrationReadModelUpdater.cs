@@ -12,6 +12,9 @@ namespace EventRegistrar.Backend.Registrations.ReadModels;
 
 public class RegistrationReadModelUpdater : ReadModelUpdater<RegistrationDisplayItem>
 {
+    public override string QueryName => nameof(RegistrationQuery);
+    public override bool IsDateDependent => false;
+
     private readonly IQueryable<Registration> _registrations;
     private readonly IQueryable<Seat> _spots;
     private readonly IQueryable<PaymentAssignment> _assignments;
@@ -27,8 +30,6 @@ public class RegistrationReadModelUpdater : ReadModelUpdater<RegistrationDisplay
         _enumTranslator = enumTranslator;
         _assignments = assignments;
     }
-
-    public override string QueryName => nameof(RegistrationQuery);
 
     public override async Task<RegistrationDisplayItem> CalculateTyped(Guid eventId, Guid? registrationId, CancellationToken cancellationToken)
     {

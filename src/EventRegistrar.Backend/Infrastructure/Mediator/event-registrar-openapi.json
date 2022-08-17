@@ -6983,6 +6983,15 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          },
+          "daysSinceLastNotification": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "lastNotificationType": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -10513,6 +10522,10 @@
             "type": "string",
             "format": "guid",
             "nullable": true
+          },
+          "dirtyMoment": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },

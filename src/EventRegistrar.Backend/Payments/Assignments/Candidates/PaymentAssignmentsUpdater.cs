@@ -10,6 +10,10 @@ namespace EventRegistrar.Backend.Payments.Assignments.Candidates;
 
 public class PaymentAssignmentsUpdater : ReadModelUpdater<PaymentAssignments>
 {
+    public override string QueryName => nameof(PaymentAssignmentsQuery);
+    public override bool IsDateDependent => false;
+
+
     private readonly IQueryable<Payment> _payments;
     private readonly IQueryable<Registration> _registrations;
 
@@ -166,8 +170,6 @@ public class PaymentAssignmentsUpdater : ReadModelUpdater<PaymentAssignments>
 
         return score;
     }
-
-    public override string QueryName => nameof(PaymentAssignmentsQuery);
 }
 
 public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTranslation<OutgoingPaymentAssigned>,

@@ -41,6 +41,13 @@ export class NavigationService
                 icon: 'heroicons_outline:check',
                 link: '/accounting/settle-payments',
             },
+            {
+                id: 'due-payments',
+                title: 'Ausstehende Zahlungen',
+                type: 'basic',
+                icon: 'mat_outline:hourglass_bottom',
+                link: '/accounting/due-payments',
+            },
         ];
 
     /**

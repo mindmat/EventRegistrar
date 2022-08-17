@@ -22,6 +22,7 @@ public class RegistrablesOverviewUpdater : ReadModelUpdater<RegistrablesOverview
     }
 
     public override string QueryName => nameof(RegistrablesOverviewQuery);
+    public override bool IsDateDependent => false;
 
     public override async Task<RegistrablesOverview> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
     {

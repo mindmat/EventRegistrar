@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AcceptedMail" xml:space="preserve">
+    <value>Accepted mail</value>
+  </data>
   <data name="AssignIncoming" xml:space="preserve">
     <value>Assign incoming payment</value>
   </data>
@@ -132,14 +135,38 @@
   <data name="FirstName" xml:space="preserve">
     <value>First Name</value>
   </data>
+  <data name="Follower" xml:space="preserve">
+    <value>Follower</value>
+  </data>
+  <data name="German" xml:space="preserve">
+    <value>German</value>
+  </data>
   <data name="Hide" xml:space="preserve">
     <value>Hide:</value>
   </data>
   <data name="Ignored" xml:space="preserve">
     <value>Ignored</value>
   </data>
+  <data name="Language" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="LastMessageTS" xml:space="preserve">
+    <value>Last message: {{type}} {{daysAgo}} ago</value>
+  </data>
   <data name="LastName" xml:space="preserve">
     <value>Last Name</value>
+  </data>
+  <data name="Leader" xml:space="preserve">
+    <value>Leader</value>
+  </data>
+  <data name="MissingAmount" xml:space="preserve">
+    <value>Missing amount</value>
+  </data>
+  <data name="Partner" xml:space="preserve">
+    <value>Partner</value>
+  </data>
+  <data name="PaymentProgressTS" xml:space="preserve">
+    <value>{{ paid }} paid of total {{ total }}</value>
   </data>
   <data name="Payouts" xml:space="preserve">
     <value>Payouts</value>
@@ -147,8 +174,20 @@
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
   </data>
+  <data name="Reduction" xml:space="preserve">
+    <value>Reduction</value>
+  </data>
   <data name="RegistrableSoldOut" xml:space="preserve">
     <value>{0} is sold out</value>
+  </data>
+  <data name="ReminderMail1" xml:space="preserve">
+    <value>Reminder mail 1</value>
+  </data>
+  <data name="ReminderMail2" xml:space="preserve">
+    <value>Reminder mail 2</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Role</value>
   </data>
   <data name="Role_Follower" xml:space="preserve">
     <value>Follower</value>
@@ -164,5 +203,8 @@
   </data>
   <data name="Settled" xml:space="preserve">
     <value>Settled</value>
+  </data>
+  <data name="SMS" xml:space="preserve">
+    <value>SMS</value>
   </data>
 </root>

@@ -8,9 +8,7 @@ import { OverviewService } from './overview.service';
 })
 export class OverviewResolver implements Resolve<any>
 {
-    constructor(private overviewService: OverviewService)
-    {
-    }
+    constructor(private overviewService: OverviewService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {

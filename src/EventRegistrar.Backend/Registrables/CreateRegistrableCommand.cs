@@ -26,7 +26,7 @@ public class CreateRegistrableCommandHandler : IRequestHandler<CreateRegistrable
 {
     private readonly IRepository<Registrable> _registrables;
     private readonly CommandQueue _commandQueue;
-    private IDateTimeProvider _dateTimeProvider;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public CreateRegistrableCommandHandler(IRepository<Registrable> registrables,
                                            CommandQueue commandQueue,
