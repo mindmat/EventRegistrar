@@ -150,8 +150,11 @@
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>
+  <data name="LastMessage" xml:space="preserve">
+    <value>Last sent message</value>
+  </data>
   <data name="LastMessageTS" xml:space="preserve">
-    <value>Last message: {{type}} {{daysAgo}} ago</value>
+    <value>{{daysAgo}} ago: {{type}}</value>
   </data>
   <data name="LastName" xml:space="preserve">
     <value>Last Name</value>

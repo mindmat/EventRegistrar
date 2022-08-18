@@ -21,11 +21,11 @@
                         <div class="flex flex-col p-6">
 
                             <!-- Participant -->
-                            <div class="mt-4 text-lg font-medium hover:underline" [routerLink]="['/registration', duePayment.id]">
-                                {{ duePayment.firstName }} {{ duePayment.lastName }}</div>
-                            <div class="mt-0.5 line-clamp-2 text-secondary">{{ 'MissingAmount' | translate }} {{ duePayment.price - duePayment.paid | number: '1.2-2' }}</div>
-                            <div *ngIf="duePayment.daysSinceLastNotification" class="mt-0.5 line-clamp-2 text-secondary">{{ 'LastMessageTS' | translate: {'type': duePayment.lastNotificationType,
-                                'daysAgo': duePayment.daysSinceLastNotification } }} </div>
+                            <div class="flex flex-row items-baseline gap-x-2">
+                                <div class="text-xl font-semibold leading-tight text-red-700">{{ duePayment.price - duePayment.paid | number: '1.2-2' }}</div>
+                                <a class="hover:underline text-secondary leading-tight" [routerLink]="['/registration', duePayment.id]">
+                                    {{ duePayment.firstName }} {{ duePayment.lastName }}</a>
+                            </div>
 
                             <!-- Payment completion -->
                             <div class="relative h-0.5 -mx-6 py-6" *ngIf="duePayment.price">
@@ -35,6 +35,24 @@
                                 </div>
                                 <mat-progress-bar class="h-0.5" [value]="100 * duePayment.paid / duePayment.price">
                                 </mat-progress-bar>
+                            </div>
+
+                            <!-- last message -->
+                            <div class="mt-0.5 line-clamp-2 text-secondary">
+                                <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:mail'" matTooltip="{{ 'LastMessage' | translate }}" [matTooltipPosition]="'above'"
+                                    [matTooltipClass]="'mb-1'">
+                                    >
+                                </mat-icon>
+                                <div *ngIf="duePayment.daysSinceLastNotification" class="mt-0.5 line-clamp-2 text-secondary">{{ duePayment.daysSinceLastNotification }}d</div>
+                            </div>
+
+                            <!-- messages -->
+                            <div class="flex items-center mt-2 leading-5 text-md text-secondary">
+                                <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:check-circle'" [matTooltip]="'Accepted'" [matTooltipPosition]="'above'"
+                                    [matTooltipClass]="'mb-1'">
+                                    >
+                                </mat-icon>
+                                <div>{{duePayment.acceptedMail.sent}}</div>
                             </div>
 
                             <!-- Class -->

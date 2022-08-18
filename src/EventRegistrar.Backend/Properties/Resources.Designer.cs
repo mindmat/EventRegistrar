@@ -408,7 +408,16 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Letzte Nachricht: {{type}} vor {{daysAgo}} Tagen.
+        ///   Looks up a localized string similar to Letzte gesendete Nachricht.
+        /// </summary>
+        internal static string LastMessage {
+            get {
+                return ResourceManager.GetString("LastMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to vor {{daysAgo}} Tagen: {{type}}.
         /// </summary>
         internal static string LastMessageTS {
             get {

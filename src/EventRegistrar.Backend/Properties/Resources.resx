@@ -231,8 +231,11 @@
   <data name="Language" xml:space="preserve">
     <value>Sprache</value>
   </data>
+  <data name="LastMessage" xml:space="preserve">
+    <value>Letzte gesendete Nachricht</value>
+  </data>
   <data name="LastMessageTS" xml:space="preserve">
-    <value>Letzte Nachricht: {{type}} vor {{daysAgo}} Tagen</value>
+    <value>vor {{daysAgo}} Tagen: {{type}}</value>
   </data>
   <data name="LastName" xml:space="preserve">
     <value>Nachname</value>
