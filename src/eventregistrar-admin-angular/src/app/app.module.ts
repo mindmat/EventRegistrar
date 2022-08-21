@@ -22,7 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FuseFindByKeyPipeModule } from '@fuse/pipes/find-by-key';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressBar, MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ParticipantsDoubleComponent } from './modules/admin/participants/participants-double/participants-double.component';
@@ -34,7 +34,6 @@ import { ParticipantsSingleComponent } from './modules/admin/participants/partic
 import { RegistrationComponent } from './modules/admin/registration/registration.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatMenuModule } from '@angular/material/menu';
-import { FuseCardComponent } from '@fuse/components/card/card.component';
 import { FuseCardModule } from '@fuse/components/card';
 import { BankStatementsComponent } from './modules/admin/accounting/bankStatements/bankStatements.component';
 import { SearchRegistrationComponent } from './modules/admin/registrations/search-registration/search-registration.component';

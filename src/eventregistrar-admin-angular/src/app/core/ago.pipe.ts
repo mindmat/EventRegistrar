@@ -23,8 +23,7 @@ export class AgoPipe extends AsyncPipe
     this.formatted$ = combineLatest([timer(0, 10000), this.input$]).pipe(
       filter(([_, input]) => !!input),
       map(([_, input]) => formatDistanceToNow(input, { addSuffix: true, includeSeconds: true, locale: this.mapLang(this.translateService.currentLang) })),
-      distinctUntilChanged(),
-      tap(time => console.log('new time:', time)),
+      distinctUntilChanged()
     );
   }
 

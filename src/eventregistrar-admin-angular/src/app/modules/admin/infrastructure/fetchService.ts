@@ -32,7 +32,6 @@ export class FetchService<TItem>
         return fetch.pipe(
             map(newItems =>
             {
-
                 // Update the item
                 this.result.next(newItems);
 

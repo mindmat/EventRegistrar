@@ -35,6 +35,7 @@ public class RightsOfUserInEventCache
                                                     .ToListAsync();
 
         return _rightsOfEventRoleProvider.GetRightsOfEventRoles(eventId, usersRolesInEvent)
+                                         .OrderBy(rgt => rgt)
                                          .ToHashSet();
     }
 }
