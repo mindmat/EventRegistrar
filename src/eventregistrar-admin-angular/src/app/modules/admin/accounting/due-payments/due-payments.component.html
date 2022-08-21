@@ -41,7 +41,7 @@
                             <div class="mt-0.5 line-clamp-2 text-secondary">
                                 <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:mail'" matTooltip="{{ 'LastMessage' | translate }}" [matTooltipPosition]="'above'"
                                     [matTooltipClass]="'mb-1'">
-                                    >
+
                                 </mat-icon>
                                 <div *ngIf="duePayment.daysSinceLastNotification" class="mt-0.5 line-clamp-2 text-secondary">{{ duePayment.daysSinceLastNotification }}d</div>
                             </div>
@@ -50,9 +50,10 @@
                             <div class="flex items-center mt-2 leading-5 text-md text-secondary">
                                 <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:check-circle'" [matTooltip]="'Accepted'" [matTooltipPosition]="'above'"
                                     [matTooltipClass]="'mb-1'">
-                                    >
+
                                 </mat-icon>
-                                <div>{{duePayment.acceptedMail.sent}}</div>
+                                <div matTooltip="{{ duePayment.acceptedMail.sent | date: 'dd.MM.yy HH:mm:ss' }}" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">{{
+                                    duePayment.acceptedMail.sent | ago }}</div>
                             </div>
 
                             <!-- Class -->

@@ -326,6 +326,41 @@ SELECT [Id]
   WHERE [ReceivedPaymentId] IN (SELECT Id FROM dbo.Payments)
     AND [ReceivedPaymentId] IN (SELECT Id FROM dbo.OutgoingPayments)
 
+
+INSERT INTO [dbo].[MailTemplates]
+           ([Id]
+           ,[EventId]
+           ,[RegistrableId]
+           ,[BulkMailKey]
+           ,[ContentType]
+           ,[Language]
+           ,[MailingAudience]
+           ,[SenderMail]
+           ,[SenderName]
+           ,[Subject]
+           ,[Template]
+           ,[Type]
+           ,[IsDeleted]
+           ,[ReleaseImmediately])
+     SELECT [Id]
+           ,[EventId]
+           ,[RegistrableId]
+           ,[BulkMailKey]
+           ,[ContentType]
+           ,[Language]
+           ,[MailingAudience]
+           ,[SenderMail]
+           ,[SenderName]
+           ,[Subject]
+           ,[Template]
+           ,[Type]
+           ,[IsDeleted]
+           ,[ReleaseImmediately]
+FROM [AZURE_ER].[EventRegistrator].[dbo].[MailTemplates]
+
+
+
+
 INSERT INTO [dbo].[Mails]
            ([Id]
            ,[EventId]
@@ -377,7 +412,8 @@ SELECT [Id]
            ,[MailId]
            ,[RegistrationId]
            ,[State]
-FROM [AZURE_ER].[EventRegistrator].[dbo].[MailsToRegistrations]
+FROM [AZURE_ER].[EventRegistrator].[dbo].[MailToRegistrations]
+  WHERE MailId IN (SELECT Id FROM Mails)
 
 INSERT INTO [dbo].[Sms]
            ([Id]

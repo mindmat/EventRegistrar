@@ -1,11 +1,18 @@
 import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { IconsModule } from 'app/core/icons/icons.module';
+import { AgoPipe } from './ago.pipe';
 // import { TranslocoCoreModule } from 'app/core/transloco/transloco.module';
 
 @NgModule({
     imports: [
         IconsModule,
         // TranslocoCoreModule
+    ],
+    declarations: [
+        AgoPipe
+    ],
+    exports: [
+        AgoPipe
     ]
 })
 export class CoreModule
