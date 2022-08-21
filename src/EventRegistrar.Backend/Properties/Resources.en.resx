@@ -204,6 +204,12 @@
   <data name="SearchByNameIbanMessage" xml:space="preserve">
     <value>Search by name, IBAN, message</value>
   </data>
+  <data name="SendReminderMail" xml:space="preserve">
+    <value>Send reminder mail</value>
+  </data>
+  <data name="SendReminderSms" xml:space="preserve">
+    <value>Send reminder SMS</value>
+  </data>
   <data name="Settled" xml:space="preserve">
     <value>Settled</value>
   </data>

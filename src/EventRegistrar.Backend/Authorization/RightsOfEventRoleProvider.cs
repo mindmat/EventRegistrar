@@ -109,7 +109,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SaveMailTemplateCommand);
             yield return nameof(ReleaseMailCommand);
             yield return nameof(DeleteMailCommand);
-            yield return nameof(SendReminderCommand);
+            yield return nameof(SendReminderMailCommand);
             yield return nameof(AddSpotCommand);
             yield return nameof(RemoveSpotCommand);
             yield return nameof(SavePaymentFileCommand);

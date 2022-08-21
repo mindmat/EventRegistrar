@@ -295,6 +295,12 @@
   <data name="SearchByNameIbanMessage" xml:space="preserve">
     <value>Suche nach Namen, IBAN, Mitteilung</value>
   </data>
+  <data name="SendReminderMail" xml:space="preserve">
+    <value>Erinnerungsmail senden</value>
+  </data>
+  <data name="SendReminderSms" xml:space="preserve">
+    <value>Erinnerungs-SMS senden</value>
+  </data>
   <data name="Settled" xml:space="preserve">
     <value>Ausgeglichene</value>
   </data>

@@ -54,7 +54,7 @@ public class PaymentController : Controller
     [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/sendReminder")]
     public async Task SendReminder(string eventAcronym, Guid registrationId, bool withholdMail)
     {
-        await _mediator.Send(new SendReminderCommand
+        await _mediator.Send(new SendReminderMailCommand
                              {
                                  EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                                  RegistrationId = registrationId

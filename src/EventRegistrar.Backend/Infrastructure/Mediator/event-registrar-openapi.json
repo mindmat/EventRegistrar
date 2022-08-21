@@ -2292,19 +2292,19 @@
         }
       }
     },
-    "/api/SendReminderCommand": {
+    "/api/SendReminderMailCommand": {
       "post": {
         "tags": [
-          "SendReminder"
+          "SendReminderMail"
         ],
-        "operationId": "SendReminder_Command",
+        "operationId": "SendReminderMail_Command",
         "requestBody": {
-          "x-name": "SendReminderCommand",
+          "x-name": "SendReminderMailCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SendReminderCommand"
+                "$ref": "#/components/schemas/SendReminderMailCommand"
               }
             }
           },
@@ -3521,19 +3521,19 @@
         }
       }
     },
-    "/api/StartUpdateAllReadModelsOfEventCommand": {
+    "/api/StartUpdateReadModelsOfEventCommand": {
       "post": {
         "tags": [
-          "StartUpdateAllReadModelsOfEvent"
+          "StartUpdateReadModelsOfEvent"
         ],
-        "operationId": "StartUpdateAllReadModelsOfEvent_Command",
+        "operationId": "StartUpdateReadModelsOfEvent_Command",
         "requestBody": {
-          "x-name": "StartUpdateAllReadModelsOfEventCommand",
+          "x-name": "StartUpdateReadModelsOfEventCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/StartUpdateAllReadModelsOfEventCommand"
+                "$ref": "#/components/schemas/StartUpdateReadModelsOfEventCommand"
               }
             }
           },
@@ -4008,6 +4008,41 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/RightsOfUserInEventQuery": {
+      "post": {
+        "tags": [
+          "RightsOfUserInEvent"
+        ],
+        "operationId": "RightsOfUserInEvent_Query",
+        "requestBody": {
+          "x-name": "RightsOfUserInEventQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RightsOfUserInEventQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -6976,6 +7011,9 @@
             "type": "integer",
             "format": "int32"
           },
+          "reminderMailPossible": {
+            "type": "boolean"
+          },
           "reminderSmsPossible": {
             "type": "boolean"
           },
@@ -7019,7 +7057,7 @@
           }
         }
       },
-      "SendReminderCommand": {
+      "SendReminderMailCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -10497,13 +10535,20 @@
           }
         }
       },
-      "StartUpdateAllReadModelsOfEventCommand": {
+      "StartUpdateReadModelsOfEventCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "eventId": {
             "type": "string",
             "format": "guid"
+          },
+          "queryNames": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -10927,6 +10972,16 @@
           },
           "role": {
             "$ref": "#/components/schemas/UserInEventRole"
+          }
+        }
+      },
+      "RightsOfUserInEventQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
           }
         }
       }

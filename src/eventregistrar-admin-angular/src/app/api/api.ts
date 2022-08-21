@@ -3546,11 +3546,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    sendReminder_Command(sendReminderCommand: SendReminderCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/SendReminderCommand";
+    sendReminderMail_Command(sendReminderMailCommand: SendReminderMailCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/SendReminderMailCommand";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(sendReminderCommand);
+        const content_ = JSON.stringify(sendReminderMailCommand);
 
         let options_ : any = {
             body: content_,
@@ -3563,11 +3563,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSendReminder_Command(response_);
+            return this.processSendReminderMail_Command(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processSendReminder_Command(response_ as any);
+                    return this.processSendReminderMail_Command(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<Unit>;
                 }
@@ -3576,7 +3576,7 @@ export class Api {
         }));
     }
 
-    protected processSendReminder_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processSendReminderMail_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5433,11 +5433,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    startUpdateAllReadModelsOfEvent_Command(startUpdateAllReadModelsOfEventCommand: StartUpdateAllReadModelsOfEventCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/StartUpdateAllReadModelsOfEventCommand";
+    startUpdateReadModelsOfEvent_Command(startUpdateReadModelsOfEventCommand: StartUpdateReadModelsOfEventCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/StartUpdateReadModelsOfEventCommand";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(startUpdateAllReadModelsOfEventCommand);
+        const content_ = JSON.stringify(startUpdateReadModelsOfEventCommand);
 
         let options_ : any = {
             body: content_,
@@ -5450,11 +5450,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processStartUpdateAllReadModelsOfEvent_Command(response_);
+            return this.processStartUpdateReadModelsOfEvent_Command(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processStartUpdateAllReadModelsOfEvent_Command(response_ as any);
+                    return this.processStartUpdateReadModelsOfEvent_Command(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<Unit>;
                 }
@@ -5463,7 +5463,7 @@ export class Api {
         }));
     }
 
-    protected processStartUpdateAllReadModelsOfEvent_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processStartUpdateReadModelsOfEvent_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6188,6 +6188,57 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    rightsOfUserInEvent_Query(rightsOfUserInEventQuery: RightsOfUserInEventQuery | undefined): Observable<string[]> {
+        let url_ = this.baseUrl + "/api/RightsOfUserInEventQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(rightsOfUserInEventQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRightsOfUserInEvent_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRightsOfUserInEvent_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string[]>;
+        }));
+    }
+
+    protected processRightsOfUserInEvent_Query(response: HttpResponseBase): Observable<string[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as string[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -7146,6 +7197,7 @@ export interface DuePaymentItem {
     reminder2Due?: boolean;
     reminder2Mail?: SentMailDto | null;
     reminderLevel?: number;
+    reminderMailPossible?: boolean;
     reminderSmsPossible?: boolean;
     reminderSmsSent?: Date | null;
     daysSinceLastNotification?: number | null;
@@ -7161,7 +7213,7 @@ export interface DuePaymentsQuery {
     eventId?: string;
 }
 
-export interface SendReminderCommand {
+export interface SendReminderMailCommand {
     eventId?: string;
     registrationId?: string;
     withhold?: boolean;
@@ -8062,8 +8114,9 @@ export interface SaveDomainEventCommand {
     eventType?: string;
 }
 
-export interface StartUpdateAllReadModelsOfEventCommand {
+export interface StartUpdateReadModelsOfEventCommand {
     eventId?: string;
+    queryNames?: string[] | null;
 }
 
 export interface UpdateReadModelCommand {
@@ -8210,6 +8263,10 @@ export interface RespondToRequestCommand {
     response?: RequestResponse;
     responseText?: string;
     role?: UserInEventRole;
+}
+
+export interface RightsOfUserInEventQuery {
+    eventId?: string;
 }
 
 export interface FileResponse {

@@ -597,6 +597,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erinnerungsmail senden.
+        /// </summary>
+        internal static string SendReminderMail {
+            get {
+                return ResourceManager.GetString("SendReminderMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erinnerungs-SMS senden.
+        /// </summary>
+        internal static string SendReminderSms {
+            get {
+                return ResourceManager.GetString("SendReminderSms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ausgeglichene.
         /// </summary>
         internal static string Settled {

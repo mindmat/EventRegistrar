@@ -107,7 +107,6 @@ public class DuePaymentsUpdater : ReadModelUpdater<IEnumerable<DuePaymentItem>>
 
                                             ReminderSms = tmp.ReminderSms.FirstOrDefault()
                                         })
-                         .OrderBy(reg => reg.AcceptedMail?.Sent ?? DateTime.MaxValue)
                          .Select(reg => new DuePaymentItem
                                         {
                                             Id = reg.Id,
@@ -125,7 +124,12 @@ public class DuePaymentsUpdater : ReadModelUpdater<IEnumerable<DuePaymentItem>>
                                             Reminder2Due = reg.Reminder2Mail == null && reg.Reminder1Mail != null && reg.Reminder1Mail.Sent < reminderDueFrom,
                                             ReminderSmsSent = reg.ReminderSms?.Sent,
                                             PhoneNormalized = reg.PhoneNormalized,
+                                            ReminderMailPossible = reg.Reminder2Mail == null
+                                                                && reg.AcceptedMail != null
+                                                                && reg.AcceptedMail.Sent < reminderDueFrom
+                                                                && reg.Email != null,
                                             ReminderSmsPossible = reg.ReminderSms == null
+                                                               && reg.Reminder2Mail != null
                                                                && reg.AcceptedMail != null
                                                                && reg.AcceptedMail.Sent < reminderDueFrom
                                                                && reg.PhoneNormalized != null
@@ -140,14 +144,9 @@ public class DuePaymentsUpdater : ReadModelUpdater<IEnumerable<DuePaymentItem>>
                 dpi.DaysSinceLastNotification = (int)Math.Floor((now - lastNotification.Value.Date).TotalDays);
                 dpi.LastNotificationType = lastNotification.Value.Type;
             }
-            else
-            {
-                dpi.DaysSinceLastNotification = 15;
-                dpi.LastNotificationType = "Test";
-            }
         });
 
-        return result;
+        return result.OrderByDescending(dpi => dpi.DaysSinceLastNotification ?? 0);
     }
 
     private static (DateTime Date, string Type)? GetLastNotification(DuePaymentItem dpi)
@@ -181,6 +180,7 @@ public class DuePaymentItem
     public bool Reminder2Due { get; set; }
     public SentMailDto? Reminder2Mail { get; set; }
     public int ReminderLevel { get; set; }
+    public bool ReminderMailPossible { get; set; }
     public bool ReminderSmsPossible { get; set; }
     public DateTime? ReminderSmsSent { get; set; }
     public int? DaysSinceLastNotification { get; set; }

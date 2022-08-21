@@ -17,7 +17,7 @@
 
                 <ng-container *ngFor="let duePayment of filteredDuePayments; trackBy: trackByFn">
                     <!-- Double Registrable -->
-                    <div class="flex flex-col h-96 shadow rounded-2xl overflow-hidden bg-card">
+                    <div class="flex flex-col h-72 shadow rounded-2xl overflow-hidden bg-card">
                         <div class="flex flex-col p-6">
 
                             <!-- Participant -->
@@ -28,7 +28,7 @@
                             </div>
 
                             <!-- Payment completion -->
-                            <div class="relative h-0.5 -mx-6 py-6" *ngIf="duePayment.price">
+                            <div class="relative h-0.5 -mx-6 py-3" *ngIf="duePayment.price">
                                 <div class="z-10 absolute inset-x-0 h-6 -mt-3"
                                     matTooltip="{{ 'PaymentProgressTS' | translate:{'paid': duePayment.paid | number: '1.2-2' , 'total': duePayment.price | number: '1.2-2' } }}"
                                     [matTooltipPosition]="'above'" [matTooltipClass]="'-mb-0.5'">
@@ -37,23 +37,30 @@
                                 </mat-progress-bar>
                             </div>
 
-                            <!-- last message -->
-                            <div class="mt-0.5 line-clamp-2 text-secondary">
-                                <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:mail'" matTooltip="{{ 'LastMessage' | translate }}" [matTooltipPosition]="'above'"
-                                    [matTooltipClass]="'mb-1'">
-
-                                </mat-icon>
-                                <div *ngIf="duePayment.daysSinceLastNotification" class="mt-0.5 line-clamp-2 text-secondary">{{ duePayment.daysSinceLastNotification }}d</div>
-                            </div>
-
                             <!-- messages -->
-                            <div class="flex items-center mt-2 leading-5 text-md text-secondary">
-                                <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:check-circle'" [matTooltip]="'Accepted'" [matTooltipPosition]="'above'"
+                            <div *ngIf="duePayment.acceptedMail" class="flex items-center mt-2 leading-5 text-md text-secondary">
+                                <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:check-circle'" matTooltip="{{ 'AcceptedMail' | translate }}" [matTooltipPosition]="'above'"
                                     [matTooltipClass]="'mb-1'">
-
                                 </mat-icon>
                                 <div matTooltip="{{ duePayment.acceptedMail.sent | date: 'dd.MM.yy HH:mm:ss' }}" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">{{
                                     duePayment.acceptedMail.sent | ago }}</div>
+                            </div>
+                            <div *ngIf="duePayment.reminder1Mail" class="flex items-center mt-2 leading-5 text-md text-secondary">
+                                <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:exclamation'" matTooltip="{{ 'ReminderMail1' | translate }}" [matTooltipPosition]="'above'"
+                                    [matTooltipClass]="'mb-1'">
+                                </mat-icon>
+                                <div matTooltip="{{ duePayment.reminder1Mail.sent | date: 'dd.MM.yy HH:mm:ss' }}" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">{{
+                                    duePayment.reminder1Mail.sent | ago }}</div>
+                            </div>
+                            <div *ngIf="duePayment.reminder2Mail" class="flex items-center mt-2 leading-5 text-md text-secondary">
+                                <mat-icon class="icon-size-5 text-hint -ml-1" [svgIcon]="'heroicons_solid:exclamation'" matTooltip="{{ 'ReminderMail2' | translate }}" [matTooltipPosition]="'above'"
+                                    [matTooltipClass]="'mb-1'">
+                                </mat-icon>
+                                <mat-icon class="icon-size-5 text-hint -ml-3 mr-1" [svgIcon]="'heroicons_solid:exclamation'" matTooltip="{{ 'ReminderMail2' | translate }}"
+                                    [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
+                                </mat-icon>
+                                <div matTooltip="{{ duePayment.reminder2Mail.sent | date: 'dd.MM.yy HH:mm:ss' }}" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">{{
+                                    duePayment.reminder2Mail.sent | ago }}</div>
                             </div>
 
                             <!-- Class -->
@@ -69,15 +76,15 @@
 
                         <!-- Footer -->
                         <div class="flex flex-col w-full mt-auto">
-                            <!-- Course launch button -->
-                            <!-- <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                <button mat-stroked-button [routerLink]="[doubleRegistrable.id, 'double', 'participants']">
-                                    <span class="inline-flex items-center">
-                                        Details
-                                        <mat-icon class="ml-1.5 icon-size-5" [svgIcon]="'heroicons_solid:arrow-sm-right'"></mat-icon>
-                                    </span>
+                            <!-- Send reminder button -->
+                            <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
+                                <button *ngIf="duePayment.reminderMailPossible" mat-flat-button [color]="'primary'" (click)="sendReminderMail">
+                                    {{ 'SendReminderMail' | translate }}
                                 </button>
-                            </div> -->
+                                <button *ngIf="duePayment.reminderSmsPossible" mat-flat-button [color]="'primary'" (click)="sendReminderSms">
+                                    {{ 'SendReminderSms' | translate }}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </ng-container>

@@ -2,7 +2,7 @@
 
 namespace EventRegistrar.Backend.Authorization;
 
-internal interface IRightsOfEventRoleProvider
+public interface IRightsOfEventRoleProvider
 {
     IEnumerable<string> GetRightsOfEventRoles(Guid eventId, ICollection<UserInEventRole> usersRolesInEvent);
 }

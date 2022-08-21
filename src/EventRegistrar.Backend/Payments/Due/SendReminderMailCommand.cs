@@ -9,14 +9,14 @@ using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Due;
 
-public class SendReminderCommand : IRequest, IEventBoundRequest
+public class SendReminderMailCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
     public Guid RegistrationId { get; set; }
     public bool Withhold { get; set; }
 }
 
-public class SendReminderCommandHandler : IRequestHandler<SendReminderCommand>
+public class SendReminderMailCommandHandler : IRequestHandler<SendReminderMailCommand>
 {
     private readonly ILogger _logger;
     private readonly IQueryable<MailToRegistration> _mailsToRegistrations;
@@ -24,11 +24,11 @@ public class SendReminderCommandHandler : IRequestHandler<SendReminderCommand>
     private readonly IRepository<Registration> _registrations;
     private readonly CommandQueue _commandQueue;
 
-    public SendReminderCommandHandler(ILogger logger,
-                                      IRepository<Registration> registrations,
-                                      IQueryable<MailToRegistration> mailsToRegistrations,
-                                      DuePaymentConfiguration paymentConfiguration,
-                                      CommandQueue commandQueue)
+    public SendReminderMailCommandHandler(ILogger logger,
+                                          IRepository<Registration> registrations,
+                                          IQueryable<MailToRegistration> mailsToRegistrations,
+                                          DuePaymentConfiguration paymentConfiguration,
+                                          CommandQueue commandQueue)
     {
         _logger = logger;
         _registrations = registrations;
@@ -37,14 +37,14 @@ public class SendReminderCommandHandler : IRequestHandler<SendReminderCommand>
         _commandQueue = commandQueue;
     }
 
-    public async Task<Unit> Handle(SendReminderCommand command, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(SendReminderMailCommand command, CancellationToken cancellationToken)
     {
         var tmp = await _registrations.Where(reg => reg.Id == command.RegistrationId)
                                       .Select(reg => new
                                                      {
                                                          Registration = reg,
                                                          StartPaymentPeriodMail = reg.Mails!
-                                                                                     .Where(map => map.Mail.Type.HasValue
+                                                                                     .Where(map => map.Mail!.Type.HasValue
                                                                                                 && _paymentConfiguration.MailTypes_Accepted.Contains(map.Mail.Type.Value))
                                                                                      .Select(map => map.Mail!)
                                                                                      .MaxBy(mail => mail.Created)
