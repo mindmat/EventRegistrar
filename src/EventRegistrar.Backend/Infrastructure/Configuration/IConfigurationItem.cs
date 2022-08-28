@@ -1,5 +1,3 @@
 ﻿namespace EventRegistrar.Backend.Infrastructure.Configuration;
 
-public interface IConfigurationItem
-{
-}
+public interface IConfigurationItem { }

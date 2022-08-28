@@ -444,6 +444,78 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Paaranmeldung: Reminder 1.
+        /// </summary>
+        internal static string MailType_PartnerRegistrationFirstReminder {
+            get {
+                return ResourceManager.GetString("MailType_PartnerRegistrationFirstReminder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paaranmeldung bezahlt.
+        /// </summary>
+        internal static string MailType_PartnerRegistrationFullyPaid {
+            get {
+                return ResourceManager.GetString("MailType_PartnerRegistrationFullyPaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paaranmeldung angenommen.
+        /// </summary>
+        internal static string MailType_PartnerRegistrationMatchedAndAccepted {
+            get {
+                return ResourceManager.GetString("MailType_PartnerRegistrationMatchedAndAccepted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paaranmeldung auf Warteliste.
+        /// </summary>
+        internal static string MailType_PartnerRegistrationMatchedOnWaitingList {
+            get {
+                return ResourceManager.GetString("MailType_PartnerRegistrationMatchedOnWaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einzelanmeldung angenommen.
+        /// </summary>
+        internal static string MailType_SingleRegistrationAccepted {
+            get {
+                return ResourceManager.GetString("MailType_SingleRegistrationAccepted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einzelanmeldung: Reminder 1.
+        /// </summary>
+        internal static string MailType_SingleRegistrationFirstReminder {
+            get {
+                return ResourceManager.GetString("MailType_SingleRegistrationFirstReminder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einzelanmeldung bezahlt.
+        /// </summary>
+        internal static string MailType_SingleRegistrationFullyPaid {
+            get {
+                return ResourceManager.GetString("MailType_SingleRegistrationFullyPaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einzelanmeldung auf Warteliste.
+        /// </summary>
+        internal static string MailType_SingleRegistrationOnWaitingList {
+            get {
+                return ResourceManager.GetString("MailType_SingleRegistrationOnWaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fehlbetrag.
         /// </summary>
         internal static string MissingAmount {

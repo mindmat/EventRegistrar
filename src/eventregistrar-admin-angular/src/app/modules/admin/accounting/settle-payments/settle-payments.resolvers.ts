@@ -15,7 +15,6 @@ export class SettlePaymentsResolver implements Resolve<any>
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {
-        console.log('resolve settle payments');
         return merge(this.statementsService.fetchBankStatements()
             .pipe(
                 // Error here means the requested task is not available

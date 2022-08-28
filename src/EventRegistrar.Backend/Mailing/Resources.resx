@@ -126,28 +126,4 @@
   <data name="MailingAudience_WaitingList" xml:space="preserve">
     <value>Warteliste</value>
   </data>
-  <data name="MailType_PartnerRegistrationFirstReminder" xml:space="preserve">
-    <value>Paaranmeldung: Reminder 1</value>
-  </data>
-  <data name="MailType_PartnerRegistrationFullyPaid" xml:space="preserve">
-    <value>Paaranmeldung bezahlt</value>
-  </data>
-  <data name="MailType_PartnerRegistrationMatchedAndAccepted" xml:space="preserve">
-    <value>Paaranmeldung angenommen</value>
-  </data>
-  <data name="MailType_PartnerRegistrationMatchedOnWaitingList" xml:space="preserve">
-    <value>Paaranmeldung auf Warteliste</value>
-  </data>
-  <data name="MailType_SingleRegistrationAccepted" xml:space="preserve">
-    <value>Einzelanmeldung angenommen</value>
-  </data>
-  <data name="MailType_SingleRegistrationFirstReminder" xml:space="preserve">
-    <value>Einzelanmeldung: Reminder 1</value>
-  </data>
-  <data name="MailType_SingleRegistrationFullyPaid" xml:space="preserve">
-    <value>Einzelanmeldung bezahlt</value>
-  </data>
-  <data name="MailType_SingleRegistrationOnWaitingList" xml:space="preserve">
-    <value>Einzelanmeldung auf Warteliste</value>
-  </data>
 </root>

@@ -1,6 +1,6 @@
 ﻿namespace EventRegistrar.Backend.Mailing.Templates;
 
-public class MailTemplateItem
+public class BulkMailTemplateItem
 {
     public MailingAudience? Audience { get; set; }
     public Guid Id { get; set; }

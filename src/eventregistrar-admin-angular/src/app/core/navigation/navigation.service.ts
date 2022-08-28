@@ -48,6 +48,13 @@ export class NavigationService
                 icon: 'mat_outline:hourglass_bottom',
                 link: '/accounting/due-payments',
             },
+            {
+                id: 'auto-mail-templates',
+                title: 'Mailvorlagen',
+                type: 'basic',
+                icon: 'mat_outline:mail',
+                link: '/mailing/auto-mail-templates',
+            },
         ];
 
     /**

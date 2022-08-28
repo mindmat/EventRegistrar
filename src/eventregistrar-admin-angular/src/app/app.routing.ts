@@ -19,6 +19,8 @@ import { SettlePaymentComponent } from './modules/admin/accounting/settle-paymen
 import { SettlePaymentResolver } from './modules/admin/accounting/settle-payment/settle-payment.resolver';
 import { DuePaymentsComponent } from './modules/admin/accounting/due-payments/due-payments.component';
 import { DuePaymentsResolver } from './modules/admin/accounting/due-payments/due-payments.resolver';
+import { AutoMailTemplatesComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-templates.component';
+import { AutoMailTemplatesResolver } from './modules/admin/mailing/auto-mail-templates/auto-mail-templates.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -156,4 +158,18 @@ export const appRoutes: Route[] = [
             }
         ]
     },
+    {
+        path: 'mailing',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: { initialData: InitialDataResolver },
+        children: [
+            {
+                path: 'auto-mail-templates',
+                canActivate: [AuthGuard],
+                component: AutoMailTemplatesComponent,
+                resolve: { initialData: AutoMailTemplatesResolver }
+            }]
+    }
 ];

@@ -69,7 +69,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(MailsOfRegistrationQuery);
             yield return nameof(SpotsOfRegistrationQuery);
             yield return nameof(DuePaymentsQuery);
-            yield return nameof(MailTemplatesQuery);
+            yield return nameof(AutoMailTemplatesQuery);
             yield return nameof(ParticipantsOfRegistrableQuery);
             yield return nameof(GetPendingMailsQuery);
             yield return nameof(MailTypesQuery);

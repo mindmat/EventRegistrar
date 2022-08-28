@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Payments.Due;
@@ -36,7 +37,9 @@ public class MailComposer
         _duePaymentConfiguration = duePaymentConfiguration;
     }
 
-    public async Task<string> Compose(Guid registrationId, string template, string language,
+    public async Task<string> Compose(Guid registrationId,
+                                      string template,
+                                      string language,
                                       CancellationToken cancellationToken)
     {
         var registration = await _registrations.Where(reg => reg.Id == registrationId)
@@ -91,10 +94,14 @@ public class MailComposer
             var registrationForPrefix = registration;
             if (parts.prefix == PrefixLeader)
                 //responsesForPrefix = leaderResponses;
+            {
                 registrationForPrefix = leaderRegistration;
+            }
             else if (parts.prefix == PrefixFollower)
                 //responsesForPrefix = followerResponses;
+            {
                 registrationForPrefix = followerRegistration;
+            }
 
             if (parts.key == "FIRSTNAME")
             {
@@ -119,8 +126,8 @@ public class MailComposer
             else if (parts.key == "PRICE")
             {
                 var price = parts.prefix == null
-                    ? registration.Price + (partnerRegistration == null ? 0m : partnerRegistration.Price)
-                    : (registrationForPrefix ?? registration).Price;
+                                ? registration.Price + (partnerRegistration == null ? 0m : partnerRegistration.Price)
+                                : (registrationForPrefix ?? registration).Price;
 
                 templateFiller[key] = (price ?? 0m).ToString("F2"); // HACK: format hardcoded
             }
@@ -130,31 +137,35 @@ public class MailComposer
                     (await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id))
                     .ToString("F2"); // HACK: format hardcoded
             }
-            else if (parts.key == "DUEAMOUNT" ||
-                     parts.key == "OVERPAIDAMOUNT")
+            else if (parts.key == "DUEAMOUNT" || parts.key == "OVERPAIDAMOUNT")
             {
                 var paid = await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id);
                 var price = (parts.prefix == null
-                                ? registration.Price + (partnerRegistration == null ? 0m : partnerRegistration.Price)
-                                : (registrationForPrefix ?? registration).Price)
+                                 ? registration.Price + (partnerRegistration == null ? 0m : partnerRegistration.Price)
+                                 : (registrationForPrefix ?? registration).Price)
                          ?? 0m;
                 var difference = price - paid;
-                if (parts.key == "OVERPAIDAMOUNT") difference = -difference;
+                if (parts.key == "OVERPAIDAMOUNT")
+                {
+                    difference = -difference;
+                }
+
                 templateFiller[key] = difference.ToString("F2"); // HACK: format hardcoded
             }
             else if (parts.key == "UNPAIDAMOUNT")
             {
                 var currency = (await _events.FirstAsync(evt => evt.Id == registration.EventId, cancellationToken))
                     ?.Currency;
-                var unpaidAmount = (registration.Price ?? 0m) -
-                                   await _paidAmountSummarizer.GetPaidAmount(registration.Id)
+                var unpaidAmount = (registration.Price ?? 0m)
+                                 - await _paidAmountSummarizer.GetPaidAmount(registration.Id)
                                  + (partnerRegistration == null
-                                       ? 0m
-                                       : (partnerRegistration.Price ?? 0m) -
-                                         await _paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
+                                        ? 0m
+                                        : (partnerRegistration.Price ?? 0m) - await _paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
                 if (unpaidAmount > 0m)
+                {
                     templateFiller[key] =
                         $" Please transfer the remaining {unpaidAmount:F2}{currency} today or pay at the checkin (ignore this message if you already paid)."; // HACK: format hardcoded
+                }
             }
             // ToDo: cancellation mail
             else if (parts.key == "CANCELLATIONREASON")
@@ -187,14 +198,17 @@ public class MailComposer
                                                            && map.Mail.Sent.HasValue)
                                                 .Select(map => map.Mail.Sent)
                                                 .FirstOrDefault();
-                if (reminder1Date.HasValue) templateFiller[key] = reminder1Date.Value.ToString(DateFormat);
+                if (reminder1Date.HasValue)
+                {
+                    templateFiller[key] = reminder1Date.Value.ToString(DateFormat);
+                }
             }
             else if (parts.key != null && key != null && registrationForPrefix?.Responses != null)
             {
                 // check responses with Question.TemplateKey
                 templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp =>
-                                                               string.Equals(rsp.Question?.TemplateKey, parts.key,
-                                                                   StringComparison.InvariantCultureIgnoreCase))
+                                                                                         string.Equals(rsp.Question?.TemplateKey, parts.key,
+                                                                                                       StringComparison.InvariantCultureIgnoreCase))
                                                            ?.ResponseString;
             }
         }
@@ -206,19 +220,34 @@ public class MailComposer
     private static (string prefix, string key) GetPrefix(string key)
     {
         var parts = key?.Split('.');
-        if (parts?.Length > 1) return (parts[0], parts[1]);
+        if (parts?.Length > 1)
+        {
+            return (parts[0], parts[1]);
+        }
+
         return (null, key);
     }
 
-    private string GetSeatText(Seat seat, Role role, string language, ICollection<Response> responses)
+    private string GetSeatText(Seat seat,
+                               Role role,
+                               string language,
+                               ICollection<Response> responses)
     {
-        if (seat?.Registrable == null) return "?";
+        if (seat?.Registrable == null)
+        {
+            return "?";
+        }
+
         var text = _spotMailLines
                    .FirstOrDefault(sml => sml.RegistrableId == seat.RegistrableId && sml.Language == language)
                    ?.Text;
         if (text != null)
         {
-            if (!text.StartsWith("- ")) text = "- " + text;
+            if (!text.StartsWith("- "))
+            {
+                text = "- " + text;
+            }
+
             text = text.Replace("{Name}", seat.Registrable.Name, StringComparison.InvariantCultureIgnoreCase)
                        .Replace("{Role}", role.ToString(), StringComparison.InvariantCultureIgnoreCase);
             text = Regex.Replace(text, "{.*?}", mtc => FillResponse(mtc, responses));
@@ -232,15 +261,27 @@ public class MailComposer
                 // HACK: hardcoded
                 //var role = responses.Lookup("ROLE", "?");
                 //var partner = responses.Lookup("PARTNER", "?");
-                if (language == Language.Deutsch)
+                if (language == Language.German)
+                {
                     text += $", Rolle: {role}"; // + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
+                }
                 else
+                {
                     text += $", Role: {role}"; // + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
+                }
             }
         }
 
-        if (seat.IsCancelled) text += language == Language.Deutsch ? " (storniert)" : " (cancelled)";
-        if (seat.IsWaitingList) text += language == Language.Deutsch ? " (Warteliste)" : " (waiting list)";
+        if (seat.IsCancelled)
+        {
+            text += language == Language.German ? " (storniert)" : " (cancelled)";
+        }
+
+        if (seat.IsWaitingList)
+        {
+            text += language == Language.German ? " (Warteliste)" : " (waiting list)";
+        }
+
         return text;
     }
 
@@ -255,24 +296,30 @@ public class MailComposer
     {
         var seatLines = new List<(int sortKey, string seatLine)>();
         if (registration.Seats_AsLeader != null)
+        {
             seatLines.AddRange(registration.Seats_AsLeader
                                            .Where(seat => seat.Registrable.ShowInMailListOrder.HasValue
                                                        && !seat.IsCancelled)
                                            .Select(seat => (seat.Registrable.ShowInMailListOrder ?? int.MaxValue,
-                                               GetSeatText(seat, Role.Leader, language, registration.Responses))));
+                                                               GetSeatText(seat, Role.Leader, language, registration.Responses))));
+        }
 
         if (registration.Seats_AsFollower != null)
+        {
             seatLines.AddRange(registration.Seats_AsFollower
                                            .Where(seat => seat.Registrable.ShowInMailListOrder.HasValue
                                                        && !seat.IsCancelled)
                                            .Select(seat => (seat.Registrable.ShowInMailListOrder ?? int.MaxValue,
-                                               GetSeatText(seat, Role.Follower, language, registration.Responses))));
+                                                               GetSeatText(seat, Role.Follower, language, registration.Responses))));
+        }
 
         var seatList = string.Join("<br />", seatLines.OrderBy(tmp => tmp.sortKey)
                                                       .Select(tmp => tmp.seatLine));
 
         if (registration.SoldOutMessage != null)
+        {
             seatList += $"<br /><br />{registration.SoldOutMessage.Replace(Environment.NewLine, "<br />")}";
+        }
 
         _log.LogInformation($"seat list {seatList}");
         return seatList;

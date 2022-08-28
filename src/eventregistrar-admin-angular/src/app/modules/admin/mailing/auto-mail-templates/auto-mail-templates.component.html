@@ -1,0 +1,90 @@
+<div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+
+    <mat-drawer-container class="flex-auto h-full" [hasBackdrop]="false">
+
+        <!-- Drawer -->
+        <mat-drawer class="w-full sm:w-100 lg:border-r lg:shadow-none dark:bg-gray-900" [autoFocus]="false" #drawer>
+
+            <!-- Profile -->
+            <!-- <ng-container *ngIf="drawerComponent === 'profile'">
+                <chat-profile [drawer]="drawer"></chat-profile>
+            </ng-container> -->
+
+        </mat-drawer>
+
+        <!-- Drawer content -->
+        <mat-drawer-content class="flex overflow-hidden">
+
+            <!-- Bookings list -->
+            <div class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100 bg-card dark:bg-transparent">
+
+                <!-- Header -->
+                <div class="flex flex-col flex-0 py-4 px-8 border-b bg-gray-50 dark:bg-transparent">
+                    <!-- <div class="flex items-center">
+                        <button class="ml-auto" mat-icon-button (click)="openNewChat()">
+                            <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                        </button>
+                    </div> -->
+                    <!-- Sender -->
+                    <div class="mt-4 space-x-4">
+                        <!-- <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full" [floatLabel]="'always'"> -->
+                        <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                        {{ templates.senderAlias }} {{ templates.senderMail }}
+                        <!-- <input matInput [autocomplete]="'off'" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" (input)="filterByQuery(searchField.value)" #searchField> -->
+                        <!-- </mat-form-field> -->
+                    </div>
+                </div>
+
+                <!-- Bookings -->
+                <div class="flex-auto overflow-y-auto">
+                    <ng-container *ngIf="templates.groups.length > 0">
+                        <ng-container *ngFor="let group of templates.groups">
+                            <div class="z-20 flex items-center justify-center my-3 -mx-6">
+                                <div class="flex-auto border-b"></div>
+                                <div class="flex-0 mx-4 text-sm font-medium leading-5 text-secondary">
+                                    {{ group.name }}
+                                </div>
+                                <div class="flex-auto border-b"></div>
+                            </div>
+                            <ng-container *ngFor="let type of group.types">
+                                <div class="z-20 flex flex-col py-5 px-4 cursor-pointer border-t border-b">
+                                    <div class="font-medium leading-5 truncate items">{{ type.typeText }}</div>
+                                    <div class="flex flex-row items-start space-x-3">
+                                        <ng-container *ngFor="let template of type.templates">
+                                            <button (click)="selectTemplate(template)" [routerLink]="[template.id]" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
+                                                'bg-primary-50 dark:bg-hover': selectedTemplate && selectedTemplate.id === template.id}">
+                                                <span class="flex items-center">
+                                                    <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: template.language}"></ng-container>
+                                                </span>
+                                            </button>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </ng-container>
+                </div>
+
+            </div>
+
+            <!-- Conversation -->
+            <ng-container *ngIf="templates && templates.groups.length > 0">
+                <div class="flex-auto border-l" [ngClass]="{'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedTemplate && selectedTemplate.id,
+                                'hidden lg:flex': !selectedTemplate || !selectedTemplate.id}">
+                    <router-outlet></router-outlet>
+                </div>
+            </ng-container>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>
+
+<!-- Flag image template -->
+<ng-template let-lang #flagImage>
+    <span class="relative w-6 shadow rounded-sm overflow-hidden">
+        <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
+        <img class="w-full" [src]="'assets/images/flags/' + flagCodes[lang]?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + lang">
+    </span>
+</ng-template>

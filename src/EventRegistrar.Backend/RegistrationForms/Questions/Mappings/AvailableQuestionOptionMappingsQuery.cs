@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrables;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
@@ -20,7 +21,8 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
     }
 
     public async Task<IEnumerable<AvailableQuestionOptionMapping>> Handle(
-        AvailableQuestionOptionMappingsQuery request, CancellationToken cancellationToken)
+        AvailableQuestionOptionMappingsQuery request,
+        CancellationToken cancellationToken)
     {
         var result = new List<AvailableQuestionOptionMapping>();
         var doubleRegistrables = await _registrables.Where(rbl => rbl.EventId == request.EventId
@@ -83,7 +85,7 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
                    {
                        Type = MappingType.Language,
                        Name = $"{Properties.Resources.Language}: {Properties.Resources.German}",
-                       Language = Language.Deutsch
+                       Language = Language.German
                    });
         result.Add(new AvailableQuestionOptionMapping
                    {
