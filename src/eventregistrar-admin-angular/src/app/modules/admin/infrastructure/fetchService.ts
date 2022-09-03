@@ -7,9 +7,9 @@ export class FetchService<TItem>
     private fetch: Observable<TItem>;
     private rowId?: string;
 
-    constructor(queryName: string, notificationService: NotificationService)
+    constructor(queryName: string, notificationService: NotificationService | null = null)
     {
-        notificationService.subscribe(queryName).pipe(
+        notificationService?.subscribe(queryName).pipe(
             filter(e => e.rowId === this.rowId),
         )
             .subscribe(e => this.refresh());

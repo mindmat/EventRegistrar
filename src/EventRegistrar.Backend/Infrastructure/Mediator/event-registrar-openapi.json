@@ -2787,6 +2787,38 @@
         }
       }
     },
+    "/api/AutoMailTemplateQuery": {
+      "post": {
+        "tags": [
+          "AutoMailTemplate"
+        ],
+        "operationId": "AutoMailTemplate_Query",
+        "requestBody": {
+          "x-name": "AutoMailTemplateQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutoMailTemplateQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoMailTemplate"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/AutoMailTemplatesQuery": {
       "post": {
         "tags": [
@@ -10002,6 +10034,38 @@
           }
         }
       },
+      "AutoMailTemplate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "subject": {
+            "type": "string",
+            "nullable": true
+          },
+          "contentHtml": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AutoMailTemplateQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "mailTemplateId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "AutoMailTemplates": {
         "type": "object",
         "additionalProperties": false,
@@ -10056,6 +10120,10 @@
             "items": {
               "$ref": "#/components/schemas/AutoMailTemplateMetadataLanguage"
             }
+          },
+          "typeText": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

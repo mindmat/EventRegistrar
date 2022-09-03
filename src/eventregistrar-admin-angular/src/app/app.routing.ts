@@ -21,6 +21,8 @@ import { DuePaymentsComponent } from './modules/admin/accounting/due-payments/du
 import { DuePaymentsResolver } from './modules/admin/accounting/due-payments/due-payments.resolver';
 import { AutoMailTemplatesComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-templates.component';
 import { AutoMailTemplatesResolver } from './modules/admin/mailing/auto-mail-templates/auto-mail-templates.resolver';
+import { AutoMailTemplateComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-template/auto-mail-template.component';
+import { AutoMailTemplateResolver } from './modules/admin/mailing/auto-mail-templates/auto-mail-template/auto-mail-template.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -169,7 +171,15 @@ export const appRoutes: Route[] = [
                 path: 'auto-mail-templates',
                 canActivate: [AuthGuard],
                 component: AutoMailTemplatesComponent,
-                resolve: { initialData: AutoMailTemplatesResolver }
+                resolve: { initialData: AutoMailTemplatesResolver },
+                children: [
+                    {
+                        path: ':id',
+                        component: AutoMailTemplateComponent,
+                        resolve: { initialData: AutoMailTemplateResolver }
+                    }
+                ]
+
             }]
     }
 ];

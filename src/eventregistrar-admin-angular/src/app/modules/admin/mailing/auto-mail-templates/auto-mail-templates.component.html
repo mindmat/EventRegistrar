@@ -35,7 +35,7 @@
                     </div>
                 </div>
 
-                <!-- Bookings -->
+                <!-- topic groups -->
                 <div class="flex-auto overflow-y-auto">
                     <ng-container *ngIf="templates.groups.length > 0">
                         <ng-container *ngFor="let group of templates.groups">
@@ -46,15 +46,17 @@
                                 </div>
                                 <div class="flex-auto border-b"></div>
                             </div>
+                            <!-- template types -->
                             <ng-container *ngFor="let type of group.types">
                                 <div class="z-20 flex flex-col py-5 px-4 cursor-pointer border-t border-b">
                                     <div class="font-medium leading-5 truncate items">{{ type.typeText }}</div>
                                     <div class="flex flex-row items-start space-x-3">
+                                        <!-- templates (per language) -->
                                         <ng-container *ngFor="let template of type.templates">
                                             <button (click)="selectTemplate(template)" [routerLink]="[template.id]" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
                                                 'bg-primary-50 dark:bg-hover': selectedTemplate && selectedTemplate.id === template.id}">
                                                 <span class="flex items-center">
-                                                    <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: template.language}"></ng-container>
+                                                    <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: template}"></ng-container>
                                                 </span>
                                             </button>
                                         </ng-container>
@@ -82,9 +84,9 @@
 </div>
 
 <!-- Flag image template -->
-<ng-template let-lang #flagImage>
+<ng-template let-template #flagImage>
     <span class="relative w-6 shadow rounded-sm overflow-hidden">
         <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
-        <img class="w-full" [src]="'assets/images/flags/' + flagCodes[lang]?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + lang">
+        <img class="w-full" [ngClass]="{'opacity-25': template.id===null}" [src]="'assets/images/flags/' + flagCodes[template.language]?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + lang">
     </span>
 </ng-template>

@@ -1,7 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Mailing.Templates;
 
 public class AutoMailTemplatesQuery : IRequest<AutoMailTemplates>

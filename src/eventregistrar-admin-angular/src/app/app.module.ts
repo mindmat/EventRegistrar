@@ -47,6 +47,7 @@ import { MissingTranslationService } from './core/i18n/missing-translation.servi
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DuePaymentsComponent } from './modules/admin/accounting/due-payments/due-payments.component';
 import { AutoMailTemplatesComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-templates.component';
+import { AutoMailTemplateComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-template/auto-mail-template.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -67,7 +68,8 @@ const routerConfig: ExtraOptions = {
         SettlePaymentComponent,
         AssignmentCandidateRegistrationComponent,
         DuePaymentsComponent,
-        AutoMailTemplatesComponent
+        AutoMailTemplatesComponent,
+        AutoMailTemplateComponent
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },
