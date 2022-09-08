@@ -15,7 +15,7 @@ public class EnumTranslator
         where TEnum : struct
     {
         return value == null
-            ? null
-            : Translate(value.Value);
+                   ? null
+                   : Translate(value.Value);
     }
 }

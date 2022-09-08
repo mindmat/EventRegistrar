@@ -1,7 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Mailing.Templates;
 
 public class AutoMailTemplateQuery : IEventBoundRequest, IRequest<AutoMailTemplate>

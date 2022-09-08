@@ -1,4 +1,4 @@
 <div class="flex flex-col w-full">
     <p>{{ template.subject }}</p>
-    <div #editorTarget cdkScrollable> </div>
+    <div [froalaEditor] [(froalaModel)]="template.contentHtml"></div>
 </div>

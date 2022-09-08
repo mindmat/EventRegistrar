@@ -103,10 +103,14 @@ public class MailComposer
                 registrationForPrefix = followerRegistration;
             }
 
-            if (parts.key == "FIRSTNAME")
+            if (Enum.TryParse<MailPlaceholder>(parts.key, true, out var placeholderKey))
             {
-                templateFiller[key] = registrationForPrefix?.RespondentFirstName;
+                if (placeholderKey == MailPlaceholder.FirstName)
+                {
+                    templateFiller[key] = registrationForPrefix?.RespondentFirstName;
+                }
             }
+
             else if (parts.key == "LASTNAME")
             {
                 templateFiller[key] = registrationForPrefix?.RespondentLastName;
@@ -137,7 +141,7 @@ public class MailComposer
                     (await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id))
                     .ToString("F2"); // HACK: format hardcoded
             }
-            else if (parts.key == "DUEAMOUNT" || parts.key == "OVERPAIDAMOUNT")
+            else if (parts.key is "DUEAMOUNT" or "OVERPAIDAMOUNT")
             {
                 var paid = await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id);
                 var price = (parts.prefix == null
