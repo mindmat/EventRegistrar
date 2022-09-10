@@ -11,6 +11,8 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
+using Newtonsoft.Json;
+
 namespace EventRegistrar.Functions
 {
     public static class ReceiveSendGridMailNotification
@@ -41,7 +43,15 @@ namespace EventRegistrar.Functions
                 await connection.ExecuteAsync(insertQuery, parameters);
             }
 
-            await ServiceBusClient.SendCommand(new { RawMailEventsId = id }, "processmailevents");
+            // await ServiceBusClient.SendCommand(new { RawMailEventsId = id }, "processmailevents");
+            var command = new { RawMailEventsId = id };
+            var commandSerialized = JsonConvert.SerializeObject(command);
+            var message = new 
+            {
+                CommandType = "EventRegistrar.Backend.Mailing.Feedback.ProcessMailEventsCommand", 
+                CommandSerialized = commandSerialized 
+            };
+            await ServiceBusClient.SendCommand(message);
 
             return new OkResult();
         }
