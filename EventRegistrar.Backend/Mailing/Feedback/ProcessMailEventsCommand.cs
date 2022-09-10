@@ -15,8 +15,9 @@ using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.Mailing.Feedback
 {
-    public class ProcessMailEventsCommand : IRequest
+    public class ProcessMailEventsCommand : IRequest, IQueueBoundMessage
     {
+        public string QueueName => "processmailevents";
         public Guid RawMailEventsId { get; set; }
     }
 
