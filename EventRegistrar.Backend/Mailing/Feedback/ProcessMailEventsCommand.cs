@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 using MediatR;
 
