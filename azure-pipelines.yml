@@ -17,7 +17,7 @@ variables:
   vmImageName: 'windows-2019'
 
   # Working Directory
-  workingDirectory: 'EventregistrarFunctions'
+  workingDirectory: 'Eventregistrar.Functions'
 
 stages:
 - stage: Build
