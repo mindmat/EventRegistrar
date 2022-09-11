@@ -30,7 +30,8 @@ public class RightsOfUserInEventCache
     private async Task<HashSet<string>> CreateRightsOfUserInEventCacheEntry(ICacheEntry entry, Guid userId, Guid eventId)
     {
         entry.SlidingExpiration = _slidingExpiration;
-        var usersRolesInEvent = await _usersInEvents.Where(uie => uie.UserId == userId && uie.EventId == eventId)
+        var usersRolesInEvent = await _usersInEvents.Where(uie => uie.UserId == userId
+                                                               && uie.EventId == eventId)
                                                     .Select(uie => uie.Role)
                                                     .ToListAsync();
 

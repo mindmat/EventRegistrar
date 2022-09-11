@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, AutoMailTemplate } from 'app/api/api';
+import { Api, AutoMailTemplateDisplayItem } from 'app/api/api';
 import { EventService } from 'app/modules/admin/events/event.service';
 import { FetchService } from 'app/modules/admin/infrastructure/fetchService';
 import { NotificationService } from 'app/modules/admin/infrastructure/notification.service';
@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AutoMailTemplateService extends FetchService<AutoMailTemplate> {
+export class AutoMailTemplateService extends FetchService<AutoMailTemplateDisplayItem> {
 
   private autoMailTemplateId: string;
 
@@ -19,7 +19,7 @@ export class AutoMailTemplateService extends FetchService<AutoMailTemplate> {
     super('AutoMailTemplateQuery', notificationService);
   }
 
-  get template$(): Observable<AutoMailTemplate>
+  get template$(): Observable<AutoMailTemplateDisplayItem>
   {
     return this.result$;
   }

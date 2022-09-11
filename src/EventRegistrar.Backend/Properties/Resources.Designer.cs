@@ -444,6 +444,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Betreff.
+        /// </summary>
+        internal static string MailSubject {
+            get {
+                return ResourceManager.GetString("MailSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vorlage.
+        /// </summary>
+        internal static string MailTemplate {
+            get {
+                return ResourceManager.GetString("MailTemplate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Paaranmeldung: Reminder 1.
         /// </summary>
         internal static string MailType_PartnerRegistrationFirstReminder {

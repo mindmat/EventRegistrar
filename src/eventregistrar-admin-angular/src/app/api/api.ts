@@ -4311,7 +4311,7 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    autoMailTemplate_Query(autoMailTemplateQuery: AutoMailTemplateQuery | undefined): Observable<AutoMailTemplate> {
+    autoMailTemplate_Query(autoMailTemplateQuery: AutoMailTemplateQuery | undefined): Observable<AutoMailTemplateDisplayItem> {
         let url_ = this.baseUrl + "/api/AutoMailTemplateQuery";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -4334,14 +4334,14 @@ export class Api {
                 try {
                     return this.processAutoMailTemplate_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<AutoMailTemplate>;
+                    return _observableThrow(e) as any as Observable<AutoMailTemplateDisplayItem>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<AutoMailTemplate>;
+                return _observableThrow(response_) as any as Observable<AutoMailTemplateDisplayItem>;
         }));
     }
 
-    protected processAutoMailTemplate_Query(response: HttpResponseBase): Observable<AutoMailTemplate> {
+    protected processAutoMailTemplate_Query(response: HttpResponseBase): Observable<AutoMailTemplateDisplayItem> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4351,7 +4351,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AutoMailTemplate;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AutoMailTemplateDisplayItem;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4597,6 +4597,57 @@ export class Api {
     }
 
     protected processSaveMailTemplate_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    updateAutoMailTemplate_Command(updateAutoMailTemplateCommand: UpdateAutoMailTemplateCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/UpdateAutoMailTemplateCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(updateAutoMailTemplateCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateAutoMailTemplate_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateAutoMailTemplate_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processUpdateAutoMailTemplate_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5066,6 +5117,57 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    autoMailPlaceholder_Query(autoMailPlaceholderQuery: AutoMailPlaceholderQuery | undefined): Observable<PlaceholderDescription[]> {
+        let url_ = this.baseUrl + "/api/AutoMailPlaceholderQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(autoMailPlaceholderQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAutoMailPlaceholder_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAutoMailPlaceholder_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PlaceholderDescription[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PlaceholderDescription[]>;
+        }));
+    }
+
+    protected processAutoMailPlaceholder_Query(response: HttpResponseBase): Observable<PlaceholderDescription[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PlaceholderDescription[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -7978,7 +8080,7 @@ export interface ReleaseMailCommand {
     mailId?: string;
 }
 
-export interface AutoMailTemplate {
+export interface AutoMailTemplateDisplayItem {
     id?: string;
     subject?: string | null;
     contentHtml?: string | null;
@@ -8044,6 +8146,13 @@ export interface MailTypesQuery {
 export interface SaveMailTemplateCommand {
     eventId?: string;
     templateId?: string | null;
+}
+
+export interface UpdateAutoMailTemplateCommand {
+    eventId?: string;
+    templateId?: string;
+    subject?: string | null;
+    contentHtml?: string | null;
 }
 
 export interface SendMailCommand {
@@ -8115,6 +8224,15 @@ export interface TryAssignImportedMailCommand {
 
 export interface ProcessMailEventsCommand {
     rawMailEventsId?: string;
+}
+
+export interface PlaceholderDescription {
+    key?: string;
+    description?: string;
+    bothPartnerPossible?: boolean;
+}
+
+export interface AutoMailPlaceholderQuery {
 }
 
 export interface ComposeAndSendMailCommand {

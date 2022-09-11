@@ -243,6 +243,12 @@
   <data name="Leader" xml:space="preserve">
     <value>Leader</value>
   </data>
+  <data name="MailSubject" xml:space="preserve">
+    <value>Betreff</value>
+  </data>
+  <data name="MailTemplate" xml:space="preserve">
+    <value>Vorlage</value>
+  </data>
   <data name="MailType_PartnerRegistrationFirstReminder" xml:space="preserve">
     <value>Paaranmeldung: Reminder 1</value>
   </data>

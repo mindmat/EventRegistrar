@@ -149,7 +149,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(ProcessFetchedBankStatementsFileCommand);
             yield return nameof(SendPaymentDueMailCommand);
             yield return nameof(RefundDifferenceCommand);
-            yield return nameof(AssignOutgoingPaymentCommand);
+            yield return nameof(UpdateAutoMailTemplateCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

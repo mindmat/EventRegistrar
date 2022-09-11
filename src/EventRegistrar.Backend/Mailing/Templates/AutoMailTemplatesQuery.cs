@@ -9,11 +9,11 @@ public class AutoMailTemplatesQuery : IRequest<AutoMailTemplates>
 
 public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQuery, AutoMailTemplates>
 {
-    private readonly IQueryable<MailTemplate> _mailTemplates;
+    private readonly IQueryable<AutoMailTemplate> _mailTemplates;
     private readonly MailConfiguration _config;
     private readonly EnumTranslator _enumTranslator;
 
-    public AutoMailTemplatesQueryHandler(IQueryable<MailTemplate> mailTemplates,
+    public AutoMailTemplatesQueryHandler(IQueryable<AutoMailTemplate> mailTemplates,
                                          MailConfiguration config,
                                          EnumTranslator enumTranslator)
     {
@@ -24,10 +24,7 @@ public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQu
 
     public async Task<AutoMailTemplates> Handle(AutoMailTemplatesQuery query, CancellationToken cancellationToken)
     {
-        var existingTemplates = await _mailTemplates.Where(mtp => mtp.EventId == query.EventId
-                                                               && mtp.BulkMailKey == null
-                                                               && mtp.Type != 0
-                                                               && !mtp.IsDeleted)
+        var existingTemplates = await _mailTemplates.Where(mtp => mtp.EventId == query.EventId)
                                                     .OrderBy(mtp => mtp.Type)
                                                     .ThenBy(mtp => mtp.Language)
                                                     .ToListAsync(cancellationToken);
@@ -83,7 +80,7 @@ public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQu
                };
     }
 
-    private AutoMailTemplateMetadataType CreateType(MailType mailType, IEnumerable<MailTemplate> existingTemplates)
+    private AutoMailTemplateMetadataType CreateType(MailType mailType, IEnumerable<AutoMailTemplate> existingTemplates)
     {
         var existing = existingTemplates.Where(mtp => mtp.Type == mailType)
                                         .ToList();
@@ -96,7 +93,7 @@ public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQu
                };
     }
 
-    private AutoMailTemplateMetadataLanguage CreateTemplate(string language, MailTemplate? existing)
+    private AutoMailTemplateMetadataLanguage CreateTemplate(string language, AutoMailTemplate? existing)
     {
         return new AutoMailTemplateMetadataLanguage
                {

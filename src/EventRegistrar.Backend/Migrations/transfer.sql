@@ -358,6 +358,23 @@ INSERT INTO [dbo].[MailTemplates]
            ,[ReleaseImmediately]
 FROM [AZURE_ER].[EventRegistrator].[dbo].[MailTemplates]
 
+INSERT INTO [dbo].AutoMailTemplates
+           ([Id]
+           ,[EventId]
+           ,[Language]
+           ,[Subject]
+           ,[ContentHtml]
+           ,[Type]
+           ,[ReleaseImmediately])
+     SELECT [Id]
+           ,[EventId]
+           ,[Language]
+           ,[Subject]
+           ,[Template]
+           ,[Type]
+           ,[ReleaseImmediately]
+FROM [AZURE_ER].[EventRegistrator].[dbo].[MailTemplates]
+WHERE [Type] <> 0
 
 
 

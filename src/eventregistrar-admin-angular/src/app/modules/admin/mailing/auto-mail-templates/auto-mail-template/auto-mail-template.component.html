@@ -1,4 +1,35 @@
-<div class="flex flex-col w-full">
-    <p>{{ template.subject }}</p>
-    <div [froalaEditor] [(froalaModel)]="template.contentHtml"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tributejs@3.5.3/dist/tribute.css">
+<div class="w-full">
+    <!-- Form -->
+    <form [formGroup]="templateForm">
+
+        <!-- Section -->
+        <!-- <div class="w-full">
+            <div class="text-xl">{{ 'Subject' | translate }}</div>
+            <div class="text-secondary" formControlName="subject"></div>
+        </div> -->
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Name -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>{{ 'MailSubject' | translate }}</mat-label>
+                    <input [formControlName]="'subject'" matInput>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-4">
+                <mat-label>{{ 'MailTemplate' | translate }}</mat-label>
+                <div [froalaEditor] #editor [(froalaModel)]="template.contentHtml"></div>
+            </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end mt-8">
+            <button mat-stroked-button type="button">
+                Cancel
+            </button>
+            <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="save()">Save</button>
+        </div>
+    </form>
 </div>

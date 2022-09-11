@@ -2811,7 +2811,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AutoMailTemplate"
+                  "$ref": "#/components/schemas/AutoMailTemplateDisplayItem"
                 }
               }
             }
@@ -2966,6 +2966,38 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SaveMailTemplateCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UpdateAutoMailTemplateCommand": {
+      "post": {
+        "tags": [
+          "UpdateAutoMailTemplate"
+        ],
+        "operationId": "UpdateAutoMailTemplate_Command",
+        "requestBody": {
+          "x-name": "UpdateAutoMailTemplateCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAutoMailTemplateCommand"
               }
             }
           },
@@ -3275,6 +3307,41 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/AutoMailPlaceholderQuery": {
+      "post": {
+        "tags": [
+          "AutoMailPlaceholder"
+        ],
+        "operationId": "AutoMailPlaceholder_Query",
+        "requestBody": {
+          "x-name": "AutoMailPlaceholderQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutoMailPlaceholderQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlaceholderDescription"
+                  }
                 }
               }
             }
@@ -10034,7 +10101,7 @@
           }
         }
       },
-      "AutoMailTemplate": {
+      "AutoMailTemplateDisplayItem": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -10238,6 +10305,28 @@
           }
         }
       },
+      "UpdateAutoMailTemplateCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "templateId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "subject": {
+            "type": "string",
+            "nullable": true
+          },
+          "contentHtml": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "SendMailCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -10433,6 +10522,25 @@
             "format": "guid"
           }
         }
+      },
+      "PlaceholderDescription": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "bothPartnerPossible": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AutoMailPlaceholderQuery": {
+        "type": "object",
+        "additionalProperties": false
       },
       "ComposeAndSendMailCommand": {
         "type": "object",
