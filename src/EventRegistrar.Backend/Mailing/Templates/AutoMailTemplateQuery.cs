@@ -11,6 +11,7 @@ public class AutoMailTemplateQuery : IEventBoundRequest, IRequest<AutoMailTempla
 public class AutoMailTemplateDisplayItem
 {
     public Guid Id { get; set; }
+    public MailType Type { get; set; }
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
 }
@@ -31,6 +32,7 @@ public class AutoMailTemplateQueryHandler : IRequestHandler<AutoMailTemplateQuer
                                    .Select(mtp => new AutoMailTemplateDisplayItem
                                                   {
                                                       Id = mtp.Id,
+                                                      Type = mtp.Type,
                                                       Subject = mtp.Subject,
                                                       ContentHtml = mtp.ContentHtml
                                                   })

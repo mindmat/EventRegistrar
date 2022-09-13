@@ -10109,6 +10109,9 @@
             "type": "string",
             "format": "guid"
           },
+          "type": {
+            "$ref": "#/components/schemas/MailType"
+          },
           "subject": {
             "type": "string",
             "nullable": true
@@ -10540,7 +10543,12 @@
       },
       "AutoMailPlaceholderQuery": {
         "type": "object",
-        "additionalProperties": false
+        "additionalProperties": false,
+        "properties": {
+          "mailType": {
+            "$ref": "#/components/schemas/MailType"
+          }
+        }
       },
       "ComposeAndSendMailCommand": {
         "type": "object",

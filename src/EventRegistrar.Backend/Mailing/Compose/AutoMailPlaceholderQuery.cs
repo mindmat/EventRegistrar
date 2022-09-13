@@ -3,7 +3,10 @@ using EventRegistrar.Backend.Mailing.Templates;
 
 namespace EventRegistrar.Backend.Mailing.Compose;
 
-public class AutoMailPlaceholderQuery : IRequest<IEnumerable<PlaceholderDescription>> { }
+public class AutoMailPlaceholderQuery : IRequest<IEnumerable<PlaceholderDescription>>
+{
+    public MailType MailType { get; set; }
+}
 
 public struct PlaceholderDescription
 {

@@ -8082,6 +8082,7 @@ export interface ReleaseMailCommand {
 
 export interface AutoMailTemplateDisplayItem {
     id?: string;
+    type?: MailType;
     subject?: string | null;
     contentHtml?: string | null;
 }
@@ -8233,6 +8234,7 @@ export interface PlaceholderDescription {
 }
 
 export interface AutoMailPlaceholderQuery {
+    mailType?: MailType;
 }
 
 export interface ComposeAndSendMailCommand {

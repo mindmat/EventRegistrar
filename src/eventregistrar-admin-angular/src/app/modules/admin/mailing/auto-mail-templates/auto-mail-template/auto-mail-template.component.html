@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tributejs@3.5.3/dist/tribute.css">
 <div class="w-full">
     <!-- Form -->
     <form [formGroup]="templateForm">
@@ -19,16 +18,14 @@
 
             <div class="sm:col-span-4">
                 <mat-label>{{ 'MailTemplate' | translate }}</mat-label>
-                <div [froalaEditor] #editor [(froalaModel)]="template.contentHtml"></div>
+                <div [froalaEditor]="options" #editor></div>
             </div>
 
         </div>
 
         <!-- Actions -->
         <div class="flex items-center justify-end mt-8">
-            <button mat-stroked-button type="button">
-                Cancel
-            </button>
+            <button mat-stroked-button type="button">Cancel</button>
             <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="save()">Save</button>
         </div>
     </form>
