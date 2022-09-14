@@ -150,6 +150,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SendPaymentDueMailCommand);
             yield return nameof(RefundDifferenceCommand);
             yield return nameof(UpdateAutoMailTemplateCommand);
+            yield return nameof(AutoMailPreviewQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

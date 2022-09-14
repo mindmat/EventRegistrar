@@ -107,6 +107,12 @@ export class AutoMailTemplateComponent implements OnInit
         this.placeholders = placeholders;
       });
   }
+  openPreview()
+  {
+    var registrationId = 'b450dc24-7591-4e45-8d64-36e62e375a78'; // ToDo
+    var url = `auto-mail-preview/${this.templateForm.value.id}/registration/${registrationId}`;
+    window.open(url, "_blank");
+  }
 
   save()
   {

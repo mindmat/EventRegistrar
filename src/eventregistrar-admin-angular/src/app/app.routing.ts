@@ -23,6 +23,8 @@ import { AutoMailTemplatesComponent } from './modules/admin/mailing/auto-mail-te
 import { AutoMailTemplatesResolver } from './modules/admin/mailing/auto-mail-templates/auto-mail-templates.resolver';
 import { AutoMailTemplateComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-template/auto-mail-template.component';
 import { AutoMailTemplateResolver } from './modules/admin/mailing/auto-mail-templates/auto-mail-template/auto-mail-template.resolver';
+import { AutoMailPreviewComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-preview/auto-mail-preview.component';
+import { AutoMailPreviewResolver } from './modules/admin/mailing/auto-mail-templates/auto-mail-preview/auto-mail-preview.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -82,6 +84,14 @@ export const appRoutes: Route[] = [
         children: [
             { path: 'home', loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule) },
         ]
+    },
+
+    // mail preview (no layout)
+    {
+        path: 'auto-mail-preview/:templateId/registration/:registrationId',
+        canActivate: [AuthGuard],
+        component: AutoMailPreviewComponent,
+        resolve: { initialData: AutoMailPreviewResolver }
     },
 
     // Admin routes
@@ -180,6 +190,7 @@ export const appRoutes: Route[] = [
                     }
                 ]
 
-            }]
+            }
+        ]
     }
 ];

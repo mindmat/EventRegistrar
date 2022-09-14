@@ -68,6 +68,7 @@ import { DuePaymentsComponent } from './modules/admin/accounting/due-payments/du
 import { AutoMailTemplatesComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-templates.component';
 import { AutoMailTemplateComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-template/auto-mail-template.component';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
+import { AutoMailPreviewComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-preview/auto-mail-preview.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -89,7 +90,8 @@ const routerConfig: ExtraOptions = {
         AssignmentCandidateRegistrationComponent,
         DuePaymentsComponent,
         AutoMailTemplatesComponent,
-        AutoMailTemplateComponent
+        AutoMailTemplateComponent,
+        AutoMailPreviewComponent
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },

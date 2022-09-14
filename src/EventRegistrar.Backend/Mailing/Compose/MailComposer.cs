@@ -43,7 +43,7 @@ public class MailComposer
                                       CancellationToken cancellationToken)
     {
         var registration = await _registrations.Where(reg => reg.Id == registrationId)
-                                               .Include(reg => reg.Seats_AsLeader)
+                                               .Include(reg => reg.Seats_AsLeader!)
                                                .ThenInclude(seat => seat.Registrable)
                                                .Include(reg => reg.Seats_AsFollower)
                                                .ThenInclude(seat => seat.Registrable)
@@ -91,18 +91,12 @@ public class MailComposer
         {
             var parts = GetPrefix(key);
 
-            //var responsesForPrefix = responses;
-            var registrationForPrefix = registration;
-            if (parts.prefix == PrefixLeader)
-                //responsesForPrefix = leaderResponses;
+            var registrationForPrefix = parts.prefix switch
             {
-                registrationForPrefix = leaderRegistration;
-            }
-            else if (parts.prefix == PrefixFollower)
-                //responsesForPrefix = followerResponses;
-            {
-                registrationForPrefix = followerRegistration;
-            }
+                PrefixLeader   => leaderRegistration,
+                PrefixFollower => followerRegistration,
+                _              => registration
+            };
 
             if (Enum.TryParse<MailPlaceholder>(parts.key, true, out var placeholderKey))
             {

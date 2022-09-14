@@ -1,5 +1,7 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Mailing.Templates;
 
@@ -14,10 +16,13 @@ public class UpdateAutoMailTemplateCommand : IRequest, IEventBoundRequest
 public class UpdateAutoMailTemplateCommandHandler : IRequestHandler<UpdateAutoMailTemplateCommand>
 {
     private readonly IRepository<AutoMailTemplate> _autoMailTemplates;
+    private readonly IEventBus _eventBus;
 
-    public UpdateAutoMailTemplateCommandHandler(IRepository<AutoMailTemplate> autoMailTemplates)
+    public UpdateAutoMailTemplateCommandHandler(IRepository<AutoMailTemplate> autoMailTemplates,
+                                                IEventBus eventBus)
     {
         _autoMailTemplates = autoMailTemplates;
+        _eventBus = eventBus;
     }
 
     public async Task<Unit> Handle(UpdateAutoMailTemplateCommand command, CancellationToken cancellationToken)
@@ -32,6 +37,12 @@ public class UpdateAutoMailTemplateCommandHandler : IRequestHandler<UpdateAutoMa
             template.ContentHtml = command.ContentHtml;
         }
 
+        _eventBus.Publish(new ReadModelUpdated
+                          {
+                              QueryName = nameof(AutoMailPreviewQuery),
+                              EventId = command.EventId,
+                              RowId = template.Id
+                          });
         return Unit.Value;
     }
 }

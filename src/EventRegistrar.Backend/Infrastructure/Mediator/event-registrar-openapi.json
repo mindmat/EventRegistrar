@@ -2787,6 +2787,38 @@
         }
       }
     },
+    "/api/AutoMailPreviewQuery": {
+      "post": {
+        "tags": [
+          "AutoMailPreview"
+        ],
+        "operationId": "AutoMailPreview_Query",
+        "requestBody": {
+          "x-name": "AutoMailPreviewQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AutoMailPreviewQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoMailPreview"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/AutoMailTemplateQuery": {
       "post": {
         "tags": [
@@ -10096,6 +10128,38 @@
             "format": "guid"
           },
           "mailId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "AutoMailPreview": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "subject": {
+            "type": "string",
+            "nullable": true
+          },
+          "contentHtml": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "AutoMailPreviewQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "autoMailTemplateId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrationId": {
             "type": "string",
             "format": "guid"
           }

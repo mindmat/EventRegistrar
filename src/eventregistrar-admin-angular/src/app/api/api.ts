@@ -4311,6 +4311,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    autoMailPreview_Query(autoMailPreviewQuery: AutoMailPreviewQuery | undefined): Observable<AutoMailPreview> {
+        let url_ = this.baseUrl + "/api/AutoMailPreviewQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(autoMailPreviewQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAutoMailPreview_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAutoMailPreview_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<AutoMailPreview>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<AutoMailPreview>;
+        }));
+    }
+
+    protected processAutoMailPreview_Query(response: HttpResponseBase): Observable<AutoMailPreview> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AutoMailPreview;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     autoMailTemplate_Query(autoMailTemplateQuery: AutoMailTemplateQuery | undefined): Observable<AutoMailTemplateDisplayItem> {
         let url_ = this.baseUrl + "/api/AutoMailTemplateQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -8078,6 +8129,17 @@ export interface ReleaseAllPendingMailsCommand {
 export interface ReleaseMailCommand {
     eventId?: string;
     mailId?: string;
+}
+
+export interface AutoMailPreview {
+    subject?: string | null;
+    contentHtml?: string | null;
+}
+
+export interface AutoMailPreviewQuery {
+    eventId?: string;
+    autoMailTemplateId?: string;
+    registrationId?: string;
 }
 
 export interface AutoMailTemplateDisplayItem {
