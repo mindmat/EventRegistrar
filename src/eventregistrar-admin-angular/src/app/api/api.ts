@@ -8229,8 +8229,8 @@ export interface ProcessMailEventsCommand {
 
 export interface PlaceholderDescription {
     key?: string;
+    placeholder?: string;
     description?: string;
-    bothPartnerPossible?: boolean;
 }
 
 export interface AutoMailPlaceholderQuery {

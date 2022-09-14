@@ -88,6 +88,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abbrechen.
+        /// </summary>
+        internal static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einzahlungen.
         /// </summary>
         internal static string Deposits {
@@ -444,6 +453,33 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Platzhalter für Mails.
+        /// </summary>
+        internal static string MailPlaceholder {
+            get {
+                return ResourceManager.GetString("MailPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vorname.
+        /// </summary>
+        internal static string MailPlaceholder_FirstName {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nachname.
+        /// </summary>
+        internal static string MailPlaceholder_LastName {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Betreff.
         /// </summary>
         internal static string MailSubject {
@@ -665,6 +701,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Role_Leader {
             get {
                 return ResourceManager.GetString("Role_Leader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Speichern.
+        /// </summary>
+        internal static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
             }
         }
         

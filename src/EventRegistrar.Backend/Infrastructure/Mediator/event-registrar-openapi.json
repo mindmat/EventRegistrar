@@ -10533,11 +10533,11 @@
           "key": {
             "type": "string"
           },
-          "description": {
+          "placeholder": {
             "type": "string"
           },
-          "bothPartnerPossible": {
-            "type": "boolean"
+          "description": {
+            "type": "string"
           }
         }
       },

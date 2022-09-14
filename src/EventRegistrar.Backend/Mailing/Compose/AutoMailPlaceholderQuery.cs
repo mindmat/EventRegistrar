@@ -1,5 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Mailing.Templates;
+using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Mailing.Compose;
 
@@ -11,8 +11,8 @@ public class AutoMailPlaceholderQuery : IRequest<IEnumerable<PlaceholderDescript
 public struct PlaceholderDescription
 {
     public string Key { get; set; }
+    public string Placeholder { get; set; }
     public string Description { get; set; }
-    public bool BothPartnerPossible { get; set; }
 }
 
 public class PartnerPlaceholderAttribute : Attribute { }
@@ -38,12 +38,38 @@ public class AutoMailPlaceholderQueryHandler : IRequestHandler<AutoMailPlacehold
     public Task<IEnumerable<PlaceholderDescription>> Handle(AutoMailPlaceholderQuery query, CancellationToken cancellationToken)
     {
         var values = Enum.GetValues<MailPlaceholder>()
-                         .Select(mph => new PlaceholderDescription
-                                        {
-                                            Key = mph.ToString(),
-                                            Description = _enumTranslator.Translate(mph),
-                                            BothPartnerPossible = false
-                                        });
+                         .SelectMany(mph => GetPossiblePlaceholders(query.MailType, mph));
         return Task.FromResult(values);
+    }
+
+    private IEnumerable<PlaceholderDescription> GetPossiblePlaceholders(MailType mailType, MailPlaceholder placeholder)
+    {
+        if (mailType.HasAttribute<PartnerMailTypeAttribute>()
+         && placeholder.HasAttribute<PartnerPlaceholderAttribute>())
+        {
+            var keyLeader = $"{Role.Leader}.{placeholder}";
+            yield return new PlaceholderDescription
+                         {
+                             Key = keyLeader,
+                             Placeholder = $"{{{{{keyLeader}}}}}",
+                             Description = $"{_enumTranslator.Translate(Role.Leader)}: {_enumTranslator.Translate(placeholder)}"
+                         };
+            var keyFollower = $"{Role.Follower}.{placeholder}";
+            yield return new PlaceholderDescription
+                         {
+                             Key = keyFollower,
+                             Placeholder = $"{{{{{keyFollower}}}}}",
+                             Description = $"{_enumTranslator.Translate(Role.Follower)}: {_enumTranslator.Translate(placeholder)}"
+                         };
+        }
+        else
+        {
+            yield return new PlaceholderDescription
+                         {
+                             Key = placeholder.ToString(),
+                             Placeholder = $"{{{{{placeholder}}}}}",
+                             Description = _enumTranslator.Translate(placeholder)
+                         };
+        }
     }
 }

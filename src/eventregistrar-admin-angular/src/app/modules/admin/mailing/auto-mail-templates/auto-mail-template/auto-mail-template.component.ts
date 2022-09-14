@@ -28,17 +28,23 @@ export class AutoMailTemplateComponent implements OnInit
     contentHtml: ''
   });
 
-  private tribute = new Tribute({
-    values: (text, cb) => { cb(this.placeholders); },
-    lookup: 'key',
-    fillAttr: 'description',
-
-    selectTemplate: (item: TributeItem<PlaceholderDescription>) =>
+  private tribute = new Tribute(
     {
-      return '{{' + item.original.description + '}}';
-    },
+      values: (text, cb) => { cb(this.placeholders.filter(plh => plh.description.toLowerCase().includes(text.toLowerCase()))); },
+      lookup: 'description',
 
-  });
+      // function called on select that returns the content to insert
+      selectTemplate: (item: TributeItem<PlaceholderDescription>) =>
+      {
+        return item.original.placeholder;
+      },
+
+      // template for displaying item in menu
+      menuItemTemplate: (item: TributeItem<PlaceholderDescription>) =>
+      {
+        return item.original.description;
+      },
+    });
 
   public options = {
     htmlRemoveTags: [],

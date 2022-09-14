@@ -126,6 +126,9 @@
   <data name="AssignOutgoing" xml:space="preserve">
     <value>Zahlungsausgang zuordnen</value>
   </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
   <data name="Deposits" xml:space="preserve">
     <value>Einzahlungen</value>
   </data>
@@ -243,6 +246,15 @@
   <data name="Leader" xml:space="preserve">
     <value>Leader</value>
   </data>
+  <data name="MailPlaceholder" xml:space="preserve">
+    <value>Platzhalter für Mails</value>
+  </data>
+  <data name="MailPlaceholder_FirstName" xml:space="preserve">
+    <value>Vorname</value>
+  </data>
+  <data name="MailPlaceholder_LastName" xml:space="preserve">
+    <value>Nachname</value>
+  </data>
   <data name="MailSubject" xml:space="preserve">
     <value>Betreff</value>
   </data>
@@ -318,6 +330,9 @@
   </data>
   <data name="Role_Leader" xml:space="preserve">
     <value>Leader</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Speichern</value>
   </data>
   <data name="SearchByName" xml:space="preserve">
     <value>Suche nach Namen</value>
