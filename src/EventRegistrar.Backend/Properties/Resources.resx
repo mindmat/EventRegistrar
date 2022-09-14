@@ -249,11 +249,44 @@
   <data name="MailPlaceholder" xml:space="preserve">
     <value>Platzhalter für Mails</value>
   </data>
+  <data name="MailPlaceholder_AcceptedDate" xml:space="preserve">
+    <value>Datum Zahlungsaufforderung</value>
+  </data>
+  <data name="MailPlaceholder_CancellationReason" xml:space="preserve">
+    <value>Grund Absage</value>
+  </data>
+  <data name="MailPlaceholder_DueAmount" xml:space="preserve">
+    <value>Offener Betrag</value>
+  </data>
   <data name="MailPlaceholder_FirstName" xml:space="preserve">
     <value>Vorname</value>
   </data>
   <data name="MailPlaceholder_LastName" xml:space="preserve">
     <value>Nachname</value>
+  </data>
+  <data name="MailPlaceholder_OverpaidAmount" xml:space="preserve">
+    <value>Zu viel bezahlter Betrag</value>
+  </data>
+  <data name="MailPlaceholder_PaidAmount" xml:space="preserve">
+    <value>Bezahlter Betrag</value>
+  </data>
+  <data name="MailPlaceholder_PartnerName" xml:space="preserve">
+    <value>Name Partner</value>
+  </data>
+  <data name="MailPlaceholder_Phone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="MailPlaceholder_Price" xml:space="preserve">
+    <value>Preis</value>
+  </data>
+  <data name="MailPlaceholder_Reminder1Date" xml:space="preserve">
+    <value>Datum erste Zahlungserinnerung</value>
+  </data>
+  <data name="MailPlaceholder_SpotList" xml:space="preserve">
+    <value>Liste der Plätze</value>
+  </data>
+  <data name="MailPlaceholder_UnpaidAmount" xml:space="preserve">
+    <value>Bemerkung über offenen Betrag</value>
   </data>
   <data name="MailSubject" xml:space="preserve">
     <value>Betreff</value>

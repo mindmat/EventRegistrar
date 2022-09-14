@@ -462,6 +462,33 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datum Zahlungsaufforderung.
+        /// </summary>
+        internal static string MailPlaceholder_AcceptedDate {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_AcceptedDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grund Absage.
+        /// </summary>
+        internal static string MailPlaceholder_CancellationReason {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_CancellationReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Offener Betrag.
+        /// </summary>
+        internal static string MailPlaceholder_DueAmount {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_DueAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vorname.
         /// </summary>
         internal static string MailPlaceholder_FirstName {
@@ -476,6 +503,78 @@ namespace EventRegistrar.Backend.Properties {
         internal static string MailPlaceholder_LastName {
             get {
                 return ResourceManager.GetString("MailPlaceholder_LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zu viel bezahlter Betrag.
+        /// </summary>
+        internal static string MailPlaceholder_OverpaidAmount {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_OverpaidAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bezahlter Betrag.
+        /// </summary>
+        internal static string MailPlaceholder_PaidAmount {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_PaidAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name Partner.
+        /// </summary>
+        internal static string MailPlaceholder_PartnerName {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_PartnerName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telefon.
+        /// </summary>
+        internal static string MailPlaceholder_Phone {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_Phone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preis.
+        /// </summary>
+        internal static string MailPlaceholder_Price {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_Price", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Datum erste Zahlungserinnerung.
+        /// </summary>
+        internal static string MailPlaceholder_Reminder1Date {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_Reminder1Date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Liste der Plätze.
+        /// </summary>
+        internal static string MailPlaceholder_SpotList {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_SpotList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bemerkung über offenen Betrag.
+        /// </summary>
+        internal static string MailPlaceholder_UnpaidAmount {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_UnpaidAmount", resourceCulture);
             }
         }
         

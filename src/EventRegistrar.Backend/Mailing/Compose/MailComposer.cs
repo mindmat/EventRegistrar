@@ -54,12 +54,13 @@ public class MailComposer
                                                .ThenInclude(map => map.Mail)
                                                .FirstAsync(cancellationToken);
 
-        var mainRegistrationRole =
-            registration.Seats_AsFollower.Any(spt => !spt.IsCancelled) ? Role.Follower : Role.Leader;
-        Registration leaderRegistration = null;
-        Registration followerRegistration = null;
+        var mainRegistrationRole = registration.Seats_AsFollower!.Any(spt => !spt.IsCancelled)
+                                       ? Role.Follower
+                                       : Role.Leader;
+        Registration? leaderRegistration = null;
+        Registration? followerRegistration = null;
         var templateFiller = new TemplateFiller(template);
-        Registration partnerRegistration = null;
+        Registration? partnerRegistration = null;
         if (templateFiller.Prefixes.Any())
         {
             _log.LogInformation($"Prefixes {string.Join(",", templateFiller.Prefixes)}");
@@ -109,111 +110,101 @@ public class MailComposer
                 {
                     templateFiller[key] = registrationForPrefix?.RespondentFirstName;
                 }
-            }
-
-            else if (parts.key == "LASTNAME")
-            {
-                templateFiller[key] = registrationForPrefix?.RespondentLastName;
-            }
-            else if (parts.key == "PHONE")
-            {
-                templateFiller[key] = registrationForPrefix?.Phone;
-            }
-            else if (parts.key == "SEATLIST" && registrationForPrefix != null)
-            {
-                templateFiller[key] = GetSeatList(registrationForPrefix, language);
-            }
-            else if (parts.key == "PARTNER")
-            {
-                templateFiller[key] = registrationForPrefix?.PartnerOriginal;
-            }
-            else if (parts.key == "PRICE")
-            {
-                var price = parts.prefix == null
-                                ? registration.Price + (partnerRegistration == null ? 0m : partnerRegistration.Price)
-                                : (registrationForPrefix ?? registration).Price;
-
-                templateFiller[key] = (price ?? 0m).ToString("F2"); // HACK: format hardcoded
-            }
-            else if (parts.key == "PAIDAMOUNT")
-            {
-                templateFiller[key] =
-                    (await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id))
-                    .ToString("F2"); // HACK: format hardcoded
-            }
-            else if (parts.key is "DUEAMOUNT" or "OVERPAIDAMOUNT")
-            {
-                var paid = await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id);
-                var price = (parts.prefix == null
-                                 ? registration.Price + (partnerRegistration == null ? 0m : partnerRegistration.Price)
-                                 : (registrationForPrefix ?? registration).Price)
-                         ?? 0m;
-                var difference = price - paid;
-                if (parts.key == "OVERPAIDAMOUNT")
+                else if (placeholderKey == MailPlaceholder.LastName)
                 {
-                    difference = -difference;
+                    templateFiller[key] = registrationForPrefix?.RespondentLastName;
                 }
+                else if (placeholderKey == MailPlaceholder.Phone)
+                {
+                    templateFiller[key] = registrationForPrefix?.Phone;
+                }
+                else if (placeholderKey == MailPlaceholder.SpotList && registrationForPrefix != null)
+                {
+                    templateFiller[key] = GetSeatList(registrationForPrefix, language);
+                }
+                else if (placeholderKey == MailPlaceholder.PartnerName)
+                {
+                    templateFiller[key] = registrationForPrefix?.PartnerOriginal;
+                }
+                else if (placeholderKey == MailPlaceholder.Price)
+                {
+                    var price = parts.prefix == null
+                                    ? registration.Price + (partnerRegistration == null ? 0m : partnerRegistration.Price)
+                                    : (registrationForPrefix ?? registration).Price;
 
-                templateFiller[key] = difference.ToString("F2"); // HACK: format hardcoded
-            }
-            else if (parts.key == "UNPAIDAMOUNT")
-            {
-                var currency = (await _events.FirstAsync(evt => evt.Id == registration.EventId, cancellationToken))
-                    ?.Currency;
-                var unpaidAmount = (registration.Price ?? 0m)
-                                 - await _paidAmountSummarizer.GetPaidAmount(registration.Id)
-                                 + (partnerRegistration == null
-                                        ? 0m
-                                        : (partnerRegistration.Price ?? 0m) - await _paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
-                if (unpaidAmount > 0m)
+                    templateFiller[key] = (price ?? 0m).ToString("F2"); // HACK: format hardcoded
+                }
+                else if (placeholderKey == MailPlaceholder.PaidAmount)
                 {
                     templateFiller[key] =
-                        $" Please transfer the remaining {unpaidAmount:F2}{currency} today or pay at the checkin (ignore this message if you already paid)."; // HACK: format hardcoded
+                        (await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id))
+                        .ToString("F2"); // HACK: format hardcoded
                 }
-            }
-            // ToDo: cancellation mail
-            else if (parts.key == "CANCELLATIONREASON")
-            {
-                var cancellation = registration.Cancellations.FirstOrDefault();
+                else if (placeholderKey is MailPlaceholder.DueAmount or MailPlaceholder.OverpaidAmount)
+                {
+                    var paid = await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id);
+                    var price = (parts.prefix == null
+                                     ? registration.Price + (partnerRegistration == null ? 0m : partnerRegistration.Price)
+                                     : (registrationForPrefix ?? registration).Price)
+                             ?? 0m;
+                    var difference = price - paid;
+                    if (placeholderKey == MailPlaceholder.OverpaidAmount)
+                    {
+                        difference = -difference;
+                    }
 
-                if (cancellation != null)
-                {
-                    var reason = cancellation.Reason;
-                    //if (cancellation.Refund > 0m)
-                    //{
-                    //    // HACK: hardcoded addition to template
-                    //    reason += language == "de"
-                    //        ? ". Bitte sende und deine Kontoinformationen (IBAN, Kontoinhaber, PLZ/Ort) für die Rückzahlung"
-                    //        : ". Please give us your bank details (IBAN, account holder name, ZIP/town) for a refund";
-                    //}
-                    templateFiller[key] = reason;
+                    templateFiller[key] = difference.ToString("F2"); // HACK: format hardcoded
                 }
-            }
-            else if (parts.key == "ACCEPTEDDATE" && registration.AdmittedAt.HasValue)
-            {
-                templateFiller[key] = registration.AdmittedAt.Value.ToString(DateFormat);
-            }
-            else if (parts.key == "REMINDER1DATE")
-            {
-                var reminder1Date = registration.Mails
-                                                .Where(map => map.Mail.Type != null
-                                                           && _duePaymentConfiguration.MailTypes_Reminder1.Contains(
-                                                                  map.Mail.Type.Value)
-                                                           && map.Mail.Sent.HasValue)
-                                                .Select(map => map.Mail.Sent)
-                                                .FirstOrDefault();
-                if (reminder1Date.HasValue)
+                else if (placeholderKey == MailPlaceholder.UnpaidAmount)
                 {
-                    templateFiller[key] = reminder1Date.Value.ToString(DateFormat);
+                    var currency = (await _events.FirstAsync(evt => evt.Id == registration.EventId, cancellationToken))
+                        ?.Currency;
+                    var unpaidAmount = (registration.Price ?? 0m)
+                                     - await _paidAmountSummarizer.GetPaidAmount(registration.Id)
+                                     + (partnerRegistration == null
+                                            ? 0m
+                                            : (partnerRegistration.Price ?? 0m) - await _paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
+                    if (unpaidAmount > 0m)
+                    {
+                        templateFiller[key] =
+                            $" Please transfer the remaining {unpaidAmount:F2}{currency} today or pay at the checkin (ignore this message if you already paid)."; // HACK: format hardcoded
+                    }
                 }
-            }
-            else if (parts.key != null && key != null && registrationForPrefix?.Responses != null)
-            {
-                // check responses with Question.TemplateKey
-                templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp =>
-                                                                                         string.Equals(rsp.Question?.TemplateKey, parts.key,
-                                                                                                       StringComparison.InvariantCultureIgnoreCase))
-                                                           ?.ResponseString;
+                else if (placeholderKey == MailPlaceholder.CancellationReason)
+                {
+                    var cancellation = registration.Cancellations!.FirstOrDefault();
+
+                    if (cancellation != null)
+                    {
+                        templateFiller[key] = cancellation.Reason;
+                    }
+                }
+                else if (placeholderKey == MailPlaceholder.AcceptedDate && registration.AdmittedAt != null)
+                {
+                    templateFiller[key] = registration.AdmittedAt.Value.ToString(DateFormat);
+                }
+                else if (placeholderKey == MailPlaceholder.Reminder1Date)
+                {
+                    var reminder1Date = registration.Mails!
+                                                    .Where(map => map.Mail!.Type != null
+                                                               && _duePaymentConfiguration.MailTypes_Reminder1.Contains(
+                                                                      map.Mail.Type.Value)
+                                                               && map.Mail.Sent.HasValue)
+                                                    .Select(map => map.Mail!.Sent)
+                                                    .FirstOrDefault();
+                    if (reminder1Date.HasValue)
+                    {
+                        templateFiller[key] = reminder1Date.Value.ToString(DateFormat);
+                    }
+                }
+                else if (parts.key != null && key != null && registrationForPrefix?.Responses != null)
+                {
+                    // check responses with Question.TemplateKey
+                    templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp =>
+                                                                                             string.Equals(rsp.Question?.TemplateKey, parts.key,
+                                                                                                           StringComparison.InvariantCultureIgnoreCase))
+                                                               ?.ResponseString;
+                }
             }
         }
 
@@ -221,15 +212,12 @@ public class MailComposer
         return content;
     }
 
-    private static (string prefix, string key) GetPrefix(string key)
+    private static (string? prefix, string? key) GetPrefix(string key)
     {
         var parts = key?.Split('.');
-        if (parts?.Length > 1)
-        {
-            return (parts[0], parts[1]);
-        }
-
-        return (null, key);
+        return parts?.Length > 1
+                   ? (parts[0], parts[1])
+                   : (null, key);
     }
 
     private string GetSeatText(Seat seat,

@@ -171,11 +171,44 @@
   <data name="MailPlaceholder" xml:space="preserve">
     <value>Mail placeholder</value>
   </data>
+  <data name="MailPlaceholder_AcceptedDate" xml:space="preserve">
+    <value>Date Payment Request</value>
+  </data>
+  <data name="MailPlaceholder_CancellationReason" xml:space="preserve">
+    <value>Reason of Cancellation</value>
+  </data>
+  <data name="MailPlaceholder_DueAmount" xml:space="preserve">
+    <value>Due Amount</value>
+  </data>
   <data name="MailPlaceholder_FirstName" xml:space="preserve">
     <value>First Name</value>
   </data>
   <data name="MailPlaceholder_LastName" xml:space="preserve">
     <value>Last Name</value>
+  </data>
+  <data name="MailPlaceholder_OverpaidAmount" xml:space="preserve">
+    <value>Overpaid Amount</value>
+  </data>
+  <data name="MailPlaceholder_PaidAmount" xml:space="preserve">
+    <value>Paid Amount</value>
+  </data>
+  <data name="MailPlaceholder_PartnerName" xml:space="preserve">
+    <value>Partner Name</value>
+  </data>
+  <data name="MailPlaceholder_Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="MailPlaceholder_Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="MailPlaceholder_Reminder1Date" xml:space="preserve">
+    <value>Date of First Reminder</value>
+  </data>
+  <data name="MailPlaceholder_SpotList" xml:space="preserve">
+    <value>Spot List</value>
+  </data>
+  <data name="MailPlaceholder_UnpaidAmount" xml:space="preserve">
+    <value>Remark about unpaid amount</value>
   </data>
   <data name="MailSubject" xml:space="preserve">
     <value>Subject</value>

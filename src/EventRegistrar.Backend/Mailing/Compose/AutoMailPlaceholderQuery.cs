@@ -23,7 +23,34 @@ public enum MailPlaceholder
     FirstName = 1,
 
     [PartnerPlaceholder]
-    LastName = 2
+    LastName = 2,
+
+    [PartnerPlaceholder]
+    Phone = 3,
+
+    [PartnerPlaceholder]
+    SpotList = 4,
+
+    [PartnerPlaceholder]
+    PartnerName = 5,
+
+    [PartnerPlaceholder]
+    Price = 6,
+
+    [PartnerPlaceholder]
+    PaidAmount = 7,
+
+    [PartnerPlaceholder]
+    DueAmount = 8,
+
+    [PartnerPlaceholder]
+    OverpaidAmount = 9,
+
+    [PartnerPlaceholder]
+    UnpaidAmount = 10,
+    CancellationReason = 11,
+    AcceptedDate = 12,
+    Reminder1Date = 13
 }
 
 public class AutoMailPlaceholderQueryHandler : IRequestHandler<AutoMailPlaceholderQuery, IEnumerable<PlaceholderDescription>>
