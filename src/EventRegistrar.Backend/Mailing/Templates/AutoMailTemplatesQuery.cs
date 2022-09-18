@@ -1,8 +1,10 @@
-﻿using EventRegistrar.Backend.Infrastructure;
+﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Properties;
 
 namespace EventRegistrar.Backend.Mailing.Templates;
 
-public class AutoMailTemplatesQuery : IRequest<AutoMailTemplates>
+public class AutoMailTemplatesQuery : IRequest<AutoMailTemplates>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
 }
@@ -30,13 +32,17 @@ public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQu
                                                     .ToListAsync(cancellationToken);
         return new AutoMailTemplates
                {
+                   EventId = query.EventId,
                    SenderMail = _config.SenderMail,
                    SenderAlias = _config.SenderName,
+                   AvailableLanguages = _config.AvailableLanguages,
+                   SingleRegistrationPossible = _config.SingleRegistrationPossible,
+                   PartnerRegistrationPossible = _config.PartnerRegistrationPossible,
                    Groups = new[]
                             {
                                 new AutoMailTemplateGroup
                                 {
-                                    Name = "Received",
+                                    Name = Resources.MailTypeGroup_Received,
                                     Types = Enumerable.Empty<AutoMailTemplateMetadataType>()
                                                       .Append(CreateType(MailType.RegistrationReceived, existingTemplates))
                                                       .Append(CreateType(MailType.SoldOut, existingTemplates))
@@ -46,7 +52,7 @@ public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQu
                                 },
                                 new AutoMailTemplateGroup
                                 {
-                                    Name = "Confirmation",
+                                    Name = Resources.MailTypeGroup_Confirmation,
                                     Types = Enumerable.Empty<AutoMailTemplateMetadataType>()
                                                       .AppendIf(_config.SingleRegistrationPossible, () => CreateType(MailType.SingleRegistrationFullyPaid, existingTemplates))
                                                       .AppendIf(_config.PartnerRegistrationPossible, () => CreateType(MailType.PartnerRegistrationFirstPaid, existingTemplates))
@@ -54,7 +60,7 @@ public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQu
                                 },
                                 new AutoMailTemplateGroup
                                 {
-                                    Name = "Waiting List",
+                                    Name = Resources.MailTypeGroup_WaitingList,
                                     Types = Enumerable.Empty<AutoMailTemplateMetadataType>()
                                                       .AppendIf(_config.SingleRegistrationPossible, () => CreateType(MailType.SingleRegistrationOnWaitingList, existingTemplates))
                                                       .AppendIf(_config.PartnerRegistrationPossible, () => CreateType(MailType.PartnerRegistrationFirstPartnerOnWaitingList, existingTemplates))
@@ -62,7 +68,7 @@ public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQu
                                 },
                                 new AutoMailTemplateGroup
                                 {
-                                    Name = "Reminders",
+                                    Name = Resources.MailTypeGroup_Reminders,
                                     Types = Enumerable.Empty<AutoMailTemplateMetadataType>()
                                                       .AppendIf(_config.SingleRegistrationPossible, () => CreateType(MailType.SingleRegistrationFirstReminder, existingTemplates))
                                                       .AppendIf(_config.SingleRegistrationPossible, () => CreateType(MailType.SingleRegistrationSecondReminder, existingTemplates))
@@ -71,7 +77,7 @@ public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQu
                                 },
                                 new AutoMailTemplateGroup
                                 {
-                                    Name = "Payments",
+                                    Name = Resources.MailTypeGroup_Payments,
                                     Types = Enumerable.Empty<AutoMailTemplateMetadataType>()
                                                       .Append(CreateType(MailType.MoneyOwed, existingTemplates))
                                                       .Append(CreateType(MailType.TooMuchPaid, existingTemplates))
@@ -106,9 +112,13 @@ public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQu
 
 public class AutoMailTemplates
 {
+    public Guid EventId { get; set; }
     public string? SenderMail { get; set; }
     public string? SenderAlias { get; set; }
     public IEnumerable<AutoMailTemplateGroup>? Groups { get; set; }
+    public IEnumerable<string> AvailableLanguages { get; set; } = null!;
+    public bool SingleRegistrationPossible { get; set; }
+    public bool PartnerRegistrationPossible { get; set; }
 }
 
 public class AutoMailTemplateGroup

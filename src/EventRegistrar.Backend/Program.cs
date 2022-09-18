@@ -141,7 +141,7 @@ container.Collection.Register<IExceptionTranslation>(assemblies);
 //container.Register(() => container.GetInstance<IHttpContextAccessor>().HttpContext?.Request ?? new DefaultHttpRequest(new DefaultHttpContext()));
 
 // Configuration
-container.Register<ConfigurationResolver>();
+container.Register<ConfigurationRegistry>();
 var defaultConfigItemTypes = container.GetTypesToRegister<IDefaultConfigurationItem>(assemblies)
                                       .ToList();
 container.Collection.Register<IDefaultConfigurationItem>(defaultConfigItemTypes);
@@ -153,7 +153,7 @@ var configTypes = container.GetTypesToRegister<IConfigurationItem>(assemblies)
                            .Except(defaultConfigItemTypes);
 foreach (var configType in configTypes)
 {
-    container.Register(configType, () => container.GetInstance<ConfigurationResolver>().GetConfigurationTypeless(configType));
+    container.Register(configType, () => container.GetInstance<ConfigurationRegistry>().GetConfigurationTypeless(configType));
 }
 
 container.RegisterSingleton<MessageQueueReceiver>();

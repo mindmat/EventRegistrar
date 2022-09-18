@@ -2883,6 +2883,39 @@
         }
       }
     },
+    "/api/CreateAutoMailTemplateCommand": {
+      "post": {
+        "tags": [
+          "CreateAutoMailTemplate"
+        ],
+        "operationId": "CreateAutoMailTemplate_Command",
+        "requestBody": {
+          "x-name": "CreateAutoMailTemplateCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAutoMailTemplateCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/DeleteMailTemplateCommand": {
       "post": {
         "tags": [
@@ -2998,6 +3031,38 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SaveMailTemplateCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UpdateAutoMailConfigurationCommand": {
+      "post": {
+        "tags": [
+          "UpdateAutoMailConfiguration"
+        ],
+        "operationId": "UpdateAutoMailConfiguration_Command",
+        "requestBody": {
+          "x-name": "UpdateAutoMailConfigurationCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAutoMailConfigurationCommand"
               }
             }
           },
@@ -10204,6 +10269,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
           "senderMail": {
             "type": "string",
             "nullable": true
@@ -10218,6 +10287,18 @@
             "items": {
               "$ref": "#/components/schemas/AutoMailTemplateGroup"
             }
+          },
+          "availableLanguages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "singleRegistrationPossible": {
+            "type": "boolean"
+          },
+          "partnerRegistrationPossible": {
+            "type": "boolean"
           }
         }
       },
@@ -10287,6 +10368,22 @@
           "eventId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "CreateAutoMailTemplateCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/MailType"
+          },
+          "language": {
+            "type": "string"
           }
         }
       },
@@ -10369,6 +10466,37 @@
             "type": "string",
             "format": "guid",
             "nullable": true
+          }
+        }
+      },
+      "UpdateAutoMailConfigurationCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "senderName": {
+            "type": "string",
+            "nullable": true
+          },
+          "senderMail": {
+            "type": "string",
+            "nullable": true
+          },
+          "singleRegistrationPossible": {
+            "type": "boolean"
+          },
+          "partnerRegistrationPossible": {
+            "type": "boolean"
+          },
+          "availableLanguages": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
           }
         }
       },

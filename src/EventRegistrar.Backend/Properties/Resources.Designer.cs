@@ -70,6 +70,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Angebotene Sprachen.
+        /// </summary>
+        internal static string AngeboteneSprachen {
+            get {
+                return ResourceManager.GetString("AngeboteneSprachen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zahlungseingang zuordnen.
         /// </summary>
         internal static string AssignIncoming {
@@ -453,6 +462,33 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to bezahlt.
+        /// </summary>
+        internal static string MailingAudience_Paid {
+            get {
+                return ResourceManager.GetString("MailingAudience_Paid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to noch nicht bezahlt.
+        /// </summary>
+        internal static string MailingAudience_Unpaid {
+            get {
+                return ResourceManager.GetString("MailingAudience_Unpaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warteliste.
+        /// </summary>
+        internal static string MailingAudience_WaitingList {
+            get {
+                return ResourceManager.GetString("MailingAudience_WaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Platzhalter für Mails.
         /// </summary>
         internal static string MailPlaceholder {
@@ -597,6 +633,42 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zu wenig bezahlt.
+        /// </summary>
+        internal static string MailType_MoneyOwed {
+            get {
+                return ResourceManager.GetString("MailType_MoneyOwed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paaranmeldung: Erste Zahlung erhalten.
+        /// </summary>
+        internal static string MailType_PartnerRegistrationFirstPaid {
+            get {
+                return ResourceManager.GetString("MailType_PartnerRegistrationFirstPaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paaranmeldung: Erste Anmeldung angenommen.
+        /// </summary>
+        internal static string MailType_PartnerRegistrationFirstPartnerAccepted {
+            get {
+                return ResourceManager.GetString("MailType_PartnerRegistrationFirstPartnerAccepted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paaranmeldung: Erste Anmeldung auf Warteliste.
+        /// </summary>
+        internal static string MailType_PartnerRegistrationFirstPartnerOnWaitingList {
+            get {
+                return ResourceManager.GetString("MailType_PartnerRegistrationFirstPartnerOnWaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Paaranmeldung: Reminder 1.
         /// </summary>
         internal static string MailType_PartnerRegistrationFirstReminder {
@@ -629,6 +701,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string MailType_PartnerRegistrationMatchedOnWaitingList {
             get {
                 return ResourceManager.GetString("MailType_PartnerRegistrationMatchedOnWaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Paaranmeldung: Reminder 2.
+        /// </summary>
+        internal static string MailType_PartnerRegistrationSecondReminder {
+            get {
+                return ResourceManager.GetString("MailType_PartnerRegistrationSecondReminder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Anmeldung erhalten.
+        /// </summary>
+        internal static string MailType_RegistrationReceived {
+            get {
+                return ResourceManager.GetString("MailType_RegistrationReceived", resourceCulture);
             }
         }
         
@@ -669,6 +759,78 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Einzelanmeldung: Reminder 2.
+        /// </summary>
+        internal static string MailType_SingleRegistrationSecondReminder {
+            get {
+                return ResourceManager.GetString("MailType_SingleRegistrationSecondReminder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ausverkauft.
+        /// </summary>
+        internal static string MailType_SoldOut {
+            get {
+                return ResourceManager.GetString("MailType_SoldOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zu viel bezahlt.
+        /// </summary>
+        internal static string MailType_TooMuchPaid {
+            get {
+                return ResourceManager.GetString("MailType_TooMuchPaid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teilnahmebestätigung.
+        /// </summary>
+        internal static string MailTypeGroup_Confirmation {
+            get {
+                return ResourceManager.GetString("MailTypeGroup_Confirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zahlungsdifferenzen.
+        /// </summary>
+        internal static string MailTypeGroup_Payments {
+            get {
+                return ResourceManager.GetString("MailTypeGroup_Payments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erhalten.
+        /// </summary>
+        internal static string MailTypeGroup_Received {
+            get {
+                return ResourceManager.GetString("MailTypeGroup_Received", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erinnerungen.
+        /// </summary>
+        internal static string MailTypeGroup_Reminders {
+            get {
+                return ResourceManager.GetString("MailTypeGroup_Reminders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warteliste.
+        /// </summary>
+        internal static string MailTypeGroup_WaitingList {
+            get {
+                return ResourceManager.GetString("MailTypeGroup_WaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fehlbetrag.
         /// </summary>
         internal static string MissingAmount {
@@ -683,6 +845,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Partner {
             get {
                 return ResourceManager.GetString("Partner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Partneranmeldung nicht möglich.
+        /// </summary>
+        internal static string PartnerNotPossible {
+            get {
+                return ResourceManager.GetString("PartnerNotPossible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Partneranmeldung möglich.
+        /// </summary>
+        internal static string PartnerPossible {
+            get {
+                return ResourceManager.GetString("PartnerPossible", resourceCulture);
             }
         }
         
@@ -710,6 +890,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Phone {
             get {
                 return ResourceManager.GetString("Phone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vorschau.
+        /// </summary>
+        internal static string Preview {
+            get {
+                return ResourceManager.GetString("Preview", resourceCulture);
             }
         }
         
@@ -831,6 +1020,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Absender Alias.
+        /// </summary>
+        internal static string SenderAlias {
+            get {
+                return ResourceManager.GetString("SenderAlias", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Absender Mail.
+        /// </summary>
+        internal static string SenderMail {
+            get {
+                return ResourceManager.GetString("SenderMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Erinnerungsmail senden.
         /// </summary>
         internal static string SendReminderMail {
@@ -854,6 +1061,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Settled {
             get {
                 return ResourceManager.GetString("Settled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einzelanmeldung nicht möglich.
+        /// </summary>
+        internal static string SingleNotPossible {
+            get {
+                return ResourceManager.GetString("SingleNotPossible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einzelanmeldung möglich.
+        /// </summary>
+        internal static string SinglePossible {
+            get {
+                return ResourceManager.GetString("SinglePossible", resourceCulture);
             }
         }
         

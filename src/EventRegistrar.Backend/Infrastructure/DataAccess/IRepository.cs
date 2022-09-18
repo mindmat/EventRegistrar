@@ -10,7 +10,7 @@ public interface IRepository<TEntity> : IQueryable<TEntity>
     Task<TEntity?> Get(Expression<Func<TEntity, bool>> predicate);
     Task<TEntity?> GetById(Guid id);
     Task InsertOrUpdateEntity(TEntity entity, CancellationToken cancellationToken = default);
-    void InsertObjectTree(TEntity rootEntity);
+    TEntity InsertObjectTree(TEntity rootEntity);
     EntityEntry<TEntity> Remove(TEntity entity);
     void Remove(Expression<Func<TEntity, bool>> predicate);
 }

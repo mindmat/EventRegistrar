@@ -25,9 +25,10 @@ public class Repository<TEntity> : Queryable<TEntity>, IRepository<TEntity>
         return DbSet.FirstOrDefaultAsync(entity => entity.Id == id);
     }
 
-    public void InsertObjectTree(TEntity rootEntity)
+    public TEntity InsertObjectTree(TEntity rootEntity)
     {
-        DbSet.Add(rootEntity);
+        var entry = DbSet.Add(rootEntity);
+        return entry.Entity;
     }
 
     public async Task InsertOrUpdateEntity(TEntity entity, CancellationToken cancellationToken = default)

@@ -3,7 +3,9 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
+
 using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.PhoneMessages;
@@ -15,7 +17,7 @@ public class ProcessReceivedSmsCommand : IRequest
 
 public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedSmsCommand>
 {
-    private readonly ConfigurationResolver _configurationResolver;
+    private readonly ConfigurationRegistry _configurationRegistry;
     private readonly PhoneNormalizer _phoneNormalizer;
     private readonly IEventBus _eventBus;
     private readonly IQueryable<Registration> _registrations;
@@ -23,13 +25,13 @@ public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedS
 
     public ProcessReceivedSmsCommandHandler(IQueryable<Registration> registrations,
                                             IRepository<Sms> sms,
-                                            ConfigurationResolver configurationResolver,
+                                            ConfigurationRegistry configurationRegistry,
                                             PhoneNormalizer phoneNormalizer,
                                             IEventBus eventBus)
     {
         _registrations = registrations;
         _sms = sms;
-        _configurationResolver = configurationResolver;
+        _configurationRegistry = configurationRegistry;
         _phoneNormalizer = phoneNormalizer;
         _eventBus = eventBus;
     }
@@ -72,13 +74,16 @@ public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedS
                               RegistrationId = registration?.Id,
                               EventId = registration?.EventId,
                               Registration = registration == null
-                                  ? null
-                                  : $"{registration.RespondentFirstName} {registration.RespondentLastName}",
+                                                 ? null
+                                                 : $"{registration.RespondentFirstName} {registration.RespondentLastName}",
                               From = command.Sms.From,
                               Text = command.Sms.Body,
                               Received = DateTimeOffset.Now
                           });
-        if (registration == null) return Unit.Value;
+        if (registration == null)
+        {
+            return Unit.Value;
+        }
 
         var sms = new Sms
                   {
@@ -101,7 +106,7 @@ public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedS
 
     private bool IsSmsAddressedToEvent(Guid eventId, TwilioSms sms)
     {
-        var config = _configurationResolver.GetConfiguration<TwilioConfiguration>(eventId);
+        var config = _configurationRegistry.GetConfiguration<TwilioConfiguration>(eventId);
         return config.Sid == sms.AccountSid
             && _phoneNormalizer.NormalizePhone(config.Number) == sms.To;
     }

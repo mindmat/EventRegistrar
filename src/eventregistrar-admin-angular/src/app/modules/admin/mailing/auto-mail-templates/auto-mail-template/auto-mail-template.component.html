@@ -2,11 +2,6 @@
     <!-- Form -->
     <form [formGroup]="templateForm">
 
-        <!-- Section -->
-        <!-- <div class="w-full">
-            <div class="text-xl">{{ 'Subject' | translate }}</div>
-            <div class="text-secondary" formControlName="subject"></div>
-        </div> -->
         <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
             <!-- Name -->
             <div class="sm:col-span-4">
@@ -18,8 +13,8 @@
 
             <div class="sm:col-span-4">
                 <mat-label>{{ 'MailTemplate' | translate }}</mat-label>
-                <button mat-stroked-button type="button" [color]="'primary'" (click)="openPreview()">{{ 'Preview' | translate }}</button>
-                <div [froalaEditor]="options" #editor></div>
+                <button mat-stroked-button type="button" [color]="'primary'" class="ml-2" (click)="openPreview()">{{ 'Preview' | translate }}</button>
+                <div class="mt-2" [froalaEditor]="options" #editor></div>
             </div>
 
         </div>

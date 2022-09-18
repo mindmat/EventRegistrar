@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Api, AutoMailTemplates } from 'app/api/api';
+import { Api, AutoMailTemplates, MailType } from 'app/api/api';
+import { map } from 'lodash';
 import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { FetchService } from '../../infrastructure/fetchService';
@@ -25,5 +26,16 @@ export class AutoMailTemplatesService extends FetchService<AutoMailTemplates> {
   fetchAutoMailTemplates()
   {
     return this.fetchItems(this.api.autoMailTemplates_Query({ eventId: this.eventService.selectedId, }));
+  }
+
+  createTemplate(type: MailType, language: string): Observable<string>
+  {
+    return this.api.createAutoMailTemplate_Command({ eventId: this.eventService.selectedId, type, language });
+  }
+
+  updateSettings(senderMail: string, senderName: string, availableLanguages: string[], singleRegistrationPossible: boolean, partnerRegistrationPossible: boolean)
+  {
+    this.api.updateAutoMailConfiguration_Command({ eventId: this.eventService.selectedId, senderMail, senderName, availableLanguages, singleRegistrationPossible, partnerRegistrationPossible })
+      .subscribe(x => console.log(x));
   }
 }

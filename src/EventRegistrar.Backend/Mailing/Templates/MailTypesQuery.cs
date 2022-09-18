@@ -1,7 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Mailing.Templates;
 
 public class MailTypesQuery : IRequest<IEnumerable<MailTypeItem>>, IEventBoundRequest
@@ -13,7 +11,7 @@ public class MailTypesQueryHandler : IRequestHandler<MailTypesQuery, IEnumerable
 {
     public Task<IEnumerable<MailTypeItem>> Handle(MailTypesQuery query, CancellationToken cancellationToken)
     {
-        var resources = Resources.ResourceManager;
+        var resources = Properties.Resources.ResourceManager;
         var list = Enum.GetValues(typeof(MailType))
                        .Cast<MailType>()
                        .Select(mtp => new MailTypeItem

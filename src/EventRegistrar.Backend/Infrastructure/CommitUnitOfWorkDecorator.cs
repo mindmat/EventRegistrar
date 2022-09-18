@@ -26,6 +26,7 @@ public class CommitUnitOfWorkDecorator<TRequest, TResponse> : IPipelineBehavior<
                                         RequestHandlerDelegate<TResponse> next)
     {
         var response = await next();
+        _dbContext.ChangeTracker.DetectChanges();
         if (_dbContext.ChangeTracker.HasChanges())
         {
             await _dbContext.SaveChangesAsync(cancellationToken);

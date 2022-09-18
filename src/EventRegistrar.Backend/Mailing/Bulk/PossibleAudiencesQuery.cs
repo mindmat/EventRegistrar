@@ -3,8 +3,6 @@ using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Mailing.Bulk;
 
 public class PossibleAudience
@@ -45,17 +43,17 @@ public class PossibleAudiencesQueryHandler : IRequestHandler<PossibleAudiencesQu
                          new()
                          {
                              Audience = MailingAudience.Paid,
-                             Name = Resources.MailingAudience_Paid + $" ({registrations.Count(reg => reg.State == RegistrationState.Paid)})"
+                             Name = Properties.Resources.MailingAudience_Paid + $" ({registrations.Count(reg => reg.State == RegistrationState.Paid)})"
                          },
                          new()
                          {
                              Audience = MailingAudience.Unpaid,
-                             Name = Resources.MailingAudience_Unpaid + $" ({registrations.Count(reg => reg.State == RegistrationState.Received && reg.IsWaitingList != true)})"
+                             Name = Properties.Resources.MailingAudience_Unpaid + $" ({registrations.Count(reg => reg.State == RegistrationState.Received && reg.IsWaitingList != true)})"
                          },
                          new()
                          {
                              Audience = MailingAudience.WaitingList,
-                             Name = Resources.MailingAudience_WaitingList + $" ({registrations.Count(reg => reg.State == RegistrationState.Received && reg.IsWaitingList == true)})"
+                             Name = Properties.Resources.MailingAudience_WaitingList + $" ({registrations.Count(reg => reg.State == RegistrationState.Received && reg.IsWaitingList == true)})"
                          }
                      };
         var predecessorEvent = await _events.Where(evt => evt.Id == query.EventId)

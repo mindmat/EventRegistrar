@@ -26,12 +26,99 @@
                         </button>
                     </div> -->
                     <!-- Sender -->
-                    <div class="mt-4 space-x-4">
+                    <div class="mt-4 space-y-4" [formGroup]="configForm">
                         <!-- <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full" [floatLabel]="'always'"> -->
-                        <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                        {{ templates.senderAlias }} {{ templates.senderMail }}
+
+                        <!-- Name -->
+                        <div class="sm:col-span-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>{{ 'SenderAlias' | translate }}</mat-label>
+                                <input [formControlName]="'senderName'" matInput>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Mail -->
+                        <div class="sm:col-span-4">
+                            <mat-form-field class="fuse-mat-no-subscript w-full">
+                                <mat-label>{{ 'SenderMail' | translate }}</mat-label>
+                                <input [formControlName]="'senderMail'" matInput>
+                            </mat-form-field>
+                        </div>
+
+                        <!-- Single available -->
+                        <button class="pr-4 pl-3.5" mat-button (click)="toggleSingle()">
+
+                            <!-- Mark as complete -->
+                            <ng-container *ngIf="!configForm.get('singleRegistrationPossible').value">
+                                <div class="flex items-center justify-center">
+                                    <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
+                                    <span class="ml-2 font-semibold">{{ 'SingleNotPossible' | translate }}</span>
+                                </div>
+                            </ng-container>
+
+                            <!-- Mark as incomplete -->
+                            <ng-container *ngIf="configForm.get('singleRegistrationPossible').value">
+                                <div class="flex items-center justify-center">
+                                    <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                                    <span class="ml-2 font-semibold">{{ 'SinglePossible' | translate }}</span>
+                                </div>
+                            </ng-container>
+                        </button>
+
+                        <!-- Partner available -->
+                        <button class="pr-4 pl-3.5" mat-button (click)="togglePartner()">
+
+                            <!-- Mark as complete -->
+                            <ng-container *ngIf="!configForm.get('partnerRegistrationPossible').value">
+                                <div class="flex items-center justify-center">
+                                    <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
+                                    <span class="ml-2 font-semibold">{{ 'PartnerNotPossible' | translate }}</span>
+                                </div>
+                            </ng-container>
+
+                            <!-- Mark as incomplete -->
+                            <ng-container *ngIf="configForm.get('partnerRegistrationPossible').value">
+                                <div class="flex items-center justify-center">
+                                    <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                                    <span class="ml-2 font-semibold">{{ 'PartnerPossible' | translate }}</span>
+                                </div>
+                            </ng-container>
+                        </button>
+
+                        <!-- Languages -->
+                        <div class="sm:col-span-4">
+                            <mat-label>{{ 'AngeboteneSprachen' | translate }}</mat-label>
+                            <div class="flex flex-row items-start space-x-3">
+                                <!-- templates (per language) -->
+                                <ng-container *ngFor="let lang of availableLangs">
+                                    <button (click)="toggleLang(lang.id)">
+                                        <span class="flex items-center relative w-6 shadow rounded-sm overflow-hidden">
+                                            <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
+                                            <img class="w-full" [ngClass]="{'opacity-25': this.configForm.value.availableLanguages.includes(lang.id)==false}"
+                                                [src]="'assets/images/flags/' + flagCodes[lang.id]?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + lang.label">
+                                        </span>
+                                    </button>
+                                    <!-- <button (click)="selectTemplate(template)" [routerLink]="[template.id]"
+                                                [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
+                                                                                                                                                        'bg-primary-50 dark:bg-hover': selectedTemplate && selectedTemplate.id === template.id}">
+                                                <span class="flex items-center">
+                                                    <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: template}"></ng-container>
+                                                </span>
+                                            </button> -->
+                                </ng-container>
+                            </div>
+
+                        </div>
+
                         <!-- <input matInput [autocomplete]="'off'" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" (input)="filterByQuery(searchField.value)" #searchField> -->
                         <!-- </mat-form-field> -->
+                        <div class="flex items-center justify-end mt-4">
+                            <button (click)="drawer.close()" mat-button>Cancel
+                            </button>
+                            <button class="ml-2" mat-flat-button [color]="'primary'" (click)="saveSettings()">Save
+                            </button>
+                        </div>
+
                     </div>
                 </div>
 
@@ -40,11 +127,9 @@
                     <ng-container *ngIf="templates.groups.length > 0">
                         <ng-container *ngFor="let group of templates.groups">
                             <div class="z-20 flex items-center justify-center my-3 -mx-6">
-                                <div class="flex-auto border-b"></div>
                                 <div class="flex-0 mx-4 text-sm font-medium leading-5 text-secondary">
                                     {{ group.name }}
                                 </div>
-                                <div class="flex-auto border-b"></div>
                             </div>
                             <!-- template types -->
                             <ng-container *ngFor="let type of group.types">
@@ -53,7 +138,7 @@
                                     <div class="flex flex-row items-start space-x-3">
                                         <!-- templates (per language) -->
                                         <ng-container *ngFor="let template of type.templates">
-                                            <button (click)="selectTemplate(template)" [routerLink]="[template.id]" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
+                                            <button (click)="selectTemplate(template, type)" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
                                                 'bg-primary-50 dark:bg-hover': selectedTemplate && selectedTemplate.id === template.id}">
                                                 <span class="flex items-center">
                                                     <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: template}"></ng-container>

@@ -120,6 +120,9 @@
   <data name="AcceptedMail" xml:space="preserve">
     <value>Accepted mail</value>
   </data>
+  <data name="AngeboteneSprachen" xml:space="preserve">
+    <value>Offered languages</value>
+  </data>
   <data name="AssignIncoming" xml:space="preserve">
     <value>Assign incoming payment</value>
   </data>
@@ -216,17 +219,50 @@
   <data name="MailTemplate" xml:space="preserve">
     <value>Template</value>
   </data>
+  <data name="MailTypeGroup_Confirmation" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="MailTypeGroup_Payments" xml:space="preserve">
+    <value>Payment Differences</value>
+  </data>
+  <data name="MailTypeGroup_Received" xml:space="preserve">
+    <value>Received</value>
+  </data>
+  <data name="MailTypeGroup_Reminders" xml:space="preserve">
+    <value>Reminders</value>
+  </data>
+  <data name="MailTypeGroup_WaitingList" xml:space="preserve">
+    <value>Waiting List</value>
+  </data>
+  <data name="MailType_MoneyOwed" xml:space="preserve">
+    <value>Not enough paid</value>
+  </data>
+  <data name="MailType_PartnerRegistrationFirstPaid" xml:space="preserve">
+    <value>Partner registration: First payment received</value>
+  </data>
+  <data name="MailType_PartnerRegistrationFirstPartnerAccepted" xml:space="preserve">
+    <value>Partner registration: First partner accepted</value>
+  </data>
+  <data name="MailType_PartnerRegistrationFirstPartnerOnWaitingList" xml:space="preserve">
+    <value>Partner registration: First partner on waiting list</value>
+  </data>
   <data name="MailType_PartnerRegistrationFirstReminder" xml:space="preserve">
-    <value>Couple registration: First Reminder</value>
+    <value>Partner registration: First Reminder</value>
   </data>
   <data name="MailType_PartnerRegistrationFullyPaid" xml:space="preserve">
-    <value>Couple registration paid</value>
+    <value>Partner registration paid</value>
   </data>
   <data name="MailType_PartnerRegistrationMatchedAndAccepted" xml:space="preserve">
-    <value>Couple registration accepted</value>
+    <value>Partner registration accepted</value>
   </data>
   <data name="MailType_PartnerRegistrationMatchedOnWaitingList" xml:space="preserve">
-    <value>Couple registration on waiting list</value>
+    <value>Partner registration on waiting list</value>
+  </data>
+  <data name="MailType_PartnerRegistrationSecondReminder" xml:space="preserve">
+    <value>Partner registration: First Reminder</value>
+  </data>
+  <data name="MailType_RegistrationReceived" xml:space="preserve">
+    <value>Registration received</value>
   </data>
   <data name="MailType_SingleRegistrationAccepted" xml:space="preserve">
     <value>Single registration accepted</value>
@@ -240,11 +276,26 @@
   <data name="MailType_SingleRegistrationOnWaitingList" xml:space="preserve">
     <value>Single registration on waiting list</value>
   </data>
+  <data name="MailType_SingleRegistrationSecondReminder" xml:space="preserve">
+    <value>Single registration: Second reminder</value>
+  </data>
+  <data name="MailType_SoldOut" xml:space="preserve">
+    <value>Sold out</value>
+  </data>
+  <data name="MailType_TooMuchPaid" xml:space="preserve">
+    <value>Too much paid</value>
+  </data>
   <data name="MissingAmount" xml:space="preserve">
     <value>Missing amount</value>
   </data>
   <data name="Partner" xml:space="preserve">
     <value>Partner</value>
+  </data>
+  <data name="PartnerNotPossible" xml:space="preserve">
+    <value>Partner registration not possible</value>
+  </data>
+  <data name="PartnerPossible" xml:space="preserve">
+    <value>Partner registration possible</value>
   </data>
   <data name="PaymentProgressTS" xml:space="preserve">
     <value>{{ paid }} paid of total {{ total }}</value>
@@ -254,6 +305,9 @@
   </data>
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
+  </data>
+  <data name="Preview" xml:space="preserve">
+    <value>Preview</value>
   </data>
   <data name="Reduction" xml:space="preserve">
     <value>Reduction</value>
@@ -285,6 +339,12 @@
   <data name="SearchByNameIbanMessage" xml:space="preserve">
     <value>Search by name, IBAN, message</value>
   </data>
+  <data name="SenderAlias" xml:space="preserve">
+    <value>Sender Alias</value>
+  </data>
+  <data name="SenderMail" xml:space="preserve">
+    <value>Sender E-mail</value>
+  </data>
   <data name="SendReminderMail" xml:space="preserve">
     <value>Send reminder mail</value>
   </data>
@@ -293,6 +353,12 @@
   </data>
   <data name="Settled" xml:space="preserve">
     <value>Settled</value>
+  </data>
+  <data name="SingleNotPossible" xml:space="preserve">
+    <value>Single registration not possible</value>
+  </data>
+  <data name="SinglePossible" xml:space="preserve">
+    <value>Single registration possible</value>
   </data>
   <data name="SMS" xml:space="preserve">
     <value>SMS</value>
