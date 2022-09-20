@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { AutoMailPreview, RegistrableTagDisplayItem } from 'app/api/api';
+import { AutoMailPreview } from 'app/api/api';
+import { SearchResult } from 'app/layout/common/search/search.component';
 import { Subject, takeUntil } from 'rxjs';
 import { AutoMailPreviewService } from './auto-mail-preview.service';
 
@@ -13,7 +14,9 @@ export class AutoMailPreviewComponent implements OnInit
   private unsubscribeAll: Subject<any> = new Subject<any>();
   preview: AutoMailPreview;
 
-  constructor(private _changeDetectorRef: ChangeDetectorRef, private mailPreviewService: AutoMailPreviewService) { }
+  constructor(
+    private _changeDetectorRef: ChangeDetectorRef,
+    private mailPreviewService: AutoMailPreviewService) { }
 
   ngOnInit(): void
   {
@@ -28,4 +31,9 @@ export class AutoMailPreviewComponent implements OnInit
       });
   }
 
+  registrationSelected(e: SearchResult)
+  {
+    const registrationId: string = e.value;
+    this.mailPreviewService.setRegistrationId(registrationId);
+  }
 }

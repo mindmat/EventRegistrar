@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Api, AutoMailTemplates, MailType } from 'app/api/api';
-import { map } from 'lodash';
 import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { FetchService } from '../../infrastructure/fetchService';

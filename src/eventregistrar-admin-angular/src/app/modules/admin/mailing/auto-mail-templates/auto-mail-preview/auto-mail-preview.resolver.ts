@@ -12,7 +12,7 @@ export class AutoMailPreviewResolver implements Resolve<boolean>
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
   {
-    return this.service.fetchPreview(route.paramMap.get('templateId'), route.paramMap.get('registrationId'))
+    return this.service.setTemplateId(route.paramMap.get('templateId'))
       .pipe(
         // Error here means the requested task is not available
         catchError((error) =>

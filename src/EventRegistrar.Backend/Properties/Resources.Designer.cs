@@ -840,6 +840,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keine Treffer gefunden.
+        /// </summary>
+        internal static string NoSearchResults {
+            get {
+                return ResourceManager.GetString("NoSearchResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Partner.
         /// </summary>
         internal static string Partner {
@@ -1016,6 +1025,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string SearchByNameIbanMessage {
             get {
                 return ResourceManager.GetString("SearchByNameIbanMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suche....
+        /// </summary>
+        internal static string SearchPlaceholder {
+            get {
+                return ResourceManager.GetString("SearchPlaceholder", resourceCulture);
             }
         }
         

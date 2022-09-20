@@ -1,16 +1,18 @@
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, Renderer2, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, Renderer2, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { MatAutocomplete } from '@angular/material/autocomplete';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { debounceTime, filter, map, Subject, takeUntil } from 'rxjs';
 import { fuseAnimations } from '@fuse/animations/public-api';
+import { Api, RegistrationMatch, RegistrationState } from 'app/api/api';
+import { EventService } from 'app/modules/admin/events/event.service';
+import { analytics } from 'app/mock-api/dashboards/analytics/data';
 
 @Component({
-    selector     : 'search',
-    templateUrl  : './search.component.html',
+    selector: 'search',
+    templateUrl: './search.component.html',
     encapsulation: ViewEncapsulation.None,
-    exportAs     : 'fuseSearch',
-    animations   : fuseAnimations
+    exportAs: 'fuseSearch',
+    animations: fuseAnimations
 })
 export class SearchComponent implements OnChanges, OnInit, OnDestroy
 {
@@ -18,9 +20,10 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     @Input() debounce: number = 300;
     @Input() minLength: number = 2;
     @Output() search: EventEmitter<any> = new EventEmitter<any>();
+    @Output() selected: EventEmitter<SearchResult> = new EventEmitter<SearchResult>();
 
     opened: boolean = false;
-    resultSets: any[];
+    resultSets: SearchResultSet[];
     searchControl: UntypedFormControl = new UntypedFormControl();
     private _matAutocomplete: MatAutocomplete;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -30,8 +33,10 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
      */
     constructor(
         private _elementRef: ElementRef,
-        private _httpClient: HttpClient,
-        private _renderer2: Renderer2
+        private api: Api,
+        private eventService: EventService,
+        private _renderer2: Renderer2,
+        private changeDetector: ChangeDetectorRef
     )
     {
     }
@@ -46,9 +51,9 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     @HostBinding('class') get classList(): any
     {
         return {
-            'search-appearance-bar'  : this.appearance === 'bar',
+            'search-appearance-bar': this.appearance === 'bar',
             'search-appearance-basic': this.appearance === 'basic',
-            'search-opened'          : this.opened
+            'search-opened': this.opened
         };
     }
 
@@ -62,10 +67,11 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     {
         // If the value exists, it means that the search input
         // is now in the DOM, and we can focus on the input..
-        if ( value )
+        if (value)
         {
             // Give Angular time to complete the change detection cycle
-            setTimeout(() => {
+            setTimeout(() =>
+            {
 
                 // Focus to the input element
                 value.nativeElement.focus();
@@ -96,7 +102,7 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     ngOnChanges(changes: SimpleChanges): void
     {
         // Appearance
-        if ( 'appearance' in changes )
+        if ('appearance' in changes)
         {
             // To prevent any issues, close the
             // search after changing the appearance
@@ -114,12 +120,13 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
             .pipe(
                 debounceTime(this.debounce),
                 takeUntil(this._unsubscribeAll),
-                map((value) => {
+                map((value) =>
+                {
 
                     // Set the resultSets to null if there is no value or
                     // the length of the value is smaller than the minLength
                     // so the autocomplete panel can be closed
-                    if ( !value || value.length < this.minLength )
+                    if (!value || value.length < this.minLength)
                     {
                         this.resultSets = null;
                     }
@@ -131,17 +138,42 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
                 // filter out the values that are smaller than minLength
                 filter(value => value && value.length >= this.minLength)
             )
-            .subscribe((value) => {
-                this._httpClient.post('api/common/search', {query: value})
-                    .subscribe((resultSets: any) => {
+            .subscribe((value) =>
+            {
+                this.api.searchRegistration_Query({ eventId: this.eventService.selectedId, searchString: value, states: [RegistrationState.Received, RegistrationState.Paid, RegistrationState.Cancelled] })
+                    .subscribe((resultSets: RegistrationMatch[]) =>
+                    {
 
                         // Store the result sets
-                        this.resultSets = resultSets;
+                        this.resultSets = [{
+                            id: 'registrations',
+                            label: 'Anmeldungen',
+                            results: resultSets.map(match =>
+                            ({
+                                avatar: null,
+                                name: `${match.firstName} ${match.lastName}`,
+                                link: null,
+                                value: match.registrationId
+                            } as SearchResult))
+                        }];
 
                         // Execute the event
                         this.search.next(resultSets);
+
+                        this.changeDetector.markForCheck();
                     });
             });
+    }
+
+    selectOption(e: MatAutocompleteSelectedEvent)
+    {
+        const item: SearchResult = e.option.value;
+        this.selected.next(item);
+    }
+
+    displayResult(option: SearchResult)
+    {
+        return option?.name;
     }
 
     /**
@@ -166,10 +198,10 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     onKeydown(event: KeyboardEvent): void
     {
         // Escape
-        if ( event.code === 'Escape' )
+        if (event.code === 'Escape')
         {
             // If the appearance is 'bar' and the mat-autocomplete is not open, close the search
-            if ( this.appearance === 'bar' && !this._matAutocomplete.isOpen )
+            if (this.appearance === 'bar' && !this._matAutocomplete.isOpen)
             {
                 this.close();
             }
@@ -183,7 +215,7 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     open(): void
     {
         // Return if it's already opened
-        if ( this.opened )
+        if (this.opened)
         {
             return;
         }
@@ -199,7 +231,7 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     close(): void
     {
         // Return if it's already closed
-        if ( !this.opened )
+        if (!this.opened)
         {
             return;
         }
@@ -221,4 +253,19 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     {
         return item.id || index;
     }
+}
+
+export class SearchResultSet
+{
+    id: string;
+    label: string;
+    results: SearchResult[];
+}
+
+export class SearchResult
+{
+    avatar: string;
+    name: string;
+    link: string | null;
+    value: string | null;
 }

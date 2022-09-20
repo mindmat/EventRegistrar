@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Mailing.Compose;
-using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Mailing.Templates;
 
@@ -8,7 +7,7 @@ public class AutoMailPreviewQuery : IEventBoundRequest, IRequest<AutoMailPreview
 {
     public Guid EventId { get; set; }
     public Guid AutoMailTemplateId { get; set; }
-    public Guid RegistrationId { get; set; }
+    public Guid? RegistrationId { get; set; }
 }
 
 public class AutoMailPreview
@@ -35,10 +34,12 @@ public class AutoMailPreviewQueryHandler : IRequestHandler<AutoMailPreviewQuery,
                                                       && mtp.Id == query.AutoMailTemplateId)
                                            .FirstAsync(cancellationToken);
 
-        var content = await _mailComposer.Compose(query.RegistrationId,
-                                                  template.ContentHtml ?? string.Empty,
-                                                  template.Language,
-                                                  cancellationToken);
+        var content = query.RegistrationId == null
+                          ? template.ContentHtml
+                          : await _mailComposer.Compose(query.RegistrationId.Value,
+                                                        template.ContentHtml ?? string.Empty,
+                                                        template.Language,
+                                                        cancellationToken);
         return new AutoMailPreview
                {
                    Subject = template.Subject,

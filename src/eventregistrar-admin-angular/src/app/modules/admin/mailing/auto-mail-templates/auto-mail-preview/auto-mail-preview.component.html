@@ -1,3 +1,5 @@
-<div class="grid h-screen w-screen place-items-center">
+<search [appearance]="'basic'" (selected)="registrationSelected($event)"></search>
+
+<div *ngIf="preview?.contentHtml" class="grid h-screen w-screen place-items-center">
     <div [froalaView]="preview.contentHtml"></div>
 </div>

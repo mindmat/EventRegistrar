@@ -375,6 +375,9 @@
   <data name="MissingAmount" xml:space="preserve">
     <value>Fehlbetrag</value>
   </data>
+  <data name="NoSearchResults" xml:space="preserve">
+    <value>Keine Treffer gefunden</value>
+  </data>
   <data name="Partner" xml:space="preserve">
     <value>Partner</value>
   </data>
@@ -435,6 +438,9 @@
   </data>
   <data name="SearchByNameIbanMessage" xml:space="preserve">
     <value>Suche nach Namen, IBAN, Mitteilung</value>
+  </data>
+  <data name="SearchPlaceholder" xml:space="preserve">
+    <value>Suche...</value>
   </data>
   <data name="SenderAlias" xml:space="preserve">
     <value>Absender Alias</value>

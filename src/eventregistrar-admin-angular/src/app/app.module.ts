@@ -69,6 +69,7 @@ import { AutoMailTemplatesComponent } from './modules/admin/mailing/auto-mail-te
 import { AutoMailTemplateComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-template/auto-mail-template.component';
 import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { AutoMailPreviewComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-preview/auto-mail-preview.component';
+import { SearchModule } from './layout/common/search/search.module';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -119,6 +120,7 @@ const routerConfig: ExtraOptions = {
         FuseMockApiModule.forRoot(mockApiServices),
         FuseFindByKeyPipeModule,
         FuseCardModule,
+        SearchModule,
 
         // Core module of your application
         CoreModule,

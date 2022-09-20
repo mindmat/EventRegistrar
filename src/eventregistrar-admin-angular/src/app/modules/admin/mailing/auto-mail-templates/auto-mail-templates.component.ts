@@ -1,9 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { AutoMailTemplates, AutoMailTemplateMetadataLanguage, UpdateAutoMailConfigurationCommand, AutoMailTemplateGroup, AutoMailTemplateMetadataType } from 'app/api/api';
-import { RightsService } from 'app/core/auth/rights.service';
-import { guideCategories } from 'app/mock-api/apps/help-center/data';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AutoMailTemplates, AutoMailTemplateMetadataLanguage, AutoMailTemplateMetadataType } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { AutoMailTemplatesService } from './auto-mail-templates.service';
 

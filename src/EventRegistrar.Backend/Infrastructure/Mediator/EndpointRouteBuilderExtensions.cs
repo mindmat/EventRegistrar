@@ -3,8 +3,6 @@ using System.Text.Json;
 
 using EventRegistrar.Backend.Authorization;
 
-using MediatR;
-
 using SimpleInjector;
 
 

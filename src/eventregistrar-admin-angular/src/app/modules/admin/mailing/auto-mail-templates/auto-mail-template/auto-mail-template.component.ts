@@ -8,6 +8,7 @@ import { TributeItem } from 'tributejs';
 
 import Tribute from "tributejs";
 import FroalaEditor from "froala-editor";
+import { SearchRegistrationService } from 'app/modules/admin/registrations/search-registration/search-registration.service';
 
 @Component({
   selector: 'app-auto-mail-template',
@@ -107,11 +108,11 @@ export class AutoMailTemplateComponent implements OnInit
         this.placeholders = placeholders;
       });
   }
+
   openPreview()
   {
-    var registrationId = 'b450dc24-7591-4e45-8d64-36e62e375a78'; // ToDo
-    var url = `auto-mail-preview/${this.templateForm.value.id}/registration/${registrationId}`;
-    window.open(url, "_blank");
+    var url = `auto-mail-preview/${this.templateForm.value.id}`;
+    window.open(url, '_blank', 'location=yes,height=900,width=700,scrollbars=yes,status=yes'); // Open new window
   }
 
   save()
