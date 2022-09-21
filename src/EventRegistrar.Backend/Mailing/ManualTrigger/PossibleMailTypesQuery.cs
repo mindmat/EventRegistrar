@@ -112,3 +112,10 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
         }
     }
 }
+
+public class MailTypeItem
+{
+    public string? BulkMailKey { get; set; }
+    public MailType? Type { get; set; }
+    public string UserText { get; set; } = null!;
+}

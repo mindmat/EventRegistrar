@@ -73,8 +73,6 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(AutoMailTemplateQuery);
             yield return nameof(ParticipantsOfRegistrableQuery);
             yield return nameof(GetPendingMailsQuery);
-            yield return nameof(MailTypesQuery);
-            yield return nameof(LanguagesQuery);
             yield return nameof(AllExternalRegistrationIdentifiersQuery);
             yield return nameof(PaymentsByDayQuery);
             yield return nameof(PaymentAssignmentsQuery);
@@ -108,7 +106,6 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
          || usersRolesInEvent.Contains(UserInEventRole.Admin))
         {
-            yield return nameof(SaveMailTemplateCommand);
             yield return nameof(ReleaseMailCommand);
             yield return nameof(DeleteMailCommand);
             yield return nameof(SendReminderMailCommand);
