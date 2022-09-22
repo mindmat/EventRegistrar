@@ -5,3 +5,5 @@ global using System.Threading;
 global using Microsoft.EntityFrameworkCore;
 
 global using MediatR;
+
+global using EventRegistrar.Backend.Authorization;

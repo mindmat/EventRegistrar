@@ -25,6 +25,8 @@ import { AutoMailTemplateComponent } from './modules/admin/mailing/auto-mail-tem
 import { AutoMailTemplateResolver } from './modules/admin/mailing/auto-mail-templates/auto-mail-template/auto-mail-template.resolver';
 import { AutoMailPreviewComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-preview/auto-mail-preview.component';
 import { AutoMailPreviewResolver } from './modules/admin/mailing/auto-mail-templates/auto-mail-preview/auto-mail-preview.resolver';
+import { ReleaseMailsComponent } from './modules/admin/mailing/mails/release-mails/release-mails.component';
+import { ReleaseMailsResolver } from './modules/admin/mailing/mails/release-mails/release-mails.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -189,6 +191,19 @@ export const appRoutes: Route[] = [
                         resolve: { initialData: AutoMailTemplateResolver }
                     }
                 ]
+            },
+            {
+                path: 'release-mails',
+                canActivate: [AuthGuard],
+                component: ReleaseMailsComponent,
+                resolve: { initialData: ReleaseMailsResolver },
+                // children: [
+                //     {
+                //         path: ':id',
+                //         component: AutoMailTemplateComponent,
+                //         resolve: { initialData: AutoMailTemplateResolver }
+                //     }
+                // ]
 
             }
         ]

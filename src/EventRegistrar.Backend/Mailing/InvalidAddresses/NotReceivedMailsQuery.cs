@@ -1,18 +1,19 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Mailing.InvalidAddresses;
 
 public class NotReceivedMail
 {
-    public DateTime Created { get; set; }
+    public DateTimeOffset Created { get; set; }
     public string Events { get; set; }
     public Guid Id { get; set; }
     public string Recipients { get; set; }
     public Guid RegistrationId { get; set; }
-    public DateTime? Sent { get; set; }
+    public DateTimeOffset? Sent { get; set; }
     public string State { get; set; }
     public string Subject { get; set; }
 }
@@ -45,9 +46,9 @@ public class NotReceivedMailsQueryHandler : IRequestHandler<NotReceivedMailsQuer
                             .Take(300)
                             .ToListAsync(cancellationToken))
                .Where(ml => !ml.Mail.Events.Any(mev =>
-                   string.Equals(mev.EMail, ml.Registration.RespondentEmail,
-                       StringComparison.InvariantCultureIgnoreCase)
-                && receivedStates.Contains(mev.State)))
+                                                    string.Equals(mev.EMail, ml.Registration.RespondentEmail,
+                                                                  StringComparison.InvariantCultureIgnoreCase)
+                                                 && receivedStates.Contains(mev.State)))
                .Select(ml => new NotReceivedMail
                              {
                                  Id = ml.Id,
@@ -58,8 +59,8 @@ public class NotReceivedMailsQueryHandler : IRequestHandler<NotReceivedMailsQuer
                                  Sent = ml.Mail.Sent,
                                  Subject = ml.Mail.Subject,
                                  Events = ml.Mail.Events.Where(mev => string.Equals(mev.EMail,
-                                                ml.Registration.RespondentEmail,
-                                                StringComparison.InvariantCultureIgnoreCase))
+                                                                                    ml.Registration.RespondentEmail,
+                                                                                    StringComparison.InvariantCultureIgnoreCase))
                                             .Select(evt => evt.State.ToString())
                                             .Distinct()
                                             .StringJoin()

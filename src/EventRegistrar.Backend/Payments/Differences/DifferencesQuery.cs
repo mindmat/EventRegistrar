@@ -110,6 +110,6 @@ public class DifferencesDisplayItem
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public RegistrationState State { get; set; }
-    public DateTime? PaymentDueMailSent { get; set; }
-    public DateTime? TooMuchPaidMailSent { get; set; }
+    public DateTimeOffset? PaymentDueMailSent { get; set; }
+    public DateTimeOffset? TooMuchPaidMailSent { get; set; }
 }

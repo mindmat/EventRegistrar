@@ -135,7 +135,7 @@ public class SendReminderMailCommandHandler : IRequestHandler<SendReminderMailCo
         return Unit.Value;
     }
 
-    public bool IsPaymentDue(DateTime startOfGracePeriodUtc, int? paymentGracePeriod = null)
+    public bool IsPaymentDue(DateTimeOffset startOfGracePeriodUtc, int? paymentGracePeriod = null)
     {
         return (DateTime.UtcNow - startOfGracePeriodUtc).TotalDays > (paymentGracePeriod ?? _paymentConfiguration.PaymentGracePeriod);
     }

@@ -4107,57 +4107,6 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    getPendingMails_Query(getPendingMailsQuery: GetPendingMailsQuery | undefined): Observable<Mail[]> {
-        let url_ = this.baseUrl + "/api/GetPendingMailsQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(getPendingMailsQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetPendingMails_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processGetPendingMails_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Mail[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Mail[]>;
-        }));
-    }
-
-    protected processGetPendingMails_Query(response: HttpResponseBase): Observable<Mail[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Mail[];
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     mailsOfRegistration_Query(mailsOfRegistrationQuery: MailsOfRegistrationQuery | undefined): Observable<MailDisplayItem[]> {
         let url_ = this.baseUrl + "/api/MailsOfRegistrationQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -4199,6 +4148,57 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as MailDisplayItem[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    pendingMails_Query(pendingMailsQuery: PendingMailsQuery | undefined): Observable<PendingMailListItem[]> {
+        let url_ = this.baseUrl + "/api/PendingMailsQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(pendingMailsQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPendingMails_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPendingMails_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PendingMailListItem[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PendingMailListItem[]>;
+        }));
+    }
+
+    protected processPendingMails_Query(response: HttpResponseBase): Observable<PendingMailListItem[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PendingMailListItem[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4546,159 +4546,6 @@ export class Api {
     }
 
     protected processDeleteMailTemplate_Command(response: HttpResponseBase): Observable<Unit> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    languages_Query(languagesQuery: LanguagesQuery | undefined): Observable<LanguageItem[]> {
-        let url_ = this.baseUrl + "/api/LanguagesQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(languagesQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processLanguages_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processLanguages_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<LanguageItem[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<LanguageItem[]>;
-        }));
-    }
-
-    protected processLanguages_Query(response: HttpResponseBase): Observable<LanguageItem[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as LanguageItem[];
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    mailTypes_Query(mailTypesQuery: MailTypesQuery | undefined): Observable<MailTypeItem[]> {
-        let url_ = this.baseUrl + "/api/MailTypesQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(mailTypesQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processMailTypes_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processMailTypes_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<MailTypeItem[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<MailTypeItem[]>;
-        }));
-    }
-
-    protected processMailTypes_Query(response: HttpResponseBase): Observable<MailTypeItem[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as MailTypeItem[];
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    saveMailTemplate_Command(saveMailTemplateCommand: SaveMailTemplateCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/SaveMailTemplateCommand";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(saveMailTemplateCommand);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSaveMailTemplate_Command(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processSaveMailTemplate_Command(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Unit>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Unit>;
-        }));
-    }
-
-    protected processSaveMailTemplate_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -7644,319 +7491,24 @@ export interface DeleteMailCommand {
     mailId?: string;
 }
 
-export interface Entity {
-    id?: string;
-    rowVersion?: string;
-}
-
-export interface Mail extends Entity {
-    eventId?: string | null;
-    event?: Event | null;
-    mailTemplateId?: string | null;
-    mailTemplate?: MailTemplate | null;
-    events?: MailEvent[] | null;
-    registrations?: MailToRegistration[] | null;
-    senderMail?: string | null;
-    senderName?: string | null;
-    subject?: string | null;
-    recipients?: string | null;
-    contentHtml?: string | null;
-    contentPlainText?: string | null;
+export interface MailDisplayItem {
+    contentHtml?: string;
     created?: Date;
-    sendGridMessageId?: string | null;
-    sent?: Date | null;
+    events?: MailEventDisplayItem[];
+    id?: string;
+    recipients?: string;
+    senderMail?: string;
+    senderName?: string;
     state?: MailState | null;
-    type?: MailType | null;
+    subject?: string;
     withhold?: boolean;
-    discarded?: boolean;
-    bulkMailKey?: string | null;
-    dataTypeFullName?: string | null;
-    dataJson?: string | null;
 }
 
-export interface Event extends Entity {
-    predecessorEventId?: string | null;
-    predecessorEvent?: Event | null;
-    accessRequests?: AccessToEventRequest[] | null;
-    configurations?: EventConfiguration[] | null;
-    registrables?: Registrable[] | null;
-    registrations?: Registration[] | null;
-    users?: UserInEvent[] | null;
-    name?: string;
-    state?: State;
-    acronym?: string;
-    currency?: string | null;
-    accountIban?: string | null;
-}
-
-export interface AccessToEventRequest extends Entity {
-    eventId?: string;
-    event?: Event | null;
-    userId_Requestor?: string | null;
-    user_Requestor?: User | null;
-    userId_Responder?: string | null;
-    user_Responder?: User | null;
-    identifier?: string | null;
-    identityProvider?: IdentityProvider;
-    firstName?: string | null;
-    lastName?: string | null;
-    email?: string | null;
-    requestReceived?: Date;
-    requestText?: string | null;
-    response?: RequestResponse | null;
-    responseText?: string | null;
-}
-
-export interface User extends Entity {
-    events?: UserInEvent[] | null;
-    identityProvider?: IdentityProvider;
-    identityProviderUserIdentifier?: string | null;
-    email?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-}
-
-export interface UserInEvent extends Entity {
-    event?: Event | null;
-    eventId?: string;
-    user?: User | null;
-    userId?: string;
-    role?: UserInEventRole;
-}
-
-export enum UserInEventRole {
-    None = 0,
-    Reader = 1,
-    Writer = 2,
-    Admin = 3,
-}
-
-export enum IdentityProvider {
-    Google = 1,
-    Microsoft = 2,
-}
-
-export enum RequestResponse {
-    Granted = 1,
-    Denied = 2,
-}
-
-export interface EventConfiguration extends Entity {
-    event?: Event | null;
-    eventId?: string;
-    type?: string;
-    valueJson?: string;
-}
-
-export interface Registrable extends Entity {
-    eventId?: string;
-    event?: Event | null;
-    compositions?: RegistrableComposition[] | null;
-    questionOptionMappings?: QuestionOptionMapping[] | null;
-    reductions?: Reduction[] | null;
-    spots?: Seat[] | null;
-    name?: string;
-    nameSecondary?: string | null;
-    hasWaitingList?: boolean;
-    automaticPromotionFromWaitingList?: boolean;
-    isCore?: boolean;
-    maximumAllowedImbalance?: number | null;
-    maximumDoubleSeats?: number | null;
-    maximumSingleSeats?: number | null;
-    price?: number | null;
-    reducedPrice?: number | null;
-    showInMailListOrder?: number | null;
-    checkinListColumn?: string | null;
-    tag?: string | null;
-    type?: RegistrableType;
-}
-
-export interface RegistrableComposition extends Entity {
-    registrableId?: string;
-    registrable?: Registrable | null;
-    registrableId_Contains?: string;
-    registrable_Contains?: Registrable | null;
-}
-
-export interface QuestionOptionMapping extends Entity {
-    questionOptionId?: string;
-    questionOption?: QuestionOption | null;
-    registrableId?: string | null;
-    registrable?: Registrable | null;
-    type?: MappingType | null;
-    language?: string | null;
-}
-
-export interface QuestionOption extends Entity {
-    questionId?: string;
-    question?: Question | null;
-    mappings?: QuestionOptionMapping[] | null;
-    answer?: string;
-}
-
-export interface Question extends Entity {
-    registrationFormId?: string;
-    registrationForm?: RegistrationForm | null;
-    questionOptions?: QuestionOption[] | null;
-    externalId?: number;
-    index?: number;
-    type?: QuestionType;
-    title?: string;
-    section?: string | null;
-    mapping?: QuestionMappingType | null;
-    templateKey?: string | null;
-}
-
-export interface RegistrationForm extends Entity {
-    eventId?: string;
-    event?: Event | null;
-    questions?: Question[] | null;
-    formPaths?: FormPath[] | null;
-    externalIdentifier?: string;
-    state?: State;
-    title?: string | null;
-}
-
-export interface FormPath extends Entity {
-    registrationFormId?: string;
-    registrationForm?: RegistrationForm | null;
-    description?: string | null;
-    type?: FormPathType;
-    configurationJson?: string;
-    singleConfiguration?: SingleRegistrationProcessConfiguration | null;
-    partnerConfiguration?: PartnerRegistrationProcessConfiguration | null;
-}
-
-export interface SingleRegistrationProcessConfiguration {
-    id?: string;
-    registrationFormId?: string;
-    description?: string | null;
-    type?: FormPathType;
-    languageMappings?: LanguageMapping[] | null;
-    questionId_Email?: string;
-    questionId_FirstName?: string;
-    questionId_LastName?: string;
-    questionId_Phone?: string | null;
-    questionId_Remarks?: string | null;
-    questionOptionId_Follower?: string | null;
-    questionOptionId_Leader?: string | null;
-    questionOptionId_Reduction?: string | null;
-    questionOptionId_Trigger?: string | null;
-    mappingsToRegistrables?: IQuestionMapping[] | null;
-}
-
-export interface LanguageMapping {
-    questionOptionId?: string;
-    language?: string;
-}
-
-export interface IQuestionMapping {
-    questionOptionId?: string;
-    registrableId?: string;
-}
-
-export interface PartnerRegistrationProcessConfiguration {
-    id?: string;
-    registrationFormId?: string;
-    description?: string | null;
-    type?: FormPathType;
-    languageMappings?: LanguageMapping[] | null;
-    questionId_Follower_Email?: string;
-    questionId_Follower_FirstName?: string;
-    questionId_Follower_LastName?: string;
-    questionId_Follower_Phone?: string | null;
-    questionId_Leader_Email?: string;
-    questionId_Leader_FirstName?: string;
-    questionId_Leader_LastName?: string;
-    questionId_Leader_Phone?: string | null;
-    questionOptionId_Trigger?: string;
-    roleSpecificMappings?: ValueTupleOfGuidAndRoleAndGuid[] | null;
-}
-
-export interface ValueTupleOfGuidAndRoleAndGuid {
-    item1?: string;
-    item2?: Role;
-    item3?: string;
-}
-
-export enum Role {
-    Leader = 1,
-    Follower = 2,
-}
-
-export interface Reduction extends Entity {
-    registrableId?: string;
-    registrable?: Registrable | null;
-    registrableId1_ReductionActivatedIfCombinedWith?: string | null;
-    registrable1_ReductionActivatedIfCombinedWith?: Registrable | null;
-    registrableId2_ReductionActivatedIfCombinedWith?: string | null;
-    registrable2_ReductionActivatedIfCombinedWith?: Registrable | null;
-    amount?: number;
-    onlyForRole?: Role | null;
-    activatedByReduction?: boolean;
-}
-
-export interface Seat extends Entity {
-    registrableId?: string;
-    registrable?: Registrable | null;
-    registrationId?: string | null;
-    registration?: Registration | null;
-    registrationId_Follower?: string | null;
-    registration_Follower?: Registration | null;
-    firstPartnerJoined?: Date;
-    isCancelled?: boolean;
-    isPartnerSpot?: boolean;
-    isWaitingList?: boolean;
-    partnerEmail?: string | null;
-}
-
-export interface Registration extends Entity {
-    eventId?: string;
-    event?: Event | null;
-    registrationFormId?: string;
-    registrationForm?: RegistrationForm | null;
-    registrationId_Partner?: string | null;
-    registration_Partner?: Registration | null;
-    mails?: MailToRegistration[] | null;
-    cancellations?: RegistrationCancellation[] | null;
-    importedMails?: ImportedMailToRegistration[] | null;
-    individualReductions?: IndividualReduction[] | null;
-    paymentAssignments?: PaymentAssignment[] | null;
-    responses?: Response[] | null;
-    seats_AsFollower?: Seat[] | null;
-    seats_AsLeader?: Seat[] | null;
-    sms?: Sms[] | null;
-    admittedAt?: Date | null;
-    externalIdentifier?: string;
-    externalTimestamp?: Date;
-    fallbackToPartyPass?: boolean | null;
-    isReduced?: boolean;
-    isWaitingList?: boolean | null;
-    language?: string | null;
-    originalPrice?: number | null;
-    partnerNormalized?: string | null;
-    partnerOriginal?: string | null;
-    phone?: string | null;
-    phoneNormalized?: string | null;
-    price?: number | null;
-    receivedAt?: Date;
-    remarks?: string | null;
-    remarksProcessed?: boolean;
-    reminderLevel?: number;
-    respondentEmail?: string | null;
-    respondentFirstName?: string | null;
-    respondentLastName?: string | null;
-    soldOutMessage?: string | null;
-    state?: RegistrationState;
-    willPayAtCheckin?: boolean;
-}
-
-export interface MailToRegistration extends Entity {
-    mailId?: string;
-    mail?: Mail | null;
-    registrationId?: string;
-    registration?: Registration | null;
-    state?: MailState | null;
+export interface MailEventDisplayItem {
+    email?: string;
+    state?: MailState;
+    stateText?: string;
+    when?: Date;
 }
 
 export enum MailState {
@@ -7974,193 +7526,48 @@ export enum MailState {
     GroupResubscribe = 11,
 }
 
-export interface RegistrationCancellation extends Entity {
-    registrationId?: string;
-    registration?: Registration | null;
-    created?: Date;
-    reason?: string | null;
-    refund?: number;
-    refundPercentage?: number;
-    received?: Date | null;
-}
-
-export interface ImportedMailToRegistration extends Entity {
-    importedMailId?: string;
-    mail?: ImportedMail | null;
-    registrationId?: string;
-    registration?: Registration | null;
-}
-
-export interface ImportedMail extends Entity {
+export interface MailsOfRegistrationQuery {
     eventId?: string;
-    event?: Event | null;
-    registrations?: ImportedMailToRegistration[] | null;
-    senderMail?: string | null;
-    senderName?: string | null;
-    subject?: string | null;
+    registrationId?: string;
+}
+
+export interface PendingMailListItem {
+    id?: string;
     recipients?: string | null;
-    contentHtml?: string | null;
-    contentPlainText?: string | null;
-    date?: Date;
-    imported?: Date;
-    messageIdentifier?: string | null;
-    sendGridMessageId?: string | null;
-}
-
-export interface IndividualReduction extends Entity {
-    registrationId?: string;
-    registration?: Registration | null;
-    userId?: string;
-    user?: User | null;
-    amount?: number;
-    reason?: string | null;
-}
-
-export interface PaymentAssignment extends Entity {
-    registrationId?: string | null;
-    registration?: Registration | null;
-    incomingPaymentId?: string | null;
-    incomingPayment?: IncomingPayment | null;
-    outgoingPaymentId?: string | null;
-    outgoingPayment?: OutgoingPayment | null;
-    paymentAssignmentId_Counter?: string | null;
-    paymentAssignment_Counter?: PaymentAssignment | null;
-    payoutRequestId?: string | null;
-    payoutRequest?: PayoutRequest | null;
-    amount?: number;
-    created?: Date | null;
-}
-
-export interface IncomingPayment extends Entity {
-    payment?: Payment | null;
-    debitorIban?: string | null;
-    debitorName?: string | null;
-    paymentSlipId?: string | null;
-    paymentSlip?: PaymentSlip | null;
-    assignments?: PaymentAssignment[] | null;
-}
-
-export interface Payment extends Entity {
-    paymentsFileId?: string;
-    paymentsFile?: PaymentsFile | null;
-    currency?: string | null;
-    amount?: number;
-    charges?: number | null;
-    bookingDate?: Date;
-    info?: string | null;
-    message?: string | null;
-    instructionIdentification?: string | null;
-    rawXml?: string | null;
-    recognizedEmail?: string | null;
-    reference?: string | null;
-    repaid?: number | null;
-    settled?: boolean;
-    ignore?: boolean;
-    incoming?: IncomingPayment | null;
-    outgoing?: OutgoingPayment | null;
-    type?: PaymentType;
-}
-
-export interface PaymentsFile extends Entity {
-    eventId?: string | null;
-    event?: Event | null;
-    accountIban?: string | null;
-    fileId?: string | null;
-    balance?: number | null;
-    bookingsFrom?: Date | null;
-    bookingsTo?: Date | null;
-    currency?: string | null;
-    content?: string | null;
-}
-
-export interface OutgoingPayment extends Entity {
-    payment?: Payment | null;
-    creditorName?: string | null;
-    creditorIban?: string | null;
-    assignments?: PaymentAssignment[] | null;
-}
-
-export interface PaymentSlip extends Entity {
-    eventId?: string;
-    event?: Event | null;
-    contentType?: string | null;
-    fileBinary?: string | null;
-    filename?: string | null;
-    reference?: string | null;
-}
-
-export interface PayoutRequest extends Entity {
-    registrationId?: string;
-    registration?: Registration | null;
-    assignments?: PaymentAssignment[] | null;
-    amount?: number;
-    reason?: string | null;
-    created?: Date;
-    state?: PayoutState;
-}
-
-export interface Response extends Entity {
-    questionId?: string | null;
-    question?: Question | null;
-    registrationId?: string;
-    registration?: Registration | null;
-    questionOptionId?: string | null;
-    questionOption?: QuestionOption | null;
-    responseString?: string;
-}
-
-export interface Sms extends Entity {
-    registrationId?: string | null;
-    registration?: Registration | null;
-    accountSid?: string | null;
-    body?: string | null;
-    error?: string | null;
-    errorCode?: number | null;
-    from?: string | null;
-    price?: string | null;
-    rawData?: string | null;
-    received?: Date | null;
-    sent?: Date | null;
-    smsSid?: string | null;
-    smsStatus?: string | null;
-    to?: string | null;
-    type?: SmsType;
-}
-
-export enum SmsType {
-    Reminder = 1,
-}
-
-export interface MailTemplate extends Entity {
-    eventId?: string;
-    event?: Event | null;
-    registrableId?: string | null;
-    registrable?: Registrable | null;
-    mails?: Mail[] | null;
-    bulkMailKey?: string | null;
-    contentType?: MailContentType;
-    language?: string | null;
-    mailingAudience?: MailingAudience | null;
-    senderMail?: string | null;
-    senderName?: string | null;
     subject?: string | null;
-    template?: string | null;
+    contentStart?: string | null;
+    created?: Date;
+}
+
+export interface PendingMailsQuery {
+    eventId?: string;
+}
+
+export interface ReleaseAllPendingMailsCommand {
+    eventId?: string;
+}
+
+export interface ReleaseMailCommand {
+    eventId?: string;
+    mailId?: string;
+}
+
+export interface AutoMailPreview {
+    subject?: string | null;
+    contentHtml?: string | null;
+}
+
+export interface AutoMailPreviewQuery {
+    eventId?: string;
+    autoMailTemplateId?: string;
+    registrationId?: string | null;
+}
+
+export interface AutoMailTemplateDisplayItem {
+    id?: string;
     type?: MailType;
-    isDeleted?: boolean;
-    releaseImmediately?: boolean;
-}
-
-export enum MailContentType {
-    Plaintext = 1,
-    Html = 2,
-}
-
-export enum MailingAudience {
-    Paid = 1,
-    Unpaid = 2,
-    WaitingList = 4,
-    PredecessorEvent = 8,
-    PrePredecessorEvent = 16,
+    subject?: string | null;
+    contentHtml?: string | null;
 }
 
 export enum MailType {
@@ -8183,72 +7590,6 @@ export enum MailType {
     PartnerRegistrationFirstReminder = 61,
     PartnerRegistrationSecondReminder = 62,
     OptionsForRegistrationsOnWaitingList = 101,
-}
-
-export interface MailEvent extends Entity {
-    mail?: Mail | null;
-    mailId?: string;
-    created?: Date;
-    eMail?: string | null;
-    externalIdentifier?: string | null;
-    rawEvent?: string | null;
-    state?: MailState;
-}
-
-export interface GetPendingMailsQuery {
-    eventId?: string;
-}
-
-export interface MailDisplayItem {
-    contentHtml?: string;
-    created?: Date;
-    events?: MailEventDisplayItem[];
-    id?: string;
-    recipients?: string;
-    senderMail?: string;
-    senderName?: string;
-    state?: MailState | null;
-    subject?: string;
-    withhold?: boolean;
-}
-
-export interface MailEventDisplayItem {
-    email?: string;
-    state?: MailState;
-    stateText?: string;
-    when?: Date;
-}
-
-export interface MailsOfRegistrationQuery {
-    eventId?: string;
-    registrationId?: string;
-}
-
-export interface ReleaseAllPendingMailsCommand {
-    eventId?: string;
-}
-
-export interface ReleaseMailCommand {
-    eventId?: string;
-    mailId?: string;
-}
-
-export interface AutoMailPreview {
-    subject?: string | null;
-    contentHtml?: string | null;
-}
-
-export interface AutoMailPreviewQuery {
-    eventId?: string;
-    autoMailTemplateId?: string;
-    registrationId?: string;
-}
-
-export interface AutoMailTemplateDisplayItem {
-    id?: string;
-    type?: MailType;
-    subject?: string | null;
-    contentHtml?: string | null;
 }
 
 export interface AutoMailTemplateQuery {
@@ -8299,30 +7640,6 @@ export interface DeleteMailTemplateCommand {
     mailTemplateId?: string;
 }
 
-export interface LanguageItem {
-    acronym?: string;
-    userText?: string;
-}
-
-export interface LanguagesQuery {
-    eventId?: string;
-}
-
-export interface MailTypeItem {
-    bulkMailKey?: string | null;
-    type?: MailType | null;
-    userText?: string;
-}
-
-export interface MailTypesQuery {
-    eventId?: string;
-}
-
-export interface SaveMailTemplateCommand {
-    eventId?: string;
-    templateId?: string | null;
-}
-
 export interface UpdateAutoMailConfigurationCommand {
     eventId?: string;
     senderName?: string | null;
@@ -8351,6 +7668,12 @@ export interface SendMailCommand {
 export interface EmailAddress {
     email?: string;
     name?: string;
+}
+
+export interface MailTypeItem {
+    bulkMailKey?: string | null;
+    type?: MailType | null;
+    userText?: string;
 }
 
 export interface PossibleMailTypesQuery {
@@ -8438,6 +7761,14 @@ export interface CreateBulkMailsCommand {
 export interface PossibleAudience {
     audience?: MailingAudience;
     name?: string;
+}
+
+export enum MailingAudience {
+    Paid = 1,
+    Unpaid = 2,
+    WaitingList = 4,
+    PredecessorEvent = 8,
+    PrePredecessorEvent = 16,
 }
 
 export interface PossibleAudiencesQuery {
@@ -8578,6 +7909,13 @@ export interface AddUserToRoleInEventCommand {
     userId?: string;
 }
 
+export enum UserInEventRole {
+    None = 0,
+    Reader = 1,
+    Writer = 2,
+    Admin = 3,
+}
+
 export interface UserInEventDisplayItem {
     eventAcronym?: string;
     eventId?: string;
@@ -8630,6 +7968,11 @@ export interface RespondToRequestCommand {
     response?: RequestResponse;
     responseText?: string;
     role?: UserInEventRole;
+}
+
+export enum RequestResponse {
+    Granted = 1,
+    Denied = 2,
 }
 
 export interface RightsOfUserInEventQuery {

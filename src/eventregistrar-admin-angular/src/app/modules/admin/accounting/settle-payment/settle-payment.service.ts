@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Api, PaymentAssignment, PaymentAssignments, PaymentType } from 'app/api/api';
-import { filter, Observable } from 'rxjs';
+import { Api, PaymentAssignments, PaymentType } from 'app/api/api';
+import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { FetchService } from '../../infrastructure/fetchService';
 import { NotificationService } from '../../infrastructure/notification.service';

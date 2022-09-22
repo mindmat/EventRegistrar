@@ -55,6 +55,13 @@ export class NavigationService
                 icon: 'mat_outline:mail',
                 link: '/mailing/auto-mail-templates',
             },
+            {
+                id: 'release-mails',
+                title: 'Mails freigeben',
+                type: 'basic',
+                icon: 'mat_outline:mail',
+                link: '/mailing/release-mails',
+            },
         ];
 
     /**

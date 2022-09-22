@@ -5,7 +5,9 @@ using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Mailing.InvalidAddresses;
 using EventRegistrar.Backend.Mailing.ManualTrigger;
 using EventRegistrar.Backend.Mailing.Templates;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Mailing;
@@ -23,8 +25,12 @@ public class MailsController : Controller
     }
 
     [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails/create")]
-    public async Task CreateMailForRegistration(string eventAcronym, Guid registrationId, MailType? mailType,
-                                                string bulkMailKey, bool withhold, bool allowDuplicate)
+    public async Task CreateMailForRegistration(string eventAcronym,
+                                                Guid registrationId,
+                                                MailType? mailType,
+                                                string bulkMailKey,
+                                                bool withhold,
+                                                bool allowDuplicate)
     {
         await _mediator.Send(new ComposeAndSendMailCommand
                              {
@@ -48,7 +54,9 @@ public class MailsController : Controller
     }
 
     [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/fixEmailAddress")]
-    public async Task FixInvalidMailAddress(string eventAcronym, Guid registrationId, string oldEmailAddress,
+    public async Task FixInvalidMailAddress(string eventAcronym,
+                                            Guid registrationId,
+                                            string oldEmailAddress,
                                             string newEmailAddress)
     {
         await _mediator.Send(new FixInvalidAddressCommand
@@ -83,15 +91,6 @@ public class MailsController : Controller
     public async Task<IEnumerable<NotReceivedMail>> GetNotReceivedMails(string eventAcronym)
     {
         return await _mediator.Send(new NotReceivedMailsQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
-
-    [HttpGet("api/events/{eventAcronym}/mails/pending")]
-    public async Task<IEnumerable<Mail>> GetPendingMails(string eventAcronym)
-    {
-        return await _mediator.Send(new GetPendingMailsQuery
                                     {
                                         EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
                                     });

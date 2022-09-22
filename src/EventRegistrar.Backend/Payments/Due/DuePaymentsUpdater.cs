@@ -149,7 +149,7 @@ public class DuePaymentsUpdater : ReadModelUpdater<IEnumerable<DuePaymentItem>>
         return result.OrderByDescending(dpi => dpi.DaysSinceLastNotification ?? 0);
     }
 
-    private static (DateTime Date, string Type)? GetLastNotification(DuePaymentItem dpi)
+    private static (DateTimeOffset Date, string Type)? GetLastNotification(DuePaymentItem dpi)
     {
         var lastNotification = new[]
                                {
@@ -190,5 +190,5 @@ public class DuePaymentItem
 public class SentMailDto
 {
     public Guid Id { get; set; }
-    public DateTime Sent { get; set; }
+    public DateTimeOffset Sent { get; set; }
 }

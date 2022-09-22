@@ -6,13 +6,15 @@ export class FetchService<TItem>
     private result: BehaviorSubject<TItem | null> = new BehaviorSubject(null);
     private fetch: Observable<TItem>;
     private rowId?: string;
+    private eventId?: string;
 
     constructor(queryName: string, notificationService: NotificationService | null = null)
     {
-        notificationService?.subscribe(queryName).pipe(
-            filter(e => e.rowId === this.rowId),
-        )
-            .subscribe(e => this.refresh());
+        notificationService?.subscribe(queryName)
+            .pipe(
+                filter(e => e.rowId === this.rowId && e.eventId === this.eventId)
+            )
+            .subscribe(_ => this.refresh());
     }
 
     refresh(): void
@@ -25,9 +27,10 @@ export class FetchService<TItem>
         return this.result.asObservable();
     }
 
-    protected fetchItems(fetch: Observable<TItem>, rowId: string | null = null): Observable<TItem>
+    protected fetchItems(fetch: Observable<TItem>, rowId: string | null = null, eventId: string | null = null): Observable<TItem>
     {
         this.rowId = rowId;
+        this.eventId = eventId;
         this.fetch = fetch;
         return fetch.pipe(
             map(newItems =>

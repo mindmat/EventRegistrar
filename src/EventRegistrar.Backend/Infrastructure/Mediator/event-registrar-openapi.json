@@ -2653,41 +2653,6 @@
         }
       }
     },
-    "/api/GetPendingMailsQuery": {
-      "post": {
-        "tags": [
-          "GetPendingMails"
-        ],
-        "operationId": "GetPendingMails_Query",
-        "requestBody": {
-          "x-name": "GetPendingMailsQuery",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetPendingMailsQuery"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Mail"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/MailsOfRegistrationQuery": {
       "post": {
         "tags": [
@@ -2715,6 +2680,41 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/MailDisplayItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/PendingMailsQuery": {
+      "post": {
+        "tags": [
+          "PendingMails"
+        ],
+        "operationId": "PendingMails_Query",
+        "requestBody": {
+          "x-name": "PendingMailsQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PendingMailsQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PendingMailListItem"
                   }
                 }
               }
@@ -2929,108 +2929,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DeleteMailTemplateCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/LanguagesQuery": {
-      "post": {
-        "tags": [
-          "Languages"
-        ],
-        "operationId": "Languages_Query",
-        "requestBody": {
-          "x-name": "LanguagesQuery",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LanguagesQuery"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/LanguageItem"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/MailTypesQuery": {
-      "post": {
-        "tags": [
-          "MailTypes"
-        ],
-        "operationId": "MailTypes_Query",
-        "requestBody": {
-          "x-name": "MailTypesQuery",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MailTypesQuery"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MailTypeItem"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SaveMailTemplateCommand": {
-      "post": {
-        "tags": [
-          "SaveMailTemplate"
-        ],
-        "operationId": "SaveMailTemplate_Command",
-        "requestBody": {
-          "x-name": "SaveMailTemplateCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SaveMailTemplateCommand"
               }
             }
           },
@@ -7645,2456 +7543,6 @@
           }
         }
       },
-      "Mail": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "eventId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "event": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Event"
-                  }
-                ]
-              },
-              "mailTemplateId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "mailTemplate": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/MailTemplate"
-                  }
-                ]
-              },
-              "events": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/MailEvent"
-                }
-              },
-              "registrations": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/MailToRegistration"
-                }
-              },
-              "senderMail": {
-                "type": "string",
-                "nullable": true
-              },
-              "senderName": {
-                "type": "string",
-                "nullable": true
-              },
-              "subject": {
-                "type": "string",
-                "nullable": true
-              },
-              "recipients": {
-                "type": "string",
-                "nullable": true
-              },
-              "contentHtml": {
-                "type": "string",
-                "nullable": true
-              },
-              "contentPlainText": {
-                "type": "string",
-                "nullable": true
-              },
-              "created": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "sendGridMessageId": {
-                "type": "string",
-                "nullable": true
-              },
-              "sent": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": true
-              },
-              "state": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/MailState"
-                  }
-                ]
-              },
-              "type": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/MailType"
-                  }
-                ]
-              },
-              "withhold": {
-                "type": "boolean"
-              },
-              "discarded": {
-                "type": "boolean"
-              },
-              "bulkMailKey": {
-                "type": "string",
-                "nullable": true
-              },
-              "dataTypeFullName": {
-                "type": "string",
-                "nullable": true
-              },
-              "dataJson": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "Event": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "predecessorEventId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "predecessorEvent": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Event"
-                  }
-                ]
-              },
-              "accessRequests": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/AccessToEventRequest"
-                }
-              },
-              "configurations": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/EventConfiguration"
-                }
-              },
-              "registrables": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Registrable"
-                }
-              },
-              "registrations": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Registration"
-                }
-              },
-              "users": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/UserInEvent"
-                }
-              },
-              "name": {
-                "type": "string"
-              },
-              "state": {
-                "$ref": "#/components/schemas/State"
-              },
-              "acronym": {
-                "type": "string"
-              },
-              "currency": {
-                "type": "string",
-                "nullable": true
-              },
-              "accountIban": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "AccessToEventRequest": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "eventId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "event": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Event"
-                  }
-                ]
-              },
-              "userId_Requestor": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "user_Requestor": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/User"
-                  }
-                ]
-              },
-              "userId_Responder": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "user_Responder": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/User"
-                  }
-                ]
-              },
-              "identifier": {
-                "type": "string",
-                "nullable": true
-              },
-              "identityProvider": {
-                "$ref": "#/components/schemas/IdentityProvider"
-              },
-              "firstName": {
-                "type": "string",
-                "nullable": true
-              },
-              "lastName": {
-                "type": "string",
-                "nullable": true
-              },
-              "email": {
-                "type": "string",
-                "nullable": true
-              },
-              "requestReceived": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "requestText": {
-                "type": "string",
-                "nullable": true
-              },
-              "response": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/RequestResponse"
-                  }
-                ]
-              },
-              "responseText": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "User": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "events": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/UserInEvent"
-                }
-              },
-              "identityProvider": {
-                "$ref": "#/components/schemas/IdentityProvider"
-              },
-              "identityProviderUserIdentifier": {
-                "type": "string",
-                "nullable": true
-              },
-              "email": {
-                "type": "string",
-                "nullable": true
-              },
-              "firstName": {
-                "type": "string",
-                "nullable": true
-              },
-              "lastName": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "UserInEvent": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "event": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Event"
-                  }
-                ]
-              },
-              "eventId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "user": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/User"
-                  }
-                ]
-              },
-              "userId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "role": {
-                "$ref": "#/components/schemas/UserInEventRole"
-              }
-            }
-          }
-        ]
-      },
-      "UserInEventRole": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "None",
-          "Reader",
-          "Writer",
-          "Admin"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3
-        ]
-      },
-      "Entity": {
-        "type": "object",
-        "x-abstract": true,
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "rowVersion": {
-            "type": "string",
-            "format": "byte"
-          }
-        }
-      },
-      "IdentityProvider": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Google",
-          "Microsoft"
-        ],
-        "enum": [
-          1,
-          2
-        ]
-      },
-      "RequestResponse": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Granted",
-          "Denied"
-        ],
-        "enum": [
-          1,
-          2
-        ]
-      },
-      "EventConfiguration": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "event": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Event"
-                  }
-                ]
-              },
-              "eventId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "type": {
-                "type": "string"
-              },
-              "valueJson": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "Registrable": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "eventId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "event": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Event"
-                  }
-                ]
-              },
-              "compositions": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/RegistrableComposition"
-                }
-              },
-              "questionOptionMappings": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/QuestionOptionMapping"
-                }
-              },
-              "reductions": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Reduction"
-                }
-              },
-              "spots": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Seat"
-                }
-              },
-              "name": {
-                "type": "string"
-              },
-              "nameSecondary": {
-                "type": "string",
-                "nullable": true
-              },
-              "hasWaitingList": {
-                "type": "boolean"
-              },
-              "automaticPromotionFromWaitingList": {
-                "type": "boolean"
-              },
-              "isCore": {
-                "type": "boolean"
-              },
-              "maximumAllowedImbalance": {
-                "type": "integer",
-                "format": "int32",
-                "nullable": true
-              },
-              "maximumDoubleSeats": {
-                "type": "integer",
-                "format": "int32",
-                "nullable": true
-              },
-              "maximumSingleSeats": {
-                "type": "integer",
-                "format": "int32",
-                "nullable": true
-              },
-              "price": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "reducedPrice": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "showInMailListOrder": {
-                "type": "integer",
-                "format": "int32",
-                "nullable": true
-              },
-              "checkinListColumn": {
-                "type": "string",
-                "nullable": true
-              },
-              "tag": {
-                "type": "string",
-                "nullable": true
-              },
-              "type": {
-                "$ref": "#/components/schemas/RegistrableType"
-              }
-            }
-          }
-        ]
-      },
-      "RegistrableComposition": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "registrableId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registrable": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registrable"
-                  }
-                ]
-              },
-              "registrableId_Contains": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registrable_Contains": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registrable"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "QuestionOptionMapping": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "questionOptionId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "questionOption": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/QuestionOption"
-                  }
-                ]
-              },
-              "registrableId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "registrable": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registrable"
-                  }
-                ]
-              },
-              "type": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/MappingType"
-                  }
-                ]
-              },
-              "language": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "QuestionOption": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "questionId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "question": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Question"
-                  }
-                ]
-              },
-              "mappings": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/QuestionOptionMapping"
-                }
-              },
-              "answer": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "Question": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "registrationFormId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registrationForm": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/RegistrationForm"
-                  }
-                ]
-              },
-              "questionOptions": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/QuestionOption"
-                }
-              },
-              "externalId": {
-                "type": "integer",
-                "format": "int32"
-              },
-              "index": {
-                "type": "integer",
-                "format": "int32"
-              },
-              "type": {
-                "$ref": "#/components/schemas/QuestionType"
-              },
-              "title": {
-                "type": "string"
-              },
-              "section": {
-                "type": "string",
-                "nullable": true
-              },
-              "mapping": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/QuestionMappingType"
-                  }
-                ]
-              },
-              "templateKey": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "RegistrationForm": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "eventId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "event": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Event"
-                  }
-                ]
-              },
-              "questions": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Question"
-                }
-              },
-              "formPaths": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/FormPath"
-                }
-              },
-              "externalIdentifier": {
-                "type": "string"
-              },
-              "state": {
-                "$ref": "#/components/schemas/State"
-              },
-              "title": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "FormPath": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "registrationFormId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registrationForm": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/RegistrationForm"
-                  }
-                ]
-              },
-              "description": {
-                "type": "string",
-                "nullable": true
-              },
-              "type": {
-                "$ref": "#/components/schemas/FormPathType"
-              },
-              "configurationJson": {
-                "type": "string"
-              },
-              "singleConfiguration": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/SingleRegistrationProcessConfiguration"
-                  }
-                ]
-              },
-              "partnerConfiguration": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/PartnerRegistrationProcessConfiguration"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "SingleRegistrationProcessConfiguration": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "registrationFormId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "type": {
-            "$ref": "#/components/schemas/FormPathType"
-          },
-          "languageMappings": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/LanguageMapping"
-            }
-          },
-          "questionId_Email": {
-            "type": "string",
-            "format": "guid"
-          },
-          "questionId_FirstName": {
-            "type": "string",
-            "format": "guid"
-          },
-          "questionId_LastName": {
-            "type": "string",
-            "format": "guid"
-          },
-          "questionId_Phone": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "questionId_Remarks": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "questionOptionId_Follower": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "questionOptionId_Leader": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "questionOptionId_Reduction": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "questionOptionId_Trigger": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "mappingsToRegistrables": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/IQuestionMapping"
-            }
-          }
-        }
-      },
-      "LanguageMapping": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "questionOptionId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "language": {
-            "type": "string"
-          }
-        }
-      },
-      "IQuestionMapping": {
-        "type": "object",
-        "x-abstract": true,
-        "additionalProperties": false,
-        "properties": {
-          "questionOptionId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "registrableId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "PartnerRegistrationProcessConfiguration": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "registrationFormId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "type": {
-            "$ref": "#/components/schemas/FormPathType"
-          },
-          "languageMappings": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/LanguageMapping"
-            }
-          },
-          "questionId_Follower_Email": {
-            "type": "string",
-            "format": "guid"
-          },
-          "questionId_Follower_FirstName": {
-            "type": "string",
-            "format": "guid"
-          },
-          "questionId_Follower_LastName": {
-            "type": "string",
-            "format": "guid"
-          },
-          "questionId_Follower_Phone": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "questionId_Leader_Email": {
-            "type": "string",
-            "format": "guid"
-          },
-          "questionId_Leader_FirstName": {
-            "type": "string",
-            "format": "guid"
-          },
-          "questionId_Leader_LastName": {
-            "type": "string",
-            "format": "guid"
-          },
-          "questionId_Leader_Phone": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "questionOptionId_Trigger": {
-            "type": "string",
-            "format": "guid"
-          },
-          "roleSpecificMappings": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/ValueTupleOfGuidAndRoleAndGuid"
-            }
-          }
-        }
-      },
-      "ValueTupleOfGuidAndRoleAndGuid": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "item1": {
-            "type": "string",
-            "format": "guid"
-          },
-          "item2": {
-            "$ref": "#/components/schemas/Role"
-          },
-          "item3": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "Role": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Leader",
-          "Follower"
-        ],
-        "enum": [
-          1,
-          2
-        ]
-      },
-      "Reduction": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "registrableId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registrable": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registrable"
-                  }
-                ]
-              },
-              "registrableId1_ReductionActivatedIfCombinedWith": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "registrable1_ReductionActivatedIfCombinedWith": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registrable"
-                  }
-                ]
-              },
-              "registrableId2_ReductionActivatedIfCombinedWith": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "registrable2_ReductionActivatedIfCombinedWith": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registrable"
-                  }
-                ]
-              },
-              "amount": {
-                "type": "number",
-                "format": "decimal"
-              },
-              "onlyForRole": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Role"
-                  }
-                ]
-              },
-              "activatedByReduction": {
-                "type": "boolean"
-              }
-            }
-          }
-        ]
-      },
-      "Seat": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "registrableId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registrable": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registrable"
-                  }
-                ]
-              },
-              "registrationId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "registration": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registration"
-                  }
-                ]
-              },
-              "registrationId_Follower": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "registration_Follower": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registration"
-                  }
-                ]
-              },
-              "firstPartnerJoined": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "isCancelled": {
-                "type": "boolean"
-              },
-              "isPartnerSpot": {
-                "type": "boolean"
-              },
-              "isWaitingList": {
-                "type": "boolean"
-              },
-              "partnerEmail": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "Registration": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "eventId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "event": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Event"
-                  }
-                ]
-              },
-              "registrationFormId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registrationForm": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/RegistrationForm"
-                  }
-                ]
-              },
-              "registrationId_Partner": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "registration_Partner": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registration"
-                  }
-                ]
-              },
-              "mails": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/MailToRegistration"
-                }
-              },
-              "cancellations": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/RegistrationCancellation"
-                }
-              },
-              "importedMails": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/ImportedMailToRegistration"
-                }
-              },
-              "individualReductions": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/IndividualReduction"
-                }
-              },
-              "paymentAssignments": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/PaymentAssignment"
-                }
-              },
-              "responses": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Response"
-                }
-              },
-              "seats_AsFollower": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Seat"
-                }
-              },
-              "seats_AsLeader": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Seat"
-                }
-              },
-              "sms": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Sms"
-                }
-              },
-              "admittedAt": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": true
-              },
-              "externalIdentifier": {
-                "type": "string"
-              },
-              "externalTimestamp": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "fallbackToPartyPass": {
-                "type": "boolean",
-                "nullable": true
-              },
-              "isReduced": {
-                "type": "boolean"
-              },
-              "isWaitingList": {
-                "type": "boolean",
-                "nullable": true
-              },
-              "language": {
-                "type": "string",
-                "nullable": true
-              },
-              "originalPrice": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "partnerNormalized": {
-                "type": "string",
-                "nullable": true
-              },
-              "partnerOriginal": {
-                "type": "string",
-                "nullable": true
-              },
-              "phone": {
-                "type": "string",
-                "nullable": true
-              },
-              "phoneNormalized": {
-                "type": "string",
-                "nullable": true
-              },
-              "price": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "receivedAt": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "remarks": {
-                "type": "string",
-                "nullable": true
-              },
-              "remarksProcessed": {
-                "type": "boolean"
-              },
-              "reminderLevel": {
-                "type": "integer",
-                "format": "int32"
-              },
-              "respondentEmail": {
-                "type": "string",
-                "nullable": true
-              },
-              "respondentFirstName": {
-                "type": "string",
-                "nullable": true
-              },
-              "respondentLastName": {
-                "type": "string",
-                "nullable": true
-              },
-              "soldOutMessage": {
-                "type": "string",
-                "nullable": true
-              },
-              "state": {
-                "$ref": "#/components/schemas/RegistrationState"
-              },
-              "willPayAtCheckin": {
-                "type": "boolean"
-              }
-            }
-          }
-        ]
-      },
-      "MailToRegistration": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "mailId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "mail": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Mail"
-                  }
-                ]
-              },
-              "registrationId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registration": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registration"
-                  }
-                ]
-              },
-              "state": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/MailState"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "MailState": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Unknown",
-          "Processed",
-          "Dropped",
-          "Delivered",
-          "Deferred",
-          "Bounce",
-          "Open",
-          "Click",
-          "SpamReport",
-          "Unsubscribe",
-          "GroupUnsubscribe",
-          "GroupResubscribe"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3,
-          4,
-          5,
-          6,
-          7,
-          8,
-          9,
-          10,
-          11
-        ]
-      },
-      "RegistrationCancellation": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "registrationId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registration": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registration"
-                  }
-                ]
-              },
-              "created": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "reason": {
-                "type": "string",
-                "nullable": true
-              },
-              "refund": {
-                "type": "number",
-                "format": "decimal"
-              },
-              "refundPercentage": {
-                "type": "number",
-                "format": "decimal"
-              },
-              "received": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "ImportedMailToRegistration": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "importedMailId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "mail": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/ImportedMail"
-                  }
-                ]
-              },
-              "registrationId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registration": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registration"
-                  }
-                ]
-              }
-            }
-          }
-        ]
-      },
-      "ImportedMail": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "eventId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "event": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Event"
-                  }
-                ]
-              },
-              "registrations": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/ImportedMailToRegistration"
-                }
-              },
-              "senderMail": {
-                "type": "string",
-                "nullable": true
-              },
-              "senderName": {
-                "type": "string",
-                "nullable": true
-              },
-              "subject": {
-                "type": "string",
-                "nullable": true
-              },
-              "recipients": {
-                "type": "string",
-                "nullable": true
-              },
-              "contentHtml": {
-                "type": "string",
-                "nullable": true
-              },
-              "contentPlainText": {
-                "type": "string",
-                "nullable": true
-              },
-              "date": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "imported": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "messageIdentifier": {
-                "type": "string",
-                "nullable": true
-              },
-              "sendGridMessageId": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "IndividualReduction": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "registrationId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registration": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registration"
-                  }
-                ]
-              },
-              "userId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "user": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/User"
-                  }
-                ]
-              },
-              "amount": {
-                "type": "number",
-                "format": "decimal"
-              },
-              "reason": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "PaymentAssignment": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "registrationId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "registration": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registration"
-                  }
-                ]
-              },
-              "incomingPaymentId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "incomingPayment": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/IncomingPayment"
-                  }
-                ]
-              },
-              "outgoingPaymentId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "outgoingPayment": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/OutgoingPayment"
-                  }
-                ]
-              },
-              "paymentAssignmentId_Counter": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "paymentAssignment_Counter": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/PaymentAssignment"
-                  }
-                ]
-              },
-              "payoutRequestId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "payoutRequest": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/PayoutRequest"
-                  }
-                ]
-              },
-              "amount": {
-                "type": "number",
-                "format": "decimal"
-              },
-              "created": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "IncomingPayment": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "payment": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Payment"
-                  }
-                ]
-              },
-              "debitorIban": {
-                "type": "string",
-                "nullable": true
-              },
-              "debitorName": {
-                "type": "string",
-                "nullable": true
-              },
-              "paymentSlipId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "paymentSlip": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/PaymentSlip"
-                  }
-                ]
-              },
-              "assignments": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/PaymentAssignment"
-                }
-              }
-            }
-          }
-        ]
-      },
-      "Payment": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "paymentsFileId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "paymentsFile": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/PaymentsFile"
-                  }
-                ]
-              },
-              "currency": {
-                "type": "string",
-                "nullable": true
-              },
-              "amount": {
-                "type": "number",
-                "format": "decimal"
-              },
-              "charges": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "bookingDate": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "info": {
-                "type": "string",
-                "nullable": true
-              },
-              "message": {
-                "type": "string",
-                "nullable": true
-              },
-              "instructionIdentification": {
-                "type": "string",
-                "nullable": true
-              },
-              "rawXml": {
-                "type": "string",
-                "nullable": true
-              },
-              "recognizedEmail": {
-                "type": "string",
-                "nullable": true
-              },
-              "reference": {
-                "type": "string",
-                "nullable": true
-              },
-              "repaid": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "settled": {
-                "type": "boolean"
-              },
-              "ignore": {
-                "type": "boolean"
-              },
-              "incoming": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/IncomingPayment"
-                  }
-                ]
-              },
-              "outgoing": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/OutgoingPayment"
-                  }
-                ]
-              },
-              "type": {
-                "$ref": "#/components/schemas/PaymentType"
-              }
-            }
-          }
-        ]
-      },
-      "PaymentsFile": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "eventId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "event": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Event"
-                  }
-                ]
-              },
-              "accountIban": {
-                "type": "string",
-                "nullable": true
-              },
-              "fileId": {
-                "type": "string",
-                "nullable": true
-              },
-              "balance": {
-                "type": "number",
-                "format": "decimal",
-                "nullable": true
-              },
-              "bookingsFrom": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": true
-              },
-              "bookingsTo": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": true
-              },
-              "currency": {
-                "type": "string",
-                "nullable": true
-              },
-              "content": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "OutgoingPayment": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "payment": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Payment"
-                  }
-                ]
-              },
-              "creditorName": {
-                "type": "string",
-                "nullable": true
-              },
-              "creditorIban": {
-                "type": "string",
-                "nullable": true
-              },
-              "assignments": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/PaymentAssignment"
-                }
-              }
-            }
-          }
-        ]
-      },
-      "PaymentSlip": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "eventId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "event": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Event"
-                  }
-                ]
-              },
-              "contentType": {
-                "type": "string",
-                "nullable": true
-              },
-              "fileBinary": {
-                "type": "string",
-                "format": "byte",
-                "nullable": true
-              },
-              "filename": {
-                "type": "string",
-                "nullable": true
-              },
-              "reference": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "PayoutRequest": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "registrationId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registration": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registration"
-                  }
-                ]
-              },
-              "assignments": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/PaymentAssignment"
-                }
-              },
-              "amount": {
-                "type": "number",
-                "format": "decimal"
-              },
-              "reason": {
-                "type": "string",
-                "nullable": true
-              },
-              "created": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "state": {
-                "$ref": "#/components/schemas/PayoutState"
-              }
-            }
-          }
-        ]
-      },
-      "Response": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "questionId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "question": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Question"
-                  }
-                ]
-              },
-              "registrationId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "registration": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registration"
-                  }
-                ]
-              },
-              "questionOptionId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "questionOption": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/QuestionOption"
-                  }
-                ]
-              },
-              "responseString": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "Sms": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "registrationId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "registration": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registration"
-                  }
-                ]
-              },
-              "accountSid": {
-                "type": "string",
-                "nullable": true
-              },
-              "body": {
-                "type": "string",
-                "nullable": true
-              },
-              "error": {
-                "type": "string",
-                "nullable": true
-              },
-              "errorCode": {
-                "type": "integer",
-                "format": "int32",
-                "nullable": true
-              },
-              "from": {
-                "type": "string",
-                "nullable": true
-              },
-              "price": {
-                "type": "string",
-                "nullable": true
-              },
-              "rawData": {
-                "type": "string",
-                "nullable": true
-              },
-              "received": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": true
-              },
-              "sent": {
-                "type": "string",
-                "format": "date-time",
-                "nullable": true
-              },
-              "smsSid": {
-                "type": "string",
-                "nullable": true
-              },
-              "smsStatus": {
-                "type": "string",
-                "nullable": true
-              },
-              "to": {
-                "type": "string",
-                "nullable": true
-              },
-              "type": {
-                "$ref": "#/components/schemas/SmsType"
-              }
-            }
-          }
-        ]
-      },
-      "SmsType": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Reminder"
-        ],
-        "enum": [
-          1
-        ]
-      },
-      "MailTemplate": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "eventId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "event": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Event"
-                  }
-                ]
-              },
-              "registrableId": {
-                "type": "string",
-                "format": "guid",
-                "nullable": true
-              },
-              "registrable": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Registrable"
-                  }
-                ]
-              },
-              "mails": {
-                "type": "array",
-                "nullable": true,
-                "items": {
-                  "$ref": "#/components/schemas/Mail"
-                }
-              },
-              "bulkMailKey": {
-                "type": "string",
-                "nullable": true
-              },
-              "contentType": {
-                "$ref": "#/components/schemas/MailContentType"
-              },
-              "language": {
-                "type": "string",
-                "nullable": true
-              },
-              "mailingAudience": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/MailingAudience"
-                  }
-                ]
-              },
-              "senderMail": {
-                "type": "string",
-                "nullable": true
-              },
-              "senderName": {
-                "type": "string",
-                "nullable": true
-              },
-              "subject": {
-                "type": "string",
-                "nullable": true
-              },
-              "template": {
-                "type": "string",
-                "nullable": true
-              },
-              "type": {
-                "$ref": "#/components/schemas/MailType"
-              },
-              "isDeleted": {
-                "type": "boolean"
-              },
-              "releaseImmediately": {
-                "type": "boolean"
-              }
-            }
-          }
-        ]
-      },
-      "MailContentType": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Plaintext",
-          "Html"
-        ],
-        "enum": [
-          1,
-          2
-        ]
-      },
-      "MailingAudience": {
-        "type": "integer",
-        "description": "",
-        "x-enumFlags": true,
-        "x-enumNames": [
-          "Paid",
-          "Unpaid",
-          "WaitingList",
-          "PredecessorEvent",
-          "PrePredecessorEvent"
-        ],
-        "enum": [
-          1,
-          2,
-          4,
-          8,
-          16
-        ]
-      },
-      "MailType": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "SingleRegistrationAccepted",
-          "SingleRegistrationOnWaitingList",
-          "RegistrationReceived",
-          "PartnerRegistrationFirstPartnerAccepted",
-          "PartnerRegistrationMatchedAndAccepted",
-          "PartnerRegistrationFirstPartnerOnWaitingList",
-          "PartnerRegistrationMatchedOnWaitingList",
-          "SoldOut",
-          "MoneyOwed",
-          "TooMuchPaid",
-          "RegistrationCancelled",
-          "SingleRegistrationFullyPaid",
-          "PartnerRegistrationFirstPaid",
-          "PartnerRegistrationFullyPaid",
-          "SingleRegistrationFirstReminder",
-          "SingleRegistrationSecondReminder",
-          "PartnerRegistrationFirstReminder",
-          "PartnerRegistrationSecondReminder",
-          "OptionsForRegistrationsOnWaitingList"
-        ],
-        "enum": [
-          1,
-          2,
-          3,
-          11,
-          12,
-          13,
-          14,
-          21,
-          22,
-          23,
-          31,
-          41,
-          42,
-          43,
-          51,
-          52,
-          61,
-          62,
-          101
-        ]
-      },
-      "MailEvent": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "mail": {
-                "nullable": true,
-                "oneOf": [
-                  {
-                    "$ref": "#/components/schemas/Mail"
-                  }
-                ]
-              },
-              "mailId": {
-                "type": "string",
-                "format": "guid"
-              },
-              "created": {
-                "type": "string",
-                "format": "date-time"
-              },
-              "eMail": {
-                "type": "string",
-                "nullable": true
-              },
-              "externalIdentifier": {
-                "type": "string",
-                "nullable": true
-              },
-              "rawEvent": {
-                "type": "string",
-                "nullable": true
-              },
-              "state": {
-                "$ref": "#/components/schemas/MailState"
-              }
-            }
-          }
-        ]
-      },
-      "GetPendingMailsQuery": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
       "MailDisplayItem": {
         "type": "object",
         "additionalProperties": false,
@@ -10160,6 +7608,38 @@
           }
         }
       },
+      "MailState": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Unknown",
+          "Processed",
+          "Dropped",
+          "Delivered",
+          "Deferred",
+          "Bounce",
+          "Open",
+          "Click",
+          "SpamReport",
+          "Unsubscribe",
+          "GroupUnsubscribe",
+          "GroupResubscribe"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ]
+      },
       "MailsOfRegistrationQuery": {
         "type": "object",
         "additionalProperties": false,
@@ -10169,6 +7649,42 @@
             "format": "guid"
           },
           "registrationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "PendingMailListItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "recipients": {
+            "type": "string",
+            "nullable": true
+          },
+          "subject": {
+            "type": "string",
+            "nullable": true
+          },
+          "contentStart": {
+            "type": "string",
+            "nullable": true
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PendingMailsQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
             "type": "string",
             "format": "guid"
           }
@@ -10226,7 +7742,8 @@
           },
           "registrationId": {
             "type": "string",
-            "format": "guid"
+            "format": "guid",
+            "nullable": true
           }
         }
       },
@@ -10250,6 +7767,52 @@
             "nullable": true
           }
         }
+      },
+      "MailType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "SingleRegistrationAccepted",
+          "SingleRegistrationOnWaitingList",
+          "RegistrationReceived",
+          "PartnerRegistrationFirstPartnerAccepted",
+          "PartnerRegistrationMatchedAndAccepted",
+          "PartnerRegistrationFirstPartnerOnWaitingList",
+          "PartnerRegistrationMatchedOnWaitingList",
+          "SoldOut",
+          "MoneyOwed",
+          "TooMuchPaid",
+          "RegistrationCancelled",
+          "SingleRegistrationFullyPaid",
+          "PartnerRegistrationFirstPaid",
+          "PartnerRegistrationFullyPaid",
+          "SingleRegistrationFirstReminder",
+          "SingleRegistrationSecondReminder",
+          "PartnerRegistrationFirstReminder",
+          "PartnerRegistrationSecondReminder",
+          "OptionsForRegistrationsOnWaitingList"
+        ],
+        "enum": [
+          1,
+          2,
+          3,
+          11,
+          12,
+          13,
+          14,
+          21,
+          22,
+          23,
+          31,
+          41,
+          42,
+          43,
+          51,
+          52,
+          61,
+          62,
+          101
+        ]
       },
       "AutoMailTemplateQuery": {
         "type": "object",
@@ -10401,74 +7964,6 @@
           }
         }
       },
-      "LanguageItem": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "acronym": {
-            "type": "string"
-          },
-          "userText": {
-            "type": "string"
-          }
-        }
-      },
-      "LanguagesQuery": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "MailTypeItem": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "bulkMailKey": {
-            "type": "string",
-            "nullable": true
-          },
-          "type": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/MailType"
-              }
-            ]
-          },
-          "userText": {
-            "type": "string"
-          }
-        }
-      },
-      "MailTypesQuery": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "SaveMailTemplateCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "templateId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          }
-        }
-      },
       "UpdateAutoMailConfigurationCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -10558,6 +8053,27 @@
             "type": "string"
           },
           "name": {
+            "type": "string"
+          }
+        }
+      },
+      "MailTypeItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "bulkMailKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MailType"
+              }
+            ]
+          },
+          "userText": {
             "type": "string"
           }
         }
@@ -10798,6 +8314,25 @@
             "type": "string"
           }
         }
+      },
+      "MailingAudience": {
+        "type": "integer",
+        "description": "",
+        "x-enumFlags": true,
+        "x-enumNames": [
+          "Paid",
+          "Unpaid",
+          "WaitingList",
+          "PredecessorEvent",
+          "PrePredecessorEvent"
+        ],
+        "enum": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ]
       },
       "PossibleAudiencesQuery": {
         "type": "object",
@@ -11203,6 +8738,22 @@
           }
         }
       },
+      "UserInEventRole": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "None",
+          "Reader",
+          "Writer",
+          "Admin"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
       "UserInEventDisplayItem": {
         "type": "object",
         "additionalProperties": false,
@@ -11351,6 +8902,18 @@
             "$ref": "#/components/schemas/UserInEventRole"
           }
         }
+      },
+      "RequestResponse": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Granted",
+          "Denied"
+        ],
+        "enum": [
+          1,
+          2
+        ]
       },
       "RightsOfUserInEventQuery": {
         "type": "object",

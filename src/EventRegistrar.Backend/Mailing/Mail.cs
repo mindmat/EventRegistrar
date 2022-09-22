@@ -24,9 +24,9 @@ public class Mail : Entity
     public string? ContentHtml { get; set; }
     public string? ContentPlainText { get; set; }
 
-    public DateTime Created { get; set; }
+    public DateTimeOffset Created { get; set; }
     public string? SendGridMessageId { get; set; }
-    public DateTime? Sent { get; set; }
+    public DateTimeOffset? Sent { get; set; }
     public MailState? State { get; set; }
     public MailType? Type { get; set; }
 

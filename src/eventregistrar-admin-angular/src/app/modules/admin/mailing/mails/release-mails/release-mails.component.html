@@ -1,0 +1,85 @@
+<div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+
+    <!-- Mails list -->
+    <ng-container *ngIf="pendingMails && pendingMails.length > 0; else noMails">
+        <div class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-90 lg:max-w-90 border-r z-10">
+
+            <!-- Header -->
+            <div class="relative flex flex-0 items-center justify-between h-16 px-4 border-b bg-gray-50 dark:bg-transparent">
+
+                <!-- Loading bar -->
+                <mat-progress-bar class="absolute inset-x-0 bottom-0 h-0.5" *ngIf="mailsLoading" [mode]="'indeterminate'"></mat-progress-bar>
+            </div>
+
+            <!-- Mail list -->
+            <div class="overflow-y-auto" #mailList>
+
+                <!-- Item loop -->
+                <ng-container *ngFor="let pendingMail of pendingMails; let i = index; trackBy: trackByFn">
+
+                    <!-- Item -->
+                    <a class="relative flex border-t first:border-0 hover:bg-hover" [routerLink]="[pendingMail.id]" (click)="onMailSelected(mail)">
+
+                        <!-- Item content -->
+                        <div class="flex flex-col items-start justify-start w-full py-6 pr-4 pl-5 border-l-4 border-transparent" [ngClass]="{
+                                        'bg-primary-50 dark:bg-black dark:bg-opacity-5': selectedMail && selectedMail.id === pendingMail.id}">
+
+                            <!-- Info -->
+                            <div class="flex items-center w-full">
+                                <!-- Sender name -->
+                                <div class="mr-2 font-semibold truncate">
+                                    {{pendingMail.recipients}}
+                                    <!-- {{pendingMail.from.contact.split('<')[0].trim()}}  -->
+                                </div>
+                                <!-- Important indicator -->
+                                <!-- <mat-icon class="mr-3 icon-size-4 text-red-500 dark:text-red-600" *ngIf="mail.important" [svgIcon]="'heroicons_solid:exclamation-circle'"></mat-icon> -->
+                                <!-- Date -->
+                                <div class="ml-auto text-md text-right whitespace-nowrap text-hint" matTooltip="{{ pendingMail.created | date: 'dd.MM.yy HH:mm:ss' }}">
+                                    {{pendingMail.created | ago}}
+                                </div>
+                            </div>
+
+                            <!-- Subject -->
+                            <div class="flex items-center w-full mt-1">
+                                <span class="leading-4 truncate">{{pendingMail.subject}}</span>
+                                <!-- Indicators -->
+                                <!-- <div class="flex ml-auto pl-2" *ngIf="(mail.attachments && mail.attachments.length > 0) || mail.starred">
+                                        <mat-icon class="flex justify-center icon-size-4" *ngIf="mail.attachments && mail.attachments.length > 0" [svgIcon]="'heroicons_solid:paper-clip'"></mat-icon>
+                                        <mat-icon class="flex justify-center icon-size-4 ml-1 text-orange-500 dark:text-orange-400" *ngIf="mail.starred" [svgIcon]="'heroicons_solid:star'"></mat-icon>
+                                    </div> -->
+                            </div>
+
+                            <!-- Excerpt -->
+                            <div class="mt-2 leading-normal line-clamp-2 text-secondary">
+                                {{pendingMail.contentStart}}
+                            </div>
+
+                        </div>
+
+                    </a>
+
+                </ng-container>
+
+            </div>
+
+        </div>
+
+    </ng-container>
+
+    <!-- No mails template -->
+    <ng-template #noMails>
+        <div class="z-100 absolute inset-0 flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
+            <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:mail'"></mat-icon>
+            <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">There are no e-mails</div>
+        </div>
+    </ng-template>
+
+    <!-- Mail details -->
+    <ng-container *ngIf="pendingMails && pendingMails.length > 0">
+        <div class="flex-auto" [ngClass]="{'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedMail && selectedMail.id,
+                        'hidden lg:flex': !selectedMail || !selectedMail.id}">
+            <router-outlet></router-outlet>
+        </div>
+    </ng-container>
+
+</div>

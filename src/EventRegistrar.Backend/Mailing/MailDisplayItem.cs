@@ -3,7 +3,7 @@
 public class MailDisplayItem
 {
     public string ContentHtml { get; set; }
-    public DateTime Created { get; set; }
+    public DateTimeOffset Created { get; set; }
     public IEnumerable<MailEventDisplayItem> Events { get; set; }
     public Guid Id { get; set; }
     public string Recipients { get; set; }
