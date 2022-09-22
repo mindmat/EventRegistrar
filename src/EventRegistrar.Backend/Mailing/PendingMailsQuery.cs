@@ -1,6 +1,9 @@
 ﻿using System.Text;
 using System.Web;
 
+using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Mailing.Send;
+
 using HtmlAgilityPack;
 
 namespace EventRegistrar.Backend.Mailing;
@@ -13,7 +16,8 @@ public class PendingMailsQuery : IRequest<IEnumerable<PendingMailListItem>>, IEv
 public class PendingMailListItem
 {
     public Guid Id { get; set; }
-    public string? Recipients { get; set; }
+    public string? RecipientsEmails { get; set; }
+    public string? RecipientsNames { get; set; }
     public string? Subject { get; set; }
     public string? ContentStart { get; set; }
     public DateTimeOffset Created { get; set; }
@@ -38,7 +42,9 @@ public class PendingMailsQueryHandler : IRequestHandler<PendingMailsQuery, IEnum
                                 .Select(mail => new PendingMailListItem
                                                 {
                                                     Id = mail.Id,
-                                                    Recipients = mail.Recipients,
+                                                    RecipientsEmails = mail.Recipients,
+                                                    RecipientsNames = mail.Registrations!.Select(reg => $"{reg.Registration!.RespondentFirstName} {reg.Registration.RespondentLastName}")
+                                                                          .StringJoin(", "),
                                                     Subject = mail.Subject,
                                                     Created = mail.Created,
                                                     ContentStart = GetContentStart(mail.ContentHtml)

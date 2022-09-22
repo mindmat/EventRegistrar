@@ -7,6 +7,15 @@
             <!-- Header -->
             <div class="relative flex flex-0 items-center justify-between h-16 px-4 border-b bg-gray-50 dark:bg-transparent">
 
+                <div class="flex items-center">
+                    <!-- Sidebar toggle button -->
+                    <!-- <button mat-icon-button (click)="mailboxComponent.drawer.toggle()">
+                        <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
+                    </button> -->
+                    <!-- Category name -->
+                    <div class="ml-2 font-semibold uppercase">{{ 'PendingMails' | translate }}</div>
+                </div>
+
                 <!-- Loading bar -->
                 <mat-progress-bar class="absolute inset-x-0 bottom-0 h-0.5" *ngIf="mailsLoading" [mode]="'indeterminate'"></mat-progress-bar>
             </div>
@@ -27,12 +36,13 @@
                             <!-- Info -->
                             <div class="flex items-center w-full">
                                 <!-- Sender name -->
-                                <div class="mr-2 font-semibold truncate">
-                                    {{pendingMail.recipients}}
+                                <div class="mr-2 font-semibold truncate" matTooltip="{{ pendingMail.recipientsEmails }}">
+                                    {{ pendingMail.recipientsNames }}
                                     <!-- {{pendingMail.from.contact.split('<')[0].trim()}}  -->
                                 </div>
                                 <!-- Important indicator -->
-                                <!-- <mat-icon class="mr-3 icon-size-4 text-red-500 dark:text-red-600" *ngIf="mail.important" [svgIcon]="'heroicons_solid:exclamation-circle'"></mat-icon> -->
+                                <!-- <mat-icon class=" mr-3 icon-size-4 text-red-500 dark:text-red-600" *ngIf="mail.important" [svgIcon]="'heroicons_solid:exclamation-circle'">
+                                    </mat-icon> -->
                                 <!-- Date -->
                                 <div class="ml-auto text-md text-right whitespace-nowrap text-hint" matTooltip="{{ pendingMail.created | date: 'dd.MM.yy HH:mm:ss' }}">
                                     {{pendingMail.created | ago}}

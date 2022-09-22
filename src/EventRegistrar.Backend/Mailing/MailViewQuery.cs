@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Mailing.Send;
+﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Mailing.Send;
 
 namespace EventRegistrar.Backend.Mailing;
 
@@ -13,7 +14,9 @@ public class MailView
     public Guid Id { get; set; }
     public string? Subject { get; set; }
     public string? Content { get; set; }
-    public string? Recipients { get; set; }
+    public string? RecipientsEmails { get; set; }
+    public string? RecipientsNames { get; set; }
+
     public EmailAddress From { get; set; } = null!;
     public DateTimeOffset Created { get; set; }
 }
@@ -38,7 +41,9 @@ public class MailViewQueryHandler : IRequestHandler<MailViewQuery, MailView>
                                                     Email = mail.SenderMail ?? "??",
                                                     Name = mail.SenderName ?? "??"
                                                 },
-                                         Recipients = mail.Recipients,
+                                         RecipientsEmails = mail.Recipients,
+                                         RecipientsNames = mail.Registrations!.Select(reg => $"{reg.Registration!.RespondentFirstName} {reg.Registration.RespondentLastName}")
+                                                               .StringJoin(", "),
                                          Subject = mail.Subject,
                                          Content = mail.ContentHtml,
                                          Created = mail.Created

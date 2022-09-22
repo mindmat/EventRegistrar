@@ -106,6 +106,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Löschen.
+        /// </summary>
+        internal static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einzahlungen.
         /// </summary>
         internal static string Deposits {
@@ -894,6 +903,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Freizugebende Mails.
+        /// </summary>
+        internal static string PendingMails {
+            get {
+                return ResourceManager.GetString("PendingMails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Phone.
         /// </summary>
         internal static string Phone {
@@ -1106,6 +1124,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string SMS {
             get {
                 return ResourceManager.GetString("SMS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to an.
+        /// </summary>
+        internal static string to {
+            get {
+                return ResourceManager.GetString("to", resourceCulture);
             }
         }
         

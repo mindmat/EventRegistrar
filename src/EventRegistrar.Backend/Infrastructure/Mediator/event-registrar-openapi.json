@@ -7702,7 +7702,11 @@
             "type": "string",
             "nullable": true
           },
-          "recipients": {
+          "recipientsEmails": {
+            "type": "string",
+            "nullable": true
+          },
+          "recipientsNames": {
             "type": "string",
             "nullable": true
           },
@@ -7749,7 +7753,7 @@
             "type": "string",
             "format": "guid"
           },
-          "recipients": {
+          "recipientsEmails": {
             "type": "string",
             "nullable": true
           },

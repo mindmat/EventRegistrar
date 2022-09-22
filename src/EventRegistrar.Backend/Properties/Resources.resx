@@ -132,6 +132,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Löschen</value>
+  </data>
   <data name="Deposits" xml:space="preserve">
     <value>Einzahlungen</value>
   </data>
@@ -393,6 +396,9 @@
   <data name="Payouts" xml:space="preserve">
     <value>Auszahlungen</value>
   </data>
+  <data name="PendingMails" xml:space="preserve">
+    <value>Freizugebende Mails</value>
+  </data>
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
   </data>
@@ -465,6 +471,9 @@
   </data>
   <data name="SMS" xml:space="preserve">
     <value>SMS</value>
+  </data>
+  <data name="to" xml:space="preserve">
+    <value>an</value>
   </data>
   <data name="Town" xml:space="preserve">
     <value>Wohnort</value>

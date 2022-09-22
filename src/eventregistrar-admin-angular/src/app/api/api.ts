@@ -7586,7 +7586,8 @@ export interface MailView {
     id?: string;
     subject?: string | null;
     content?: string | null;
-    recipients?: string | null;
+    recipientsEmails?: string | null;
+    recipientsNames?: string | null;
     from?: EmailAddress;
     created?: Date;
 }
@@ -7603,7 +7604,7 @@ export interface MailViewQuery {
 
 export interface PendingMailListItem {
     id?: string;
-    recipients?: string | null;
+    recipientsEmails?: string | null;
     subject?: string | null;
     contentStart?: string | null;
     created?: Date;

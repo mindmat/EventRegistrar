@@ -111,7 +111,7 @@
                             <!-- To -->
                             <div class="flex items-center mt-0.5 leading-5">
                                 <div>{{ 'to' | translate }}</div>
-                                <div class="ml-1 font-semibold">{{ mail.recipients }}</div>
+                                <div class="ml-1 font-semibold">{{ mail.recipientsNames }}</div>
 
                                 <!-- Info details panel button -->
                                 <button class="w-5 h-5 min-h-5 ml-1" mat-icon-button (click)="openInfoDetailsPanel()" #infoDetailsPanelOrigin>
@@ -129,7 +129,7 @@
                                         <!-- To -->
                                         <div class="flex">
                                             <div class="min-w-14 font-medium text-right">to:</div>
-                                            <div class="pl-2 whitespace-pre-wrap">{{ mail.recipients }}</div>
+                                            <div class="pl-2 whitespace-pre-wrap">{{ mail.recipientsNames }}</div>
                                         </div>
                                         <!-- Cc -->
                                         <!-- <ng-container *ngIf="mail.cc">
