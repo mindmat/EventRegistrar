@@ -6,7 +6,8 @@ import { AutoMailTemplatesService } from './auto-mail-templates.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AutoMailTemplatesResolver implements Resolve<boolean> {
+export class AutoMailTemplatesResolver implements Resolve<boolean>
+{
   constructor(private router: Router, private service: AutoMailTemplatesService)
   {
   }

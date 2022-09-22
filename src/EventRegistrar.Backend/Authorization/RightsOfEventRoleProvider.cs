@@ -101,6 +101,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(PossiblePayoutAssignmentQuery);
             yield return nameof(DomainEventsQuery);
             yield return nameof(BookingsByStateQuery);
+            yield return nameof(MailViewQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)

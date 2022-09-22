@@ -1,18 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Router, Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import
+{
+  Router, Resolve,
+  RouterStateSnapshot,
+  ActivatedRouteSnapshot
+} from '@angular/router';
 import { catchError, Observable, of, throwError } from 'rxjs';
-import { AutoMailTemplateService } from './auto-mail-template.service';
+import { MailViewService } from './mail-view.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AutoMailTemplateResolver implements Resolve<boolean>
+export class MailViewResolver implements Resolve<boolean>
 {
-  constructor(private router: Router, private service: AutoMailTemplateService) { }
+  constructor(private router: Router, private service: MailViewService) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> 
   {
-    return this.service.fetchTemplate(route.paramMap.get('id'))
+    return this.service.fetchMail(route.paramMap.get('id'))
       .pipe(
         // Error here means the requested task is not available
         catchError((error) =>
@@ -27,7 +32,7 @@ export class AutoMailTemplateResolver implements Resolve<boolean>
           this.router.navigateByUrl(parentUrl);
 
           // Throw an error
-          return throwError(error);
+          return throwError(() => error);
         })
       );
   }

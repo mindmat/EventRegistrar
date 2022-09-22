@@ -2688,6 +2688,38 @@
         }
       }
     },
+    "/api/MailViewQuery": {
+      "post": {
+        "tags": [
+          "MailView"
+        ],
+        "operationId": "MailView_Query",
+        "requestBody": {
+          "x-name": "MailViewQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MailViewQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailView"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/PendingMailsQuery": {
       "post": {
         "tags": [
@@ -7654,6 +7686,61 @@
           }
         }
       },
+      "MailView": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "subject": {
+            "type": "string",
+            "nullable": true
+          },
+          "content": {
+            "type": "string",
+            "nullable": true
+          },
+          "recipients": {
+            "type": "string",
+            "nullable": true
+          },
+          "from": {
+            "$ref": "#/components/schemas/EmailAddress"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "EmailAddress": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "MailViewQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "mailId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "PendingMailListItem": {
         "type": "object",
         "additionalProperties": false,
@@ -8042,18 +8129,6 @@
             "items": {
               "$ref": "#/components/schemas/EmailAddress"
             }
-          }
-        }
-      },
-      "EmailAddress": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "email": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
           }
         }
       },

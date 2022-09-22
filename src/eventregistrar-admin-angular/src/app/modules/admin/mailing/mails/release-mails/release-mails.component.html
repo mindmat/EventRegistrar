@@ -18,7 +18,7 @@
                 <ng-container *ngFor="let pendingMail of pendingMails; let i = index; trackBy: trackByFn">
 
                     <!-- Item -->
-                    <a class="relative flex border-t first:border-0 hover:bg-hover" [routerLink]="[pendingMail.id]" (click)="onMailSelected(mail)">
+                    <a class="relative flex border-t first:border-0 hover:bg-hover" [routerLink]="[pendingMail.id]" (click)="onMailSelected(pendingMail)">
 
                         <!-- Item content -->
                         <div class="flex flex-col items-start justify-start w-full py-6 pr-4 pl-5 border-l-4 border-transparent" [ngClass]="{

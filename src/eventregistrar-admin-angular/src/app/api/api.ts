@@ -4158,6 +4158,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    mailView_Query(mailViewQuery: MailViewQuery | undefined): Observable<MailView> {
+        let url_ = this.baseUrl + "/api/MailViewQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(mailViewQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMailView_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMailView_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<MailView>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<MailView>;
+        }));
+    }
+
+    protected processMailView_Query(response: HttpResponseBase): Observable<MailView> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as MailView;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     pendingMails_Query(pendingMailsQuery: PendingMailsQuery | undefined): Observable<PendingMailListItem[]> {
         let url_ = this.baseUrl + "/api/PendingMailsQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -7531,6 +7582,25 @@ export interface MailsOfRegistrationQuery {
     registrationId?: string;
 }
 
+export interface MailView {
+    id?: string;
+    subject?: string | null;
+    content?: string | null;
+    recipients?: string | null;
+    from?: EmailAddress;
+    created?: Date;
+}
+
+export interface EmailAddress {
+    email?: string;
+    name?: string;
+}
+
+export interface MailViewQuery {
+    eventId?: string;
+    mailId?: string;
+}
+
 export interface PendingMailListItem {
     id?: string;
     recipients?: string | null;
@@ -7663,11 +7733,6 @@ export interface SendMailCommand {
     sender?: EmailAddress;
     subject?: string;
     to?: EmailAddress[];
-}
-
-export interface EmailAddress {
-    email?: string;
-    name?: string;
 }
 
 export interface MailTypeItem {

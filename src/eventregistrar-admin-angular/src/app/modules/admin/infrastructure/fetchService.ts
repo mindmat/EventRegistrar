@@ -8,13 +8,16 @@ export class FetchService<TItem>
     private rowId?: string;
     private eventId?: string;
 
-    constructor(queryName: string, notificationService: NotificationService | null = null)
+    constructor(queryName: string | null = null, notificationService: NotificationService | null = null)
     {
-        notificationService?.subscribe(queryName)
-            .pipe(
-                filter(e => e.rowId === this.rowId && e.eventId === this.eventId)
-            )
-            .subscribe(_ => this.refresh());
+        if (queryName != null && notificationService != null)
+        {
+            notificationService?.subscribe(queryName)
+                .pipe(
+                    filter(e => e.rowId === this.rowId && e.eventId === this.eventId)
+                )
+                .subscribe(_ => this.refresh());
+        }
     }
 
     refresh(): void

@@ -71,6 +71,7 @@ import { FroalaEditorModule, FroalaViewModule } from 'angular-froala-wysiwyg';
 import { AutoMailPreviewComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-preview/auto-mail-preview.component';
 import { SearchModule } from './layout/common/search/search.module';
 import { ReleaseMailsComponent } from './modules/admin/mailing/mails/release-mails/release-mails.component';
+import { MailViewComponent } from './modules/admin/mailing/mails/mail-view/mail-view.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -94,7 +95,8 @@ const routerConfig: ExtraOptions = {
         AutoMailTemplatesComponent,
         AutoMailTemplateComponent,
         AutoMailPreviewComponent,
-        ReleaseMailsComponent
+        ReleaseMailsComponent,
+        MailViewComponent
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },

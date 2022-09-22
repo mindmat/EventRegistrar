@@ -11,7 +11,7 @@ export class ReleaseMailsComponent implements OnInit
 {
   private unsubscribeAll: Subject<any> = new Subject<any>();
   pendingMails: PendingMailListItem[];
-  selectedTemplate: PendingMailListItem;
+  selectedMail: PendingMailListItem;
 
   constructor(private service: ReleaseMailsService,
     private changeDetectorRef: ChangeDetectorRef) { }
@@ -29,4 +29,8 @@ export class ReleaseMailsComponent implements OnInit
       });
   }
 
+  onMailSelected(mail: PendingMailListItem)
+  {
+    this.selectedMail = mail;
+  }
 }

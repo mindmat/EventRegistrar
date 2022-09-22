@@ -27,6 +27,8 @@ import { AutoMailPreviewComponent } from './modules/admin/mailing/auto-mail-temp
 import { AutoMailPreviewResolver } from './modules/admin/mailing/auto-mail-templates/auto-mail-preview/auto-mail-preview.resolver';
 import { ReleaseMailsComponent } from './modules/admin/mailing/mails/release-mails/release-mails.component';
 import { ReleaseMailsResolver } from './modules/admin/mailing/mails/release-mails/release-mails.resolver';
+import { MailViewComponent } from './modules/admin/mailing/mails/mail-view/mail-view.component';
+import { MailViewResolver } from './modules/admin/mailing/mails/mail-view/mail-view.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -197,13 +199,13 @@ export const appRoutes: Route[] = [
                 canActivate: [AuthGuard],
                 component: ReleaseMailsComponent,
                 resolve: { initialData: ReleaseMailsResolver },
-                // children: [
-                //     {
-                //         path: ':id',
-                //         component: AutoMailTemplateComponent,
-                //         resolve: { initialData: AutoMailTemplateResolver }
-                //     }
-                // ]
+                children: [
+                    {
+                        path: ':id',
+                        component: MailViewComponent,
+                        resolve: { initialData: MailViewResolver }
+                    }
+                ]
 
             }
         ]
