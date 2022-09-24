@@ -175,20 +175,10 @@
                     <!-- Buttons -->
                     <ng-container *ngIf="!replyFormActive">
                         <div class="flex flex-wrap w-full -m-2">
-                            <!-- Reply -->
-                            <button class="m-2" mat-stroked-button [color]="'primary'" (click)="reply()">
-                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:reply'"></mat-icon>
-                                <span class="ml-2">Reply</span>
-                            </button>
-                            <!-- Reply all -->
-                            <button class="m-2" mat-stroked-button [color]="'primary'" (click)="replyAll()">
-                                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:reply'"></mat-icon>
-                                <span class="ml-2">Reply All</span>
-                            </button>
-                            <!-- Forward -->
-                            <button class="m-2" mat-stroked-button [color]="'primary'" (click)="forward()">
-                                <mat-icon class="icon-size-5" [color]="'primary'" [svgIcon]="'heroicons_solid:chevron-double-right'"></mat-icon>
-                                <span class="ml-2">Forward</span>
+                            <!-- Release -->
+                            <button class="m-2" mat-stroked-button [color]="'primary'" (click)="release(mail.id)">
+                                <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:send'"></mat-icon>
+                                <span class="ml-2">{{ 'Release' | translate }}</span>
                             </button>
                         </div>
                     </ng-container>

@@ -849,6 +849,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keine freizugebende Mails.
+        /// </summary>
+        internal static string NoPendingMails {
+            get {
+                return ResourceManager.GetString("NoPendingMails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keine Treffer gefunden.
         /// </summary>
         internal static string NoSearchResults {

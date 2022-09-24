@@ -378,6 +378,9 @@
   <data name="MissingAmount" xml:space="preserve">
     <value>Fehlbetrag</value>
   </data>
+  <data name="NoPendingMails" xml:space="preserve">
+    <value>Keine freizugebende Mails</value>
+  </data>
   <data name="NoSearchResults" xml:space="preserve">
     <value>Keine Treffer gefunden</value>
   </data>

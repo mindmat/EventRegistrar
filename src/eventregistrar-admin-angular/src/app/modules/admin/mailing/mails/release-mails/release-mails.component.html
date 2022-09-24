@@ -45,13 +45,13 @@
                                     </mat-icon> -->
                                 <!-- Date -->
                                 <div class="ml-auto text-md text-right whitespace-nowrap text-hint" matTooltip="{{ pendingMail.created | date: 'dd.MM.yy HH:mm:ss' }}">
-                                    {{pendingMail.created | ago}}
+                                    {{ pendingMail.created | ago }}
                                 </div>
                             </div>
 
                             <!-- Subject -->
                             <div class="flex items-center w-full mt-1">
-                                <span class="leading-4 truncate">{{pendingMail.subject}}</span>
+                                <span class="leading-4 truncate">{{ pendingMail.subject }}</span>
                                 <!-- Indicators -->
                                 <!-- <div class="flex ml-auto pl-2" *ngIf="(mail.attachments && mail.attachments.length > 0) || mail.starred">
                                         <mat-icon class="flex justify-center icon-size-4" *ngIf="mail.attachments && mail.attachments.length > 0" [svgIcon]="'heroicons_solid:paper-clip'"></mat-icon>
@@ -61,7 +61,7 @@
 
                             <!-- Excerpt -->
                             <div class="mt-2 leading-normal line-clamp-2 text-secondary">
-                                {{pendingMail.contentStart}}
+                                {{ pendingMail.contentStart }}
                             </div>
 
                         </div>
@@ -80,7 +80,7 @@
     <ng-template #noMails>
         <div class="z-100 absolute inset-0 flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
             <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:mail'"></mat-icon>
-            <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">There are no e-mails</div>
+            <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">{{ 'NoPendingMails' | translate }}</div>
         </div>
     </ng-template>
 

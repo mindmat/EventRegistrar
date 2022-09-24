@@ -27,4 +27,9 @@ export class MailViewComponent implements OnInit
         this.changeDetectorRef.markForCheck();
       });
   }
+
+  release(mailId: string)
+  {
+    this.service.releaseMail(mailId);
+  }
 }

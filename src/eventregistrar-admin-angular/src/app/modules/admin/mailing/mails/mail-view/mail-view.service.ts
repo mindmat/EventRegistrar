@@ -26,4 +26,10 @@ export class MailViewService extends FetchService<MailView>
   {
     return this.fetchItems(this.api.mailView_Query({ eventId: this.eventService.selectedId, mailId }));
   }
+
+  releaseMail(mailId: string)
+  {
+    this.api.releaseMail_Command({ eventId: this.eventService.selectedId, mailId })
+      .subscribe();
+  }
 }

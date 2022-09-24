@@ -291,6 +291,9 @@
   <data name="MissingAmount" xml:space="preserve">
     <value>Missing amount</value>
   </data>
+  <data name="NoPendingMails" xml:space="preserve">
+    <value>No pending mails</value>
+  </data>
   <data name="NoSearchResults" xml:space="preserve">
     <value>No results found</value>
   </data>
