@@ -132,6 +132,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="date" xml:space="preserve">
+    <value>date</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
@@ -149,6 +152,9 @@
   </data>
   <data name="Follower" xml:space="preserve">
     <value>Follower</value>
+  </data>
+  <data name="from" xml:space="preserve">
+    <value>from</value>
   </data>
   <data name="German" xml:space="preserve">
     <value>German</value>
@@ -380,6 +386,9 @@
   </data>
   <data name="SMS" xml:space="preserve">
     <value>SMS</value>
+  </data>
+  <data name="subject" xml:space="preserve">
+    <value>subject</value>
   </data>
   <data name="to" xml:space="preserve">
     <value>to</value>

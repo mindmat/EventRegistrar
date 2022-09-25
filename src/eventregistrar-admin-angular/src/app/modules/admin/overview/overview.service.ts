@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, DoubleRegistrableDisplayItem, RegistrablesOverview, RegistrableTagDisplayItem, SingleRegistrableDisplayItem } from 'app/api/api';
+import { Api, RegistrablesOverview, RegistrableTagDisplayItem } from 'app/api/api';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
 

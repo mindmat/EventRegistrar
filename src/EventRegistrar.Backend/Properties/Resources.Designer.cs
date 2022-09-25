@@ -106,6 +106,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Datum.
+        /// </summary>
+        internal static string date {
+            get {
+                return ResourceManager.GetString("date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Löschen.
         /// </summary>
         internal static string Delete {
@@ -395,6 +404,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Follower {
             get {
                 return ResourceManager.GetString("Follower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to von.
+        /// </summary>
+        internal static string from {
+            get {
+                return ResourceManager.GetString("from", resourceCulture);
             }
         }
         
@@ -1142,6 +1160,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string SMS {
             get {
                 return ResourceManager.GetString("SMS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Betreff.
+        /// </summary>
+        internal static string subject {
+            get {
+                return ResourceManager.GetString("subject", resourceCulture);
             }
         }
         

@@ -5,8 +5,6 @@ using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 
 public class StartUpdateReadModelsOfEventCommand : IRequest

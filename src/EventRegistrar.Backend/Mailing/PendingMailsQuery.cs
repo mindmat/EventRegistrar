@@ -2,7 +2,6 @@
 using System.Web;
 
 using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Mailing.Send;
 
 using HtmlAgilityPack;
 

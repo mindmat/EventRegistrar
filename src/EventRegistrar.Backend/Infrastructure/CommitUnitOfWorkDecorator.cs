@@ -1,8 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Infrastructure;
 
 public class CommitUnitOfWorkDecorator<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
