@@ -421,6 +421,9 @@
   <data name="RegistrationCandidatesForOutgoingPayment" xml:space="preserve">
     <value>Rückzahlung für:</value>
   </data>
+  <data name="Release" xml:space="preserve">
+    <value>Freigeben</value>
+  </data>
   <data name="Remarks" xml:space="preserve">
     <value>Bemerkungen</value>
   </data>

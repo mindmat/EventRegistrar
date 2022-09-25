@@ -119,18 +119,18 @@ namespace EventRegistrar.Backend.Migrations
                 name: "ReadModels",
                 columns: table => new
                 {
+                    Sequence = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     QueryName = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RowId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RowId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     ContentJson = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Sequence = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1")
+                    LastUpdate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReadModels", x => new { x.QueryName, x.EventId, x.RowId })
-                        .Annotation("SqlServer:Clustered", false);
+                    table.PrimaryKey("PK_ReadModels", x => x.Sequence)
+                        .Annotation("SqlServer:Clustered", true);
                 });
 
             migrationBuilder.CreateTable(
@@ -151,6 +151,33 @@ namespace EventRegistrar.Backend.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.Id)
                         .Annotation("SqlServer:Clustered", false);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AutoMailTemplates",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Language = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Subject = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
+                    ContentHtml = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ReleaseImmediately = table.Column<bool>(type: "bit", nullable: false),
+                    Sequence = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AutoMailTemplates", x => x.Id)
+                        .Annotation("SqlServer:Clustered", false);
+                    table.ForeignKey(
+                        name: "FK_AutoMailTemplates_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -791,9 +818,9 @@ namespace EventRegistrar.Backend.Migrations
                     Recipients = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ContentHtml = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ContentPlainText = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     SendGridMessageId = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Sent = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Sent = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     State = table.Column<int>(type: "int", nullable: true),
                     Type = table.Column<int>(type: "int", nullable: true),
                     Withhold = table.Column<bool>(type: "bit", nullable: false),
@@ -1222,6 +1249,18 @@ namespace EventRegistrar.Backend.Migrations
                 column: "UserId_Responder");
 
             migrationBuilder.CreateIndex(
+                name: "IX_AutoMailTemplates_EventId",
+                table: "AutoMailTemplates",
+                column: "EventId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AutoMailTemplates_Sequence",
+                table: "AutoMailTemplates",
+                column: "Sequence",
+                unique: true)
+                .Annotation("SqlServer:Clustered", true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DomainEvents_EventId",
                 table: "DomainEvents",
                 column: "EventId");
@@ -1552,11 +1591,11 @@ namespace EventRegistrar.Backend.Migrations
                 .Annotation("SqlServer:Clustered", true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReadModels_Sequence",
+                name: "IX_ReadModels_QueryName_EventId_RowId",
                 table: "ReadModels",
-                column: "Sequence",
-                unique: true)
-                .Annotation("SqlServer:Clustered", true);
+                columns: new[] { "QueryName", "EventId", "RowId" },
+                unique: true,
+                filter: "[RowId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reductions_RegistrableId",
@@ -1764,6 +1803,9 @@ namespace EventRegistrar.Backend.Migrations
         {
             migrationBuilder.DropTable(
                 name: "AccessToEventRequests");
+
+            migrationBuilder.DropTable(
+                name: "AutoMailTemplates");
 
             migrationBuilder.DropTable(
                 name: "DomainEvents");

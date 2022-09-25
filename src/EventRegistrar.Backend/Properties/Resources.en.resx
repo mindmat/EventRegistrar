@@ -327,6 +327,9 @@
   <data name="RegistrableSoldOut" xml:space="preserve">
     <value>{0} is sold out</value>
   </data>
+  <data name="Release" xml:space="preserve">
+    <value>Release</value>
+  </data>
   <data name="ReminderMail1" xml:space="preserve">
     <value>Reminder mail 1</value>
   </data>

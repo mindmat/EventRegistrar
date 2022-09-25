@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventRegistrar.Backend.Migrations
 {
     [DbContext(typeof(EventRegistratorDbContext))]
-    [Migration("20220911211015_AutoMailTemplate")]
-    partial class AutoMailTemplate
+    [Migration("20220924115138_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -590,8 +590,8 @@ namespace EventRegistrar.Backend.Migrations
                     b.Property<string>("ContentPlainText")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("DataJson")
                         .HasColumnType("nvarchar(max)");
@@ -626,8 +626,8 @@ namespace EventRegistrar.Backend.Migrations
                     b.Property<string>("SenderName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("Sent")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Sent")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Sequence")
                         .ValueGeneratedOnAdd()
