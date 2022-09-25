@@ -33,4 +33,9 @@ export class ReleaseMailsComponent implements OnInit
   {
     this.selectedMail = mail;
   }
+
+  trackByFn(index: number, item: any): any
+  {
+    return item.id || index;
+  }
 }

@@ -138,6 +138,9 @@
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
   </data>
+  <data name="DeleteAll" xml:space="preserve">
+    <value>Delete all</value>
+  </data>
   <data name="Deposits" xml:space="preserve">
     <value>Deposits</value>
   </data>
@@ -354,6 +357,9 @@
   <data name="Save" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
   <data name="SearchByName" xml:space="preserve">
     <value>Search by name</value>
   </data>
@@ -362,6 +368,9 @@
   </data>
   <data name="SearchPlaceholder" xml:space="preserve">
     <value>Search...</value>
+  </data>
+  <data name="SelectMail" xml:space="preserve">
+    <value>Select mail</value>
   </data>
   <data name="SenderAlias" xml:space="preserve">
     <value>Sender Alias</value>

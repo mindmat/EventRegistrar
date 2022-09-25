@@ -6,15 +6,23 @@
         <div class="z-10 relative flex flex-col flex-0 w-full border-b">
 
             <!-- Toolbar -->
-            <div class="flex items-center min-h-16 px-4 md:px-6 border-b bg-gray-50 dark:bg-transparent">
+            <div class="flex items-center min-h-16 px-4 md:px-6 border-b dark:bg-transparent">
 
                 <!-- Back button -->
                 <a class="lg:hidden md:-ml-2" mat-icon-button [routerLink]="['../']">
                     <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
                 </a>
 
+                <!-- Subject -->
+                <div class="flex flex-auto my-1 mr-4 text-2xl">{{ mail.subject }}</div>
+
+                <!-- Release -->
+                <button class="m-2 ml-auto" mat-stroked-button [color]="'primary'" matTooltip="{{ 'Release' | translate }}" (click)="release(mail.id)">
+                    <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:send'"></mat-icon>
+                </button>
+
                 <!-- Other actions button & menu -->
-                <button class="ml-auto" mat-icon-button [matMenuTriggerFor]="mailMenu">
+                <button class="ml-2" mat-icon-button [matMenuTriggerFor]="mailMenu">
                     <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
                 </button>
                 <mat-menu #mailMenu="matMenu">
@@ -45,9 +53,6 @@
 
                         <!-- Info -->
                         <div class="ml-4 min-w-0">
-
-                            <!-- Subject -->
-                            <div class="truncate">{{ mail.subject }}</div>
 
                             <!-- To -->
                             <div class="flex items-center mt-0.5 leading-5">
@@ -104,7 +109,7 @@
                     <ng-container *ngIf="!replyFormActive">
                         <div class="flex flex-wrap w-full -m-2">
                             <!-- Release -->
-                            <button class="m-2" mat-stroked-button [color]="'primary'" (click)="release(mail.id)">
+                            <button class="m-2 ml-auto" mat-stroked-button [color]="'primary'" (click)="release(mail.id)">
                                 <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:send'"></mat-icon>
                                 <span class="ml-2">{{ 'Release' | translate }}</span>
                             </button>
@@ -120,7 +125,7 @@
 
         <div class="flex flex-col flex-auto items-center justify-center bg-gray-100 dark:bg-transparent">
             <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:mail'"></mat-icon>
-            <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">Select a mail to read</div>
+            <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">{{ 'SelectMail' | translate }}</div>
         </div>
 
     </ng-template>

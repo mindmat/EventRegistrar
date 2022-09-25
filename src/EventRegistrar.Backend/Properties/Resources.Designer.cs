@@ -124,6 +124,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alle löschen.
+        /// </summary>
+        internal static string DeleteAll {
+            get {
+                return ResourceManager.GetString("DeleteAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einzahlungen.
         /// </summary>
         internal static string Deposits {
@@ -1065,6 +1074,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Suchen.
+        /// </summary>
+        internal static string Search {
+            get {
+                return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Suche nach Namen.
         /// </summary>
         internal static string SearchByName {
@@ -1088,6 +1106,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string SearchPlaceholder {
             get {
                 return ResourceManager.GetString("SearchPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mail auswählen.
+        /// </summary>
+        internal static string SelectMail {
+            get {
+                return ResourceManager.GetString("SelectMail", resourceCulture);
             }
         }
         
