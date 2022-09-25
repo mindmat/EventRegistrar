@@ -7,8 +7,12 @@ import { NotificationService } from '../infrastructure/notification.service';
 })
 export class EventService
 {
-  private selectedEventAcronymSubject: BehaviorSubject<string | null> = new BehaviorSubject('ll22');
-  private selectedEventIdSubject: BehaviorSubject<string | null> = new BehaviorSubject('40EB7B32-696E-41D5-9A57-AE9A45344E2B');
+  // private selectedEventAcronymSubject: BehaviorSubject<string | null> = new BehaviorSubject('ll22');
+  // private selectedEventIdSubject: BehaviorSubject<string | null> = new BehaviorSubject('40EB7B32-696E-41D5-9A57-AE9A45344E2B');
+  // private selectedEventAcronymSubject: BehaviorSubject<string | null> = new BehaviorSubject('ll22');
+  // private selectedEventIdSubject: BehaviorSubject<string | null> = new BehaviorSubject('40EB7B32-696E-41D5-9A57-AE9A45344E2B');
+  private selectedEventAcronymSubject: BehaviorSubject<string | null> = new BehaviorSubject('sb21');
+  private selectedEventIdSubject: BehaviorSubject<string | null> = new BehaviorSubject('BF1D1E9F-259F-404A-A4B3-3FAE03B5942B');
 
   constructor(private notificationService: NotificationService)
   {

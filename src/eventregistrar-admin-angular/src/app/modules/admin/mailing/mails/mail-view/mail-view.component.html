@@ -17,7 +17,7 @@
                 <div class="flex flex-auto my-1 mr-4 text-2xl">{{ mail.subject }}</div>
 
                 <!-- Release -->
-                <button class="m-2 ml-auto" mat-stroked-button [color]="'primary'" matTooltip="{{ 'Release' | translate }}" (click)="release(mail.id)">
+                <button class="m-2 ml-auto" mat-stroked-button [color]="'primary'" matTooltip="{{ 'Release' | translate }}" (click)="releaseMail(mail.id)">
                     <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:send'"></mat-icon>
                 </button>
 
@@ -27,7 +27,7 @@
                 </button>
                 <mat-menu #mailMenu="matMenu">
                     <!-- Delete -->
-                    <button mat-menu-item (click)="moveToFolder('trash')">
+                    <button mat-menu-item (click)="deleteMail(mail.id)">
                         <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                         <span>{{ 'Delete' | translate }}</span>
                     </button>
@@ -70,7 +70,7 @@
                                         <!-- From -->
                                         <div class="flex">
                                             <div class="min-w-14 font-medium text-right">{{ 'from' | translate }}:</div>
-                                            <div class="pl-2 whitespace-pre-wrap">{{ mail.from.email }}</div>
+                                            <div class="pl-2 whitespace-pre-wrap">{{ mail.from.name }} &lt;{{ mail.from.email }}&gt;</div>
                                         </div>
                                         <!-- To -->
                                         <div class="flex">

@@ -32,4 +32,10 @@ export class MailViewService extends FetchService<MailView>
     this.api.releaseMail_Command({ eventId: this.eventService.selectedId, mailId })
       .subscribe();
   }
+
+  deleteMail(mailId: string)
+  {
+    this.api.deleteMail_Command({ eventId: this.eventService.selectedId, mailId })
+      .subscribe();
+  }
 }

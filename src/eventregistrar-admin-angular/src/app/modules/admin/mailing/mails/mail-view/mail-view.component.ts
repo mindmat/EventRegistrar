@@ -103,8 +103,13 @@ export class MailViewComponent implements OnInit
     });
   }
 
-  release(mailId: string)
+  releaseMail(mailId: string)
   {
     this.service.releaseMail(mailId);
+  }
+
+  deleteMail(mailId: string)
+  {
+    this.service.deleteMail(mailId);
   }
 }
