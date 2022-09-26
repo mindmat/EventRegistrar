@@ -7605,6 +7605,7 @@ export interface MailViewQuery {
 export interface PendingMailListItem {
     id?: string;
     recipientsEmails?: string | null;
+    recipientsNames?: string | null;
     subject?: string | null;
     contentStart?: string | null;
     created?: Date;

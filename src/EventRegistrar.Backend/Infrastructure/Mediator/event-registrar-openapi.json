@@ -7757,6 +7757,10 @@
             "type": "string",
             "nullable": true
           },
+          "recipientsNames": {
+            "type": "string",
+            "nullable": true
+          },
           "subject": {
             "type": "string",
             "nullable": true

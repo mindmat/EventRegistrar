@@ -19,7 +19,7 @@
                 <mat-drawer-content class="flex overflow-hidden">
 
                     <!-- Mails list -->
-                    <ng-container *ngIf="pendingMails && pendingMails.length > 0; else noMails">
+                    <ng-container *ngIf="pendingMails?.length > 0; else noMails">
                         <div class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100 bg-card dark:bg-transparent">
 
                             <!-- Header -->
@@ -49,8 +49,8 @@
 
                             <!-- Mails -->
                             <div class="flex-auto overflow-y-auto">
-                                <ng-container *ngIf="pendingMails?.length > 0; else noChats">
-                                    <ng-container *ngFor="let pendingMail of pendingMails; trackBy: trackByFn">
+                                <ng-container *ngIf="filteredPendingMails?.length > 0; else noChats">
+                                    <ng-container *ngFor="let pendingMail of filteredPendingMails; trackBy: trackByFn">
                                         <!-- Mail -->
                                         <a class="relative flex border-t first:border-0 hover:bg-hover" [routerLink]="[pendingMail.id]" (click)="onMailSelected(pendingMail)">
 
@@ -109,7 +109,7 @@
                     </ng-template>
 
                     <!-- Mail details -->
-                    <ng-container *ngIf="pendingMails && pendingMails.length > 0">
+                    <ng-container *ngIf="filteredPendingMails?.length > 0">
                         <div class="flex-auto border-l" [ngClass]="{'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedMail && selectedMail.id,
                                 'hidden lg:flex': !selectedMail || !selectedMail.id}">
                             <router-outlet></router-outlet>

@@ -24,6 +24,6 @@ export class ReleaseMailsService extends FetchService<PendingMailListItem[]>
 
   fetchPendingMails()
   {
-    return this.fetchItems(this.api.pendingMails_Query({ eventId: this.eventService.selectedId }));
+    return this.fetchItems(this.api.pendingMails_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
 }

@@ -65,7 +65,6 @@ export class NotificationService
     {
         this.subscribedEventId = eventId;
         this.subscription$.next(eventId);
-
     }
 
     get isConnected$()

@@ -62,7 +62,6 @@ export class OverviewComponent implements OnInit, OnDestroy
         combineLatest([this.filters.categoryTag$, this.filters.query$, this.filters.hideCompleted$])
             .subscribe(([categoryTag, query, hideCompleted]) =>
             {
-
                 // Reset the filtered courses
                 this.filteredSingleRegistrables = this.singleRegistrables;
                 this.filteredDoubleRegistrables = this.doubleRegistrables;
