@@ -4,9 +4,6 @@ using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Mailing.InvalidAddresses;
 using EventRegistrar.Backend.Mailing.ManualTrigger;
-using EventRegistrar.Backend.Mailing.Templates;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -110,25 +107,6 @@ public class MailsController : Controller
     public async Task ImportMails(string eventAcronym)
     {
         await _mediator.Send(new ImportMailsFromImapCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                             });
-    }
-
-    [HttpPost("api/events/{eventAcronym}/mails/{mailId:guid}/release")]
-    public async Task ReleaseMail(string eventAcronym, Guid mailId)
-    {
-        await _mediator.Send(new ReleaseMailCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 MailId = mailId
-                             });
-    }
-
-    [HttpPost("api/events/{eventAcronym}/mails/release")]
-    public async Task ReleaseAllPendingMails(string eventAcronym)
-    {
-        await _mediator.Send(new ReleaseAllPendingMailsCommand
                              {
                                  EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
                              });

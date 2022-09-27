@@ -1,6 +1,6 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatButton } from '@angular/material/button';
 import { MailView } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
@@ -8,7 +8,8 @@ import { MailViewService } from './mail-view.service';
 
 @Component({
   selector: 'app-mail-view',
-  templateUrl: './mail-view.component.html'
+  templateUrl: './mail-view.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MailViewComponent implements OnInit
 {
