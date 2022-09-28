@@ -62,6 +62,22 @@ export class NavigationService
                 icon: 'mat_outline:mail',
                 link: '/mailing/release-mails',
             },
+            {
+                id: 'admin',
+                title: 'Administration',
+                type: 'collapsable',
+                icon: 'mat_outline:mail',
+                link: '/mailing/release-mails',
+                children: [
+                    {
+                        id: 'user-access',
+                        title: 'Berechtigungen',
+                        type: 'basic',
+                        icon: 'heroicons_outline:user',
+                        link: '/admin/user-access',
+                    }
+                ]
+            },
         ];
 
     /**

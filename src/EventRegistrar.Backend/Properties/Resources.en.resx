@@ -402,4 +402,16 @@
   <data name="to" xml:space="preserve">
     <value>to</value>
   </data>
+  <data name="Town" xml:space="preserve">
+    <value>Town</value>
+  </data>
+  <data name="UserInEventRole_Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="UserInEventRole_Reader" xml:space="preserve">
+    <value>Read</value>
+  </data>
+  <data name="UserInEventRole_Writer" xml:space="preserve">
+    <value>Write</value>
+  </data>
 </root>

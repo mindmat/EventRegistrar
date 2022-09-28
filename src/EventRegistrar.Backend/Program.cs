@@ -1,5 +1,4 @@
 using EventRegistrar.Backend.Authentication;
-using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Events.UsersInEvents;
@@ -11,8 +10,6 @@ using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ErrorHandling;
 using EventRegistrar.Backend.Infrastructure.Mediator;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;

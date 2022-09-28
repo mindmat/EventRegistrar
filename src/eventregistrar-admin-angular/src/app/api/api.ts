@@ -6045,58 +6045,7 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    addUserToRoleInEvent_Command(addUserToRoleInEventCommand: AddUserToRoleInEventCommand | undefined): Observable<string> {
-        let url_ = this.baseUrl + "/api/AddUserToRoleInEventCommand";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(addUserToRoleInEventCommand);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAddUserToRoleInEvent_Command(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processAddUserToRoleInEvent_Command(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<string>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<string>;
-        }));
-    }
-
-    protected processAddUserToRoleInEvent_Command(response: HttpResponseBase): Observable<string> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as string;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    eventsOfUser_Query(eventsOfUserQuery: EventsOfUserQuery | undefined): Observable<UserInEventDisplayItem[]> {
+    eventsOfUser_Query(eventsOfUserQuery: EventsOfUserQuery | undefined): Observable<EventOfUser[]> {
         let url_ = this.baseUrl + "/api/EventsOfUserQuery";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -6119,14 +6068,14 @@ export class Api {
                 try {
                     return this.processEventsOfUser_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<UserInEventDisplayItem[]>;
+                    return _observableThrow(e) as any as Observable<EventOfUser[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<UserInEventDisplayItem[]>;
+                return _observableThrow(response_) as any as Observable<EventOfUser[]>;
         }));
     }
 
-    protected processEventsOfUser_Query(response: HttpResponseBase): Observable<UserInEventDisplayItem[]> {
+    protected processEventsOfUser_Query(response: HttpResponseBase): Observable<EventOfUser[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6136,7 +6085,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as UserInEventDisplayItem[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as EventOfUser[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -6147,11 +6096,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    removeUserFromRoleInEvent_Command(removeUserFromRoleInEventCommand: RemoveUserFromRoleInEventCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/RemoveUserFromRoleInEventCommand";
+    removeUserFromEvent_Command(removeUserFromEventCommand: RemoveUserFromEventCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/RemoveUserFromEventCommand";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(removeUserFromRoleInEventCommand);
+        const content_ = JSON.stringify(removeUserFromEventCommand);
 
         let options_ : any = {
             body: content_,
@@ -6164,11 +6113,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRemoveUserFromRoleInEvent_Command(response_);
+            return this.processRemoveUserFromEvent_Command(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processRemoveUserFromRoleInEvent_Command(response_ as any);
+                    return this.processRemoveUserFromEvent_Command(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<Unit>;
                 }
@@ -6177,7 +6126,7 @@ export class Api {
         }));
     }
 
-    protected processRemoveUserFromRoleInEvent_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processRemoveUserFromEvent_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6188,6 +6137,108 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    setRoleOfUserInEvent_Command(setRoleOfUserInEventCommand: SetRoleOfUserInEventCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/SetRoleOfUserInEventCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(setRoleOfUserInEventCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetRoleOfUserInEvent_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetRoleOfUserInEvent_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processSetRoleOfUserInEvent_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    userInEventRoles_Query(userInEventRolesQuery: UserInEventRolesQuery | undefined): Observable<RoleDescription[]> {
+        let url_ = this.baseUrl + "/api/UserInEventRolesQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(userInEventRolesQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUserInEventRoles_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUserInEventRoles_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<RoleDescription[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<RoleDescription[]>;
+        }));
+    }
+
+    protected processUserInEventRoles_Query(response: HttpResponseBase): Observable<RoleDescription[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as RoleDescription[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -7970,10 +8021,13 @@ export interface SearchEventQuery {
     searchString?: string | null;
 }
 
-export interface AddUserToRoleInEventCommand {
+export interface EventOfUser {
     eventId?: string;
+    eventName?: string;
+    eventAcronym?: string;
+    eventState?: State;
     role?: UserInEventRole;
-    userId?: string;
+    requestSent?: Date;
 }
 
 export enum UserInEventRole {
@@ -7983,27 +8037,37 @@ export enum UserInEventRole {
     Admin = 3,
 }
 
-export interface UserInEventDisplayItem {
-    eventAcronym?: string;
-    eventId?: string;
-    eventName?: string;
-    eventState?: State;
-    requestSent?: boolean;
-    role?: UserInEventRole;
-    userEmail?: string;
-    userFirstName?: string;
-    userId?: string;
-    userLastName?: string;
-}
-
 export interface EventsOfUserQuery {
     includeRequestedEvents?: boolean;
 }
 
-export interface RemoveUserFromRoleInEventCommand {
+export interface RemoveUserFromEventCommand {
+    eventId?: string;
+    userId?: string;
+}
+
+export interface SetRoleOfUserInEventCommand {
+    eventId?: string;
+    userId?: string;
+    role?: UserInEventRole;
+}
+
+export interface RoleDescription {
+    role?: UserInEventRole;
+    name?: string;
+    description?: string;
+}
+
+export interface UserInEventRolesQuery {
+}
+
+export interface UserInEventDisplayItem {
     eventId?: string;
     role?: UserInEventRole;
+    roleText?: string;
+    userEmail?: string | null;
     userId?: string;
+    userDisplayName?: string;
 }
 
 export interface UsersOfEventQuery {

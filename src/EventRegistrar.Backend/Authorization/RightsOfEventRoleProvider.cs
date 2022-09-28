@@ -102,6 +102,10 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(DomainEventsQuery);
             yield return nameof(BookingsByStateQuery);
             yield return nameof(MailViewQuery);
+            yield return nameof(AutoMailPreviewQuery);
+            yield return nameof(AccessRequestsOfEventQuery);
+            yield return nameof(UsersOfEventQuery);
+            yield return nameof(UserInEventRolesQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
@@ -148,17 +152,14 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SendPaymentDueMailCommand);
             yield return nameof(RefundDifferenceCommand);
             yield return nameof(UpdateAutoMailTemplateCommand);
-            yield return nameof(AutoMailPreviewQuery);
             yield return nameof(UpdateAutoMailConfigurationCommand);
             yield return nameof(CreateAutoMailTemplateCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))
         {
-            yield return nameof(AccessRequestsOfEventQuery);
-            yield return nameof(UsersOfEventQuery);
-            yield return nameof(AddUserToRoleInEventCommand);
-            yield return nameof(RemoveUserFromRoleInEventCommand);
+            yield return nameof(SetRoleOfUserInEventCommand);
+            yield return nameof(RemoveUserFromEventCommand);
             yield return nameof(RespondToRequestCommand);
             yield return nameof(SaveRegistrationFormDefinitionCommand);
             yield return nameof(OpenRegistrationCommand);

@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents;
 
@@ -15,31 +14,9 @@ public class UserInEventsController : Controller
         _eventAcronymResolver = eventAcronymResolver;
     }
 
-    [HttpPut("api/events/{eventAcronym}/users/{userId:guid}/roles/{role}")]
-    public async Task AddRole(string eventAcronym, Guid userId, UserInEventRole role)
-    {
-        await _mediator.Send(new AddUserToRoleInEventCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 UserId = userId,
-                                 Role = role
-                             });
-    }
-
-    [HttpGet("api/me/events")]
-    public Task<IEnumerable<UserInEventDisplayItem>> GetMyEvents(bool includeRequestedEvents)
-    {
-        return _mediator.Send(new EventsOfUserQuery { IncludeRequestedEvents = includeRequestedEvents });
-    }
-
-    [HttpDelete("api/events/{eventAcronym}/users/{userId:guid}/roles/{role}")]
-    public async Task RemoveRole(string eventAcronym, Guid userId, UserInEventRole role)
-    {
-        await _mediator.Send(new RemoveUserFromRoleInEventCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 UserId = userId,
-                                 Role = role
-                             });
-    }
+    //[HttpGet("api/me/events")]
+    //public Task<IEnumerable<UserInEventDisplayItem>> GetMyEvents(bool includeRequestedEvents)
+    //{
+    //    return _mediator.Send(new EventsOfUserQuery { IncludeRequestedEvents = includeRequestedEvents });
+    //}
 }

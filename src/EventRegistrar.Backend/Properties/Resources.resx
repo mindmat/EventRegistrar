@@ -502,4 +502,25 @@
   <data name="Town" xml:space="preserve">
     <value>Wohnort</value>
   </data>
+  <data name="UserInEventRole_Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="UserInEventRole_Admin_Description" xml:space="preserve">
+    <value>Schreiben plus 
+- Formulare importieren &amp; Fragen zuordnen
+- Preisgestaltung
+- Berechtigungen</value>
+  </data>
+  <data name="UserInEventRole_Reader" xml:space="preserve">
+    <value>Lesen</value>
+  </data>
+  <data name="UserInEventRole_Reader_Description" xml:space="preserve">
+    <value>Kann alle Daten lesen</value>
+  </data>
+  <data name="UserInEventRole_Writer" xml:space="preserve">
+    <value>Schreiben</value>
+  </data>
+  <data name="UserInEventRole_Writer_Description" xml:space="preserve">
+    <value>Kann das Tagesgeschäft erledigen</value>
+  </data>
 </root>

@@ -29,6 +29,8 @@ import { ReleaseMailsComponent } from './modules/admin/mailing/mails/release-mai
 import { ReleaseMailsResolver } from './modules/admin/mailing/mails/release-mails/release-mails.resolver';
 import { MailViewComponent } from './modules/admin/mailing/mails/mail-view/mail-view.component';
 import { MailViewResolver } from './modules/admin/mailing/mails/mail-view/mail-view.resolver';
+import { UserAccessComponent } from './modules/admin/auth/user-access/user-access.component';
+import { UserAccessResolver } from './modules/admin/auth/user-access/user-access.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -153,13 +155,6 @@ export const appRoutes: Route[] = [
                 component: DuePaymentsComponent,
                 resolve: { initialData: DuePaymentsResolver }
             },
-            // {
-            //     path: 'settle-payments/:id',
-            //     canActivate: [AuthGuard],
-            //     component: SettlePaymentsComponent,
-            //     // resolve: { initialData: SettlePaymentsResolver }
-            // }
-
         ]
     },
     {
@@ -207,6 +202,21 @@ export const appRoutes: Route[] = [
                     }
                 ]
 
+            }
+        ]
+    },
+    {
+        path: 'admin',
+        canActivate: [AuthGuard],
+        canActivateChild: [AuthGuard],
+        component: LayoutComponent,
+        resolve: { initialData: InitialDataResolver },
+        children: [
+            {
+                path: 'user-access',
+                canActivate: [AuthGuard],
+                component: UserAccessComponent,
+                resolve: { initialData: UserAccessResolver }
             }
         ]
     }

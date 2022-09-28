@@ -1216,5 +1216,62 @@ namespace EventRegistrar.Backend.Properties {
                 return ResourceManager.GetString("Town", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Admin.
+        /// </summary>
+        internal static string UserInEventRole_Admin {
+            get {
+                return ResourceManager.GetString("UserInEventRole_Admin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schreiben plus 
+        ///- Formulare importieren &amp; Fragen zuordnen
+        ///- Preisgestaltung
+        ///- Berechtigungen.
+        /// </summary>
+        internal static string UserInEventRole_Admin_Description {
+            get {
+                return ResourceManager.GetString("UserInEventRole_Admin_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lesen.
+        /// </summary>
+        internal static string UserInEventRole_Reader {
+            get {
+                return ResourceManager.GetString("UserInEventRole_Reader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kann alle Daten lesen.
+        /// </summary>
+        internal static string UserInEventRole_Reader_Description {
+            get {
+                return ResourceManager.GetString("UserInEventRole_Reader_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schreiben.
+        /// </summary>
+        internal static string UserInEventRole_Writer {
+            get {
+                return ResourceManager.GetString("UserInEventRole_Writer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kann das Tagesgeschäft erledigen.
+        /// </summary>
+        internal static string UserInEventRole_Writer_Description {
+            get {
+                return ResourceManager.GetString("UserInEventRole_Writer_Description", resourceCulture);
+            }
+        }
     }
 }

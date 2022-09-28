@@ -11,7 +11,8 @@ import { ReleaseMailsService } from './release-mails.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ReleaseMailsResolver implements Resolve<boolean> {
+export class ReleaseMailsResolver implements Resolve<boolean>
+{
   constructor(private router: Router, private service: ReleaseMailsService)
   {
   }

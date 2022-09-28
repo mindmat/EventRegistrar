@@ -10,11 +10,12 @@ export class FetchService<TItem>
 
     constructor(queryName: string | null = null, notificationService: NotificationService | null = null)
     {
-        if (queryName != null && notificationService != null)
+        if (queryName !== null && notificationService !== null)
         {
-            notificationService?.subscribe(queryName)
+            notificationService.subscribe(queryName)
                 .pipe(
-                    filter(e => e.rowId === this.rowId && e.eventId === this.eventId)
+                    filter(e => e.rowId?.toLowerCase() === this.rowId?.toLowerCase()
+                        && e.eventId?.toLowerCase() === this.eventId?.toLowerCase())
                 )
                 .subscribe(_ => this.refresh());
         }

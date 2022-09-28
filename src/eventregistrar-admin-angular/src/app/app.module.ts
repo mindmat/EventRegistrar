@@ -72,6 +72,7 @@ import { AutoMailPreviewComponent } from './modules/admin/mailing/auto-mail-temp
 import { SearchModule } from './layout/common/search/search.module';
 import { ReleaseMailsComponent } from './modules/admin/mailing/mails/release-mails/release-mails.component';
 import { MailViewComponent } from './modules/admin/mailing/mails/mail-view/mail-view.component';
+import { UserAccessComponent } from './modules/admin/auth/user-access/user-access.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -96,7 +97,8 @@ const routerConfig: ExtraOptions = {
         AutoMailTemplateComponent,
         AutoMailPreviewComponent,
         ReleaseMailsComponent,
-        MailViewComponent
+        MailViewComponent,
+        UserAccessComponent
     ],
     providers: [
         { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },

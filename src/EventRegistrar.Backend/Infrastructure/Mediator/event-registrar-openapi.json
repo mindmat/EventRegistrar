@@ -3903,39 +3903,6 @@
         }
       }
     },
-    "/api/AddUserToRoleInEventCommand": {
-      "post": {
-        "tags": [
-          "AddUserToRoleInEvent"
-        ],
-        "operationId": "AddUserToRoleInEvent_Command",
-        "requestBody": {
-          "x-name": "AddUserToRoleInEventCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AddUserToRoleInEventCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "string",
-                  "format": "guid"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/EventsOfUserQuery": {
       "post": {
         "tags": [
@@ -3962,7 +3929,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/UserInEventDisplayItem"
+                    "$ref": "#/components/schemas/EventOfUser"
                   }
                 }
               }
@@ -3971,19 +3938,19 @@
         }
       }
     },
-    "/api/RemoveUserFromRoleInEventCommand": {
+    "/api/RemoveUserFromEventCommand": {
       "post": {
         "tags": [
-          "RemoveUserFromRoleInEvent"
+          "RemoveUserFromEvent"
         ],
-        "operationId": "RemoveUserFromRoleInEvent_Command",
+        "operationId": "RemoveUserFromEvent_Command",
         "requestBody": {
-          "x-name": "RemoveUserFromRoleInEventCommand",
+          "x-name": "RemoveUserFromEventCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RemoveUserFromRoleInEventCommand"
+                "$ref": "#/components/schemas/RemoveUserFromEventCommand"
               }
             }
           },
@@ -3996,6 +3963,73 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SetRoleOfUserInEventCommand": {
+      "post": {
+        "tags": [
+          "SetRoleOfUserInEvent"
+        ],
+        "operationId": "SetRoleOfUserInEvent_Command",
+        "requestBody": {
+          "x-name": "SetRoleOfUserInEventCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetRoleOfUserInEventCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UserInEventRolesQuery": {
+      "post": {
+        "tags": [
+          "UserInEventRoles"
+        ],
+        "operationId": "UserInEventRoles_Query",
+        "requestBody": {
+          "x-name": "UserInEventRolesQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserInEventRolesQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RoleDescription"
+                  }
                 }
               }
             }
@@ -8804,7 +8838,7 @@
           }
         }
       },
-      "AddUserToRoleInEventCommand": {
+      "EventOfUser": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -8812,12 +8846,21 @@
             "type": "string",
             "format": "guid"
           },
+          "eventName": {
+            "type": "string"
+          },
+          "eventAcronym": {
+            "type": "string"
+          },
+          "eventState": {
+            "$ref": "#/components/schemas/State"
+          },
           "role": {
             "$ref": "#/components/schemas/UserInEventRole"
           },
-          "userId": {
+          "requestSent": {
             "type": "string",
-            "format": "guid"
+            "format": "date-time"
           }
         }
       },
@@ -8837,44 +8880,6 @@
           3
         ]
       },
-      "UserInEventDisplayItem": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventAcronym": {
-            "type": "string"
-          },
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "eventName": {
-            "type": "string"
-          },
-          "eventState": {
-            "$ref": "#/components/schemas/State"
-          },
-          "requestSent": {
-            "type": "boolean"
-          },
-          "role": {
-            "$ref": "#/components/schemas/UserInEventRole"
-          },
-          "userEmail": {
-            "type": "string"
-          },
-          "userFirstName": {
-            "type": "string"
-          },
-          "userId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "userLastName": {
-            "type": "string"
-          }
-        }
-      },
       "EventsOfUserQuery": {
         "type": "object",
         "additionalProperties": false,
@@ -8884,7 +8889,57 @@
           }
         }
       },
-      "RemoveUserFromRoleInEventCommand": {
+      "RemoveUserFromEventCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "SetRoleOfUserInEventCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/UserInEventRole"
+          }
+        }
+      },
+      "RoleDescription": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/UserInEventRole"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "UserInEventRolesQuery": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "UserInEventDisplayItem": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -8895,9 +8950,19 @@
           "role": {
             "$ref": "#/components/schemas/UserInEventRole"
           },
+          "roleText": {
+            "type": "string"
+          },
+          "userEmail": {
+            "type": "string",
+            "nullable": true
+          },
           "userId": {
             "type": "string",
             "format": "guid"
+          },
+          "userDisplayName": {
+            "type": "string"
           }
         }
       },

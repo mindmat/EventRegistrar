@@ -57,7 +57,7 @@ export class NotificationService
     public subscribe(queryName: string): Observable<ReadModelUpdated>
     {
         return this.serverEvents$.pipe(
-            filter(ntf => ntf.queryName === queryName)
+            filter(ntf => ntf.queryName.toLowerCase() === queryName.toLowerCase())
         );
     }
 
