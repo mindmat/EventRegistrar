@@ -8980,25 +8980,29 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "email": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
           "id": {
             "type": "string",
             "format": "guid"
           },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
           "lastName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
           },
           "requestReceived": {
             "type": "string",
             "format": "date-time"
           },
           "requestText": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -9042,12 +9046,6 @@
           },
           "response": {
             "$ref": "#/components/schemas/RequestResponse"
-          },
-          "responseText": {
-            "type": "string"
-          },
-          "role": {
-            "$ref": "#/components/schemas/UserInEventRole"
           }
         }
       },

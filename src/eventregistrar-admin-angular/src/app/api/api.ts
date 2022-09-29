@@ -8075,12 +8075,12 @@ export interface UsersOfEventQuery {
 }
 
 export interface AccessRequestOfEvent {
-    email?: string;
-    firstName?: string;
     id?: string;
-    lastName?: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
     requestReceived?: Date;
-    requestText?: string;
+    requestText?: string | null;
 }
 
 export interface AccessRequestsOfEventQuery {
@@ -8097,8 +8097,6 @@ export interface RespondToRequestCommand {
     accessToEventRequestId?: string;
     eventId?: string;
     response?: RequestResponse;
-    responseText?: string;
-    role?: UserInEventRole;
 }
 
 export enum RequestResponse {

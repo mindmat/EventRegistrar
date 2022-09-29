@@ -1,6 +1,5 @@
-﻿using EventRegistrar.Backend.Events.UsersInEvents;
-using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
-using MediatR;
+﻿using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Events;
@@ -18,7 +17,10 @@ public class EventsController : Controller
     }
 
     [HttpPut("api/events/{eventAcronym}")]
-    public Task CreateEvent(string eventAcronym, string name, Guid id, Guid? eventId_CopyFrom)
+    public Task CreateEvent(string eventAcronym,
+                            string name,
+                            Guid id,
+                            Guid? eventId_CopyFrom)
     {
         return _mediator.Send(new CreateEventCommand
                               {
@@ -27,26 +29,6 @@ public class EventsController : Controller
                                   EventId_CopyFrom = eventId_CopyFrom,
                                   Name = name
                               });
-    }
-
-    [HttpGet("api/events/{eventAcronym}/requests")]
-    public async Task<IEnumerable<AccessRequestOfEvent>> GetRequestsOfEvent(
-        string eventAcronym, bool includeDeniedRequests = false)
-    {
-        return await _mediator.Send(new AccessRequestsOfEventQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                        IncludeDeniedRequests = includeDeniedRequests
-                                    });
-    }
-
-    [HttpGet("api/events/{eventAcronym}/users")]
-    public async Task<IEnumerable<UserInEventDisplayItem>> GetUsersOfEvent(string eventAcronym)
-    {
-        return await _mediator.Send(new UsersOfEventQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
     }
 
     [HttpPost("api/events/{eventAcronym}/openRegistration")]
@@ -69,23 +51,9 @@ public class EventsController : Controller
                                     });
     }
 
-    [HttpPost("api/events/{eventAcronym}/accessrequests/{accessRequestId:guid}/respond")]
-    public async Task RespondToAccessRequest(string eventAcronym,
-                                             Guid accessRequestId,
-                                             [FromBody] RequestResponseDto response)
-    {
-        await _mediator.Send(new RespondToRequestCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 AccessToEventRequestId = accessRequestId,
-                                 Response = response.Response,
-                                 Role = response.Role,
-                                 ResponseText = response.Text
-                             });
-    }
-
     [HttpGet("api/events")]
-    public Task<IEnumerable<EventSearchResult>> Search(string searchString, bool includeRequestedEvents = false,
+    public Task<IEnumerable<EventSearchResult>> Search(string searchString,
+                                                       bool includeRequestedEvents = false,
                                                        bool includeAuthorizedEvents = false)
     {
         return _mediator.Send(new SearchEventQuery

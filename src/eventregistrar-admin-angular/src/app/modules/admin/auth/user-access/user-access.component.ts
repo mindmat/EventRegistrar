@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatSelectChange } from '@angular/material/select';
-import { RoleDescription, UserInEventDisplayItem, UserInEventRole } from 'app/api/api';
+import { AccessRequestOfEvent, RoleDescription, UserInEventDisplayItem, UserInEventRole } from 'app/api/api';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
+import { UserAccessRequestsService } from './user-access-requests.service';
 import { UserAccessService } from './user-access.service';
 import { UserRolesService } from './user-roles.service';
 
@@ -15,25 +16,34 @@ export class UserAccessComponent implements OnInit
   private unsubscribeAll: Subject<any> = new Subject<any>();
   usersWithAccess: UserInEventDisplayItem[];
   filteredUsersWithAccess: UserInEventDisplayItem[];
+  requests: AccessRequestOfEvent[];
+  filteredRequests: AccessRequestOfEvent[];
   query$: BehaviorSubject<string | null> = new BehaviorSubject(null);
   roles: RoleDescription[];
 
   constructor(private userAccessService: UserAccessService,
+    private accessRequestService: UserAccessRequestsService,
     private userRolesService: UserRolesService,
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
   {
-    combineLatest([this.userAccessService.usersWithAccess$, this.query$])
+    combineLatest([this.userAccessService.usersWithAccess$, this.accessRequestService.requests$, this.query$])
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe(([users, query]) =>
+      .subscribe(([users, requests, query]) =>
       {
         this.usersWithAccess = users;
         this.filteredUsersWithAccess = users;
+        this.requests = requests;
+        this.filteredRequests = requests;
 
         if (query != null && query !== '')
         {
           this.filteredUsersWithAccess = this.filteredUsersWithAccess.filter(usr => usr.userDisplayName.toLowerCase().includes(query.toLowerCase()));
+          this.filteredRequests = this.filteredRequests.filter(req =>
+            req.firstName.toLowerCase().includes(query.toLowerCase())
+            || req.lastName.toLowerCase().includes(query.toLowerCase())
+            || req.email.toLowerCase().includes(query.toLowerCase()));
         }
 
         // Mark for check
@@ -71,5 +81,15 @@ export class UserAccessComponent implements OnInit
   {
     const role = change.value as UserInEventRole;
     this.userRolesService.setRoleOfUserInEvent(userId, role);
+  }
+
+  approveRequest(requestId: string)
+  {
+    this.accessRequestService.approveRequest(requestId);
+  }
+
+  denyRequest(requestId: string)
+  {
+    this.accessRequestService.denyRequest(requestId);
   }
 }
