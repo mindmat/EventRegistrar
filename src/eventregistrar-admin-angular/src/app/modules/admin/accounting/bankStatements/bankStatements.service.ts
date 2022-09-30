@@ -2,22 +2,26 @@ import { Injectable } from '@angular/core';
 import { Api, BookingsOfDay } from 'app/api/api';
 import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
-import { ListService } from '../../infrastructure/listService';
+import { FetchService } from '../../infrastructure/fetchService';
+import { NotificationService } from '../../infrastructure/notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class BankStatementsService extends ListService<BookingsOfDay>
+export class BankStatementsService extends FetchService<BookingsOfDay[]>
 {
-  constructor(private api: Api, private eventService: EventService) { super(); }
+  constructor(private api: Api, private eventService: EventService, notificationService: NotificationService)
+  {
+    super('PaymentsByDayQuery', notificationService);
+  }
 
   get payments$(): Observable<BookingsOfDay[]>
   {
-    return this.list$;
+    return this.result$;
   }
 
   fetchBankStatements(hideIncoming: boolean = false, hideOutgoing: boolean = false, hideSettled: boolean = false, hideIgnored: boolean = false): Observable<BookingsOfDay[]>
   {
-    return this.fetchItems(this.api.paymentsByDay_Query({ eventId: this.eventService.selectedId, hideIncoming, hideOutgoing, hideSettled, hideIgnored }));
+    return this.fetchItems(this.api.paymentsByDay_Query({ eventId: this.eventService.selectedId, hideIncoming, hideOutgoing, hideSettled, hideIgnored }), null, this.eventService.selectedId);
   }
 }

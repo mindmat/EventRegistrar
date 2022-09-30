@@ -41,9 +41,9 @@ export class UserAccessComponent implements OnInit
         {
           this.filteredUsersWithAccess = this.filteredUsersWithAccess.filter(usr => usr.userDisplayName.toLowerCase().includes(query.toLowerCase()));
           this.filteredRequests = this.filteredRequests.filter(req =>
-            req.firstName.toLowerCase().includes(query.toLowerCase())
-            || req.lastName.toLowerCase().includes(query.toLowerCase())
-            || req.email.toLowerCase().includes(query.toLowerCase()));
+            req.firstName?.toLowerCase().includes(query.toLowerCase())
+            || req.lastName?.toLowerCase().includes(query.toLowerCase())
+            || req.email?.toLowerCase().includes(query.toLowerCase()));
         }
 
         // Mark for check

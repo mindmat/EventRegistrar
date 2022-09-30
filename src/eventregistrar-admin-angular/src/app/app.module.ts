@@ -73,6 +73,7 @@ import { SearchModule } from './layout/common/search/search.module';
 import { ReleaseMailsComponent } from './modules/admin/mailing/mails/release-mails/release-mails.component';
 import { MailViewComponent } from './modules/admin/mailing/mails/mail-view/mail-view.component';
 import { UserAccessComponent } from './modules/admin/auth/user-access/user-access.component';
+import { API_BASE_URL } from './api/api';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -101,7 +102,7 @@ const routerConfig: ExtraOptions = {
         UserAccessComponent
     ],
     providers: [
-        { provide: 'BASE_API_URL', useValue: 'https://localhost:5001' },
+        { provide: API_BASE_URL, useValue: 'https://localhost:5001' },
         // {
         //     provide: HTTP_INTERCEPTORS,
         //     useClass: BaseUrlInterceptor,

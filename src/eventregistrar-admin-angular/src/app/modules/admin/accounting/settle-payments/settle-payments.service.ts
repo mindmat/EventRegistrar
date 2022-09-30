@@ -2,18 +2,18 @@ import { Injectable } from '@angular/core';
 import { Api, BookingsOfDay } from 'app/api/api';
 import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
-import { ListService } from '../../infrastructure/listService';
+import { FetchService } from '../../infrastructure/fetchService';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SettlePaymentsService extends ListService<BookingsOfDay>
+export class SettlePaymentsService extends FetchService<BookingsOfDay[]>
 {
   constructor(private api: Api, private eventService: EventService) { super(); }
 
   get payments$(): Observable<BookingsOfDay[]>
   {
-    return this.list$;
+    return this.result$;
   }
 
   // get candidates$(): Observable<AssignmentCandidate[]>

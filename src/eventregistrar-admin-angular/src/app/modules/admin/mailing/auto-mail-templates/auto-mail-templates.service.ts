@@ -24,7 +24,7 @@ export class AutoMailTemplatesService extends FetchService<AutoMailTemplates> {
 
   fetchAutoMailTemplates()
   {
-    return this.fetchItems(this.api.autoMailTemplates_Query({ eventId: this.eventService.selectedId, }));
+    return this.fetchItems(this.api.autoMailTemplates_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
 
   createTemplate(type: MailType, language: string): Observable<string>
@@ -35,6 +35,6 @@ export class AutoMailTemplatesService extends FetchService<AutoMailTemplates> {
   updateSettings(senderMail: string, senderName: string, availableLanguages: string[], singleRegistrationPossible: boolean, partnerRegistrationPossible: boolean)
   {
     this.api.updateAutoMailConfiguration_Command({ eventId: this.eventService.selectedId, senderMail, senderName, availableLanguages, singleRegistrationPossible, partnerRegistrationPossible })
-      .subscribe(x => console.log(x));
+      .subscribe();
   }
 }

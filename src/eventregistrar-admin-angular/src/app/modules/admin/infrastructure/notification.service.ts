@@ -1,6 +1,7 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Inject, Injectable, NgZone } from '@angular/core';
 import { HttpTransportType, HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
-import { filter, map, mergeMap, Observable, ReplaySubject, shareReplay, Subject, tap } from 'rxjs';
+import { API_BASE_URL } from 'app/api/api';
+import { filter, map, mergeMap, Observable, ReplaySubject, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService
@@ -13,11 +14,11 @@ export class NotificationService
     private zone = new NgZone({ enableLongStackTrace: false });
     private _isConnected$ = new Subject<boolean>();
 
-    constructor()
+    constructor(@Inject(API_BASE_URL) baseUrl?: string)
     {
         this.hubConnection = new HubConnectionBuilder()
             .configureLogging(LogLevel.Debug)
-            .withUrl(`https://localhost:5001/notifications`, {
+            .withUrl(baseUrl + '/notifications', {
                 skipNegotiation: true,
                 transport: HttpTransportType.WebSockets
             })

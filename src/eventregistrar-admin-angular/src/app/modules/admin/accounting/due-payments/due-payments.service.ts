@@ -24,6 +24,6 @@ export class DuePaymentsService extends FetchService<DuePaymentItem[]> {
 
   fetchDuePayments()
   {
-    return this.fetchItems(this.api.duePayments_Query({ eventId: this.eventService.selectedId, }));
+    return this.fetchItems(this.api.duePayments_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
 }

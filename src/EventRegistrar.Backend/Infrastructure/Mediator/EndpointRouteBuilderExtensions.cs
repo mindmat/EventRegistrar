@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
 using System.Text.Json;
 
-using EventRegistrar.Backend.Authorization;
-
 using SimpleInjector;
 
 

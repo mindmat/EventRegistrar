@@ -27,7 +27,7 @@ export class SettlePaymentService extends FetchService<PaymentAssignments>
   fetchCandidates(paymentId: string)
   {
     this.paymentId = paymentId;
-    return this.fetchItems(this.api.paymentAssignments_Query({ eventId: this.eventService.selectedId, paymentId }), this.paymentId);
+    return this.fetchItems(this.api.paymentAssignments_Query({ eventId: this.eventService.selectedId, paymentId }), this.paymentId, this.eventService.selectedId);
   }
 
   unassign(paymentAssignmentId: string)

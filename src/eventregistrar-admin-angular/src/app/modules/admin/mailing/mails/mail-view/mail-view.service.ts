@@ -14,7 +14,7 @@ export class MailViewService extends FetchService<MailView>
     private eventService: EventService,
     notificationService: NotificationService)
   {
-    super();
+    super('MailViewQuery', notificationService);
   }
 
   get mail$(): Observable<MailView>
@@ -24,7 +24,7 @@ export class MailViewService extends FetchService<MailView>
 
   fetchMail(mailId: string)
   {
-    return this.fetchItems(this.api.mailView_Query({ eventId: this.eventService.selectedId, mailId }));
+    return this.fetchItems(this.api.mailView_Query({ eventId: this.eventService.selectedId, mailId }), mailId, this.eventService.selectedId);
   }
 
   releaseMail(mailId: string)

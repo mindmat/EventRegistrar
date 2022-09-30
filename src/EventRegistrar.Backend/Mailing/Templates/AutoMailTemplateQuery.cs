@@ -1,6 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-
-namespace EventRegistrar.Backend.Mailing.Templates;
+﻿namespace EventRegistrar.Backend.Mailing.Templates;
 
 public class AutoMailTemplateQuery : IEventBoundRequest, IRequest<AutoMailTemplateDisplayItem>
 {

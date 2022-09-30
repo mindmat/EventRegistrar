@@ -21,7 +21,7 @@ export class AutoMailPreviewService extends FetchService<AutoMailPreview> {
 
     combineLatest([this.registrationId, this.autoMailTemplateId]).pipe(
       filter(([_, tid]) => tid != null),
-      switchMap(([rid, tid]) => this.fetchItems(this.api.autoMailPreview_Query({ eventId: this.eventService.selectedId, autoMailTemplateId: tid, registrationId: rid }), tid))
+      switchMap(([rid, tid]) => this.fetchItems(this.api.autoMailPreview_Query({ eventId: this.eventService.selectedId, autoMailTemplateId: tid, registrationId: rid }), tid, this.eventService.selectedId))
     ).subscribe(x => console.log(x));
   }
 

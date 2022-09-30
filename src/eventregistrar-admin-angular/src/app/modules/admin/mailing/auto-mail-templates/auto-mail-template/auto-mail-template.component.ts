@@ -124,6 +124,6 @@ export class AutoMailTemplateComponent implements OnInit
       subject: this.templateForm.value.subject,
       contentHtml: html
     })
-      .subscribe(x => console.log(x));
+      .subscribe();
   }
 }

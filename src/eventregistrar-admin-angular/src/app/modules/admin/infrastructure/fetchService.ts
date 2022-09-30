@@ -14,9 +14,9 @@ export class FetchService<TItem>
         {
             notificationService.subscribe(queryName)
                 .pipe(
-                    filter(e => e.rowId?.toLowerCase() === this.rowId?.toLowerCase()
-                        && e.eventId?.toLowerCase() === this.eventId?.toLowerCase())
-                )
+                    filter(e => (e.rowId === this.rowId || e.rowId?.toLowerCase() === this.rowId?.toLowerCase())
+                        && (e.eventId === this.eventId || e.eventId?.toLowerCase() === this.eventId?.toLowerCase())
+                    ))
                 .subscribe(_ => this.refresh());
         }
     }

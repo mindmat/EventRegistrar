@@ -27,6 +27,6 @@ export class AutoMailTemplateService extends FetchService<AutoMailTemplateDispla
   fetchTemplate(autoMailTemplateId: string)
   {
     this.autoMailTemplateId = autoMailTemplateId;
-    return this.fetchItems(this.api.autoMailTemplate_Query({ eventId: this.eventService.selectedId, mailTemplateId: autoMailTemplateId }), this.autoMailTemplateId);
+    return this.fetchItems(this.api.autoMailTemplate_Query({ eventId: this.eventService.selectedId, mailTemplateId: autoMailTemplateId }), this.autoMailTemplateId, this.eventService.selectedId);
   }
 }
