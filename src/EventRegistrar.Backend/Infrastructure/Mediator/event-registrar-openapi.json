@@ -3959,10 +3959,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/EventOfUser"
-                  }
+                  "$ref": "#/components/schemas/EventsOfUser"
                 }
               }
             }
@@ -5302,7 +5299,7 @@
             "type": "string"
           },
           "state": {
-            "$ref": "#/components/schemas/State"
+            "$ref": "#/components/schemas/EventState"
           },
           "title": {
             "type": "string"
@@ -5327,7 +5324,7 @@
           }
         }
       },
-      "State": {
+      "EventState": {
         "type": "integer",
         "description": "",
         "x-enumNames": [
@@ -8805,7 +8802,7 @@
             "type": "string"
           },
           "state": {
-            "$ref": "#/components/schemas/State"
+            "$ref": "#/components/schemas/EventState"
           }
         }
       },
@@ -8860,7 +8857,7 @@
             "type": "boolean"
           },
           "state": {
-            "$ref": "#/components/schemas/State"
+            "$ref": "#/components/schemas/EventState"
           }
         }
       },
@@ -8880,6 +8877,24 @@
           }
         }
       },
+      "EventsOfUser": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "authorizedEvents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EventOfUser"
+            }
+          },
+          "requests": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccessRequest"
+            }
+          }
+        }
+      },
       "EventOfUser": {
         "type": "object",
         "additionalProperties": false,
@@ -8895,14 +8910,16 @@
             "type": "string"
           },
           "eventState": {
-            "$ref": "#/components/schemas/State"
+            "$ref": "#/components/schemas/EventState"
+          },
+          "eventStateText": {
+            "type": "string"
           },
           "role": {
             "$ref": "#/components/schemas/UserInEventRole"
           },
-          "requestSent": {
-            "type": "string",
-            "format": "date-time"
+          "roleText": {
+            "type": "string"
           }
         }
       },
@@ -8922,14 +8939,36 @@
           3
         ]
       },
-      "EventsOfUserQuery": {
+      "AccessRequest": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "includeRequestedEvents": {
-            "type": "boolean"
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "eventName": {
+            "type": "string"
+          },
+          "eventAcronym": {
+            "type": "string"
+          },
+          "eventState": {
+            "$ref": "#/components/schemas/EventState"
+          },
+          "eventStateText": {
+            "type": "string"
+          },
+          "requestSent": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         }
+      },
+      "EventsOfUserQuery": {
+        "type": "object",
+        "additionalProperties": false
       },
       "RemoveUserFromEventCommand": {
         "type": "object",

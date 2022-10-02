@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, EventOfUser } from 'app/api/api';
+import { Api, EventOfUser, EventsOfUser } from 'app/api/api';
 import { Observable } from 'rxjs';
 import { FetchService } from '../../infrastructure/fetchService';
 import { NotificationService } from '../../infrastructure/notification.service';
@@ -7,7 +7,7 @@ import { NotificationService } from '../../infrastructure/notification.service';
 @Injectable({
   providedIn: 'root'
 })
-export class EventsOfUserService extends FetchService<EventOfUser[]>
+export class EventsOfUserService extends FetchService<EventsOfUser>
 {
   constructor(private api: Api,
     notificationService: NotificationService)
@@ -15,7 +15,7 @@ export class EventsOfUserService extends FetchService<EventOfUser[]>
     super('EventsOfUserQuery', notificationService);
   }
 
-  get events$(): Observable<EventOfUser[]>
+  get events$(): Observable<EventsOfUser>
   {
     return this.result$;
   }
@@ -23,6 +23,12 @@ export class EventsOfUserService extends FetchService<EventOfUser[]>
   fetchEventsOfUser(): Observable<any>
   {
     return this.fetchItems(this.api.eventsOfUser_Query({ includeRequestedEvents: true }));
+  }
+
+  requestAccess(eventId: string)
+  {
+    return this.api.requestAccess_Command({ eventId })
+      .subscribe();
   }
 }
 

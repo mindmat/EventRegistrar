@@ -160,6 +160,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name des Events.
+        /// </summary>
+        internal static string EventName {
+            get {
+                return ResourceManager.GetString("EventName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mail importiert.
         /// </summary>
         internal static string EventRegistrar_Backend_Mailing_Import_ExternalMailImported {
@@ -399,6 +408,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Events.
+        /// </summary>
+        internal static string Events {
+            get {
+                return ResourceManager.GetString("Events", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Beendet.
         /// </summary>
         internal static string EventState_Finished {
@@ -476,6 +494,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Hide {
             get {
                 return ResourceManager.GetString("Hide", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beendete Events ausblenden.
+        /// </summary>
+        internal static string HideFinished {
+            get {
+                return ResourceManager.GetString("HideFinished", resourceCulture);
             }
         }
         
@@ -912,6 +939,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Neuen Event erstellen.
+        /// </summary>
+        internal static string NewEvent {
+            get {
+                return ResourceManager.GetString("NewEvent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keine freizugebende Mails.
         /// </summary>
         internal static string NoPendingMails {
@@ -926,6 +962,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string NoSearchResults {
             get {
                 return ResourceManager.GetString("NoSearchResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Weitere Events.
+        /// </summary>
+        internal static string OtherEvents {
+            get {
+                return ResourceManager.GetString("OtherEvents", resourceCulture);
             }
         }
         
@@ -1101,6 +1146,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zugriff beantragen.
+        /// </summary>
+        internal static string RequestAccess {
+            get {
+                return ResourceManager.GetString("RequestAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rolle.
         /// </summary>
         internal static string Role {
@@ -1151,6 +1205,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string SearchByName {
             get {
                 return ResourceManager.GetString("SearchByName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Suche nach Name, Abkürzung.
+        /// </summary>
+        internal static string SearchByNameAcronym {
+            get {
+                return ResourceManager.GetString("SearchByNameAcronym", resourceCulture);
             }
         }
         
@@ -1223,6 +1286,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Settled {
             get {
                 return ResourceManager.GetString("Settled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beendete Events anzeigen.
+        /// </summary>
+        internal static string ShowFinished {
+            get {
+                return ResourceManager.GetString("ShowFinished", resourceCulture);
             }
         }
         
@@ -1334,6 +1406,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string UserInEventRole_Writer_Description {
             get {
                 return ResourceManager.GetString("UserInEventRole_Writer_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zugriffsanfragen.
+        /// </summary>
+        internal static string Zugriffsanfragen {
+            get {
+                return ResourceManager.GetString("Zugriffsanfragen", resourceCulture);
             }
         }
     }

@@ -1,6 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-
-namespace EventRegistrar.Backend.Registrations.Search;
+﻿namespace EventRegistrar.Backend.Registrations.Search;
 
 public class SearchRegistrationQuery : IRequest<IEnumerable<RegistrationMatch>>, IEventBoundRequest
 {

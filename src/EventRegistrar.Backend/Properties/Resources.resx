@@ -150,6 +150,9 @@
   <data name="English" xml:space="preserve">
     <value>Englisch</value>
   </data>
+  <data name="EventName" xml:space="preserve">
+    <value>Name des Events</value>
+  </data>
   <data name="EventRegistrar_Backend_Mailing_Import_ExternalMailImported" xml:space="preserve">
     <value>Mail importiert</value>
   </data>
@@ -228,6 +231,9 @@
   <data name="EventRegistrar_Backend_Spots_SpotRemoved" xml:space="preserve">
     <value>Platz entfernt</value>
   </data>
+  <data name="Events" xml:space="preserve">
+    <value>Events</value>
+  </data>
   <data name="EventState_Finished" xml:space="preserve">
     <value>Beendet</value>
   </data>
@@ -254,6 +260,9 @@
   </data>
   <data name="Hide" xml:space="preserve">
     <value>Ausblenden:</value>
+  </data>
+  <data name="HideFinished" xml:space="preserve">
+    <value>Beendete Events ausblenden</value>
   </data>
   <data name="Ignored" xml:space="preserve">
     <value>Ignorierte</value>
@@ -399,11 +408,17 @@
   <data name="MissingAmount" xml:space="preserve">
     <value>Fehlbetrag</value>
   </data>
+  <data name="NewEvent" xml:space="preserve">
+    <value>Neuen Event erstellen</value>
+  </data>
   <data name="NoPendingMails" xml:space="preserve">
     <value>Keine freizugebende Mails</value>
   </data>
   <data name="NoSearchResults" xml:space="preserve">
     <value>Keine Treffer gefunden</value>
+  </data>
+  <data name="OtherEvents" xml:space="preserve">
+    <value>Weitere Events</value>
   </data>
   <data name="Partner" xml:space="preserve">
     <value>Partner</value>
@@ -463,6 +478,9 @@
   <data name="ReminderMail2" xml:space="preserve">
     <value>Mail Zahlungserinnerung 2</value>
   </data>
+  <data name="RequestAccess" xml:space="preserve">
+    <value>Zugriff beantragen</value>
+  </data>
   <data name="Role" xml:space="preserve">
     <value>Rolle</value>
   </data>
@@ -477,6 +495,9 @@
   </data>
   <data name="Search" xml:space="preserve">
     <value>Suchen</value>
+  </data>
+  <data name="SearchByNameAcronym" xml:space="preserve">
+    <value>Suche nach Name, Abkürzung</value>
   </data>
   <data name="SearchByName" xml:space="preserve">
     <value>Suche nach Namen</value>
@@ -504,6 +525,9 @@
   </data>
   <data name="Settled" xml:space="preserve">
     <value>Ausgeglichene</value>
+  </data>
+  <data name="ShowFinished" xml:space="preserve">
+    <value>Beendete Events anzeigen</value>
   </data>
   <data name="SingleNotPossible" xml:space="preserve">
     <value>Einzelanmeldung nicht möglich</value>
@@ -543,5 +567,8 @@
   </data>
   <data name="UserInEventRole_Writer_Description" xml:space="preserve">
     <value>Kann das Tagesgeschäft erledigen</value>
+  </data>
+  <data name="Zugriffsanfragen" xml:space="preserve">
+    <value>Zugriffsanfragen</value>
   </data>
 </root>

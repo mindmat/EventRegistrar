@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
-import { EventOfUser, RoleDescription, UserInEventRole } from 'app/api/api';
+import { AccessRequest, EventOfUser, EventSearchResult, EventState, RoleDescription, UserInEventRole } from 'app/api/api';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
-import { UserRolesService } from '../../auth/user-access/user-roles.service';
 import { EventsOfUserService } from './events-of-user.service';
+import { SearchEventsService } from './search-events.service';
 
 @Component({
   selector: 'app-select-event',
@@ -15,48 +14,73 @@ export class SelectEventComponent implements OnInit
   private unsubscribeAll: Subject<any> = new Subject<any>();
   events: EventOfUser[];
   filteredEvents: EventOfUser[];
-  // requests: AccessRequestOfEvent[];
-  // filteredRequests: AccessRequestOfEvent[];
+  requests: AccessRequest[];
+  filteredRequests: AccessRequest[];
+  otherEvents: EventSearchResult[];
+  filteredOtherEvents: EventSearchResult[];
+
+  finishedEventsInList: boolean = false;
+  showFinishedEvents$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  finishedOtherEventsInList: boolean = false;
+  showOtherFinishedEvents$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+
   query$: BehaviorSubject<string | null> = new BehaviorSubject(null);
-  roles: RoleDescription[];
 
   constructor(private eventsOfUserService: EventsOfUserService,
-    // private accessRequestService: UserAccessRequestsService,
-    private userRolesService: UserRolesService,
+    private searchEventService: SearchEventsService,
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
   {
-    combineLatest([this.eventsOfUserService.events$, /*this.accessRequestService.requests$,*/ this.query$])
+    combineLatest([this.eventsOfUserService.events$, this.query$, this.showFinishedEvents$])
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe(([events, /*requests,*/ query]) =>
+      .subscribe(([events, query, showFinishedEvents]) =>
       {
-        this.events = events;
-        this.filteredEvents = events;
-        // this.requests = requests;
-        // this.filteredRequests = requests;
+        this.events = events.authorizedEvents;
+        this.filteredEvents = events.authorizedEvents;
+        this.requests = events.requests;
+        this.filteredRequests = events.requests;
 
         if (query != null && query !== '')
         {
           this.filteredEvents = this.filteredEvents.filter(evt => evt.eventName?.toLowerCase().includes(query.toLowerCase()));
-          // this.filteredRequests = this.filteredRequests.filter(req =>
-          // req.firstName?.toLowerCase().includes(query.toLowerCase())
-          // || req.lastName?.toLowerCase().includes(query.toLowerCase())
-          // || req.email?.toLowerCase().includes(query.toLowerCase()));
+          this.filteredRequests = this.filteredRequests.filter(evt => evt.eventName?.toLowerCase().includes(query.toLowerCase()));
+        }
+
+        this.finishedEventsInList = this.filteredEvents.some(evt => evt.eventState === EventState.Finished);
+        if (!showFinishedEvents && this.finishedEventsInList)
+        {
+          this.filteredEvents = this.filteredEvents.filter(evt => evt.eventState !== EventState.Finished);
         }
 
         // Mark for check
         this.changeDetectorRef.markForCheck();
       });
 
-    this.userRolesService.roles$.subscribe(roles =>
-    {
-      this.roles = roles;
-      this.changeDetectorRef.markForCheck();
-    });
+    combineLatest([this.searchEventService.events$, this.query$, this.showOtherFinishedEvents$])
+      .pipe(takeUntil(this.unsubscribeAll))
+      .subscribe(([events, query, showFinishedEvents]) =>
+      {
+        this.otherEvents = events;
+        this.filteredOtherEvents = events;
+
+        if (query != null && query !== '')
+        {
+          this.filteredOtherEvents = this.filteredOtherEvents.filter(evt => evt.name?.toLowerCase().includes(query.toLowerCase()));
+        }
+
+        this.finishedOtherEventsInList = this.filteredOtherEvents.some(evt => evt.state === EventState.Finished);
+        if (!showFinishedEvents && this.finishedOtherEventsInList)
+        {
+          this.filteredOtherEvents = this.filteredOtherEvents.filter(evt => evt.state !== EventState.Finished);
+        }
+
+        // Mark for check
+        this.changeDetectorRef.markForCheck();
+      });
   }
 
-  filterUsers(query: string)
+  filterByQuery(query: string)
   {
     this.query$.next(query);
   }
@@ -66,21 +90,36 @@ export class SelectEventComponent implements OnInit
     return item.id || index;
   }
 
-  lookupRoleName(role: UserInEventRole): string
+  showFinishedEvents()
   {
-    return this.roles.find(rol => rol.role == role)?.name;
+    this.showFinishedEvents$.next(true);
   }
 
-  removeUser(userId: string)
+  hideFinishedEvents()
   {
-    this.userRolesService.removeUserFromEvent(userId);
+    this.showFinishedEvents$.next(false);
   }
 
-  setRoleOfUser(change: MatSelectChange, userId: string)
+  showOtherFinishedEvents()
   {
-    const role = change.value as UserInEventRole;
-    this.userRolesService.setRoleOfUserInEvent(userId, role);
+    this.showOtherFinishedEvents$.next(true);
   }
+
+  hideOtherFinishedEvents()
+  {
+    this.showOtherFinishedEvents$.next(false);
+  }
+
+  requestAccess(eventId: string)
+  {
+    this.eventsOfUserService.requestAccess(eventId);
+  }
+
+  // setRoleOfUser(change: MatSelectChange, userId: string)
+  // {
+  //   const role = change.value as UserInEventRole;
+  //   this.userRolesService.setRoleOfUserInEvent(userId, role);
+  // }
 
   // approveRequest(requestId: string)
   // {

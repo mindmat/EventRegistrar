@@ -3,6 +3,5 @@
 public interface IAuthenticatedUserProvider
 {
     AuthenticatedUser GetAuthenticatedUser();
-
     Task<Guid?> GetAuthenticatedUserId();
 }

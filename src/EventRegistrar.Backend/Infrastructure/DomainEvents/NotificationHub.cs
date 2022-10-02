@@ -4,7 +4,7 @@ namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 public interface INotificationConsumer
 {
-    Task Process(Guid eventId, string queryName, Guid? rowId);
+    Task Process(Guid? eventId, string queryName, Guid? rowId);
 }
 
 public class NotificationHub : Hub<INotificationConsumer>

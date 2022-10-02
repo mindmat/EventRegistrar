@@ -10,7 +10,7 @@ public class GoogleIdentityProvider : IIdentityProvider
 
     public IdentityProvider Provider => IdentityProvider.Google;
 
-    public (IdentityProvider? Provider, string? Identifier) GetIdentifier(IHttpContextAccessor contextAccessor)
+    public (IdentityProvider Provider, string Identifier)? GetIdentifier(IHttpContextAccessor contextAccessor)
     {
         var idTokenString = contextAccessor.HttpContext?.Request.Headers[HeaderKeyIdToken].FirstOrDefault();
         if (idTokenString != null)
@@ -19,7 +19,7 @@ public class GoogleIdentityProvider : IIdentityProvider
             return (IdentityProvider.Google, token.Subject);
         }
 
-        return (null, null);
+        return null;
     }
 
     public AuthenticatedUser GetUser(IHttpContextAccessor contextAccessor)

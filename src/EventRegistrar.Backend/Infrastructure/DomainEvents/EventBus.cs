@@ -72,8 +72,15 @@ public class EventBus : IEventBus
     {
         foreach (var notification in _notifications)
         {
-            _hub.Clients.Group(notification.EventId!.ToString()!)
-                .Process(notification.EventId!.Value, notification.QueryName, notification.RowId);
+            if (notification.EventId != null)
+            {
+                _hub.Clients.Group(notification.EventId!.ToString()!)
+                    .Process(notification.EventId!.Value, notification.QueryName, notification.RowId);
+            }
+            else
+            {
+                _hub.Clients.All.Process(null, notification.QueryName, notification.RowId);
+            }
         }
     }
 }

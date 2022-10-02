@@ -150,6 +150,12 @@
   <data name="English" xml:space="preserve">
     <value>English</value>
   </data>
+  <data name="EventName" xml:space="preserve">
+    <value>Event name</value>
+  </data>
+  <data name="Events" xml:space="preserve">
+    <value>Events</value>
+  </data>
   <data name="EventState_Finished" xml:space="preserve">
     <value>Finished</value>
   </data>
@@ -176,6 +182,9 @@
   </data>
   <data name="Hide" xml:space="preserve">
     <value>Hide:</value>
+  </data>
+  <data name="HideFinished" xml:space="preserve">
+    <value>Hide finished events</value>
   </data>
   <data name="Ignored" xml:space="preserve">
     <value>Ignored</value>
@@ -321,11 +330,17 @@
   <data name="MissingAmount" xml:space="preserve">
     <value>Missing amount</value>
   </data>
+  <data name="NewEvent" xml:space="preserve">
+    <value>Create new event</value>
+  </data>
   <data name="NoPendingMails" xml:space="preserve">
     <value>No pending mails</value>
   </data>
   <data name="NoSearchResults" xml:space="preserve">
     <value>No results found</value>
+  </data>
+  <data name="OtherEvents" xml:space="preserve">
+    <value>Other Events</value>
   </data>
   <data name="Partner" xml:space="preserve">
     <value>Partner</value>
@@ -375,6 +390,9 @@
   <data name="ReminderMail2" xml:space="preserve">
     <value>Reminder mail 2</value>
   </data>
+  <data name="RequestAccess" xml:space="preserve">
+    <value>Request access</value>
+  </data>
   <data name="Role" xml:space="preserve">
     <value>Role</value>
   </data>
@@ -389,6 +407,9 @@
   </data>
   <data name="Search" xml:space="preserve">
     <value>Search</value>
+  </data>
+  <data name="SearchByNameAcronym" xml:space="preserve">
+    <value>Search by name, acronym</value>
   </data>
   <data name="SearchByName" xml:space="preserve">
     <value>Search by name</value>
@@ -417,6 +438,9 @@
   <data name="Settled" xml:space="preserve">
     <value>Settled</value>
   </data>
+  <data name="ShowFinished" xml:space="preserve">
+    <value>Show finished events</value>
+  </data>
   <data name="SingleNotPossible" xml:space="preserve">
     <value>Single registration not possible</value>
   </data>
@@ -443,5 +467,8 @@
   </data>
   <data name="UserInEventRole_Writer" xml:space="preserve">
     <value>Write</value>
+  </data>
+  <data name="Zugriffsanfragen" xml:space="preserve">
+    <value>Access requests</value>
   </data>
 </root>

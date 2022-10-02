@@ -6096,7 +6096,7 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    eventsOfUser_Query(eventsOfUserQuery: EventsOfUserQuery | undefined): Observable<EventOfUser[]> {
+    eventsOfUser_Query(eventsOfUserQuery: EventsOfUserQuery | undefined): Observable<EventsOfUser> {
         let url_ = this.baseUrl + "/api/EventsOfUserQuery";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -6119,14 +6119,14 @@ export class Api {
                 try {
                     return this.processEventsOfUser_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<EventOfUser[]>;
+                    return _observableThrow(e) as any as Observable<EventsOfUser>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<EventOfUser[]>;
+                return _observableThrow(response_) as any as Observable<EventsOfUser>;
         }));
     }
 
-    protected processEventsOfUser_Query(response: HttpResponseBase): Observable<EventOfUser[]> {
+    protected processEventsOfUser_Query(response: HttpResponseBase): Observable<EventsOfUser> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6136,7 +6136,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as EventOfUser[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as EventsOfUser;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -6910,7 +6910,7 @@ export interface DeleteRegistrationFormCommand {
 export interface RegistrationFormItem {
     registrationFormId?: string | null;
     externalIdentifier?: string;
-    state?: State;
+    state?: EventState;
     title?: string;
     lastImport?: Date | null;
     pendingRawFormCreated?: Date | null;
@@ -6918,7 +6918,7 @@ export interface RegistrationFormItem {
     deletable?: boolean;
 }
 
-export enum State {
+export enum EventState {
     Setup = 1,
     RegistrationOpen = 2,
     RegistrationClosed = 3,
@@ -8046,7 +8046,7 @@ export interface EventDetails {
     id?: string;
     name?: string;
     acronym?: string;
-    state?: State;
+    state?: EventState;
 }
 
 export interface EventByAcronymQuery {
@@ -8067,7 +8067,7 @@ export interface EventSearchResult {
     id?: string;
     name?: string;
     requestSent?: boolean;
-    state?: State;
+    state?: EventState;
 }
 
 export interface SearchEventQuery {
@@ -8076,13 +8076,19 @@ export interface SearchEventQuery {
     searchString?: string | null;
 }
 
+export interface EventsOfUser {
+    authorizedEvents?: EventOfUser[];
+    requests?: AccessRequest[];
+}
+
 export interface EventOfUser {
     eventId?: string;
     eventName?: string;
     eventAcronym?: string;
-    eventState?: State;
+    eventState?: EventState;
+    eventStateText?: string;
     role?: UserInEventRole;
-    requestSent?: Date;
+    roleText?: string;
 }
 
 export enum UserInEventRole {
@@ -8092,8 +8098,16 @@ export enum UserInEventRole {
     Admin = 3,
 }
 
+export interface AccessRequest {
+    eventId?: string;
+    eventName?: string;
+    eventAcronym?: string;
+    eventState?: EventState;
+    eventStateText?: string;
+    requestSent?: Date | null;
+}
+
 export interface EventsOfUserQuery {
-    includeRequestedEvents?: boolean;
 }
 
 export interface RemoveUserFromEventCommand {

@@ -25,11 +25,11 @@ internal class AuthenticatedUserProvider : IAuthenticatedUserProvider
 
     public async Task<Guid?> GetAuthenticatedUserId()
     {
-        var (provider, identifier) = _identityProvider.GetIdentifier(_httpContextAccessor);
-        if (provider != null && identifier != null)
+        var identifier = _identityProvider.GetIdentifier(_httpContextAccessor);
+        if (identifier != null)
         {
-            var user = await _users.FirstOrDefaultAsync(usr => usr.IdentityProvider == provider
-                                                            && usr.IdentityProviderUserIdentifier == identifier);
+            var user = await _users.FirstOrDefaultAsync(usr => usr.IdentityProvider == identifier.Value.Provider
+                                                            && usr.IdentityProviderUserIdentifier == identifier.Value.Identifier);
             if (user == null)
             {
                 //return new Guid("73B167CE-61CC-46AC-BC7D-F72A1EA5D7C9");
