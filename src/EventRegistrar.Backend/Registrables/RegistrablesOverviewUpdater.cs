@@ -62,7 +62,7 @@ public class RegistrablesOverviewUpdater : ReadModelUpdater<RegistrablesOverview
                                                                                                              || registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty))),
                                                                        IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
                                                                                   && userCanDeleteRegistrable
-                                                                                  && rbl.Event!.State == RegistrationForms.State.Setup,
+                                                                                  && rbl.Event!.State == RegistrationForms.EventState.Setup,
                                                                        Class = rbl.Spots!.Where(spt => !spt.IsCancelled
                                                                                                     && !spt.IsWaitingList)
                                                                                   .Select(GetSpotState)
@@ -101,7 +101,7 @@ public class RegistrablesOverviewUpdater : ReadModelUpdater<RegistrablesOverview
                                                                                                                    && (spt.IsUnmatchedPartnerSpot() || spt.IsMatchedPartnerSpot())),
                                                                        IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
                                                                                   && userCanDeleteRegistrable
-                                                                                  && rbl.Event!.State == RegistrationForms.State.Setup,
+                                                                                  && rbl.Event!.State == RegistrationForms.EventState.Setup,
                                                                        Class = rbl.Spots!.Where(spt => !spt.IsCancelled
                                                                                                     && !spt.IsWaitingList)
                                                                                   .OrderBy(spt => spt.FirstPartnerJoined)

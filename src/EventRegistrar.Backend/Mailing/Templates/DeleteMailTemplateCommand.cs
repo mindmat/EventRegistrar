@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Mailing.Templates;
@@ -25,9 +26,12 @@ public class DeleteMailTemplateCommandHandler : IRequestHandler<DeleteMailTempla
                                                       && mtp.EventId == command.EventId)
                                            .Include(mtp => mtp.Event)
                                            .FirstAsync();
-        if (template.Event.State != RegistrationForms.State.Setup)
+        if (template.Event.State != RegistrationForms.EventState.Setup)
+        {
             throw new Exception(
                 $"To delete a template, event must be in state Setup, but it is in state {template.Event.State}");
+        }
+
         template.IsDeleted = true;
         await _mailTemplates.InsertOrUpdateEntity(template);
 

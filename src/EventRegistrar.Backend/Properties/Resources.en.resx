@@ -150,6 +150,18 @@
   <data name="English" xml:space="preserve">
     <value>English</value>
   </data>
+  <data name="EventState_Finished" xml:space="preserve">
+    <value>Finished</value>
+  </data>
+  <data name="EventState_RegistrationClosed" xml:space="preserve">
+    <value>Closed</value>
+  </data>
+  <data name="EventState_RegistrationOpen" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="EventState_Setup" xml:space="preserve">
+    <value>Setup</value>
+  </data>
   <data name="FirstName" xml:space="preserve">
     <value>First Name</value>
   </data>
@@ -182,6 +194,15 @@
   </data>
   <data name="Leader" xml:space="preserve">
     <value>Leader</value>
+  </data>
+  <data name="MailingAudience_Paid" xml:space="preserve">
+    <value>paid</value>
+  </data>
+  <data name="MailingAudience_Unpaid" xml:space="preserve">
+    <value>unpaid</value>
+  </data>
+  <data name="MailingAudience_WaitingList" xml:space="preserve">
+    <value>waiting list</value>
   </data>
   <data name="MailPlaceholder" xml:space="preserve">
     <value>Mail placeholder</value>
@@ -335,6 +356,15 @@
   </data>
   <data name="RegistrableSoldOut" xml:space="preserve">
     <value>{0} is sold out</value>
+  </data>
+  <data name="RegistrationState_Cancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="RegistrationState_Paid" xml:space="preserve">
+    <value>Paid</value>
+  </data>
+  <data name="RegistrationState_Received" xml:space="preserve">
+    <value>Received</value>
   </data>
   <data name="Release" xml:space="preserve">
     <value>Release</value>

@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
@@ -31,7 +32,7 @@ public class
         var acronym = await _events.FirstAsync(evt => evt.Id == query.EventId, cancellationToken);
         var rawForms = (await _rawForms.Where(frm => frm.EventAcronym == acronym.Acronym)
                                        .Select(frm =>
-                                           new { frm.FormExternalIdentifier, frm.Processed, frm.Created, frm.Id })
+                                                   new { frm.FormExternalIdentifier, frm.Processed, frm.Created, frm.Id })
                                        .ToListAsync(cancellationToken)
                        )
                        .GroupBy(frm => frm.FormExternalIdentifier)
@@ -54,8 +55,7 @@ public class
                                                    State = frm.State,
                                                    Title = frm.Title,
                                                    //Language = frm.Language,
-                                                   Deletable = frm.Event.State == State.Setup &&
-                                                               frm.State == State.Setup
+                                                   Deletable = frm.Event.State == EventState.Setup && frm.State == EventState.Setup
                                                })
                                 .ToListAsync(cancellationToken);
 

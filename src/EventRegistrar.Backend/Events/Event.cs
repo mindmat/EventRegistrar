@@ -5,6 +5,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Events;
@@ -21,7 +22,7 @@ public class Event : Entity
     public ICollection<UserInEvent>? Users { get; set; }
 
     public string Name { get; set; } = null!;
-    public State State { get; set; }
+    public EventState State { get; set; }
     public string Acronym { get; set; } = null!;
     public string? Currency { get; set; }
     public string? AccountIban { get; set; }

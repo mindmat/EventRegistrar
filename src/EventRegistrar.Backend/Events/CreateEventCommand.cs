@@ -7,6 +7,7 @@ using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Compositions;
 using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.RegistrationForms;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Events;
@@ -54,9 +55,14 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
         var existingEvent = await _events.FirstOrDefaultAsync(evt => evt.Acronym == command.Acronym
                                                                   || evt.Id == command.Id, cancellationToken);
         if (existingEvent != null)
+        {
             throw new Exception($"Event with Acronym {existingEvent.Acronym} already exists (Id {existingEvent.Id})");
+        }
 
-        if (!_authenticatedUserId.UserId.HasValue) throw new UnauthorizedAccessException("Unknown authenticated user");
+        if (!_authenticatedUserId.UserId.HasValue)
+        {
+            throw new UnauthorizedAccessException("Unknown authenticated user");
+        }
 
         // create event
         var newEventId = command.Id;
@@ -64,7 +70,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                        {
                            Id = newEventId,
                            Acronym = command.Acronym,
-                           State = State.Setup,
+                           State = EventState.Setup,
                            Name = command.Name,
                            PredecessorEventId = command.EventId_CopyFrom
                        };
@@ -89,11 +95,14 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                 accessRightsInSourceEvent.Any(uie => uie.UserId == _authenticatedUserId.UserId.Value);
 
             if (!isUserAdminInOtherEvent)
+            {
                 throw new Exception($"You are not admin of event {sourceEventId}. Only an admin can copy an event");
+            }
 
             // copy access rights
             foreach (var accessRightInSourceEvent in accessRightsInSourceEvent.Where(uie =>
-                         uie.UserId != _authenticatedUserId.UserId.Value))
+                                                                                         uie.UserId != _authenticatedUserId.UserId.Value))
+            {
                 await _usersInEvents.InsertOrUpdateEntity(new UserInEvent
                                                           {
                                                               Id = Guid.NewGuid(),
@@ -101,12 +110,14 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                                                               Role = accessRightInSourceEvent.Role,
                                                               UserId = accessRightInSourceEvent.UserId
                                                           }, cancellationToken);
+            }
 
             // copy mail templates
             var mailTemplatesOfSourceEvent = await _mailTemplates.Where(mtp => mtp.EventId == sourceEventId
                                                                             && !mtp.IsDeleted)
                                                                  .ToListAsync(cancellationToken);
             foreach (var mailTemplateOfSourceEvent in mailTemplatesOfSourceEvent)
+            {
                 await _mailTemplates.InsertOrUpdateEntity(new MailTemplate
                                                           {
                                                               Id = Guid.NewGuid(),
@@ -122,6 +133,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                                                               SenderName = mailTemplateOfSourceEvent.SenderName,
                                                               Subject = mailTemplateOfSourceEvent.Subject
                                                           }, cancellationToken);
+            }
 
             // copy registrables
             // ToDo: map RegistrableId1_ReductionActivatedIfCombinedWith etc to new ids
@@ -161,6 +173,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                 var newRegistrableId = registrableMap[registrableOfSourceEvent.Id];
                 // copy reductions
                 foreach (var reduction in registrableOfSourceEvent.Reductions.ToList())
+                {
                     await _reductions.InsertOrUpdateEntity(new Reduction
                                                            {
                                                                Id = Guid.NewGuid(),
@@ -170,17 +183,19 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                                                                //QuestionOptionId_ActivatesReduction = reduction.QuestionOptionId_ActivatesReduction,
                                                                RegistrableId1_ReductionActivatedIfCombinedWith =
                                                                    registrableMap.Lookup(reduction
-                                                                       .RegistrableId1_ReductionActivatedIfCombinedWith),
+                                                                                             .RegistrableId1_ReductionActivatedIfCombinedWith),
                                                                RegistrableId2_ReductionActivatedIfCombinedWith =
                                                                    registrableMap.Lookup(reduction
-                                                                       .RegistrableId2_ReductionActivatedIfCombinedWith)
+                                                                                             .RegistrableId2_ReductionActivatedIfCombinedWith)
                                                            }, cancellationToken);
+                }
 
                 // copy compositions
                 foreach (var composition in registrableOfSourceEvent.Compositions)
                 {
                     var mappedRegistrableId_Contains = registrableMap.Lookup(composition.RegistrableId_Contains);
                     if (mappedRegistrableId_Contains != null)
+                    {
                         await _registrableCompositions.InsertOrUpdateEntity(new RegistrableComposition
                                                                             {
                                                                                 Id = Guid.NewGuid(),
@@ -188,6 +203,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                                                                                 RegistrableId_Contains =
                                                                                     mappedRegistrableId_Contains.Value
                                                                             }, cancellationToken);
+                    }
                 }
             }
 
@@ -195,6 +211,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
             var configurationsOfSourceEvent = await _configurations.Where(mtp => mtp.EventId == sourceEventId)
                                                                    .ToListAsync(cancellationToken);
             foreach (var configurationOfSourceEvent in configurationsOfSourceEvent)
+            {
                 await _configurations.InsertOrUpdateEntity(new EventConfiguration
                                                            {
                                                                Id = Guid.NewGuid(),
@@ -202,6 +219,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                                                                Type = configurationOfSourceEvent.Type,
                                                                ValueJson = configurationOfSourceEvent.ValueJson
                                                            }, cancellationToken);
+            }
         }
 
         return Unit.Value;

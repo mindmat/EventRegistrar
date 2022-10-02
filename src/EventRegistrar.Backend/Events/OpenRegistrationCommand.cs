@@ -9,6 +9,7 @@ using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
 using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Spots;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Events;
@@ -58,11 +59,13 @@ public class OpenRegistrationCommandHandler : IRequestHandler<OpenRegistrationCo
     public async Task<Unit> Handle(OpenRegistrationCommand command, CancellationToken cancellationToken)
     {
         var eventToOpen = await _events.FirstAsync(evt => evt.Id == command.EventId, cancellationToken);
-        if (eventToOpen.State != State.Setup)
+        if (eventToOpen.State != EventState.Setup)
+        {
             throw new ArgumentException(
                 $"Event {eventToOpen.Id} is in state {eventToOpen.State} and can therefore not be opened");
+        }
 
-        eventToOpen.State = State.RegistrationOpen;
+        eventToOpen.State = EventState.RegistrationOpen;
 
         if (command.DeleteTestData)
         {

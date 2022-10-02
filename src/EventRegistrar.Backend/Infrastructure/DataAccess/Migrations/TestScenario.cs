@@ -5,6 +5,7 @@ using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;
+
 using SimpleInjector;
 using SimpleInjector.Lifestyles;
 
@@ -42,7 +43,7 @@ public class TestScenario : IDisposable
                                           Id = new Guid("6A916C80-AD0F-4548-BCD6-80F2DC617365"),
                                           Name = "OtherCurrentEvent",
                                           Acronym = "cev",
-                                          State = State.RegistrationOpen
+                                          State = EventState.RegistrationOpen
                                       };
 
     public Event OtherOwnEvent => new()
@@ -50,7 +51,7 @@ public class TestScenario : IDisposable
                                       Id = new Guid("733A954C-A751-46DD-A8BA-3AFBBC54D459"),
                                       Name = "OtherOwnEvent",
                                       Acronym = "ooe",
-                                      State = State.RegistrationOpen
+                                      State = EventState.RegistrationOpen
                                   };
 
     public Event PastEvent => new()
@@ -58,7 +59,7 @@ public class TestScenario : IDisposable
                                   Id = new Guid("F569251D-E1FB-444B-AD68-3BBAFD64319D"),
                                   Name = "PastEvent",
                                   Acronym = "pev",
-                                  State = State.Finished
+                                  State = EventState.Finished
                               };
 
     public User Reader => new()
@@ -138,7 +139,7 @@ public class TestScenario : IDisposable
                                   Id = new Guid("ACBCA10C-B53F-4DAA-8D00-D1ED9394A294"),
                                   Name = "TestEvent",
                                   Acronym = "tev",
-                                  State = State.RegistrationOpen
+                                  State = EventState.RegistrationOpen
                               };
 
     private Event FutureEvent => new()
@@ -146,7 +147,7 @@ public class TestScenario : IDisposable
                                      Id = new Guid("E5AB67E4-9D1E-49CA-8069-FAA6F785C107"),
                                      Name = "FutureEvent",
                                      Acronym = "fev",
-                                     State = State.Setup
+                                     State = EventState.Setup
                                  };
 
     public async Task Create(Container container)
@@ -158,9 +159,7 @@ public class TestScenario : IDisposable
         }
     }
 
-    public void Dispose()
-    {
-    }
+    public void Dispose() { }
 
     private async Task InsertAccessToEventRequests(Container container)
     {

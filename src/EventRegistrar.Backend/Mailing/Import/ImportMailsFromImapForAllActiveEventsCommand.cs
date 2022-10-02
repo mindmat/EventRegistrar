@@ -23,7 +23,7 @@ public class ImportMailsFromImapForAllActiveEventsCommandHandler : IRequestHandl
     public async Task<Unit> Handle(ImportMailsFromImapForAllActiveEventsCommand command,
                                    CancellationToken cancellationToken)
     {
-        var activeImportConfigurations = await _configurations.Where(cfg => cfg.Event!.State != State.Finished
+        var activeImportConfigurations = await _configurations.Where(cfg => cfg.Event!.State != EventState.Finished
                                                                          && cfg.Type == typeof(ExternalMailConfigurations).FullName)
                                                               .ToListAsync(cancellationToken);
         foreach (var activeImportConfiguration in activeImportConfigurations)

@@ -8,5 +8,5 @@ public class EventSearchResult
     public Guid Id { get; set; }
     public string Name { get; set; }
     public bool RequestSent { get; set; }
-    public State State { get; set; }
+    public EventState State { get; set; }
 }

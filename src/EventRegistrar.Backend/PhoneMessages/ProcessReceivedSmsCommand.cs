@@ -40,7 +40,7 @@ public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedS
     {
         var registrations = await _registrations
                                   .Where(reg => reg.PhoneNormalized == command.Sms.From
-                                             && reg.Event.State != State.Finished)
+                                             && reg.Event.State != EventState.Finished)
                                   .Select(reg => new
                                                  {
                                                      reg.Id,
@@ -62,7 +62,7 @@ public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedS
                                                   .Where(eid => IsSmsAddressedToEvent(eid, command.Sms))
                                                   .ToHashSet();
         registrations = registrations.Where(reg => eventIdsWithThisNumber.Contains(reg.EventId))
-                                     .OrderByDescending(reg => reg.EventState == State.RegistrationOpen)
+                                     .OrderByDescending(reg => reg.EventState == EventState.RegistrationOpen)
                                      .ThenBy(reg => reg.RegistrationState == RegistrationState.Cancelled)
                                      .ThenByDescending(reg => reg.LastSmsSent ?? DateTime.MinValue)
                                      .ThenByDescending(reg => reg.ReceivedAt)

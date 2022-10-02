@@ -31,193 +31,221 @@ import { MailViewComponent } from './modules/admin/mailing/mails/mail-view/mail-
 import { MailViewResolver } from './modules/admin/mailing/mails/mail-view/mail-view.resolver';
 import { UserAccessComponent } from './modules/admin/auth/user-access/user-access.component';
 import { UserAccessResolver } from './modules/admin/auth/user-access/user-access.resolver';
+import { EventAcronymResolver } from './modules/admin/events/event-acronym.resolver';
+import { SelectEventComponent } from './modules/admin/events/select-event/select-event.component';
+import { SelectEventResolver } from './modules/admin/events/select-event/select-event.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-export const appRoutes: Route[] = [
+export const appRoutes: Route[] =
+    [
+        // Redirect empty path to '/select-event'
+        { path: '', pathMatch: 'full', redirectTo: '/select-event' },
 
-    // Redirect empty path to '/overview'
-    { path: '', pathMatch: 'full', redirectTo: 'overview' },
+        // Redirect signed in user to the '/select-event'
+        //
+        // After the user signs in, the sign in page will redirect the user to the 'signed-in-redirect'
+        // path. Below is another redirection for that path to redirect the user to the desired
+        // location. This is a small convenience to keep all main routes together here on this file.
+        { path: 'signed-in-redirect', pathMatch: 'full', redirectTo: '/select-event' },
 
-    // Redirect signed in user to the '/overview'
-    //
-    // After the user signs in, the sign in page will redirect the user to the 'signed-in-redirect'
-    // path. Below is another redirection for that path to redirect the user to the desired
-    // location. This is a small convenience to keep all main routes together here on this file.
-    { path: 'signed-in-redirect', pathMatch: 'full', redirectTo: 'overview' },
-
-    // Auth routes for guests
-    {
-        path: '',
-        canActivate: [NoAuthGuard],
-        canActivateChild: [NoAuthGuard],
-        component: LayoutComponent,
-        data: {
-            layout: 'empty'
+        // Auth routes for guests
+        {
+            path: '',
+            canActivate: [NoAuthGuard],
+            canActivateChild: [NoAuthGuard],
+            component: LayoutComponent,
+            data: {
+                layout: 'empty'
+            },
+            children: [
+                { path: 'confirmation-required', loadChildren: () => import('app/modules/auth/confirmation-required/confirmation-required.module').then(m => m.AuthConfirmationRequiredModule) },
+                { path: 'forgot-password', loadChildren: () => import('app/modules/auth/forgot-password/forgot-password.module').then(m => m.AuthForgotPasswordModule) },
+                { path: 'reset-password', loadChildren: () => import('app/modules/auth/reset-password/reset-password.module').then(m => m.AuthResetPasswordModule) },
+                { path: 'sign-in', loadChildren: () => import('app/modules/auth/sign-in/sign-in.module').then(m => m.AuthSignInModule) },
+                { path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.module').then(m => m.AuthSignUpModule) }
+            ]
         },
-        children: [
-            { path: 'confirmation-required', loadChildren: () => import('app/modules/auth/confirmation-required/confirmation-required.module').then(m => m.AuthConfirmationRequiredModule) },
-            { path: 'forgot-password', loadChildren: () => import('app/modules/auth/forgot-password/forgot-password.module').then(m => m.AuthForgotPasswordModule) },
-            { path: 'reset-password', loadChildren: () => import('app/modules/auth/reset-password/reset-password.module').then(m => m.AuthResetPasswordModule) },
-            { path: 'sign-in', loadChildren: () => import('app/modules/auth/sign-in/sign-in.module').then(m => m.AuthSignInModule) },
-            { path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.module').then(m => m.AuthSignUpModule) }
-        ]
-    },
 
-    // Auth routes for authenticated users
-    {
-        path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        component: LayoutComponent,
-        data: {
-            layout: 'empty'
+        // Auth routes for authenticated users
+        {
+            path: '',
+            canActivate: [AuthGuard],
+            canActivateChild: [AuthGuard],
+            component: LayoutComponent,
+            data: {
+                layout: 'empty'
+            },
+            children: [
+                { path: 'sign-out', loadChildren: () => import('app/modules/auth/sign-out/sign-out.module').then(m => m.AuthSignOutModule) },
+                { path: 'unlock-session', loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.module').then(m => m.AuthUnlockSessionModule) }
+            ]
         },
-        children: [
-            { path: 'sign-out', loadChildren: () => import('app/modules/auth/sign-out/sign-out.module').then(m => m.AuthSignOutModule) },
-            { path: 'unlock-session', loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.module').then(m => m.AuthUnlockSessionModule) }
-        ]
-    },
 
-    // Landing routes
-    {
-        path: '',
-        component: LayoutComponent,
-        data: {
-            layout: 'empty'
+        {
+            path: 'select-event',
+            canActivate: [AuthGuard],
+            canActivateChild: [AuthGuard],
+            component: LayoutComponent,
+            // data: { layout: 'empty' },
+            children: [
+                {
+                    path: '',
+                    canActivate: [AuthGuard],
+                    component: SelectEventComponent,
+                    resolve: { initialData: SelectEventResolver },
+                }]
         },
-        children: [
-            { path: 'home', loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule) },
-        ]
-    },
+        {
+            path: ':eventAcronym',
+            canActivate: [AuthGuard],
+            canActivateChild: [AuthGuard],
+            resolve: { initialData: EventAcronymResolver },
 
-    // mail preview (no layout)
-    {
-        path: 'auto-mail-preview/:templateId',
-        canActivate: [AuthGuard],
-        component: AutoMailPreviewComponent,
-        resolve: { initialData: AutoMailPreviewResolver }
-    },
+            children: [
 
-    // Admin routes
-    {
-        path: '',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        component: LayoutComponent,
-        resolve: {
-            initialData: InitialDataResolver,
-        },
-        children: [
-            {
-                path: 'overview',
-                children: [
-                    { path: '', component: OverviewComponent, resolve: { initialData: OverviewResolver } },
-                    { path: ':id/double/participants', component: ParticipantsDoubleComponent, resolve: { initialData: ParticipantsResolver } },
-                    { path: ':id/single/participants', component: ParticipantsSingleComponent, resolve: { initialData: ParticipantsResolver } },
-                ]
-            },
-            {
-                path: 'registration/:id', canActivate: [AuthGuard], component: RegistrationComponent, resolve: { initialData: RegistrationResolver }
-            }
-        ]
-    },
-    {
-        path: 'accounting',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        component: LayoutComponent,
-        resolve: { initialData: InitialDataResolver },
-        children: [
-            {
-                path: 'bank-statements',
-                canActivate: [AuthGuard],
-                component: BankStatementsComponent,
-                resolve: { initialData: BankStatementsResolver }
-            },
-            {
-                path: 'settle-payments',
-                canActivate: [AuthGuard],
-                component: SettlePaymentsComponent,
-                resolve: { initialData: SettlePaymentsResolver },
-                children: [
-                    {
-                        path: ':id',
-                        component: SettlePaymentComponent,
-                        resolve: { initialData: SettlePaymentResolver }
-                    }
-                ]
-            },
-            {
-                path: 'due-payments',
-                canActivate: [AuthGuard],
-                component: DuePaymentsComponent,
-                resolve: { initialData: DuePaymentsResolver }
-            },
-        ]
-    },
-    {
-        path: 'registrations',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        component: LayoutComponent,
-        resolve: { initialData: InitialDataResolver },
-        children: [
-            {
-                path: 'search-registration', canActivate: [AuthGuard], component: SearchRegistrationComponent
-            }
-        ]
-    },
-    {
-        path: 'mailing',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        component: LayoutComponent,
-        resolve: { initialData: InitialDataResolver },
-        children: [
-            {
-                path: 'auto-mail-templates',
-                canActivate: [AuthGuard],
-                component: AutoMailTemplatesComponent,
-                resolve: { initialData: AutoMailTemplatesResolver },
-                children: [
-                    {
-                        path: ':id',
-                        component: AutoMailTemplateComponent,
-                        resolve: { initialData: AutoMailTemplateResolver }
-                    }
-                ]
-            },
-            {
-                path: 'release-mails',
-                canActivate: [AuthGuard],
-                component: ReleaseMailsComponent,
-                resolve: { initialData: ReleaseMailsResolver },
-                children: [
-                    {
-                        path: ':id',
-                        component: MailViewComponent,
-                        resolve: { initialData: MailViewResolver }
-                    }
-                ]
+                // Redirect empty path to '/overview'
+                { path: '', pathMatch: 'full', redirectTo: 'overview' },
 
-            }
-        ]
-    },
-    {
-        path: 'admin',
-        canActivate: [AuthGuard],
-        canActivateChild: [AuthGuard],
-        component: LayoutComponent,
-        resolve: { initialData: InitialDataResolver },
-        children: [
-            {
-                path: 'user-access',
-                canActivate: [AuthGuard],
-                component: UserAccessComponent,
-                resolve: { initialData: UserAccessResolver }
-            }
-        ]
-    }
-];
+
+                // Landing routes
+                {
+                    path: '',
+                    component: LayoutComponent,
+                    data: {
+                        layout: 'empty'
+                    },
+                    children: [
+                        { path: 'home', loadChildren: () => import('app/modules/landing/home/home.module').then(m => m.LandingHomeModule) },
+                    ]
+                },
+
+                // mail preview (no layout)
+                {
+                    path: 'auto-mail-preview/:templateId',
+                    canActivate: [AuthGuard],
+                    component: AutoMailPreviewComponent,
+                    resolve: { initialData: AutoMailPreviewResolver }
+                },
+
+                // Admin routes
+                {
+                    path: '',
+                    canActivate: [AuthGuard],
+                    canActivateChild: [AuthGuard],
+                    component: LayoutComponent,
+                    resolve: { initialData: InitialDataResolver },
+                    children: [
+                        {
+                            path: 'overview',
+                            children: [
+                                { path: '', component: OverviewComponent, resolve: { initialData: OverviewResolver } },
+                                { path: ':id/double/participants', component: ParticipantsDoubleComponent, resolve: { initialData: ParticipantsResolver } },
+                                { path: ':id/single/participants', component: ParticipantsSingleComponent, resolve: { initialData: ParticipantsResolver } },
+                            ]
+                        },
+                        {
+                            path: 'registration/:id', canActivate: [AuthGuard], component: RegistrationComponent, resolve: { initialData: RegistrationResolver }
+                        }
+                    ]
+                },
+                {
+                    path: 'accounting',
+                    canActivate: [AuthGuard],
+                    canActivateChild: [AuthGuard],
+                    component: LayoutComponent,
+                    resolve: { initialData: InitialDataResolver },
+                    children: [
+                        {
+                            path: 'bank-statements',
+                            canActivate: [AuthGuard],
+                            component: BankStatementsComponent,
+                            resolve: { initialData: BankStatementsResolver }
+                        },
+                        {
+                            path: 'settle-payments',
+                            canActivate: [AuthGuard],
+                            component: SettlePaymentsComponent,
+                            resolve: { initialData: SettlePaymentsResolver },
+                            children: [
+                                {
+                                    path: ':id',
+                                    component: SettlePaymentComponent,
+                                    resolve: { initialData: SettlePaymentResolver }
+                                }
+                            ]
+                        },
+                        {
+                            path: 'due-payments',
+                            canActivate: [AuthGuard],
+                            component: DuePaymentsComponent,
+                            resolve: { initialData: DuePaymentsResolver }
+                        },
+                    ]
+                },
+                {
+                    path: 'registrations',
+                    canActivate: [AuthGuard],
+                    canActivateChild: [AuthGuard],
+                    component: LayoutComponent,
+                    resolve: { initialData: InitialDataResolver },
+                    children: [
+                        {
+                            path: 'search-registration', canActivate: [AuthGuard], component: SearchRegistrationComponent
+                        }
+                    ]
+                },
+                {
+                    path: 'mailing',
+                    canActivate: [AuthGuard],
+                    canActivateChild: [AuthGuard],
+                    component: LayoutComponent,
+                    resolve: { initialData: InitialDataResolver },
+                    children: [
+                        {
+                            path: 'auto-mail-templates',
+                            canActivate: [AuthGuard],
+                            component: AutoMailTemplatesComponent,
+                            resolve: { initialData: AutoMailTemplatesResolver },
+                            children: [
+                                {
+                                    path: ':id',
+                                    component: AutoMailTemplateComponent,
+                                    resolve: { initialData: AutoMailTemplateResolver }
+                                }
+                            ]
+                        },
+                        {
+                            path: 'release-mails',
+                            canActivate: [AuthGuard],
+                            component: ReleaseMailsComponent,
+                            resolve: { initialData: ReleaseMailsResolver },
+                            children: [
+                                {
+                                    path: ':id',
+                                    component: MailViewComponent,
+                                    resolve: { initialData: MailViewResolver }
+                                }
+                            ]
+
+                        }
+                    ]
+                },
+                {
+                    path: 'admin',
+                    canActivate: [AuthGuard],
+                    canActivateChild: [AuthGuard],
+                    component: LayoutComponent,
+                    resolve: { initialData: InitialDataResolver },
+                    children: [
+                        {
+                            path: 'user-access',
+                            canActivate: [AuthGuard],
+                            component: UserAccessComponent,
+                            resolve: { initialData: UserAccessResolver }
+                        }
+                    ]
+                }]
+        }
+    ];

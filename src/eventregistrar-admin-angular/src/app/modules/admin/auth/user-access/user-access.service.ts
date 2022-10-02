@@ -22,7 +22,7 @@ export class UserAccessService extends FetchService<UserInEventDisplayItem[]>
     return this.result$;
   }
 
-  fetchUsersOfEvent()
+  fetchUsersOfEvent(): Observable<any>
   {
     return this.fetchItems(this.api.usersOfEvent_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }

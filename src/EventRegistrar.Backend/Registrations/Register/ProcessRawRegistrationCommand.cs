@@ -71,7 +71,7 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
             $"Questions: {form.Questions?.Count}, Options: {form.Questions?.Sum(qst => qst.QuestionOptions?.Count)}");
 
         // check form state
-        if (form.State == State.RegistrationClosed)
+        if (form.State == EventState.RegistrationClosed)
         {
             throw new ApplicationException("Registration is closed");
         }

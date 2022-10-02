@@ -2,7 +2,9 @@
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.RegistrationForms.Questions;
+
 using MediatR;
+
 using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
@@ -42,15 +44,20 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
                                                 && !frm.Processed)
                                      .OrderByDescending(frm => frm.Created)
                                      .FirstOrDefaultAsync(cancellationToken);
-        if (rawForm == null) throw new ArgumentException("No unprocessed form found");
+        if (rawForm == null)
+        {
+            throw new ArgumentException("No unprocessed form found");
+        }
 
         var formDescription = JsonConvert.DeserializeObject<FormDescription>(rawForm.ReceivedMessage);
         var form = await _forms.FirstOrDefaultAsync(frm => frm.ExternalIdentifier == command.FormId, cancellationToken);
         if (form != null)
         {
             // update existing form
-            if (form.State != State.Setup)
+            if (form.State != EventState.Setup)
+            {
                 throw new InvalidOperationException("Registration form can only be changed in state 'setup'");
+            }
 
             form.Title = formDescription.Title;
         }
@@ -63,7 +70,7 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
                        EventId = command.EventId,
                        ExternalIdentifier = command.FormId,
                        Title = formDescription.Title,
-                       State = State.Setup
+                       State = EventState.Setup
                    };
             await _forms.InsertOrUpdateEntity(form, cancellationToken);
         }
@@ -77,7 +84,10 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
             var type = (Questions.QuestionType)receivedQuestion.Type;
             if (type == Questions.QuestionType.SectionHeader
              || type == Questions.QuestionType.PageBreak)
+            {
                 section = receivedQuestion.Title;
+            }
+
             var existingQuestion = existingQuestions.FirstOrDefault(qst => qst.ExternalId == receivedQuestion.Id);
             if (existingQuestion == null)
             {
@@ -94,13 +104,17 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
                                };
                 await _questions.InsertOrUpdateEntity(question, cancellationToken);
                 if (receivedQuestion.Choices?.Any() == true)
+                {
                     foreach (var choice in receivedQuestion.Choices)
+                    {
                         await _questionOptions.InsertOrUpdateEntity(new QuestionOption
                                                                     {
                                                                         Id = Guid.NewGuid(),
                                                                         QuestionId = question.Id,
                                                                         Answer = choice
                                                                     }, cancellationToken);
+                    }
+                }
             }
             else
             {
@@ -120,22 +134,32 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
                     {
                         var existingOption = existingOptions.FirstOrDefault(exo => exo.Answer == receivedChoice);
                         if (existingOption == null)
+                        {
                             await _questionOptions.InsertOrUpdateEntity(new QuestionOption
                                                                         {
                                                                             Id = Guid.NewGuid(),
                                                                             QuestionId = existingQuestion.Id,
                                                                             Answer = receivedChoice
                                                                         }, cancellationToken);
+                        }
                         else
+                        {
                             existingOptions.Remove(existingOption);
+                        }
                     }
 
-                    foreach (var existingOption in existingOptions) _questionOptions.Remove(existingOption);
+                    foreach (var existingOption in existingOptions)
+                    {
+                        _questionOptions.Remove(existingOption);
+                    }
                 }
             }
         }
 
-        foreach (var existingQuestion in existingQuestions) _questions.Remove(existingQuestion);
+        foreach (var existingQuestion in existingQuestions)
+        {
+            _questions.Remove(existingQuestion);
+        }
 
         rawForm.Processed = true;
 

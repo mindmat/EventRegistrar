@@ -1,7 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using MediatR;
-
-namespace EventRegistrar.Backend.Events;
+﻿namespace EventRegistrar.Backend.Events;
 
 public class EventQuery : IRequest<EventDetails>, IEventBoundRequest
 {

@@ -4,7 +4,7 @@ public class RegistrationFormItem
 {
     public Guid? RegistrationFormId { get; internal set; }
     public string ExternalIdentifier { get; internal set; }
-    public State State { get; internal set; }
+    public EventState State { get; internal set; }
 
     public string Title { get; internal set; }
 

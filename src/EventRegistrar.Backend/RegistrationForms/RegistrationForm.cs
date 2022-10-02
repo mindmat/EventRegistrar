@@ -15,7 +15,7 @@ public class RegistrationForm : Entity
     public ICollection<FormPath>? FormPaths { get; set; }
 
     public string ExternalIdentifier { get; set; } = null!;
-    public State State { get; set; }
+    public EventState State { get; set; }
     public string? Title { get; set; }
 }
 

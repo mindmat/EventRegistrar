@@ -1,6 +1,6 @@
 ﻿namespace EventRegistrar.Backend.RegistrationForms;
 
-public enum State
+public enum EventState
 {
     Setup = 1,
     RegistrationOpen = 2,

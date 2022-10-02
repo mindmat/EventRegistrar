@@ -106,6 +106,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(AccessRequestsOfEventQuery);
             yield return nameof(UsersOfEventQuery);
             yield return nameof(UserInEventRolesQuery);
+            yield return nameof(EventByAcronymQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)

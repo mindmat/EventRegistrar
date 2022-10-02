@@ -399,6 +399,42 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Beendet.
+        /// </summary>
+        internal static string EventState_Finished {
+            get {
+                return ResourceManager.GetString("EventState_Finished", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geschlossen.
+        /// </summary>
+        internal static string EventState_RegistrationClosed {
+            get {
+                return ResourceManager.GetString("EventState_RegistrationClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geöffnet.
+        /// </summary>
+        internal static string EventState_RegistrationOpen {
+            get {
+                return ResourceManager.GetString("EventState_RegistrationOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Setup.
+        /// </summary>
+        internal static string EventState_Setup {
+            get {
+                return ResourceManager.GetString("EventState_Setup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vorname.
         /// </summary>
         internal static string FirstName {
@@ -998,6 +1034,33 @@ namespace EventRegistrar.Backend.Properties {
         internal static string RegistrationCandidatesForOutgoingPayment {
             get {
                 return ResourceManager.GetString("RegistrationCandidatesForOutgoingPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storniert.
+        /// </summary>
+        internal static string RegistrationState_Cancelled {
+            get {
+                return ResourceManager.GetString("RegistrationState_Cancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bezahlt.
+        /// </summary>
+        internal static string RegistrationState_Paid {
+            get {
+                return ResourceManager.GetString("RegistrationState_Paid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Eingegangen.
+        /// </summary>
+        internal static string RegistrationState_Received {
+            get {
+                return ResourceManager.GetString("RegistrationState_Received", resourceCulture);
             }
         }
         

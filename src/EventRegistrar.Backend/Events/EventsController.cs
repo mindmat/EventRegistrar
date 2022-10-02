@@ -63,13 +63,4 @@ public class EventsController : Controller
                                   IncludeAuthorizedEvents = includeAuthorizedEvents
                               });
     }
-
-    [HttpGet("api/events/{eventAcronym}")]
-    public async Task<EventDetails> GetEventDetails(string eventAcronym)
-    {
-        return await _mediator.Send(new EventQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
 }

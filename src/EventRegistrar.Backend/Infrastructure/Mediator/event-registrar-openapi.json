@@ -3804,6 +3804,38 @@
         }
       }
     },
+    "/api/EventByAcronymQuery": {
+      "post": {
+        "tags": [
+          "EventByAcronym"
+        ],
+        "operationId": "EventByAcronym_Query",
+        "requestBody": {
+          "x-name": "EventByAcronymQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventByAcronymQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/EventQuery": {
       "post": {
         "tags": [
@@ -8774,6 +8806,16 @@
           },
           "state": {
             "$ref": "#/components/schemas/State"
+          }
+        }
+      },
+      "EventByAcronymQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventAcronym": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

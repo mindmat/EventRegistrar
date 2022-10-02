@@ -228,6 +228,18 @@
   <data name="EventRegistrar_Backend_Spots_SpotRemoved" xml:space="preserve">
     <value>Platz entfernt</value>
   </data>
+  <data name="EventState_Finished" xml:space="preserve">
+    <value>Beendet</value>
+  </data>
+  <data name="EventState_RegistrationClosed" xml:space="preserve">
+    <value>Geschlossen</value>
+  </data>
+  <data name="EventState_RegistrationOpen" xml:space="preserve">
+    <value>Geöffnet</value>
+  </data>
+  <data name="EventState_Setup" xml:space="preserve">
+    <value>Setup</value>
+  </data>
   <data name="FirstName" xml:space="preserve">
     <value>Vorname</value>
   </data>
@@ -429,6 +441,15 @@
   </data>
   <data name="RegistrationCandidatesForOutgoingPayment" xml:space="preserve">
     <value>Rückzahlung für:</value>
+  </data>
+  <data name="RegistrationState_Cancelled" xml:space="preserve">
+    <value>Storniert</value>
+  </data>
+  <data name="RegistrationState_Paid" xml:space="preserve">
+    <value>Bezahlt</value>
+  </data>
+  <data name="RegistrationState_Received" xml:space="preserve">
+    <value>Eingegangen</value>
   </data>
   <data name="Release" xml:space="preserve">
     <value>Freigeben</value>

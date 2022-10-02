@@ -1,8 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-
-using MediatR;
-
-namespace EventRegistrar.Backend.Events.Context;
+﻿namespace EventRegistrar.Backend.Events.Context;
 
 public class ExtractEventIdDecorator<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
@@ -14,7 +10,8 @@ public class ExtractEventIdDecorator<TRequest, TResponse> : IPipelineBehavior<TR
         _eventContext = eventContext;
     }
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken,
+    public async Task<TResponse> Handle(TRequest request,
+                                        CancellationToken cancellationToken,
                                         RequestHandlerDelegate<TResponse> next)
     {
         if (request is IEventBoundRequest eventBoundRequest)

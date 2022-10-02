@@ -74,6 +74,7 @@ import { ReleaseMailsComponent } from './modules/admin/mailing/mails/release-mai
 import { MailViewComponent } from './modules/admin/mailing/mails/mail-view/mail-view.component';
 import { UserAccessComponent } from './modules/admin/auth/user-access/user-access.component';
 import { API_BASE_URL } from './api/api';
+import { SelectEventComponent } from './modules/admin/events/select-event/select-event.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -99,7 +100,8 @@ const routerConfig: ExtraOptions = {
         AutoMailPreviewComponent,
         ReleaseMailsComponent,
         MailViewComponent,
-        UserAccessComponent
+        UserAccessComponent,
+        SelectEventComponent
     ],
     providers: [
         { provide: API_BASE_URL, useValue: 'https://localhost:5001' },
