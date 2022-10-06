@@ -3,5 +3,6 @@
 public enum IdentityProvider
 {
     Google = 1,
-    Microsoft = 2
+    Microsoft = 2,
+    Auth0 = 3
 }

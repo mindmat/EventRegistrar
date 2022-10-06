@@ -114,6 +114,7 @@ container.RegisterInstance(optionsBuilder.Options);
 container.Register<DbContext, EventRegistratorDbContext>();
 
 container.Register<IIdentityProvider, Auth0IdentityProvider>();
+container.RegisterSingleton<Auth0TokenProvider>();
 container.Register(() => new AuthenticatedUserId(container.GetInstance<IAuthenticatedUserProvider>()
                                                           .GetAuthenticatedUserId()
                                                           .Result));
@@ -141,7 +142,7 @@ container.Collection.Register<IExceptionTranslation>(assemblies);
 container.Register<ConfigurationRegistry>();
 var defaultConfigItemTypes = container.GetTypesToRegister<IDefaultConfigurationItem>(assemblies)
                                       .ToList();
-container.Collection.Register<IDefaultConfigurationItem>(defaultConfigItemTypes);
+container.Collection.Register<IDefaultConfigurationItem>(defaultConfigItemTypes, Lifestyle.Singleton);
 
 var domainEventTypes = container.GetTypesToRegister<DomainEvent>(assemblies);
 container.RegisterSingleton(() => new DomainEventCatalog(domainEventTypes));
@@ -151,8 +152,13 @@ var configTypes = container.GetTypesToRegister<IConfigurationItem>(assemblies)
 foreach (var configType in configTypes)
 {
     container.Register(configType, () => container.GetInstance<ConfigurationRegistry>().GetConfigurationTypeless(configType));
+    // add the possibility to inject FeatureConfigurations to singletons
+    container.RegisterSingleton(typeof(SingletonConfigurationFeature<>).MakeGenericType(configType),
+                                () => GetSingletonConfig(container, configType));
 }
 
+
+container.RegisterSingleton<SecretReader>();
 container.RegisterSingleton<MessageQueueReceiver>();
 container.Register<CommandQueue>();
 container.Register<IEventBus, EventBus>();
@@ -207,4 +213,15 @@ void SetDbOptions(DbContextOptionsBuilder o)
 {
     o.UseSqlServer(connectionString, sqlBuilder => { sqlBuilder.EnableRetryOnFailure(); })
      .EnableSensitiveDataLogging();
+}
+
+
+static object GetSingletonConfig(Container container, Type featureConfigType)
+{
+    using (new EnsureExecutionScope(container))
+    {
+        var singletonConfigurationFeatureType = typeof(SingletonConfigurationFeature<>).MakeGenericType(featureConfigType);
+        var constructor = singletonConfigurationFeatureType.GetConstructor(new[] { featureConfigType });
+        return constructor?.Invoke(new[] { container.GetInstance(featureConfigType) })!;
+    }
 }

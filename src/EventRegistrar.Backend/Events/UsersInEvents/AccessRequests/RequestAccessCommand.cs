@@ -1,6 +1,8 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Authentication.Users;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 
@@ -15,17 +17,20 @@ public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand,
     private readonly IRepository<AccessToEventRequest> _accessRequests;
     private readonly IAuthenticatedUserProvider _authenticatedUserProvider;
     private readonly IEventBus _eventBus;
+    private readonly CommandQueue _commandQueue;
     private readonly AuthenticatedUserId _user;
 
     public RequestAccessCommandHandler(IRepository<AccessToEventRequest> accessRequests,
                                        AuthenticatedUserId user,
                                        IAuthenticatedUserProvider authenticatedUserProvider,
-                                       IEventBus eventBus)
+                                       IEventBus eventBus,
+                                       CommandQueue commandQueue)
     {
         _accessRequests = accessRequests;
         _user = user;
         _authenticatedUserProvider = authenticatedUserProvider;
         _eventBus = eventBus;
+        _commandQueue = commandQueue;
     }
 
     public async Task<Guid> Handle(RequestAccessCommand command, CancellationToken cancellationToken)
@@ -78,6 +83,17 @@ public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand,
                                   EventId = command.EventId,
                                   QueryName = nameof(AccessRequestsOfEventQuery)
                               });
+
+            if (string.IsNullOrEmpty(user.FirstName)
+             || string.IsNullOrEmpty(user.LastName)
+             || string.IsNullOrEmpty(user.Email))
+            {
+                _commandQueue.EnqueueCommand(new UpdateUserInfoCommand
+                                             {
+                                                 Provider = request.IdentityProvider,
+                                                 Identifier = request.Identifier
+                                             });
+            }
         }
 
         return request.Id;

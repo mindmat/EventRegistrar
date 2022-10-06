@@ -1,4 +1,7 @@
-﻿using EventRegistrar.Backend.Authentication;
+﻿using System.Threading.Tasks;
+
+using EventRegistrar.Backend.Authentication;
+using EventRegistrar.Backend.Authentication.Users;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure.DataAccess.Migrations;
 
@@ -54,5 +57,10 @@ public class TestGoogleIdentityProvider : IIdentityProvider
         }
 
         return AuthenticatedUser.None;
+    }
+
+    public Task<ExternalUserDetails?> GetUserDetails(string identifier)
+    {
+        return Task.FromResult((ExternalUserDetails?)null);
     }
 }

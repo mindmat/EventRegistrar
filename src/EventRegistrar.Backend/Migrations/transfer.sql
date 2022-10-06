@@ -25,8 +25,8 @@ INSERT INTO [dbo].[Users]
            ,[FirstName]
            ,[LastName])
 SELECT [Id]
-      ,[IdentityProvider]
-      ,[IdentityProviderUserIdentifier]
+      ,3
+      ,'google-oauth2|' + [IdentityProviderUserIdentifier]
       ,[Email]
       ,[FirstName]
       ,[LastName]

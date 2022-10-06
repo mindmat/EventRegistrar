@@ -1,7 +1,5 @@
 ﻿using System.Text;
 
-using MediatR;
-
 using Microsoft.Azure.ServiceBus;
 
 using Newtonsoft.Json;

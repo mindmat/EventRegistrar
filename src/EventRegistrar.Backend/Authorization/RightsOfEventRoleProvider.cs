@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Events;
+﻿using EventRegistrar.Backend.Authentication.Users;
+using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Hosting;
@@ -107,6 +108,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(UsersOfEventQuery);
             yield return nameof(UserInEventRolesQuery);
             yield return nameof(EventByAcronymQuery);
+            yield return nameof(UpdateUserInfoCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
@@ -148,7 +150,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(DeactivateAutomaticPromotionCommand);
             yield return nameof(IgnorePaymentCommand);
             yield return nameof(CreateRegistrableCommand);
-            yield return nameof(FetchBankStamentsFileCommand);
+            yield return nameof(FetchBankStatementsFileCommand);
             yield return nameof(ProcessFetchedBankStatementsFileCommand);
             yield return nameof(SendPaymentDueMailCommand);
             yield return nameof(RefundDifferenceCommand);

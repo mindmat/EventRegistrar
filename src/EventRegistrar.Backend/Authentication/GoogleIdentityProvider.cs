@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 
+using EventRegistrar.Backend.Authentication.Users;
 using EventRegistrar.Backend.Events.UsersInEvents;
 
 namespace EventRegistrar.Backend.Authentication;
@@ -37,5 +38,10 @@ public class GoogleIdentityProvider : IIdentityProvider
         }
 
         return AuthenticatedUser.None;
+    }
+
+    public Task<ExternalUserDetails?> GetUserDetails(string identifier)
+    {
+        return Task.FromResult((ExternalUserDetails?)null);
     }
 }
