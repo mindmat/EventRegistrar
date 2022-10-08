@@ -23,7 +23,7 @@ env:
   AZURE_WEBAPP_NAME: event-admin-backend       # set this to the name of your Azure Web App
   AZURE_WEBAPP_PACKAGE_PATH: '.'               # set this to the path to your web app project, defaults to the repository root
   PROJECT_PATH: 'src/EventRegistrar.Backend'   # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '7.0.100-rc.1.22431.12'      # set this to the .NET Core version to use
+  DOTNET_VERSION: '7.0.0-preview.7.22375.6'    # set this to the .NET Core version to use
 
 on:
   push:
