@@ -22,7 +22,7 @@
     "@angular/platform-browser-dynamic": "^6.1.10",
     "@angular/router": "^6.1.10",
     "@nguniversal/module-map-ngfactory-loader": "6.0.0",
-    "angular-froala-wysiwyg": "^2.9.8",
+    "angular-froala-wysiwyg": "^4.0.14",
     "aspnet-prerendering": "^3.0.1",
     "bootstrap": "^4.5.2",
     "core-js": "^2.6.11",
