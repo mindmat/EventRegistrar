@@ -1,3 +1,4 @@
+using EventRegistrar.Backend;
 using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.Context;
@@ -203,6 +204,7 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapHub<NotificationHub>("/notifications");
     endpoints.MapRequests(container);
+    endpoints.MapGet("/", () => container.GetInstance<HomeController>().Index()).AllowAnonymous();
 });
 
 

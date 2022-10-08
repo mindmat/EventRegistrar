@@ -1,23 +1,32 @@
 BEGIN TRAN
 
-INSERT INTO [dbo].[Events]
-           ([Id]
-           ,[PredecessorEventId]
-           ,[Name]
-           ,[State]
-           ,[Acronym]
-           ,[Currency]
-           ,[AccountIban])
-SELECT [Id]
-      ,[PredecessorEventId]
-	  ,[Name]
-      ,[State]
-      ,[Acronym]
-      ,[Currency]
-      ,[AccountIban]
-  FROM [AZURE_ER].[EventRegistrator].[dbo].[Events]
+DECLARE @Watchdog INT = 20;
+WHILE @Watchdog > 0
+BEGIN
+  INSERT INTO [AZURE_EA].[event-admin].[dbo].[Events]
+             ([Id]
+             ,[PredecessorEventId]
+             ,[Name]
+             ,[State]
+             ,[Acronym]
+             ,[Currency]
+             ,[AccountIban])
+  SELECT [Id]
+        ,[PredecessorEventId]
+        ,[Name]
+        ,[State]
+        ,[Acronym]
+        ,[Currency]
+        ,[AccountIban]
+    FROM [AZURE_ER].[EventRegistrator].[dbo].[Events]
+  WHERE ([PredecessorEventId] IS NULL OR [PredecessorEventId] IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].[Events]))
+    AND Id NOT IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].[Events]);
 
-INSERT INTO [dbo].[Users]
+  IF @@ROWCOUNT = 0 BREAK;
+  SET @Watchdog = @Watchdog - 1
+END
+
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[Users]
            ([Id]
            ,[IdentityProvider]
            ,[IdentityProviderUserIdentifier]
@@ -32,7 +41,7 @@ SELECT [Id]
       ,[LastName]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[Users]
 
-INSERT INTO [dbo].[UsersInEvents]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[UsersInEvents]
            ([Id]
            ,[EventId]
            ,[UserId]
@@ -44,7 +53,7 @@ SELECT [Id]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[UsersInEvents]
 
 
-INSERT INTO [dbo].[Registrables]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[Registrables]
            ([Id]
            ,[EventId]
            ,[HasWaitingList]
@@ -75,7 +84,7 @@ SELECT [Id]
       ,[Type] = CASE WHEN [MaximumDoubleSeats] IS NULL THEN 1 ELSE 2 END
   FROM [AZURE_ER].[EventRegistrator].[dbo].[Registrables]
 
-INSERT INTO [dbo].[RegistrationForms]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[RegistrationForms]
            ([Id]
            ,[EventId]
            ,[ExternalIdentifier]
@@ -89,11 +98,12 @@ SELECT [Id]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[RegistrationForms]
 
 
-INSERT INTO [dbo].[Registrations]
+
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[Registrations]
            ([Id]
            ,[EventId]
            ,[RegistrationFormId]
-           ,[RegistrationId_Partner]
+           --,[RegistrationId_Partner]
            ,[AdmittedAt]
            ,[ExternalIdentifier]
            ,[ExternalTimestamp]
@@ -120,7 +130,7 @@ INSERT INTO [dbo].[Registrations]
 SELECT [Id]
       ,[EventId]
       ,[RegistrationFormId]
-	  ,[RegistrationId_Partner]
+      --,[RegistrationId_Partner]
       ,[AdmittedAt]
       ,[ExternalIdentifier]
       ,[ExternalTimestamp]
@@ -144,10 +154,15 @@ SELECT [Id]
       ,[SoldOutMessage]
       ,[State]
       ,[WillPayAtCheckin]
-  FROM [AZURE_ER].[EventRegistrator].[dbo].[Registrations]
+FROM [AZURE_ER].[EventRegistrator].[dbo].[Registrations]
+
+UPDATE NEW
+SET RegistrationId_Partner = OLD.RegistrationId_Partner
+FROM [AZURE_EA].[event-admin].[dbo].[Registrations]              NEW 
+  INNER JOIN [AZURE_ER].[EventRegistrator].[dbo].[Registrations] OLD ON OLD.Id = NEW.Id
 
 
-INSERT INTO [dbo].[Spots]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[Spots]
            ([Id]
            ,[RegistrableId]
            ,[RegistrationId]
@@ -169,7 +184,7 @@ SELECT [Id]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[Seats]
 
 -- Payments
-INSERT INTO [dbo].[PaymentsFiles]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[PaymentsFiles]
            ([Id]
            ,[EventId]
            ,[AccountIban]
@@ -190,7 +205,7 @@ SELECT [Id]
       ,[Content]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[PaymentFiles]
 
-INSERT INTO [dbo].[PayoutRequests]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[PayoutRequests]
            ([Id]
            ,[RegistrationId]
            ,[Amount]
@@ -205,7 +220,7 @@ SELECT [Id]
       ,[State]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[PayoutRequests]
 
-INSERT INTO [dbo].[PaymentSlips]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[PaymentSlips]
            ([Id]
            ,[EventId]
            ,[ContentType]
@@ -219,10 +234,10 @@ SELECT [Id]
       ,[Filename]
       ,[Reference]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[PaymentSlips]
-  WHERE EventId IN (SELECT Id FROM dbo.[Events])
+  WHERE EventId IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].[Events])
 
 
-INSERT INTO [dbo].Payments
+INSERT INTO [AZURE_EA].[event-admin].[dbo].Payments
            ([Id]
            ,PaymentsFileId
            ,[Amount]
@@ -256,10 +271,10 @@ SELECT [Id]
       ,[Message]
 	  ,[CreditDebitType]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[ReceivedPayments]
-  WHERE [PaymentFileId] IN (SELECT Id FROM dbo.PaymentsFiles)
-    AND (PaymentSlipId IS NULL OR PaymentSlipId IN (SELECT Id FROM dbo.PaymentSlips))
+  WHERE [PaymentFileId] IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].PaymentsFiles)
+    AND (PaymentSlipId IS NULL OR PaymentSlipId IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].PaymentSlips))
 
-INSERT INTO [dbo].IncomingPayments
+INSERT INTO [AZURE_EA].[event-admin].[dbo].IncomingPayments
            ([Id]
            ,[PaymentSlipId]
            ,[DebitorIban]
@@ -269,10 +284,11 @@ SELECT [Id]
       ,[DebitorIban]
       ,[DebitorName]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[ReceivedPayments]
-  WHERE [PaymentFileId] IN (SELECT Id FROM dbo.PaymentsFiles)
-    AND (PaymentSlipId IS NULL OR PaymentSlipId IN (SELECT Id FROM dbo.PaymentSlips))
+  WHERE [PaymentFileId] IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].PaymentsFiles)
+    AND (PaymentSlipId IS NULL OR PaymentSlipId IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].PaymentSlips))
 	AND [CreditDebitType] = 1
-INSERT INTO [dbo].OutgoingPayments
+
+INSERT INTO [AZURE_EA].[event-admin].[dbo].OutgoingPayments
            ([Id]
            ,[CreditorName]
            ,[CreditorIban])
@@ -280,15 +296,15 @@ SELECT [Id]
       ,[CreditorName]
       ,[CreditorIban]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[ReceivedPayments]
-  WHERE [PaymentFileId] IN (SELECT Id FROM dbo.PaymentsFiles)
-    AND (PaymentSlipId IS NULL OR PaymentSlipId IN (SELECT Id FROM dbo.PaymentSlips))
+  WHERE [PaymentFileId] IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].PaymentsFiles)
+    AND (PaymentSlipId IS NULL OR PaymentSlipId IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].PaymentSlips))
 	AND [CreditDebitType] = 2
 
-INSERT INTO [dbo].[PaymentAssignments]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[PaymentAssignments]
            ([Id]
            ,[RegistrationId]
            ,IncomingPaymentId
-           ,[PaymentAssignmentId_Counter]
+           --,[PaymentAssignmentId_Counter]
            ,OutgoingPaymentId
            ,[PayoutRequestId]
            ,[Amount]
@@ -296,16 +312,16 @@ INSERT INTO [dbo].[PaymentAssignments]
 SELECT [Id]
       ,[RegistrationId]
       ,[ReceivedPaymentId]
-      ,[PaymentAssignmentId_Counter]
+      --,[PaymentAssignmentId_Counter]
       ,[PaymentId_Repayment]
       ,[PayoutRequestId]
       ,[Amount]
       ,[Created]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[PaymentAssignments]
-  WHERE [ReceivedPaymentId] IN (SELECT Id FROM dbo.Payments)
-    AND [ReceivedPaymentId] IN (SELECT Id FROM dbo.IncomingPayments)
+  WHERE [ReceivedPaymentId] IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].Payments)
+    AND [ReceivedPaymentId] IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].IncomingPayments)
 
-INSERT INTO [dbo].[PaymentAssignments]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[PaymentAssignments]
            ([Id]
            ,[RegistrationId]
            ,IncomingPaymentId
@@ -323,11 +339,16 @@ SELECT [Id]
       ,[Amount]
       ,[Created]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[PaymentAssignments]
-  WHERE [ReceivedPaymentId] IN (SELECT Id FROM dbo.Payments)
-    AND [ReceivedPaymentId] IN (SELECT Id FROM dbo.OutgoingPayments)
+  WHERE [ReceivedPaymentId] IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].Payments)
+    AND [ReceivedPaymentId] IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].OutgoingPayments)
+
+UPDATE NEW
+SET PaymentAssignmentId_Counter = OLD.PaymentAssignmentId_Counter
+FROM [AZURE_EA].[event-admin].[dbo].[PaymentAssignments]              NEW 
+  INNER JOIN [AZURE_ER].[EventRegistrator].[dbo].[PaymentAssignments] OLD ON OLD.Id = NEW.Id
 
 
-INSERT INTO [dbo].[MailTemplates]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[MailTemplates]
            ([Id]
            ,[EventId]
            ,[RegistrableId]
@@ -358,7 +379,7 @@ INSERT INTO [dbo].[MailTemplates]
            ,[ReleaseImmediately]
 FROM [AZURE_ER].[EventRegistrator].[dbo].[MailTemplates]
 
-INSERT INTO [dbo].AutoMailTemplates
+INSERT INTO [AZURE_EA].[event-admin].[dbo].AutoMailTemplates
            ([Id]
            ,[EventId]
            ,[Language]
@@ -378,7 +399,7 @@ WHERE [Type] <> 0
 
 
 
-INSERT INTO [dbo].[Mails]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[Mails]
            ([Id]
            ,[EventId]
            ,[MailTemplateId]
@@ -420,7 +441,7 @@ SELECT [Id]
 FROM [AZURE_ER].[EventRegistrator].[dbo].[Mails]
 
 
-INSERT INTO [dbo].[MailsToRegistrations]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[MailsToRegistrations]
            ([Id]
            ,[MailId]
            ,[RegistrationId]
@@ -430,9 +451,10 @@ SELECT [Id]
            ,[RegistrationId]
            ,[State]
 FROM [AZURE_ER].[EventRegistrator].[dbo].[MailToRegistrations]
-  WHERE MailId IN (SELECT Id FROM Mails)
+WHERE MailId IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].Mails)
 
-INSERT INTO [dbo].[Sms]
+
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[Sms]
            ([Id]
            ,[RegistrationId]
            ,[AccountSid]
