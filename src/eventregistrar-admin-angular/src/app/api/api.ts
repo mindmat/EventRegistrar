@@ -3393,11 +3393,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    fetchBankStamentsFile_Command(fetchBankStamentsFileCommand: FetchBankStamentsFileCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/FetchBankStamentsFileCommand";
+    fetchBankStatementsFile_Command(fetchBankStatementsFileCommand: FetchBankStatementsFileCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/FetchBankStatementsFileCommand";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(fetchBankStamentsFileCommand);
+        const content_ = JSON.stringify(fetchBankStatementsFileCommand);
 
         let options_ : any = {
             body: content_,
@@ -3410,11 +3410,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processFetchBankStamentsFile_Command(response_);
+            return this.processFetchBankStatementsFile_Command(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processFetchBankStamentsFile_Command(response_ as any);
+                    return this.processFetchBankStatementsFile_Command(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<Unit>;
                 }
@@ -3423,7 +3423,7 @@ export class Api {
         }));
     }
 
-    protected processFetchBankStamentsFile_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processFetchBankStatementsFile_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6554,6 +6554,57 @@ export class Api {
         }
         return _observableOf(null as any);
     }
+
+    updateUserInfo_Command(updateUserInfoCommand: UpdateUserInfoCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/UpdateUserInfoCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(updateUserInfoCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateUserInfo_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateUserInfo_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processUpdateUserInfo_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 /** Represents a void type, since Void is not a valid return type in C#. */
@@ -7479,7 +7530,7 @@ export interface TryAssignPaymentSlipCommand {
     reference?: string;
 }
 
-export interface FetchBankStamentsFileCommand {
+export interface FetchBankStatementsFileCommand {
     eventId?: string;
 }
 
@@ -8063,11 +8114,12 @@ export interface OpenRegistrationCommand {
 }
 
 export interface EventSearchResult {
-    acronym?: string;
     id?: string;
     name?: string;
+    acronym?: string;
     requestSent?: boolean;
     state?: EventState;
+    stateText?: string;
 }
 
 export interface SearchEventQuery {
@@ -8159,7 +8211,7 @@ export interface AccessRequestsOfEventQuery {
 
 export interface RequestAccessCommand {
     eventId?: string;
-    requestText?: string;
+    requestText?: string | null;
 }
 
 export interface RespondToRequestCommand {
@@ -8175,6 +8227,17 @@ export enum RequestResponse {
 
 export interface RightsOfUserInEventQuery {
     eventId?: string;
+}
+
+export interface UpdateUserInfoCommand {
+    provider?: IdentityProvider;
+    identifier?: string;
+}
+
+export enum IdentityProvider {
+    Google = 1,
+    Microsoft = 2,
+    Auth0 = 3,
 }
 
 export interface FileResponse {

@@ -2193,19 +2193,19 @@
         }
       }
     },
-    "/api/FetchBankStamentsFileCommand": {
+    "/api/FetchBankStatementsFileCommand": {
       "post": {
         "tags": [
-          "FetchBankStamentsFile"
+          "FetchBankStatementsFile"
         ],
-        "operationId": "FetchBankStamentsFile_Command",
+        "operationId": "FetchBankStatementsFile_Command",
         "requestBody": {
-          "x-name": "FetchBankStamentsFileCommand",
+          "x-name": "FetchBankStatementsFileCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FetchBankStamentsFileCommand"
+                "$ref": "#/components/schemas/FetchBankStatementsFileCommand"
               }
             }
           },
@@ -4229,6 +4229,38 @@
                   "items": {
                     "type": "string"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UpdateUserInfoCommand": {
+      "post": {
+        "tags": [
+          "UpdateUserInfo"
+        ],
+        "operationId": "UpdateUserInfo_Command",
+        "requestBody": {
+          "x-name": "UpdateUserInfoCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserInfoCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
                 }
               }
             }
@@ -7101,7 +7133,7 @@
           }
         }
       },
-      "FetchBankStamentsFileCommand": {
+      "FetchBankStatementsFileCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -8843,9 +8875,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "acronym": {
-            "type": "string"
-          },
           "id": {
             "type": "string",
             "format": "guid"
@@ -8853,11 +8882,17 @@
           "name": {
             "type": "string"
           },
+          "acronym": {
+            "type": "string"
+          },
           "requestSent": {
             "type": "boolean"
           },
           "state": {
             "$ref": "#/components/schemas/EventState"
+          },
+          "stateText": {
+            "type": "string"
           }
         }
       },
@@ -9109,7 +9144,8 @@
             "format": "guid"
           },
           "requestText": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -9151,6 +9187,32 @@
             "format": "guid"
           }
         }
+      },
+      "UpdateUserInfoCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "provider": {
+            "$ref": "#/components/schemas/IdentityProvider"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "IdentityProvider": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Google",
+          "Microsoft",
+          "Auth0"
+        ],
+        "enum": [
+          1,
+          2,
+          3
+        ]
       }
     }
   }

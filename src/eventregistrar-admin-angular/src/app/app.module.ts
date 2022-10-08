@@ -104,12 +104,6 @@ const routerConfig: ExtraOptions = {
         SelectEventComponent
     ],
     providers: [
-        { provide: API_BASE_URL, useValue: 'https://localhost:5001' },
-        // {
-        //     provide: HTTP_INTERCEPTORS,
-        //     useClass: BaseUrlInterceptor,
-        //     multi: true
-        // },
         AuthServiceFuse,
         AuthService,
         {
