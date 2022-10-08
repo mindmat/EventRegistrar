@@ -66,7 +66,7 @@
     <Folder Include="Payments\Settlements\" />
   </ItemGroup>
 
-  <Target Name="NSwag" AfterTargets="Build">
+  <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)'=='DEBUG'">
     <!--<Exec EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe) aspnetcore2openapi /assembly:$(TargetDir)EventRegistrar.Backend.dll /output:swagger.json" />-->
     <Exec Command="$(NSwagExe) openapi2tsclient /input:infrastructure/mediator/event-registrar-openapi.json /className:Api /typeScriptVersion:4.3 /rxJsVersion:7.0 /template:Angular /typeStyle:Interface /generateClientClasses:true /generateClientInterfaces:false /generateDtoTypes:true /useSingletonProvider:true /nullValue:null /operationGenerationMode:SingleClientFromOperationId /injectionTokenType:injectionToken /output:../eventregistrar-admin-angular/src/app/api/api.ts" />
   </Target>
