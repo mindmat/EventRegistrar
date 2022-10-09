@@ -2,7 +2,6 @@
 
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend;
