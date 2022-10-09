@@ -29,7 +29,7 @@ on:
   push:
     branches: ["cqsapi"]
     paths:
-      - 'src/EventRegistrar.Backend'
+      - 'src/EventRegistrar.Backend/**'
 
 permissions:
   contents: read
