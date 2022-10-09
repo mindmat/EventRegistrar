@@ -205,6 +205,7 @@ const routerConfig: ExtraOptions = {
 
                             // The attached token should have these scopes
                             // scope: 'read:current_user'
+
                         }
                     }
                 ]
