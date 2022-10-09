@@ -187,6 +187,17 @@ const routerConfig: ExtraOptions = {
                     },
                     {
                         // Match any request that starts {uri} (note the asterisk)
+                        uri: 'https://event-admin-backend.azurewebsites.net/api/*',
+                        tokenOptions: {
+                            // The attached token should target this audience
+                            audience: 'https://eventregistrar.azurewebsites.net/api',
+
+                            // The attached token should have these scopes
+                            // scope: 'read:current_user'
+                        }
+                    },
+                    {
+                        // Match any request that starts {uri} (note the asterisk)
                         uri: 'https://localhost:5001/api/*',
                         tokenOptions: {
                             // The attached token should target this audience
