@@ -28,7 +28,8 @@ env:
 on:
   push:
     branches: ["cqsapi"]
-  workflow_dispatch:
+    paths:
+      - 'src/EventRegistrar.Backend'
 
 permissions:
   contents: read
