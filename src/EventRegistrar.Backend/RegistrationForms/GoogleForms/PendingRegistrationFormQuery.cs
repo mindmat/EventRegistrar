@@ -40,11 +40,9 @@ public class
                                       {
                                           ExternalIdentifier = grp.Key,
                                           PendingRawForm = grp.Where(frm => !frm.Processed)
-                                                              .OrderByDescending(frm => frm.Created)
-                                                              .FirstOrDefault(),
+                                                              .MaxBy(frm => frm.Created),
                                           LastProcessedRawForm = grp.Where(frm => frm.Processed)
-                                                                    .OrderByDescending(frm => frm.Created)
-                                                                    .FirstOrDefault()
+                                                                    .MaxBy(frm => frm.Created)
                                       })
                        .ToList();
         var forms = await _forms.Where(frm => frm.EventId == query.EventId)

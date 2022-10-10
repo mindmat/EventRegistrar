@@ -9,8 +9,8 @@ public class RegistrationFormItem
     public string Title { get; internal set; }
 
     //public string Language { get; internal set; }
-    public DateTime? LastImport { get; internal set; }
-    public DateTime? PendingRawFormCreated { get; internal set; }
+    public DateTimeOffset? LastImport { get; internal set; }
+    public DateTimeOffset? PendingRawFormCreated { get; internal set; }
     public Guid? PendingRawFormId { get; internal set; }
     public bool Deletable { get; set; }
 }
