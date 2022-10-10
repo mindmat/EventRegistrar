@@ -1,13 +1,11 @@
 {
-  "version": "2.0",
-  "functions": [
-    "Register",
-    "SaveRegistrationForm",
-    "GetRegistrationExternalIdentifiersOfForm",
-    "SetSmsStatus",
-    "ReceiveSms",
-    "ReceiveSendGridMailNotification",
-    "ImportMailTrigger",
-    "TriggerBankStatementsImport"
-  ]
+    "version": "2.0",
+    "logging": {
+        "applicationInsights": {
+            "samplingSettings": {
+                "isEnabled": true,
+                "excludedTypes": "Request"
+            }
+        }
+    }
 }

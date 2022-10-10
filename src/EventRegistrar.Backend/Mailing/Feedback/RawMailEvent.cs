@@ -7,8 +7,8 @@ namespace EventRegistrar.Backend.Mailing.Feedback;
 public class RawMailEvent : Entity
 {
     public string Body { get; set; } = null!;
-    public DateTime Created { get; set; }
-    public DateTime? Processed { get; set; }
+    public DateTimeOffset Created { get; set; }
+    public DateTimeOffset? Processed { get; set; }
 }
 
 public class RawMailEventsMap : EntityMap<RawMailEvent>

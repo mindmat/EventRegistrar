@@ -6,7 +6,7 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
 
 public class RawRegistrationForm : Entity
 {
-    public DateTime Created { get; set; }
+    public DateTimeOffset Created { get; set; }
     public string EventAcronym { get; set; } = null!;
     public string FormExternalIdentifier { get; set; } = null!;
     public bool Processed { get; set; }

@@ -1,33 +1,31 @@
-using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 
 using Dapper;
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace EventRegistrar.Functions
-{
-    public static class GetRegistrationExternalIdentifiersOfForm
-    {
-        [FunctionName("GetRegistrationExternalIdentifiersOfForm")]
-        public static async Task<IEnumerable<string>> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrationforms/{formId}/RegistrationExternalIdentifiers")]
-            HttpRequest req,
-            string formId,
-            ILogger log)
-        {
-            var config = new ConfigurationBuilder().AddEnvironmentVariables()
-                                                   .Build();
+namespace EventRegistrar.Functions;
 
-            var connectionString = config.GetConnectionString("DefaultConnection");
-            await using var connection = new SqlConnection(connectionString);
-            return await connection.QueryAsync<string>("SELECT RegistrationExternalIdentifier " +
-                                                       "FROM dbo.RawRegistrations " +
-                                                       "WHERE FormExternalIdentifier = @formId", new { formId });
-        }
+public static class GetRegistrationExternalIdentifiersOfForm
+{
+    [Function(nameof(GetRegistrationExternalIdentifiersOfForm))]
+    public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrationforms/{formId}/RegistrationExternalIdentifiers")] HttpRequestData req,
+                                                   ILogger log,
+                                                   string formId)
+    {
+        var config = new ConfigurationBuilder().AddEnvironmentVariables()
+                                               .Build();
+
+        var connectionString = config.GetConnectionString("DefaultConnection");
+        await using var connection = new SqlConnection(connectionString);
+        var ids = await connection.QueryAsync<string>("SELECT RegistrationExternalIdentifier FROM dbo.RawRegistrations WHERE FormExternalIdentifier = @formId", new { formId });
+        var response = req.CreateResponse(HttpStatusCode.OK);
+        await response.WriteAsJsonAsync(ids);
+        return response;
     }
 }

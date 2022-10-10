@@ -4,8 +4,6 @@ using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations;
 
-using MediatR;
-
 using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.PhoneMessages;

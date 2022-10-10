@@ -1,23 +1,22 @@
 using System;
 using System.Threading.Tasks;
 
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace EventRegistrar.Functions
+namespace EventRegistrar.Functions;
+
+public static class ImportMailTrigger
 {
-    public static class ImportMailTrigger
+    [Function(nameof(ImportMailTrigger))]
+    public static async Task Run([TimerTrigger("0 0 */2 * * *")] TimerInfo myTimer, ILogger log)
     {
-        [FunctionName("ImportMailTrigger")]
-        public static async Task Run([TimerTrigger("0 0 */2 * * *")]TimerInfo myTimer, ILogger log)
-        {
-            log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
-            var command = new
-            {
-                CommandType = "EventRegistrar.Backend.Mailing.Import.ImportMailsFromImapForAllActiveEventsCommand",
-                CommandSerialized = "{}"
-            };
-            await ServiceBusClient.SendCommand(command);
-        }
+        log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+        var command = new
+                      {
+                          CommandType = "EventRegistrar.Backend.Mailing.Import.ImportMailsFromImapForAllActiveEventsCommand",
+                          CommandSerialized = "{}"
+                      };
+        await CommandQueue.SendCommand(command);
     }
 }

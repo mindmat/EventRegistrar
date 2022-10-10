@@ -1,34 +1,38 @@
+using System.IO;
+using System.Net;
+using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 
-using Newtonsoft.Json;
+namespace EventRegistrar.Functions;
 
-namespace EventRegistrar.Functions
+public static class ReceiveSms
 {
-    public static class ReceiveSms
+    [Function(nameof(ReceiveSms))]
+    public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "sms/reply")] HttpRequestData req,
+                                                   ILogger log)
     {
-        [FunctionName("ReceiveSms")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "sms/reply")]
-            HttpRequest req,
-            ILogger log)
-        {
-            log.LogInformation(JsonConvert.SerializeObject(req.Form));
-            var twilioSms = req.Form.Deserialize<TwilioSms>();
+        // Read body
+        var stringBody = await new StreamReader(req.Body).ReadToEndAsync();
+        log.LogInformation(stringBody);
 
-            var command = new { Sms = twilioSms };
-            var message = new
-            {
-                CommandType = "EventRegistrar.Backend.PhoneMessages.ProcessReceivedSmsCommand",
-                CommandSerialized = JsonConvert.SerializeObject(command)
-            };
-            await ServiceBusClient.SendCommand(message);
+        // Parse as query string
+        var keyValues = HttpUtility.ParseQueryString(stringBody);
 
-            return new OkResult();
-        }
+        var twilioSms = keyValues.Deserialize<TwilioSms>();
+
+        var command = new { Sms = twilioSms };
+        var message = new
+                      {
+                          CommandType = "EventRegistrar.Backend.PhoneMessages.ProcessReceivedSmsCommand",
+                          CommandSerialized = JsonSerializer.Serialize(command)
+                      };
+        await CommandQueue.SendCommand(message);
+
+        return req.CreateResponse(HttpStatusCode.OK);
     }
 }

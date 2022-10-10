@@ -1,51 +1,48 @@
 using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 
 using Dapper;
 
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Azure.WebJobs.Host;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
-namespace EventRegistrar.Functions
+namespace EventRegistrar.Functions;
+
+public static class SaveRegistrationForm
 {
-    public static class SaveRegistrationForm
+    [Function(nameof(SaveRegistrationForm))]
+    public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "events/{eventAcronym}/registrationforms/{formId}")] HttpRequestData req,
+                                                   string eventAcronym,
+                                                   string formId,
+                                                   ILogger log)
     {
-        [FunctionName("SaveRegistrationForm")]
-        public static async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "events/{eventAcronym}/registrationforms/{formId}")]
-                                                     HttpRequest req,
-                                                     string eventAcronym,
-                                                     string formId,
-                                                     TraceWriter log)
+        var config = new ConfigurationBuilder().AddEnvironmentVariables()
+                                               .Build();
+
+        var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+        var connectionString = config.GetConnectionString("DefaultConnection");
+        await using (var connection = new SqlConnection(connectionString))
         {
-            var config = new ConfigurationBuilder().AddEnvironmentVariables()
-                                                   .Build();
+            const string insertQuery = @"INSERT INTO dbo.RawRegistrationForms(Id, EventAcronym, ReceivedMessage, FormExternalIdentifier, Created) "
+                                     + @"VALUES (@Id, @EventAcronym, @ReceivedMessage, @FormExternalIdentifier, @Created)";
+            var parameters = new
+                             {
+                                 Id = Guid.NewGuid(),
+                                 EventAcronym = eventAcronym,
+                                 ReceivedMessage = requestBody,
+                                 FormExternalIdentifier = formId,
+                                 Created = DateTimeOffset.Now
+                             };
 
-            var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
-
-            var connectionString = config.GetConnectionString("DefaultConnection");
-            await using (var connection = new SqlConnection(connectionString))
-            {
-                const string insertQuery = @"INSERT INTO dbo.RawRegistrationForms(Id, EventAcronym, ReceivedMessage, FormExternalIdentifier, Created) " +
-                                           @"VALUES (@Id, @EventAcronym, @ReceivedMessage, @FormExternalIdentifier, @Created)";
-                var parameters = new
-                {
-                    Id = Guid.NewGuid(),
-                    EventAcronym = eventAcronym,
-                    ReceivedMessage = requestBody,
-                    FormExternalIdentifier = formId,
-                    Created = DateTime.UtcNow
-                };
-
-                await connection.ExecuteAsync(insertQuery, parameters);
-            }
-
-            return new OkResult();
+            await connection.ExecuteAsync(insertQuery, parameters);
         }
+
+        return req.CreateResponse(HttpStatusCode.OK);
     }
 }
