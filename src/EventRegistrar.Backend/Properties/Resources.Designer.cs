@@ -70,6 +70,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kürzel.
+        /// </summary>
+        internal static string Acronym {
+            get {
+                return ResourceManager.GetString("Acronym", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Angebotene Sprachen.
         /// </summary>
         internal static string AngeboteneSprachen {
@@ -106,6 +115,69 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zugriffsrechte kopieren.
+        /// </summary>
+        internal static string CopyAccessRights {
+            get {
+                return ResourceManager.GetString("CopyAccessRights", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mailvorlagen kopieren.
+        /// </summary>
+        internal static string CopyAutoMailTemplates {
+            get {
+                return ResourceManager.GetString("CopyAutoMailTemplates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Konfigurationen kopieren.
+        /// </summary>
+        internal static string CopyConfigurations {
+            get {
+                return ResourceManager.GetString("CopyConfigurations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Aktivitäten kopieren.
+        /// </summary>
+        internal static string CopyRegistrables {
+            get {
+                return ResourceManager.GetString("CopyRegistrables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erstellen.
+        /// </summary>
+        internal static string Create {
+            get {
+                return ResourceManager.GetString("Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nachfolge-Event erstellen.
+        /// </summary>
+        internal static string CreateSuccessorEvent {
+            get {
+                return ResourceManager.GetString("CreateSuccessorEvent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nachfolge-Event von {event} erstellen.
+        /// </summary>
+        internal static string CreateSuccessorEventOf {
+            get {
+                return ResourceManager.GetString("CreateSuccessorEventOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Datum.
         /// </summary>
         internal static string date {
@@ -138,6 +210,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Deposits {
             get {
                 return ResourceManager.GetString("Deposits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verwerfen.
+        /// </summary>
+        internal static string Discard {
+            get {
+                return ResourceManager.GetString("Discard", resourceCulture);
             }
         }
         
@@ -935,6 +1016,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string MissingAmount {
             get {
                 return ResourceManager.GetString("MissingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        internal static string Name {
+            get {
+                return ResourceManager.GetString("Name", resourceCulture);
             }
         }
         

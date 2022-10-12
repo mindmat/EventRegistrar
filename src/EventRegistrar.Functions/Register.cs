@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 using Dapper;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Data.SqlClient;

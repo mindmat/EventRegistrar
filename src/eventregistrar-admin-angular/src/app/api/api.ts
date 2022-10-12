@@ -8033,7 +8033,7 @@ export interface SaveDomainEventCommand {
 }
 
 export interface StartUpdateReadModelsOfEventCommand {
-    eventId?: string;
+    eventId?: string | null;
     queryNames?: string[] | null;
 }
 
@@ -8088,9 +8088,13 @@ export interface HostingRequestsQuery {
 
 export interface CreateEventCommand {
     acronym?: string;
-    eventId_CopyFrom?: string | null;
+    eventId_Predecessor?: string | null;
     id?: string;
     name?: string;
+    copyAccessRights?: boolean;
+    copyRegistrables?: boolean;
+    copyAutoMailTemplates?: boolean;
+    copyConfigurations?: boolean;
 }
 
 export interface EventDetails {

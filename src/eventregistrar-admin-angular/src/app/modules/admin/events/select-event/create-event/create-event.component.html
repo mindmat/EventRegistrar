@@ -1,0 +1,53 @@
+<div class="flex flex-col max-w-240 md:min-w-160 max-h-screen -m-6">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">{{ title }}</div>
+        <button mat-icon-button (click)="discard()" [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="createEventForm">
+
+        <!-- Name -->
+        <mat-form-field>
+            <mat-label>{{ 'Name' | translate }}</mat-label>
+            <input matInput [formControlName]="'name'">
+        </mat-form-field>
+
+        <!-- Acronym -->
+        <mat-form-field>
+            <mat-label>{{ 'Acronym' | translate }}</mat-label>
+            <input matInput [formControlName]="'acronym'">
+        </mat-form-field>
+
+        <!-- copy data -->
+        <mat-checkbox class="flex items-center h-10 min-h-10 px-4" [color]="'primary'" [formControlName]="'copyAccessRights'">
+            {{ 'CopyAccessRights' | translate }}
+        </mat-checkbox>
+        <mat-checkbox class="flex items-center h-10 min-h-10 px-4" [color]="'primary'" [formControlName]="'copyRegistrables'">
+            {{ 'CopyRegistrables' | translate }}
+        </mat-checkbox>
+        <mat-checkbox class="flex items-center h-10 min-h-10 px-4" [color]="'primary'" [formControlName]="'copyAutoMailTemplates'">
+            {{ 'CopyAutoMailTemplates' | translate }}
+        </mat-checkbox>
+        <mat-checkbox class="flex items-center h-10 min-h-10 px-4" [color]="'primary'" [formControlName]="'copyConfigurations'">
+            {{ 'CopyConfigurations' | translate }}
+        </mat-checkbox>
+
+        <!-- Actions -->
+        <div class="flex justify-end mt-4 sm:mt-6 space-x-3">
+
+            <!-- Discard -->
+            <button class="ml-auto sm:ml-0" mat-stroked-button (click)="discard()">
+                {{ 'Discard' | translate }}
+            </button>
+            <!-- Send -->
+            <button class="order-first sm:order-last" mat-flat-button [color]="'primary'" (click)="create()">
+                {{ 'Create' | translate }}
+            </button>
+        </div>
+    </form>
+</div>

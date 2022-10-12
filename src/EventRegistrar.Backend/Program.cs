@@ -202,8 +202,8 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapHub<NotificationHub>("/notifications");
     endpoints.MapRequests(container);
+    endpoints.MapHub<NotificationHub>("/notifications");
     endpoints.MapGet("/", () => container.GetInstance<HomeController>().Index()).AllowAnonymous();
 });
 

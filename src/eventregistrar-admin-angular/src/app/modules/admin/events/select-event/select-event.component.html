@@ -16,11 +16,11 @@
 
     <div class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:p-12 w-full max-w-3xl">
 
-        <!-- Events members -->
+        <!-- Events -->
         <div class="flex flex-col mt-8 divide-y border-t border-b">
             <ng-container *ngFor="let event of filteredEvents; trackBy: trackByFn;">
-                <a [routerLink]="['/', event.eventAcronym]">
-                    <div class="flex flex-col sm:flex-row sm:items-center py-4">
+                <div class="flex flex-col sm:flex-row sm:items-center py-4">
+                    <a [routerLink]="['/', event.eventAcronym]">
                         <div class="flex items-center">
                             <div class="flex flex-0 items-center justify-center w-24 h-10 rounded-full overflow-hidden">
                                 <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
@@ -32,13 +32,22 @@
                                 <div class="text-secondary">{{ event.eventStateText }}</div>
                             </div>
                         </div>
-                        <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
-                            <div class="order-2 sm:order-1 ml-4 sm:ml-0">
-                                <div class="font-medium">{{ event.roleText }}</div>
-                            </div>
+                    </a>
+                    <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
+                        <div class="order-2 sm:order-1 ml-4 sm:ml-0">
+                            <div class="font-medium">{{ event.roleText }}</div>
                         </div>
                     </div>
-                </a>
+                    <button class="ml-1 -mr-4" mat-icon-button [matMenuTriggerFor]="chatsHeaderMenu">
+                        <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                        <mat-menu #chatsHeaderMenu>
+                            <button mat-menu-item (click)="createSuccessorEvent(event)">
+                                <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                                {{ 'CreateSuccessorEvent' | translate }}
+                            </button>
+                        </mat-menu>
+                    </button>
+                </div>
             </ng-container>
 
             <!-- show/hide closed events -->

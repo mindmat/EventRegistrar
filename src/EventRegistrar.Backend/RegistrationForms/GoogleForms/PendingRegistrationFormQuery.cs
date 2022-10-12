@@ -1,7 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
 
 public class PendingRegistrationFormQuery : IRequest<IEnumerable<RegistrationFormItem>>
@@ -9,9 +7,7 @@ public class PendingRegistrationFormQuery : IRequest<IEnumerable<RegistrationFor
     public Guid EventId { get; set; }
 }
 
-public class
-    PendingRegistrationFormQueryHandler : IRequestHandler<PendingRegistrationFormQuery,
-        IEnumerable<RegistrationFormItem>>
+public class PendingRegistrationFormQueryHandler : IRequestHandler<PendingRegistrationFormQuery, IEnumerable<RegistrationFormItem>>
 {
     private readonly IQueryable<RawRegistrationForm> _rawForms;
     private readonly IQueryable<RegistrationForm> _forms;

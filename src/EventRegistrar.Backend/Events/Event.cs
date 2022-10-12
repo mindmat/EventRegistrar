@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations;
@@ -20,6 +21,7 @@ public class Event : Entity
     public ICollection<Registrable>? Registrables { get; set; }
     public ICollection<Registration>? Registrations { get; set; }
     public ICollection<UserInEvent>? Users { get; set; }
+    public ICollection<AutoMailTemplate>? AutoMailTemplates { get; set; }
 
     public string Name { get; set; } = null!;
     public EventState State { get; set; }

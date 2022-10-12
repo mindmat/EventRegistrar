@@ -75,6 +75,7 @@ import { MailViewComponent } from './modules/admin/mailing/mails/mail-view/mail-
 import { UserAccessComponent } from './modules/admin/auth/user-access/user-access.component';
 import { API_BASE_URL } from './api/api';
 import { SelectEventComponent } from './modules/admin/events/select-event/select-event.component';
+import { CreateEventComponent } from './modules/admin/events/select-event/create-event/create-event.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -101,7 +102,8 @@ const routerConfig: ExtraOptions = {
         ReleaseMailsComponent,
         MailViewComponent,
         UserAccessComponent,
-        SelectEventComponent
+        SelectEventComponent,
+        CreateEventComponent
     ],
     providers: [
         AuthServiceFuse,

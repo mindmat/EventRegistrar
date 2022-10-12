@@ -120,6 +120,9 @@
   <data name="AcceptedMail" xml:space="preserve">
     <value>Accepted mail</value>
   </data>
+  <data name="Acronym" xml:space="preserve">
+    <value>Acronym</value>
+  </data>
   <data name="AngeboteneSprachen" xml:space="preserve">
     <value>Offered languages</value>
   </data>
@@ -132,6 +135,24 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="CopyAccessRights" xml:space="preserve">
+    <value>Copy access rights</value>
+  </data>
+  <data name="CopyAutoMailTemplates" xml:space="preserve">
+    <value>Copy mail templates</value>
+  </data>
+  <data name="CopyConfigurations" xml:space="preserve">
+    <value>Copy configurations</value>
+  </data>
+  <data name="CopyRegistrables" xml:space="preserve">
+    <value>Copy activities</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="CreateSuccessorEvent" xml:space="preserve">
+    <value>Create successor event</value>
+  </data>
   <data name="date" xml:space="preserve">
     <value>date</value>
   </data>
@@ -143,6 +164,9 @@
   </data>
   <data name="Deposits" xml:space="preserve">
     <value>Deposits</value>
+  </data>
+  <data name="Discard" xml:space="preserve">
+    <value>Discard</value>
   </data>
   <data name="EMail" xml:space="preserve">
     <value>Email address</value>
@@ -330,6 +354,9 @@
   <data name="MissingAmount" xml:space="preserve">
     <value>Missing amount</value>
   </data>
+  <data name="Name" xml:space="preserve">
+    <value>Name</value>
+  </data>
   <data name="NewEvent" xml:space="preserve">
     <value>Create new event</value>
   </data>
@@ -408,11 +435,11 @@
   <data name="Search" xml:space="preserve">
     <value>Search</value>
   </data>
-  <data name="SearchByNameAcronym" xml:space="preserve">
-    <value>Search by name, acronym</value>
-  </data>
   <data name="SearchByName" xml:space="preserve">
     <value>Search by name</value>
+  </data>
+  <data name="SearchByNameAcronym" xml:space="preserve">
+    <value>Search by name, acronym</value>
   </data>
   <data name="SearchByNameIbanMessage" xml:space="preserve">
     <value>Search by name, IBAN, message</value>
@@ -452,6 +479,9 @@
   </data>
   <data name="subject" xml:space="preserve">
     <value>subject</value>
+  </data>
+  <data name="CreateSuccessorEventOf" xml:space="preserve">
+    <value>Create successor event of {event}</value>
   </data>
   <data name="to" xml:space="preserve">
     <value>to</value>

@@ -24,7 +24,7 @@ public class AutoMailTemplateMap : EntityMap<AutoMailTemplate>
         builder.ToTable("AutoMailTemplates");
 
         builder.HasOne(mtp => mtp.Event)
-               .WithMany()
+               .WithMany(evt => evt.AutoMailTemplates)
                .HasForeignKey(mtp => mtp.EventId);
 
         builder.Property(mtp => mtp.Language)

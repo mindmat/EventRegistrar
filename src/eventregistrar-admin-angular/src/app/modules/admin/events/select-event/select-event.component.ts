@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { AccessRequest, EventOfUser, EventSearchResult, EventState, RoleDescription, UserInEventRole } from 'app/api/api';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
+import { CreateEventComponent } from './create-event/create-event.component';
 import { EventsOfUserService } from './events-of-user.service';
 import { SearchEventsService } from './search-events.service';
 
@@ -28,7 +30,8 @@ export class SelectEventComponent implements OnInit
 
   constructor(private eventsOfUserService: EventsOfUserService,
     private searchEventService: SearchEventsService,
-    private changeDetectorRef: ChangeDetectorRef) { }
+    private changeDetectorRef: ChangeDetectorRef,
+    private matDialog: MatDialog) { }
 
   ngOnInit(): void
   {
@@ -113,6 +116,17 @@ export class SelectEventComponent implements OnInit
   requestAccess(eventId: string)
   {
     this.eventsOfUserService.requestAccess(eventId);
+  }
+
+  createSuccessorEvent(event: EventOfUser)
+  {
+    const dialogRef = this.matDialog.open(CreateEventComponent, { data: { event } });
+
+    dialogRef.afterClosed()
+      .subscribe((result) =>
+      {
+        console.log('Create event dialog was closed!');
+      });
   }
 
   // setRoleOfUser(change: MatSelectChange, userId: string)

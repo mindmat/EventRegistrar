@@ -28,4 +28,20 @@ public static class EnumerableExtensions
                    ? source.Append(createElement.Invoke())
                    : source;
     }
+
+    public static async Task ForEach<T>(this IEnumerable<T> source, Func<T, Task> action)
+    {
+        foreach (var obj in source)
+        {
+            await action(obj);
+        }
+    }
+
+    public static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
+    {
+        foreach (var obj in source)
+        {
+            action(obj);
+        }
+    }
 }

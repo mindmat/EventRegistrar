@@ -8631,7 +8631,8 @@
         "properties": {
           "eventId": {
             "type": "string",
-            "format": "guid"
+            "format": "guid",
+            "nullable": true
           },
           "queryNames": {
             "type": "array",
@@ -8805,7 +8806,7 @@
           "acronym": {
             "type": "string"
           },
-          "eventId_CopyFrom": {
+          "eventId_Predecessor": {
             "type": "string",
             "format": "guid",
             "nullable": true
@@ -8816,6 +8817,18 @@
           },
           "name": {
             "type": "string"
+          },
+          "copyAccessRights": {
+            "type": "boolean"
+          },
+          "copyRegistrables": {
+            "type": "boolean"
+          },
+          "copyAutoMailTemplates": {
+            "type": "boolean"
+          },
+          "copyConfigurations": {
+            "type": "boolean"
           }
         }
       },

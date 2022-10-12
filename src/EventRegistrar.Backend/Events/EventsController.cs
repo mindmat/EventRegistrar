@@ -1,6 +1,4 @@
-﻿using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
-
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Events;
 
@@ -16,20 +14,6 @@ public class EventsController : Controller
         _eventAcronymResolver = eventAcronymResolver;
     }
 
-    [HttpPut("api/events/{eventAcronym}")]
-    public Task CreateEvent(string eventAcronym,
-                            string name,
-                            Guid id,
-                            Guid? eventId_CopyFrom)
-    {
-        return _mediator.Send(new CreateEventCommand
-                              {
-                                  Acronym = eventAcronym,
-                                  Id = id,
-                                  EventId_CopyFrom = eventId_CopyFrom,
-                                  Name = name
-                              });
-    }
 
     [HttpPost("api/events/{eventAcronym}/openRegistration")]
     public async Task OpenRegistration(string eventAcronym, bool deleteTestData = false)
@@ -39,16 +23,6 @@ public class EventsController : Controller
                                  EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                                  DeleteTestData = deleteTestData
                              });
-    }
-
-    [HttpPost("api/events/{eventAcronym}/requestAccess")]
-    public async Task<Guid> RequestAccess(string eventAcronym)
-    {
-        return await _mediator.Send(new RequestAccessCommand
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                        RequestText = null
-                                    });
     }
 
     [HttpGet("api/events")]

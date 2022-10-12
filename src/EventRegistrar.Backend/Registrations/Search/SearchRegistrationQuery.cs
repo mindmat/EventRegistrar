@@ -1,4 +1,6 @@
-﻿namespace EventRegistrar.Backend.Registrations.Search;
+﻿using EventRegistrar.Backend.Infrastructure;
+
+namespace EventRegistrar.Backend.Registrations.Search;
 
 public class SearchRegistrationQuery : IRequest<IEnumerable<RegistrationMatch>>, IEventBoundRequest
 {
@@ -27,10 +29,11 @@ public class SearchRegistrationQueryHandler : IRequestHandler<SearchRegistration
         }
 
         var registrations = await _registrations.Where(reg => reg.EventId == query.EventId)
-                                                .Where(reg => reg.RespondentFirstName!.Contains(searchString)
-                                                           || reg.RespondentLastName!.Contains(searchString)
-                                                           || reg.RespondentEmail!.Contains(searchString)
-                                                           || reg.PhoneNormalized!.Contains(searchString))
+                                                .WhereIf(!string.IsNullOrWhiteSpace(query.SearchString),
+                                                         reg => reg.RespondentFirstName!.Contains(searchString)
+                                                             || reg.RespondentLastName!.Contains(searchString)
+                                                             || reg.RespondentEmail!.Contains(searchString)
+                                                             || reg.PhoneNormalized!.Contains(searchString))
                                                 .Where(reg => allowedStates.Contains(reg.State))
                                                 .Select(reg => new RegistrationMatch
                                                                {
