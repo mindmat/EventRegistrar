@@ -106,10 +106,10 @@
                 <div class="flex w-full p-6 border-t bg-gray-50 dark:bg-transparent">
 
                     <!-- Buttons -->
-                    <ng-container *ngIf="!replyFormActive">
+                    <ng-container>
                         <div class="flex flex-wrap w-full -m-2">
                             <!-- Release -->
-                            <button class="m-2 ml-auto" mat-stroked-button [color]="'primary'" (click)="release(mail.id)">
+                            <button class="m-2 ml-auto" mat-stroked-button [color]="'primary'" (click)="releaseMail(mail.id)">
                                 <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:send'"></mat-icon>
                                 <span class="ml-2">{{ 'Release' | translate }}</span>
                             </button>

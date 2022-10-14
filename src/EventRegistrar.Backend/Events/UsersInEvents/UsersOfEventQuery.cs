@@ -15,6 +15,7 @@ public class UserInEventDisplayItem
     public string? UserEmail { get; set; }
     public Guid UserId { get; set; }
     public string UserDisplayName { get; set; } = null!;
+    public string? UserAvatarUrl { get; set; }
 }
 
 public class UsersOfEventQueryHandler : IRequestHandler<UsersOfEventQuery, IEnumerable<UserInEventDisplayItem>>
@@ -40,7 +41,8 @@ public class UsersOfEventQueryHandler : IRequestHandler<UsersOfEventQuery, IEnum
                                                       Role = uie.Role,
                                                       RoleText = _enumTranslator.Translate(uie.Role),
                                                       UserDisplayName = $"{uie.User!.FirstName} {uie.User.LastName}",
-                                                      UserEmail = uie.User.Email
+                                                      UserEmail = uie.User.Email,
+                                                      UserAvatarUrl = uie.User.AvatarUrl
                                                   })
                                    .ToListAsync(cancellationToken);
     }

@@ -73,4 +73,14 @@ export class DuePaymentsComponent implements OnInit
   {
     return item.id || index;
   }
+
+  sendReminderMail(duePayment: DuePaymentItem)
+  {
+
+  }
+
+  sendReminderSms(duePayment: DuePaymentItem)
+  {
+
+  }
 }

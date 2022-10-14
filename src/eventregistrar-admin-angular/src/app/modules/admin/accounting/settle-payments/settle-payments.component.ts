@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatCheckboxChange } from '@angular/material/checkbox';
 import { PaymentDisplayItem2, BookingsOfDay, CreditDebit } from 'app/api/api';
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
 import { SettlePaymentsService } from './settle-payments.service';
@@ -81,22 +81,22 @@ export class SettlePaymentsComponent implements OnInit
     this.filters.query$.next(query);
   }
 
-  toggleIncoming(change: MatSlideToggleChange): void
+  toggleIncoming(change: MatCheckboxChange): void
   {
     this.filters.hideIncoming$.next(change.checked);
   }
 
-  toggleOutgoing(change: MatSlideToggleChange): void
+  toggleOutgoing(change: MatCheckboxChange): void
   {
     this.filters.hideOutgoing$.next(change.checked);
   }
 
-  toggleSettled(change: MatSlideToggleChange): void
+  toggleSettled(change: MatCheckboxChange): void
   {
     this.filters.hideSettled$.next(change.checked);
   }
 
-  toggleIgnored(change: MatSlideToggleChange): void
+  toggleIgnored(change: MatCheckboxChange): void
   {
     this.filters.hideIgnored$.next(change.checked);
   }

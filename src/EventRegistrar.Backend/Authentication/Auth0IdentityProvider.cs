@@ -35,7 +35,7 @@ public class Auth0IdentityProvider : IIdentityProvider
         var extract = GetIdentifier(contextAccessor);
         return extract == null
                    ? AuthenticatedUser.None
-                   : new AuthenticatedUser(extract.Value.Provider, extract.Value.Identifier, null, null, null);
+                   : new AuthenticatedUser(extract.Value.Provider, extract.Value.Identifier);
     }
 
     public async Task<ExternalUserDetails?> GetUserDetails(string identifier)
@@ -59,7 +59,7 @@ public class Auth0IdentityProvider : IIdentityProvider
                        FirstName = contentUser?.given_name,
                        LastName = contentUser?.family_name,
                        Email = contentUser?.email,
-                       PictureUrl = contentUser?.picture
+                       AvatarUrl = contentUser?.picture
                    };
         }
 

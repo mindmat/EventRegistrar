@@ -68,6 +68,7 @@ public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand,
                           FirstName = user.FirstName,
                           LastName = user.LastName,
                           Email = user.Email,
+                          AvatarUrl = user.AvatarUrl,
                           RequestText = command.RequestText,
                           EventId = command.EventId,
                           RequestReceived = DateTime.UtcNow

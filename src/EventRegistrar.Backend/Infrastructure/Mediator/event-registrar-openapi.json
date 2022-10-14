@@ -9092,6 +9092,10 @@
           },
           "userDisplayName": {
             "type": "string"
+          },
+          "userAvatarUrl": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -9122,6 +9126,10 @@
             "nullable": true
           },
           "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "avatarUrl": {
             "type": "string",
             "nullable": true
           },

@@ -12,6 +12,7 @@ public class AccessRequestOfEvent
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
+    public string? AvatarUrl { get; set; }
     public DateTimeOffset RequestReceived { get; set; }
     public string? RequestText { get; set; }
 }
@@ -37,6 +38,7 @@ public class AccessRequestsOfEventQueryHandler : IRequestHandler<AccessRequestsO
                                                        FirstName = req.FirstName,
                                                        LastName = req.LastName,
                                                        Email = req.Email,
+                                                       AvatarUrl = req.AvatarUrl,
                                                        RequestReceived = req.RequestReceived,
                                                        RequestText = req.RequestText
                                                    })

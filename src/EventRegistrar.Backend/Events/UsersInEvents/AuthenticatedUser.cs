@@ -8,15 +8,17 @@ public class AuthenticatedUser
 
     public AuthenticatedUser(IdentityProvider identityProvider,
                              string identityProviderUserIdentifier,
-                             string? firstName,
-                             string? lastName,
-                             string? email)
+                             string? firstName = null,
+                             string? lastName = null,
+                             string? email = null,
+                             string? avatarUrl = null)
     {
         IdentityProvider = identityProvider;
         IdentityProviderUserIdentifier = identityProviderUserIdentifier;
         FirstName = firstName;
         LastName = lastName;
         Email = email;
+        AvatarUrl = avatarUrl;
     }
 
     public IdentityProvider IdentityProvider { get; }
@@ -24,6 +26,7 @@ public class AuthenticatedUser
     public string? FirstName { get; }
     public string? LastName { get; }
     public string? Email { get; }
+    public string? AvatarUrl { get; }
 
     public static AuthenticatedUser None => new();
 }

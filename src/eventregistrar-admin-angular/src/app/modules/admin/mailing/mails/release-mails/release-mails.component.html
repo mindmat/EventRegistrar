@@ -25,7 +25,7 @@
                             <!-- Header -->
                             <div class="flex flex-col flex-0 py-4 px-8 border-b bg-gray-50 dark:bg-transparent">
                                 <div class="flex items-center">
-                                    <div class="flex items-center mr-1 cursor-pointer" (click)="openProfile()">
+                                    <div class="flex items-center mr-1 cursor-pointer">
                                         <div class="ml-2 font-semibold uppercase">{{ 'PendingMails' | translate }}</div>
                                     </div>
                                     <button class="ml-auto -mr-4" mat-icon-button [matMenuTriggerFor]="mailsHeaderMenu">
@@ -49,7 +49,7 @@
 
                             <!-- Mails -->
                             <div class="flex-auto overflow-y-auto">
-                                <ng-container *ngIf="filteredPendingMails?.length > 0; else noChats">
+                                <ng-container *ngIf="filteredPendingMails?.length > 0; else noMails">
                                     <ng-container *ngFor="let pendingMail of filteredPendingMails; trackBy: trackByFn">
                                         <!-- Mail -->
                                         <a class="relative flex border-t first:border-0 hover:bg-hover" [routerLink]="[pendingMail.id]" (click)="onMailSelected(pendingMail)">

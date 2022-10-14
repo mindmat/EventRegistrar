@@ -228,6 +228,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                                          QueryName = nameof(DuePaymentsQuery)
                                      });
         _eventBus.Publish(new ReadModelUpdated { QueryName = nameof(EventsOfUserQuery) });
+        _eventBus.Publish(new ReadModelUpdated { QueryName = nameof(SearchEventQuery) });
 
         return Unit.Value;
     }

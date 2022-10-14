@@ -34,7 +34,8 @@ public class GoogleIdentityProvider : IIdentityProvider
             var firstName = token.GetClaim("given_name");
             var lastName = token.GetClaim("family_name");
             var email = token.GetClaim("email");
-            return new AuthenticatedUser(Provider, token.Subject, firstName, lastName, email);
+            var avatarUrl = token.GetClaim("picture");
+            return new AuthenticatedUser(Provider, token.Subject, firstName, lastName, email, avatarUrl);
         }
 
         return AuthenticatedUser.None;

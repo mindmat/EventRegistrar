@@ -8193,6 +8193,7 @@ export interface UserInEventDisplayItem {
     userEmail?: string | null;
     userId?: string;
     userDisplayName?: string;
+    userAvatarUrl?: string | null;
 }
 
 export interface UsersOfEventQuery {
@@ -8204,6 +8205,7 @@ export interface AccessRequestOfEvent {
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;
+    avatarUrl?: string | null;
     requestReceived?: Date;
     requestText?: string | null;
 }

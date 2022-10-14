@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Authentication.Users;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
@@ -20,6 +21,7 @@ public class AccessToEventRequest : Entity
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
+    public string? AvatarUrl { get; set; }
 
     public DateTime RequestReceived { get; set; }
     public string? RequestText { get; set; }
@@ -53,5 +55,7 @@ public class AccessToEventRequestMap : EntityMap<AccessToEventRequest>
                .HasMaxLength(200);
         builder.Property(arq => arq.Email)
                .HasMaxLength(200);
+        builder.Property(arq => arq.AvatarUrl)
+               .HasMaxLength(500);
     }
 }
