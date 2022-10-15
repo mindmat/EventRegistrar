@@ -34,9 +34,9 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
                                    .Select(grp => new
                                                   {
                                                       ExternalIdentifier = grp.Key,
-                                                      PendingRawForm = grp.Where(frm => !frm.Processed)
+                                                      PendingRawForm = grp.Where(frm => frm.Processed == null)
                                                                           .MaxBy(frm => frm.Created),
-                                                      LastProcessedRawForm = grp.Where(frm => frm.Processed)
+                                                      LastProcessedRawForm = grp.Where(frm => frm.Processed != null)
                                                                                 .MaxBy(frm => frm.Created)
                                                   })
                                    .ToList();

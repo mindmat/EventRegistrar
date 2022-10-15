@@ -1,9 +1,7 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Events;
+﻿using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.RegistrationForms.Questions;
-
-using MediatR;
 
 using Newtonsoft.Json;
 
@@ -18,6 +16,7 @@ public class SaveRegistrationFormDefinitionCommand : IRequest, IEventBoundReques
 public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<SaveRegistrationFormDefinitionCommand>
 {
     private readonly IQueryable<Event> _events;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IRepository<RegistrationForm> _forms;
     private readonly IRepository<QuestionOption> _questionOptions;
     private readonly IRepository<Question> _questions;
@@ -27,13 +26,15 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
                                                         IRepository<RawRegistrationForm> rawForms,
                                                         IRepository<Question> questions,
                                                         IRepository<QuestionOption> questionOptions,
-                                                        IQueryable<Event> events)
+                                                        IQueryable<Event> events,
+                                                        IDateTimeProvider dateTimeProvider)
     {
         _forms = forms;
         _rawForms = rawForms;
         _questions = questions;
         _questionOptions = questionOptions;
         _events = events;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(SaveRegistrationFormDefinitionCommand command, CancellationToken cancellationToken)
@@ -41,7 +42,7 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
         var acronym = await _events.FirstAsync(evt => evt.Id == command.EventId, cancellationToken);
         var rawForm = await _rawForms.Where(frm => frm.EventAcronym == acronym.Acronym
                                                 && frm.FormExternalIdentifier == command.FormId
-                                                && !frm.Processed)
+                                                && frm.Processed == null)
                                      .OrderByDescending(frm => frm.Created)
                                      .FirstOrDefaultAsync(cancellationToken);
         if (rawForm == null)
@@ -161,7 +162,7 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
             _questions.Remove(existingQuestion);
         }
 
-        rawForm.Processed = true;
+        rawForm.Processed = _dateTimeProvider.Now;
 
         return Unit.Value;
     }
