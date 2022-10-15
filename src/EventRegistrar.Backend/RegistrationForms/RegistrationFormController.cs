@@ -2,7 +2,7 @@
 using EventRegistrar.Backend.RegistrationForms.FormPaths;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
-using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.RegistrationForms;
@@ -27,15 +27,6 @@ public class RegistrationFormController : Controller
                                  EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                                  FormId = formId
                              });
-    }
-
-    [HttpGet("api/events/{eventAcronym}/registrationForms/pending")]
-    public async Task<IEnumerable<RegistrationFormItem>> GetPendingRegistrationForms(string eventAcronym)
-    {
-        return await _mediator.Send(new PendingRegistrationFormQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
     }
 
     [HttpPost("api/events/{eventAcronym}/registrationForms/{formId}/mappings")]

@@ -9,7 +9,6 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Functions;
 
@@ -18,8 +17,7 @@ public static class SaveRegistrationForm
     [Function(nameof(SaveRegistrationForm))]
     public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "events/{eventAcronym}/registrationforms/{formId}")] HttpRequestData req,
                                                    string eventAcronym,
-                                                   string formId,
-                                                   ILogger log)
+                                                   string formId)
     {
         var config = new ConfigurationBuilder().AddEnvironmentVariables()
                                                .Build();

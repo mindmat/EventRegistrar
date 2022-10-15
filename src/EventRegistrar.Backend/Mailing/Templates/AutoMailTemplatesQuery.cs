@@ -1,5 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure;
+﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Properties;
 
 namespace EventRegistrar.Backend.Mailing.Templates;
@@ -99,7 +98,7 @@ public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQu
                };
     }
 
-    private AutoMailTemplateMetadataLanguage CreateTemplate(string language, AutoMailTemplate? existing)
+    private static AutoMailTemplateMetadataLanguage CreateTemplate(string language, AutoMailTemplate? existing)
     {
         return new AutoMailTemplateMetadataLanguage
                {

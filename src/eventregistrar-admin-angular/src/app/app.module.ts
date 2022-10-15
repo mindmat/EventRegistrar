@@ -76,6 +76,7 @@ import { UserAccessComponent } from './modules/admin/auth/user-access/user-acces
 import { API_BASE_URL } from './api/api';
 import { SelectEventComponent } from './modules/admin/events/select-event/select-event.component';
 import { CreateEventComponent } from './modules/admin/events/select-event/create-event/create-event.component';
+import { FormMappingComponent } from './modules/admin/registration-forms/form-mapping/form-mapping.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -103,7 +104,8 @@ const routerConfig: ExtraOptions = {
         MailViewComponent,
         UserAccessComponent,
         SelectEventComponent,
-        CreateEventComponent
+        CreateEventComponent,
+        FormMappingComponent
     ],
     providers: [
         AuthServiceFuse,

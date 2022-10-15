@@ -18,7 +18,6 @@ public static class ReceiveSms
     {
         // Read body
         var stringBody = await new StreamReader(req.Body).ReadToEndAsync();
-        log.LogInformation(stringBody);
 
         // Parse as query string
         var keyValues = HttpUtility.ParseQueryString(stringBody);

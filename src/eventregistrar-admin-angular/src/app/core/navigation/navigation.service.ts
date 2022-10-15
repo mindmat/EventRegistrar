@@ -101,6 +101,13 @@ export class NavigationService
                                 type: 'basic',
                                 icon: 'heroicons_outline:user',
                                 link: `/${e.acronym}/admin/user-access`,
+                            },
+                            {
+                                id: 'form-mapping',
+                                title: 'Formulare',
+                                type: 'basic',
+                                icon: 'heroicons_outline:clipboard-list',
+                                link: `/${e.acronym}/admin/form-mapping`,
                             }
                         ]
                     },

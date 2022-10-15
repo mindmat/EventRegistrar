@@ -15,7 +15,6 @@ public static class GetRegistrationExternalIdentifiersOfForm
 {
     [Function(nameof(GetRegistrationExternalIdentifiersOfForm))]
     public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "registrationforms/{formId}/RegistrationExternalIdentifiers")] HttpRequestData req,
-                                                   ILogger log,
                                                    string formId)
     {
         var config = new ConfigurationBuilder().AddEnvironmentVariables()

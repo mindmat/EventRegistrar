@@ -1303,11 +1303,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    pendingRegistrationForm_Query(pendingRegistrationFormQuery: PendingRegistrationFormQuery | undefined): Observable<RegistrationFormItem[]> {
-        let url_ = this.baseUrl + "/api/PendingRegistrationFormQuery";
+    registrationForms_Query(registrationFormsQuery: RegistrationFormsQuery | undefined): Observable<RegistrationFormItem[]> {
+        let url_ = this.baseUrl + "/api/RegistrationFormsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(pendingRegistrationFormQuery);
+        const content_ = JSON.stringify(registrationFormsQuery);
 
         let options_ : any = {
             body: content_,
@@ -1320,11 +1320,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPendingRegistrationForm_Query(response_);
+            return this.processRegistrationForms_Query(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processPendingRegistrationForm_Query(response_ as any);
+                    return this.processRegistrationForms_Query(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<RegistrationFormItem[]>;
                 }
@@ -1333,7 +1333,7 @@ export class Api {
         }));
     }
 
-    protected processPendingRegistrationForm_Query(response: HttpResponseBase): Observable<RegistrationFormItem[]> {
+    protected processRegistrationForms_Query(response: HttpResponseBase): Observable<RegistrationFormItem[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6962,7 +6962,7 @@ export interface RegistrationFormItem {
     registrationFormId?: string | null;
     externalIdentifier?: string;
     state?: EventState;
-    title?: string;
+    title?: string | null;
     lastImport?: Date | null;
     pendingRawFormCreated?: Date | null;
     pendingRawFormId?: string | null;
@@ -6976,7 +6976,7 @@ export enum EventState {
     Finished = 4,
 }
 
-export interface PendingRegistrationFormQuery {
+export interface RegistrationFormsQuery {
     eventId?: string;
 }
 
@@ -8237,7 +8237,7 @@ export interface RightsOfUserInEventQuery {
 
 export interface UpdateUserInfoCommand {
     provider?: IdentityProvider;
-    identifier?: string;
+    identifier?: string | null;
 }
 
 export enum IdentityProvider {

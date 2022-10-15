@@ -9,7 +9,6 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Functions;
 
@@ -19,7 +18,6 @@ public static class Register
     public static async Task<HttpResponseData> Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "events/{eventAcronym}/registrationforms/{formId}/registrations/{registrationId}")]
         HttpRequestData req,
-        ILogger log,
         string eventAcronym,
         string formId,
         string registrationId)

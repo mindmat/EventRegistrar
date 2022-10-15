@@ -838,19 +838,19 @@
         }
       }
     },
-    "/api/PendingRegistrationFormQuery": {
+    "/api/RegistrationFormsQuery": {
       "post": {
         "tags": [
-          "PendingRegistrationForm"
+          "RegistrationForms"
         ],
-        "operationId": "PendingRegistrationForm_Query",
+        "operationId": "RegistrationForms_Query",
         "requestBody": {
-          "x-name": "PendingRegistrationFormQuery",
+          "x-name": "RegistrationFormsQuery",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PendingRegistrationFormQuery"
+                "$ref": "#/components/schemas/RegistrationFormsQuery"
               }
             }
           },
@@ -5334,7 +5334,8 @@
             "$ref": "#/components/schemas/EventState"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "lastImport": {
             "type": "string",
@@ -5372,7 +5373,7 @@
           4
         ]
       },
-      "PendingRegistrationFormQuery": {
+      "RegistrationFormsQuery": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -9217,7 +9218,8 @@
             "$ref": "#/components/schemas/IdentityProvider"
           },
           "identifier": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },

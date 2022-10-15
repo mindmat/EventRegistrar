@@ -8,18 +8,15 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Functions;
 
 public static class ReceiveSendGridMailNotification
 {
     [Function(nameof(ReceiveSendGridMailNotification))]
-    public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "mails/state")] HttpRequestData req,
-                                                   ILogger log)
+    public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "mails/state")] HttpRequestData req)
     {
         var bodyJson = await req.ReadAsStringAsync();
-        log.LogInformation(bodyJson);
 
         var config = new ConfigurationBuilder().AddEnvironmentVariables()
                                                .Build();

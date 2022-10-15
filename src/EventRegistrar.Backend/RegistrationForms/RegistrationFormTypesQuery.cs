@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace EventRegistrar.Backend.RegistrationForms;
+﻿namespace EventRegistrar.Backend.RegistrationForms;
 
 public enum FormPathType
 {
@@ -14,12 +12,9 @@ public class RegistrationFormType
     public string Name { get; set; }
 }
 
-public class RegistrationFormTypesQuery : IRequest<IEnumerable<RegistrationFormType>>
-{
-}
+public class RegistrationFormTypesQuery : IRequest<IEnumerable<RegistrationFormType>> { }
 
-public class
-    RegistrationFormTypesQueryHandler : IRequestHandler<RegistrationFormTypesQuery, IEnumerable<RegistrationFormType>>
+public class RegistrationFormTypesQueryHandler : IRequestHandler<RegistrationFormTypesQuery, IEnumerable<RegistrationFormType>>
 {
     public Task<IEnumerable<RegistrationFormType>> Handle(RegistrationFormTypesQuery request,
                                                           CancellationToken cancellationToken)

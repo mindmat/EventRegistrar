@@ -7,13 +7,14 @@
     <PublishReadyToRun>true</PublishReadyToRun>-->
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.10.0" />
+    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.11.0" />
     <PackageReference Include="Dapper" Version="2.0.123" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.10.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer" Version="4.1.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.7.0" OutputItemType="Analyzer" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk.Analyzers" Version="1.1.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
   </ItemGroup>
   <ItemGroup>

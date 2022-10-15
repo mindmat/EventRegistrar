@@ -18,7 +18,6 @@ public static class SetSmsStatus
 {
     [Function(nameof(SetSmsStatus))]
     public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "events/{eventIdString}/sms/setStatus")] HttpRequestData req,
-                                                   ILogger log,
                                                    string eventIdString)
     {
         var config = new ConfigurationBuilder().AddEnvironmentVariables()
@@ -26,7 +25,6 @@ public static class SetSmsStatus
         var connectionString = config.GetConnectionString("DefaultConnection");
 
         var stringBody = await new StreamReader(req.Body).ReadToEndAsync();
-        log.LogInformation(stringBody);
 
         // Parse as query string
         var keyValues = HttpUtility.ParseQueryString(stringBody);
@@ -44,7 +42,6 @@ public static class SetSmsStatus
                      INNER JOIN dbo.Registrations REG ON REG.Id = SMS.RegistrationId
                    WHERE REG.EventID = @EventId
                      AND SMS.SmsSid = @Sid", new { Sid = smsSid, EventId = eventId, Status = messageStatus });
-            log.LogInformation("{0} rows updated", affectedRows);
         }
 
         return req.CreateResponse(HttpStatusCode.OK);

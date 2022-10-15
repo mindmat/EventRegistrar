@@ -34,6 +34,8 @@ import { UserAccessResolver } from './modules/admin/auth/user-access/user-access
 import { EventAcronymResolver } from './modules/admin/events/event-acronym.resolver';
 import { SelectEventComponent } from './modules/admin/events/select-event/select-event.component';
 import { SelectEventResolver } from './modules/admin/events/select-event/select-event.resolver';
+import { FormMappingComponent } from './modules/admin/registration-forms/form-mapping/form-mapping.component';
+import { FormMappingResolver } from './modules/admin/registration-forms/form-mapping/form-mapping.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -244,6 +246,12 @@ export const appRoutes: Route[] =
                             canActivate: [AuthGuard],
                             component: UserAccessComponent,
                             resolve: { initialData: UserAccessResolver }
+                        },
+                        {
+                            path: 'form-mapping',
+                            canActivate: [AuthGuard],
+                            component: FormMappingComponent,
+                            resolve: { initialData: FormMappingResolver }
                         }
                     ]
                 }]

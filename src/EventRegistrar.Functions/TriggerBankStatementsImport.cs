@@ -7,14 +7,13 @@ using Dapper;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
 
 namespace EventRegistrar.Functions;
 
 public static class TriggerBankStatementsImport
 {
     [Function(nameof(TriggerBankStatementsImport))]
-    public static async Task Run([TimerTrigger("0 0 3 * * 1-6")] TimerInfo timer, ILogger log)
+    public static async Task Run([TimerTrigger("0 0 3 * * 1-6")] TimerInfo _)
     {
         var config = new ConfigurationBuilder().AddEnvironmentVariables()
                                                .Build();
@@ -26,7 +25,7 @@ public static class TriggerBankStatementsImport
                      INNER JOIN dbo.[Events]   EVT ON EVT.Id = CFG.EventId
                    WHERE CFG.[Type] = 'EventRegistrar.Backend.Payments.Files.Fetch.FetchBankStatementsFilesConfiguration'
                      AND EVT.[State] IN (1,2)")).AsList();
-        log.LogInformation("{0} events will be triggered", eventIds.Count);
+
         foreach (var eventId in eventIds)
         {
             var command = new { EventId = eventId };

@@ -6,7 +6,7 @@ public class RegistrationFormItem
     public string ExternalIdentifier { get; internal set; }
     public EventState State { get; internal set; }
 
-    public string Title { get; internal set; }
+    public string? Title { get; internal set; }
 
     //public string Language { get; internal set; }
     public DateTimeOffset? LastImport { get; internal set; }

@@ -24,17 +24,4 @@ public class EventsController : Controller
                                  DeleteTestData = deleteTestData
                              });
     }
-
-    [HttpGet("api/events")]
-    public Task<IEnumerable<EventSearchResult>> Search(string searchString,
-                                                       bool includeRequestedEvents = false,
-                                                       bool includeAuthorizedEvents = false)
-    {
-        return _mediator.Send(new SearchEventQuery
-                              {
-                                  SearchString = searchString,
-                                  IncludeRequestedEvents = includeRequestedEvents,
-                                  IncludeAuthorizedEvents = includeAuthorizedEvents
-                              });
-    }
 }
