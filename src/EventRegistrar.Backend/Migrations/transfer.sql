@@ -53,6 +53,41 @@ SELECT [Id]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[UsersInEvents]
 
 
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[AccessToEventRequests]
+           ([Id]
+           ,[EventId]
+           ,[UserId_Requestor]
+           ,[UserId_Responder]
+           ,[IdentityProvider]
+           ,[Identifier]
+           ,[FirstName]
+           ,[LastName]
+           ,[Email]
+           ,[AvatarUrl]
+           ,[RequestReceived]
+           ,[RequestText]
+           ,[Response]
+           ,[ResponseText])
+SELECT [Id]
+      ,[EventId]
+      ,[UserId_Requestor]
+      ,[UserId_Responder]
+      ,3
+      ,'google-oauth2|' + [Identifier]
+      ,[FirstName]
+      ,[LastName]
+      ,[Email]
+      ,null
+      ,[RequestReceived]
+      ,[RequestText]
+      ,[Response]
+      ,[ResponseText]
+  FROM [AZURE_ER].[EventRegistrator].[dbo].[AccessToEventRequests]
+
+
+
+
+
 INSERT INTO [AZURE_EA].[event-admin].[dbo].[Registrables]
            ([Id]
            ,[EventId]
@@ -486,6 +521,35 @@ SELECT [Id]
            ,[To]
            ,[Type]
 FROM [AZURE_ER].[EventRegistrator].[dbo].[Sms]
+
+
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[RawRegistrationForms]
+           ([Id]
+           ,[FormExternalIdentifier]
+           ,[ReceivedMessage]
+           ,[Created]
+           ,[EventAcronym]
+           ,[Processed])
+SELECT [Id]
+      ,[FormExternalIdentifier]
+      ,[ReceivedMessage]
+      ,[Created]
+      ,[EventAcronym]
+      ,[Created]
+  FROM [AZURE_ER].[EventRegistrator].[dbo].[RawRegistrationForms]
+   
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[RegistrationForms]
+           ([Id]
+           ,[EventId]
+           ,[ExternalIdentifier]
+           ,[State]
+           ,[Title])
+SELECT [Id]
+      ,[EventId]
+      ,[ExternalIdentifier]
+      ,[State]
+      ,[Title]
+  FROM [AZURE_ER].[EventRegistrator].[dbo].[RegistrationForms]
 
 --UPDATE BankAccountbookings
 --SET Charges = 12
