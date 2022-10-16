@@ -7,13 +7,13 @@ using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
 
-public class SaveRegistrationFormDefinitionCommand : IRequest, IEventBoundRequest
+public class ImportRegistrationFormCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
-    public string FormId { get; set; }
+    public string FormExternalIdentifier { get; set; }
 }
 
-public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<SaveRegistrationFormDefinitionCommand>
+public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegistrationFormCommand>
 {
     private readonly IQueryable<Event> _events;
     private readonly IDateTimeProvider _dateTimeProvider;
@@ -22,12 +22,12 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
     private readonly IRepository<Question> _questions;
     private readonly IRepository<RawRegistrationForm> _rawForms;
 
-    public SaveRegistrationFormDefinitionCommandHandler(IRepository<RegistrationForm> forms,
-                                                        IRepository<RawRegistrationForm> rawForms,
-                                                        IRepository<Question> questions,
-                                                        IRepository<QuestionOption> questionOptions,
-                                                        IQueryable<Event> events,
-                                                        IDateTimeProvider dateTimeProvider)
+    public ImportRegistrationFormCommandHandler(IRepository<RegistrationForm> forms,
+                                                IRepository<RawRegistrationForm> rawForms,
+                                                IRepository<Question> questions,
+                                                IRepository<QuestionOption> questionOptions,
+                                                IQueryable<Event> events,
+                                                IDateTimeProvider dateTimeProvider)
     {
         _forms = forms;
         _rawForms = rawForms;
@@ -37,11 +37,11 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Unit> Handle(SaveRegistrationFormDefinitionCommand command, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(ImportRegistrationFormCommand command, CancellationToken cancellationToken)
     {
         var acronym = await _events.FirstAsync(evt => evt.Id == command.EventId, cancellationToken);
         var rawForm = await _rawForms.Where(frm => frm.EventAcronym == acronym.Acronym
-                                                && frm.FormExternalIdentifier == command.FormId
+                                                && frm.FormExternalIdentifier == command.FormExternalIdentifier
                                                 && frm.Processed == null)
                                      .OrderByDescending(frm => frm.Created)
                                      .FirstOrDefaultAsync(cancellationToken);
@@ -51,7 +51,7 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
         }
 
         var formDescription = JsonConvert.DeserializeObject<FormDescription>(rawForm.ReceivedMessage);
-        var form = await _forms.FirstOrDefaultAsync(frm => frm.ExternalIdentifier == command.FormId, cancellationToken);
+        var form = await _forms.FirstOrDefaultAsync(frm => frm.ExternalIdentifier == command.FormExternalIdentifier, cancellationToken);
         if (form != null)
         {
             // update existing form
@@ -69,7 +69,7 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
                    {
                        Id = Guid.NewGuid(),
                        EventId = command.EventId,
-                       ExternalIdentifier = command.FormId,
+                       ExternalIdentifier = command.FormExternalIdentifier,
                        Title = formDescription.Title,
                        State = EventState.Setup
                    };
@@ -77,14 +77,15 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
         }
 
         // update questions
-        var existingQuestions =
-            await _questions.Where(qst => qst.RegistrationFormId == form.Id).ToListAsync(cancellationToken);
+        var existingQuestions = await _questions.Where(qst => qst.RegistrationFormId == form.Id)
+                                                .AsTracking()
+                                                .ToListAsync(cancellationToken);
         string section = null;
         foreach (var receivedQuestion in formDescription.Questions.OrderBy(que => que.Index))
         {
             var type = (Questions.QuestionType)receivedQuestion.Type;
-            if (type == Questions.QuestionType.SectionHeader
-             || type == Questions.QuestionType.PageBreak)
+            if (type is Questions.QuestionType.SectionHeader
+                or Questions.QuestionType.PageBreak)
             {
                 section = receivedQuestion.Title;
             }
@@ -103,17 +104,17 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
                                    Type = type,
                                    Section = section
                                };
-                await _questions.InsertOrUpdateEntity(question, cancellationToken);
+                _questions.InsertObjectTree(question);
                 if (receivedQuestion.Choices?.Any() == true)
                 {
                     foreach (var choice in receivedQuestion.Choices)
                     {
-                        await _questionOptions.InsertOrUpdateEntity(new QuestionOption
-                                                                    {
-                                                                        Id = Guid.NewGuid(),
-                                                                        QuestionId = question.Id,
-                                                                        Answer = choice
-                                                                    }, cancellationToken);
+                        _questionOptions.InsertObjectTree(new QuestionOption
+                                                          {
+                                                              Id = Guid.NewGuid(),
+                                                              QuestionId = question.Id,
+                                                              Answer = choice
+                                                          });
                     }
                 }
             }
@@ -136,12 +137,12 @@ public class SaveRegistrationFormDefinitionCommandHandler : IRequestHandler<Save
                         var existingOption = existingOptions.FirstOrDefault(exo => exo.Answer == receivedChoice);
                         if (existingOption == null)
                         {
-                            await _questionOptions.InsertOrUpdateEntity(new QuestionOption
-                                                                        {
-                                                                            Id = Guid.NewGuid(),
-                                                                            QuestionId = existingQuestion.Id,
-                                                                            Answer = receivedChoice
-                                                                        }, cancellationToken);
+                            _questionOptions.InsertObjectTree(new QuestionOption
+                                                              {
+                                                                  Id = Guid.NewGuid(),
+                                                                  QuestionId = existingQuestion.Id,
+                                                                  Answer = receivedChoice
+                                                              });
                         }
                         else
                         {

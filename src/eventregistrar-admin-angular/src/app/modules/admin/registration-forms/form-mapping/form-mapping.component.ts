@@ -28,4 +28,8 @@ export class FormMappingComponent implements OnInit
       });
   }
 
+  importFormUpdate(form: RegistrationFormItem)
+  {
+    this.formsService.importForm(form.externalIdentifier);
+  }
 }

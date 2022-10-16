@@ -1303,6 +1303,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    importRegistrationForm_Command(importRegistrationFormCommand: ImportRegistrationFormCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/ImportRegistrationFormCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(importRegistrationFormCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processImportRegistrationForm_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processImportRegistrationForm_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processImportRegistrationForm_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     registrationForms_Query(registrationFormsQuery: RegistrationFormsQuery | undefined): Observable<RegistrationFormItem[]> {
         let url_ = this.baseUrl + "/api/RegistrationFormsQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -1344,57 +1395,6 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as RegistrationFormItem[];
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    saveRegistrationFormDefinition_Command(saveRegistrationFormDefinitionCommand: SaveRegistrationFormDefinitionCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/SaveRegistrationFormDefinitionCommand";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(saveRegistrationFormDefinitionCommand);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSaveRegistrationFormDefinition_Command(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processSaveRegistrationFormDefinition_Command(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Unit>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Unit>;
-        }));
-    }
-
-    protected processSaveRegistrationFormDefinition_Command(response: HttpResponseBase): Observable<Unit> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -6958,6 +6958,11 @@ export interface DeleteRegistrationFormCommand {
     registrationFormId?: string;
 }
 
+export interface ImportRegistrationFormCommand {
+    eventId?: string;
+    formExternalIdentifier?: string;
+}
+
 export interface RegistrationFormItem {
     registrationFormId?: string | null;
     externalIdentifier?: string;
@@ -6978,11 +6983,6 @@ export enum EventState {
 
 export interface RegistrationFormsQuery {
     eventId?: string;
-}
-
-export interface SaveRegistrationFormDefinitionCommand {
-    eventId?: string;
-    formId?: string;
 }
 
 export interface FormPathsQuery {
@@ -8160,7 +8160,7 @@ export interface AccessRequest {
     eventAcronym?: string;
     eventState?: EventState;
     eventStateText?: string;
-    requestSent?: Date | null;
+    requestSent?: Date;
 }
 
 export interface EventsOfUserQuery {

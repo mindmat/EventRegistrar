@@ -297,8 +297,14 @@
   <data name="Ignored" xml:space="preserve">
     <value>Ignorierte</value>
   </data>
+  <data name="ImportNewVersion" xml:space="preserve">
+    <value>Neue Version importieren</value>
+  </data>
   <data name="Language" xml:space="preserve">
     <value>Sprache</value>
+  </data>
+  <data name="LastImport" xml:space="preserve">
+    <value>Zuletzt importiert</value>
   </data>
   <data name="LastMessage" xml:space="preserve">
     <value>Letzte gesendete Nachricht</value>

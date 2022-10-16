@@ -535,7 +535,7 @@ SELECT [Id]
       ,[ReceivedMessage]
       ,[Created]
       ,[EventAcronym]
-      ,[Created]
+      ,CASE WHEN Processed THEN [Created] ELSE NULL END
   FROM [AZURE_ER].[EventRegistrator].[dbo].[RawRegistrationForms]
    
 INSERT INTO [AZURE_EA].[event-admin].[dbo].[RegistrationForms]

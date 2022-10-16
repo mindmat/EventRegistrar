@@ -838,6 +838,38 @@
         }
       }
     },
+    "/api/ImportRegistrationFormCommand": {
+      "post": {
+        "tags": [
+          "ImportRegistrationForm"
+        ],
+        "operationId": "ImportRegistrationForm_Command",
+        "requestBody": {
+          "x-name": "ImportRegistrationFormCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ImportRegistrationFormCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/RegistrationFormsQuery": {
       "post": {
         "tags": [
@@ -866,38 +898,6 @@
                   "items": {
                     "$ref": "#/components/schemas/RegistrationFormItem"
                   }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SaveRegistrationFormDefinitionCommand": {
-      "post": {
-        "tags": [
-          "SaveRegistrationFormDefinition"
-        ],
-        "operationId": "SaveRegistrationFormDefinition_Command",
-        "requestBody": {
-          "x-name": "SaveRegistrationFormDefinitionCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SaveRegistrationFormDefinitionCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
                 }
               }
             }
@@ -5318,6 +5318,19 @@
           }
         }
       },
+      "ImportRegistrationFormCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "formExternalIdentifier": {
+            "type": "string"
+          }
+        }
+      },
       "RegistrationFormItem": {
         "type": "object",
         "additionalProperties": false,
@@ -5380,19 +5393,6 @@
           "eventId": {
             "type": "string",
             "format": "guid"
-          }
-        }
-      },
-      "SaveRegistrationFormDefinitionCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "formId": {
-            "type": "string"
           }
         }
       },
@@ -9010,8 +9010,7 @@
           },
           "requestSent": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           }
         }
       },

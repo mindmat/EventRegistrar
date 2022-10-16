@@ -219,8 +219,14 @@
   <data name="Ignored" xml:space="preserve">
     <value>Ignored</value>
   </data>
+  <data name="ImportNewVersion" xml:space="preserve">
+    <value>Import new version</value>
+  </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
+  </data>
+  <data name="LastImport" xml:space="preserve">
+    <value>Last import</value>
   </data>
   <data name="LastMessage" xml:space="preserve">
     <value>Last sent message</value>

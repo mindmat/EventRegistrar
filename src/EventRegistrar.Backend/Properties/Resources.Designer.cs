@@ -606,11 +606,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Neue Version importieren.
+        /// </summary>
+        internal static string ImportNewVersion {
+            get {
+                return ResourceManager.GetString("ImportNewVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sprache.
         /// </summary>
         internal static string Language {
             get {
                 return ResourceManager.GetString("Language", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zuletzt importiert.
+        /// </summary>
+        internal static string LastImport {
+            get {
+                return ResourceManager.GetString("LastImport", resourceCulture);
             }
         }
         

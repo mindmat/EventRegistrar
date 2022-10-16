@@ -19,16 +19,6 @@ public class RegistrationFormController : Controller
         _eventAcronymResolver = eventAcronymResolver;
     }
 
-    [HttpPost("api/events/{eventAcronym}/registrationForms/{formId}")]
-    public async Task SaveRegistrationFormDefinition(string eventAcronym, string formId)
-    {
-        await _mediator.Send(new SaveRegistrationFormDefinitionCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 FormId = formId
-                             });
-    }
-
     [HttpPost("api/events/{eventAcronym}/registrationForms/{formId}/mappings")]
     public async Task SaveRegistrationFormMappings(string eventAcronym,
                                                    Guid formId,

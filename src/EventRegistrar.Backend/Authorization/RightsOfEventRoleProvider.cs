@@ -164,7 +164,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SetRoleOfUserInEventCommand);
             yield return nameof(RemoveUserFromEventCommand);
             yield return nameof(RespondToRequestCommand);
-            yield return nameof(SaveRegistrationFormDefinitionCommand);
+            yield return nameof(ImportRegistrationFormCommand);
             yield return nameof(OpenRegistrationCommand);
             yield return nameof(ReleaseAllPendingMailsCommand);
             yield return nameof(DeleteRegistrationFormCommand);

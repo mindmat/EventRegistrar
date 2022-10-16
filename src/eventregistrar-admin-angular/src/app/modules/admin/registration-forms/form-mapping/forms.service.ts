@@ -26,4 +26,10 @@ export class FormsService extends FetchService<RegistrationFormItem[]>
   {
     return this.fetchItems(this.api.registrationForms_Query({ eventId: this.eventService.selectedId }));
   }
+
+  importForm(formExternalIdentifier: string)
+  {
+    this.api.importRegistrationForm_Command({ eventId: this.eventService.selectedId, formExternalIdentifier })
+      .subscribe();
+  }
 }
