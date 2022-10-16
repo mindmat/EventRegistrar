@@ -126,6 +126,9 @@
   <data name="AngeboteneSprachen" xml:space="preserve">
     <value>Offered languages</value>
   </data>
+  <data name="Anmeldeformulare" xml:space="preserve">
+    <value>Registration forms</value>
+  </data>
   <data name="AssignIncoming" xml:space="preserve">
     <value>Assign incoming payment</value>
   </data>
@@ -152,6 +155,9 @@
   </data>
   <data name="CreateSuccessorEvent" xml:space="preserve">
     <value>Create successor event</value>
+  </data>
+  <data name="CreateSuccessorEventOf" xml:space="preserve">
+    <value>Create successor event of {event}</value>
   </data>
   <data name="date" xml:space="preserve">
     <value>date</value>
@@ -479,9 +485,6 @@
   </data>
   <data name="subject" xml:space="preserve">
     <value>subject</value>
-  </data>
-  <data name="CreateSuccessorEventOf" xml:space="preserve">
-    <value>Create successor event of {event}</value>
   </data>
   <data name="to" xml:space="preserve">
     <value>to</value>

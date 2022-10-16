@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Api, EventDetails } from 'app/api/api';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 import { NotificationService } from '../infrastructure/notification.service';
 
 @Injectable({
@@ -58,16 +58,17 @@ export class EventService
     }
     else
     {
-      const observable = this.api.eventByAcronym_Query({ eventAcronym });
-      observable.subscribe(e =>
-      {
-        if (e !== null)
-        {
-          this.cache.set(eventAcronym, e);
-        }
-        this.setEvent(e);
-      });
-      return observable;
+      return this.api.eventByAcronym_Query({ eventAcronym })
+        .pipe(
+          tap(e =>
+          {
+            if (e !== null)
+            {
+              this.cache.set(eventAcronym, e);
+            }
+            this.setEvent(e);
+          })
+        );
     }
   }
 

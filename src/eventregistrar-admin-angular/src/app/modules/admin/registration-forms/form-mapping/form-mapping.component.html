@@ -2,18 +2,17 @@
 
     <!-- Main -->
     <div class="flex flex-col items-center p-6 sm:p-10">
-        <div class="flex flex-col w-full max-w-4xl">
+        <div class="flex flex-col w-full max-w-6xl">
 
             <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">{{ 'Anmeldeformulare' | translate }}</div>
             <!-- <div class="mt-1 sm:text-2xl tracking-tight text-secondary">{{guideCategory.guides[0].subtitle}}</div> -->
 
             <!-- Forms  -->
-            <div *ngFor="let form of forms" class="mt-8 flex items-center justify-between p-6 sm:px-10 rounded-2xl shadow hover:shadow-lg bg-card transition-shadow ease-in-out duration-150">
+            <div *ngFor="let form of forms" class="mt-8 flex items-center justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150">
                 <div>
                     <div class="text-secondary">Next</div>
                     <div class="text-lg font-semibold">{{ form.title }}</div>
                 </div>
-                <mat-icon class="ml-3" [svgIcon]="'heroicons_outline:arrow-right'"></mat-icon>
             </div>
 
 

@@ -88,6 +88,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anmeldeformulare.
+        /// </summary>
+        internal static string Anmeldeformulare {
+            get {
+                return ResourceManager.GetString("Anmeldeformulare", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zahlungseingang zuordnen.
         /// </summary>
         internal static string AssignIncoming {
