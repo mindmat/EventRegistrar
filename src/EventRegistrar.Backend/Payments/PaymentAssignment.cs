@@ -21,7 +21,7 @@ public class PaymentAssignment : Entity
     public PayoutRequest? PayoutRequest { get; set; }
 
     public decimal Amount { get; set; }
-    public DateTime? Created { get; set; }
+    public DateTimeOffset? Created { get; set; }
 }
 
 public class PaymentAssignmentMap : EntityMap<PaymentAssignment>

@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Assignments;
@@ -26,6 +27,7 @@ public class AssignOutgoingPaymentCommandHandler : IRequestHandler<AssignOutgoin
 {
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IEventBus _eventBus;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IQueryable<PayoutRequest> _payoutRequests;
     private readonly IQueryable<OutgoingPayment> _outgoingPayments;
     private readonly IQueryable<Registration> _registrations;
@@ -34,13 +36,15 @@ public class AssignOutgoingPaymentCommandHandler : IRequestHandler<AssignOutgoin
                                                IQueryable<OutgoingPayment> outgoingPayments,
                                                IQueryable<Registration> registrations,
                                                IRepository<PaymentAssignment> assignments,
-                                               IEventBus eventBus)
+                                               IEventBus eventBus,
+                                               IDateTimeProvider dateTimeProvider)
     {
         _payoutRequests = payoutRequests;
         _outgoingPayments = outgoingPayments;
         _registrations = registrations;
         _assignments = assignments;
         _eventBus = eventBus;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(AssignOutgoingPaymentCommand command, CancellationToken cancellationToken)
@@ -74,7 +78,7 @@ public class AssignOutgoingPaymentCommandHandler : IRequestHandler<AssignOutgoin
                              PayoutRequestId = command.PayoutRequestId,
                              OutgoingPaymentId = outgoingPayment.Id,
                              Amount = command.Amount,
-                             Created = DateTime.UtcNow
+                             Created = _dateTimeProvider.Now
                          };
         await _assignments.InsertOrUpdateEntity(assignment, cancellationToken);
 

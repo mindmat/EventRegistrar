@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Files;
@@ -19,17 +20,20 @@ public class AssignRepaymentCommandHandler : IRequestHandler<AssignRepaymentComm
 {
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IEventBus _eventBus;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IQueryable<IncomingPayment> _incomingPayments;
     private readonly IQueryable<OutgoingPayment> _outgoingPayments;
 
     public AssignRepaymentCommandHandler(IQueryable<IncomingPayment> incomingIncomingPayments,
                                          IQueryable<OutgoingPayment> outgoingPayments,
                                          IRepository<PaymentAssignment> assignments,
-                                         IEventBus eventBus)
+                                         IEventBus eventBus,
+                                         IDateTimeProvider dateTimeProvider)
     {
         _incomingPayments = incomingIncomingPayments;
         _assignments = assignments;
         _eventBus = eventBus;
+        _dateTimeProvider = dateTimeProvider;
         _outgoingPayments = outgoingPayments;
     }
 
@@ -48,7 +52,7 @@ public class AssignRepaymentCommandHandler : IRequestHandler<AssignRepaymentComm
                              IncomingPaymentId = incomingPayment.Id,
                              OutgoingPaymentId = outgoingPayment.Id,
                              Amount = command.Amount,
-                             Created = DateTime.UtcNow
+                             Created = _dateTimeProvider.Now
                          };
         await _assignments.InsertOrUpdateEntity(assignment, cancellationToken);
 

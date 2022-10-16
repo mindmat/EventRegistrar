@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authentication.Users;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
@@ -18,19 +19,22 @@ public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand,
     private readonly IAuthenticatedUserProvider _authenticatedUserProvider;
     private readonly IEventBus _eventBus;
     private readonly CommandQueue _commandQueue;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly AuthenticatedUserId _user;
 
     public RequestAccessCommandHandler(IRepository<AccessToEventRequest> accessRequests,
                                        AuthenticatedUserId user,
                                        IAuthenticatedUserProvider authenticatedUserProvider,
                                        IEventBus eventBus,
-                                       CommandQueue commandQueue)
+                                       CommandQueue commandQueue,
+                                       IDateTimeProvider dateTimeProvider)
     {
         _accessRequests = accessRequests;
         _user = user;
         _authenticatedUserProvider = authenticatedUserProvider;
         _eventBus = eventBus;
         _commandQueue = commandQueue;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Guid> Handle(RequestAccessCommand command, CancellationToken cancellationToken)
@@ -71,7 +75,7 @@ public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand,
                           AvatarUrl = user.AvatarUrl,
                           RequestText = command.RequestText,
                           EventId = command.EventId,
-                          RequestReceived = DateTime.UtcNow
+                          RequestReceived = _dateTimeProvider.Now
                       };
             _accessRequests.InsertObjectTree(request);
 

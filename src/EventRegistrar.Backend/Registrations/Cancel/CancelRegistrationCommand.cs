@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Refunds;
@@ -15,7 +16,7 @@ public class CancelRegistrationCommand : IRequest, IEventBoundRequest
     public string Reason { get; set; }
     public decimal RefundPercentage { get; set; }
     public Guid RegistrationId { get; set; }
-    public DateTime? Received { get; set; }
+    public DateTimeOffset? Received { get; set; }
 }
 
 public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrationCommand>
@@ -23,6 +24,7 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
     private readonly IRepository<RegistrationCancellation> _cancellations;
     private readonly IRepository<PayoutRequest> _payoutRequests;
     private readonly IEventBus _eventBus;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IQueryable<Registration> _registrations;
     private readonly SpotRemover _spotRemover;
     private readonly IQueryable<Seat> _spots;
@@ -32,7 +34,8 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
                                             IRepository<RegistrationCancellation> cancellations,
                                             IRepository<PayoutRequest> payoutRequests,
                                             SpotRemover spotRemover,
-                                            IEventBus eventBus)
+                                            IEventBus eventBus,
+                                            IDateTimeProvider dateTimeProvider)
     {
         _registrations = registrations;
         _spots = spots;
@@ -40,6 +43,7 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
         _payoutRequests = payoutRequests;
         _spotRemover = spotRemover;
         _eventBus = eventBus;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(CancelRegistrationCommand command, CancellationToken cancellationToken)
@@ -84,11 +88,10 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
                                Id = Guid.NewGuid(),
                                RegistrationId = command.RegistrationId,
                                Reason = command.Reason,
-                               Created = DateTime.UtcNow,
+                               Created = _dateTimeProvider.Now,
                                RefundPercentage = refundPercentage,
                                Refund = refundPercentage
-                                      * registration.PaymentAssignments.Sum(asn =>
-                                                                                asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
+                                      * registration.PaymentAssignments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                                Received = command.Received
                            };
         await _cancellations.InsertOrUpdateEntity(cancellation, cancellationToken);
@@ -101,7 +104,7 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
                                     Amount = cancellation.Refund,
                                     Reason = command.Reason,
                                     State = PayoutState.Requested,
-                                    Created = DateTimeOffset.Now
+                                    Created = _dateTimeProvider.Now
                                 };
             await _payoutRequests.InsertOrUpdateEntity(payoutRequest, cancellationToken);
         }
@@ -113,7 +116,7 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
                               EventId = registration.EventId,
                               Reason = command.Reason,
                               Refund = cancellation.Refund,
-                              Received = command.Received ?? DateTimeOffset.Now,
+                              Received = command.Received ?? _dateTimeProvider.Now,
                               Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}"
                           });
 

@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
@@ -16,13 +17,15 @@ public class PartnerRegistrationProcessor
     private readonly IRepository<Registration> _registrations;
     private readonly SpotManager _spotManager;
     private readonly CommandQueue _commandQueue;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public PartnerRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                         IQueryable<QuestionOptionMapping> optionToRegistrableMappings,
                                         SpotManager spotManager,
                                         IRepository<Registration> registrations,
                                         PriceCalculator priceCalculator,
-                                        CommandQueue commandQueue)
+                                        CommandQueue commandQueue,
+                                        IDateTimeProvider dateTimeProvider)
     {
         _phoneNormalizer = phoneNormalizer;
         _optionToRegistrableMappings = optionToRegistrableMappings;
@@ -30,6 +33,7 @@ public class PartnerRegistrationProcessor
         _registrations = registrations;
         _priceCalculator = priceCalculator;
         _commandQueue = commandQueue;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<IEnumerable<Seat>> Process(Registration registration,
@@ -160,9 +164,9 @@ public class PartnerRegistrationProcessor
 
         // finalize follower registration
         followerRegistration.IsWaitingList = isOnWaitingList;
-        if (followerRegistration.IsWaitingList == false && !followerRegistration.AdmittedAt.HasValue)
+        if (followerRegistration.IsWaitingList == false && followerRegistration.AdmittedAt == null)
         {
-            followerRegistration.AdmittedAt = DateTime.UtcNow;
+            followerRegistration.AdmittedAt = _dateTimeProvider.Now;
         }
 
         followerRegistration.OriginalPrice = await _priceCalculator.CalculatePrice(followerRegistration, spots);
@@ -172,9 +176,9 @@ public class PartnerRegistrationProcessor
 
         // finalize leader registration
         registration.IsWaitingList = isOnWaitingList;
-        if (registration.IsWaitingList == false && !registration.AdmittedAt.HasValue)
+        if (registration.IsWaitingList == false && registration.AdmittedAt == null)
         {
-            registration.AdmittedAt = DateTime.UtcNow;
+            registration.AdmittedAt = _dateTimeProvider.Now;
         }
 
         registration.OriginalPrice = await _priceCalculator.CalculatePrice(registration, spots);

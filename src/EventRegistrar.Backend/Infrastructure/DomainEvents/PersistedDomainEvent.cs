@@ -13,7 +13,7 @@ public class PersistedDomainEvent : Entity
     public string Type { get; set; } = null!;
     public string Data { get; set; } = null!;
     public Guid? DomainEventId_Parent { get; set; }
-    public DateTime Timestamp { get; set; }
+    public DateTimeOffset Timestamp { get; set; }
 }
 
 public class PersistedDomainEventMap : EntityMap<PersistedDomainEvent>

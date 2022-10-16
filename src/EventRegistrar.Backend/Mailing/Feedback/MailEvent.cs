@@ -9,7 +9,7 @@ public class MailEvent : Entity
     public Mail? Mail { get; set; }
     public Guid MailId { get; set; }
 
-    public DateTime Created { get; set; }
+    public DateTimeOffset Created { get; set; }
     public string? EMail { get; set; }
     public string? ExternalIdentifier { get; set; }
     public string? RawEvent { get; set; }

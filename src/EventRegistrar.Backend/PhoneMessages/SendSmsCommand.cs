@@ -1,9 +1,13 @@
 ﻿using EventRegistrar.Backend.Authorization;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
+
 using Newtonsoft.Json;
+
 using Twilio;
 using Twilio.Rest.Api.V2010.Account;
 
@@ -22,28 +26,36 @@ public class SendSmsCommandHandler : IRequestHandler<SendSmsCommand>
     private readonly IRepository<Sms> _sms;
     private readonly TwilioConfiguration _twilioConfiguration;
     private readonly IEventBus _eventBus;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public SendSmsCommandHandler(IQueryable<Registration> registrations,
                                  IRepository<Sms> sms,
                                  TwilioConfiguration twilioConfiguration,
-                                 IEventBus eventBus)
+                                 IEventBus eventBus,
+                                 IDateTimeProvider dateTimeProvider)
     {
         _registrations = registrations;
         _sms = sms;
         _twilioConfiguration = twilioConfiguration;
         _eventBus = eventBus;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(SendSmsCommand command, CancellationToken cancellationToken)
     {
         if (_twilioConfiguration.Sid == null || _twilioConfiguration.Token == null)
+        {
             throw new Exception("No Twilio SID/Token found");
+        }
 
         var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId
                                                           && reg.EventId == command.EventId)
                                                .FirstOrDefaultAsync(cancellationToken);
 
-        if (registration.PhoneNormalized == null) throw new Exception("No number found in registration");
+        if (registration.PhoneNormalized == null)
+        {
+            throw new Exception("No number found in registration");
+        }
 
         TwilioClient.Init(_twilioConfiguration.Sid, _twilioConfiguration.Token);
 
@@ -51,9 +63,9 @@ public class SendSmsCommandHandler : IRequestHandler<SendSmsCommand>
             new Uri($"https://eventregistrarfunctions.azurewebsites.net/api/events/{command.EventId}/sms/setStatus");
 
         var message = await MessageResource.CreateAsync(registration.PhoneNormalized,
-            from: _twilioConfiguration.Number,
-            body: command.Message,
-            statusCallback: callbackUrl);
+                                                        from: _twilioConfiguration.Number,
+                                                        body: command.Message,
+                                                        statusCallback: callbackUrl);
 
         var sms = new Sms
                   {
@@ -65,7 +77,7 @@ public class SendSmsCommandHandler : IRequestHandler<SendSmsCommand>
                       From = message.From.ToString(),
                       To = message.To,
                       AccountSid = message.AccountSid,
-                      Sent = DateTime.UtcNow,
+                      Sent = _dateTimeProvider.Now,
                       Price = $"{message.Price}{message.PriceUnit}",
                       ErrorCode = message.ErrorCode,
                       Error = message.ErrorMessage,
@@ -81,7 +93,7 @@ public class SendSmsCommandHandler : IRequestHandler<SendSmsCommand>
                               EventId = registration?.EventId,
                               To = registration.PhoneNormalized,
                               Text = command.Message,
-                              Sent = DateTimeOffset.UtcNow
+                              Sent = _dateTimeProvider.Now
                           });
 
 

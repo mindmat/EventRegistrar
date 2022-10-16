@@ -2,7 +2,7 @@
 
 public class HostingOffer
 {
-    public DateTime? AdmittedAt { get; set; }
+    public DateTimeOffset? AdmittedAt { get; set; }
     public Dictionary<string, string> Columns { get; set; }
     public string Email { get; set; }
     public string FirstName { get; set; }

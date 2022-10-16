@@ -88,7 +88,7 @@ public class RegistrationMatch
     public decimal AmountPaid { get; set; }
     public string StateText { get; set; }
     public IEnumerable<SpotShort> Spots { get; set; } = null!;
-    public DateTime ReceivedAt { get; set; }
+    public DateTimeOffset ReceivedAt { get; set; }
 }
 
 public class SpotShort

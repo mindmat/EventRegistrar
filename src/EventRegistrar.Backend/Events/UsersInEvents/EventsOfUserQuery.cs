@@ -99,5 +99,5 @@ public class AccessRequest
     public string EventAcronym { get; set; } = null!;
     public EventState EventState { get; set; }
     public string EventStateText { get; set; } = null!;
-    public DateTimeOffset? RequestSent { get; set; }
+    public DateTimeOffset RequestSent { get; set; }
 }

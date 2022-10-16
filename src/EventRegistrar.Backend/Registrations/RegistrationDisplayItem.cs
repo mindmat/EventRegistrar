@@ -19,7 +19,7 @@ public class RegistrationDisplayItem
     public string? PhoneNormalized { get; set; }
     public string? PhoneFormatted { get; internal set; }
     public decimal? Price { get; set; }
-    public DateTime ReceivedAt { get; set; }
+    public DateTimeOffset ReceivedAt { get; set; }
     public string? Remarks { get; set; }
     public int ReminderLevel { get; set; }
     public int SmsCount { get; set; }

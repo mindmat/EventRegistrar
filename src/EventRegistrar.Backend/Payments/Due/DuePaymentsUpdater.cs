@@ -174,7 +174,7 @@ public class DuePaymentItem
     public decimal? Paid { get; set; }
     public string? PhoneNormalized { get; set; }
     public decimal? Price { get; set; }
-    public DateTime ReceivedAt { get; set; }
+    public DateTimeOffset ReceivedAt { get; set; }
     public bool Reminder1Due { get; set; }
     public SentMailDto? Reminder1Mail { get; set; }
     public bool Reminder2Due { get; set; }
@@ -182,7 +182,7 @@ public class DuePaymentItem
     public int ReminderLevel { get; set; }
     public bool ReminderMailPossible { get; set; }
     public bool ReminderSmsPossible { get; set; }
-    public DateTime? ReminderSmsSent { get; set; }
+    public DateTimeOffset? ReminderSmsSent { get; set; }
     public int? DaysSinceLastNotification { get; set; }
     public string? LastNotificationType { get; set; }
 }

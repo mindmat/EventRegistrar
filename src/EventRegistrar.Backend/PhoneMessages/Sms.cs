@@ -17,8 +17,8 @@ public class Sms : Entity
     public string? From { get; set; }
     public string? Price { get; set; }
     public string? RawData { get; set; }
-    public DateTime? Received { get; set; }
-    public DateTime? Sent { get; set; }
+    public DateTimeOffset? Received { get; set; }
+    public DateTimeOffset? Sent { get; set; }
     public string? SmsSid { get; set; }
     public string? SmsStatus { get; set; }
     public string? To { get; set; }

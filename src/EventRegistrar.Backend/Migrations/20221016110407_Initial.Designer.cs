@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventRegistrar.Backend.Migrations
 {
     [DbContext(typeof(EventRegistratorDbContext))]
-    [Migration("20221010215419_UseDateTimeOffset")]
-    partial class UseDateTimeOffset
+    [Migration("20221016110407_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -30,20 +30,28 @@ namespace EventRegistrar.Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AvatarUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("IdentityProvider")
                         .HasColumnType("int");
 
                     b.Property<string>("IdentityProviderUserIdentifier")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<byte[]>("RowVersion")
                         .IsConcurrencyToken()
@@ -127,6 +135,10 @@ namespace EventRegistrar.Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AvatarUrl")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
@@ -149,8 +161,8 @@ namespace EventRegistrar.Backend.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<DateTime>("RequestReceived")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("RequestReceived")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("RequestText")
                         .HasColumnType("nvarchar(max)");
@@ -348,8 +360,8 @@ namespace EventRegistrar.Backend.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"), 1L, 1);
 
-                    b.Property<DateTime>("Timestamp")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("Timestamp")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -378,8 +390,8 @@ namespace EventRegistrar.Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("EMail")
                         .HasMaxLength(200)
@@ -476,14 +488,14 @@ namespace EventRegistrar.Backend.Migrations
                     b.Property<string>("ContentPlainText")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("Date")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("EventId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Imported")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("Imported")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("MessageIdentifier")
                         .HasMaxLength(500)
@@ -1162,8 +1174,8 @@ namespace EventRegistrar.Backend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime?>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("IncomingPaymentId")
                         .HasColumnType("uniqueidentifier");
@@ -1289,8 +1301,8 @@ namespace EventRegistrar.Backend.Migrations
                     b.Property<string>("RawData")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("Received")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Received")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid?>("RegistrationId")
                         .HasColumnType("uniqueidentifier");
@@ -1301,8 +1313,8 @@ namespace EventRegistrar.Backend.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("rowversion");
 
-                    b.Property<DateTime?>("Sent")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Sent")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<int>("Sequence")
                         .ValueGeneratedOnAdd()
@@ -1677,8 +1689,8 @@ namespace EventRegistrar.Backend.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<bool>("Processed")
-                        .HasColumnType("bit");
+                    b.Property<DateTimeOffset?>("Processed")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("ReceivedMessage")
                         .IsRequired()
@@ -1901,14 +1913,14 @@ namespace EventRegistrar.Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<string>("Reason")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("Received")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("Received")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<decimal>("Refund")
                         .HasPrecision(18, 2)
@@ -2053,8 +2065,8 @@ namespace EventRegistrar.Backend.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("AdmittedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset?>("AdmittedAt")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("EventId")
                         .HasColumnType("uniqueidentifier");
@@ -2064,8 +2076,8 @@ namespace EventRegistrar.Backend.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<DateTime>("ExternalTimestamp")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("ExternalTimestamp")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<bool?>("FallbackToPartyPass")
                         .HasColumnType("bit");
@@ -2104,8 +2116,8 @@ namespace EventRegistrar.Backend.Migrations
                         .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<DateTime>("ReceivedAt")
-                        .HasColumnType("datetime2");
+                    b.Property<DateTimeOffset>("ReceivedAt")
+                        .HasColumnType("datetimeoffset");
 
                     b.Property<Guid>("RegistrationFormId")
                         .HasColumnType("uniqueidentifier");
@@ -2431,7 +2443,7 @@ namespace EventRegistrar.Backend.Migrations
             modelBuilder.Entity("EventRegistrar.Backend.Mailing.Templates.AutoMailTemplate", b =>
                 {
                     b.HasOne("EventRegistrar.Backend.Events.Event", "Event")
-                        .WithMany()
+                        .WithMany("AutoMailTemplates")
                         .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -2813,6 +2825,8 @@ namespace EventRegistrar.Backend.Migrations
             modelBuilder.Entity("EventRegistrar.Backend.Events.Event", b =>
                 {
                     b.Navigation("AccessRequests");
+
+                    b.Navigation("AutoMailTemplates");
 
                     b.Navigation("Configurations");
 

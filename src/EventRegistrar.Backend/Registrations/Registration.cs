@@ -35,9 +35,9 @@ public class Registration : Entity
     public ICollection<Seat>? Seats_AsLeader { get; set; }
     public ICollection<Sms>? Sms { get; set; }
 
-    public DateTime? AdmittedAt { get; set; }
+    public DateTimeOffset? AdmittedAt { get; set; }
     public string ExternalIdentifier { get; set; } = null!;
-    public DateTime ExternalTimestamp { get; set; }
+    public DateTimeOffset ExternalTimestamp { get; set; }
     public bool? FallbackToPartyPass { get; set; }
     public bool IsReduced { get; set; }
     public bool? IsWaitingList { get; set; }
@@ -48,7 +48,7 @@ public class Registration : Entity
     public string? Phone { get; set; }
     public string? PhoneNormalized { get; set; }
     public decimal? Price { get; set; }
-    public DateTime ReceivedAt { get; set; }
+    public DateTimeOffset ReceivedAt { get; set; }
     public string? Remarks { get; set; }
     public bool RemarksProcessed { get; set; }
     public int ReminderLevel { get; set; }

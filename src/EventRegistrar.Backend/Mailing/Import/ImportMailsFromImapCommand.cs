@@ -2,9 +2,12 @@
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
 using MailKit;
 using MailKit.Net.Imap;
+
 using MediatR;
+
 using MimeKit;
 
 namespace EventRegistrar.Backend.Mailing.Import;
@@ -20,21 +23,27 @@ public class ImportMailsFromImapCommandHandler : IRequestHandler<ImportMailsFrom
     private readonly IEventBus _eventBus;
     private readonly IRepository<ImportedMail> _importedMails;
     private readonly ILogger _log;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public ImportMailsFromImapCommandHandler(ExternalMailConfigurations configurations,
                                              IRepository<ImportedMail> importedMails,
                                              IEventBus eventBus,
-                                             ILogger log)
+                                             ILogger log,
+                                             IDateTimeProvider dateTimeProvider)
     {
         _configurations = configurations;
         _importedMails = importedMails;
         _eventBus = eventBus;
         _log = log;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(ImportMailsFromImapCommand command, CancellationToken cancellationToken)
     {
-        if (_configurations.MailConfigurations == null) return Unit.Value;
+        if (_configurations.MailConfigurations == null)
+        {
+            return Unit.Value;
+        }
 
         foreach (var mailConfiguration in _configurations.MailConfigurations)
         {
@@ -55,7 +64,9 @@ public class ImportMailsFromImapCommandHandler : IRequestHandler<ImportMailsFrom
                 if (_importedMails.Any(iml => iml.EventId == command.EventId
                                            && iml.MessageIdentifier == message.MessageId))
                     // mail has been imported earlier
+                {
                     continue;
+                }
 
                 var mail = new ImportedMail
                            {
@@ -63,7 +74,7 @@ public class ImportMailsFromImapCommandHandler : IRequestHandler<ImportMailsFrom
                                EventId = command.EventId,
                                ContentHtml = message.HtmlBody,
                                ContentPlainText = message.TextBody,
-                               Imported = DateTime.UtcNow,
+                               Imported = _dateTimeProvider.Now,
                                MessageIdentifier = message.MessageId,
                                Recipients = message.To.OfType<MailboxAddress>()
                                                    .Select(rcp => rcp.Address)
@@ -71,7 +82,7 @@ public class ImportMailsFromImapCommandHandler : IRequestHandler<ImportMailsFrom
                                SenderMail = message.From.OfType<MailboxAddress>().FirstOrDefault()?.Address,
                                SenderName = message.From.FirstOrDefault()?.Name,
                                Subject = message.Subject,
-                               Date = message.Date.ToUniversalTime().DateTime,
+                               Date = message.Date,
                                SendGridMessageId =
                                    message.References.FirstOrDefault(rfr => rfr.EndsWith("sendgrid.net"))
                            };

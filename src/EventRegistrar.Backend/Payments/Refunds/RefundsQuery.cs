@@ -53,6 +53,6 @@ public class RefundDisplayItem
     public decimal Paid { get; set; }
     public decimal RefundPercentage { get; set; }
     public decimal Refund { get; set; }
-    public DateTime CancellationDate { get; set; }
+    public DateTimeOffset CancellationDate { get; set; }
     public string CancellationReason { get; set; }
 }

@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Mailing.Import;
@@ -16,8 +17,8 @@ public class ImportedMail : Entity
     public string? Recipients { get; set; }
     public string? ContentHtml { get; set; }
     public string? ContentPlainText { get; set; }
-    public DateTime Date { get; set; }
-    public DateTime Imported { get; set; }
+    public DateTimeOffset Date { get; set; }
+    public DateTimeOffset Imported { get; set; }
     public string? MessageIdentifier { get; set; }
     public string? SendGridMessageId { get; set; }
 }

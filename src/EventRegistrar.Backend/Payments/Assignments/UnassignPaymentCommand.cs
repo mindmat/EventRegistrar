@@ -1,8 +1,6 @@
-﻿using EventRegistrar.Backend.Authorization;
+﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
 
@@ -16,12 +14,15 @@ public class UnassignPaymentCommandHandler : IRequestHandler<UnassignPaymentComm
 {
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IEventBus _eventBus;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public UnassignPaymentCommandHandler(IRepository<PaymentAssignment> assignments,
-                                         IEventBus eventBus)
+                                         IEventBus eventBus,
+                                         IDateTimeProvider dateTimeProvider)
     {
         _assignments = assignments;
         _eventBus = eventBus;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(UnassignPaymentCommand command, CancellationToken cancellationToken)
@@ -41,7 +42,7 @@ public class UnassignPaymentCommandHandler : IRequestHandler<UnassignPaymentComm
                                     OutgoingPaymentId = existingAssignment.OutgoingPaymentId,
                                     PaymentAssignmentId_Counter = existingAssignment.Id,
                                     Amount = -existingAssignment.Amount,
-                                    Created = DateTime.UtcNow
+                                    Created = _dateTimeProvider.Now
                                 };
         existingAssignment.PaymentAssignmentId_Counter = counterAssignment.Id;
         await _assignments.InsertOrUpdateEntity(counterAssignment, cancellationToken);

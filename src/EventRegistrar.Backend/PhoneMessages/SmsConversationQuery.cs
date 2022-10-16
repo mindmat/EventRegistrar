@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.PhoneMessages;
@@ -26,7 +27,7 @@ public class SmsConversationQueryHandler : IRequestHandler<SmsConversationQuery,
                                       {
                                           Status = s.SmsStatus,
                                           Body = s.Body,
-                                          Sent = s.Sent.HasValue,
+                                          Sent = s.Sent != null,
                                           Date = s.Sent ?? s.Received
                                       })
                          .OrderBy(s => s.Date)

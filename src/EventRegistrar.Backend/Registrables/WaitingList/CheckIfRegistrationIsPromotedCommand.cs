@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Infrastructure.ServiceBus;
+﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrations;
@@ -16,12 +17,15 @@ public class CheckIfRegistrationIsPromotedCommandHandler : IRequestHandler<Check
 {
     private readonly IQueryable<Registration> _registrations;
     private readonly CommandQueue _commandQueue;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public CheckIfRegistrationIsPromotedCommandHandler(IQueryable<Registration> registrations,
-                                                       CommandQueue commandQueue)
+                                                       CommandQueue commandQueue,
+                                                       IDateTimeProvider dateTimeProvider)
     {
         _registrations = registrations;
         _commandQueue = commandQueue;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(CheckIfRegistrationIsPromotedCommand command, CancellationToken cancellationToken)
@@ -53,10 +57,7 @@ public class CheckIfRegistrationIsPromotedCommandHandler : IRequestHandler<Check
                 spt.IsWaitingList = false;
             }
 
-            if (registration.AdmittedAt == null)
-            {
-                registration.AdmittedAt = DateTime.UtcNow;
-            }
+            registration.AdmittedAt ??= _dateTimeProvider.Now;
 
             // registration is now accepted, send Mail
             var sendMailCommand = new ComposeAndSendMailCommand

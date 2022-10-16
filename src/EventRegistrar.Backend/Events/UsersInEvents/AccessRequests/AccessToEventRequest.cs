@@ -23,7 +23,7 @@ public class AccessToEventRequest : Entity
     public string? Email { get; set; }
     public string? AvatarUrl { get; set; }
 
-    public DateTime RequestReceived { get; set; }
+    public DateTimeOffset RequestReceived { get; set; }
     public string? RequestText { get; set; }
     public RequestResponse? Response { get; set; }
     public string? ResponseText { get; set; }

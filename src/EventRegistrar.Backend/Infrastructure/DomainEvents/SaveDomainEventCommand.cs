@@ -13,10 +13,13 @@ public class SaveDomainEventCommand : IRequest
 
 public class SaveDomainEventCommandHandler : IRequestHandler<SaveDomainEventCommand>
 {
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly DbSet<PersistedDomainEvent> _domainEvents;
 
-    public SaveDomainEventCommandHandler(DbContext dbContext)
+    public SaveDomainEventCommandHandler(DbContext dbContext,
+                                         IDateTimeProvider dateTimeProvider)
     {
+        _dateTimeProvider = dateTimeProvider;
         _domainEvents = dbContext.Set<PersistedDomainEvent>();
     }
 
@@ -28,7 +31,7 @@ public class SaveDomainEventCommandHandler : IRequestHandler<SaveDomainEventComm
                                          Id = id,
                                          EventId = command.EventId,
                                          DomainEventId_Parent = command.DomainEventId_Parent,
-                                         Timestamp = DateTime.UtcNow,
+                                         Timestamp = _dateTimeProvider.Now,
                                          Type = command.EventType,
                                          Data = command.EventData
                                      }, cancellationToken);

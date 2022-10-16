@@ -21,6 +21,7 @@ public class SingleRegistrationProcessor
     private readonly CommandQueue _commandQueue;
     private readonly IQueryable<RegistrationForm> _forms;
     private readonly IQueryable<Registrable> _registrables;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                        SpotManager spotManager,
@@ -28,7 +29,8 @@ public class SingleRegistrationProcessor
                                        IRepository<Registration> registrations,
                                        CommandQueue commandQueue,
                                        IQueryable<RegistrationForm> forms,
-                                       IQueryable<Registrable> registrables)
+                                       IQueryable<Registrable> registrables,
+                                       IDateTimeProvider dateTimeProvider)
     {
         _phoneNormalizer = phoneNormalizer;
         _spotManager = spotManager;
@@ -37,6 +39,7 @@ public class SingleRegistrationProcessor
         _commandQueue = commandQueue;
         _forms = forms;
         _registrables = registrables;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<IEnumerable<Seat>> Process(Registration registration)
@@ -287,7 +290,7 @@ public class SingleRegistrationProcessor
         if (registration.IsWaitingList == false
          && registration.AdmittedAt == null)
         {
-            registration.AdmittedAt = DateTime.UtcNow;
+            registration.AdmittedAt = _dateTimeProvider.Now;
         }
 
         registration.OriginalPrice = await _priceCalculator.CalculatePrice(registration, spots);

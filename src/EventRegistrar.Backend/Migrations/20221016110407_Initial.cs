@@ -62,8 +62,8 @@ namespace EventRegistrar.Backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Body = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Processed = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Processed = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Sequence = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
@@ -79,10 +79,10 @@ namespace EventRegistrar.Backend.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    EventAcronym = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     FormExternalIdentifier = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    Processed = table.Column<bool>(type: "bit", nullable: false),
+                    EventAcronym = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Processed = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     ReceivedMessage = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Sequence = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
@@ -99,12 +99,12 @@ namespace EventRegistrar.Backend.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     EventAcronym = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     FormExternalIdentifier = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
-                    Processed = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ReceivedMessage = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     RegistrationExternalIdentifier = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    Processed = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Sequence = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
@@ -139,10 +139,11 @@ namespace EventRegistrar.Backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     IdentityProvider = table.Column<int>(type: "int", nullable: false),
-                    IdentityProviderUserIdentifier = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IdentityProviderUserIdentifier = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    FirstName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
+                    AvatarUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Sequence = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
@@ -189,7 +190,7 @@ namespace EventRegistrar.Backend.Migrations
                     Type = table.Column<string>(type: "nvarchar(300)", maxLength: 300, nullable: false),
                     Data = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DomainEventId_Parent = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    Timestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Timestamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Sequence = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
@@ -241,8 +242,8 @@ namespace EventRegistrar.Backend.Migrations
                     Recipients = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     ContentHtml = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ContentPlainText = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Imported = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Date = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
+                    Imported = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     MessageIdentifier = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     SendGridMessageId = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     Sequence = table.Column<int>(type: "int", nullable: false)
@@ -414,7 +415,8 @@ namespace EventRegistrar.Backend.Migrations
                     FirstName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    RequestReceived = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    AvatarUrl = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    RequestReceived = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     RequestText = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Response = table.Column<int>(type: "int", nullable: true),
                     ResponseText = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -703,9 +705,9 @@ namespace EventRegistrar.Backend.Migrations
                     EventId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RegistrationFormId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RegistrationId_Partner = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    AdmittedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AdmittedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     ExternalIdentifier = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    ExternalTimestamp = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ExternalTimestamp = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     FallbackToPartyPass = table.Column<bool>(type: "bit", nullable: true),
                     IsReduced = table.Column<bool>(type: "bit", nullable: false),
                     IsWaitingList = table.Column<bool>(type: "bit", nullable: true),
@@ -716,7 +718,7 @@ namespace EventRegistrar.Backend.Migrations
                     Phone = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     PhoneNormalized = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Price = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
-                    ReceivedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReceivedAt = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Remarks = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RemarksProcessed = table.Column<bool>(type: "bit", nullable: false),
                     ReminderLevel = table.Column<int>(type: "int", nullable: false),
@@ -963,11 +965,11 @@ namespace EventRegistrar.Backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RegistrationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     Reason = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Refund = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
                     RefundPercentage = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Received = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Received = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Sequence = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)
@@ -997,8 +999,8 @@ namespace EventRegistrar.Backend.Migrations
                     From = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RawData = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Received = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Sent = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Received = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    Sent = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     SmsSid = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SmsStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     To = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -1063,7 +1065,7 @@ namespace EventRegistrar.Backend.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MailId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: false),
                     EMail = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     ExternalIdentifier = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
                     RawEvent = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -1190,7 +1192,7 @@ namespace EventRegistrar.Backend.Migrations
                     PaymentAssignmentId_Counter = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PayoutRequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Amount = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     Sequence = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     RowVersion = table.Column<byte[]>(type: "rowversion", rowVersion: true, nullable: false)

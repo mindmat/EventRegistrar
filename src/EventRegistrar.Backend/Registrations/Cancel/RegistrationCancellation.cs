@@ -9,11 +9,11 @@ public class RegistrationCancellation : Entity
     public Guid RegistrationId { get; set; }
     public Registration? Registration { get; set; }
 
-    public DateTime Created { get; set; }
+    public DateTimeOffset Created { get; set; }
     public string? Reason { get; set; }
     public decimal Refund { get; set; }
     public decimal RefundPercentage { get; set; }
-    public DateTime? Received { get; set; }
+    public DateTimeOffset? Received { get; set; }
 }
 
 public class RegistrationCancellationMap : EntityMap<RegistrationCancellation>

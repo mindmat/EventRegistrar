@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Infrastructure.Configuration;
+﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.RegistrationForms;
@@ -18,6 +19,7 @@ public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedS
     private readonly ConfigurationRegistry _configurationRegistry;
     private readonly PhoneNormalizer _phoneNormalizer;
     private readonly IEventBus _eventBus;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IQueryable<Registration> _registrations;
     private readonly IRepository<Sms> _sms;
 
@@ -25,13 +27,15 @@ public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedS
                                             IRepository<Sms> sms,
                                             ConfigurationRegistry configurationRegistry,
                                             PhoneNormalizer phoneNormalizer,
-                                            IEventBus eventBus)
+                                            IEventBus eventBus,
+                                            IDateTimeProvider dateTimeProvider)
     {
         _registrations = registrations;
         _sms = sms;
         _configurationRegistry = configurationRegistry;
         _phoneNormalizer = phoneNormalizer;
         _eventBus = eventBus;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(ProcessReceivedSmsCommand command, CancellationToken cancellationToken)
@@ -76,7 +80,7 @@ public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedS
                                                  : $"{registration.RespondentFirstName} {registration.RespondentLastName}",
                               From = command.Sms.From,
                               Text = command.Sms.Body,
-                              Received = DateTimeOffset.Now
+                              Received = _dateTimeProvider.Now
                           });
         if (registration == null)
         {
@@ -94,7 +98,7 @@ public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedS
                       To = command.Sms.To,
                       AccountSid = command.Sms.AccountSid,
                       RawData = JsonConvert.SerializeObject(command.Sms),
-                      Received = DateTime.UtcNow
+                      Received = _dateTimeProvider.Now
                   };
 
         await _sms.InsertOrUpdateEntity(sms, cancellationToken);
