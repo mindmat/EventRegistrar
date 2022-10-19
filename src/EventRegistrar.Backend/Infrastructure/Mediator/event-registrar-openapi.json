@@ -5350,6 +5350,12 @@
             "type": "string",
             "nullable": true
           },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormSection"
+            }
+          },
           "lastImport": {
             "type": "string",
             "format": "date-time",

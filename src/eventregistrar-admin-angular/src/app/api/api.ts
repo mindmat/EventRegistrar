@@ -6968,6 +6968,7 @@ export interface RegistrationFormItem {
     externalIdentifier?: string;
     state?: EventState;
     title?: string | null;
+    sections?: FormSection[];
     lastImport?: Date | null;
     pendingRawFormCreated?: Date | null;
     pendingRawFormId?: string | null;

@@ -132,6 +132,51 @@ SELECT [Id]
       ,[Title]
   FROM [AZURE_ER].[EventRegistrator].[dbo].[RegistrationForms]
 
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[Questions]
+           ([Id]
+           ,[RegistrationFormId]
+           ,[ExternalId]
+           ,[Section]
+           ,[Index]
+           ,[Title]
+           ,[Type]
+           ,[Mapping]
+           ,[TemplateKey])
+SELECT [Id]
+      ,[RegistrationFormId]
+      ,[ExternalId]
+      ,[Section]
+      ,[Index]
+      ,[Title]
+      ,[Type]
+      ,[Mapping]
+      ,[TemplateKey]
+  FROM [AZURE_ER].[EventRegistrator].[dbo].[Questions]
+
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[QuestionOptions]
+           ([Id]
+           ,[QuestionId]
+           ,[Answer])
+SELECT [Id]
+      ,[QuestionId]
+      ,[Answer]
+FROM [AZURE_ER].[EventRegistrator].[dbo].[QuestionOptions]
+WHERE QuestionId IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].[Questions])
+
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[QuestionOptionMappings]
+           ([Id]
+           ,[QuestionOptionId]
+           ,[RegistrableId]
+           ,[Type]
+           ,[Language])
+SELECT [Id]
+      ,[QuestionOptionId]
+      ,[RegistrableId]
+      ,[Type]
+      ,[Language]
+FROM [AZURE_ER].[EventRegistrator].[dbo].[QuestionOptionMappings]
+WHERE RegistrableId IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].[Registrables])
+  AND [QuestionOptionId] IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].[QuestionOptions])
 
 
 INSERT INTO [AZURE_EA].[event-admin].[dbo].[Registrations]

@@ -1,7 +1,5 @@
 ﻿using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
-using EventRegistrar.Backend.Registrations.Register;
-using MediatR;
 
 namespace EventRegistrar.Backend.RegistrationForms.FormPaths;
 
@@ -17,147 +15,110 @@ public class RegistrationFormGroup
     public IEnumerable<FormSection> Sections { get; set; }
 }
 
-public class RegistrationFormPath
-{
-    public Guid Id { get; set; }
-    public string? Description { get; set; }
-    public SingleRegistrationProcessConfiguration? SingleConfig { get; set; }
-    public PartnerRegistrationProcessConfiguration? PartnerConfig { get; set; }
-}
-
 public class FormPathsQueryHandler : IRequestHandler<FormPathsQuery, IEnumerable<RegistrationFormGroup>>
 {
-    private readonly IQueryable<RegistrationForm> _registrationForms;
+    private readonly IQueryable<RegistrationForm> _forms;
 
-    public FormPathsQueryHandler(IQueryable<RegistrationForm> registrationForms)
+    public FormPathsQueryHandler(IQueryable<RegistrationForm> forms)
     {
-        _registrationForms = registrationForms;
+        _forms = forms;
     }
 
     public async Task<IEnumerable<RegistrationFormGroup>> Handle(FormPathsQuery query,
                                                                  CancellationToken cancellationToken)
     {
-        var forms = await _registrationForms.Where(frm => frm.EventId == query.EventId)
-                                            .Select(frm => new
-                                                           {
-                                                               frm.Id,
-                                                               frm.Title,
-                                                               Questions = frm.Questions.Select(qst => new
-                                                                   {
-                                                                       qst.Id,
-                                                                       qst.Section,
-                                                                       qst.Index,
-                                                                       qst.Title,
-                                                                       qst.Type,
-                                                                       qst.Mapping,
-                                                                       Options = qst.QuestionOptions.Select(qop => new
-                                                                           {
-                                                                               qop.Id,
-                                                                               qop.Answer,
-                                                                               MappedRegistrables =
-                                                                                   qop.Mappings.Select(map =>
-                                                                                       new
-                                                                                       {
-                                                                                           map.RegistrableId,
-                                                                                           map.Type,
-                                                                                           map.Registrable!.Name,
-                                                                                           map.Language
-                                                                                       })
-                                                                           })
-                                                                   })
-                                                           })
-                                            .ToListAsync(cancellationToken);
+        var forms = await _forms.Where(frm => frm.EventId == query.EventId)
+                                .Select(frm => new
+                                               {
+                                                   frm.Id,
+                                                   frm.Title,
+                                                   Questions = frm.Questions!
+                                                                  .Select(qst => new
+                                                                                 {
+                                                                                     qst.Id,
+                                                                                     qst.Section,
+                                                                                     qst.Index,
+                                                                                     qst.Title,
+                                                                                     qst.Type,
+                                                                                     qst.Mapping,
+                                                                                     Options = qst.QuestionOptions!
+                                                                                                  .Select(qop => new
+                                                                                                                 {
+                                                                                                                     qop.Id,
+                                                                                                                     qop.Answer,
+                                                                                                                     MappedRegistrables =
+                                                                                                                         qop.Mappings!
+                                                                                                                            .Select(map => new
+                                                                                                                                        {
+                                                                                                                                            map.RegistrableId,
+                                                                                                                                            map.Type,
+                                                                                                                                            map.Registrable!.Name,
+                                                                                                                                            map.Language
+                                                                                                                                        })
+                                                                                                                 })
+                                                                                 })
+                                               })
+                                .ToListAsync(cancellationToken);
 
         return forms.Select(frm => new RegistrationFormGroup
                                    {
                                        Id = frm.Id,
                                        Title = frm.Title,
-                                       Sections = frm.Questions.GroupBy(qst => qst.Section)
+                                       Sections = frm.Questions
+                                                     .GroupBy(qst => qst.Section)
                                                      .Select(grp => new FormSection
                                                                     {
                                                                         Name = grp.Key,
                                                                         SortKey = grp.Min(qst => qst.Index),
-                                                                        Questions = grp.Where(qst =>
-                                                                                qst.Type != QuestionType
-                                                                                    .SectionHeader &&
-                                                                                qst.Type != QuestionType.PageBreak)
-                                                                            .Select(qst =>
-                                                                                new QuestionMappingDisplayItem
-                                                                                {
-                                                                                    Id = qst.Id,
-                                                                                    Question = qst.Title,
-                                                                                    Type = qst.Type,
-                                                                                    SortKey = qst.Index,
-                                                                                    Mappable = qst.Type ==
-                                                                                        QuestionType.Text
-                                                                                     || qst.Type ==
-                                                                                        QuestionType.ParagraphText,
-                                                                                    Mapping = qst.Mapping,
-                                                                                    Options = qst.Options.Select(qop =>
-                                                                                        new
-                                                                                        QuestionOptionMappingDisplayItem
-                                                                                        {
-                                                                                            Id = qop.Id,
-                                                                                            Answer = qop.Answer,
-                                                                                            MappedRegistrables =
-                                                                                                qop.MappedRegistrables
-                                                                                                    .Select(map =>
-                                                                                                        new
-                                                                                                        AvailableQuestionOptionMapping
-                                                                                                        {
-                                                                                                            CombinedId =
-                                                                                                                $"{map.RegistrableId}/{map.Type}/{map.Language}",
-                                                                                                            Id = map
-                                                                                                                .RegistrableId,
-                                                                                                            Type = map
-                                                                                                                .Type,
-                                                                                                            Name =
-                                                                                                                GetName(
-                                                                                                                    map
-                                                                                                                        .Type,
-                                                                                                                    map
-                                                                                                                        .Name,
-                                                                                                                    map
-                                                                                                                        .Language)
-                                                                                                        })
-                                                                                        })
-                                                                                })
-                                                                            .OrderBy(qst => qst.SortKey)
+                                                                        Questions = grp.Where(qst => qst.Type != QuestionType.SectionHeader
+                                                                                                  && qst.Type != QuestionType.PageBreak)
+                                                                                       .Select(qst => new QuestionMappingDisplayItem
+                                                                                                      {
+                                                                                                          Id = qst.Id,
+                                                                                                          Question = qst.Title,
+                                                                                                          Type = qst.Type,
+                                                                                                          SortKey = qst.Index,
+                                                                                                          Mappable = qst.Type is QuestionType.Text or QuestionType.ParagraphText,
+                                                                                                          Mapping = qst.Mapping,
+                                                                                                          Options = qst.Options.Select(qop =>
+                                                                                                              new QuestionOptionMappingDisplayItem
+                                                                                                              {
+                                                                                                                  Id = qop.Id,
+                                                                                                                  Answer = qop.Answer,
+                                                                                                                  MappedRegistrables = qop.MappedRegistrables
+                                                                                                                      .Select(map => new AvailableQuestionOptionMapping
+                                                                                                                                  {
+                                                                                                                                      CombinedId = $"{map.RegistrableId}/{map.Type}/{map.Language}",
+                                                                                                                                      Id = map.RegistrableId,
+                                                                                                                                      Type = map.Type,
+                                                                                                                                      Name = GetName(map.Type, map.Name, map.Language)
+                                                                                                                                  })
+                                                                                                              })
+                                                                                                      })
+                                                                                       .OrderBy(qst => qst.SortKey)
                                                                     })
-                                                     .Where(sec => sec.Questions?.Any() == true)
+                                                     .Where(sec => sec.Questions.Any())
                                                      .OrderBy(sec => sec.SortKey)
                                    });
     }
 
-    private string GetName(MappingType? type, string registrableName, string? language)
+    private static string GetName(MappingType? type, string registrableName, string? language)
     {
-        switch (type)
+        return type switch
         {
-            case MappingType.Language:
+            MappingType.Language => language switch
             {
-                return language switch
-                {
-                    "en" => $"{Properties.Resources.Language}: {Properties.Resources.English}",
-                    "de" => $"{Properties.Resources.Language}: {Properties.Resources.German}",
-                    _ => $"{Properties.Resources.Language}: ?"
-                };
-            }
-
-            case MappingType.Reduction:
-                return Properties.Resources.Reduction;
-
-            case MappingType.PartnerRegistrableLeader:
-                return $"{registrableName} ({Properties.Resources.Leader})";
-            case MappingType.PartnerRegistrableFollower:
-                return $"{registrableName} ({Properties.Resources.Follower})";
-
-            case MappingType.RoleLeader:
-                return $"{Properties.Resources.Role}: {Properties.Resources.Leader}";
-            case MappingType.RoleFollower:
-                return $"{Properties.Resources.Role}: {Properties.Resources.Follower}";
-        }
-
-        return registrableName;
+                "en" => $"{Properties.Resources.Language}: {Properties.Resources.English}",
+                "de" => $"{Properties.Resources.Language}: {Properties.Resources.German}",
+                _    => $"{Properties.Resources.Language}: ?"
+            },
+            MappingType.Reduction                  => Properties.Resources.Reduction,
+            MappingType.PartnerRegistrableLeader   => $"{registrableName} ({Properties.Resources.Leader})",
+            MappingType.PartnerRegistrableFollower => $"{registrableName} ({Properties.Resources.Follower})",
+            MappingType.RoleLeader                 => $"{Properties.Resources.Role}: {Properties.Resources.Leader}",
+            MappingType.RoleFollower               => $"{Properties.Resources.Role}: {Properties.Resources.Follower}",
+            _                                      => registrableName
+        };
     }
 }
 

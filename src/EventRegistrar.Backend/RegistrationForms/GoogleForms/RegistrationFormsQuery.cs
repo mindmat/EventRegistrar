@@ -1,4 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.RegistrationForms.FormPaths;
+using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
 namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
 
@@ -41,26 +43,99 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
                                                   })
                                    .ToList();
 
-        var forms = await _forms.Where(frm => frm.EventId == query.EventId)
-                                .Select(frm => new RegistrationFormItem
-                                               {
-                                                   RegistrationFormId = frm.Id,
-                                                   ExternalIdentifier = frm.ExternalIdentifier,
-                                                   State = frm.State,
-                                                   Title = frm.Title,
-                                                   Deletable = frm.Event!.State == EventState.Setup
-                                                            && frm.State == EventState.Setup
-                                               })
-                                .ToListAsync(cancellationToken);
+        var formsData = await _forms.Where(frm => frm.EventId == query.EventId)
+                                    .Select(frm => new
+                                                   {
+                                                       FormId = frm.Id,
+                                                       frm.ExternalIdentifier,
+                                                       frm.State,
+                                                       frm.Title,
+                                                       EventState = frm.Event!.State,
+                                                       FormState = frm.State,
+                                                       Questions = frm.Questions!
+                                                                      .Select(qst => new
+                                                                                     {
+                                                                                         qst.Id,
+                                                                                         qst.Section,
+                                                                                         qst.Index,
+                                                                                         qst.Title,
+                                                                                         qst.Type,
+                                                                                         qst.Mapping,
+                                                                                         Options = qst.QuestionOptions!
+                                                                                                      .Select(qop => new
+                                                                                                                     {
+                                                                                                                         qop.Id,
+                                                                                                                         qop.Answer,
+                                                                                                                         MappedRegistrables =
+                                                                                                                             qop.Mappings!
+                                                                                                                                .Select(map => new
+                                                                                                                                    {
+                                                                                                                                        map.RegistrableId,
+                                                                                                                                        map.Type,
+                                                                                                                                        map.Registrable!.Name,
+                                                                                                                                        map.Language
+                                                                                                                                    })
+                                                                                                                     })
+                                                                                     })
+                                                   })
+                                    .ToListAsync(cancellationToken);
 
+        var forms = new List<RegistrationFormItem>();
         foreach (var rawForm in rawForms)
         {
-            var existingForm = forms.FirstOrDefault(frm => frm.ExternalIdentifier == rawForm.ExternalIdentifier);
+            var existingForm = formsData.FirstOrDefault(frm => frm.ExternalIdentifier == rawForm.ExternalIdentifier);
             if (existingForm != null)
             {
-                existingForm.LastImport = rawForm.LastProcessedRawForm?.Created;
-                existingForm.PendingRawFormId = rawForm.PendingRawForm?.Id;
-                existingForm.PendingRawFormCreated = rawForm.PendingRawForm?.Created;
+                var formItem = new RegistrationFormItem
+                               {
+                                   RegistrationFormId = existingForm.FormId,
+                                   ExternalIdentifier = existingForm.ExternalIdentifier,
+                                   State = existingForm.FormState,
+                                   Title = existingForm.Title,
+                                   LastImport = rawForm.LastProcessedRawForm?.Created,
+                                   PendingRawFormId = rawForm.PendingRawForm?.Id,
+                                   PendingRawFormCreated = rawForm.PendingRawForm?.Created,
+                                   Deletable = existingForm.FormState == EventState.Setup
+                                            && existingForm.EventState == EventState.Setup,
+                                   Sections = existingForm.Questions
+                                                          .GroupBy(qst => qst.Section)
+                                                          .Select(grp => new FormSection
+                                                                         {
+                                                                             Name = grp.Key,
+                                                                             SortKey = grp.Min(qst => qst.Index),
+                                                                             Questions = grp.Where(qst => qst.Type != Questions.QuestionType.SectionHeader
+                                                                                                       && qst.Type != Questions.QuestionType.PageBreak)
+                                                                                            .Select(qst => new QuestionMappingDisplayItem
+                                                                                                           {
+                                                                                                               Id = qst.Id,
+                                                                                                               Question = qst.Title,
+                                                                                                               Type = qst.Type,
+                                                                                                               SortKey = qst.Index,
+                                                                                                               Mappable = qst.Type is Questions.QuestionType.Text
+                                                                                                                              or Questions.QuestionType.ParagraphText,
+                                                                                                               Mapping = qst.Mapping,
+                                                                                                               Options = qst.Options.Select(qop =>
+                                                                                                                   new QuestionOptionMappingDisplayItem
+                                                                                                                   {
+                                                                                                                       Id = qop.Id,
+                                                                                                                       Answer = qop.Answer,
+                                                                                                                       MappedRegistrables = qop.MappedRegistrables
+                                                                                                                           .Select(map => new AvailableQuestionOptionMapping
+                                                                                                                                       {
+                                                                                                                                           CombinedId =
+                                                                                                                                               $"{map.RegistrableId}/{map.Type}/{map.Language}",
+                                                                                                                                           Id = map.RegistrableId,
+                                                                                                                                           Type = map.Type,
+                                                                                                                                           Name = GetName(map.Type, map.Name, map.Language)
+                                                                                                                                       })
+                                                                                                                   })
+                                                                                                           })
+                                                                                            .OrderBy(qst => qst.SortKey)
+                                                                         })
+                                                          .Where(sec => sec.Questions.Any())
+                                                          .OrderBy(sec => sec.SortKey)
+                               };
+                forms.Add(formItem);
             }
             else if (rawForm.PendingRawForm?.FormExternalIdentifier != null)
             {
@@ -74,5 +149,24 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
         }
 
         return forms;
+    }
+
+    private static string GetName(MappingType? type, string registrableName, string? language)
+    {
+        return type switch
+        {
+            MappingType.Language => language switch
+            {
+                "en" => $"{Properties.Resources.Language}: {Properties.Resources.English}",
+                "de" => $"{Properties.Resources.Language}: {Properties.Resources.German}",
+                _    => $"{Properties.Resources.Language}: ?"
+            },
+            MappingType.Reduction                  => Properties.Resources.Reduction,
+            MappingType.PartnerRegistrableLeader   => $"{registrableName} ({Properties.Resources.Leader})",
+            MappingType.PartnerRegistrableFollower => $"{registrableName} ({Properties.Resources.Follower})",
+            MappingType.RoleLeader                 => $"{Properties.Resources.Role}: {Properties.Resources.Leader}",
+            MappingType.RoleFollower               => $"{Properties.Resources.Role}: {Properties.Resources.Follower}",
+            _                                      => registrableName
+        };
     }
 }
