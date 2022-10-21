@@ -23,7 +23,7 @@
                 <div *ngFor="let section of form.sections" class="mt-8 flex flex-col items-center justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150">
                     <div class="text-xl font-semibold">{{ section.name }}</div>
                     <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
-                    <div *ngFor="let question of section.questions" class="flex flex-col w-full py-5 px-2">
+                    <div *ngFor="let question of section.questions; last as lastQuestion" class="flex flex-col w-full py-2 px-2">
 
                         <!-- Question -->
                         <div class="text-lg font-semibold">{{question.question}}</div>
@@ -33,25 +33,18 @@
 
                                     <!-- Option -->
                                     <div class="flex flex-auto items-center justify-center">
-                                        <!-- <ng-container *ngIf="!task.completed">
-                                                        <div class="flex items-center justify-center w-5 h-5">
-                                                            <div class="w-4 h-4 rounded-full border-2"></div>
-                                                        </div>
-                                                    </ng-container>
-                                                    <ng-container *ngIf="task.completed">
-                                                        <mat-icon class="text-hint icon-size-5" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-                                                    </ng-container> -->
                                         <div class="ml-1.5 leading-5">
                                             - {{option.answer}}
                                         </div>
                                         <app-tags-picker class="ml-auto" [allTags]="allOptionMappings" [selectedTagIds]="option.mappedRegistrableCombinedIds" idProperty="combinedId">
-
                                         </app-tags-picker>
                                     </div>
                                 </ng-container>
                             </div>
                         </ng-container>
-
+                        <div *ngIf="!lastQuestion" class="flex items-center justify-center mt-3 -mx-6">
+                            <div class="flex-auto border-b"></div>
+                        </div>
                     </div>
                 </div>
             </div>

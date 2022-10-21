@@ -2,8 +2,7 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { getMatIconNameNotFoundError } from '@angular/material/icon';
-import { BehaviorSubject, throwIfEmpty } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-tags-picker',
@@ -34,6 +33,7 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
   public filteredTags: any[];
   private tagsPanelOverlayRef: OverlayRef;
   private tagFilter$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  templatePortal: TemplatePortal<any>;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private overlay: Overlay,
@@ -118,9 +118,7 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
 
     // Add the tag
     this.selectedTagIds.unshift(tag[this.idProperty]);
-
-    // Update the contact form
-    // this.contactForm.get('tags').patchValue(this.contact.tags);
+    this.closeTagOverlay();
 
     // Mark for check
     this.changeDetectorRef.markForCheck();
@@ -133,9 +131,6 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
 
     // Remove the tag
     this.selectedTagIds.splice(this.selectedTagIds.findIndex(id => id === tag[this.idProperty]), 1);
-
-    // Update the contact form
-    // this.contactForm.get('tags').patchValue(this.contact.tags);
 
     // Mark for check
     this.changeDetectorRef.markForCheck();
@@ -202,36 +197,37 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
     });
 
     // Create a portal from the template
-    const templatePortal = new TemplatePortal(this._tagsPanel, this.viewContainerRef);
+    this.templatePortal = new TemplatePortal(this._tagsPanel, this.viewContainerRef);
 
     // Attach the portal to the overlay
-    this.tagsPanelOverlayRef.attach(templatePortal);
+    this.tagsPanelOverlayRef.attach(this.templatePortal);
 
     // Subscribe to the backdrop click
-    this.tagsPanelOverlayRef.backdropClick().subscribe(() =>
-    {
-
-      // Remove the class from the origin
-      this.renderer2.removeClass(this._tagsPanelOrigin.nativeElement, 'panel-opened');
-
-      // If overlay exists and attached...
-      if (this.tagsPanelOverlayRef && this.tagsPanelOverlayRef.hasAttached())
-      {
-        // Detach it
-        this.tagsPanelOverlayRef.detach();
-
-        // Reset the tag filter
-        this.filteredTags = this.allTags;
-      }
-
-      // If template portal exists and attached...
-      if (templatePortal && templatePortal.isAttached)
-      {
-        // Detach it
-        templatePortal.detach();
-      }
-    });
+    this.tagsPanelOverlayRef.backdropClick().subscribe(() => this.closeTagOverlay());
   }
+
+  closeTagOverlay()
+  {
+    // Remove the class from the origin
+    this.renderer2.removeClass(this._tagsPanelOrigin.nativeElement, 'panel-opened');
+
+    // If overlay exists and attached...
+    if (this.tagsPanelOverlayRef && this.tagsPanelOverlayRef.hasAttached())
+    {
+      // Detach it
+      this.tagsPanelOverlayRef.detach();
+
+      // Reset the tag filter
+      this.filteredTags = this.allTags;
+    }
+
+    // If template portal exists and attached...
+    if (this.templatePortal && this.templatePortal.isAttached)
+    {
+      // Detach it
+      this.templatePortal.detach();
+    }
+  };
 }
 
 export interface Tag
