@@ -1,34 +1,36 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { getMatIconNameNotFoundError } from '@angular/material/icon';
 import { BehaviorSubject, throwIfEmpty } from 'rxjs';
 
 @Component({
   selector: 'app-tags-picker',
   templateUrl: './tags-picker.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: TagsPickerComponent
+    }]
 })
-export class TagsPickerComponent implements OnInit, OnChanges
+export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAccessor 
 {
   @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
   @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
 
   @Input() allTags: Tag[];
-  //   (tags: any[])
-  // {
-  //   console.log(tags);
-  //   console.log(this.allTags);
-  //   this.changeDetectorRef.markForCheck();
-  // }
-  // public allTags: Tag[]
   @Input() selectedTagIds: string[] = [];
   @Input() textProperty: string = 'name';
+  @Input() idProperty: string = 'id';
 
-  //   (tags: string[])
-  // {
-  //   this.changeDetectorRef.markForCheck();
-  // }
+  onChange = (_) => { };
+  onTouched = () => { };
+  touched = false;
+  disabled = false;
+
   public filteredTags: any[];
   private tagsPanelOverlayRef: OverlayRef;
   private tagFilter$: BehaviorSubject<string> = new BehaviorSubject<string>('');
@@ -38,6 +40,26 @@ export class TagsPickerComponent implements OnInit, OnChanges
     private renderer2: Renderer2,
     private viewContainerRef: ViewContainerRef
   ) { }
+
+  writeValue(selectedTagIds: string[]): void
+  {
+    this.selectedTagIds = selectedTagIds;
+  }
+
+  registerOnChange(onChange: any)
+  {
+    this.onChange = onChange;
+  }
+
+  registerOnTouched(onTouched: any): void
+  {
+    this.onTouched = onTouched;
+  }
+
+  setDisabledState?(disabled: boolean): void
+  {
+    this.disabled = disabled;
+  }
 
   ngOnChanges(changes: SimpleChanges): void
   {
@@ -75,7 +97,7 @@ export class TagsPickerComponent implements OnInit, OnChanges
 
     // If there is a tag...
     const tag = this.filteredTags[0];
-    const isTagApplied = this.selectedTagIds.find(id => id === tag.id);
+    const isTagApplied = this.selectedTagIds.find(id => id === tag[this.idProperty]);
 
     // If the found tag is already applied to the contact...
     if (isTagApplied)
@@ -92,31 +114,37 @@ export class TagsPickerComponent implements OnInit, OnChanges
 
   addTag(tag: Tag): void
   {
+    this.markAsTouched();
+
     // Add the tag
-    this.selectedTagIds.unshift(tag.id);
+    this.selectedTagIds.unshift(tag[this.idProperty]);
 
     // Update the contact form
     // this.contactForm.get('tags').patchValue(this.contact.tags);
 
     // Mark for check
     this.changeDetectorRef.markForCheck();
+    this.onChange(this.selectedTagIds);
   }
 
   removeTag(tag: Tag): void
   {
+    this.markAsTouched();
+
     // Remove the tag
-    this.selectedTagIds.splice(this.selectedTagIds.findIndex(id => id === tag.id), 1);
+    this.selectedTagIds.splice(this.selectedTagIds.findIndex(id => id === tag[this.idProperty]), 1);
 
     // Update the contact form
     // this.contactForm.get('tags').patchValue(this.contact.tags);
 
     // Mark for check
     this.changeDetectorRef.markForCheck();
+    this.onChange(this.selectedTagIds);
   }
 
   toggleTag(tag: Tag): void
   {
-    if (this.selectedTagIds.includes(tag.id))
+    if (this.selectedTagIds.includes(tag[this.idProperty]))
     {
       this.removeTag(tag);
     }
@@ -128,7 +156,16 @@ export class TagsPickerComponent implements OnInit, OnChanges
 
   trackByFn(index: number, item: any): any
   {
-    return item.id || index;
+    return item[this.idProperty] || index;
+  }
+
+  markAsTouched()
+  {
+    if (!this.touched)
+    {
+      this.onTouched();
+      this.touched = true;
+    }
   }
 
   openTagsPanel(): void

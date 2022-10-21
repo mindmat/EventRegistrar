@@ -2,7 +2,7 @@
     <div class="flex flex-wrap items-center -m-1.5">
         <!-- Tags -->
         <ng-container *ngIf="selectedTagIds.length">
-            <ng-container *ngFor="let tag of (selectedTagIds | fuseFindByKey:'id':allTags); trackBy: trackByFn">
+            <ng-container *ngFor="let tag of (selectedTagIds | fuseFindByKey:idProperty:allTags); trackBy: trackByFn">
                 <div class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
                     <span class="text-md font-medium whitespace-nowrap">{{tag[textProperty]}}</span>
                 </div>
@@ -40,7 +40,8 @@
                         <ng-container>
                             <ng-container *ngFor="let tag of filteredTags; trackBy: trackByFn">
                                 <div class="flex items-center h-10 min-h-10 px-4 cursor-pointer hover:bg-hover" (click)="toggleTag(tag)" matRipple>
-                                    <mat-checkbox class="flex items-center h-10 min-h-10 pointer-events-none" [checked]="selectedTagIds.includes(tag.id)" [color]="'primary'" [disableRipple]="true">
+                                    <mat-checkbox class="flex items-center h-10 min-h-10 pointer-events-none" [checked]="selectedTagIds.includes(tag[idProperty])" [color]="'primary'"
+                                        [disableRipple]="true">
                                     </mat-checkbox>
                                     <div class="ml-1">{{tag[textProperty]}}</div>
                                 </div>

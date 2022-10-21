@@ -1,14 +1,12 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.RegistrationForms.FormPaths;
-using MediatR;
 
 namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
 public class SaveRegistrationFormMappingsCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
-    public RegistrationFormGroup Mappings { get; set; } = null!;
+    public RegistrationFormGroup? Mappings { get; set; }
     public Guid FormId { get; set; }
 }
 
@@ -27,7 +25,10 @@ public class SaveRegistrationFormMappingsCommandHandler : IRequestHandler<SaveRe
     public async Task<Unit> Handle(SaveRegistrationFormMappingsCommand command, CancellationToken cancellationToken)
     {
         var formToSave = command.Mappings;
-        if (formToSave == null) return Unit.Value;
+        if (formToSave == null)
+        {
+            return Unit.Value;
+        }
 
         var form = await _forms.Where(frm => frm.EventId == command.EventId
                                           && frm.Id == formToSave.Id)
@@ -39,37 +40,30 @@ public class SaveRegistrationFormMappingsCommandHandler : IRequestHandler<SaveRe
         foreach (var questionToSave in formToSave.Sections.SelectMany(sec => sec.Questions))
         {
             var question = form.Questions.FirstOrDefault(qst => qst.Id == questionToSave.Id);
-            if (question == null) continue;
+            if (question == null)
+            {
+                continue;
+            }
 
             question.Mapping = questionToSave.Mapping;
             foreach (var optionToSave in questionToSave.Options ?? Enumerable.Empty<QuestionOptionMappingDisplayItem>())
             {
                 var option = question?.QuestionOptions.FirstOrDefault(qop => qop.Id == optionToSave.Id);
-                if (option == null) continue;
+                if (option == null)
+                {
+                    continue;
+                }
 
                 var existingMappings =
                     new List<QuestionOptionMapping>(option.Mappings ?? Enumerable.Empty<QuestionOptionMapping>());
 
-                foreach (var mapping in optionToSave.MappedRegistrables ??
-                                        Enumerable.Empty<AvailableQuestionOptionMapping>())
+                foreach (var mapping in optionToSave.MappedRegistrableCombinedIds?.Select(cid => new CombinedMappingId(cid)) ?? Enumerable.Empty<CombinedMappingId>())
                 {
-                    if (mapping.Type == null || mapping.Id == null || mapping.Language == null)
-                    {
-                        var splits = mapping.CombinedId.Split('/').ToList();
-                        if (splits.Count >= 3)
-                        {
-                            if (Guid.TryParse(splits[0], out var id)) mapping.Id = id;
-
-                            if (Enum.TryParse<MappingType>(splits[1], out var type)) mapping.Type = type;
-                            var language = splits[2];
-                            if (!string.IsNullOrWhiteSpace(language)) mapping.Language = language;
-                        }
-                    }
-
                     var existingMapping = existingMappings.FirstOrDefault(map => map.Type == mapping.Type
-                     && map.RegistrableId == mapping.Id
-                     && map.Language == mapping.Language);
+                                                                              && map.RegistrableId == mapping.Id
+                                                                              && map.Language == mapping.Language);
                     if (existingMapping == null)
+                    {
                         await _mappings.InsertOrUpdateEntity(new QuestionOptionMapping
                                                              {
                                                                  Id = Guid.NewGuid(),
@@ -78,12 +72,18 @@ public class SaveRegistrationFormMappingsCommandHandler : IRequestHandler<SaveRe
                                                                  RegistrableId = mapping.Id,
                                                                  Language = mapping.Language
                                                              }, cancellationToken);
+                    }
                     else
+                    {
                         existingMappings.Remove(existingMapping);
+                    }
                 }
 
                 // Check if option has been removed
-                foreach (var removedMapping in existingMappings) _mappings.Remove(removedMapping);
+                foreach (var removedMapping in existingMappings)
+                {
+                    _mappings.Remove(removedMapping);
+                }
             }
         }
 

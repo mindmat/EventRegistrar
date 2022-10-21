@@ -6879,10 +6879,10 @@ export interface AvailableQuestionMappingsQuery {
 }
 
 export interface AvailableQuestionOptionMapping {
-    combinedId?: string;
+    type?: MappingType;
     id?: string | null;
-    type?: MappingType | null;
     language?: string | null;
+    combinedId?: string;
     name?: string | null;
 }
 
@@ -6903,7 +6903,7 @@ export interface AvailableQuestionOptionMappingsQuery {
 
 export interface SaveRegistrationFormMappingsCommand {
     eventId?: string;
-    mappings?: RegistrationFormGroup;
+    mappings?: RegistrationFormGroup | null;
     formId?: string;
 }
 
@@ -6950,7 +6950,7 @@ export enum QuestionType {
 export interface QuestionOptionMappingDisplayItem {
     id?: string;
     answer?: string | null;
-    mappedRegistrables?: AvailableQuestionOptionMapping[] | null;
+    mappedRegistrableCombinedIds?: string[] | null;
 }
 
 export interface DeleteRegistrationFormCommand {

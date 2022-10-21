@@ -1,8 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrables;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
 public class AvailableQuestionOptionMappingsQuery : IRequest<IEnumerable<AvailableQuestionOptionMapping>>
@@ -10,8 +8,7 @@ public class AvailableQuestionOptionMappingsQuery : IRequest<IEnumerable<Availab
     public Guid EventId { get; set; }
 }
 
-public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<AvailableQuestionOptionMappingsQuery,
-    IEnumerable<AvailableQuestionOptionMapping>>
+public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<AvailableQuestionOptionMappingsQuery, IEnumerable<AvailableQuestionOptionMapping>>
 {
     private readonly IQueryable<Registrable> _registrables;
 
@@ -20,12 +17,11 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
         _registrables = registrables;
     }
 
-    public async Task<IEnumerable<AvailableQuestionOptionMapping>> Handle(
-        AvailableQuestionOptionMappingsQuery request,
-        CancellationToken cancellationToken)
+    public async Task<IEnumerable<AvailableQuestionOptionMapping>> Handle(AvailableQuestionOptionMappingsQuery query,
+                                                                          CancellationToken cancellationToken)
     {
         var result = new List<AvailableQuestionOptionMapping>();
-        var doubleRegistrables = await _registrables.Where(rbl => rbl.EventId == request.EventId
+        var doubleRegistrables = await _registrables.Where(rbl => rbl.EventId == query.EventId
                                                                && rbl.MaximumDoubleSeats != null)
                                                     .Select(rbl => new
                                                                    {
@@ -42,32 +38,32 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
                                                      {
                                                          new AvailableQuestionOptionMapping
                                                          {
-                                                             Id = rbl.Id,
                                                              Type = MappingType.PartnerRegistrableLeader,
+                                                             Id = rbl.Id,
                                                              Name = $"{rbl.Name} ({Properties.Resources.Leader})"
                                                          },
                                                          new AvailableQuestionOptionMapping
                                                          {
-                                                             Id = rbl.Id,
                                                              Type = MappingType.PartnerRegistrableFollower,
+                                                             Id = rbl.Id,
                                                              Name = $"{rbl.Name} ({Properties.Resources.Follower})"
                                                          },
                                                          new AvailableQuestionOptionMapping
                                                          {
-                                                             Id = rbl.Id,
                                                              Type = MappingType.PartnerRegistrable,
+                                                             Id = rbl.Id,
                                                              Name = rbl.Name
                                                          }
                                                      };
                                           }));
 
-        var singleRegistrables = await _registrables.Where(rbl => rbl.EventId == request.EventId
+        var singleRegistrables = await _registrables.Where(rbl => rbl.EventId == query.EventId
                                                                && rbl.MaximumDoubleSeats == null)
                                                     .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
                                                     .Select(rbl => new AvailableQuestionOptionMapping
                                                                    {
-                                                                       Id = rbl.Id,
                                                                        Type = MappingType.SingleRegistrable,
+                                                                       Id = rbl.Id,
                                                                        Name = rbl.Name
                                                                    })
                                                     .ToListAsync(cancellationToken);
@@ -106,7 +102,7 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
                        Name = $"{Properties.Resources.Role}: {Properties.Resources.Follower}"
                    });
 
-        result.ForEach(aqo => aqo.CombinedId = $"{aqo.Id}/{aqo.Type}/{aqo.Language}");
+        result.ForEach(aqo => aqo.CombinedId = new CombinedMappingId(aqo.Type, aqo.Id, aqo.Language).ToString());
 
         return result;
     }
@@ -114,9 +110,9 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
 
 public class AvailableQuestionOptionMapping
 {
-    public string CombinedId { get; set; } = null!;
+    public MappingType Type { get; set; }
     public Guid? Id { get; set; }
-    public MappingType? Type { get; set; }
     public string? Language { get; set; }
+    public string CombinedId { get; set; } = null!;
     public string? Name { get; set; }
 }

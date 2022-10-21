@@ -5089,25 +5089,20 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "combinedId": {
-            "type": "string"
+          "type": {
+            "$ref": "#/components/schemas/MappingType"
           },
           "id": {
             "type": "string",
             "format": "guid",
             "nullable": true
           },
-          "type": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/MappingType"
-              }
-            ]
-          },
           "language": {
             "type": "string",
             "nullable": true
+          },
+          "combinedId": {
+            "type": "string"
           },
           "name": {
             "type": "string",
@@ -5158,7 +5153,12 @@
             "format": "guid"
           },
           "mappings": {
-            "$ref": "#/components/schemas/RegistrationFormGroup"
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RegistrationFormGroup"
+              }
+            ]
           },
           "formId": {
             "type": "string",
@@ -5295,11 +5295,11 @@
             "type": "string",
             "nullable": true
           },
-          "mappedRegistrables": {
+          "mappedRegistrableCombinedIds": {
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/AvailableQuestionOptionMapping"
+              "type": "string"
             }
           }
         }

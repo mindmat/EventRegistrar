@@ -85,14 +85,8 @@ public class FormPathsQueryHandler : IRequestHandler<FormPathsQuery, IEnumerable
                                                                                                               {
                                                                                                                   Id = qop.Id,
                                                                                                                   Answer = qop.Answer,
-                                                                                                                  MappedRegistrables = qop.MappedRegistrables
-                                                                                                                      .Select(map => new AvailableQuestionOptionMapping
-                                                                                                                                  {
-                                                                                                                                      CombinedId = $"{map.RegistrableId}/{map.Type}/{map.Language}",
-                                                                                                                                      Id = map.RegistrableId,
-                                                                                                                                      Type = map.Type,
-                                                                                                                                      Name = GetName(map.Type, map.Name, map.Language)
-                                                                                                                                  })
+                                                                                                                  MappedRegistrableCombinedIds = qop.MappedRegistrables
+                                                                                                                      .Select(map => $"{map.RegistrableId}|{map.Type}|{map.Language}")
                                                                                                               })
                                                                                                       })
                                                                                        .OrderBy(qst => qst.SortKey)
@@ -126,7 +120,7 @@ public class QuestionOptionMappingDisplayItem
 {
     public Guid Id { get; set; }
     public string? Answer { get; set; }
-    public IEnumerable<AvailableQuestionOptionMapping>? MappedRegistrables { get; set; }
+    public IEnumerable<string>? MappedRegistrableCombinedIds { get; set; }
 }
 
 public class QuestionMappingDisplayItem

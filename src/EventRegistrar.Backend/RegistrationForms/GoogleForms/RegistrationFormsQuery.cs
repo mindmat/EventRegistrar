@@ -119,15 +119,11 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
                                                                                                                    {
                                                                                                                        Id = qop.Id,
                                                                                                                        Answer = qop.Answer,
-                                                                                                                       MappedRegistrables = qop.MappedRegistrables
-                                                                                                                           .Select(map => new AvailableQuestionOptionMapping
-                                                                                                                                       {
-                                                                                                                                           CombinedId =
-                                                                                                                                               $"{map.RegistrableId}/{map.Type}/{map.Language}",
-                                                                                                                                           Id = map.RegistrableId,
-                                                                                                                                           Type = map.Type,
-                                                                                                                                           Name = GetName(map.Type, map.Name, map.Language)
-                                                                                                                                       })
+                                                                                                                       MappedRegistrableCombinedIds = qop.MappedRegistrables
+                                                                                                                           .Select(map => new CombinedMappingId(
+                                                                                                                                       map.Type,
+                                                                                                                                       map.RegistrableId,
+                                                                                                                                       map.Language).ToString())
                                                                                                                    })
                                                                                                            })
                                                                                             .OrderBy(qst => qst.SortKey)

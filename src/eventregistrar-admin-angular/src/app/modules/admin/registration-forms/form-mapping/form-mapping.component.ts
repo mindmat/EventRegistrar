@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { RegistrableDisplayItem, RegistrationFormItem } from 'app/api/api';
+import { AvailableQuestionMapping, AvailableQuestionOptionMapping, RegistrationFormItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { FormsService } from './forms.service';
-import { RegistrablesService } from './registrables.service';
+import { QuestionMappingService } from './question-mapping.service';
+import { QuestionOptionMappingService } from './question-option-mapping.service';
 
 @Component({
   selector: 'app-form-mapping',
@@ -13,9 +14,12 @@ export class FormMappingComponent implements OnInit
 {
   private unsubscribeAll: Subject<any> = new Subject<any>();
   forms: RegistrationFormItem[];
-  allRegistrables: RegistrableDisplayItem[];
+  allOptionMappings: AvailableQuestionOptionMapping[];
+  allQuestionMappings: AvailableQuestionMapping[];
+
   constructor(private formsService: FormsService,
-    private registrablesService: RegistrablesService,
+    private questionMappingService: QuestionMappingService,
+    private questionOptionMappingService: QuestionOptionMappingService,
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
@@ -30,11 +34,21 @@ export class FormMappingComponent implements OnInit
         this.changeDetectorRef.markForCheck();
       });
 
-    this.registrablesService.registrables$
+    this.questionMappingService.questionMappings
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe((registrables: RegistrableDisplayItem[]) =>
+      .subscribe((mappings: AvailableQuestionMapping[]) =>
       {
-        this.allRegistrables = registrables;
+        this.allQuestionMappings = mappings;
+
+        // Mark for check
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.questionOptionMappingService.questionOptionMappings
+      .pipe(takeUntil(this.unsubscribeAll))
+      .subscribe((mappings: AvailableQuestionOptionMapping[]) =>
+      {
+        this.allOptionMappings = mappings;
 
         // Mark for check
         this.changeDetectorRef.markForCheck();

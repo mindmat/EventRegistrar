@@ -175,8 +175,8 @@ SELECT [Id]
       ,[Type]
       ,[Language]
 FROM [AZURE_ER].[EventRegistrator].[dbo].[QuestionOptionMappings]
-WHERE RegistrableId IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].[Registrables])
-  AND [QuestionOptionId] IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].[QuestionOptions])
+WHERE [QuestionOptionId] IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].[QuestionOptions])
+  AND (RegistrableId IN (SELECT Id FROM [AZURE_EA].[event-admin].[dbo].[Registrables]) OR RegistrableId IS NULL)
 
 
 INSERT INTO [AZURE_EA].[event-admin].[dbo].[Registrations]

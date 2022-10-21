@@ -44,7 +44,7 @@
                                         <div class="ml-1.5 leading-5">
                                             - {{option.answer}}
                                         </div>
-                                        <app-tags-picker class="ml-auto" [allTags]="allRegistrables">
+                                        <app-tags-picker class="ml-auto" [allTags]="allOptionMappings" [selectedTagIds]="option.mappedRegistrableCombinedIds" idProperty="combinedId">
 
                                         </app-tags-picker>
                                     </div>
