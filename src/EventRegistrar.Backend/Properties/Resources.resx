@@ -123,6 +123,9 @@
   <data name="Acronym" xml:space="preserve">
     <value>Kürzel</value>
   </data>
+  <data name="Add" xml:space="preserve">
+    <value>Hinzufügen</value>
+  </data>
   <data name="AngeboteneSprachen" xml:space="preserve">
     <value>Angebotene Sprachen</value>
   </data>
@@ -173,6 +176,9 @@
   </data>
   <data name="Discard" xml:space="preserve">
     <value>Verwerfen</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Bearbeiten</value>
   </data>
   <data name="EMail" xml:space="preserve">
     <value>E-Mail</value>

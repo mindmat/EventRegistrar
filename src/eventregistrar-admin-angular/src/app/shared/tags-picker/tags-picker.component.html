@@ -1,10 +1,10 @@
 <ng-container *ngIf="allTags?.length > 0">
-    <div class="flex flex-wrap items-center -m-1.5 mt-6">
+    <div class="flex flex-wrap items-center -m-1.5">
         <!-- Tags -->
         <ng-container *ngIf="selectedTagIds.length">
             <ng-container *ngFor="let tag of (selectedTagIds | fuseFindByKey:'id':allTags); trackBy: trackByFn">
                 <div class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
-                    <span class="text-md font-medium whitespace-nowrap">{{tag.title}}</span>
+                    <span class="text-md font-medium whitespace-nowrap">{{tag[textProperty]}}</span>
                 </div>
             </ng-container>
         </ng-container>
@@ -14,12 +14,12 @@
 
             <ng-container *ngIf="selectedTagIds.length">
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'"></mat-icon>
-                <span class="ml-1.5 text-md font-medium whitespace-nowrap">Edit</span>
+                <span class="ml-1.5 text-md font-medium whitespace-nowrap">{{ 'Edit' | translate }}</span>
             </ng-container>
 
             <ng-container *ngIf="!selectedTagIds.length">
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                <span class="ml-1.5 text-md font-medium whitespace-nowrap">Add</span>
+                <span class="ml-1.5 text-md font-medium whitespace-nowrap">{{ 'Add'| translate }}</span>
             </ng-container>
 
             <!-- Tags panel -->

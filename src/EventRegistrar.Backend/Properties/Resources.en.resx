@@ -123,6 +123,9 @@
   <data name="Acronym" xml:space="preserve">
     <value>Acronym</value>
   </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
   <data name="AngeboteneSprachen" xml:space="preserve">
     <value>Offered languages</value>
   </data>
@@ -173,6 +176,9 @@
   </data>
   <data name="Discard" xml:space="preserve">
     <value>Discard</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
   </data>
   <data name="EMail" xml:space="preserve">
     <value>Email address</value>

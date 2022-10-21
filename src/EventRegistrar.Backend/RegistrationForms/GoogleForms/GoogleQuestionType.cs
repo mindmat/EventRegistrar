@@ -1,6 +1,6 @@
 ﻿namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
 
-public enum QuestionType
+public enum GoogleQuestionType
 {
     Checkbox = 1,
     Checkbox_Grid = 2,

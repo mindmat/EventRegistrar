@@ -7,33 +7,33 @@
         <!-- Forms  -->
         <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
 
-            <!-- Form -->
             <div *ngFor="let form of forms" class="flex flex-col p-6">
+                <!-- Form header -->
                 <div class="flex items-center justify-between space-y-3">
                     <div>
-                        <div class="text-xl font-semibold">{{ form.title }}</div>
+                        <div class=" text-xl font-semibold">{{ form.title }}</div>
                         <div class="text-secondary">{{ 'LastImport' | translate }}: {{ form.lastImport | date:'dd.MM.yyyy HH:mm' }}</div>
                     </div>
                     <button mat-flat-button [color]="'primary'" (click)="importFormUpdate(form)">
                         {{ 'ImportNewVersion' | translate }} ({{ form.pendingRawFormCreated | ago }})
                     </button>
                 </div>
-                <div class="flex-row">
-                    <div *ngFor="let section of form.sections" class="mt-8 flex items-center justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150">
-                        <div>
-                            <div class="text-lg font-semibold">{{ section.name }}</div>
-                            <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
-                            <div *ngFor="let question of section.questions" class="flex w-full py-5 px-2">
-                                <div>
-                                    {{question.question}}
-                                    <ng-container *ngIf="question.options">
-                                        <div class="space-y-1.5">
-                                            <ng-container *ngFor="let option of question.options">
-                                                <div class="flex items-center">
-                                                    <div class="flex items-center justify-center w-5 h-5">
-                                                        <div class="w-4 h-4 rounded-full border-2"></div>
-                                                    </div>
-                                                    <!-- <ng-container *ngIf="!task.completed">
+
+                <!-- Sections -->
+                <div *ngFor="let section of form.sections" class="mt-8 flex flex-col items-center justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150">
+                    <div class="text-xl font-semibold">{{ section.name }}</div>
+                    <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
+                    <div *ngFor="let question of section.questions" class="flex flex-col w-full py-5 px-2">
+
+                        <!-- Question -->
+                        <div class="text-lg font-semibold">{{question.question}}</div>
+                        <ng-container *ngIf="question.options">
+                            <div class="space-y-1.5">
+                                <ng-container *ngFor="let option of question.options">
+
+                                    <!-- Option -->
+                                    <div class="flex flex-auto items-center justify-center">
+                                        <!-- <ng-container *ngIf="!task.completed">
                                                         <div class="flex items-center justify-center w-5 h-5">
                                                             <div class="w-4 h-4 rounded-full border-2"></div>
                                                         </div>
@@ -41,20 +41,17 @@
                                                     <ng-container *ngIf="task.completed">
                                                         <mat-icon class="text-hint icon-size-5" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
                                                     </ng-container> -->
-                                                    <div class="ml-1.5 leading-5">
-                                                        {{option.answer}}
-                                                    </div>
-                                                    <app-tags-picker [allTags]="allRegistrables">
-
-                                                    </app-tags-picker>
-                                                </div>
-                                            </ng-container>
+                                        <div class="ml-1.5 leading-5">
+                                            - {{option.answer}}
                                         </div>
-                                    </ng-container>
+                                        <app-tags-picker class="ml-auto" [allTags]="allRegistrables">
 
-                                </div>
+                                        </app-tags-picker>
+                                    </div>
+                                </ng-container>
                             </div>
-                        </div>
+                        </ng-container>
+
                     </div>
                 </div>
             </div>
