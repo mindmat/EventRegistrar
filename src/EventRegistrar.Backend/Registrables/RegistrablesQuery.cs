@@ -1,8 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-
-using MediatR;
-
-namespace EventRegistrar.Backend.Registrables;
+﻿namespace EventRegistrar.Backend.Registrables;
 
 public class RegistrablesQuery : IRequest<IEnumerable<RegistrableDisplayItem>>, IEventBoundRequest
 {

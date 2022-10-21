@@ -25,16 +25,6 @@ public class RegistrablesController : Controller
     }
 
 
-    [HttpGet("api/events/{eventAcronym}/registrables")]
-    public async Task<IEnumerable<RegistrableDisplayItem>> GetRegistrables(string eventAcronym)
-    {
-        return await _mediator.Send(new RegistrablesQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
-
-
     [HttpGet("api/events/{eventAcronym}/registrationsOnWaitingList")]
     public async Task<IEnumerable<WaitingListSpot>> GetRegistrationsOnWaitingList(string eventAcronym)
     {

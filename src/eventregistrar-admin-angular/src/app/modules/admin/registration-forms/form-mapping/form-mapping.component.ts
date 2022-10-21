@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { RegistrationFormItem } from 'app/api/api';
+import { RegistrableDisplayItem, RegistrationFormItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { FormsService } from './forms.service';
+import { RegistrablesService } from './registrables.service';
 
 @Component({
   selector: 'app-form-mapping',
@@ -12,7 +13,9 @@ export class FormMappingComponent implements OnInit
 {
   private unsubscribeAll: Subject<any> = new Subject<any>();
   forms: RegistrationFormItem[];
+  allRegistrables: RegistrableDisplayItem[];
   constructor(private formsService: FormsService,
+    private registrablesService: RegistrablesService,
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
@@ -22,6 +25,16 @@ export class FormMappingComponent implements OnInit
       .subscribe((forms: RegistrationFormItem[]) =>
       {
         this.forms = forms;
+
+        // Mark for check
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.registrablesService.registrables$
+      .pipe(takeUntil(this.unsubscribeAll))
+      .subscribe((registrables: RegistrableDisplayItem[]) =>
+      {
+        this.allRegistrables = registrables;
 
         // Mark for check
         this.changeDetectorRef.markForCheck();

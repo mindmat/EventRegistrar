@@ -77,6 +77,7 @@ import { API_BASE_URL } from './api/api';
 import { SelectEventComponent } from './modules/admin/events/select-event/select-event.component';
 import { CreateEventComponent } from './modules/admin/events/select-event/create-event/create-event.component';
 import { FormMappingComponent } from './modules/admin/registration-forms/form-mapping/form-mapping.component';
+import { TagsPickerComponent } from './shared/tags-picker/tags-picker.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -105,7 +106,8 @@ const routerConfig: ExtraOptions = {
         UserAccessComponent,
         SelectEventComponent,
         CreateEventComponent,
-        FormMappingComponent
+        FormMappingComponent,
+        TagsPickerComponent
     ],
     providers: [
         AuthServiceFuse,
