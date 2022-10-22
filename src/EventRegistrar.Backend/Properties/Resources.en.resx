@@ -372,6 +372,9 @@
   <data name="MailType_TooMuchPaid" xml:space="preserve">
     <value>Too much paid</value>
   </data>
+  <data name="Mapping" xml:space="preserve">
+    <value>Mapping</value>
+  </data>
   <data name="MissingAmount" xml:space="preserve">
     <value>Missing amount</value>
   </data>

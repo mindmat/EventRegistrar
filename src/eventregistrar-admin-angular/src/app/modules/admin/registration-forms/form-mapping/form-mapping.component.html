@@ -46,7 +46,13 @@
                         </ng-container>
 
                         <!-- String mapping -->
-                        <ng-container *ngIf="question.options">
+                        <ng-container *ngIf="question.mappable">
+                            <mat-form-field class="flex-auto gt-xs:pl-3">
+                                <mat-select [placeholder]="'Mapping' | translate" [(value)]="question.mapping">
+                                    <mat-option *ngFor="let mapping of allQuestionMappings" [value]="mapping.type">{{ mapping.text }}</mat-option>
+                                </mat-select>
+                                <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:link'"></mat-icon>
+                            </mat-form-field>
 
                         </ng-container>
 

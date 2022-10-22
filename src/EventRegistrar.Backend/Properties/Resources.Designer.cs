@@ -1065,6 +1065,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zuordnung.
+        /// </summary>
+        internal static string Mapping {
+            get {
+                return ResourceManager.GetString("Mapping", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fehlbetrag.
         /// </summary>
         internal static string MissingAmount {

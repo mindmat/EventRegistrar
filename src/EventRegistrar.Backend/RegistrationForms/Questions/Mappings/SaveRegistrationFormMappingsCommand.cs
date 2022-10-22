@@ -54,8 +54,7 @@ public class SaveRegistrationFormMappingsCommandHandler : IRequestHandler<SaveRe
                     continue;
                 }
 
-                var existingMappings =
-                    new List<QuestionOptionMapping>(option.Mappings ?? Enumerable.Empty<QuestionOptionMapping>());
+                var existingMappings = new List<QuestionOptionMapping>(option.Mappings ?? Enumerable.Empty<QuestionOptionMapping>());
 
                 foreach (var mapping in optionToSave.MappedRegistrableCombinedIds?.Select(cid => new CombinedMappingId(cid)) ?? Enumerable.Empty<CombinedMappingId>())
                 {

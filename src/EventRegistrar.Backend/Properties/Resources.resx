@@ -450,6 +450,9 @@
   <data name="MailType_TooMuchPaid" xml:space="preserve">
     <value>Zu viel bezahlt</value>
   </data>
+  <data name="Mapping" xml:space="preserve">
+    <value>Zuordnung</value>
+  </data>
   <data name="MissingAmount" xml:space="preserve">
     <value>Fehlbetrag</value>
   </data>
