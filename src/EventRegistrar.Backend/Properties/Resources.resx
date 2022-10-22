@@ -126,6 +126,9 @@
   <data name="Add" xml:space="preserve">
     <value>Hinzufügen</value>
   </data>
+  <data name="AddLink" xml:space="preserve">
+    <value>Neue Zuordnung</value>
+  </data>
   <data name="AngeboteneSprachen" xml:space="preserve">
     <value>Angebotene Sprachen</value>
   </data>
@@ -522,6 +525,9 @@
   </data>
   <data name="ReminderMail2" xml:space="preserve">
     <value>Mail Zahlungserinnerung 2</value>
+  </data>
+  <data name="RemoveLink" xml:space="preserve">
+    <value>Zuordnung aufheben</value>
   </data>
   <data name="RequestAccess" xml:space="preserve">
     <value>Zugriff beantragen</value>

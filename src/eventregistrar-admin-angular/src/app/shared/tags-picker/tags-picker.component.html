@@ -5,7 +5,7 @@
             <ng-container *ngFor="let tag of (selectedTagIds | fuseFindByKey:idProperty:allTags); trackBy: trackByFn">
                 <div class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
                     <span class="text-md font-medium whitespace-nowrap">{{tag[textProperty]}}</span>
-                    <mat-icon class="icon-size-5 ml-2 cursor-pointer" [svgIcon]="'heroicons_solid:x-circle'" (click)="removeTag(tag)"></mat-icon>
+                    <mat-icon class="icon-size-5 ml-2 cursor-pointer" [svgIcon]="'mat_outline:link_off'" (click)="removeTag(tag)" [matTooltip]="'RemoveLink' | translate"></mat-icon>
                 </div>
             </ng-container>
         </ng-container>
@@ -13,7 +13,8 @@
         <div class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 cursor-pointer text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700" (click)="openTagsPanel()"
             #tagsPanelOrigin>
 
-            <mat-icon class="icon-size-5 my-2 -mx-2" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+            <!-- Add new tag -->
+            <mat-icon class="icon-size-5 my-2 -mx-2" [svgIcon]="'mat_outline:add_link'" [matTooltip]="'AddLink' | translate"></mat-icon>
 
             <!-- Tags panel -->
             <ng-template #tagsPanel>
@@ -21,7 +22,7 @@
                     <!-- Tags panel header -->
                     <div class="flex items-center m-3 mr-2">
                         <div class="flex items-center">
-                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:search'"></mat-icon>
                             <div class="ml-2">
                                 <input class="w-full min-w-0 py-1 border-0" type="text" placeholder="{{ 'Search' | translate }}" (input)="filterTags($event)" (keydown)="filterTagsInputKeyDown($event)"
                                     [maxLength]="30" #newTagInput>
@@ -33,7 +34,7 @@
                         <ng-container>
                             <ng-container *ngFor="let tag of filteredTags; trackBy: trackByFn">
                                 <div *ngIf="!selectedTagIds.includes(tag[idProperty])" class="flex items-center h-10 min-h-10 px-4 cursor-pointer hover:bg-hover" (click)="addTag(tag)" matRipple>
-                                    <mat-icon class="icon-size-5 cursor-pointer" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+                                    <mat-icon class="icon-size-5 cursor-pointer" [svgIcon]="'mat_outline:add_link'"></mat-icon>
                                     <div class="ml-2">{{tag[textProperty]}}</div>
                                 </div>
                             </ng-container>

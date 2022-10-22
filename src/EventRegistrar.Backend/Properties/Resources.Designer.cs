@@ -88,6 +88,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Neue Zuordnung.
+        /// </summary>
+        internal static string AddLink {
+            get {
+                return ResourceManager.GetString("AddLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Angebotene Sprachen.
         /// </summary>
         internal static string AngeboteneSprachen {
@@ -1277,6 +1286,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string ReminderMail2 {
             get {
                 return ResourceManager.GetString("ReminderMail2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zuordnung aufheben.
+        /// </summary>
+        internal static string RemoveLink {
+            get {
+                return ResourceManager.GetString("RemoveLink", resourceCulture);
             }
         }
         

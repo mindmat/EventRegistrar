@@ -126,6 +126,9 @@
   <data name="Add" xml:space="preserve">
     <value>Add</value>
   </data>
+  <data name="AddLink" xml:space="preserve">
+    <value>Add link</value>
+  </data>
   <data name="AngeboteneSprachen" xml:space="preserve">
     <value>Offered languages</value>
   </data>
@@ -434,6 +437,9 @@
   </data>
   <data name="ReminderMail2" xml:space="preserve">
     <value>Reminder mail 2</value>
+  </data>
+  <data name="RemoveLink" xml:space="preserve">
+    <value>Remove link</value>
   </data>
   <data name="RequestAccess" xml:space="preserve">
     <value>Request access</value>
