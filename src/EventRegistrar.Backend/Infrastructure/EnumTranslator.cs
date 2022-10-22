@@ -18,4 +18,10 @@ public class EnumTranslator
                    ? null
                    : Translate(value.Value);
     }
+
+    public Dictionary<TEnum, string> TranslateAll<TEnum>()
+        where TEnum : struct, Enum
+    {
+        return Enum.GetValues<TEnum>().ToDictionary(env => env, Translate);
+    }
 }

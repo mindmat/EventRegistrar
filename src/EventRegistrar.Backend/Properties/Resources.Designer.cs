@@ -1200,6 +1200,78 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to E-Mail.
+        /// </summary>
+        internal static string QuestionMappingType_Email {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vorname.
+        /// </summary>
+        internal static string QuestionMappingType_FirstName {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IBAN.
+        /// </summary>
+        internal static string QuestionMappingType_Iban {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_Iban", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nachname.
+        /// </summary>
+        internal static string QuestionMappingType_LastName {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Partner.
+        /// </summary>
+        internal static string QuestionMappingType_Partner {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_Partner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telefon.
+        /// </summary>
+        internal static string QuestionMappingType_Phone {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_Phone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bemerkungen.
+        /// </summary>
+        internal static string QuestionMappingType_Remarks {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_Remarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wohnort.
+        /// </summary>
+        internal static string QuestionMappingType_Town {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_Town", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reduktion.
         /// </summary>
         internal static string Reduction {

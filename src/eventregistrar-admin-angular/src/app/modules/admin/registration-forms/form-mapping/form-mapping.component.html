@@ -14,7 +14,7 @@
                         <div class=" text-xl font-semibold">{{ form.title }}</div>
                         <div *ngIf="form.lastImport" class="text-secondary">{{ 'LastImport' | translate }}: {{ form.lastImport | date:'dd.MM.yyyy HH:mm' }}</div>
                     </div>
-                    <button mat-flat-button [color]="'primary'" (click)="importFormUpdate(form)">
+                    <button *ngIf="form.pendingRawFormId" mat-flat-button [color]="'primary'" (click)="importFormUpdate(form)">
                         {{ 'ImportNewVersion' | translate }} ({{ form.pendingRawFormCreated | ago }})
                     </button>
                 </div>

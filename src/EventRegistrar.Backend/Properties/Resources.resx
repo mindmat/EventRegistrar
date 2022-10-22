@@ -495,6 +495,30 @@
   <data name="Preview" xml:space="preserve">
     <value>Vorschau</value>
   </data>
+  <data name="QuestionMappingType_Email" xml:space="preserve">
+    <value>E-Mail</value>
+  </data>
+  <data name="QuestionMappingType_FirstName" xml:space="preserve">
+    <value>Vorname</value>
+  </data>
+  <data name="QuestionMappingType_Iban" xml:space="preserve">
+    <value>IBAN</value>
+  </data>
+  <data name="QuestionMappingType_LastName" xml:space="preserve">
+    <value>Nachname</value>
+  </data>
+  <data name="QuestionMappingType_Partner" xml:space="preserve">
+    <value>Partner</value>
+  </data>
+  <data name="QuestionMappingType_Phone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="QuestionMappingType_Remarks" xml:space="preserve">
+    <value>Bemerkungen</value>
+  </data>
+  <data name="QuestionMappingType_Town" xml:space="preserve">
+    <value>Wohnort</value>
+  </data>
   <data name="Reduction" xml:space="preserve">
     <value>Reduktion</value>
   </data>

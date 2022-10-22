@@ -417,6 +417,30 @@
   <data name="Preview" xml:space="preserve">
     <value>Preview</value>
   </data>
+  <data name="QuestionMappingType_Email" xml:space="preserve">
+    <value>Email address</value>
+  </data>
+  <data name="QuestionMappingType_FirstName" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="QuestionMappingType_Iban" xml:space="preserve">
+    <value>IBAN</value>
+  </data>
+  <data name="QuestionMappingType_LastName" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="QuestionMappingType_Partner" xml:space="preserve">
+    <value>Partner</value>
+  </data>
+  <data name="QuestionMappingType_Phone" xml:space="preserve">
+    <value>Phone</value>
+  </data>
+  <data name="QuestionMappingType_Remarks" xml:space="preserve">
+    <value>Remarks</value>
+  </data>
+  <data name="QuestionMappingType_Town" xml:space="preserve">
+    <value>Place of living</value>
+  </data>
   <data name="Reduction" xml:space="preserve">
     <value>Reduction</value>
   </data>

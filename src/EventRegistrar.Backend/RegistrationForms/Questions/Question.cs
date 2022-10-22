@@ -41,5 +41,6 @@ public enum QuestionMappingType
     Phone = 4,
     Town = 5,
     Remarks = 6,
+    Iban = 7,
     Partner = 10
 }
