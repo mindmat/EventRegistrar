@@ -1,7 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.RegistrationForms.FormPaths;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
-using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,19 +18,6 @@ public class RegistrationFormController : Controller
         _eventAcronymResolver = eventAcronymResolver;
     }
 
-    [HttpPost("api/events/{eventAcronym}/registrationForms/{formId}/mappings")]
-    public async Task SaveRegistrationFormMappings(string eventAcronym,
-                                                   Guid formId,
-                                                   [FromBody] RegistrationFormGroup form)
-    {
-        await _mediator.Send(new SaveRegistrationFormMappingsCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 FormId = formId,
-                                 Mappings = form
-                             });
-    }
-
     [HttpDelete("api/events/{eventAcronym}/registrationForms/{registrationFormId}")]
     public async Task DeleteRegistrationForm(string eventAcronym, Guid registrationFormId)
     {
@@ -47,25 +33,6 @@ public class RegistrationFormController : Controller
     public async Task<IEnumerable<RegistrationFormGroup>> GetFormPaths(string eventAcronym)
     {
         return await _mediator.Send(new FormPathsQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
-
-    [HttpGet("api/events/{eventAcronym}/availableQuestionOptionMappings")]
-    public async Task<IEnumerable<AvailableQuestionOptionMapping>> AvailableQuestionOptionMappingsQuery(
-        string eventAcronym)
-    {
-        return await _mediator.Send(new AvailableQuestionOptionMappingsQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
-
-    [HttpGet("api/events/{eventAcronym}/availableQuestionMappings")]
-    public async Task<IEnumerable<AvailableQuestionMapping>> AvailableQuestionMappingsQuery(string eventAcronym)
-    {
-        return await _mediator.Send(new AvailableQuestionMappingsQuery
                                     {
                                         EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
                                     });

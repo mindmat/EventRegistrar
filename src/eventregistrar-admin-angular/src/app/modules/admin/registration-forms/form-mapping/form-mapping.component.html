@@ -27,6 +27,8 @@
 
                         <!-- Question -->
                         <div class="text-lg font-semibold">{{question.question}}</div>
+
+                        <!-- Question options -->
                         <ng-container *ngIf="question.options">
                             <div class="space-y-1.5">
                                 <ng-container *ngFor="let option of question.options">
@@ -42,11 +44,23 @@
                                 </ng-container>
                             </div>
                         </ng-container>
+
+                        <!-- String mapping -->
+                        <ng-container *ngIf="question.options">
+
+                        </ng-container>
+
+                        <!-- Line -->
                         <div *ngIf="!lastQuestion" class="flex items-center justify-center mt-3 -mx-6">
                             <div class="flex-auto border-b"></div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Save -->
+                <button mat-flat-button [color]="'primary'" class="mt-3" (click)="saveMappings(form)">
+                    {{ 'Save' | translate }}
+                </button>
             </div>
         </div>
     </div>

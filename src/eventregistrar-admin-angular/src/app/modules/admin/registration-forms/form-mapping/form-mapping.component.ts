@@ -59,4 +59,9 @@ export class FormMappingComponent implements OnInit
   {
     this.formsService.importForm(form.externalIdentifier);
   }
+
+  saveMappings(form: RegistrationFormItem)
+  {
+    this.formsService.saveMappings(form.registrationFormId, form.sections);
+  }
 }

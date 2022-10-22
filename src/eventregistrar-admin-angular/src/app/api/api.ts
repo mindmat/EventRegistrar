@@ -6903,14 +6903,8 @@ export interface AvailableQuestionOptionMappingsQuery {
 
 export interface SaveRegistrationFormMappingsCommand {
     eventId?: string;
-    mappings?: RegistrationFormGroup | null;
     formId?: string;
-}
-
-export interface RegistrationFormGroup {
-    id?: string;
-    title?: string | null;
-    sections?: FormSection[];
+    sections?: FormSection[] | null;
 }
 
 export interface FormSection {
@@ -6984,6 +6978,12 @@ export enum EventState {
 
 export interface RegistrationFormsQuery {
     eventId?: string;
+}
+
+export interface RegistrationFormGroup {
+    id?: string;
+    title?: string | null;
+    sections?: FormSection[];
 }
 
 export interface FormPathsQuery {

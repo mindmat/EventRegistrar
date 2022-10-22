@@ -6,8 +6,8 @@ namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 public class SaveRegistrationFormMappingsCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
-    public RegistrationFormGroup? Mappings { get; set; }
     public Guid FormId { get; set; }
+    public IEnumerable<FormSection>? Sections { get; set; }
 }
 
 public class SaveRegistrationFormMappingsCommandHandler : IRequestHandler<SaveRegistrationFormMappingsCommand>
@@ -24,20 +24,20 @@ public class SaveRegistrationFormMappingsCommandHandler : IRequestHandler<SaveRe
 
     public async Task<Unit> Handle(SaveRegistrationFormMappingsCommand command, CancellationToken cancellationToken)
     {
-        var formToSave = command.Mappings;
-        if (formToSave == null)
+        var sectionsToSave = command.Sections;
+        if (sectionsToSave == null)
         {
             return Unit.Value;
         }
 
         var form = await _forms.Where(frm => frm.EventId == command.EventId
-                                          && frm.Id == formToSave.Id)
-                               .Include(frm => frm.Questions)
-                               .ThenInclude(qst => qst.QuestionOptions)
+                                          && frm.Id == command.FormId)
+                               .Include(frm => frm.Questions!)
+                               .ThenInclude(qst => qst.QuestionOptions!)
                                .ThenInclude(qop => qop.Mappings)
                                .FirstAsync(cancellationToken);
 
-        foreach (var questionToSave in formToSave.Sections.SelectMany(sec => sec.Questions))
+        foreach (var questionToSave in sectionsToSave.SelectMany(sec => sec.Questions))
         {
             var question = form.Questions.FirstOrDefault(qst => qst.Id == questionToSave.Id);
             if (question == null)

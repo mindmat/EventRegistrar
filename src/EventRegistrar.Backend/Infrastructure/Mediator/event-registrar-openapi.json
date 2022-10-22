@@ -5152,34 +5152,13 @@
             "type": "string",
             "format": "guid"
           },
-          "mappings": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/RegistrationFormGroup"
-              }
-            ]
-          },
           "formId": {
             "type": "string",
             "format": "guid"
-          }
-        }
-      },
-      "RegistrationFormGroup": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
           },
           "sections": {
             "type": "array",
+            "nullable": true,
             "items": {
               "$ref": "#/components/schemas/FormSection"
             }
@@ -5399,6 +5378,26 @@
           "eventId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "RegistrationFormGroup": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "sections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FormSection"
+            }
           }
         }
       },
