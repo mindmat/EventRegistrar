@@ -70,6 +70,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Berechtigungen.
+        /// </summary>
+        internal static string AccessRights {
+            get {
+                return ResourceManager.GetString("AccessRights", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Buchhaltung.
+        /// </summary>
+        internal static string Accounting {
+            get {
+                return ResourceManager.GetString("Accounting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kürzel.
         /// </summary>
         internal static string Acronym {
@@ -115,6 +133,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kontobewegungen zuorden.
+        /// </summary>
+        internal static string AssignBankStatements {
+            get {
+                return ResourceManager.GetString("AssignBankStatements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zahlungseingang zuordnen.
         /// </summary>
         internal static string AssignIncoming {
@@ -129,6 +156,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string AssignOutgoing {
             get {
                 return ResourceManager.GetString("AssignOutgoing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mailvorlagen.
+        /// </summary>
+        internal static string AutoMailTemplates {
+            get {
+                return ResourceManager.GetString("AutoMailTemplates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kontobewegungen.
+        /// </summary>
+        internal static string BankStatement {
+            get {
+                return ResourceManager.GetString("BankStatement", resourceCulture);
             }
         }
         
@@ -246,6 +291,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Discard {
             get {
                 return ResourceManager.GetString("Discard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ausstehende Zahlungen.
+        /// </summary>
+        internal static string DuePayments {
+            get {
+                return ResourceManager.GetString("DuePayments", resourceCulture);
             }
         }
         
@@ -584,6 +638,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Follower {
             get {
                 return ResourceManager.GetString("Follower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Formulare.
+        /// </summary>
+        internal static string Forms {
+            get {
+                return ResourceManager.GetString("Forms", resourceCulture);
             }
         }
         
@@ -1128,6 +1191,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Übersicht.
+        /// </summary>
+        internal static string Overview {
+            get {
+                return ResourceManager.GetString("Overview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Übersichten.
+        /// </summary>
+        internal static string Overviews {
+            get {
+                return ResourceManager.GetString("Overviews", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Partner.
         /// </summary>
         internal static string Partner {
@@ -1308,6 +1389,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anmeldungen.
+        /// </summary>
+        internal static string Registrations {
+            get {
+                return ResourceManager.GetString("Registrations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Storniert.
         /// </summary>
         internal static string RegistrationState_Cancelled {
@@ -1340,6 +1430,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Release {
             get {
                 return ResourceManager.GetString("Release", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mails freigeben.
+        /// </summary>
+        internal static string ReleaseMails {
+            get {
+                return ResourceManager.GetString("ReleaseMails", resourceCulture);
             }
         }
         
@@ -1470,6 +1569,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anmeldung suchen.
+        /// </summary>
+        internal static string SearchRegistration {
+            get {
+                return ResourceManager.GetString("SearchRegistration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Event auswählen.
+        /// </summary>
+        internal static string SelectEvent {
+            get {
+                return ResourceManager.GetString("SelectEvent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mail auswählen.
         /// </summary>
         internal static string SelectMail {
@@ -1520,6 +1637,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Settled {
             get {
                 return ResourceManager.GetString("Settled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Event vorbereiten.
+        /// </summary>
+        internal static string Setup {
+            get {
+                return ResourceManager.GetString("Setup", resourceCulture);
             }
         }
         

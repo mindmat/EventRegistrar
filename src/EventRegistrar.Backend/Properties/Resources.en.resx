@@ -120,6 +120,12 @@
   <data name="AcceptedMail" xml:space="preserve">
     <value>Accepted mail</value>
   </data>
+  <data name="AccessRights" xml:space="preserve">
+    <value>Access rights</value>
+  </data>
+  <data name="Accounting" xml:space="preserve">
+    <value>Accounting</value>
+  </data>
   <data name="Acronym" xml:space="preserve">
     <value>Acronym</value>
   </data>
@@ -135,11 +141,20 @@
   <data name="Anmeldeformulare" xml:space="preserve">
     <value>Registration forms</value>
   </data>
+  <data name="AssignBankStatements" xml:space="preserve">
+    <value>Assign bank statements</value>
+  </data>
   <data name="AssignIncoming" xml:space="preserve">
     <value>Assign incoming payment</value>
   </data>
   <data name="AssignOutgoing" xml:space="preserve">
     <value>Assign outgoing payment</value>
+  </data>
+  <data name="AutoMailTemplates" xml:space="preserve">
+    <value>Mail templates</value>
+  </data>
+  <data name="BankStatement" xml:space="preserve">
+    <value>Bank statements</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
@@ -180,6 +195,9 @@
   <data name="Discard" xml:space="preserve">
     <value>Discard</value>
   </data>
+  <data name="DuePayments" xml:space="preserve">
+    <value>Due payments</value>
+  </data>
   <data name="Edit" xml:space="preserve">
     <value>Edit</value>
   </data>
@@ -212,6 +230,9 @@
   </data>
   <data name="Follower" xml:space="preserve">
     <value>Follower</value>
+  </data>
+  <data name="Forms" xml:space="preserve">
+    <value>Forms</value>
   </data>
   <data name="from" xml:space="preserve">
     <value>from</value>
@@ -393,6 +414,12 @@
   <data name="OtherEvents" xml:space="preserve">
     <value>Other Events</value>
   </data>
+  <data name="Overview" xml:space="preserve">
+    <value>Overview</value>
+  </data>
+  <data name="Overviews" xml:space="preserve">
+    <value>Overviews</value>
+  </data>
   <data name="Partner" xml:space="preserve">
     <value>Partner</value>
   </data>
@@ -447,6 +474,9 @@
   <data name="RegistrableSoldOut" xml:space="preserve">
     <value>{0} is sold out</value>
   </data>
+  <data name="Registrations" xml:space="preserve">
+    <value>Registrations</value>
+  </data>
   <data name="RegistrationState_Cancelled" xml:space="preserve">
     <value>Cancelled</value>
   </data>
@@ -458,6 +488,9 @@
   </data>
   <data name="Release" xml:space="preserve">
     <value>Release</value>
+  </data>
+  <data name="ReleaseMails" xml:space="preserve">
+    <value>Release mails</value>
   </data>
   <data name="ReminderMail1" xml:space="preserve">
     <value>Reminder mail 1</value>
@@ -498,6 +531,12 @@
   <data name="SearchPlaceholder" xml:space="preserve">
     <value>Search...</value>
   </data>
+  <data name="SearchRegistration" xml:space="preserve">
+    <value>Search registration</value>
+  </data>
+  <data name="SelectEvent" xml:space="preserve">
+    <value>Select event</value>
+  </data>
   <data name="SelectMail" xml:space="preserve">
     <value>Select mail</value>
   </data>
@@ -515,6 +554,9 @@
   </data>
   <data name="Settled" xml:space="preserve">
     <value>Settled</value>
+  </data>
+  <data name="Setup" xml:space="preserve">
+    <value>Setup</value>
   </data>
   <data name="ShowFinished" xml:space="preserve">
     <value>Show finished events</value>

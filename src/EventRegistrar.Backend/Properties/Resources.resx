@@ -120,6 +120,12 @@
   <data name="AcceptedMail" xml:space="preserve">
     <value>Bestätigungsmail</value>
   </data>
+  <data name="AccessRights" xml:space="preserve">
+    <value>Berechtigungen</value>
+  </data>
+  <data name="Accounting" xml:space="preserve">
+    <value>Buchhaltung</value>
+  </data>
   <data name="Acronym" xml:space="preserve">
     <value>Kürzel</value>
   </data>
@@ -135,11 +141,20 @@
   <data name="Anmeldeformulare" xml:space="preserve">
     <value>Anmeldeformulare</value>
   </data>
+  <data name="AssignBankStatements" xml:space="preserve">
+    <value>Kontobewegungen zuorden</value>
+  </data>
   <data name="AssignIncoming" xml:space="preserve">
     <value>Zahlungseingang zuordnen</value>
   </data>
   <data name="AssignOutgoing" xml:space="preserve">
     <value>Zahlungsausgang zuordnen</value>
+  </data>
+  <data name="AutoMailTemplates" xml:space="preserve">
+    <value>Mailvorlagen</value>
+  </data>
+  <data name="BankStatement" xml:space="preserve">
+    <value>Kontobewegungen</value>
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
@@ -179,6 +194,9 @@
   </data>
   <data name="Discard" xml:space="preserve">
     <value>Verwerfen</value>
+  </data>
+  <data name="DuePayments" xml:space="preserve">
+    <value>Ausstehende Zahlungen</value>
   </data>
   <data name="Edit" xml:space="preserve">
     <value>Bearbeiten</value>
@@ -290,6 +308,9 @@
   </data>
   <data name="Follower" xml:space="preserve">
     <value>Follower</value>
+  </data>
+  <data name="Forms" xml:space="preserve">
+    <value>Formulare</value>
   </data>
   <data name="from" xml:space="preserve">
     <value>von</value>
@@ -471,6 +492,12 @@
   <data name="OtherEvents" xml:space="preserve">
     <value>Weitere Events</value>
   </data>
+  <data name="Overview" xml:space="preserve">
+    <value>Übersicht</value>
+  </data>
+  <data name="Overviews" xml:space="preserve">
+    <value>Übersichten</value>
+  </data>
   <data name="Partner" xml:space="preserve">
     <value>Partner</value>
   </data>
@@ -532,6 +559,9 @@
   <data name="RegistrationCandidatesForOutgoingPayment" xml:space="preserve">
     <value>Rückzahlung für:</value>
   </data>
+  <data name="Registrations" xml:space="preserve">
+    <value>Anmeldungen</value>
+  </data>
   <data name="RegistrationState_Cancelled" xml:space="preserve">
     <value>Storniert</value>
   </data>
@@ -543,6 +573,9 @@
   </data>
   <data name="Release" xml:space="preserve">
     <value>Freigeben</value>
+  </data>
+  <data name="ReleaseMails" xml:space="preserve">
+    <value>Mails freigeben</value>
   </data>
   <data name="Remarks" xml:space="preserve">
     <value>Bemerkungen</value>
@@ -586,6 +619,12 @@
   <data name="SearchPlaceholder" xml:space="preserve">
     <value>Suche...</value>
   </data>
+  <data name="SearchRegistration" xml:space="preserve">
+    <value>Anmeldung suchen</value>
+  </data>
+  <data name="SelectEvent" xml:space="preserve">
+    <value>Event auswählen</value>
+  </data>
   <data name="SelectMail" xml:space="preserve">
     <value>Mail auswählen</value>
   </data>
@@ -603,6 +642,9 @@
   </data>
   <data name="Settled" xml:space="preserve">
     <value>Ausgeglichene</value>
+  </data>
+  <data name="Setup" xml:space="preserve">
+    <value>Event vorbereiten</value>
   </data>
   <data name="ShowFinished" xml:space="preserve">
     <value>Beendete Events anzeigen</value>
