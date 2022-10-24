@@ -2980,6 +2980,38 @@
         }
       }
     },
+    "/api/SetReleaseMailCommand": {
+      "post": {
+        "tags": [
+          "SetReleaseMail"
+        ],
+        "operationId": "SetReleaseMail_Command",
+        "requestBody": {
+          "x-name": "SetReleaseMailCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetReleaseMailCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/UpdateAutoMailConfigurationCommand": {
       "post": {
         "tags": [
@@ -5063,6 +5095,7 @@
           "Phone",
           "Town",
           "Remarks",
+          "Iban",
           "Partner"
         ],
         "enum": [
@@ -5072,6 +5105,7 @@
           4,
           5,
           6,
+          7,
           10
         ]
       },
@@ -8157,6 +8191,22 @@
           "mailTemplateId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "SetReleaseMailCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/MailType"
+          },
+          "releaseImmediately": {
+            "type": "boolean"
           }
         }
       },

@@ -324,6 +324,9 @@
   <data name="HideFinished" xml:space="preserve">
     <value>Beendete Events ausblenden</value>
   </data>
+  <data name="HoldMailBack" xml:space="preserve">
+    <value>Zurückhalten</value>
+  </data>
   <data name="Ignored" xml:space="preserve">
     <value>Ignorierte</value>
   </data>
@@ -573,6 +576,9 @@
   </data>
   <data name="Release" xml:space="preserve">
     <value>Freigeben</value>
+  </data>
+  <data name="ReleaseImmediately" xml:space="preserve">
+    <value>Automatisch versenden</value>
   </data>
   <data name="ReleaseMails" xml:space="preserve">
     <value>Mails freigeben</value>

@@ -157,6 +157,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(UpdateAutoMailTemplateCommand);
             yield return nameof(UpdateAutoMailConfigurationCommand);
             yield return nameof(CreateAutoMailTemplateCommand);
+            yield return nameof(SetReleaseMailCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

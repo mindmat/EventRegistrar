@@ -246,6 +246,9 @@
   <data name="HideFinished" xml:space="preserve">
     <value>Hide finished events</value>
   </data>
+  <data name="HoldMailBack" xml:space="preserve">
+    <value>Hold back</value>
+  </data>
   <data name="Ignored" xml:space="preserve">
     <value>Ignored</value>
   </data>
@@ -488,6 +491,9 @@
   </data>
   <data name="Release" xml:space="preserve">
     <value>Release</value>
+  </data>
+  <data name="ReleaseImmediately" xml:space="preserve">
+    <value>Release immediately</value>
   </data>
   <data name="ReleaseMails" xml:space="preserve">
     <value>Release mails</value>

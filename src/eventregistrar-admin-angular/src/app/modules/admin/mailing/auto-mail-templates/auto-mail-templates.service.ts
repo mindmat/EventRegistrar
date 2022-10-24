@@ -37,4 +37,10 @@ export class AutoMailTemplatesService extends FetchService<AutoMailTemplates> {
     this.api.updateAutoMailConfiguration_Command({ eventId: this.eventService.selectedId, senderMail, senderName, availableLanguages, singleRegistrationPossible, partnerRegistrationPossible })
       .subscribe();
   }
+
+  setReleaseMail(type: MailType, releaseImmediately: boolean)
+  {
+    this.api.setReleaseMail_Command({ eventId: this.eventService.selectedId, type, releaseImmediately })
+      .subscribe();
+  }
 }

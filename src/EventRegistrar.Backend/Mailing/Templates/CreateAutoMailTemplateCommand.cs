@@ -1,5 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
@@ -26,10 +25,10 @@ public class CreateAutoMailTemplateCommandHandler : IRequestHandler<CreateAutoMa
 
     public async Task<Guid> Handle(CreateAutoMailTemplateCommand command, CancellationToken cancellationToken)
     {
-        var template = await _templates.Where(mtp => mtp.EventId == command.EventId
-                                                  && mtp.Type == command.Type
-                                                  && mtp.Language == command.Language)
-                                       .FirstOrDefaultAsync(cancellationToken);
+        var templatesOfType = await _templates.Where(mtp => mtp.EventId == command.EventId
+                                                         && mtp.Type == command.Type)
+                                              .ToListAsync(cancellationToken);
+        var template = templatesOfType.FirstOrDefault(mtp => mtp.Language == command.Language);
         if (template != null)
         {
             return template.Id;
@@ -40,7 +39,8 @@ public class CreateAutoMailTemplateCommandHandler : IRequestHandler<CreateAutoMa
                                                    Id = Guid.NewGuid(),
                                                    EventId = command.EventId,
                                                    Type = command.Type,
-                                                   Language = command.Language
+                                                   Language = command.Language,
+                                                   ReleaseImmediately = templatesOfType.FirstOrDefault()?.ReleaseImmediately ?? false // copy from other language
                                                });
 
         _eventBus.Publish(new ReadModelUpdated

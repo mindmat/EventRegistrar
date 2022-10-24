@@ -92,6 +92,12 @@ export class AutoMailTemplatesComponent implements OnInit
     });
   }
 
+  toggleRelease(type: AutoMailTemplateMetadataType)
+  {
+    type.releaseImmediately = !type.releaseImmediately;
+    this.service.setReleaseMail(type.type, type.releaseImmediately);
+  }
+
   selectTemplate(template: AutoMailTemplateMetadataLanguage, type: AutoMailTemplateMetadataType)
   {
     this.selectedTemplate = template;

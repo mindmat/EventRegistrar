@@ -4617,6 +4617,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    setReleaseMail_Command(setReleaseMailCommand: SetReleaseMailCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/SetReleaseMailCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(setReleaseMailCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetReleaseMail_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetReleaseMail_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processSetReleaseMail_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     updateAutoMailConfiguration_Command(updateAutoMailConfigurationCommand: UpdateAutoMailConfigurationCommand | undefined): Observable<Unit> {
         let url_ = this.baseUrl + "/api/UpdateAutoMailConfigurationCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -6871,6 +6922,7 @@ export enum QuestionMappingType {
     Phone = 4,
     Town = 5,
     Remarks = 6,
+    Iban = 7,
     Partner = 10,
 }
 
@@ -7864,6 +7916,12 @@ export interface CreateAutoMailTemplateCommand {
 export interface DeleteMailTemplateCommand {
     eventId?: string;
     mailTemplateId?: string;
+}
+
+export interface SetReleaseMailCommand {
+    eventId?: string;
+    type?: MailType;
+    releaseImmediately?: boolean;
 }
 
 export interface UpdateAutoMailConfigurationCommand {

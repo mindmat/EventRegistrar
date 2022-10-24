@@ -93,7 +93,7 @@ public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQu
                {
                    Type = mailType,
                    TypeText = _enumTranslator.Translate(mailType),
-                   ReleaseImmediately = existing.FirstOrDefault()?.ReleaseImmediately ?? false,
+                   ReleaseImmediately = existing.FirstOrDefault()?.ReleaseImmediately,
                    Templates = _config.AvailableLanguages.Select(lng => CreateTemplate(lng, existing.FirstOrDefault(mtp => mtp.Language == lng)))
                };
     }
@@ -129,7 +129,7 @@ public class AutoMailTemplateGroup
 public class AutoMailTemplateMetadataType
 {
     public MailType Type { get; set; }
-    public bool ReleaseImmediately { get; set; }
+    public bool? ReleaseImmediately { get; set; }
     public IEnumerable<AutoMailTemplateMetadataLanguage>? Templates { get; set; }
     public string? TypeText { get; set; }
 }

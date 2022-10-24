@@ -687,6 +687,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zurückhalten.
+        /// </summary>
+        internal static string HoldMailBack {
+            get {
+                return ResourceManager.GetString("HoldMailBack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignorierte.
         /// </summary>
         internal static string Ignored {
@@ -1430,6 +1439,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Release {
             get {
                 return ResourceManager.GetString("Release", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Automatisch versenden.
+        /// </summary>
+        internal static string ReleaseImmediately {
+            get {
+                return ResourceManager.GetString("ReleaseImmediately", resourceCulture);
             }
         }
         
