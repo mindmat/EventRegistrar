@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AssignmentCandidateRegistration, PaymentType } from 'app/api/api';
+import { PaymentType } from 'app/api/api';
+import { NavigatorService } from 'app/modules/admin/navigator.service';
 import { AssignmentCandidateRegistrationEditItem } from '../settle-payment.component';
 
 @Component({
@@ -15,7 +16,8 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
   @Input() paymentType?: PaymentType;
   @Output() assign = new EventEmitter<AssignmentRequest>();
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder,
+    public navigator: NavigatorService) { }
 
   ngOnInit(): void
   {

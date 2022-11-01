@@ -19,7 +19,7 @@
 
         <ng-container *ngFor="let match of matches">
             <!-- Match -->
-            <a class="flex flex-col min-h-64 shadow rounded-2xl overflow-hidden bg-card" [routerLink]="['/registration', match.registrationId]">
+            <a class="flex flex-col min-h-64 shadow rounded-2xl overflow-hidden bg-card" [routerLink]="navigator.getRegistrationUrl(match.registrationId)">
                 <div class="flex m-4">
                     <div class="grow flex-col w-full">
                         <!-- <div class="flex items-center justify-between">
@@ -70,7 +70,7 @@
                             <div class="flex items-center mt-4" *ngIf="spot.partnerName">
                                 <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
                                 <span class="leading-none">
-                                    <a *ngIf="registration.partnerId" class="hover:underline" [routerLink]="['/registration', spot.partnerRegistrationId]">{{ spot.partnerName }}</a>
+                                    <a *ngIf="registration.partnerId" class="hover:underline" [routerLink]="['/registrations', spot.partnerRegistrationId]">{{ spot.partnerName }}</a>
                                     <span *ngIf="!registration.partnerId" class="italic">{{ spot.partnerName }}</span>
                                 </span>
                             </div> -->

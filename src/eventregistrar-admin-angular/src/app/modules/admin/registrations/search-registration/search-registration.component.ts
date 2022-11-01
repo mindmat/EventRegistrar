@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RegistrationMatch } from 'app/api/api';
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
+import { NavigatorService } from '../../navigator.service';
 import { SearchRegistrationService } from './search-registration.service';
 
 @Component({
@@ -24,7 +25,11 @@ export class SearchRegistrationComponent implements OnInit
       // hideCompleted$: new BehaviorSubject(false)
     };
 
-  constructor(private service: SearchRegistrationService, private changeDetectorRef: ChangeDetectorRef, private route: ActivatedRoute, private router: Router) { }
+  constructor(private service: SearchRegistrationService,
+    public navigator: NavigatorService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private route: ActivatedRoute,
+    private router: Router) { }
 
   ngOnInit(): void
   {

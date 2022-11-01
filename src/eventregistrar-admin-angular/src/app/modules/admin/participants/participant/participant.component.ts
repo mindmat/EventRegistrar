@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { RegistrationDisplayInfo } from 'app/api/api';
+import { NavigatorService } from '../../navigator.service';
 
 @Component({
   selector: 'app-participant',
@@ -11,7 +12,7 @@ export class ParticipantComponent implements OnInit
   @Input() registration?: RegistrationDisplayInfo;
   @Input() placeholderPartner?: string;
 
-  constructor() { }
+  constructor(public navigator: NavigatorService) { }
 
   ngOnInit(): void
   {

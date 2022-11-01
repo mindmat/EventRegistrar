@@ -2,7 +2,7 @@
     <div>
         <div class="flex flex-row items-baseline gap-x-2">
             <div class="text-xl font-semibold leading-tight">{{ possibleAmount | number:'1.2-2' }}</div>
-            <a class="hover:underline text-secondary leading-tight" [routerLink]="['/registration', candidate.registrationId]">{{ candidate.firstName }} {{ candidate.lastName }}</a>
+            <a class="hover:underline text-secondary leading-tight" [routerLink]="navigator.getRegistrationUrl(candidate.registrationId)">{{ candidate.firstName }} {{ candidate.lastName }}</a>
         </div>
 
         <div class="flex flex-row items-baseline gap-x-2" [formGroup]="candidateForm">

@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { DuePaymentItem } from 'app/api/api';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
+import { NavigatorService } from '../../navigator.service';
 import { DuePaymentsService } from './due-payments.service';
 
 @Component({
@@ -20,7 +21,8 @@ export class DuePaymentsComponent implements OnInit
   private _unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(private _changeDetectorRef: ChangeDetectorRef,
-    private duePaymentsService: DuePaymentsService) { }
+    private duePaymentsService: DuePaymentsService,
+    public navigator: NavigatorService) { }
 
   ngOnInit(): void
   {

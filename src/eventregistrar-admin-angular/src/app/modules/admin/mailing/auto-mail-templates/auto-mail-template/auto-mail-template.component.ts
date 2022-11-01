@@ -1,14 +1,13 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 import { Api, AutoMailTemplateDisplayItem, MailType, PlaceholderDescription } from 'app/api/api';
 import { EventService } from 'app/modules/admin/events/event.service';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { AutoMailTemplateService } from './auto-mail-template.service';
 import { TributeItem } from 'tributejs';
 
 import Tribute from "tributejs";
 import FroalaEditor from "froala-editor";
-import { SearchRegistrationService } from 'app/modules/admin/registrations/search-registration/search-registration.service';
 
 @Component({
   selector: 'app-auto-mail-template',

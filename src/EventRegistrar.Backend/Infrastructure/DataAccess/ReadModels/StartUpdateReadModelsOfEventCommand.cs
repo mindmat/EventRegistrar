@@ -64,7 +64,7 @@ public class StartUpdateReadModelsOfEventCommandHandler : IRequestHandler<StartU
 
             if (command.QueryNames?.Contains(nameof(RegistrationQuery)) != false)
             {
-                var registrationIds = await _registrations.Where(reg => reg.EventId == command.EventId)
+                var registrationIds = await _registrations.Where(reg => reg.EventId == eventId)
                                                           .Select(reg => reg.Id)
                                                           .ToListAsync(cancellationToken);
 
@@ -82,7 +82,7 @@ public class StartUpdateReadModelsOfEventCommandHandler : IRequestHandler<StartU
 
             if (command.QueryNames?.Contains(nameof(PaymentAssignmentsQuery)) != false)
             {
-                var paymentIds = await _payments.Where(pmt => pmt.PaymentsFile!.EventId == command.EventId)
+                var paymentIds = await _payments.Where(pmt => pmt.PaymentsFile!.EventId == eventId)
                                                 .Select(pmt => pmt.Id)
                                                 .ToListAsync(cancellationToken);
 

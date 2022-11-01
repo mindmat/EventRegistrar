@@ -2,6 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/co
 import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
 import { AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType } from 'app/api/api';
 import { BehaviorSubject, combineLatest, combineLatestWith, filter, fromEvent, merge, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { NavigatorService } from '../../navigator.service';
 import { AssignmentRequest } from './assignment-candidate-registration/assignment-candidate-registration.component';
 import { SettlePaymentService } from './settle-payment.service';
 
@@ -22,7 +23,10 @@ export class SettlePaymentComponent implements OnInit
 
   PaymentType = PaymentType;
 
-  constructor(private service: SettlePaymentService, private changeDetectorRef: ChangeDetectorRef, private route: ActivatedRoute) { }
+  constructor(private service: SettlePaymentService,
+    public navigator: NavigatorService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void
   {

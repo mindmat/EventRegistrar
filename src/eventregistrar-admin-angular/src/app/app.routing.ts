@@ -146,9 +146,6 @@ export const appRoutes: Route[] =
                                 { path: ':id/double/participants', component: ParticipantsDoubleComponent, resolve: { initialData: ParticipantsResolver } },
                                 { path: ':id/single/participants', component: ParticipantsSingleComponent, resolve: { initialData: ParticipantsResolver } },
                             ]
-                        },
-                        {
-                            path: 'registration/:id', canActivate: [AuthGuard], component: RegistrationComponent, resolve: { initialData: RegistrationResolver }
                         }
                     ]
                 },
@@ -195,6 +192,11 @@ export const appRoutes: Route[] =
                     children: [
                         {
                             path: 'search-registration', canActivate: [AuthGuard], component: SearchRegistrationComponent
+                        },
+                        {
+                            path: ':id',
+                            component: RegistrationComponent,
+                            resolve: { initialData: RegistrationResolver }
                         }
                     ]
                 },

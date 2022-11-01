@@ -26,7 +26,7 @@
                     <div *ngFor="let question of section.questions; last as lastQuestion" class="flex flex-col w-full py-2 px-2">
 
                         <!-- Question -->
-                        <div class="text-lg font-semibold">{{question.question}}</div>
+                        <div class="text-lg font-semibold">{{ question.question }}</div>
 
                         <!-- Question options -->
                         <ng-container *ngIf="question.options">

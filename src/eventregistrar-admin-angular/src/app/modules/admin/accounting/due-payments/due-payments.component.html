@@ -23,7 +23,7 @@
                             <!-- Participant -->
                             <div class="flex flex-row items-baseline gap-x-2">
                                 <div class="text-xl font-semibold leading-tight text-red-700">{{ duePayment.price - duePayment.paid | number: '1.2-2' }}</div>
-                                <a class="hover:underline text-secondary leading-tight" [routerLink]="['/registration', duePayment.id]">
+                                <a class="hover:underline text-secondary leading-tight" [routerLink]="navigator.getRegistrationUrl(duePayment.id)">
                                     {{ duePayment.firstName }} {{ duePayment.lastName }}</a>
                             </div>
 

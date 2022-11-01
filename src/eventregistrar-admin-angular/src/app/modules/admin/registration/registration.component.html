@@ -89,7 +89,7 @@
                     <div class="flex items-center mt-4" *ngIf="registration.partnerOriginal">
                         <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
                         <span class="leading-none">
-                            <a *ngIf="registration.partnerId" class="hover:underline" [routerLink]="['/registration', registration.partnerId]">{{ registration.partnerName }}</a>
+                            <a *ngIf="registration.partnerId" class="hover:underline" [routerLink]="navigator.getRegistrationUrl(registration.partnerId)">{{ registration.partnerName }}</a>
                             <span *ngIf="!registration.partnerId" class="italic">{{ registration.partnerOriginal }}</span>
                         </span>
                     </div>
@@ -146,7 +146,7 @@
                     <ng-container *ngFor="let spot of registration.spots">
                         <div class="flex flex-col rounded-xl bg-default shadow p-3">
                             <div class="flex align-top relative">
-                                <a class="leading-tight hover:underline" [routerLink]="['/overview', spot.registrableId, spot.type == 1?'single':'double', 'participants']">
+                                <a class="leading-tight hover:underline" [routerLink]="getRegistrableUrl(spot)">
                                     <div>{{ spot.registrableName }}</div>
                                     <div class="text-md leading-none text-secondary mt-2" *ngIf="spot.registrableNameSecondary">{{ spot.registrableNameSecondary }}</div>
                                 </a>
@@ -159,7 +159,7 @@
                             <div class="flex items-center mt-4" *ngIf="spot.partnerName">
                                 <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
                                 <span class="leading-none">
-                                    <a *ngIf="registration.partnerId" class="hover:underline" [routerLink]="['/registration', spot.partnerRegistrationId]">{{ spot.partnerName }}</a>
+                                    <a *ngIf="registration.partnerId" class="hover:underline" [routerLink]="navigator.getRegistrationUrl(spot.partnerRegistrationId)">{{ spot.partnerName }}</a>
                                     <span *ngIf="!registration.partnerId" class="italic">{{ spot.partnerName }}</span>
                                 </span>
                             </div>
