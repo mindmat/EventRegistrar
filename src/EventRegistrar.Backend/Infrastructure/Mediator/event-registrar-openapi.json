@@ -1455,8 +1455,40 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/RegistrablePricing"
+                    "$ref": "#/components/schemas/PricePackageDto"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SavePricingCommand": {
+      "post": {
+        "tags": [
+          "SavePricing"
+        ],
+        "operationId": "SavePricing_Command",
+        "requestBody": {
+          "x-name": "SavePricingCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SavePricingCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
                 }
               }
             }
@@ -5970,36 +6002,7 @@
           }
         }
       },
-      "RegistrablePricing": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "registrableId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "price": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "reducedPrice": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "registrableName": {
-            "type": "string"
-          },
-          "reductions": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PricingReduction"
-            }
-          }
-        }
-      },
-      "PricingReduction": {
+      "PricePackageDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -6007,19 +6010,46 @@
             "type": "string",
             "format": "guid"
           },
-          "amount": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
             "type": "number",
             "format": "decimal"
           },
-          "registrableId1_ReductionActivatedIfCombinedWith": {
+          "parts": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PricePackagePartDto"
+            }
+          }
+        }
+      },
+      "PricePackagePartDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
             "type": "string",
-            "format": "guid",
+            "format": "guid"
+          },
+          "isOptional": {
+            "type": "boolean"
+          },
+          "reduction": {
+            "type": "number",
+            "format": "decimal",
             "nullable": true
           },
-          "registrableId2_ReductionActivatedIfCombinedWith": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
+          "registrableIds": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
           }
         }
       },
@@ -6030,6 +6060,23 @@
           "eventId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "SavePricingCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "packages": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PricePackageDto"
+            }
           }
         }
       },
@@ -8120,7 +8167,8 @@
             "$ref": "#/components/schemas/MailType"
           },
           "releaseImmediately": {
-            "type": "boolean"
+            "type": "boolean",
+            "nullable": true
           },
           "templates": {
             "type": "array",

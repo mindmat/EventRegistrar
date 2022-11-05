@@ -1,12 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Registrables.Participants;
-using EventRegistrar.Backend.Registrables.Pricing;
-using EventRegistrar.Backend.Registrables.Reductions;
-using EventRegistrar.Backend.Registrables.Tags;
 using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrables.WaitingList.Promotion;
-
-using MediatR;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -98,61 +92,6 @@ public class RegistrablesController : Controller
         await _mediator.Send(new DeleteRegistrableCommand
                              {
                                  EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 RegistrableId = registrableId
-                             });
-    }
-
-    [HttpGet("api/events/{eventAcronym}/registrables/pricing")]
-    public async Task<IEnumerable<RegistrablePricing>> GetPricing(string eventAcronym)
-    {
-        return await _mediator.Send(new PricingQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
-
-    [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/prices")]
-    public async Task SetRegistrablePrices(string eventAcronym,
-                                           Guid registrableId,
-                                           [FromQuery] decimal? price,
-                                           [FromQuery] decimal? reducedPrice)
-    {
-        await _mediator.Send(new SetRegistrablesPricesCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 RegistrableId = registrableId,
-                                 Price = price,
-                                 ReducedPrice = reducedPrice
-                             });
-    }
-
-
-    [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/reductions/{reductionId:guid}")]
-    public async Task SaveReduction(string eventAcronym,
-                                    Guid registrableId,
-                                    Guid reductionId,
-                                    [FromBody] Reduction reduction)
-    {
-        await _mediator.Send(new SaveReductionCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 ReductionId = reductionId,
-                                 RegistrableId = registrableId,
-                                 Amount = reduction.Amount,
-                                 RegistrableId1_ReductionActivatedIfCombinedWith =
-                                     reduction?.RegistrableId1_ReductionActivatedIfCombinedWith,
-                                 RegistrableId2_ReductionActivatedIfCombinedWith =
-                                     reduction?.RegistrableId2_ReductionActivatedIfCombinedWith
-                             });
-    }
-
-    [HttpDelete("api/events/{eventAcronym}/registrables/{registrableId:guid}/reductions/{reductionId:guid}")]
-    public async Task DeleteReduction(string eventAcronym, Guid registrableId, Guid reductionId)
-    {
-        await _mediator.Send(new DeleteReductionCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 ReductionId = reductionId,
                                  RegistrableId = registrableId
                              });
     }

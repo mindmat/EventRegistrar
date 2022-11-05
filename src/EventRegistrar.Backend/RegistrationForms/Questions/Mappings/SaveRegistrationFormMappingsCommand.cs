@@ -39,7 +39,7 @@ public class SaveRegistrationFormMappingsCommandHandler : IRequestHandler<SaveRe
 
         foreach (var questionToSave in sectionsToSave.SelectMany(sec => sec.Questions))
         {
-            var question = form.Questions.FirstOrDefault(qst => qst.Id == questionToSave.Id);
+            var question = form.Questions!.FirstOrDefault(qst => qst.Id == questionToSave.Id);
             if (question == null)
             {
                 continue;
@@ -48,7 +48,7 @@ public class SaveRegistrationFormMappingsCommandHandler : IRequestHandler<SaveRe
             question.Mapping = questionToSave.Mapping;
             foreach (var optionToSave in questionToSave.Options ?? Enumerable.Empty<QuestionOptionMappingDisplayItem>())
             {
-                var option = question?.QuestionOptions.FirstOrDefault(qop => qop.Id == optionToSave.Id);
+                var option = question?.QuestionOptions!.FirstOrDefault(qop => qop.Id == optionToSave.Id);
                 if (option == null)
                 {
                     continue;

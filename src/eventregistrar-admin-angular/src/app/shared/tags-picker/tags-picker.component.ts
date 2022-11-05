@@ -20,7 +20,7 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
   @ViewChild('tagsPanel') private _tagsPanel: TemplateRef<any>;
   @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
 
-  @Input() allTags: Tag[];
+  @Input() allTags: any[];
   @Input() selectedTagIds: string[] = [];
   @Input() textProperty: string = 'name';
   @Input() idProperty: string = 'id';
@@ -43,7 +43,8 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
 
   writeValue(selectedTagIds: string[]): void
   {
-    this.selectedTagIds = selectedTagIds;
+    this.selectedTagIds = selectedTagIds ?? [];
+    this.changeDetectorRef.markForCheck();
   }
 
   registerOnChange(onChange: any)
@@ -78,6 +79,7 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
   {
     var value = this.tagFilter$.value;
     this.filteredTags = this.allTags.filter(tag => tag[this.textProperty].toLowerCase().includes(value));
+    this.changeDetectorRef.markForCheck();
   }
 
   filterTags(event): void
@@ -112,7 +114,7 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
     }
   }
 
-  addTag(tag: Tag): void
+  addTag(tag: any): void
   {
     this.markAsTouched();
 
@@ -120,24 +122,22 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
     this.selectedTagIds.unshift(tag[this.idProperty]);
     this.closeTagOverlay();
 
-    // Mark for check
     this.changeDetectorRef.markForCheck();
     this.onChange(this.selectedTagIds);
   }
 
-  removeTag(tag: Tag): void
+  removeTag(tag: any): void
   {
     this.markAsTouched();
 
     // Remove the tag
     this.selectedTagIds.splice(this.selectedTagIds.findIndex(id => id === tag[this.idProperty]), 1);
 
-    // Mark for check
     this.changeDetectorRef.markForCheck();
     this.onChange(this.selectedTagIds);
   }
 
-  toggleTag(tag: Tag): void
+  toggleTag(tag: any): void
   {
     if (this.selectedTagIds.includes(tag[this.idProperty]))
     {
@@ -228,9 +228,4 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
       this.templatePortal.detach();
     }
   };
-}
-
-export interface Tag
-{
-  id?: string;
 }

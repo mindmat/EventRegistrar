@@ -170,6 +170,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(ReleaseAllPendingMailsCommand);
             yield return nameof(DeleteRegistrationFormCommand);
             yield return nameof(SaveRegistrationFormMappingsCommand);
+            yield return nameof(SavePricingCommand);
         }
     }
 }

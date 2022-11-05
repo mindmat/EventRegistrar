@@ -2221,7 +2221,7 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    pricing_Query(pricingQuery: PricingQuery | undefined): Observable<RegistrablePricing[]> {
+    pricing_Query(pricingQuery: PricingQuery | undefined): Observable<PricePackageDto[]> {
         let url_ = this.baseUrl + "/api/PricingQuery";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -2244,14 +2244,14 @@ export class Api {
                 try {
                     return this.processPricing_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<RegistrablePricing[]>;
+                    return _observableThrow(e) as any as Observable<PricePackageDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<RegistrablePricing[]>;
+                return _observableThrow(response_) as any as Observable<PricePackageDto[]>;
         }));
     }
 
-    protected processPricing_Query(response: HttpResponseBase): Observable<RegistrablePricing[]> {
+    protected processPricing_Query(response: HttpResponseBase): Observable<PricePackageDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -2261,7 +2261,58 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as RegistrablePricing[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PricePackageDto[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    savePricing_Command(savePricingCommand: SavePricingCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/SavePricingCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(savePricingCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSavePricing_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSavePricing_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processSavePricing_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -7214,23 +7265,27 @@ export interface SaveReductionCommand {
     eventId?: string;
 }
 
-export interface RegistrablePricing {
-    registrableId?: string;
-    price?: number | null;
-    reducedPrice?: number | null;
-    registrableName?: string;
-    reductions?: PricingReduction[];
+export interface PricePackageDto {
+    id?: string;
+    name?: string | null;
+    price?: number;
+    parts?: PricePackagePartDto[] | null;
 }
 
-export interface PricingReduction {
+export interface PricePackagePartDto {
     id?: string;
-    amount?: number;
-    registrableId1_ReductionActivatedIfCombinedWith?: string | null;
-    registrableId2_ReductionActivatedIfCombinedWith?: string | null;
+    isOptional?: boolean;
+    reduction?: number | null;
+    registrableIds?: string[] | null;
 }
 
 export interface PricingQuery {
     eventId?: string;
+}
+
+export interface SavePricingCommand {
+    eventId?: string;
+    packages?: PricePackageDto[] | null;
 }
 
 export interface SetRegistrablesPricesCommand {
@@ -7892,7 +7947,7 @@ export interface AutoMailTemplateGroup {
 
 export interface AutoMailTemplateMetadataType {
     type?: MailType;
-    releaseImmediately?: boolean;
+    releaseImmediately?: boolean | null;
     templates?: AutoMailTemplateMetadataLanguage[] | null;
     typeText?: string | null;
 }

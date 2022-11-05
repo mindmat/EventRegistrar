@@ -1,0 +1,70 @@
+<!-- Main -->
+<div class="flex flex-col items-center p-6 sm:p-10 w-full">
+    <div class="flex flex-col w-full max-w-6xl space-y-3">
+
+        <div class="mt-2 text-4xl sm:text-7xl font-extrabold tracking-tight leading-tight">{{ 'Pricing' | translate }}</div>
+
+        <!-- Packages  -->
+
+        <div *ngFor="let packageForm of packagesForms" class="flex flex-col">
+            <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border p-6 space-y-3" [formGroup]="packageForm">
+                <!-- Package header -->
+                <div class="flex flex-row items-baseline justify-start space-x-3">
+
+                    <!-- Name -->
+                    <div class="sm:col-span-4 basis-3/4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>{{ 'Name' | translate }}</mat-label>
+                            <input formControlName="name" matInput>
+                        </mat-form-field>
+                    </div>
+
+                    <!-- Price -->
+                    <div class="sm:col-span-4 basis-1/4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full">
+                            <mat-label>{{ 'Price' | translate }}</mat-label>
+                            <input type="number" formControlName="price" matInput>
+                        </mat-form-field>
+                    </div>
+
+                </div>
+
+                <!-- Parts -->
+                <ng-container *ngIf="packageForm?.controls?.parts" formArrayName="parts">
+                    <ng-container *ngFor="let partForm of getParts(packageForm).controls; let i = index">
+                        <div class="mt-8 flex flex-col items-start enter justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150" [formGroup]="partForm">
+                            <!-- <div class="text-xl font-semibold">{{ part.reduction }}</div> -->
+
+                            <!-- Registrables -->
+                            <ng-container *ngIf="registrables">
+                                <app-tags-picker [allTags]="registrables" [formControlName]="'registrableIds'" idProperty="id">
+                                </app-tags-picker>
+                            </ng-container>
+
+                            <!-- Price -->
+                            <div class="sm:col-span-4">
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>{{ 'Reduction' | translate }}</mat-label>
+                                    <input type="number" formControlName="reduction" matInput>
+                                </mat-form-field>
+                            </div>
+                            <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
+                        </div>
+                    </ng-container>
+
+                    <button mat-flat-button [color]="'primary'" (click)="addPart(packageForm)">
+                        {{ 'AddPricePart' | translate }}
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+        <div class="flex flex-row">
+            <button mat-flat-button [color]="'primary'" (click)="addPackage()">
+                {{ 'AddPricePackage' | translate }}
+            </button>
+            <button class="ml-auto" mat-flat-button [color]="'primary'" (click)="save()">
+                {{ 'Save' | translate }}
+            </button>
+        </div>
+    </div>
+</div>

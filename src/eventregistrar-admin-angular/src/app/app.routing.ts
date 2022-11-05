@@ -36,6 +36,8 @@ import { SelectEventComponent } from './modules/admin/events/select-event/select
 import { SelectEventResolver } from './modules/admin/events/select-event/select-event.resolver';
 import { FormMappingComponent } from './modules/admin/registration-forms/form-mapping/form-mapping.component';
 import { FormMappingResolver } from './modules/admin/registration-forms/form-mapping/form-mapping.resolver';
+import { PricingResolver } from './modules/admin/pricing/pricing.resolver';
+import { PricingComponent } from './modules/admin/pricing/pricing.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -254,6 +256,12 @@ export const appRoutes: Route[] =
                             canActivate: [AuthGuard],
                             component: FormMappingComponent,
                             resolve: { initialData: FormMappingResolver }
+                        },
+                        {
+                            path: 'pricing',
+                            canActivate: [AuthGuard],
+                            component: PricingComponent,
+                            resolve: { initialData: PricingResolver }
                         }
                     ]
                 }]

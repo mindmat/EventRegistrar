@@ -1,46 +1,51 @@
-﻿using EventRegistrar.Backend.Authorization;
-using MediatR;
+﻿namespace EventRegistrar.Backend.Registrables.Pricing;
 
-namespace EventRegistrar.Backend.Registrables.Pricing;
-
-public class PricingQuery : IRequest<IEnumerable<RegistrablePricing>>, IEventBoundRequest
+public class PricingQuery : IRequest<IEnumerable<PricePackageDto>>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
 }
 
-public class PricingQueryHandler : IRequestHandler<PricingQuery, IEnumerable<RegistrablePricing>>
+public class PricingQueryHandler : IRequestHandler<PricingQuery, IEnumerable<PricePackageDto>>
 {
-    private readonly IQueryable<Registrable> _registrables;
+    private readonly IQueryable<PricePackage> _packages;
 
-    public PricingQueryHandler(IQueryable<Registrable> registrables)
+    public PricingQueryHandler(IQueryable<PricePackage> packages)
     {
-        _registrables = registrables;
+        _packages = packages;
     }
 
-    public async Task<IEnumerable<RegistrablePricing>> Handle(PricingQuery query, CancellationToken cancellationToken)
+    public async Task<IEnumerable<PricePackageDto>> Handle(PricingQuery query, CancellationToken cancellationToken)
     {
-        return await _registrables.Where(rbl => rbl.EventId == query.EventId)
-                                  .OrderByDescending(rbl => rbl.Price ?? 0m)
-                                  .ThenBy(rbl => rbl.Name)
-                                  .Select(rbl => new RegistrablePricing
-                                                 {
-                                                     RegistrableId = rbl.Id,
-                                                     RegistrableName = rbl.Name,
-                                                     Price = rbl.Price,
-                                                     ReducedPrice = rbl.ReducedPrice,
-                                                     Reductions = rbl.Reductions.Where(red => !red.ActivatedByReduction)
-                                                                     .Select(red => new PricingReduction
-                                                                         {
-                                                                             Id = red.Id,
-                                                                             Amount = red.Amount,
-                                                                             RegistrableId1_ReductionActivatedIfCombinedWith =
-                                                                                 red
-                                                                                     .RegistrableId1_ReductionActivatedIfCombinedWith,
-                                                                             RegistrableId2_ReductionActivatedIfCombinedWith =
-                                                                                 red
-                                                                                     .RegistrableId2_ReductionActivatedIfCombinedWith
-                                                                         })
-                                                 })
-                                  .ToListAsync();
+        return await _packages.Where(ppg => ppg.EventId == query.EventId)
+                              .Select(ppg => new PricePackageDto
+                                             {
+                                                 Id = ppg.Id,
+                                                 Name = ppg.Name, Price = ppg.Price,
+                                                 Parts = ppg.Parts!.Select(ppp => new PricePackagePartDto
+                                                                                  {
+                                                                                      Id = ppp.Id,
+                                                                                      IsOptional = ppp.IsOptional,
+                                                                                      Reduction = ppp.Reduction,
+                                                                                      RegistrableIds = ppp.Registrables!.Select(rip => rip.RegistrableId)
+                                                                                  })
+                                             })
+                              .OrderBy(ppg => ppg.Name)
+                              .ToListAsync(cancellationToken);
     }
+}
+
+public record PricePackageDto
+{
+    public Guid Id { get; set; }
+    public string? Name { get; set; }
+    public decimal Price { get; set; }
+    public IEnumerable<PricePackagePartDto>? Parts { get; set; }
+}
+
+public record PricePackagePartDto
+{
+    public Guid Id { get; set; }
+    public bool IsOptional { get; set; }
+    public decimal? Reduction { get; set; }
+    public IEnumerable<Guid>? RegistrableIds { get; set; }
 }

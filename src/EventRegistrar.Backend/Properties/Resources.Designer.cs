@@ -115,6 +115,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Neues Paket erstellen.
+        /// </summary>
+        internal static string AddPricePackage {
+            get {
+                return ResourceManager.GetString("AddPricePackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Neue Auswahl erstellen.
+        /// </summary>
+        internal static string AddPricePart {
+            get {
+                return ResourceManager.GetString("AddPricePart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Angebotene Sprachen.
         /// </summary>
         internal static string AngeboteneSprachen {
@@ -1286,6 +1304,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Preview {
             get {
                 return ResourceManager.GetString("Preview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preis.
+        /// </summary>
+        internal static string Price {
+            get {
+                return ResourceManager.GetString("Price", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preisgestaltung.
+        /// </summary>
+        internal static string Pricing {
+            get {
+                return ResourceManager.GetString("Pricing", resourceCulture);
             }
         }
         

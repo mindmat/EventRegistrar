@@ -135,6 +135,12 @@
   <data name="AddLink" xml:space="preserve">
     <value>Neue Zuordnung</value>
   </data>
+  <data name="AddPricePackage" xml:space="preserve">
+    <value>Neues Paket erstellen</value>
+  </data>
+  <data name="AddPricePart" xml:space="preserve">
+    <value>Neue Auswahl erstellen</value>
+  </data>
   <data name="AngeboteneSprachen" xml:space="preserve">
     <value>Angebotene Sprachen</value>
   </data>
@@ -524,6 +530,12 @@
   </data>
   <data name="Preview" xml:space="preserve">
     <value>Vorschau</value>
+  </data>
+  <data name="Price" xml:space="preserve">
+    <value>Preis</value>
+  </data>
+  <data name="Pricing" xml:space="preserve">
+    <value>Preisgestaltung</value>
   </data>
   <data name="QuestionMappingType_Email" xml:space="preserve">
     <value>E-Mail</value>

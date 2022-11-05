@@ -118,6 +118,13 @@ export class NavigationService
                                     link: `/${e.acronym}/admin/form-mapping`,
                                 },
                                 {
+                                    id: 'pricing',
+                                    title: translateService.instant('Pricing'),
+                                    type: 'basic',
+                                    icon: 'heroicons_outline:cash',
+                                    link: `/${e.acronym}/admin/pricing`,
+                                },
+                                {
                                     id: 'auto-mail-templates',
                                     title: translateService.instant('AutoMailTemplates'),
                                     type: 'basic',
