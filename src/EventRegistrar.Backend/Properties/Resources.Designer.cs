@@ -1317,6 +1317,60 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anpassung des Preises.
+        /// </summary>
+        internal static string PriceAdjustment {
+            get {
+                return ResourceManager.GetString("PriceAdjustment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alle.
+        /// </summary>
+        internal static string PricePackagePartSelectionType_All {
+            get {
+                return ResourceManager.GetString("PricePackagePartSelectionType_All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Eines aus der Auswahl.
+        /// </summary>
+        internal static string PricePackagePartSelectionType_AnyOne {
+            get {
+                return ResourceManager.GetString("PricePackagePartSelectionType_AnyOne", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drei aus der Auswahl.
+        /// </summary>
+        internal static string PricePackagePartSelectionType_AnyThree {
+            get {
+                return ResourceManager.GetString("PricePackagePartSelectionType_AnyThree", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zwei aus der Auswahl.
+        /// </summary>
+        internal static string PricePackagePartSelectionType_AnyTwo {
+            get {
+                return ResourceManager.GetString("PricePackagePartSelectionType_AnyTwo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Optional.
+        /// </summary>
+        internal static string PricePackagePartSelectionType_Optional {
+            get {
+                return ResourceManager.GetString("PricePackagePartSelectionType_Optional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Preisgestaltung.
         /// </summary>
         internal static string Pricing {
@@ -1637,6 +1691,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string SelectEvent {
             get {
                 return ResourceManager.GetString("SelectEvent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auswahl-Modus.
+        /// </summary>
+        internal static string SelectionType {
+            get {
+                return ResourceManager.GetString("SelectionType", resourceCulture);
             }
         }
         

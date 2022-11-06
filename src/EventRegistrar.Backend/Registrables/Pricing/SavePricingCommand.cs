@@ -59,8 +59,8 @@ public class SavePricingCommandHandler : IRequestHandler<SavePricingCommand>
                                                    });
 
 
-                part.Reduction = partToSave.Reduction;
-                part.IsOptional = partToSave.IsOptional;
+                part.SelectionType = partToSave.SelectionType;
+                part.PriceAdjustment = partToSave.PriceAdjustment;
 
                 var registrableIdsToSave = (partToSave.RegistrableIds ?? Enumerable.Empty<Guid>()).ToList();
                 var existingRegistrableIds = part.Registrables?
@@ -81,9 +81,12 @@ public class SavePricingCommandHandler : IRequestHandler<SavePricingCommand>
                                                          });
                 }
 
-                part.Registrables = part.Registrables!
-                                        .Where(rip => !removedIds.Contains(rip.RegistrableId))
-                                        .ToList();
+                if (removedIds.Any() && part.Registrables != null)
+                {
+                    part.Registrables = part.Registrables!
+                                            .Where(rip => !removedIds.Contains(rip.RegistrableId))
+                                            .ToList();
+                }
             }
         }
 

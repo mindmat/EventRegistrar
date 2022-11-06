@@ -26,44 +26,6 @@ public class AvailableQuestionMappingsQueryHandler : IRequestHandler<AvailableQu
                                                          Text = kvp.Value
                                                      });
         return Task.FromResult(mappings);
-        return Task.FromResult(new[]
-                               {
-                                   new AvailableQuestionMapping
-                                   {
-                                       Type = QuestionMappingType.FirstName,
-                                       Text = Properties.Resources.FirstName
-                                   },
-                                   new AvailableQuestionMapping
-                                   {
-                                       Type = QuestionMappingType.LastName,
-                                       Text = Properties.Resources.LastName
-                                   },
-                                   new AvailableQuestionMapping
-                                   {
-                                       Type = QuestionMappingType.EMail,
-                                       Text = Properties.Resources.EMail
-                                   },
-                                   new AvailableQuestionMapping
-                                   {
-                                       Type = QuestionMappingType.Phone,
-                                       Text = Properties.Resources.Phone
-                                   },
-                                   new AvailableQuestionMapping
-                                   {
-                                       Type = QuestionMappingType.Town,
-                                       Text = Properties.Resources.Town
-                                   },
-                                   new AvailableQuestionMapping
-                                   {
-                                       Type = QuestionMappingType.Partner,
-                                       Text = Properties.Resources.Partner
-                                   },
-                                   new AvailableQuestionMapping
-                                   {
-                                       Type = QuestionMappingType.Remarks,
-                                       Text = Properties.Resources.Remarks
-                                   }
-                               } as IEnumerable<AvailableQuestionMapping>);
     }
 }
 

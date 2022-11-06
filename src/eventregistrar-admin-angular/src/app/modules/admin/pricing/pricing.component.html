@@ -6,7 +6,7 @@
 
         <!-- Packages  -->
 
-        <div *ngFor="let packageForm of packagesForms" class="flex flex-col">
+        <div *ngFor="let packageForm of packagesForms; let indexPackage = index" class="flex flex-col">
             <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border p-6 space-y-3" [formGroup]="packageForm">
                 <!-- Package header -->
                 <div class="flex flex-row items-baseline justify-start space-x-3">
@@ -27,12 +27,58 @@
                         </mat-form-field>
                     </div>
 
+                    <!-- Other actions button & menu -->
+                    <button class="ml-2" mat-icon-button [matMenuTriggerFor]="packageMenu">
+                        <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                    </button>
+                    <mat-menu #packageMenu="matMenu">
+                        <!-- Delete -->
+                        <button mat-menu-item (click)="removePackage(indexPackage)">
+                            <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                            <span>{{ 'Delete' | translate }}</span>
+                        </button>
+                    </mat-menu>
+
                 </div>
 
                 <!-- Parts -->
-                <ng-container *ngIf="packageForm?.controls?.parts" formArrayName="parts">
-                    <ng-container *ngFor="let partForm of getParts(packageForm).controls; let i = index">
-                        <div class="mt-8 flex flex-col items-start enter justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150" [formGroup]="partForm">
+                <div formArrayName="parts">
+                    <ng-container *ngFor="let partForm of getParts(packageForm).controls; let indexPart = index">
+                        <div class="mt-8 flex flex-col items-start enter justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150"
+                            [formGroupName]="indexPart">
+                            <!-- Package part header -->
+                            <div class="flex flex-row items-start justify-start space-x-3 w-full">
+
+                                <!-- String mapping -->
+                                <mat-form-field class=" basis-3/4">
+                                    <mat-label>{{ 'SelectionType' | translate }}</mat-label>
+                                    <mat-select [placeholder]="'SelectionType' | translate" formControlName="selectionType">
+                                        <mat-option *ngFor="let selectionType of selectionTypes" [value]="selectionType.type">{{ selectionType.text }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <!-- Price adjustment -->
+                                <div class="sm:col-span-4 basis-1/4" *ngIf="partForm?.value?.selectionType == 11">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>{{ 'PriceAdjustment' | translate }}</mat-label>
+                                        <input type="number" formControlName="priceAdjustment" matInput>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- Other actions button & menu -->
+                                <button class="ml-auto justify-end" mat-icon-button [matMenuTriggerFor]="packageMenu">
+                                    <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                                </button>
+                                <mat-menu #packageMenu="matMenu">
+                                    <!-- Delete -->
+                                    <button mat-menu-item (click)="removePackagePart(packageForm, indexPart)">
+                                        <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                        <span>{{ 'Delete' | translate }}</span>
+                                    </button>
+                                </mat-menu>
+
+                            </div>
+
                             <!-- <div class="text-xl font-semibold">{{ part.reduction }}</div> -->
 
                             <!-- Registrables -->
@@ -41,13 +87,6 @@
                                 </app-tags-picker>
                             </ng-container>
 
-                            <!-- Price -->
-                            <div class="sm:col-span-4">
-                                <mat-form-field class="fuse-mat-no-subscript w-full">
-                                    <mat-label>{{ 'Reduction' | translate }}</mat-label>
-                                    <input type="number" formControlName="reduction" matInput>
-                                </mat-form-field>
-                            </div>
                             <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
                         </div>
                     </ng-container>
@@ -55,7 +94,7 @@
                     <button mat-flat-button [color]="'primary'" (click)="addPart(packageForm)">
                         {{ 'AddPricePart' | translate }}
                     </button>
-                </ng-container>
+                </div>
             </div>
         </div>
         <div class="flex flex-row">

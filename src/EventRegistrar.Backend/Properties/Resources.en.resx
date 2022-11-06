@@ -453,6 +453,27 @@
   <data name="Preview" xml:space="preserve">
     <value>Preview</value>
   </data>
+  <data name="Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="PriceAdjustment" xml:space="preserve">
+    <value>Price adjustment</value>
+  </data>
+  <data name="PricePackagePartSelectionType_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="PricePackagePartSelectionType_AnyOne" xml:space="preserve">
+    <value>One of the selection</value>
+  </data>
+  <data name="PricePackagePartSelectionType_AnyThree" xml:space="preserve">
+    <value>Two of the selection</value>
+  </data>
+  <data name="PricePackagePartSelectionType_AnyTwo" xml:space="preserve">
+    <value>Three of the selection</value>
+  </data>
+  <data name="PricePackagePartSelectionType_Optional" xml:space="preserve">
+    <value>Optional</value>
+  </data>
   <data name="Pricing" xml:space="preserve">
     <value>Pricing</value>
   </data>
@@ -551,6 +572,9 @@
   </data>
   <data name="SelectEvent" xml:space="preserve">
     <value>Select event</value>
+  </data>
+  <data name="SelectionType" xml:space="preserve">
+    <value>Selection type</value>
   </data>
   <data name="SelectMail" xml:space="preserve">
     <value>Select mail</value>

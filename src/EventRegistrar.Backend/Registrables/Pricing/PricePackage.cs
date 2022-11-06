@@ -35,8 +35,17 @@ public class PricePackagePart : Entity
     public Guid PricePackageId { get; set; }
     public PricePackage? PricePackage { get; set; }
     public ICollection<RegistrableInPricePackagePart>? Registrables { get; set; }
-    public decimal? Reduction { get; set; }
-    public bool IsOptional { get; set; }
+    public PricePackagePartSelectionType SelectionType { get; set; }
+    public decimal? PriceAdjustment { get; set; }
+}
+
+public enum PricePackagePartSelectionType
+{
+    AnyOne = 1,
+    AnyTwo = 2,
+    AnyThree = 3,
+    All = 10,
+    Optional = 11
 }
 
 public class PricePackagePartMap : EntityMap<PricePackagePart>

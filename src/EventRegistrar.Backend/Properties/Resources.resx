@@ -534,6 +534,24 @@
   <data name="Price" xml:space="preserve">
     <value>Preis</value>
   </data>
+  <data name="PriceAdjustment" xml:space="preserve">
+    <value>Anpassung des Preises</value>
+  </data>
+  <data name="PricePackagePartSelectionType_All" xml:space="preserve">
+    <value>Alle</value>
+  </data>
+  <data name="PricePackagePartSelectionType_AnyOne" xml:space="preserve">
+    <value>Eines aus der Auswahl</value>
+  </data>
+  <data name="PricePackagePartSelectionType_AnyThree" xml:space="preserve">
+    <value>Drei aus der Auswahl</value>
+  </data>
+  <data name="PricePackagePartSelectionType_AnyTwo" xml:space="preserve">
+    <value>Zwei aus der Auswahl</value>
+  </data>
+  <data name="PricePackagePartSelectionType_Optional" xml:space="preserve">
+    <value>Optional</value>
+  </data>
   <data name="Pricing" xml:space="preserve">
     <value>Preisgestaltung</value>
   </data>
@@ -642,6 +660,9 @@
   </data>
   <data name="SelectEvent" xml:space="preserve">
     <value>Event auswählen</value>
+  </data>
+  <data name="SelectionType" xml:space="preserve">
+    <value>Auswahl-Modus</value>
   </data>
   <data name="SelectMail" xml:space="preserve">
     <value>Mail auswählen</value>

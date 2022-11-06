@@ -24,8 +24,8 @@ public class PricingQueryHandler : IRequestHandler<PricingQuery, IEnumerable<Pri
                                                  Parts = ppg.Parts!.Select(ppp => new PricePackagePartDto
                                                                                   {
                                                                                       Id = ppp.Id,
-                                                                                      IsOptional = ppp.IsOptional,
-                                                                                      Reduction = ppp.Reduction,
+                                                                                      SelectionType = ppp.SelectionType,
+                                                                                      PriceAdjustment = ppp.PriceAdjustment,
                                                                                       RegistrableIds = ppp.Registrables!.Select(rip => rip.RegistrableId)
                                                                                   })
                                              })
@@ -45,7 +45,7 @@ public record PricePackageDto
 public record PricePackagePartDto
 {
     public Guid Id { get; set; }
-    public bool IsOptional { get; set; }
-    public decimal? Reduction { get; set; }
+    public PricePackagePartSelectionType SelectionType { get; set; }
+    public decimal? PriceAdjustment { get; set; }
     public IEnumerable<Guid>? RegistrableIds { get; set; }
 }

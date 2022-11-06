@@ -308,6 +308,41 @@
         }
       }
     },
+    "/api/PricePackagePartSelectionTypeQuery": {
+      "post": {
+        "tags": [
+          "PricePackagePartSelectionType"
+        ],
+        "operationId": "PricePackagePartSelectionType_Query",
+        "requestBody": {
+          "x-name": "PricePackagePartSelectionTypeQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PricePackagePartSelectionTypeQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PricePackagePartSelectionTypeOption"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/RecalculatePriceCommand": {
       "post": {
         "tags": [
@@ -4748,6 +4783,46 @@
           }
         }
       },
+      "PricePackagePartSelectionTypeOption": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/PricePackagePartSelectionType"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "PricePackagePartSelectionType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "AnyOne",
+          "AnyTwo",
+          "AnyThree",
+          "All",
+          "Optional"
+        ],
+        "enum": [
+          1,
+          2,
+          3,
+          10,
+          11
+        ]
+      },
+      "PricePackagePartSelectionTypeQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "RecalculatePriceCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -6035,10 +6110,10 @@
             "type": "string",
             "format": "guid"
           },
-          "isOptional": {
-            "type": "boolean"
+          "selectionType": {
+            "$ref": "#/components/schemas/PricePackagePartSelectionType"
           },
-          "reduction": {
+          "priceAdjustment": {
             "type": "number",
             "format": "decimal",
             "nullable": true

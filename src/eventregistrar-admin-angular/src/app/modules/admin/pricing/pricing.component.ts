@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { PricePackageDto, PricePackagePartDto, RegistrableDisplayItem } from 'app/api/api';
+import { PricePackageDto, PricePackagePartDto, PricePackagePartSelectionTypeOption, RegistrableDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { PricingService } from './pricing.service';
 import { RegistrablesService } from './registrables.service';
 import { v4 as createUuid } from 'uuid';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { PricePackagePartSelectionTypeService } from './pricing-selection-type.service';
 
 @Component({
   selector: 'app-pricing',
@@ -17,9 +18,11 @@ export class PricingComponent implements OnInit
   private unsubscribeAll: Subject<any> = new Subject<any>();
   packages: PricePackageDto[];
   registrables: RegistrableDisplayItem[];
+  selectionTypes: PricePackagePartSelectionTypeOption[];
 
   constructor(private pricingService: PricingService,
     private registrablesService: RegistrablesService,
+    private pricePackagePartSelectionTypeService: PricePackagePartSelectionTypeService,
     private fb: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef) { }
 
@@ -30,10 +33,15 @@ export class PricingComponent implements OnInit
       .subscribe((packages: PricePackageDto[]) =>
       {
         this.packages = packages;
-        this.packagesForms = packages.map(ppg => this.fb.group({
-          ...ppg,
-          parts: this.fb.array(ppg.parts?.map(ppp => this.fb.group({ ...ppp, registrableIds: this.fb.array(ppp.registrableIds) })))
-        }));
+        this.packagesForms = packages.map(ppg => this.fb.group(
+          {
+            ...ppg,
+            parts: this.fb.array(ppg.parts?.map(ppp => this.fb.group(
+              {
+                ...ppp,
+                registrableIds: this.fb.array(ppp.registrableIds)
+              })))
+          }));
 
         this.changeDetectorRef.markForCheck();
       });
@@ -43,6 +51,15 @@ export class PricingComponent implements OnInit
       .subscribe((registrables: RegistrableDisplayItem[]) =>
       {
         this.registrables = registrables;
+
+        this.changeDetectorRef.markForCheck();
+      });
+
+    this.pricePackagePartSelectionTypeService.selectionTypes$
+      .pipe(takeUntil(this.unsubscribeAll))
+      .subscribe((selectionTypes: PricePackagePartSelectionTypeOption[]) =>
+      {
+        this.selectionTypes = selectionTypes;
 
         this.changeDetectorRef.markForCheck();
       });
@@ -62,7 +79,7 @@ export class PricingComponent implements OnInit
       parts: this.fb.array([])
     }));
 
-    this.changeDetectorRef.markForCheck();
+    // this.changeDetectorRef.markForCheck();
   }
 
   addPart(packageForm: FormGroup)
@@ -74,7 +91,17 @@ export class PricingComponent implements OnInit
       registrableIds: this.fb.array([] as string[])
     }));
 
-    this.changeDetectorRef.markForCheck();
+    // this.changeDetectorRef.markForCheck();
+  }
+
+  removePackage(index: number)
+  {
+    this.packagesForms.splice(index, 1);
+  }
+
+  removePackagePart(packageForm: FormGroup, index: number)
+  {
+    this.getParts(packageForm).removeAt(index);
   }
 
   save()

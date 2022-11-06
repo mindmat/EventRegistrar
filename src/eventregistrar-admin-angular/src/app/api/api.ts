@@ -487,6 +487,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    pricePackagePartSelectionType_Query(pricePackagePartSelectionTypeQuery: PricePackagePartSelectionTypeQuery | undefined): Observable<PricePackagePartSelectionTypeOption[]> {
+        let url_ = this.baseUrl + "/api/PricePackagePartSelectionTypeQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(pricePackagePartSelectionTypeQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPricePackagePartSelectionType_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPricePackagePartSelectionType_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PricePackagePartSelectionTypeOption[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PricePackagePartSelectionTypeOption[]>;
+        }));
+    }
+
+    protected processPricePackagePartSelectionType_Query(response: HttpResponseBase): Observable<PricePackagePartSelectionTypeOption[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PricePackagePartSelectionTypeOption[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     recalculatePrice_Command(recalculatePriceCommand: RecalculatePriceCommand | undefined): Observable<Unit> {
         let url_ = this.baseUrl + "/api/RecalculatePriceCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -6841,6 +6892,23 @@ export interface AllExternalRegistrationIdentifiersQuery {
     registrationFormExternalIdentifier?: string;
 }
 
+export interface PricePackagePartSelectionTypeOption {
+    type?: PricePackagePartSelectionType;
+    text?: string;
+}
+
+export enum PricePackagePartSelectionType {
+    AnyOne = 1,
+    AnyTwo = 2,
+    AnyThree = 3,
+    All = 10,
+    Optional = 11,
+}
+
+export interface PricePackagePartSelectionTypeQuery {
+    eventId?: string;
+}
+
 export interface RecalculatePriceCommand {
     registrationId?: string;
 }
@@ -7274,8 +7342,8 @@ export interface PricePackageDto {
 
 export interface PricePackagePartDto {
     id?: string;
-    isOptional?: boolean;
-    reduction?: number | null;
+    selectionType?: PricePackagePartSelectionType;
+    priceAdjustment?: number | null;
     registrableIds?: string[] | null;
 }
 
