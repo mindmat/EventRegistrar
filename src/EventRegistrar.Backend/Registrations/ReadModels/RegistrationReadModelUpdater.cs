@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Spots;
 
 using MediatR;
@@ -143,16 +144,31 @@ public class RegistrationReadModelUpdater : ReadModelUpdater<RegistrationDisplay
     }
 }
 
-public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTranslation<OutgoingPaymentAssigned>,
+public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTranslation<RegistrationProcessed>,
+                                                             IEventToCommandTranslation<OutgoingPaymentAssigned>,
                                                              IEventToCommandTranslation<OutgoingPaymentUnassigned>,
                                                              IEventToCommandTranslation<IncomingPaymentUnassigned>,
                                                              IEventToCommandTranslation<IncomingPaymentAssigned>
 {
-    private IDateTimeProvider _dateTimeProvider;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public UpdateRegistrationWhenOutgoingPaymentAssigned(IDateTimeProvider dateTimeProvider)
     {
         _dateTimeProvider = dateTimeProvider;
+    }
+
+    public IEnumerable<IRequest> Translate(RegistrationProcessed e)
+    {
+        if (e.EventId != null)
+        {
+            yield return new UpdateReadModelCommand
+                         {
+                             QueryName = nameof(RegistrationQuery),
+                             EventId = e.EventId.Value,
+                             RowId = e.RegistrationId,
+                             DirtyMoment = _dateTimeProvider.Now
+                         };
+        }
     }
 
     public IEnumerable<IRequest> Translate(OutgoingPaymentAssigned e)

@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 
 namespace EventRegistrar.Backend.Registrations.Search;
 
@@ -12,10 +13,13 @@ public class SearchRegistrationQuery : IRequest<IEnumerable<RegistrationMatch>>,
 public class SearchRegistrationQueryHandler : IRequestHandler<SearchRegistrationQuery, IEnumerable<RegistrationMatch>>
 {
     private readonly IQueryable<Registration> _registrations;
+    private readonly ReadModelReader _readModelReader;
 
-    public SearchRegistrationQueryHandler(IQueryable<Registration> registrations)
+    public SearchRegistrationQueryHandler(IQueryable<Registration> registrations,
+                                          ReadModelReader readModelReader)
     {
         _registrations = registrations;
+        _readModelReader = readModelReader;
     }
 
     public async Task<IEnumerable<RegistrationMatch>> Handle(SearchRegistrationQuery query,
@@ -28,51 +32,41 @@ public class SearchRegistrationQueryHandler : IRequestHandler<SearchRegistration
             return Enumerable.Empty<RegistrationMatch>();
         }
 
-        var registrations = await _registrations.Where(reg => reg.EventId == query.EventId)
-                                                .WhereIf(!string.IsNullOrWhiteSpace(query.SearchString),
-                                                         reg => reg.RespondentFirstName!.Contains(searchString)
-                                                             || reg.RespondentLastName!.Contains(searchString)
-                                                             || reg.RespondentEmail!.Contains(searchString)
-                                                             || reg.PhoneNormalized!.Contains(searchString))
-                                                .Where(reg => allowedStates.Contains(reg.State))
-                                                .Select(reg => new RegistrationMatch
-                                                               {
-                                                                   RegistrationId = reg.Id,
-                                                                   FirstName = reg.RespondentFirstName,
-                                                                   LastName = reg.RespondentLastName,
-                                                                   Email = reg.RespondentEmail,
-                                                                   ReceivedAt = reg.ReceivedAt,
-                                                                   Amount = reg.Price ?? 0m,
-                                                                   AmountPaid = reg.PaymentAssignments!.Select(asn =>
-                                                                                                                   asn.PayoutRequestId == null
-                                                                                                                       ? asn.Amount
-                                                                                                                       : -asn.Amount)
-                                                                                   .Sum(),
-                                                                   State = reg.State,
-                                                                   StateText = reg.State.ToString(),
-                                                                   IsWaitingList = reg.IsWaitingList == true,
-                                                                   Spots = reg.Seats_AsLeader!
-                                                                              .Where(spt => !spt.IsCancelled)
-                                                                              .Select(spt => new SpotShort
-                                                                                             {
-                                                                                                 Name = spt.Registrable!.Name,
-                                                                                                 Secondary = spt.Registrable.NameSecondary,
-                                                                                                 IsWaitingList = spt.IsWaitingList
-                                                                                             })
-                                                                              .Union(reg.Seats_AsFollower!
-                                                                                        .Where(spt => !spt.IsCancelled)
-                                                                                        .Select(spt => new SpotShort
-                                                                                                       {
-                                                                                                           Name = spt.Registrable!.Name,
-                                                                                                           Secondary = spt.Registrable.NameSecondary,
-                                                                                                           IsWaitingList = spt.IsWaitingList
-                                                                                                       }))
-                                                               })
-                                                .OrderBy(reg => reg.FirstName)
-                                                .ThenBy(reg => reg.LastName)
-                                                .Take(20)
-                                                .ToListAsync(cancellationToken);
-        return registrations;
+        var registrationIds = await _registrations.Where(reg => reg.EventId == query.EventId)
+                                                  .WhereIf(!string.IsNullOrWhiteSpace(query.SearchString),
+                                                           reg => reg.RespondentFirstName!.Contains(searchString)
+                                                               || reg.RespondentLastName!.Contains(searchString)
+                                                               || reg.RespondentEmail!.Contains(searchString)
+                                                               || reg.PhoneNormalized!.Contains(searchString))
+                                                  .Where(reg => allowedStates.Contains(reg.State))
+                                                  .OrderBy(reg => reg.RespondentFirstName)
+                                                  .ThenBy(reg => reg.RespondentLastName)
+                                                  .Take(20)
+                                                  .Select(reg => reg.Id)
+                                                  .ToListAsync(cancellationToken);
+
+        var registrations = await _readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery), query.EventId, registrationIds, cancellationToken);
+
+        return registrations.Select(reg => new RegistrationMatch
+                                           {
+                                               RegistrationId = reg.Id,
+                                               FirstName = reg.FirstName,
+                                               LastName = reg.LastName,
+                                               Email = reg.Email,
+                                               ReceivedAt = reg.ReceivedAt,
+                                               Amount = reg.Price ?? 0m,
+                                               AmountPaid = reg.Paid,
+                                               State = reg.Status,
+                                               StateText = reg.Status.ToString(),
+                                               IsWaitingList = reg.IsWaitingList == true,
+                                               Spots = reg.Spots!.Select(spt => new SpotShort
+                                                                                {
+                                                                                    Name = spt.RegistrableName,
+                                                                                    Secondary = spt.RegistrableNameSecondary,
+                                                                                    IsWaitingList = spt.IsWaitingList
+                                                                                })
+                                           })
+                            .ToList();
     }
 }
 

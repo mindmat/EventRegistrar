@@ -5,18 +5,17 @@ namespace EventRegistrar.Backend.Registrations.Register;
 
 public class RegistrationProcessed : DomainEvent
 {
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string[] Registrables { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string[]? Registrables { get; set; }
     public Guid RegistrationId { get; set; }
-    public string Email { get; set; }
+    public string? Email { get; set; }
 }
 
 public class RegistrationProcessedUserTranslation : IEventToUserTranslation<RegistrationProcessed>
 {
     public string GetText(RegistrationProcessed domainEvent)
     {
-        return
-            $"Teilnehmer: {domainEvent.FirstName} {domainEvent.LastName}, angemeldet für {domainEvent.Registrables.StringJoin()}";
+        return $"Teilnehmer: {domainEvent.FirstName} {domainEvent.LastName}, angemeldet für {domainEvent.Registrables.StringJoin()}";
     }
 }

@@ -11,6 +11,7 @@ public class RawRegistration : Entity
     public string? FormExternalIdentifier { get; set; }
     public string ReceivedMessage { get; set; } = null!;
     public string RegistrationExternalIdentifier { get; set; } = null!;
+    public string? LastProcessingError { get; set; }
     public DateTimeOffset? Processed { get; set; }
 }
 

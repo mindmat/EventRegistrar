@@ -7,9 +7,10 @@ public static class StringExtensions
         return string.Join(separator, strings);
     }
 
-    public static decimal? TryToDecimal(this string text)
+    public static decimal? TryToDecimal(this string? text)
     {
-        if (text != null && decimal.TryParse(text, out var number)) return number;
-        return null;
+        return text != null && decimal.TryParse(text, out var number)
+                   ? number
+                   : null;
     }
 }

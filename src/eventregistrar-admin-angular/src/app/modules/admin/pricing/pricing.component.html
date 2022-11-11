@@ -82,7 +82,7 @@
                             <!-- <div class="text-xl font-semibold">{{ part.reduction }}</div> -->
 
                             <!-- Registrables -->
-                            <ng-container *ngIf="registrables">
+                            <ng-container *ngIf="registrables && partForm?.value?.registrableIds">
                                 <app-tags-picker [allTags]="registrables" [formControlName]="'registrableIds'" idProperty="id">
                                 </app-tags-picker>
                             </ng-container>

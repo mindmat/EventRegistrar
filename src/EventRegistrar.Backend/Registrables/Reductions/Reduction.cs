@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Registrables.Reductions;
 
+[Obsolete("Use PricingPackages instead")]
 public class Reduction : Entity
 {
     public Guid RegistrableId { get; set; }

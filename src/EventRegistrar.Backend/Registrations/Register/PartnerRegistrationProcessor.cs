@@ -57,8 +57,7 @@ public class PartnerRegistrationProcessor
         if (config.QuestionId_Leader_Phone.HasValue)
         {
             registration.Phone = registration.Responses
-                                             .FirstOrDefault(rsp =>
-                                                                 rsp.QuestionId == config.QuestionId_Leader_Phone.Value)
+                                             .FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_Phone.Value)
                                              ?.ResponseString;
             registration.PhoneNormalized = _phoneNormalizer.NormalizePhone(registration.Phone);
         }
@@ -69,16 +68,13 @@ public class PartnerRegistrationProcessor
                                        EventId = registration.EventId,
                                        ExternalTimestamp = registration.ExternalTimestamp,
                                        RespondentFirstName = registration.Responses
-                                                                         .FirstOrDefault(rsp =>
-                                                                                             rsp.QuestionId == config.QuestionId_Follower_FirstName)
+                                                                         .FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Follower_FirstName)
                                                                          ?.ResponseString,
                                        RespondentLastName = registration.Responses
-                                                                        .FirstOrDefault(rsp =>
-                                                                                            rsp.QuestionId == config.QuestionId_Follower_LastName)
+                                                                        .FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Follower_LastName)
                                                                         ?.ResponseString,
                                        RespondentEmail = registration.Responses
-                                                                     .FirstOrDefault(rsp =>
-                                                                                         rsp.QuestionId == config.QuestionId_Follower_Email)
+                                                                     .FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Follower_Email)
                                                                      ?.ResponseString,
                                        ExternalIdentifier = registration.ExternalIdentifier,
                                        ReceivedAt = registration.ReceivedAt,
@@ -116,8 +112,11 @@ public class PartnerRegistrationProcessor
             foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
             {
                 var seat = registrable.Registrable.MaximumDoubleSeats.HasValue
-                               ? await _spotManager.ReservePartnerSpot(registration.EventId, registrable.Registrable, registration.Id,
-                                                                       followerRegistration.Id, true)
+                               ? await _spotManager.ReservePartnerSpot(registration.EventId,
+                                                                       registrable.Registrable,
+                                                                       registration.Id,
+                                                                       followerRegistration.Id,
+                                                                       true)
                                : await _spotManager.ReserveSingleSpot(registration.EventId, registrable.Id, registration.Id, true);
 
                 if (seat == null)

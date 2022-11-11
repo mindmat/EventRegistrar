@@ -45,9 +45,9 @@ public class SingleRegistrationProcessor
     public async Task<IEnumerable<Seat>> Process(Registration registration)
     {
         var form = await _forms.Where(frm => frm.Id == registration.RegistrationFormId)
-                               .Include(frm => frm.Questions)
-                               .ThenInclude(qst => qst.QuestionOptions)
-                               .ThenInclude(qop => qop.Mappings)
+                               .Include(frm => frm.Questions!)
+                               .ThenInclude(qst => qst.QuestionOptions!)
+                               .ThenInclude(qop => qop.Mappings!)
                                .FirstOrDefaultAsync();
         if (form?.Questions == null)
         {
@@ -60,7 +60,7 @@ public class SingleRegistrationProcessor
         var spots = new List<Seat>();
         foreach (var question in form.Questions)
         {
-            var response = registration.Responses.FirstOrDefault(rsp => rsp.QuestionId == question.Id);
+            var response = registration.Responses!.FirstOrDefault(rsp => rsp.QuestionId == question.Id);
             if (response == null)
             {
                 continue;
@@ -123,7 +123,7 @@ public class SingleRegistrationProcessor
             }
             else if (response.QuestionOptionId != null)
             {
-                var questionOption = question.QuestionOptions.FirstOrDefault(qop => qop.Id == response.QuestionOptionId);
+                var questionOption = question.QuestionOptions!.FirstOrDefault(qop => qop.Id == response.QuestionOptionId);
                 if (questionOption?.Mappings == null)
                 {
                     continue;

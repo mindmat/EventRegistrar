@@ -3,7 +3,6 @@ using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrations.Register;
-using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.ReceivedConfirmation;
 
@@ -25,12 +24,14 @@ internal class SendRegistrationReceivedConfirmationMailWhenProcessed : IEventToC
         {
             var eventId = _eventContext.EventId ?? e.EventId;
             if (eventId != null)
+            {
                 yield return new ComposeAndSendMailCommand
                              {
                                  EventId = eventId.Value,
                                  MailType = MailType.RegistrationReceived,
                                  RegistrationId = e.RegistrationId
                              };
+            }
         }
     }
 }
