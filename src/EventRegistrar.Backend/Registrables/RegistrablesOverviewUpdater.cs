@@ -1,7 +1,8 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure;
+﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrables;
@@ -151,20 +152,28 @@ public class RegistrablesOverviewUpdater : ReadModelUpdater<RegistrablesOverview
     }
 }
 
-//public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTranslation<OutgoingPaymentAssigned>
-//{
-//    public IEnumerable<IRequest> Translate(OutgoingPaymentAssigned e)
-//    {
-//        if (e.EventId != null && e.RegistrationId != null)
-//        {
-//            yield return new UpdateRegistrationQueryReadModelCommand
-//                         {
-//                             EventId = e.EventId.Value,
-//                             RegistrationId = e.RegistrationId.Value
-//                         };
-//        }
-//    }
-//}
+public class UpdateRegistrationReadModel : IEventToCommandTranslation<RegistrationProcessed>
+{
+    private readonly IDateTimeProvider _dateTimeProvider;
+
+    public UpdateRegistrationReadModel(IDateTimeProvider dateTimeProvider)
+    {
+        _dateTimeProvider = dateTimeProvider;
+    }
+
+    public IEnumerable<IRequest> Translate(RegistrationProcessed e)
+    {
+        if (e.EventId != null)
+        {
+            yield return new UpdateReadModelCommand
+                         {
+                             QueryName = nameof(RegistrablesOverviewQuery),
+                             EventId = e.EventId.Value,
+                             DirtyMoment = _dateTimeProvider.Now
+                         };
+        }
+    }
+}
 
 public class SingleRegistrableDisplayItem
 {
