@@ -2,16 +2,20 @@ import { Injectable } from '@angular/core';
 import { Api, RegistrablesOverview, RegistrableTagDisplayItem } from 'app/api/api';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
+import { FetchService } from '../infrastructure/fetchService';
+import { NotificationService } from '../infrastructure/notification.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class OverviewService
+export class OverviewService extends FetchService<RegistrablesOverview | null>
 {
   private registrableTags: BehaviorSubject<RegistrableTagDisplayItem[] | null> = new BehaviorSubject(null);
-  private registrables: BehaviorSubject<RegistrablesOverview | null> = new BehaviorSubject(null);
 
-  constructor(private api: Api, private eventService: EventService) { }
+  constructor(private api: Api, private eventService: EventService, notificationService: NotificationService)
+  {
+    super('RegistrablesOverviewQuery', notificationService);
+  }
 
   get registrableTags$(): Observable<RegistrableTagDisplayItem[]>
   {
@@ -20,7 +24,7 @@ export class OverviewService
 
   get registrables$(): Observable<RegistrablesOverview>
   {
-    return this.registrables.asObservable();
+    return this.result$;
   }
 
   fetchRegistrableTags(): Observable<RegistrableTagDisplayItem[]>
@@ -34,14 +38,8 @@ export class OverviewService
       );
   }
 
-  fetchRegistrables(): Observable<RegistrablesOverview>
+  fetchRegistrables(): Observable<any>
   {
-    return this.api.registrablesOverview_Query({ eventId: this.eventService.selectedId })
-      .pipe(
-        tap((response: any) =>
-        {
-          this.registrables.next(response);
-        })
-      );
+    return this.fetchItems(this.api.registrablesOverview_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
 }
