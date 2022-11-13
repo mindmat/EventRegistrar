@@ -225,15 +225,15 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                 var iban = matches.Groups["IBAN"].Value;
                 byte[] binary;
                 string extension;
-                if (fileInfo.Extension is ".tiff" or ".tif")
-                {
-                    // chrome doesn't support tiff, so convert it to png
-                    extension = "image/png";
-                    var pngStream = new MemoryStream();
-                    new Bitmap(outStream).Save(pngStream, ImageFormat.Png);
-                    binary = pngStream.ToArray();
-                }
-                else
+                //if (fileInfo.Extension is ".tiff" or ".tif")
+                //{
+                //    // chrome doesn't support tiff, so convert it to png
+                //    extension = "image/png";
+                //    var pngStream = new MemoryStream();
+                //    new Bitmap(outStream).Save(pngStream, ImageFormat.Png);
+                //    binary = pngStream.ToArray();
+                //}
+                //else
                 {
                     extension = ConvertExtensionToContentType(fileInfo.Extension);
                     binary = outStream.ToArray();
