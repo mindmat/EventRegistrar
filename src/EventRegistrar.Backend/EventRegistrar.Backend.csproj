@@ -14,7 +14,7 @@
     <PackageReference Include="ClosedXML" Version="0.97.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />
     <PackageReference Include="MailKit" Version="3.2.0" />
-    <PackageReference Include="MediatR" Version="10.0.1" />
+    <PackageReference Include="MediatR" Version="11.0.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.TraceListener" Version="2.21.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.5" />
     <PackageReference Include="Microsoft.Azure.ServiceBus" Version="5.2.0" />
