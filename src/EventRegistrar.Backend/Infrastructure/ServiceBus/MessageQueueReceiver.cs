@@ -26,8 +26,14 @@ public class MessageQueueReceiver : IAsyncDisposable
         _logger = logger;
         _container = container;
         _client = client;
-        _typedProcessMethod = typeof(MessageQueueReceiver).GetMethod(nameof(ProcessTypedMessage),
-                                                                     BindingFlags.NonPublic | BindingFlags.Instance)!;
+        var typedProcessMethod = typeof(MessageQueueReceiver).GetMethod(nameof(ProcessTypedMessage),
+                                                                        BindingFlags.NonPublic | BindingFlags.Instance)!;
+        if (typedProcessMethod == null)
+        {
+            throw new MissingMethodException("Method ProcessTypedMessage<TRequest> not found");
+        }
+
+        _typedProcessMethod = typedProcessMethod;
     }
 
     public async void StartReceiveLoop()
@@ -63,7 +69,6 @@ public class MessageQueueReceiver : IAsyncDisposable
 
     private async Task ProcessMessage(ProcessMessageEventArgs arg)
     {
-        //var messageDecoded = Encoding.UTF8.GetString(arg.Body);
         var commandMessage = JsonConvert.DeserializeObject<CommandMessage>(arg.Message.Body.ToString());
         if (commandMessage?.CommandType == null)
         {
@@ -77,16 +82,25 @@ public class MessageQueueReceiver : IAsyncDisposable
         }
 
         var typedMethod = _typedProcessMethod.MakeGenericMethod(commandType);
-        await (Task)typedMethod.Invoke(this,
-                                       new object[] { commandMessage.CommandSerialized, CommandQueue.CommandQueueName, arg.CancellationToken });
+        if (typedMethod.Invoke(this, new object?[] { commandMessage.CommandSerialized, CommandQueue.CommandQueueName, arg.CancellationToken }) is Task task)
+        {
+            await task;
+        }
     }
 
-    private async Task ProcessTypedMessage<TRequest>(string commandSerialized,
+    private async Task ProcessTypedMessage<TRequest>(string? commandSerialized,
                                                      string queueName,
                                                      CancellationToken cancellationToken)
         where TRequest : IRequest
     {
-        var request = JsonConvert.DeserializeObject<TRequest>(commandSerialized);
+        var request = default(TRequest);
+        if (commandSerialized != null)
+        {
+            request = JsonConvert.DeserializeObject<TRequest>(commandSerialized);
+        }
+
+        request ??= Activator.CreateInstance<TRequest>();
+
         using (new EnsureExecutionScope(_container))
         {
             _container.GetInstance<SourceQueueProvider>().SourceQueueName = queueName;
