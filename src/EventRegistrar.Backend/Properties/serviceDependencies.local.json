@@ -1,12 +1,5 @@
 {
   "dependencies": {
-    "storage1": {
-      "type": "storage.emulator",
-      "connectionId": "AzureWebJobsStorage"
-    },
-    "secrets1": {
-      "type": "secrets.user"
-    },
     "appInsights1": {
       "secretStore": "LocalSecretsFile",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/microsoft.insights/components/event-admin",

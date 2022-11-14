@@ -80,6 +80,11 @@ builder.Services.AddCors();
 //builder.Services.AddSwaggerDocument();
 builder.Services.AddSingleton<IApiDescriptionGroupCollectionProvider>(_ => new MediatorEndpointApiDescriptionGroupCollectionProvider(container.GetInstance<RequestRegistry>()));
 builder.Services.AddOpenApiDocument(document => document.DocumentName = "v1");
+builder.Services.AddApplicationInsightsTelemetry(options =>
+{
+    options.ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+    options.DeveloperMode = builder.Environment.IsDevelopment();
+});
 
 var app = builder.Build();
 
