@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AzureFunctionsVersion>v4</AzureFunctionsVersion>
     <OutputType>Exe</OutputType>
     <ApplicationInsightsResourceId>/subscriptions/aa0cb34f-eb53-4377-8b74-14f3766835ab/resourceGroups/event-admin/providers/microsoft.insights/components/event-admin</ApplicationInsightsResourceId>
@@ -20,6 +20,7 @@
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk.Analyzers" Version="1.1.1" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="6.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
