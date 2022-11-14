@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-using Microsoft.Azure.ServiceBus;
+﻿using Azure.Messaging.ServiceBus;
 
 using Newtonsoft.Json;
 
@@ -8,14 +6,13 @@ namespace EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 public class CommandQueue
 {
+    private readonly ServiceBusSender _sender;
     public const string CommandQueueName = "CommandQueue";
     private readonly List<CommandMessage> _messages = new();
-    private readonly string _serviceBusEndpoint;
 
-    public CommandQueue(IConfiguration configuration)
+    public CommandQueue(ServiceBusSender sender)
     {
-        _serviceBusEndpoint = Environment.GetEnvironmentVariable("ServiceBusEndpoint")
-                           ?? configuration.GetValue<string>("ServiceBusEndpoint");
+        _sender = sender;
     }
 
     public async Task Release()
@@ -25,12 +22,7 @@ public class CommandQueue
             return;
         }
 
-        var queueClient = new QueueClient(_serviceBusEndpoint, CommandQueueName);
-        foreach (var message in _messages)
-        {
-            var serialized = JsonConvert.SerializeObject(message);
-            await queueClient.SendAsync(new Message(Encoding.UTF8.GetBytes(serialized)));
-        }
+        await _sender.SendMessagesAsync(_messages.Select(msg => new ServiceBusMessage(JsonConvert.SerializeObject(msg))));
     }
 
     public void EnqueueCommand<T>(T command)

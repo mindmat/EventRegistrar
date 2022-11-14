@@ -1,9 +1,6 @@
 ﻿using System.Reflection;
-using System.Text;
 
-using MediatR;
-
-using Microsoft.Azure.ServiceBus;
+using Azure.Messaging.ServiceBus;
 
 using Newtonsoft.Json;
 
@@ -11,89 +8,82 @@ using SimpleInjector;
 
 namespace EventRegistrar.Backend.Infrastructure.ServiceBus;
 
-public class MessageQueueReceiver : IDisposable
+public class MessageQueueReceiver : IAsyncDisposable
 {
     private readonly Container _container;
+    private readonly ServiceBusClient _client;
     private readonly ILogger _logger;
     private readonly IMediator _mediator;
-    private readonly IList<QueueClient> _queueClients = new List<QueueClient>();
     private readonly MethodInfo _typedProcessMethod;
-    private readonly string _serviceBusEndpoint;
+    private ServiceBusProcessor? _processor;
 
     public MessageQueueReceiver(IMediator mediator,
                                 ILogger logger,
                                 Container container,
-                                IConfiguration configuration)
+                                ServiceBusClient client)
     {
         _mediator = mediator;
         _logger = logger;
         _container = container;
+        _client = client;
         _typedProcessMethod = typeof(MessageQueueReceiver).GetMethod(nameof(ProcessTypedMessage),
                                                                      BindingFlags.NonPublic | BindingFlags.Instance)!;
-        _serviceBusEndpoint = Environment.GetEnvironmentVariable("ServiceBusEndpoint")
-                           ?? configuration.GetValue<string>("ServiceBusEndpoint");
     }
 
-    public void Dispose()
+    public async void StartReceiveLoop()
     {
-        foreach (var queueClient in _queueClients)
+        if (_processor != null)
         {
-            queueClient.CloseAsync().Wait();
-        }
-    }
-
-    public void RegisterMessageHandlers()
-    {
-        if (string.IsNullOrEmpty(_serviceBusEndpoint))
-        {
-            _logger.LogWarning("No ServiceBusEndpoint configured");
             return;
         }
 
-        var genericQueueClient = new QueueClient(_serviceBusEndpoint, CommandQueue.CommandQueueName);
+        var options = new ServiceBusProcessorOptions
+                      {
+                          MaxConcurrentCalls = 1,
+                          AutoCompleteMessages = true
+                      };
+        _processor = _client.CreateProcessor(CommandQueue.CommandQueueName, options);
+        _processor.ProcessMessageAsync += ProcessMessage;
+        _processor.ProcessErrorAsync += ProcessError;
 
-        // Configure the MessageHandler Options in terms of exception handling, number of concurrent messages to deliver etc.
-        var messageHandlerOptions = new MessageHandlerOptions(ExceptionReceivedHandler)
-                                    {
-                                        // Maximum number of Concurrent calls to the callback `ProcessMessagesAsync`, set to 1 for simplicity.
-                                        // Set it according to how many messages the application wants to process in parallel.
-                                        MaxConcurrentCalls = 1,
-
-                                        // Indicates whether MessagePump should automatically complete the messages after returning from User Callback.
-                                        // False value below indicates the Complete will be handled by the User Callback as seen in `ProcessMessagesAsync`.
-                                        AutoComplete = true
-                                    };
-
-        // Register the function that will process messages
-        genericQueueClient.RegisterMessageHandler(ProcessGenericMessage, messageHandlerOptions);
-        _queueClients.Add(genericQueueClient);
+        await _processor.StartProcessingAsync();
     }
 
-    private Task ExceptionReceivedHandler(ExceptionReceivedEventArgs arg)
+    private Task ProcessError(ProcessErrorEventArgs arg)
     {
         _logger.LogError(arg.Exception,
-                         $"Error while processing a message from queue. Endpoint: {0}, Action: {1}, ClientId {2}, EntityPath {3}",
-                         arg.ExceptionReceivedContext.Endpoint,
-                         arg.ExceptionReceivedContext.Action,
-                         arg.ExceptionReceivedContext.ClientId,
-                         arg.ExceptionReceivedContext.EntityPath);
+                         $"Error while processing a message from queue. Namespace: {0}, Identifier: {1}, ErrorSource: {2}, ClientId {3}, Exception: {4}, EntityPath {5}",
+                         arg.FullyQualifiedNamespace,
+                         arg.Identifier,
+                         arg.ErrorSource,
+                         arg.Exception.Message,
+                         arg.EntityPath);
         return Task.CompletedTask;
     }
 
-    private async Task ProcessGenericMessage(Message message, CancellationToken cancellationToken)
+    private async Task ProcessMessage(ProcessMessageEventArgs arg)
     {
-        var messageDecoded = Encoding.UTF8.GetString(message.Body);
-        var commandMessage = JsonConvert.DeserializeObject<CommandMessage>(messageDecoded);
+        //var messageDecoded = Encoding.UTF8.GetString(arg.Body);
+        var commandMessage = JsonConvert.DeserializeObject<CommandMessage>(arg.Message.Body.ToString());
+        if (commandMessage?.CommandType == null)
+        {
+            throw new ArgumentException($"Invalid message: {arg.Message.Body}");
+        }
+
         var commandType = Type.GetType(commandMessage.CommandType);
+        if (commandType == null)
+        {
+            throw new ArgumentException($"Unknown command type: {commandType}");
+        }
 
         var typedMethod = _typedProcessMethod.MakeGenericMethod(commandType);
         await (Task)typedMethod.Invoke(this,
-                                       new object[] { commandMessage.CommandSerialized, cancellationToken, CommandQueue.CommandQueueName });
+                                       new object[] { commandMessage.CommandSerialized, CommandQueue.CommandQueueName, arg.CancellationToken });
     }
 
     private async Task ProcessTypedMessage<TRequest>(string commandSerialized,
-                                                     CancellationToken cancellationToken,
-                                                     string queueName)
+                                                     string queueName,
+                                                     CancellationToken cancellationToken)
         where TRequest : IRequest
     {
         var request = JsonConvert.DeserializeObject<TRequest>(commandSerialized);
@@ -101,6 +91,15 @@ public class MessageQueueReceiver : IDisposable
         {
             _container.GetInstance<SourceQueueProvider>().SourceQueueName = queueName;
             await _mediator.Send(request, cancellationToken);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_processor != null)
+        {
+            await _processor.StopProcessingAsync();
+            await _processor.DisposeAsync();
         }
     }
 }

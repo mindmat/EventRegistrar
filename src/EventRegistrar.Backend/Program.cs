@@ -1,3 +1,6 @@
+using Azure.Identity;
+using Azure.Messaging.ServiceBus;
+
 using EventRegistrar.Backend;
 using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Events;
@@ -130,6 +133,9 @@ container.Register<IRightsOfEventRoleProvider, RightsOfEventRoleProvider>();
 
 container.RegisterSingleton<IDateTimeProvider, DateTimeProvider>();
 
+container.RegisterSingleton(() => new ServiceBusClient(builder.Configuration.GetValue<string>("ServiceBusNamespace"), new DefaultAzureCredential()));
+container.RegisterSingleton(() => container.GetInstance<ServiceBusClient>().CreateSender(CommandQueue.CommandQueueName));
+
 // Error handling
 container.RegisterSingleton<ExceptionTranslator>();
 
@@ -167,7 +173,7 @@ container.Register<SourceQueueProvider>();
 container.Register(typeof(IEventToUserTranslation<>), assemblies);
 container.Verify();
 
-container.GetInstance<MessageQueueReceiver>().RegisterMessageHandlers();
+container.GetInstance<MessageQueueReceiver>().StartReceiveLoop();
 
 
 // Configure the HTTP request pipeline.

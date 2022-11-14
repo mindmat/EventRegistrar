@@ -2,5 +2,5 @@
 
 public class SourceQueueProvider
 {
-    public string SourceQueueName { get; set; }
+    public string? SourceQueueName { get; set; }
 }
