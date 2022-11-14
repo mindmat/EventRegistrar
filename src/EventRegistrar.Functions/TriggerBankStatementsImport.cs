@@ -28,13 +28,7 @@ public static class TriggerBankStatementsImport
 
         foreach (var eventId in eventIds)
         {
-            var command = new { EventId = eventId };
-            var message = new
-                          {
-                              CommandType = "EventRegistrar.Backend.Payments.Files.Fetch.FetchBankStatementsFileCommand",
-                              CommandSerialized = JsonSerializer.Serialize(command)
-                          };
-            await CommandQueue.SendCommand(message);
+            await CommandQueue.SendCommand("EventRegistrar.Backend.Payments.Files.Fetch.FetchBankStatementsFileCommand", new { EventId = eventId });
         }
     }
 }

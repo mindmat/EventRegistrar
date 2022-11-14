@@ -5,6 +5,7 @@
     <OutputType>Exe</OutputType>
     <ApplicationInsightsResourceId>/subscriptions/aa0cb34f-eb53-4377-8b74-14f3766835ab/resourceGroups/event-admin/providers/microsoft.insights/components/event-admin</ApplicationInsightsResourceId>
     <UserSecretsId>f566beee-2efc-4c43-ada5-78b7344866ae</UserSecretsId>
+    <Nullable>enable</Nullable>
     <!--<RuntimeIdentifier>win-x86</RuntimeIdentifier>
     <PublishReadyToRun>true</PublishReadyToRun>-->
   </PropertyGroup>

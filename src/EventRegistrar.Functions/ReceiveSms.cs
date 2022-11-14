@@ -24,13 +24,7 @@ public static class ReceiveSms
 
         var twilioSms = keyValues.Deserialize<TwilioSms>();
 
-        var command = new { Sms = twilioSms };
-        var message = new
-                      {
-                          CommandType = "EventRegistrar.Backend.PhoneMessages.ProcessReceivedSmsCommand",
-                          CommandSerialized = JsonSerializer.Serialize(command)
-                      };
-        await CommandQueue.SendCommand(message);
+        await CommandQueue.SendCommand("EventRegistrar.Backend.PhoneMessages.ProcessReceivedSmsCommand", new { Sms = twilioSms });
 
         return req.CreateResponse(HttpStatusCode.OK);
     }

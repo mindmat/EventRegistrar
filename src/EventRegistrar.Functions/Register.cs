@@ -46,7 +46,7 @@ public static class Register
             await connection.ExecuteAsync(insertQuery, parameters);
         }
 
-        await CommandQueue.SendCommand(new { RawRegistrationId = rawRegistrationId });
+        await CommandQueue.SendCommand("EventRegistrar.Backend.Registrations.Register.ProcessRawRegistrationCommand", new { RawRegistrationId = rawRegistrationId });
 
         return req.CreateResponse(HttpStatusCode.OK);
     }

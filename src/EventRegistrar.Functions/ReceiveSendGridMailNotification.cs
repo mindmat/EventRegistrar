@@ -36,7 +36,7 @@ public static class ReceiveSendGridMailNotification
             await connection.ExecuteAsync(insertQuery, parameters);
         }
 
-        await CommandQueue.SendCommand(new { RawMailEventsId = id });
+        await CommandQueue.SendCommand("EventRegistrar.Backend.Mailing.Feedback.ProcessMailEventsCommand", new { RawMailEventsId = id });
 
         return req.CreateResponse(HttpStatusCode.OK);
     }
