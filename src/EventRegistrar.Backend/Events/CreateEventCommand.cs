@@ -154,10 +154,14 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                                                    MaximumSingleSeats = sourceRegistrable.MaximumSingleSeats,
                                                    MaximumAllowedImbalance = sourceRegistrable.MaximumAllowedImbalance,
                                                    Name = sourceRegistrable.Name,
+                                                   NameSecondary = sourceRegistrable.NameSecondary,
                                                    CheckinListColumn = sourceRegistrable.CheckinListColumn,
                                                    HasWaitingList = sourceRegistrable.HasWaitingList,
                                                    ShowInMailListOrder = sourceRegistrable.ShowInMailListOrder,
-                                                   IsCore = sourceRegistrable.IsCore
+                                                   IsCore = sourceRegistrable.IsCore,
+                                                   Type = sourceRegistrable.Type,
+                                                   AutomaticPromotionFromWaitingList = sourceRegistrable.AutomaticPromotionFromWaitingList,
+                                                   Tag = sourceRegistrable.Tag
                                                });
 
                     registrableMap.Add(sourceRegistrable.Id, newRegistrableId);

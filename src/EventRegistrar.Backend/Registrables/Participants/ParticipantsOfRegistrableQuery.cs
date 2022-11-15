@@ -1,7 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Spots;
-
-using MediatR;
+﻿using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrables.Participants;
 
@@ -44,37 +41,32 @@ public class ParticipantsOfRegistrableQueryHandler : IRequestHandler<Participant
                                        .Select(seat => new SpotDisplayInfo
                                                        {
                                                            Leader = seat.RegistrationId == null
-                                                               ? null
-                                                               : new RegistrationDisplayInfo
-                                                                 {
-                                                                     Id = seat.Registration!.Id,
-                                                                     Email = seat.Registration.RespondentEmail,
-                                                                     State = seat.Registration.State,
-                                                                     FirstName = seat.Registration.RespondentFirstName,
-                                                                     LastName = seat.Registration.RespondentLastName
-                                                                 },
+                                                                        ? null
+                                                                        : new RegistrationDisplayInfo
+                                                                          {
+                                                                              Id = seat.Registration!.Id,
+                                                                              Email = seat.Registration.RespondentEmail,
+                                                                              State = seat.Registration.State,
+                                                                              FirstName = seat.Registration.RespondentFirstName,
+                                                                              LastName = seat.Registration.RespondentLastName
+                                                                          },
                                                            Follower = seat.RegistrationId_Follower == null
-                                                               ? null
-                                                               : new RegistrationDisplayInfo
-                                                                 {
-                                                                     Id = seat.Registration_Follower!.Id,
-                                                                     Email = seat.Registration_Follower.RespondentEmail,
-                                                                     State = seat.Registration_Follower.State,
-                                                                     FirstName = seat.Registration_Follower
-                                                                                     .RespondentFirstName,
-                                                                     LastName = seat.Registration_Follower
-                                                                                    .RespondentLastName
-                                                                 },
-                                                           PlaceholderPartner = seat.IsPartnerSpot &&
-                                                                                (seat.RegistrationId == null ||
-                                                                                 seat.RegistrationId_Follower == null)
-                                                               ? seat.PartnerEmail
-                                                               : null,
-                                                           IsOnWaitingList = seat.IsWaitingList ||
-                                                                             seat.Registration != null &&
-                                                                             seat.Registration.IsWaitingList == true,
-                                                           IsPartnerRegistration = seat.IsPartnerSpot ||
-                                                                                   seat.PartnerEmail != null
+                                                                          ? null
+                                                                          : new RegistrationDisplayInfo
+                                                                            {
+                                                                                Id = seat.Registration_Follower!.Id,
+                                                                                Email = seat.Registration_Follower.RespondentEmail,
+                                                                                State = seat.Registration_Follower.State,
+                                                                                FirstName = seat.Registration_Follower
+                                                                                                .RespondentFirstName,
+                                                                                LastName = seat.Registration_Follower
+                                                                                               .RespondentLastName
+                                                                            },
+                                                           PlaceholderPartner = seat.IsPartnerSpot && (seat.RegistrationId == null || seat.RegistrationId_Follower == null)
+                                                                                    ? seat.PartnerEmail
+                                                                                    : null,
+                                                           IsOnWaitingList = seat.IsWaitingList || (seat.Registration != null && seat.Registration.IsWaitingList == true),
+                                                           IsPartnerRegistration = seat.IsPartnerSpot || seat.PartnerEmail != null
                                                        })
                                        .ToListAsync(cancellationToken);
 
