@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { MatButton } from '@angular/material/button';
+import { MatLegacyButton as MatButton } from '@angular/material/legacy-button';
 import { Subject, takeUntil } from 'rxjs';
 import { Shortcut } from 'app/layout/common/shortcuts/shortcuts.types';
 import { ShortcutsService } from 'app/layout/common/shortcuts/shortcuts.service';
