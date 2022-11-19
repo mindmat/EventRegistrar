@@ -42,7 +42,7 @@
                                 </div>
 
                                 <!-- Registrable title & description -->
-                                <div class="mt-4 text-lg font-medium">{{ doubleRegistrable.name }}</div>
+                                <a class="mt-4 text-lg font-medium hover:underline" [routerLink]="[doubleRegistrable.id, 'double', 'participants']">{{ doubleRegistrable.name }}</a>
                                 <div class="mt-0.5 line-clamp-2 text-secondary">{{ doubleRegistrable.nameSecondary }}</div>
                                 <div class="w-12 h-1 my-6 border-t-2"></div>
 
@@ -144,7 +144,7 @@
                             <!-- Footer -->
                             <div class="flex flex-col w-full mt-auto">
                                 <!-- Registrable completion -->
-                                <div class="relative h-0.5" *ngIf="doubleRegistrable.spotsAvailable">
+                                <div class="relative h-0.5" *ngIf="doubleRegistrable.spotsAvailable > 0">
                                     <div class="z-10 absolute inset-x-0 h-6 -mt-3"
                                         [matTooltip]="(doubleRegistrable.leadersAccepted + doubleRegistrable.followersAccepted) / (doubleRegistrable.spotsAvailable * 2) | percent"
                                         [matTooltipPosition]="'above'" [matTooltipClass]="'-mb-0.5'"></div>
@@ -185,7 +185,7 @@
                                 </div>
 
                                 <!-- Registrable title & description -->
-                                <div class="mt-4 text-lg font-medium">{{ singleRegistrable.name }}</div>
+                                <a class="mt-4 text-lg font-medium hover:underline" [routerLink]="[singleRegistrable.id, 'single', 'participants']">{{ singleRegistrable.name }}</a>
                                 <div class="mt-0.5 line-clamp-2 text-secondary">{{ singleRegistrable.nameSecondary }}</div>
                                 <div class="w-12 h-1 my-6 border-t-2"></div>
 
@@ -249,7 +249,7 @@
                             <!-- Footer -->
                             <div class="flex flex-col w-full mt-auto">
                                 <!-- Registrable completion -->
-                                <div class="relative h-0.5" *ngIf="singleRegistrable.spotsAvailable">
+                                <div class="relative h-0.5" *ngIf="singleRegistrable.spotsAvailable > 0">
                                     <div class="z-10 absolute inset-x-0 h-6 -mt-3" [matTooltip]="singleRegistrable.accepted / singleRegistrable.spotsAvailable | percent" [matTooltipPosition]="'above'"
                                         [matTooltipClass]="'-mb-0.5'"></div>
                                     <mat-progress-bar class="h-0.5" [value]="100 * singleRegistrable.accepted / singleRegistrable.spotsAvailable">
