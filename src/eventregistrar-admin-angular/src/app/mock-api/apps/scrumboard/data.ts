@@ -1,5 +1,8 @@
 /* eslint-disable */
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
+
+/* Get the current instant */
+const now = DateTime.now();
 
 export const boards = [
     {
@@ -7,7 +10,7 @@ export const boards = [
         title       : 'Admin Dashboard',
         description : 'Roadmap for the new project',
         icon        : 'heroicons_outline:template',
-        lastActivity: moment().startOf('day').subtract(1, 'day').toISOString(),
+        lastActivity: now.startOf('day').minus({day: 1}).toISO(),
         members     : [
             '9c510cf3-460d-4a8c-b3be-bcc3db578c08',
             'baa88231-0ee6-4028-96d5-7f187e0f4cd5',
@@ -19,7 +22,7 @@ export const boards = [
         title       : 'Weekly Planning',
         description : 'Job related tasks for the week',
         icon        : 'heroicons_outline:calendar',
-        lastActivity: moment().startOf('day').subtract(2, 'days').toISOString(),
+        lastActivity: now.startOf('day').minus({day: 2}).toISO(),
         members     : [
             '79ebb9ee-1e57-4706-810c-03edaec8f56d',
             '319ecb5b-f99c-4ee4-81b2-3aeffd1d4735',
@@ -36,7 +39,7 @@ export const boards = [
         title       : 'Personal Tasks',
         description : 'Personal tasks around the house',
         icon        : 'heroicons_outline:home',
-        lastActivity: moment().startOf('day').subtract(1, 'week').toISOString(),
+        lastActivity: now.startOf('day').minus({week: 1}).toISO(),
         members     : [
             '6f6a1c34-390b-4b2e-97c8-ff0e0d787839'
         ]
@@ -83,7 +86,7 @@ export const cards = [
             'caff9c9b-a198-4564-b1f4-8b3df1d345bb',
             'f9eeb436-13a3-4208-a239-0d555960a567'
         ],
-        dueDate    : moment().subtract(10, 'days').startOf('day').toISOString()
+        dueDate    : now.startOf('day').minus({day: 10}).toISO()
     },
     {
         id      : 'ed58add1-45a7-41db-887d-3ca7ee7f2719',
@@ -105,7 +108,7 @@ export const cards = [
         labels  : [
             'caff9c9b-a198-4564-b1f4-8b3df1d345bb'
         ],
-        dueDate : moment().startOf('day').toISOString()
+        dueDate : now.startOf('day').toISO()
     },
     {
         id      : '6da8747f-b474-4c9a-9eba-5ef212285500',
@@ -116,7 +119,7 @@ export const cards = [
         labels  : [
             'caff9c9b-a198-4564-b1f4-8b3df1d345bb'
         ],
-        dueDate : moment().subtract(1, 'day').startOf('day').toISOString()
+        dueDate : now.startOf('day').minus({day: 1}).toISO()
     },
     {
         id      : '94fb1dee-dd83-4cca-acdd-02e96d3cc4f1',
@@ -167,7 +170,7 @@ export const cards = [
         position: 131072,
         title   : 'Create high fidelity wireframes',
         labels  : [],
-        dueDate : moment().subtract(10, 'day').startOf('day').toISOString()
+        dueDate : now.startOf('day').minus({day: 10}).toISO()
     },
     {
         id      : 'b1da11ed-7896-4826-962d-4b7b718896d4',

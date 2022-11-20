@@ -38,8 +38,8 @@ export class FileManagerMockApi
                 // Clone the items
                 let items = cloneDeep(this._items);
 
-                // See if a folder id exist
-                const folderId = request.params.get('folderId') ?? null;
+                // See if the folder id exist
+                const folderId = request.params.get('folderId') === 'null' ? null : request.params.get('folderId');
 
                 // Filter the items by folder id. If folder id is null,
                 // that means we want to root items which have folder id

@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { MatLegacySlideToggleChange as MatSlideToggleChange } from '@angular/material/legacy-slide-toggle';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
-import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
 import { OverviewService } from './overview.service';
 import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDisplayItem';
 import { DoubleRegistrableDisplayItem, RegistrablesOverview, SingleRegistrableDisplayItem } from 'app/api/api';
+import { MatSelectChange } from '@angular/material/select';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
     selector: 'app-overview',

@@ -34,16 +34,9 @@ import { AppComponent } from 'app/app.component';
 import { appRoutes } from 'app/app.routing';
 import { AuthHttpInterceptor, AuthModule, AuthService } from '@auth0/auth0-angular';
 import { OverviewComponent } from './modules/admin/overview/overview.component';
-import { MatLegacyFormFieldModule as MatFormFieldModule } from '@angular/material/legacy-form-field';
-import { MatLegacySelectModule as MatSelectModule } from '@angular/material/legacy-select';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatLegacySlideToggleModule as MatSlideToggleModule } from '@angular/material/legacy-slide-toggle';
 import { FuseFindByKeyPipeModule } from '@fuse/pipes/find-by-key';
-import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy-input';
-import { MatLegacyProgressBarModule as MatProgressBarModule } from '@angular/material/legacy-progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatLegacyTooltipModule as MatTooltipModule } from '@angular/material/legacy-tooltip';
 import { ParticipantsDoubleComponent } from './modules/admin/participants/participants-double/participants-double.component';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthService as AuthServiceFuse } from './core/auth/auth.service';
@@ -52,7 +45,6 @@ import { ParticipantComponent } from './modules/admin/participants/participant/p
 import { ParticipantsSingleComponent } from './modules/admin/participants/participants-single/participants-single.component';
 import { RegistrationComponent } from './modules/admin/registration/registration.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatLegacyMenuModule as MatMenuModule } from '@angular/material/legacy-menu';
 import { FuseCardModule } from '@fuse/components/card';
 import { BankStatementsComponent } from './modules/admin/accounting/bankStatements/bankStatements.component';
 import { SearchRegistrationComponent } from './modules/admin/registrations/search-registration/search-registration.component';
@@ -63,7 +55,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslationLoaderService } from './core/i18n/translation-loader.service';
 import { MissingTranslationService } from './core/i18n/missing-translation.service';
-import { MatLegacyCheckboxModule as MatCheckboxModule } from '@angular/material/legacy-checkbox';
 import { DuePaymentsComponent } from './modules/admin/accounting/due-payments/due-payments.component';
 import { AutoMailTemplatesComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-templates.component';
 import { AutoMailTemplateComponent } from './modules/admin/mailing/auto-mail-templates/auto-mail-template/auto-mail-template.component';
@@ -73,12 +64,23 @@ import { SearchModule } from './layout/common/search/search.module';
 import { ReleaseMailsComponent } from './modules/admin/mailing/mails/release-mails/release-mails.component';
 import { MailViewComponent } from './modules/admin/mailing/mails/mail-view/mail-view.component';
 import { UserAccessComponent } from './modules/admin/auth/user-access/user-access.component';
-import { API_BASE_URL } from './api/api';
 import { SelectEventComponent } from './modules/admin/events/select-event/select-event.component';
 import { CreateEventComponent } from './modules/admin/events/select-event/create-event/create-event.component';
 import { FormMappingComponent } from './modules/admin/registration-forms/form-mapping/form-mapping.component';
 import { TagsPickerComponent } from './shared/tags-picker/tags-picker.component';
 import { PricingComponent } from './modules/admin/pricing/pricing.component';
+// import { RegistrableDetailComponent } from './modules/admin/overview/registrable-detail/registrable-detail.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatInputModule } from '@angular/material/input';
+import { MatLuxonDateModule } from '@angular/material-luxon-adapter';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -109,7 +111,8 @@ const routerConfig: ExtraOptions = {
         CreateEventComponent,
         FormMappingComponent,
         TagsPickerComponent,
-        PricingComponent
+        PricingComponent,
+        // RegistrableDetailComponent
     ],
     providers: [
         AuthServiceFuse,
@@ -155,16 +158,18 @@ const routerConfig: ExtraOptions = {
         DragDropModule,
         MatFormFieldModule,
         MatSelectModule,
-        MatButtonModule,
-        MatCheckboxModule,
         MatIconModule,
+        MatCheckboxModule,
+        MatButtonModule,
         MatSlideToggleModule,
         MatInputModule,
+        MatLuxonDateModule,
         MatProgressBarModule,
         MatTooltipModule,
         MatDividerModule,
         MatMenuModule,
         MatSidenavModule,
+        MatDialogModule,
 
         FroalaEditorModule.forRoot(),
         FroalaViewModule.forRoot(),

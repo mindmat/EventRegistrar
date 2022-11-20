@@ -1,4 +1,5 @@
-import { Component, ElementRef, HostBinding, HostListener, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, Inject, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
 import { Subject, takeUntil } from 'rxjs';
 import { QuickChatService } from 'app/layout/common/quick-chat/quick-chat.service';
@@ -11,13 +12,14 @@ import { Chat } from 'app/layout/common/quick-chat/quick-chat.types';
     encapsulation: ViewEncapsulation.None,
     exportAs     : 'quickChat'
 })
-export class QuickChatComponent implements OnInit, OnDestroy
+export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
 {
     @ViewChild('messageInput') messageInput: ElementRef;
     chat: Chat;
     chats: Chat[];
     opened: boolean = false;
     selectedChat: Chat;
+    private _mutationObserver: MutationObserver;
     private _scrollStrategy: ScrollStrategy = this._scrollStrategyOptions.block();
     private _overlay: HTMLElement;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -26,6 +28,7 @@ export class QuickChatComponent implements OnInit, OnDestroy
      * Constructor
      */
     constructor(
+        @Inject(DOCUMENT) private _document: Document,
         private _elementRef: ElementRef,
         private _renderer2: Renderer2,
         private _ngZone: NgZone,
@@ -104,10 +107,47 @@ export class QuickChatComponent implements OnInit, OnDestroy
     }
 
     /**
+     * After view init
+     */
+    ngAfterViewInit(): void
+    {
+        // Fix for Firefox.
+        //
+        // Because 'position: sticky' doesn't work correctly inside a 'position: fixed' parent,
+        // adding the '.cdk-global-scrollblock' to the html element breaks the navigation's position.
+        // This fixes the problem by reading the 'top' value from the html element and adding it as a
+        // 'marginTop' to the navigation itself.
+        this._mutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                const mutationTarget = mutation.target as HTMLElement;
+                if ( mutation.attributeName === 'class' )
+                {
+                    if ( mutationTarget.classList.contains('cdk-global-scrollblock') )
+                    {
+                        const top = parseInt(mutationTarget.style.top, 10);
+                        this._renderer2.setStyle(this._elementRef.nativeElement, 'margin-top', `${Math.abs(top)}px`);
+                    }
+                    else
+                    {
+                        this._renderer2.setStyle(this._elementRef.nativeElement, 'margin-top', null);
+                    }
+                }
+            });
+        });
+        this._mutationObserver.observe(this._document.documentElement, {
+            attributes     : true,
+            attributeFilter: ['class']
+        });
+    }
+
+    /**
      * On destroy
      */
     ngOnDestroy(): void
     {
+        // Disconnect the mutation observer
+        this._mutationObserver.disconnect();
+
         // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();

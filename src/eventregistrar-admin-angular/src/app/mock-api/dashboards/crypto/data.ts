@@ -1,4 +1,7 @@
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
+
+/* Get the current instant */
+const now = DateTime.now();
 
 /* tslint:disable:max-line-length */
 export const crypto = {
@@ -628,83 +631,83 @@ export const crypto = {
                     name: 'Price',
                     data: [
                         {
-                            x: moment().subtract(20, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 20}).toFormat('HH:mm'),
                             y: 154.36
                         },
                         {
-                            x: moment().subtract(19, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 19}).toFormat('HH:mm'),
                             y: 154.36
                         },
                         {
-                            x: moment().subtract(18, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 18}).toFormat('HH:mm'),
                             y: 146.94
                         },
                         {
-                            x: moment().subtract(17, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 17}).toFormat('HH:mm'),
                             y: 146.96
                         },
                         {
-                            x: moment().subtract(16, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 16}).toFormat('HH:mm'),
                             y: 146.11
                         },
                         {
-                            x: moment().subtract(15, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 15}).toFormat('HH:mm'),
                             y: 150.26
                         },
                         {
-                            x: moment().subtract(14, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 14}).toFormat('HH:mm'),
                             y: 146.11
                         },
                         {
-                            x: moment().subtract(13, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 13}).toFormat('HH:mm'),
                             y: 150.79
                         },
                         {
-                            x: moment().subtract(12, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 12}).toFormat('HH:mm'),
                             y: 145.36
                         },
                         {
-                            x: moment().subtract(11, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 11}).toFormat('HH:mm'),
                             y: 141.06
                         },
                         {
-                            x: moment().subtract(10, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 10}).toFormat('HH:mm'),
                             y: 140.10
                         },
                         {
-                            x: moment().subtract(9, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 9}).toFormat('HH:mm'),
                             y: 138.31
                         },
                         {
-                            x: moment().subtract(8, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 8}).toFormat('HH:mm'),
                             y: 138.42
                         },
                         {
-                            x: moment().subtract(7, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 7}).toFormat('HH:mm'),
                             y: 138.48
                         },
                         {
-                            x: moment().subtract(6, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 6}).toFormat('HH:mm'),
                             y: 138.71
                         },
                         {
-                            x: moment().subtract(5, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 5}).toFormat('HH:mm'),
                             y: 148.42
                         },
                         {
-                            x: moment().subtract(4, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 4}).toFormat('HH:mm'),
                             y: 146.87
                         },
                         {
-                            x: moment().subtract(3, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 3}).toFormat('HH:mm'),
                             y: 147.07
                         },
                         {
-                            x: moment().subtract(2, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 2}).toFormat('HH:mm'),
                             y: 135.07
                         },
                         {
-                            x: moment().subtract(1, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 1}).toFormat('HH:mm'),
                             y: 135.01
                         }
                     ]
@@ -724,83 +727,83 @@ export const crypto = {
                     name: 'Price',
                     data: [
                         {
-                            x: moment().subtract(20, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 20}).toFormat('HH:mm'),
                             y: 374.77
                         },
                         {
-                            x: moment().subtract(19, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 19}).toFormat('HH:mm'),
                             y: 374.41
                         },
                         {
-                            x: moment().subtract(18, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 18}).toFormat('HH:mm'),
                             y: 375.08
                         },
                         {
-                            x: moment().subtract(17, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 17}).toFormat('HH:mm'),
                             y: 375.08
                         },
                         {
-                            x: moment().subtract(16, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 16}).toFormat('HH:mm'),
                             y: 374.09
                         },
                         {
-                            x: moment().subtract(15, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 15}).toFormat('HH:mm'),
                             y: 368.84
                         },
                         {
-                            x: moment().subtract(14, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 14}).toFormat('HH:mm'),
                             y: 367.49
                         },
                         {
-                            x: moment().subtract(13, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 13}).toFormat('HH:mm'),
                             y: 359.75
                         },
                         {
-                            x: moment().subtract(12, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 12}).toFormat('HH:mm'),
                             y: 366.65
                         },
                         {
-                            x: moment().subtract(11, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 11}).toFormat('HH:mm'),
                             y: 367.52
                         },
                         {
-                            x: moment().subtract(10, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 10}).toFormat('HH:mm'),
                             y: 367.59
                         },
                         {
-                            x: moment().subtract(9, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 9}).toFormat('HH:mm'),
                             y: 364.18
                         },
                         {
-                            x: moment().subtract(8, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 8}).toFormat('HH:mm'),
                             y: 370.11
                         },
                         {
-                            x: moment().subtract(7, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 7}).toFormat('HH:mm'),
                             y: 362.70
                         },
                         {
-                            x: moment().subtract(6, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 6}).toFormat('HH:mm'),
                             y: 362.70
                         },
                         {
-                            x: moment().subtract(5, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 5}).toFormat('HH:mm'),
                             y: 362.77
                         },
                         {
-                            x: moment().subtract(4, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 4}).toFormat('HH:mm'),
                             y: 369.46
                         },
                         {
-                            x: moment().subtract(3, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 3}).toFormat('HH:mm'),
                             y: 371.04
                         },
                         {
-                            x: moment().subtract(2, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 2}).toFormat('HH:mm'),
                             y: 371.48
                         },
                         {
-                            x: moment().subtract(1, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 1}).toFormat('HH:mm'),
                             y: 371.30
                         }
                     ]
@@ -820,83 +823,83 @@ export const crypto = {
                     name: 'Price',
                     data: [
                         {
-                            x: moment().subtract(20, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 20}).toFormat('HH:mm'),
                             y: 0.258
                         },
                         {
-                            x: moment().subtract(19, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 19}).toFormat('HH:mm'),
                             y: 0.256
                         },
                         {
-                            x: moment().subtract(18, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 18}).toFormat('HH:mm'),
                             y: 0.255
                         },
                         {
-                            x: moment().subtract(17, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 17}).toFormat('HH:mm'),
                             y: 0.255
                         },
                         {
-                            x: moment().subtract(16, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 16}).toFormat('HH:mm'),
                             y: 0.254
                         },
                         {
-                            x: moment().subtract(15, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 15}).toFormat('HH:mm'),
                             y: 0.248
                         },
                         {
-                            x: moment().subtract(14, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 14}).toFormat('HH:mm'),
                             y: 0.247
                         },
                         {
-                            x: moment().subtract(13, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 13}).toFormat('HH:mm'),
                             y: 0.249
                         },
                         {
-                            x: moment().subtract(12, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 12}).toFormat('HH:mm'),
                             y: 0.246
                         },
                         {
-                            x: moment().subtract(11, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 11}).toFormat('HH:mm'),
                             y: 0.247
                         },
                         {
-                            x: moment().subtract(10, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 10}).toFormat('HH:mm'),
                             y: 0.247
                         },
                         {
-                            x: moment().subtract(9, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 9}).toFormat('HH:mm'),
                             y: 0.244
                         },
                         {
-                            x: moment().subtract(8, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 8}).toFormat('HH:mm'),
                             y: 0.250
                         },
                         {
-                            x: moment().subtract(7, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 7}).toFormat('HH:mm'),
                             y: 0.242
                         },
                         {
-                            x: moment().subtract(6, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 6}).toFormat('HH:mm'),
                             y: 0.251
                         },
                         {
-                            x: moment().subtract(5, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 5}).toFormat('HH:mm'),
                             y: 0.251
                         },
                         {
-                            x: moment().subtract(4, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 4}).toFormat('HH:mm'),
                             y: 0.251
                         },
                         {
-                            x: moment().subtract(3, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 3}).toFormat('HH:mm'),
                             y: 0.249
                         },
                         {
-                            x: moment().subtract(2, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 2}).toFormat('HH:mm'),
                             y: 0.242
                         },
                         {
-                            x: moment().subtract(1, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 1}).toFormat('HH:mm'),
                             y: 0.240
                         }
                     ]
@@ -916,83 +919,83 @@ export const crypto = {
                     name: 'Price',
                     data: [
                         {
-                            x: moment().subtract(20, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 20}).toFormat('HH:mm'),
                             y: 62.54
                         },
                         {
-                            x: moment().subtract(19, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 19}).toFormat('HH:mm'),
                             y: 61.54
                         },
                         {
-                            x: moment().subtract(18, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 18}).toFormat('HH:mm'),
                             y: 62.55
                         },
                         {
-                            x: moment().subtract(17, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 17}).toFormat('HH:mm'),
                             y: 60.55
                         },
                         {
-                            x: moment().subtract(16, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 16}).toFormat('HH:mm'),
                             y: 59.54
                         },
                         {
-                            x: moment().subtract(15, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 15}).toFormat('HH:mm'),
                             y: 58.48
                         },
                         {
-                            x: moment().subtract(14, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 14}).toFormat('HH:mm'),
                             y: 54.47
                         },
                         {
-                            x: moment().subtract(13, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 13}).toFormat('HH:mm'),
                             y: 51.49
                         },
                         {
-                            x: moment().subtract(12, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 12}).toFormat('HH:mm'),
                             y: 51.46
                         },
                         {
-                            x: moment().subtract(11, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 11}).toFormat('HH:mm'),
                             y: 53.47
                         },
                         {
-                            x: moment().subtract(10, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 10}).toFormat('HH:mm'),
                             y: 52.47
                         },
                         {
-                            x: moment().subtract(9, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 9}).toFormat('HH:mm'),
                             y: 54.44
                         },
                         {
-                            x: moment().subtract(8, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 8}).toFormat('HH:mm'),
                             y: 59.50
                         },
                         {
-                            x: moment().subtract(7, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 7}).toFormat('HH:mm'),
                             y: 62.42
                         },
                         {
-                            x: moment().subtract(6, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 6}).toFormat('HH:mm'),
                             y: 61.42
                         },
                         {
-                            x: moment().subtract(5, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 5}).toFormat('HH:mm'),
                             y: 60.42
                         },
                         {
-                            x: moment().subtract(4, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 4}).toFormat('HH:mm'),
                             y: 58.49
                         },
                         {
-                            x: moment().subtract(3, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 3}).toFormat('HH:mm'),
                             y: 57.51
                         },
                         {
-                            x: moment().subtract(2, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 2}).toFormat('HH:mm'),
                             y: 54.51
                         },
                         {
-                            x: moment().subtract(1, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 1}).toFormat('HH:mm'),
                             y: 51.25
                         }
                     ]
@@ -1012,83 +1015,83 @@ export const crypto = {
                     name: 'Price',
                     data: [
                         {
-                            x: moment().subtract(20, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 20}).toFormat('HH:mm'),
                             y: 53.54
                         },
                         {
-                            x: moment().subtract(19, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 19}).toFormat('HH:mm'),
                             y: 52.54
                         },
                         {
-                            x: moment().subtract(18, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 18}).toFormat('HH:mm'),
                             y: 52.55
                         },
                         {
-                            x: moment().subtract(17, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 17}).toFormat('HH:mm'),
                             y: 46.44
                         },
                         {
-                            x: moment().subtract(16, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 16}).toFormat('HH:mm'),
                             y: 49.50
                         },
                         {
-                            x: moment().subtract(15, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 15}).toFormat('HH:mm'),
                             y: 55.42
                         },
                         {
-                            x: moment().subtract(14, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 14}).toFormat('HH:mm'),
                             y: 54.42
                         },
                         {
-                            x: moment().subtract(13, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 13}).toFormat('HH:mm'),
                             y: 43.49
                         },
                         {
-                            x: moment().subtract(12, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 12}).toFormat('HH:mm'),
                             y: 43.46
                         },
                         {
-                            x: moment().subtract(11, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 11}).toFormat('HH:mm'),
                             y: 41.47
                         },
                         {
-                            x: moment().subtract(10, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 10}).toFormat('HH:mm'),
                             y: 41.47
                         },
                         {
-                            x: moment().subtract(9, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 9}).toFormat('HH:mm'),
                             y: 51.55
                         },
                         {
-                            x: moment().subtract(8, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 8}).toFormat('HH:mm'),
                             y: 48.54
                         },
                         {
-                            x: moment().subtract(7, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 7}).toFormat('HH:mm'),
                             y: 49.48
                         },
                         {
-                            x: moment().subtract(6, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 6}).toFormat('HH:mm'),
                             y: 45.47
                         },
                         {
-                            x: moment().subtract(5, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 5}).toFormat('HH:mm'),
                             y: 51.42
                         },
                         {
-                            x: moment().subtract(4, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 4}).toFormat('HH:mm'),
                             y: 49.49
                         },
                         {
-                            x: moment().subtract(3, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 3}).toFormat('HH:mm'),
                             y: 46.51
                         },
                         {
-                            x: moment().subtract(2, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 2}).toFormat('HH:mm'),
                             y: 41.51
                         },
                         {
-                            x: moment().subtract(1, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 1}).toFormat('HH:mm'),
                             y: 44.25
                         }
                     ]
@@ -1108,83 +1111,83 @@ export const crypto = {
                     name: 'Price',
                     data: [
                         {
-                            x: moment().subtract(20, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 20}).toFormat('HH:mm'),
                             y: 14.77
                         },
                         {
-                            x: moment().subtract(19, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 19}).toFormat('HH:mm'),
                             y: 14.41
                         },
                         {
-                            x: moment().subtract(18, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 18}).toFormat('HH:mm'),
                             y: 15.08
                         },
                         {
-                            x: moment().subtract(17, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 17}).toFormat('HH:mm'),
                             y: 15.08
                         },
                         {
-                            x: moment().subtract(16, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 16}).toFormat('HH:mm'),
                             y: 14.09
                         },
                         {
-                            x: moment().subtract(15, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 15}).toFormat('HH:mm'),
                             y: 18.84
                         },
                         {
-                            x: moment().subtract(14, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 14}).toFormat('HH:mm'),
                             y: 17.49
                         },
                         {
-                            x: moment().subtract(13, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 13}).toFormat('HH:mm'),
                             y: 19.75
                         },
                         {
-                            x: moment().subtract(12, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 12}).toFormat('HH:mm'),
                             y: 16.65
                         },
                         {
-                            x: moment().subtract(11, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 11}).toFormat('HH:mm'),
                             y: 17.52
                         },
                         {
-                            x: moment().subtract(10, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 10}).toFormat('HH:mm'),
                             y: 17.59
                         },
                         {
-                            x: moment().subtract(9, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 9}).toFormat('HH:mm'),
                             y: 14.18
                         },
                         {
-                            x: moment().subtract(8, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 8}).toFormat('HH:mm'),
                             y: 10.11
                         },
                         {
-                            x: moment().subtract(7, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 7}).toFormat('HH:mm'),
                             y: 12.70
                         },
                         {
-                            x: moment().subtract(6, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 6}).toFormat('HH:mm'),
                             y: 12.70
                         },
                         {
-                            x: moment().subtract(5, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 5}).toFormat('HH:mm'),
                             y: 12.77
                         },
                         {
-                            x: moment().subtract(4, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 4}).toFormat('HH:mm'),
                             y: 19.46
                         },
                         {
-                            x: moment().subtract(3, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 3}).toFormat('HH:mm'),
                             y: 11.04
                         },
                         {
-                            x: moment().subtract(2, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 2}).toFormat('HH:mm'),
                             y: 11.48
                         },
                         {
-                            x: moment().subtract(1, 'minutes').format('HH:mm'),
+                            x: now.minus({minutes: 1}).toFormat('HH:mm'),
                             y: 11.30
                         }
                     ]

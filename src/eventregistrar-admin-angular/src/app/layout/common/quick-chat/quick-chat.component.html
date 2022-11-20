@@ -151,12 +151,12 @@
 
                     <!-- Message field -->
                     <div class="flex items-end p-4 border-t bg-gray-50 dark:bg-transparent">
-                        <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded fuse-mat-bold w-full">
+                        <mat-form-field
+                            class="fuse-mat-dense fuse-mat-rounded fuse-mat-bold w-full"
+                            [subscriptSizing]="'dynamic'">
                             <textarea
-                                class="min-h-5 my-0 resize-none"
-                                style="margin: 11px 0 !important; padding: 0 !important;"
-                                [rows]="1"
                                 matInput
+                                cdkTextareaAutosize
                                 #messageInput></textarea>
                         </mat-form-field>
                         <div class="flex items-center h-11 my-px ml-4">

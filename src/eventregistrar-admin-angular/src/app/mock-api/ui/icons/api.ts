@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { cloneDeep } from 'lodash-es';
 import { FuseMockApiService } from '@fuse/lib/mock-api';
-import { feather, heroicons, iconsmind, material } from 'app/mock-api/ui/icons/data';
+import { feather, heroicons, material } from 'app/mock-api/ui/icons/data';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +10,6 @@ export class IconsMockApi
 {
     private readonly _feather: any = feather;
     private readonly _heroicons: any = heroicons;
-    private readonly _iconsmind: any = iconsmind;
     private readonly _material: any = material;
 
     /**
@@ -41,7 +40,7 @@ export class IconsMockApi
                 {
                     namespace: 'feather',
                     name     : 'Feather',
-                    grid     : 6,
+                    grid     : 'icon-size-6',
                     list     : cloneDeep(this._feather)
                 }
             ]);
@@ -56,7 +55,7 @@ export class IconsMockApi
                 {
                     namespace: 'heroicons_outline',
                     name     : 'Heroicons Outline',
-                    grid     : 6,
+                    grid     : 'icon-size-6',
                     list     : cloneDeep(this._heroicons)
                 }
             ]);
@@ -71,23 +70,8 @@ export class IconsMockApi
                 {
                     namespace: 'heroicons_solid',
                     name     : 'Heroicons Solid',
-                    grid     : 5,
+                    grid     : 'icon-size-5',
                     list     : cloneDeep(this._heroicons)
-                }
-            ]);
-
-        // -----------------------------------------------------------------------------------------------------
-        // @ Iconsmind icons - GET
-        // -----------------------------------------------------------------------------------------------------
-        this._fuseMockApiService
-            .onGet('api/ui/icons/iconsmind')
-            .reply(() => [
-                200,
-                {
-                    namespace: 'iconsmind',
-                    name     : 'Iconsmind',
-                    grid     : 10,
-                    list     : cloneDeep(this._iconsmind)
                 }
             ]);
 
@@ -101,7 +85,7 @@ export class IconsMockApi
                 {
                     namespace: 'mat_solid',
                     name     : 'Material Solid',
-                    grid     : 6,
+                    grid     : 'icon-size-6',
                     list     : cloneDeep(this._material)
                 }
             ]);
@@ -116,7 +100,7 @@ export class IconsMockApi
                 {
                     namespace: 'mat_outline',
                     name     : 'Material Outline',
-                    grid     : 6,
+                    grid     : 'icon-size-6',
                     list     : cloneDeep(this._material)
                 }
             ]);
@@ -131,7 +115,7 @@ export class IconsMockApi
                 {
                     namespace: '',
                     name     : 'Material Twotone',
-                    grid     : 6,
+                    grid     : 'icon-size-6',
                     list     : cloneDeep(this._material)
                 }
             ]);

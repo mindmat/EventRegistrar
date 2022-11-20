@@ -1,21 +1,27 @@
-/* ----------------------------------------------------------------------------------------------------- */
-/*  @ Angular Material CDK helpers & overrides
-/* ----------------------------------------------------------------------------------------------------- */
-
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Overlay
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 .fuse-backdrop-on-mobile {
     @apply bg-black bg-opacity-60 sm:bg-transparent #{'!important'};
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
-/*  @ Angular Material helpers & overrides
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*  @ Font smoothing
+/* -------------------------------------------------------------------------- */
+*[class*=mat-],
+*[class*=mat-mdc-] {
+    -webkit-font-smoothing: auto !important;
+    -moz-osx-font-smoothing: auto !important;
 
-/* ----------------------------------------------------------------------------------------------------- */
+    * {
+        -webkit-font-smoothing: auto !important;
+        -moz-osx-font-smoothing: auto !important;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
 /*  @ Accordion
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 .mat-accordion {
 
     .mat-expansion-panel {
@@ -73,43 +79,25 @@
         }
 
         .mat-expansion-panel-body {
-            line-height: 1.7;
             @apply text-secondary #{'!important'};
         }
     }
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Buttons
-/* ----------------------------------------------------------------------------------------------------- */
-.mat-button,
-.mat-fab,
-.mat-flat-button,
-.mat-icon-button,
-.mat-mini-fab,
-.mat-raised-button,
-.mat-stroked-button {
-    display: inline-flex !important;
-    align-items: center;
-    justify-content: center;
+/* -------------------------------------------------------------------------- */
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-icon-button,
+.mat-mdc-fab,
+.mat-mdc-mini-fab {
     height: 40px;
     min-height: 40px;
     max-height: 40px;
     line-height: 1 !important;
-
-    .mat-button-wrapper {
-        position: relative;
-        display: inline-flex !important;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        z-index: 2; /* Move mat-button-wrapper above the ripple and focus overlay */
-    }
-
-    .mat-button-focus-overlay,
-    .mat-button-ripple {
-        z-index: 1;
-    }
 
     /* Large button */
     &.fuse-mat-button-large {
@@ -119,7 +107,7 @@
     }
 
     /* Lower the icon opacity on disabled buttons */
-    &.mat-button-disabled {
+    &[disabled=true] {
 
         .mat-icon {
             opacity: 0.38 !important;
@@ -127,33 +115,73 @@
     }
 }
 
-.mat-fab {
+/* Icon buttons */
+.mat-mdc-icon-button {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 40px !important;
+    padding: 0 !important;
+
+    svg,
+    img {
+        height: auto !important;
+    }
+}
+
+/* FAB buttons */
+.mat-mdc-fab {
     max-height: 56px;
+    border-radius: 16px !important;
+
+    &:not(.mdc-fab--extended) .mdc-fab__ripple {
+        border-radius: 16px !important;
+    }
+}
+
+/* Mini FAB buttons */
+.mat-mdc-mini-fab {
+    border-radius: 12px !important;
+
+    &:not(.mdc-fab--extended) .mdc-fab__ripple {
+        border-radius: 12px !important;
+    }
 }
 
 /* Rounded design */
-.mat-button,
-.mat-flat-button,
-.mat-raised-button,
-.mat-stroked-button {
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button {
     padding: 0 20px !important;
     border-radius: 9999px !important;
 }
 
-/* Target all buttons */
-.mat-button,
-.mat-fab,
-.mat-flat-button,
-.mat-icon-button,
-.mat-fab,
-.mat-mini-fab,
-.mat-raised-button,
-.mat-stroked-button {
 
-    /* mat-progress-spinner inside buttons */
-    .mat-progress-spinner {
+/* Fix the alignment of icons when used within buttons */
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button {
 
-        &.mat-progress-spinner-indeterminate-animation[mode=indeterminate] {
+    & > .mat-icon {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+/* Adjust the color of mat-progress-spinner when used within buttons */
+.mat-mdc-button,
+.mat-mdc-raised-button,
+.mat-mdc-outlined-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-icon-button,
+.mat-mdc-fab,
+.mat-mdc-mini-fab {
+
+    .mat-mdc-progress-spinner {
+
+        .mdc-circular-progress__indeterminate-container {
 
             circle {
                 stroke: currentColor !important;
@@ -163,173 +191,87 @@
     }
 }
 
-/* Colored background buttons */
-.mat-flat-button,
-.mat-raised-button,
-.mat-fab,
-.mat-mini-fab {
+/* Adjust the focus, ripple and icon colors of colored background buttons */
+.mat-mdc-raised-button,
+.mat-mdc-unelevated-button,
+.mat-mdc-fab,
+.mat-mdc-mini-fab {
+
+    --mat-mdc-button-persistent-ripple-color: theme('colors.gray[400]') !important;
+    --mat-mdc-button-ripple-color: rgba(0, 0, 0, 0.1) !important;
+
+    .dark & {
+        --mat-mdc-button-persistent-ripple-color: theme('colors.black') !important;
+        --mat-mdc-button-ripple-color: rgba(0, 0, 0, 0.1) !important;
+    }
 
     .mat-icon {
         color: currentColor !important;
     }
 
-    /* Add hover and focus style on all buttons */
-    .mat-button-focus-overlay {
-        @apply bg-gray-400 bg-opacity-20 dark:bg-black dark:bg-opacity-5 #{'!important'};
+    .mat-ripple-element {
+        @apply bg-black/10 #{'!important'};
     }
+}
 
-    /* On palette colored buttons, use a darker color */
-    &.mat-primary,
-    &.mat-accent,
-    &.mat-warn {
+/* Color the icons of transparent background buttons */
+.mat-mdc-button,
+.mat-mdc-icon-button,
+.mat-mdc-outlined-button {
 
-        .mat-button-focus-overlay {
-            background-color: rgba(0, 0, 0, 0.1) !important;
-        }
-    }
+    &:not([disabled=true]) {
 
-    &:hover,
-    &.cdk-keyboard-focused,
-    &.cdk-program-focused {
+        /* Apply primary color */
+        &.mat-primary {
 
-        .mat-button-focus-overlay {
-            opacity: 1 !important;
-        }
-    }
-
-    @media (hover: none) {
-
-        &:hover {
-
-            .mat-button-focus-overlay {
-                opacity: 0 !important;
+            .mat-icon {
+                @apply text-primary #{'!important'};
             }
         }
-    }
 
-    &.mat-button-disabled {
+        /* Apply accent color */
+        &.mat-accent {
 
-        .mat-button-focus-overlay {
-            opacity: 0 !important;
+            .mat-icon {
+                @apply text-accent #{'!important'};
+            }
+        }
+
+        /* Apply warn color */
+        &.mat-warn {
+
+            .mat-icon {
+                @apply text-warn #{'!important'};
+            }
         }
     }
 }
 
-/* Transparent background buttons */
-.mat-button,
-.mat-icon-button,
-.mat-stroked-button {
+/* Adjust the border color of outlined buttons */
+.mat-mdc-outlined-button {
 
-    /* Apply primary color */
-    &.mat-primary:not(.mat-button-disabled) {
-
-        .mat-icon {
-            @apply text-primary #{'!important'};
-        }
-    }
-
-    /* Apply accent color */
-    &.mat-accent:not(.mat-button-disabled) {
-
-        .mat-icon {
-            @apply text-accent #{'!important'};
-        }
-    }
-
-    /* Apply warn color */
-    &.mat-warn:not(.mat-button-disabled) {
-
-        .mat-icon {
-            @apply text-warn #{'!important'};
-        }
-    }
-
-    /* Add hover and focus styles */
-    .mat-button-focus-overlay {
-        @apply bg-gray-400 bg-opacity-20 dark:bg-black dark:bg-opacity-5 #{'!important'};
-    }
-
-    /* On primary colored buttons, use the primary color as focus overlay */
-    &.mat-primary:not(.mat-button-disabled) {
-
-        .mat-button-focus-overlay {
-            @apply bg-primary #{'!important'};
-        }
-    }
-
-    /* On accent colored buttons, use the accent color as focus overlay */
-    &.mat-accent:not(.mat-button-disabled) {
-
-        .mat-button-focus-overlay {
-            @apply bg-accent #{'!important'};
-        }
-    }
-
-    /* On warn colored buttons, use the warn color as focus overlay */
-    &.mat-warn:not(.mat-button-disabled) {
-
-        .mat-button-focus-overlay {
-            @apply bg-warn #{'!important'};
-        }
-    }
-
-    &.mat-primary:not(.mat-button-disabled),
-    &.mat-accent:not(.mat-button-disabled),
-    &.mat-warn:not(.mat-button-disabled) {
-
-        &:hover,
-        &.cdk-keyboard-focused,
-        &.cdk-program-focused {
-
-            .mat-button-focus-overlay {
-                opacity: 0.1 !important;
-            }
-        }
-    }
-
-    &:hover,
-    &.cdk-keyboard-focused,
-    &.cdk-program-focused {
-
-        .mat-button-focus-overlay {
-            opacity: 1 !important;
-        }
-    }
-
-    @media (hover: none) {
-
-        &:hover {
-
-            .mat-button-focus-overlay {
-                opacity: 0 !important;
-            }
-        }
-    }
-
-    &.mat-button-disabled {
-
-        .mat-button-focus-overlay {
-            opacity: 0 !important;
-        }
-    }
-}
-
-/* Stroked buttons */
-.mat-stroked-button {
-
-    /* Border color */
-    &:not(.mat-button-disabled) {
+    /* Not disabled */
+    &:not([disabled=true]) {
         @apply border-gray-300 dark:border-gray-500 #{'!important'};
     }
 
-    &.mat-button-disabled {
-        @apply border-gray-200 dark:border-gray-600 #{'!important'};
+    /* Disabled */
+    &[disabled=true] {
+        @apply border-gray-300/70 dark:border-gray-600 #{'!important'};
     }
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* Don't wrap the button label text */
+.mdc-button {
+
+    .mdc-button__label {
+        white-space: nowrap;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
 /*  @ Button Toggle
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 .mat-button-toggle-group {
     border: none !important;
     @apply space-x-1;
@@ -356,71 +298,54 @@
 
         .mat-button-toggle-label-content {
             padding: 0 20px;
+            line-height: 40px !important;
             @apply text-secondary;
         }
-
-        .mat-ripple {
-            border-radius: 9999px;
-        }
     }
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Checkbox
-/* ----------------------------------------------------------------------------------------------------- */
-.mat-checkbox {
-    display: inline-flex;
+/* -------------------------------------------------------------------------- */
+.mat-mdc-checkbox {
+    display: inline-flex !important;
 
-    /* Allow multiline text */
-    .mat-checkbox-layout {
-        white-space: normal;
-
-        .mat-checkbox-inner-container {
-            display: inline-flex;
-            align-items: center;
-            margin: 0 8px 0 0;
-
-            /* Add a zero-width space character to trick the container */
-            /* into being the same height as a single line of the label */
-            &:after {
-                content: '\200b';
-            }
-        }
-
-        .mat-checkbox-label {
-            line-height: inherit;
-        }
+    .mdc-form-field {
+        padding-right: 12px;
     }
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Chip
-/* ----------------------------------------------------------------------------------------------------- */
-.mat-chip {
+/* -------------------------------------------------------------------------- */
+.mat-mdc-chip {
     font-weight: 500 !important;
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Dialog
-/* ----------------------------------------------------------------------------------------------------- */
-.mat-dialog-container {
-    border-radius: 16px !important;
+/* -------------------------------------------------------------------------- */
+.mat-mdc-dialog-container {
+
+    .mdc-dialog__surface {
+        border-radius: 16px !important;
+        padding: 24px;
+    }
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Drawer
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 .mat-drawer-backdrop.mat-drawer-shown {
     background-color: rgba(0, 0, 0, 0.6) !important;
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Form fields
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 
-/* Fuse only uses 'fill' style form fields and therefore */
-/* only provides fixes and tweaks for that style */
-.mat-form-field.mat-form-field-appearance-fill {
+/* "fill" appearance */
+.mat-mdc-form-field.mat-form-field-appearance-fill {
 
     /* Disabled */
     &.mat-form-field-disabled {
@@ -430,55 +355,50 @@
     /* Invalid */
     &.mat-form-field-invalid {
 
-        .mat-form-field-wrapper {
+        /* Border color */
+        .mat-mdc-text-field-wrapper {
+            @apply border-warn dark:border-warn #{'!important'};
+        }
 
-            /* Border color */
-            .mat-form-field-flex {
-                @apply border-warn dark:border-warn #{'!important'};
+        /* Select */
+        .mat-mdc-select {
+
+            /* Placeholder color */
+            .mat-mdc-select-placeholder {
+                @apply text-warn #{'!important'};
             }
+        }
+    }
+
+    /* Hover */
+    &:hover {
+
+        .mat-mdc-form-field-focus-overlay {
+            opacity: 0 !important;
         }
     }
 
     /* Focused */
     &.mat-focused {
 
-        .mat-form-field-wrapper {
-
-            /* Background color */
-            .mat-form-field-flex {
-                @apply bg-card dark:bg-card #{'!important'};
-            }
+        .mat-mdc-form-field-focus-overlay {
+            opacity: 0 !important;
         }
     }
 
     /* Focused and valid fields */
     &.mat-focused:not(.mat-form-field-invalid) {
 
-        .mat-form-field-wrapper {
-
-            /* Border color */
-            .mat-form-field-flex {
-                @apply border-primary dark:border-primary #{'!important'};
-            }
-        }
-    }
-
-    /* Disable floating mat-label */
-    &.mat-form-field-has-label.mat-form-field-can-float.mat-form-field-should-float {
-
-        .mat-form-field-label-wrapper {
-
-            .mat-form-field-label {
-                width: 100% !important;
-                transform: none !important;
-            }
+        /* Border color */
+        .mat-mdc-text-field-wrapper {
+            @apply border-primary dark:border-primary #{'!important'};
         }
     }
 
     /* Remove the default arrow for native select */
-    &.mat-form-field-type-mat-native-select {
+    &.mat-mdc-form-field-type-mat-native-select {
 
-        .mat-form-field-infix {
+        .mat-mdc-form-field-infix {
 
             select {
                 top: auto;
@@ -502,63 +422,68 @@
         }
     }
 
-    /* Adjustments for mat-label */
-    &.mat-form-field-has-label {
-
-        .mat-form-field-wrapper {
-            margin-top: 24px;
-        }
-    }
-
     /* Default style tweaks and enhancements */
-    .mat-form-field-wrapper {
-        margin-bottom: 16px;
-        padding-bottom: 0;
+    .mat-mdc-text-field-wrapper {
+        padding: 0;
+        border-radius: 6px;
+        border-width: 1px;
+        border-style: solid;
+        @apply shadow-sm bg-white border-gray-300 dark:bg-black dark:bg-opacity-5 dark:border-gray-500 #{'!important'};
 
-        .mat-form-field-flex {
+        /* Adjust the top spacing and overflow when mat-label present */
+        &:not(.mdc-text-field--no-label) {
+            margin-top: 24px;
+            overflow: visible;
+        }
+
+        .mat-mdc-form-field-focus-overlay {
+            border-radius: 6px;
+        }
+
+        /* Form field */
+        .mat-mdc-form-field-flex {
             position: relative;
             display: flex;
             align-items: stretch;
-            min-height: 48px;
             border-radius: 6px;
             padding: 0 16px;
-            border-width: 1px;
-            @apply shadow-sm bg-white border-gray-300 dark:bg-black dark:bg-opacity-5 dark:border-gray-500 #{'!important'};
 
-            .mat-form-field-prefix {
+            .mat-mdc-form-field-icon-prefix,
+            .mat-mdc-form-field-text-prefix {
+                padding: 0 !important;
 
                 > .mat-icon {
                     margin-right: 12px;
+                    padding: 0 !important;
                 }
 
-                > .mat-icon-button {
+                > .mat-mdc-icon-button {
                     margin: 0 4px 0 -10px;
                 }
 
-                > .mat-select {
+                > .mat-mdc-select {
                     margin-right: 10px;
                 }
 
                 > .mat-datepicker-toggle {
                     margin-left: -8px;
                 }
-
-                > *:not(.mat-icon):not(.mat-icon-button):not(.mat-select):not(.mat-datepicker-toggle) {
-                    margin-right: 12px;
-                }
             }
 
-            .mat-form-field-suffix {
+            .mat-mdc-form-field-icon-suffix,
+            .mat-mdc-form-field-text-suffix {
+                padding: 0 !important;
 
                 > .mat-icon {
                     margin-left: 12px;
+                    padding: 0 !important;
                 }
 
-                > .mat-icon-button {
+                > .mat-mdc-icon-button {
                     margin: 0 -10px 0 4px;
                 }
 
-                > .mat-select {
+                > .mat-mdc-select {
                     margin-left: 10px;
                 }
 
@@ -567,14 +492,16 @@
                 }
             }
 
-            .mat-form-field-prefix,
-            .mat-form-field-suffix {
+            .mat-mdc-form-field-icon-prefix,
+            .mat-mdc-form-field-text-prefix,
+            .mat-mdc-form-field-icon-suffix,
+            .mat-mdc-form-field-text-suffix {
                 display: inline-flex;
                 align-items: center;
                 justify-content: center;
                 @apply text-hint #{'!important'};
 
-                .mat-icon-button {
+                .mat-mdc-icon-button {
                     width: 40px;
                     min-width: 40px;
                     height: 40px;
@@ -582,25 +509,9 @@
                 }
 
                 .mat-icon,
-                .mat-icon-button:not(.mat-button-disabled),
-                .mat-select-value {
+                .mat-mdc-icon-button:not([disabled]),
+                .mat-mdc-select-value {
                     @apply text-hint;
-                }
-
-                /* Remove the margins from the mat-icon if it's inside a button */
-                /* Force the icon size to 24 */
-                .mat-button,
-                .mat-raised-button,
-                .mat-icon-button,
-                .mat-stroked-button,
-                .mat-flat-button,
-                .mat-fab,
-                .mat-mini-fab {
-
-                    .mat-icon {
-                        margin: 0 !important;
-                        @apply icon-size-6;
-                    }
                 }
 
                 /* Datepicker default icon size */
@@ -609,36 +520,36 @@
                 }
 
                 /* Make mat-select usable as prefix and suffix */
-                .mat-select {
+                .mat-mdc-select {
                     display: flex;
                     align-items: center;
 
                     &:focus {
 
-                        .mat-select-trigger {
+                        .mat-mdc-select-trigger {
 
-                            .mat-select-value {
+                            .mat-mdc-select-value {
                                 @apply text-primary #{'!important'};
                             }
 
-                            .mat-select-arrow-wrapper {
+                            .mat-mdc-select-arrow-wrapper {
 
-                                .mat-select-arrow {
+                                .mat-mdc-select-arrow {
                                     border-top-color: var(--fuse-primary) !important;
                                 }
                             }
                         }
                     }
 
-                    .mat-select-trigger {
+                    .mat-mdc-select-trigger {
                         display: flex;
                         align-items: center;
 
-                        .mat-select-value {
+                        .mat-mdc-select-value {
                             display: flex;
                             max-width: none;
 
-                            mat-select-trigger {
+                            mat-mdc-select-trigger {
 
                                 .mat-icon {
                                     margin: 0 !important;
@@ -646,13 +557,13 @@
                             }
                         }
 
-                        .mat-select-arrow-wrapper {
+                        .mat-mdc-select-arrow-wrapper {
                             display: flex;
                             align-items: center;
                             transform: none;
                             margin-left: 4px;
 
-                            .mat-select-arrow {
+                            .mat-mdc-select-arrow {
                                 min-height: 0;
                                 @apply text-gray-500 dark:text-gray-400 #{'!important'};
                             }
@@ -661,159 +572,76 @@
                 }
             }
 
-            .mat-form-field-infix {
+            /* Infix */
+            .mat-mdc-form-field-infix {
                 position: static;
                 display: flex;
                 align-items: center;
                 width: 88px;
+                min-height: 48px;
                 padding: 0;
                 border: 0;
 
-                .mat-input-element {
-                    padding: 14px 0;
-                    margin-top: 0;
+                /* Floating label - disable floating action */
+                .mat-mdc-floating-label {
+                    top: -25px !important;
+                    left: 0 !important;
+                    width: 100% !important;
+                    transform: none !important;
+                    pointer-events: auto;
+                    font-weight: 500;
+                    @apply text-default #{'!important'};
                 }
 
                 /* Textarea */
-                textarea.mat-input-element {
-                    display: flex;
-                    align-self: stretch;
-                    min-height: 36px;
-                    height: auto;
-                    margin: 14px 0;
+                textarea.mat-mdc-input-element {
+                    margin: 12px 0;
                     padding: 0 6px 0 0;
-                    transform: none;
-                }
-
-                /* Select */
-                .mat-select {
-                    display: inline-flex;
-
-                    .mat-select-trigger {
-                        display: inline-flex;
-                        align-items: center;
-                        width: 100%;
-
-                        .mat-select-value {
-                            display: flex;
-                            position: relative;
-                            max-width: none;
-
-                            .mat-select-value-text {
-                                display: inline-flex;
-
-                                > * {
-                                    overflow: hidden;
-                                    white-space: nowrap;
-                                    text-overflow: ellipsis;
-                                }
-                            }
-                        }
-                    }
-
-                    .mat-select-arrow-wrapper {
-                        transform: translateY(0);
-
-                        .mat-select-arrow {
-                            margin: 0 0 0 8px;
-                        }
-                    }
                 }
 
                 /* Chips */
-                .mat-chip-list {
+                .mat-mdc-chip-set {
                     width: 100%;
                     margin: 0 -8px;
-
-                    .mat-chip-input {
-                        margin: 0 0 0 8px;
-                    }
-                }
-
-                .mat-form-field-label-wrapper {
-                    top: -25px;
-                    height: auto;
-                    padding-top: 0;
-                    overflow: visible;
-                    pointer-events: auto;
-
-                    .mat-form-field-label {
-                        position: relative;
-                        top: 0;
-                        margin-top: 0;
-                        backface-visibility: hidden;
-                        transition: none;
-                        font-weight: 500;
-                        @apply text-default #{'!important'};
-                    }
                 }
             }
         }
 
         /* Remove the underline */
-        .mat-form-field-underline {
+        .mdc-line-ripple {
             display: none;
         }
+    }
 
-        /* Subscript tweaks */
-        .mat-form-field-subscript-wrapper {
-            position: relative;
-            top: auto;
+    /* Subscript tweaks */
+    .mat-mdc-form-field-subscript-wrapper {
+        font-size: 12px;
+        font-weight: 500;
+
+        .mat-mdc-form-field-hint-wrapper,
+        .mat-mdc-form-field-error-wrapper {
             padding: 0;
-            margin-top: 0;
-            font-size: 12px;
-            font-weight: 500;
-            line-height: 1;
+        }
 
-            > div {
-                display: contents; /* Remove the div from flow to stop the subscript animation */
-            }
-
-            .mat-error,
-            .mat-hint {
-                display: block;
-                margin-top: 4px;
-            }
-
-            .mat-hint {
-                @apply text-hint #{'!important'};
-            }
+        .mat-mdc-form-field-hint {
+            @apply text-hint #{'!important'};
         }
     }
 
     /* Adds better alignment for textarea inputs */
-    &.fuse-mat-textarea {
+    &:has(textarea.mat-mdc-input-element) {
 
-        .mat-form-field-wrapper {
+        .mat-mdc-text-field-wrapper {
 
-            .mat-form-field-flex {
+            .mat-mdc-form-field-flex {
 
-                .mat-form-field-prefix,
-                .mat-form-field-suffix {
-                    align-items: flex-start;
+                .mat-mdc-form-field-icon-prefix,
+                .mat-mdc-form-field-text-prefix,
+                .mat-mdc-form-field-icon-suffix,
+                .mat-mdc-form-field-text-suffix {
+                    align-self: flex-start;
+                    padding-top: 14px !important;
                 }
-
-                .mat-form-field-prefix {
-                    padding-top: 12px;
-                }
-
-                .mat-form-field-suffix {
-                    padding-top: 12px;
-                }
-            }
-        }
-    }
-
-    /* Removes subscript space */
-    &.fuse-mat-no-subscript {
-
-        .mat-form-field-wrapper {
-            padding-bottom: 0;
-            margin-bottom: 0;
-
-            .mat-form-field-subscript-wrapper {
-                display: none !important;
-                height: 0 !important;
             }
         }
     }
@@ -821,32 +649,30 @@
     /* Rounded */
     &.fuse-mat-rounded {
 
-        .mat-form-field-wrapper {
-
-            .mat-form-field-flex {
-                border-radius: 24px;
-            }
+        .mat-mdc-text-field-wrapper {
+            border-radius: 24px;
         }
 
         /* Emphasized affix */
         &.fuse-mat-emphasized-affix {
 
-            .mat-form-field-wrapper {
+            .mat-mdc-text-field-wrapper {
 
-                .mat-form-field-flex {
+                .mat-mdc-form-field-flex {
 
-                    .mat-form-field-prefix {
+                    .mat-mdc-form-field-icon-prefix,
+                    .mat-mdc-form-field-text-prefix {
                         border-radius: 24px 0 0 24px;
 
                         > .mat-icon {
                             margin-right: 12px;
                         }
 
-                        > .mat-icon-button {
-                            margin-right: 2px;
+                        > .mat-mdc-icon-button {
+                            margin: 0 2px 0 -10px !important;
                         }
 
-                        > .mat-select {
+                        > .mat-mdc-select {
                             margin-right: 8px;
                         }
 
@@ -854,23 +680,24 @@
                             margin-right: 4px;
                         }
 
-                        > *:not(.mat-icon):not(.mat-icon-button):not(.mat-select):not(.mat-datepicker-toggle) {
+                        > *:not(.mat-icon):not(.mat-mdc-icon-button):not(.mat-mdc-select):not(.mat-datepicker-toggle) {
                             margin-right: 12px;
                         }
                     }
 
-                    .mat-form-field-suffix {
+                    .mat-mdc-form-field-icon-suffix,
+                    .mat-mdc-form-field-text-suffix {
                         border-radius: 0 24px 24px 0;
 
                         > .mat-icon {
                             margin-left: 12px !important;
                         }
 
-                        > .mat-icon-button {
-                            margin-left: 2px !important;
+                        > .mat-mdc-icon-button {
+                            margin: 0 -10px 0 2px !important;
                         }
 
-                        > .mat-select {
+                        > .mat-mdc-select {
                             margin-left: 12px !important;
                         }
 
@@ -878,7 +705,7 @@
                             margin-left: 4px !important;
                         }
 
-                        > *:not(.mat-icon):not(.mat-icon-button):not(.mat-select):not(.mat-datepicker-toggle) {
+                        > *:not(.mat-icon):not(.mat-mdc-icon-button):not(.mat-mdc-select):not(.mat-datepicker-toggle) {
                             margin-left: 12px !important;
                         }
                     }
@@ -890,42 +717,64 @@
     /* Dense */
     &.fuse-mat-dense {
 
-        .mat-form-field-wrapper {
+        .mat-mdc-text-field-wrapper {
 
-            .mat-form-field-flex {
-                min-height: 40px;
+            .mat-mdc-form-field-flex {
 
-                .mat-form-field-prefix,
-                .mat-form-field-suffix {
+                .mat-mdc-form-field-icon-prefix,
+                .mat-mdc-form-field-text-prefix,
+                .mat-mdc-form-field-icon-suffix,
+                .mat-mdc-form-field-text-suffix {
 
-                    .mat-icon-button {
-                        width: 32px;
+                    .mat-mdc-icon-button {
+                        width: 32px !important;
                         min-width: 32px;
                         height: 32px;
                         min-height: 32px;
                     }
                 }
 
-                .mat-form-field-prefix {
+                .mat-mdc-form-field-icon-prefix,
+                .mat-mdc-form-field-text-prefix {
 
-                    > .mat-icon-button {
+                    > .mat-mdc-icon-button {
                         margin-left: -6px;
                         margin-right: 12px;
                     }
                 }
 
-                .mat-form-field-suffix {
+                .mat-mdc-form-field-icon-suffix,
+                .mat-mdc-form-field-text-suffix {
 
-                    > .mat-icon-button {
+                    > .mat-mdc-icon-button {
                         margin-left: 12px;
                         margin-right: -6px;
                     }
                 }
 
-                .mat-form-field-infix {
+                .mat-mdc-form-field-infix {
+                    min-height: 40px;
 
-                    .mat-input-element {
-                        padding: 11px 0;
+                    /* Textarea */
+                    textarea.mat-mdc-input-element {
+                        margin: 8px 0;
+                    }
+                }
+            }
+        }
+
+        /* Adds better alignment for textarea inputs */
+        &:has(textarea.mat-mdc-input-element) {
+
+            .mat-mdc-text-field-wrapper {
+
+                .mat-mdc-form-field-flex {
+
+                    .mat-mdc-form-field-icon-prefix,
+                    .mat-mdc-form-field-text-prefix,
+                    .mat-mdc-form-field-icon-suffix,
+                    .mat-mdc-form-field-text-suffix {
+                        padding-top: 10px !important;
                     }
                 }
             }
@@ -934,25 +783,24 @@
         /* Rounded */
         &.fuse-mat-rounded {
 
-            .mat-form-field-wrapper {
-
-                .mat-form-field-flex {
-                    border-radius: 20px;
-                }
+            .mat-mdc-text-field-wrapper {
+                border-radius: 20px;
             }
 
             /* Emphasized affix */
             &.fuse-mat-emphasized-affix {
 
-                .mat-form-field-wrapper {
+                .mat-mdc-text-field-wrapper {
 
-                    .mat-form-field-flex {
+                    .mat-mdc-form-field-flex {
 
-                        .mat-form-field-prefix {
+                        .mat-mdc-form-field-icon-prefix,
+                        .mat-mdc-form-field-text-prefix {
                             border-radius: 20px 0 0 20px !important;
                         }
 
-                        .mat-form-field-suffix {
+                        .mat-mdc-form-field-icon-suffix,
+                        .mat-mdc-form-field-text-suffix {
                             border-radius: 0 20px 20px 0 !important;
                         }
                     }
@@ -964,67 +812,92 @@
     /* Emphasized affix */
     &.fuse-mat-emphasized-affix {
 
-        .mat-form-field-wrapper {
+        .mat-mdc-text-field-wrapper {
 
-            .mat-form-field-flex {
+            .mat-mdc-form-field-flex {
 
-                .mat-form-field-prefix {
-                    margin: 0 16px 0 -16px;
-                    padding-left: 16px;
+                .mat-mdc-form-field-icon-prefix,
+                .mat-mdc-form-field-text-prefix {
+                    align-self: stretch !important;
+                    margin: 0 16px 0 -16px !important;
+                    padding-left: 16px !important;
                     border-radius: 6px 0 0 6px;
                     border-right-width: 1px;
+                    border-style: solid;
 
                     > .mat-icon {
                         margin-right: 16px;
                     }
 
-                    > .mat-icon-button {
-                        margin: 0 6px 0 -10px;
+                    > .mat-mdc-icon-button {
+                        margin: 0 6px 0 -10px !important;
                     }
 
-                    > .mat-select {
-                        margin-right: 12px;
+                    > .mat-mdc-select {
+                        margin-right: 12px !important;
                     }
 
                     > .mat-datepicker-toggle {
                         margin-right: 8px;
                     }
 
-                    > *:not(.mat-icon):not(.mat-icon-button):not(.mat-select):not(.mat-datepicker-toggle) {
+                    > *:not(.mat-icon):not(.mat-mdc-icon-button):not(.mat-mdc-select):not(.mat-datepicker-toggle) {
                         margin-right: 16px;
                     }
                 }
 
-                .mat-form-field-suffix {
-                    margin: 0 -16px 0 16px;
-                    padding-right: 16px;
+                .mat-mdc-form-field-icon-suffix,
+                .mat-mdc-form-field-text-suffix {
+                    align-self: stretch !important;
+                    margin: 0 -16px 0 16px !important;
+                    padding-right: 16px !important;
                     border-radius: 0 6px 6px 0;
                     border-left-width: 1px;
+                    border-style: solid;
 
                     > .mat-icon {
                         margin-left: 16px;
                     }
 
-                    > .mat-icon-button {
-                        margin: 0 -10px 0 6px;
+                    > .mat-mdc-icon-button {
+                        margin: 0 -10px 0 6px !important;
                     }
 
-                    > .mat-select {
-                        margin: 0 -4px 0 16px;
+                    > .mat-mdc-select {
+                        margin: 0 -4px 0 16px !important;
                     }
 
                     > .mat-datepicker-toggle {
                         margin-left: 8px;
                     }
 
-                    > *:not(.mat-icon):not(.mat-icon-button):not(.mat-select):not(.mat-datepicker-toggle) {
+                    > *:not(.mat-icon):not(.mat-mdc-icon-button):not(.mat-mdc-select):not(.mat-datepicker-toggle) {
                         margin-left: 16px;
                     }
                 }
 
-                .mat-form-field-prefix,
-                .mat-form-field-suffix {
+                .mat-mdc-form-field-icon-prefix,
+                .mat-mdc-form-field-text-prefix,
+                .mat-mdc-form-field-icon-suffix,
+                .mat-mdc-form-field-text-suffix {
                     @apply bg-default border-gray-300 dark:border-gray-500 #{'!important'};
+                }
+            }
+        }
+
+        /* with Textarea */
+        &:has(textarea.mat-mdc-input-element) {
+
+            .mat-mdc-text-field-wrapper {
+
+                .mat-mdc-form-field-flex {
+
+                    .mat-mdc-form-field-icon-prefix,
+                    .mat-mdc-form-field-text-prefix,
+                    .mat-mdc-form-field-icon-suffix,
+                    .mat-mdc-form-field-text-suffix {
+                        align-items: flex-start;
+                    }
                 }
             }
         }
@@ -1033,46 +906,91 @@
     /* Bolder border width */
     &.fuse-mat-bold {
 
-        .mat-form-field-wrapper {
+        .mat-mdc-text-field-wrapper {
+            border-width: 2px !important;
+        }
+    }
+}
 
-            .mat-form-field-flex {
-                border-width: 2px !important;
+/* "outline" appearance */
+.mat-mdc-form-field.mat-form-field-appearance-outline {
+
+    /* Invalid */
+    &.mat-form-field-invalid {
+
+        .mdc-notched-outline__leading,
+        .mdc-notched-outline__notch,
+        .mdc-notched-outline__trailing {
+            border-color: var(--fuse-warn) !important;
+        }
+    }
+
+    /* Focused */
+    &.mat-focused:not(.mat-form-field-invalid) {
+
+        /* Primary */
+        &.mat-primary {
+
+            .mdc-notched-outline__leading,
+            .mdc-notched-outline__notch,
+            .mdc-notched-outline__trailing {
+                border-color: var(--fuse-primary) !important;
+            }
+        }
+
+        /* Accent */
+        &.mat-accent {
+
+            .mdc-notched-outline__leading,
+            .mdc-notched-outline__notch,
+            .mdc-notched-outline__trailing {
+                border-color: var(--fuse-accent) !important;
+            }
+        }
+    }
+
+    &:not(.mat-focused):not(.mat-form-field-invalid) {
+
+        .mat-mdc-text-field-wrapper {
+
+            .mat-mdc-form-field-flex {
+
+                .mdc-notched-outline {
+
+                    .mdc-notched-outline__leading,
+                    .mdc-notched-outline__notch,
+                    .mdc-notched-outline__trailing {
+                        @apply border-slate-300 dark:border-slate-500 #{'!important'};
+                    }
+                }
+            }
+        }
+    }
+
+    /* Remove the extra border on the right side of the notch */
+    /* Tailwind's global border setter causes this issue */
+    .mat-mdc-text-field-wrapper {
+
+        .mat-mdc-form-field-flex {
+
+            .mdc-notched-outline {
+
+                .mdc-notched-outline__notch {
+                    border-right-style: none !important;
+                }
             }
         }
     }
 }
 
-/* Fix the outline appearance */
-.mat-form-field.mat-form-field-appearance-outline {
-
-    .mat-form-field-wrapper {
-
-        .mat-form-field-flex {
-
-            .mat-form-field-outline {
-                @apply text-gray-300 dark:text-gray-500 #{'!important'};
-            }
-        }
-    }
-}
-
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Datepicker
-/* ----------------------------------------------------------------------------------------------------- */
-/* Hover and active cell content background opacity */
-.mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover,
-.cdk-keyboard-focused .mat-calendar-body-active,
-.cdk-program-focused .mat-calendar-body-active {
-    & > .mat-calendar-body-cell-content {
-        &:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-            @apply bg-primary bg-opacity-30 #{'!important'};
-        }
-    }
-}
+/* -------------------------------------------------------------------------- */
 
-/* ----------------------------------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
 /*  @ Icon
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 .mat-icon {
     display: inline-flex !important;
     align-items: center;
@@ -1086,10 +1004,10 @@
     -webkit-appearance: none !important;
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Inputs
-/* ----------------------------------------------------------------------------------------------------- */
-.mat-input-element {
+/* -------------------------------------------------------------------------- */
+.mat-mdc-input-element {
 
     &::placeholder {
         transition: none !important;
@@ -1115,7 +1033,7 @@
 /* Invalid */
 .mat-form-field-invalid {
 
-    .mat-input-element {
+    .mat-mdc-input-element {
 
         /* Placeholder color */
         &::placeholder {
@@ -1136,24 +1054,34 @@
     }
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Menu
-/* ----------------------------------------------------------------------------------------------------- */
-.mat-menu-panel {
+/* -------------------------------------------------------------------------- */
+.mat-mdc-menu-panel {
     min-width: 144px !important;
 
-    .mat-menu-content {
+    .mat-mdc-menu-content {
 
-        .mat-menu-item {
+        .mat-mdc-menu-item {
             display: flex;
             align-items: center;
 
-            &.mat-menu-item-submenu-trigger {
+            > span {
+                display: inline-flex;
+                align-items: center;
+            }
+
+            &.mat-mdc-menu-item-submenu-trigger {
                 padding-right: 40px;
             }
 
             .mat-icon {
                 margin-right: 12px;
+            }
+
+            .mat-icon-no-color {
+                --tw-text-opacity: 1;
+                color: rgba(var(--fuse-mat-icon-rgb), var(--tw-text-opacity));
             }
         }
 
@@ -1164,12 +1092,12 @@
     }
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Paginator
-/* ----------------------------------------------------------------------------------------------------- */
-.mat-paginator {
+/* -------------------------------------------------------------------------- */
+.mat-mdc-paginator {
 
-    .mat-paginator-container {
+    .mat-mdc-paginator-container {
         padding: 8px 16px;
         justify-content: space-between;
 
@@ -1178,12 +1106,12 @@
         }
 
         /* Page size select */
-        .mat-paginator-page-size {
+        .mat-mdc-paginator-page-size {
             align-items: center;
             min-height: 40px;
             margin: 8px;
 
-            .mat-paginator-page-size-label {
+            .mat-mdc-paginator-page-size-label {
                 display: none;
                 margin-right: 12px;
 
@@ -1192,54 +1120,49 @@
                 }
             }
 
-            .mat-paginator-page-size-select {
+            .mat-mdc-paginator-page-size-select {
                 margin: 0;
 
-                .mat-form-field-wrapper {
-                    margin-bottom: 0;
+                .mat-mdc-text-field-wrapper {
+                    padding: 0 10px;
 
                     .mat-form-field-flex {
                         min-height: 32px;
-                        padding: 0 10px;
                     }
                 }
             }
         }
 
         /* Range actions */
-        .mat-paginator-range-actions {
+        .mat-mdc-paginator-range-actions {
             margin: 8px 0;
 
-            .mat-paginator-range-label {
+            .mat-mdc-paginator-range-label {
                 margin-right: 16px;
             }
         }
     }
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Select
-/* ----------------------------------------------------------------------------------------------------- */
-.mat-select {
-    display: inline-flex;
+/* -------------------------------------------------------------------------- */
+.mat-mdc-select {
+    display: inline-flex !important;
 
-    .mat-select-placeholder {
+    .mat-mdc-select-placeholder {
         transition: none !important;
         @apply text-hint #{'!important'};
     }
 
-    .mat-select-trigger {
-        display: inline-flex;
-        align-items: center;
-        width: 100%;
-        height: auto;
+    .mat-mdc-select-trigger {
 
-        .mat-select-value {
-            display: flex;
+        .mat-mdc-select-value {
             position: relative;
+            display: flex;
             max-width: none;
 
-            .mat-select-value-text {
+            .mat-mdc-select-value-text {
                 display: inline-flex;
 
                 > * {
@@ -1251,45 +1174,23 @@
         }
     }
 
-    .mat-select-arrow-wrapper {
-        transform: translateY(0);
+    .mat-mdc-select-arrow-wrapper {
+        transform: translateY(0) !important;
 
-        .mat-select-arrow {
-            margin: 0 4px 0 2px;
+        .mat-mdc-select-arrow {
+            margin: 0 0 0 8px;
         }
     }
 }
 
-/* Invalid */
-.mat-form-field-invalid {
-
-    .mat-select {
-
-        /* Placeholder color */
-        .mat-select-placeholder {
-            @apply text-warn #{'!important'};
-        }
-    }
-}
-
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Slide Toggle
-/* ----------------------------------------------------------------------------------------------------- */
-.mat-slide-toggle.mat-checked .mat-slide-toggle-bar {
-    background-color: rgba(var(--fuse-accent-500-rgb), 0.54) !important;
-}
+/* -------------------------------------------------------------------------- */
 
-.mat-slide-toggle.mat-primary.mat-checked .mat-slide-toggle-bar {
-    background-color: rgba(var(--fuse-primary-500-rgb), 0.54) !important;
-}
 
-.mat-slide-toggle.mat-warn.mat-checked .mat-slide-toggle-bar {
-    background-color: rgba(var(--fuse-warn-500-rgb), 0.54) !important;
-}
-
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Stepper
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 .mat-step-icon {
 
     /* Do not override the mat-icon color */
@@ -1303,15 +1204,25 @@
     font-weight: 500 !important;
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+/*  @ Table
+/* -------------------------------------------------------------------------- */
+.mat-mdc-table {
+
+    .mdc-data-table__row:not(.mdc-data-table__row--selected):hover {
+        background: none !important;
+    }
+}
+
+/* -------------------------------------------------------------------------- */
 /*  @ Tabs
-/* ----------------------------------------------------------------------------------------------------- */
-.mat-tab-group {
+/* -------------------------------------------------------------------------- */
+.mat-mdc-tab-group {
 
     /* No header */
     &.fuse-mat-no-header {
 
-        .mat-tab-header {
+        .mat-mdc-tab-header {
             height: 0 !important;
             max-height: 0 !important;
             border: none !important;
@@ -1320,64 +1231,38 @@
         }
     }
 
-    .mat-tab-header {
-        border-bottom: none !important;
+    &:not(.mat-background-primary):not(.mat-background-accent) {
 
-        .mat-tab-label-container {
-            padding: 0 24px;
+        .mat-mdc-tab-header {
 
-            .mat-tab-list {
-
-                .mat-tab-labels {
-
-                    .mat-tab-label {
-                        min-width: 0 !important;
-                        height: 40px !important;
-                        padding: 0 20px !important;
-                        border-radius: 9999px !important;
-                        @apply text-secondary;
-
-                        &.mat-tab-label-active {
-                            @apply bg-gray-700 bg-opacity-10 dark:bg-gray-50 dark:bg-opacity-10 #{'!important'};
-                            @apply text-default #{'!important'};
-                        }
-
-                        + .mat-tab-label {
-                            margin-left: 4px;
-                        }
-
-                        .mat-tab-label-content {
-                            line-height: 20px;
-                        }
-                    }
-                }
-
-                .mat-ink-bar {
-                    display: none !important;
-                }
+            .mat-mdc-tab-label-container {
+                box-shadow: inset 0 -1px var(--fuse-border);
             }
         }
     }
 
-    .mat-tab-body-content {
+    .mat-mdc-tab-header {
+
+        .mat-mdc-tab-label-container {
+            margin: 0 24px;
+        }
+    }
+
+    .mat-mdc-tab-body-content {
         padding: 24px;
     }
 }
 
-.mat-tab-label {
-    opacity: 1 !important;
-}
-
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Textarea
-/* ----------------------------------------------------------------------------------------------------- */
-textarea.mat-input-element {
+/* -------------------------------------------------------------------------- */
+textarea.mat-mdc-input-element {
     box-sizing: content-box !important;
 }
 
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 /*  @ Toolbar
-/* ----------------------------------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
 .mat-toolbar {
 
     /* Apply primary contrast color */

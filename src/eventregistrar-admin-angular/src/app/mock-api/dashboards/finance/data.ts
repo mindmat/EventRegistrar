@@ -1,4 +1,7 @@
-import * as moment from 'moment';
+import { DateTime } from 'luxon';
+
+/* Get the current instant */
+const now = DateTime.now();
 
 /* tslint:disable:max-line-length */
 export const finance = {
@@ -10,483 +13,483 @@ export const finance = {
                 name: 'Predicted',
                 data: [
                     {
-                        x: moment().subtract(12, 'months').day(1).toDate(),
+                        x: now.minus({months: 12}).plus({day: 1}).toJSDate(),
                         y: 48.84
                     },
                     {
-                        x: moment().subtract(12, 'months').day(4).toDate(),
+                        x: now.minus({months: 12}).plus({day: 4}).toJSDate(),
                         y: 53.51
                     },
                     {
-                        x: moment().subtract(12, 'months').day(7).toDate(),
+                        x: now.minus({months: 12}).plus({day: 7}).toJSDate(),
                         y: 52.93
                     },
                     {
-                        x: moment().subtract(12, 'months').day(10).toDate(),
+                        x: now.minus({months: 12}).plus({day: 10}).toJSDate(),
                         y: 49.08
                     },
                     {
-                        x: moment().subtract(12, 'months').day(13).toDate(),
+                        x: now.minus({months: 12}).plus({day: 13}).toJSDate(),
                         y: 50.27
                     },
                     {
-                        x: moment().subtract(12, 'months').day(16).toDate(),
+                        x: now.minus({months: 12}).plus({day: 16}).toJSDate(),
                         y: 48.37
                     },
                     {
-                        x: moment().subtract(12, 'months').day(19).toDate(),
+                        x: now.minus({months: 12}).plus({day: 19}).toJSDate(),
                         y: 44.84
                     },
                     {
-                        x: moment().subtract(12, 'months').day(22).toDate(),
+                        x: now.minus({months: 12}).plus({day: 22}).toJSDate(),
                         y: 40.71
                     },
                     {
-                        x: moment().subtract(12, 'months').day(25).toDate(),
+                        x: now.minus({months: 12}).plus({day: 25}).toJSDate(),
                         y: 41.24
                     },
                     {
-                        x: moment().subtract(12, 'months').day(28).toDate(),
+                        x: now.minus({months: 12}).plus({day: 28}).toJSDate(),
                         y: 45.63
                     },
                     {
-                        x: moment().subtract(11, 'months').day(1).toDate(),
+                        x: now.minus({months: 11}).plus({day: 1}).toJSDate(),
                         y: 38.20
                     },
                     {
-                        x: moment().subtract(11, 'months').day(4).toDate(),
+                        x: now.minus({months: 11}).plus({day: 4}).toJSDate(),
                         y: 39.68
                     },
                     {
-                        x: moment().subtract(11, 'months').day(7).toDate(),
+                        x: now.minus({months: 11}).plus({day: 7}).toJSDate(),
                         y: 41.02
                     },
                     {
-                        x: moment().subtract(11, 'months').day(10).toDate(),
+                        x: now.minus({months: 11}).plus({day: 10}).toJSDate(),
                         y: 39.41
                     },
                     {
-                        x: moment().subtract(11, 'months').day(13).toDate(),
+                        x: now.minus({months: 11}).plus({day: 13}).toJSDate(),
                         y: 35.66
                     },
                     {
-                        x: moment().subtract(11, 'months').day(16).toDate(),
+                        x: now.minus({months: 11}).plus({day: 16}).toJSDate(),
                         y: 38.53
                     },
                     {
-                        x: moment().subtract(11, 'months').day(19).toDate(),
+                        x: now.minus({months: 11}).plus({day: 19}).toJSDate(),
                         y: 38.53
                     },
                     {
-                        x: moment().subtract(11, 'months').day(22).toDate(),
+                        x: now.minus({months: 11}).plus({day: 22}).toJSDate(),
                         y: 40.69
                     },
                     {
-                        x: moment().subtract(11, 'months').day(25).toDate(),
+                        x: now.minus({months: 11}).plus({day: 25}).toJSDate(),
                         y: 38.79
                     },
                     {
-                        x: moment().subtract(11, 'months').day(28).toDate(),
+                        x: now.minus({months: 11}).plus({day: 28}).toJSDate(),
                         y: 42.98
                     },
                     {
-                        x: moment().subtract(10, 'months').day(1).toDate(),
+                        x: now.minus({months: 10}).plus({day: 1}).toJSDate(),
                         y: 43.55
                     },
                     {
-                        x: moment().subtract(10, 'months').day(4).toDate(),
+                        x: now.minus({months: 10}).plus({day: 4}).toJSDate(),
                         y: 40.65
                     },
                     {
-                        x: moment().subtract(10, 'months').day(7).toDate(),
+                        x: now.minus({months: 10}).plus({day: 7}).toJSDate(),
                         y: 36.50
                     },
                     {
-                        x: moment().subtract(10, 'months').day(10).toDate(),
+                        x: now.minus({months: 10}).plus({day: 10}).toJSDate(),
                         y: 33.79
                     },
                     {
-                        x: moment().subtract(10, 'months').day(13).toDate(),
+                        x: now.minus({months: 10}).plus({day: 13}).toJSDate(),
                         y: 31.91
                     },
                     {
-                        x: moment().subtract(10, 'months').day(16).toDate(),
+                        x: now.minus({months: 10}).plus({day: 16}).toJSDate(),
                         y: 29.68
                     },
                     {
-                        x: moment().subtract(10, 'months').day(19).toDate(),
+                        x: now.minus({months: 10}).plus({day: 19}).toJSDate(),
                         y: 29.57
                     },
                     {
-                        x: moment().subtract(10, 'months').day(22).toDate(),
+                        x: now.minus({months: 10}).plus({day: 22}).toJSDate(),
                         y: 33.13
                     },
                     {
-                        x: moment().subtract(10, 'months').day(25).toDate(),
+                        x: now.minus({months: 10}).plus({day: 25}).toJSDate(),
                         y: 37.08
                     },
                     {
-                        x: moment().subtract(10, 'months').day(28).toDate(),
+                        x: now.minus({months: 10}).plus({day: 28}).toJSDate(),
                         y: 35.86
                     },
                     {
-                        x: moment().subtract(9, 'months').day(1).toDate(),
+                        x: now.minus({months: 9}).plus({day: 1}).toJSDate(),
                         y: 39.65
                     },
                     {
-                        x: moment().subtract(9, 'months').day(4).toDate(),
+                        x: now.minus({months: 9}).plus({day: 4}).toJSDate(),
                         y: 39.01
                     },
                     {
-                        x: moment().subtract(9, 'months').day(7).toDate(),
+                        x: now.minus({months: 9}).plus({day: 7}).toJSDate(),
                         y: 34.10
                     },
                     {
-                        x: moment().subtract(9, 'months').day(10).toDate(),
+                        x: now.minus({months: 9}).plus({day: 10}).toJSDate(),
                         y: 37.48
                     },
                     {
-                        x: moment().subtract(9, 'months').day(13).toDate(),
+                        x: now.minus({months: 9}).plus({day: 13}).toJSDate(),
                         y: 39.29
                     },
                     {
-                        x: moment().subtract(9, 'months').day(16).toDate(),
+                        x: now.minus({months: 9}).plus({day: 16}).toJSDate(),
                         y: 38.46
                     },
                     {
-                        x: moment().subtract(9, 'months').day(19).toDate(),
+                        x: now.minus({months: 9}).plus({day: 19}).toJSDate(),
                         y: 37.71
                     },
                     {
-                        x: moment().subtract(9, 'months').day(22).toDate(),
+                        x: now.minus({months: 9}).plus({day: 22}).toJSDate(),
                         y: 40.15
                     },
                     {
-                        x: moment().subtract(9, 'months').day(25).toDate(),
+                        x: now.minus({months: 9}).plus({day: 25}).toJSDate(),
                         y: 35.89
                     },
                     {
-                        x: moment().subtract(9, 'months').day(28).toDate(),
+                        x: now.minus({months: 9}).plus({day: 28}).toJSDate(),
                         y: 31.50
                     },
                     {
-                        x: moment().subtract(8, 'months').day(1).toDate(),
+                        x: now.minus({months: 8}).plus({day: 1}).toJSDate(),
                         y: 30.50
                     },
                     {
-                        x: moment().subtract(8, 'months').day(4).toDate(),
+                        x: now.minus({months: 8}).plus({day: 4}).toJSDate(),
                         y: 25.74
                     },
                     {
-                        x: moment().subtract(8, 'months').day(7).toDate(),
+                        x: now.minus({months: 8}).plus({day: 7}).toJSDate(),
                         y: 28.23
                     },
                     {
-                        x: moment().subtract(8, 'months').day(10).toDate(),
+                        x: now.minus({months: 8}).plus({day: 10}).toJSDate(),
                         y: 28.48
                     },
                     {
-                        x: moment().subtract(8, 'months').day(13).toDate(),
+                        x: now.minus({months: 8}).plus({day: 13}).toJSDate(),
                         y: 30.00
                     },
                     {
-                        x: moment().subtract(8, 'months').day(16).toDate(),
+                        x: now.minus({months: 8}).plus({day: 16}).toJSDate(),
                         y: 32.16
                     },
                     {
-                        x: moment().subtract(8, 'months').day(19).toDate(),
+                        x: now.minus({months: 8}).plus({day: 19}).toJSDate(),
                         y: 32.99
                     },
                     {
-                        x: moment().subtract(8, 'months').day(22).toDate(),
+                        x: now.minus({months: 8}).plus({day: 22}).toJSDate(),
                         y: 37.68
                     },
                     {
-                        x: moment().subtract(8, 'months').day(25).toDate(),
+                        x: now.minus({months: 8}).plus({day: 25}).toJSDate(),
                         y: 35.24
                     },
                     {
-                        x: moment().subtract(8, 'months').day(28).toDate(),
+                        x: now.minus({months: 8}).plus({day: 28}).toJSDate(),
                         y: 39.18
                     },
                     {
-                        x: moment().subtract(7, 'months').day(1).toDate(),
+                        x: now.minus({months: 7}).plus({day: 1}).toJSDate(),
                         y: 41.45
                     },
                     {
-                        x: moment().subtract(7, 'months').day(4).toDate(),
+                        x: now.minus({months: 7}).plus({day: 4}).toJSDate(),
                         y: 43.78
                     },
                     {
-                        x: moment().subtract(7, 'months').day(7).toDate(),
+                        x: now.minus({months: 7}).plus({day: 7}).toJSDate(),
                         y: 39.41
                     },
                     {
-                        x: moment().subtract(7, 'months').day(10).toDate(),
+                        x: now.minus({months: 7}).plus({day: 10}).toJSDate(),
                         y: 39.32
                     },
                     {
-                        x: moment().subtract(7, 'months').day(13).toDate(),
+                        x: now.minus({months: 7}).plus({day: 13}).toJSDate(),
                         y: 43.80
                     },
                     {
-                        x: moment().subtract(7, 'months').day(16).toDate(),
+                        x: now.minus({months: 7}).plus({day: 16}).toJSDate(),
                         y: 42.43
                     },
                     {
-                        x: moment().subtract(7, 'months').day(19).toDate(),
+                        x: now.minus({months: 7}).plus({day: 19}).toJSDate(),
                         y: 43.67
                     },
                     {
-                        x: moment().subtract(7, 'months').day(22).toDate(),
+                        x: now.minus({months: 7}).plus({day: 22}).toJSDate(),
                         y: 38.79
                     },
                     {
-                        x: moment().subtract(7, 'months').day(25).toDate(),
+                        x: now.minus({months: 7}).plus({day: 25}).toJSDate(),
                         y: 43.57
                     },
                     {
-                        x: moment().subtract(7, 'months').day(28).toDate(),
+                        x: now.minus({months: 7}).plus({day: 28}).toJSDate(),
                         y: 41.81
                     },
                     {
-                        x: moment().subtract(6, 'months').day(1).toDate(),
+                        x: now.minus({months: 6}).plus({day: 1}).toJSDate(),
                         y: 46.19
                     },
                     {
-                        x: moment().subtract(6, 'months').day(4).toDate(),
+                        x: now.minus({months: 6}).plus({day: 4}).toJSDate(),
                         y: 47.69
                     },
                     {
-                        x: moment().subtract(6, 'months').day(7).toDate(),
+                        x: now.minus({months: 6}).plus({day: 7}).toJSDate(),
                         y: 49.01
                     },
                     {
-                        x: moment().subtract(6, 'months').day(10).toDate(),
+                        x: now.minus({months: 6}).plus({day: 10}).toJSDate(),
                         y: 46.40
                     },
                     {
-                        x: moment().subtract(6, 'months').day(13).toDate(),
+                        x: now.minus({months: 6}).plus({day: 13}).toJSDate(),
                         y: 51.28
                     },
                     {
-                        x: moment().subtract(6, 'months').day(16).toDate(),
+                        x: now.minus({months: 6}).plus({day: 16}).toJSDate(),
                         y: 50.15
                     },
                     {
-                        x: moment().subtract(6, 'months').day(19).toDate(),
+                        x: now.minus({months: 6}).plus({day: 19}).toJSDate(),
                         y: 53.60
                     },
                     {
-                        x: moment().subtract(6, 'months').day(22).toDate(),
+                        x: now.minus({months: 6}).plus({day: 22}).toJSDate(),
                         y: 56.08
                     },
                     {
-                        x: moment().subtract(6, 'months').day(25).toDate(),
+                        x: now.minus({months: 6}).plus({day: 25}).toJSDate(),
                         y: 52.72
                     },
                     {
-                        x: moment().subtract(6, 'months').day(28).toDate(),
+                        x: now.minus({months: 6}).plus({day: 28}).toJSDate(),
                         y: 56.60
                     },
                     {
-                        x: moment().subtract(5, 'months').day(1).toDate(),
+                        x: now.minus({months: 5}).plus({day: 1}).toJSDate(),
                         y: 58.36
                     },
                     {
-                        x: moment().subtract(5, 'months').day(4).toDate(),
+                        x: now.minus({months: 5}).plus({day: 4}).toJSDate(),
                         y: 56.59
                     },
                     {
-                        x: moment().subtract(5, 'months').day(7).toDate(),
+                        x: now.minus({months: 5}).plus({day: 7}).toJSDate(),
                         y: 55.75
                     },
                     {
-                        x: moment().subtract(5, 'months').day(10).toDate(),
+                        x: now.minus({months: 5}).plus({day: 10}).toJSDate(),
                         y: 54.74
                     },
                     {
-                        x: moment().subtract(5, 'months').day(13).toDate(),
+                        x: now.minus({months: 5}).plus({day: 13}).toJSDate(),
                         y: 54.27
                     },
                     {
-                        x: moment().subtract(5, 'months').day(16).toDate(),
+                        x: now.minus({months: 5}).plus({day: 16}).toJSDate(),
                         y: 58.65
                     },
                     {
-                        x: moment().subtract(5, 'months').day(19).toDate(),
+                        x: now.minus({months: 5}).plus({day: 19}).toJSDate(),
                         y: 57.00
                     },
                     {
-                        x: moment().subtract(5, 'months').day(22).toDate(),
+                        x: now.minus({months: 5}).plus({day: 22}).toJSDate(),
                         y: 60.52
                     },
                     {
-                        x: moment().subtract(5, 'months').day(25).toDate(),
+                        x: now.minus({months: 5}).plus({day: 25}).toJSDate(),
                         y: 57.60
                     },
                     {
-                        x: moment().subtract(5, 'months').day(28).toDate(),
+                        x: now.minus({months: 5}).plus({day: 28}).toJSDate(),
                         y: 56.48
                     },
                     {
-                        x: moment().subtract(4, 'months').day(1).toDate(),
+                        x: now.minus({months: 4}).plus({day: 1}).toJSDate(),
                         y: 54.35
                     },
                     {
-                        x: moment().subtract(4, 'months').day(4).toDate(),
+                        x: now.minus({months: 4}).plus({day: 4}).toJSDate(),
                         y: 52.39
                     },
                     {
-                        x: moment().subtract(4, 'months').day(7).toDate(),
+                        x: now.minus({months: 4}).plus({day: 7}).toJSDate(),
                         y: 54.52
                     },
                     {
-                        x: moment().subtract(4, 'months').day(10).toDate(),
+                        x: now.minus({months: 4}).plus({day: 10}).toJSDate(),
                         y: 54.16
                     },
                     {
-                        x: moment().subtract(4, 'months').day(13).toDate(),
+                        x: now.minus({months: 4}).plus({day: 13}).toJSDate(),
                         y: 51.95
                     },
                     {
-                        x: moment().subtract(4, 'months').day(16).toDate(),
+                        x: now.minus({months: 4}).plus({day: 16}).toJSDate(),
                         y: 51.19
                     },
                     {
-                        x: moment().subtract(4, 'months').day(19).toDate(),
+                        x: now.minus({months: 4}).plus({day: 19}).toJSDate(),
                         y: 46.35
                     },
                     {
-                        x: moment().subtract(4, 'months').day(22).toDate(),
+                        x: now.minus({months: 4}).plus({day: 22}).toJSDate(),
                         y: 48.33
                     },
                     {
-                        x: moment().subtract(4, 'months').day(25).toDate(),
+                        x: now.minus({months: 4}).plus({day: 25}).toJSDate(),
                         y: 45.84
                     },
                     {
-                        x: moment().subtract(4, 'months').day(28).toDate(),
+                        x: now.minus({months: 4}).plus({day: 28}).toJSDate(),
                         y: 48.22
                     },
                     {
-                        x: moment().subtract(3, 'months').day(1).toDate(),
+                        x: now.minus({months: 3}).plus({day: 1}).toJSDate(),
                         y: 45.82
                     },
                     {
-                        x: moment().subtract(3, 'months').day(4).toDate(),
+                        x: now.minus({months: 3}).plus({day: 4}).toJSDate(),
                         y: 43.48
                     },
                     {
-                        x: moment().subtract(3, 'months').day(7).toDate(),
+                        x: now.minus({months: 3}).plus({day: 7}).toJSDate(),
                         y: 41.32
                     },
                     {
-                        x: moment().subtract(3, 'months').day(10).toDate(),
+                        x: now.minus({months: 3}).plus({day: 10}).toJSDate(),
                         y: 40.99
                     },
                     {
-                        x: moment().subtract(3, 'months').day(13).toDate(),
+                        x: now.minus({months: 3}).plus({day: 13}).toJSDate(),
                         y: 38.49
                     },
                     {
-                        x: moment().subtract(3, 'months').day(16).toDate(),
+                        x: now.minus({months: 3}).plus({day: 16}).toJSDate(),
                         y: 40.10
                     },
                     {
-                        x: moment().subtract(3, 'months').day(19).toDate(),
+                        x: now.minus({months: 3}).plus({day: 19}).toJSDate(),
                         y: 44.86
                     },
                     {
-                        x: moment().subtract(3, 'months').day(22).toDate(),
+                        x: now.minus({months: 3}).plus({day: 22}).toJSDate(),
                         y: 44.03
                     },
                     {
-                        x: moment().subtract(3, 'months').day(25).toDate(),
+                        x: now.minus({months: 3}).plus({day: 25}).toJSDate(),
                         y: 41.41
                     },
                     {
-                        x: moment().subtract(3, 'months').day(28).toDate(),
+                        x: now.minus({months: 3}).plus({day: 28}).toJSDate(),
                         y: 37.80
                     },
                     {
-                        x: moment().subtract(2, 'months').day(1).toDate(),
+                        x: now.minus({months: 2}).plus({day: 1}).toJSDate(),
                         y: 35.24
                     },
                     {
-                        x: moment().subtract(2, 'months').day(4).toDate(),
+                        x: now.minus({months: 2}).plus({day: 4}).toJSDate(),
                         y: 32.12
                     },
                     {
-                        x: moment().subtract(2, 'months').day(7).toDate(),
+                        x: now.minus({months: 2}).plus({day: 7}).toJSDate(),
                         y: 35.68
                     },
                     {
-                        x: moment().subtract(2, 'months').day(10).toDate(),
+                        x: now.minus({months: 2}).plus({day: 10}).toJSDate(),
                         y: 38.00
                     },
                     {
-                        x: moment().subtract(2, 'months').day(13).toDate(),
+                        x: now.minus({months: 2}).plus({day: 13}).toJSDate(),
                         y: 37.96
                     },
                     {
-                        x: moment().subtract(2, 'months').day(16).toDate(),
+                        x: now.minus({months: 2}).plus({day: 16}).toJSDate(),
                         y: 38.70
                     },
                     {
-                        x: moment().subtract(2, 'months').day(19).toDate(),
+                        x: now.minus({months: 2}).plus({day: 19}).toJSDate(),
                         y: 37.45
                     },
                     {
-                        x: moment().subtract(2, 'months').day(22).toDate(),
+                        x: now.minus({months: 2}).plus({day: 22}).toJSDate(),
                         y: 37.51
                     },
                     {
-                        x: moment().subtract(2, 'months').day(25).toDate(),
+                        x: now.minus({months: 2}).plus({day: 25}).toJSDate(),
                         y: 33.10
                     },
                     {
-                        x: moment().subtract(2, 'months').day(28).toDate(),
+                        x: now.minus({months: 2}).plus({day: 28}).toJSDate(),
                         y: 35.09
                     },
                     {
-                        x: moment().subtract(1, 'months').day(1).toDate(),
+                        x: now.minus({months: 1}).plus({day: 1}).toJSDate(),
                         y: 31.87
                     },
                     {
-                        x: moment().subtract(1, 'months').day(4).toDate(),
+                        x: now.minus({months: 1}).plus({day: 4}).toJSDate(),
                         y: 29.18
                     },
                     {
-                        x: moment().subtract(1, 'months').day(7).toDate(),
+                        x: now.minus({months: 1}).plus({day: 7}).toJSDate(),
                         y: 31.91
                     },
                     {
-                        x: moment().subtract(1, 'months').day(10).toDate(),
+                        x: now.minus({months: 1}).plus({day: 10}).toJSDate(),
                         y: 34.37
                     },
                     {
-                        x: moment().subtract(1, 'months').day(13).toDate(),
+                        x: now.minus({months: 1}).plus({day: 13}).toJSDate(),
                         y: 32.91
                     },
                     {
-                        x: moment().subtract(1, 'months').day(16).toDate(),
+                        x: now.minus({months: 1}).plus({day: 16}).toJSDate(),
                         y: 33.17
                     },
                     {
-                        x: moment().subtract(1, 'months').day(19).toDate(),
+                        x: now.minus({months: 1}).plus({day: 19}).toJSDate(),
                         y: 37.16
                     },
                     {
-                        x: moment().subtract(1, 'months').day(22).toDate(),
+                        x: now.minus({months: 1}).plus({day: 22}).toJSDate(),
                         y: 32.60
                     },
                     {
-                        x: moment().subtract(1, 'months').day(25).toDate(),
+                        x: now.minus({months: 1}).plus({day: 25}).toJSDate(),
                         y: 36.94
                     },
                     {
-                        x: moment().subtract(1, 'months').day(28).toDate(),
+                        x: now.minus({months: 1}).plus({day: 28}).toJSDate(),
                         y: 35.98
                     }
                 ]
@@ -495,483 +498,483 @@ export const finance = {
                 name: 'Actual',
                 data: [
                     {
-                        x: moment().subtract(12, 'months').day(1).toDate(),
+                        x: now.minus({months: 12}).plus({day: 1}).toJSDate(),
                         y: 20.21
                     },
                     {
-                        x: moment().subtract(12, 'months').day(4).toDate(),
+                        x: now.minus({months: 12}).plus({day: 4}).toJSDate(),
                         y: 17.49
                     },
                     {
-                        x: moment().subtract(12, 'months').day(7).toDate(),
+                        x: now.minus({months: 12}).plus({day: 7}).toJSDate(),
                         y: 16.54
                     },
                     {
-                        x: moment().subtract(12, 'months').day(10).toDate(),
+                        x: now.minus({months: 12}).plus({day: 10}).toJSDate(),
                         y: 19.00
                     },
                     {
-                        x: moment().subtract(12, 'months').day(13).toDate(),
+                        x: now.minus({months: 12}).plus({day: 13}).toJSDate(),
                         y: 16.47
                     },
                     {
-                        x: moment().subtract(12, 'months').day(16).toDate(),
+                        x: now.minus({months: 12}).plus({day: 16}).toJSDate(),
                         y: 13.15
                     },
                     {
-                        x: moment().subtract(12, 'months').day(19).toDate(),
+                        x: now.minus({months: 12}).plus({day: 19}).toJSDate(),
                         y: 18.07
                     },
                     {
-                        x: moment().subtract(12, 'months').day(22).toDate(),
+                        x: now.minus({months: 12}).plus({day: 22}).toJSDate(),
                         y: 17.93
                     },
                     {
-                        x: moment().subtract(12, 'months').day(25).toDate(),
+                        x: now.minus({months: 12}).plus({day: 25}).toJSDate(),
                         y: 18.92
                     },
                     {
-                        x: moment().subtract(12, 'months').day(28).toDate(),
+                        x: now.minus({months: 12}).plus({day: 28}).toJSDate(),
                         y: 18.46
                     },
                     {
-                        x: moment().subtract(11, 'months').day(1).toDate(),
+                        x: now.minus({months: 11}).plus({day: 1}).toJSDate(),
                         y: 18.04
                     },
                     {
-                        x: moment().subtract(11, 'months').day(4).toDate(),
+                        x: now.minus({months: 11}).plus({day: 4}).toJSDate(),
                         y: 17.78
                     },
                     {
-                        x: moment().subtract(11, 'months').day(7).toDate(),
+                        x: now.minus({months: 11}).plus({day: 7}).toJSDate(),
                         y: 20.15
                     },
                     {
-                        x: moment().subtract(11, 'months').day(10).toDate(),
+                        x: now.minus({months: 11}).plus({day: 10}).toJSDate(),
                         y: 18.92
                     },
                     {
-                        x: moment().subtract(11, 'months').day(13).toDate(),
+                        x: now.minus({months: 11}).plus({day: 13}).toJSDate(),
                         y: 17.08
                     },
                     {
-                        x: moment().subtract(11, 'months').day(16).toDate(),
+                        x: now.minus({months: 11}).plus({day: 16}).toJSDate(),
                         y: 17.11
                     },
                     {
-                        x: moment().subtract(11, 'months').day(19).toDate(),
+                        x: now.minus({months: 11}).plus({day: 19}).toJSDate(),
                         y: 15.70
                     },
                     {
-                        x: moment().subtract(11, 'months').day(22).toDate(),
+                        x: now.minus({months: 11}).plus({day: 22}).toJSDate(),
                         y: 15.07
                     },
                     {
-                        x: moment().subtract(11, 'months').day(25).toDate(),
+                        x: now.minus({months: 11}).plus({day: 25}).toJSDate(),
                         y: 14.51
                     },
                     {
-                        x: moment().subtract(11, 'months').day(28).toDate(),
+                        x: now.minus({months: 11}).plus({day: 28}).toJSDate(),
                         y: 15.22
                     },
                     {
-                        x: moment().subtract(10, 'months').day(1).toDate(),
+                        x: now.minus({months: 10}).plus({day: 1}).toJSDate(),
                         y: 19.77
                     },
                     {
-                        x: moment().subtract(10, 'months').day(4).toDate(),
+                        x: now.minus({months: 10}).plus({day: 4}).toJSDate(),
                         y: 23.67
                     },
                     {
-                        x: moment().subtract(10, 'months').day(7).toDate(),
+                        x: now.minus({months: 10}).plus({day: 7}).toJSDate(),
                         y: 27.98
                     },
                     {
-                        x: moment().subtract(10, 'months').day(10).toDate(),
+                        x: now.minus({months: 10}).plus({day: 10}).toJSDate(),
                         y: 30.80
                     },
                     {
-                        x: moment().subtract(10, 'months').day(13).toDate(),
+                        x: now.minus({months: 10}).plus({day: 13}).toJSDate(),
                         y: 28.56
                     },
                     {
-                        x: moment().subtract(10, 'months').day(16).toDate(),
+                        x: now.minus({months: 10}).plus({day: 16}).toJSDate(),
                         y: 27.45
                     },
                     {
-                        x: moment().subtract(10, 'months').day(19).toDate(),
+                        x: now.minus({months: 10}).plus({day: 19}).toJSDate(),
                         y: 27.50
                     },
                     {
-                        x: moment().subtract(10, 'months').day(22).toDate(),
+                        x: now.minus({months: 10}).plus({day: 22}).toJSDate(),
                         y: 27.28
                     },
                     {
-                        x: moment().subtract(10, 'months').day(25).toDate(),
+                        x: now.minus({months: 10}).plus({day: 25}).toJSDate(),
                         y: 24.36
                     },
                     {
-                        x: moment().subtract(10, 'months').day(28).toDate(),
+                        x: now.minus({months: 10}).plus({day: 28}).toJSDate(),
                         y: 22.89
                     },
                     {
-                        x: moment().subtract(9, 'months').day(1).toDate(),
+                        x: now.minus({months: 9}).plus({day: 1}).toJSDate(),
                         y: 28.04
                     },
                     {
-                        x: moment().subtract(9, 'months').day(4).toDate(),
+                        x: now.minus({months: 9}).plus({day: 4}).toJSDate(),
                         y: 27.77
                     },
                     {
-                        x: moment().subtract(9, 'months').day(7).toDate(),
+                        x: now.minus({months: 9}).plus({day: 7}).toJSDate(),
                         y: 30.24
                     },
                     {
-                        x: moment().subtract(9, 'months').day(10).toDate(),
+                        x: now.minus({months: 9}).plus({day: 10}).toJSDate(),
                         y: 26.57
                     },
                     {
-                        x: moment().subtract(9, 'months').day(13).toDate(),
+                        x: now.minus({months: 9}).plus({day: 13}).toJSDate(),
                         y: 22.18
                     },
                     {
-                        x: moment().subtract(9, 'months').day(16).toDate(),
+                        x: now.minus({months: 9}).plus({day: 16}).toJSDate(),
                         y: 19.64
                     },
                     {
-                        x: moment().subtract(9, 'months').day(19).toDate(),
+                        x: now.minus({months: 9}).plus({day: 19}).toJSDate(),
                         y: 16.74
                     },
                     {
-                        x: moment().subtract(9, 'months').day(22).toDate(),
+                        x: now.minus({months: 9}).plus({day: 22}).toJSDate(),
                         y: 17.21
                     },
                     {
-                        x: moment().subtract(9, 'months').day(25).toDate(),
+                        x: now.minus({months: 9}).plus({day: 25}).toJSDate(),
                         y: 20.05
                     },
                     {
-                        x: moment().subtract(9, 'months').day(28).toDate(),
+                        x: now.minus({months: 9}).plus({day: 28}).toJSDate(),
                         y: 16.13
                     },
                     {
-                        x: moment().subtract(8, 'months').day(1).toDate(),
+                        x: now.minus({months: 8}).plus({day: 1}).toJSDate(),
                         y: 10.71
                     },
                     {
-                        x: moment().subtract(8, 'months').day(4).toDate(),
+                        x: now.minus({months: 8}).plus({day: 4}).toJSDate(),
                         y: 7.99
                     },
                     {
-                        x: moment().subtract(8, 'months').day(7).toDate(),
+                        x: now.minus({months: 8}).plus({day: 7}).toJSDate(),
                         y: 11.33
                     },
                     {
-                        x: moment().subtract(8, 'months').day(10).toDate(),
+                        x: now.minus({months: 8}).plus({day: 10}).toJSDate(),
                         y: 15.36
                     },
                     {
-                        x: moment().subtract(8, 'months').day(13).toDate(),
+                        x: now.minus({months: 8}).plus({day: 13}).toJSDate(),
                         y: 20.16
                     },
                     {
-                        x: moment().subtract(8, 'months').day(16).toDate(),
+                        x: now.minus({months: 8}).plus({day: 16}).toJSDate(),
                         y: 22.56
                     },
                     {
-                        x: moment().subtract(8, 'months').day(19).toDate(),
+                        x: now.minus({months: 8}).plus({day: 19}).toJSDate(),
                         y: 19.34
                     },
                     {
-                        x: moment().subtract(8, 'months').day(22).toDate(),
+                        x: now.minus({months: 8}).plus({day: 22}).toJSDate(),
                         y: 18.32
                     },
                     {
-                        x: moment().subtract(8, 'months').day(25).toDate(),
+                        x: now.minus({months: 8}).plus({day: 25}).toJSDate(),
                         y: 20.75
                     },
                     {
-                        x: moment().subtract(8, 'months').day(28).toDate(),
+                        x: now.minus({months: 8}).plus({day: 28}).toJSDate(),
                         y: 17.09
                     },
                     {
-                        x: moment().subtract(7, 'months').day(1).toDate(),
+                        x: now.minus({months: 7}).plus({day: 1}).toJSDate(),
                         y: 18.31
                     },
                     {
-                        x: moment().subtract(7, 'months').day(4).toDate(),
+                        x: now.minus({months: 7}).plus({day: 4}).toJSDate(),
                         y: 14.34
                     },
                     {
-                        x: moment().subtract(7, 'months').day(7).toDate(),
+                        x: now.minus({months: 7}).plus({day: 7}).toJSDate(),
                         y: 9.93
                     },
                     {
-                        x: moment().subtract(7, 'months').day(10).toDate(),
+                        x: now.minus({months: 7}).plus({day: 10}).toJSDate(),
                         y: 10.64
                     },
                     {
-                        x: moment().subtract(7, 'months').day(13).toDate(),
+                        x: now.minus({months: 7}).plus({day: 13}).toJSDate(),
                         y: 6.18
                     },
                     {
-                        x: moment().subtract(7, 'months').day(16).toDate(),
+                        x: now.minus({months: 7}).plus({day: 16}).toJSDate(),
                         y: 10.32
                     },
                     {
-                        x: moment().subtract(7, 'months').day(19).toDate(),
+                        x: now.minus({months: 7}).plus({day: 19}).toJSDate(),
                         y: 12.80
                     },
                     {
-                        x: moment().subtract(7, 'months').day(22).toDate(),
+                        x: now.minus({months: 7}).plus({day: 22}).toJSDate(),
                         y: 13.44
                     },
                     {
-                        x: moment().subtract(7, 'months').day(25).toDate(),
+                        x: now.minus({months: 7}).plus({day: 25}).toJSDate(),
                         y: 18.35
                     },
                     {
-                        x: moment().subtract(7, 'months').day(28).toDate(),
+                        x: now.minus({months: 7}).plus({day: 28}).toJSDate(),
                         y: 22.87
                     },
                     {
-                        x: moment().subtract(6, 'months').day(1).toDate(),
+                        x: now.minus({months: 6}).plus({day: 1}).toJSDate(),
                         y: 26.92
                     },
                     {
-                        x: moment().subtract(6, 'months').day(4).toDate(),
+                        x: now.minus({months: 6}).plus({day: 4}).toJSDate(),
                         y: 22.50
                     },
                     {
-                        x: moment().subtract(6, 'months').day(7).toDate(),
+                        x: now.minus({months: 6}).plus({day: 7}).toJSDate(),
                         y: 18.14
                     },
                     {
-                        x: moment().subtract(6, 'months').day(10).toDate(),
+                        x: now.minus({months: 6}).plus({day: 10}).toJSDate(),
                         y: 19.06
                     },
                     {
-                        x: moment().subtract(6, 'months').day(13).toDate(),
+                        x: now.minus({months: 6}).plus({day: 13}).toJSDate(),
                         y: 19.73
                     },
                     {
-                        x: moment().subtract(6, 'months').day(16).toDate(),
+                        x: now.minus({months: 6}).plus({day: 16}).toJSDate(),
                         y: 18.82
                     },
                     {
-                        x: moment().subtract(6, 'months').day(19).toDate(),
+                        x: now.minus({months: 6}).plus({day: 19}).toJSDate(),
                         y: 23.33
                     },
                     {
-                        x: moment().subtract(6, 'months').day(22).toDate(),
+                        x: now.minus({months: 6}).plus({day: 22}).toJSDate(),
                         y: 20.48
                     },
                     {
-                        x: moment().subtract(6, 'months').day(25).toDate(),
+                        x: now.minus({months: 6}).plus({day: 25}).toJSDate(),
                         y: 25.47
                     },
                     {
-                        x: moment().subtract(6, 'months').day(28).toDate(),
+                        x: now.minus({months: 6}).plus({day: 28}).toJSDate(),
                         y: 28.84
                     },
                     {
-                        x: moment().subtract(5, 'months').day(1).toDate(),
+                        x: now.minus({months: 5}).plus({day: 1}).toJSDate(),
                         y: 27.71
                     },
                     {
-                        x: moment().subtract(5, 'months').day(4).toDate(),
+                        x: now.minus({months: 5}).plus({day: 4}).toJSDate(),
                         y: 25.22
                     },
                     {
-                        x: moment().subtract(5, 'months').day(7).toDate(),
+                        x: now.minus({months: 5}).plus({day: 7}).toJSDate(),
                         y: 25.43
                     },
                     {
-                        x: moment().subtract(5, 'months').day(10).toDate(),
+                        x: now.minus({months: 5}).plus({day: 10}).toJSDate(),
                         y: 24.13
                     },
                     {
-                        x: moment().subtract(5, 'months').day(13).toDate(),
+                        x: now.minus({months: 5}).plus({day: 13}).toJSDate(),
                         y: 20.02
                     },
                     {
-                        x: moment().subtract(5, 'months').day(16).toDate(),
+                        x: now.minus({months: 5}).plus({day: 16}).toJSDate(),
                         y: 18.38
                     },
                     {
-                        x: moment().subtract(5, 'months').day(19).toDate(),
+                        x: now.minus({months: 5}).plus({day: 19}).toJSDate(),
                         y: 18.30
                     },
                     {
-                        x: moment().subtract(5, 'months').day(22).toDate(),
+                        x: now.minus({months: 5}).plus({day: 22}).toJSDate(),
                         y: 18.72
                     },
                     {
-                        x: moment().subtract(5, 'months').day(25).toDate(),
+                        x: now.minus({months: 5}).plus({day: 25}).toJSDate(),
                         y: 22.46
                     },
                     {
-                        x: moment().subtract(5, 'months').day(28).toDate(),
+                        x: now.minus({months: 5}).plus({day: 28}).toJSDate(),
                         y: 21.71
                     },
                     {
-                        x: moment().subtract(4, 'months').day(1).toDate(),
+                        x: now.minus({months: 4}).plus({day: 1}).toJSDate(),
                         y: 29.88
                     },
                     {
-                        x: moment().subtract(4, 'months').day(4).toDate(),
+                        x: now.minus({months: 4}).plus({day: 4}).toJSDate(),
                         y: 26.94
                     },
                     {
-                        x: moment().subtract(4, 'months').day(7).toDate(),
+                        x: now.minus({months: 4}).plus({day: 7}).toJSDate(),
                         y: 28.06
                     },
                     {
-                        x: moment().subtract(4, 'months').day(10).toDate(),
+                        x: now.minus({months: 4}).plus({day: 10}).toJSDate(),
                         y: 30.40
                     },
                     {
-                        x: moment().subtract(4, 'months').day(13).toDate(),
+                        x: now.minus({months: 4}).plus({day: 13}).toJSDate(),
                         y: 28.98
                     },
                     {
-                        x: moment().subtract(4, 'months').day(16).toDate(),
+                        x: now.minus({months: 4}).plus({day: 16}).toJSDate(),
                         y: 30.13
                     },
                     {
-                        x: moment().subtract(4, 'months').day(19).toDate(),
+                        x: now.minus({months: 4}).plus({day: 19}).toJSDate(),
                         y: 27.60
                     },
                     {
-                        x: moment().subtract(4, 'months').day(22).toDate(),
+                        x: now.minus({months: 4}).plus({day: 22}).toJSDate(),
                         y: 30.21
                     },
                     {
-                        x: moment().subtract(4, 'months').day(25).toDate(),
+                        x: now.minus({months: 4}).plus({day: 25}).toJSDate(),
                         y: 26.88
                     },
                     {
-                        x: moment().subtract(4, 'months').day(28).toDate(),
+                        x: now.minus({months: 4}).plus({day: 28}).toJSDate(),
                         y: 25.72
                     },
                     {
-                        x: moment().subtract(3, 'months').day(1).toDate(),
+                        x: now.minus({months: 3}).plus({day: 1}).toJSDate(),
                         y: 27.89
                     },
                     {
-                        x: moment().subtract(3, 'months').day(4).toDate(),
+                        x: now.minus({months: 3}).plus({day: 4}).toJSDate(),
                         y: 30.69
                     },
                     {
-                        x: moment().subtract(3, 'months').day(7).toDate(),
+                        x: now.minus({months: 3}).plus({day: 7}).toJSDate(),
                         y: 31.42
                     },
                     {
-                        x: moment().subtract(3, 'months').day(10).toDate(),
+                        x: now.minus({months: 3}).plus({day: 10}).toJSDate(),
                         y: 36.14
                     },
                     {
-                        x: moment().subtract(3, 'months').day(13).toDate(),
+                        x: now.minus({months: 3}).plus({day: 13}).toJSDate(),
                         y: 32.02
                     },
                     {
-                        x: moment().subtract(3, 'months').day(16).toDate(),
+                        x: now.minus({months: 3}).plus({day: 16}).toJSDate(),
                         y: 27.30
                     },
                     {
-                        x: moment().subtract(3, 'months').day(19).toDate(),
+                        x: now.minus({months: 3}).plus({day: 19}).toJSDate(),
                         y: 29.51
                     },
                     {
-                        x: moment().subtract(3, 'months').day(22).toDate(),
+                        x: now.minus({months: 3}).plus({day: 22}).toJSDate(),
                         y: 32.67
                     },
                     {
-                        x: moment().subtract(3, 'months').day(25).toDate(),
+                        x: now.minus({months: 3}).plus({day: 25}).toJSDate(),
                         y: 28.82
                     },
                     {
-                        x: moment().subtract(3, 'months').day(28).toDate(),
+                        x: now.minus({months: 3}).plus({day: 28}).toJSDate(),
                         y: 28.85
                     },
                     {
-                        x: moment().subtract(2, 'months').day(1).toDate(),
+                        x: now.minus({months: 2}).plus({day: 1}).toJSDate(),
                         y: 29.15
                     },
                     {
-                        x: moment().subtract(2, 'months').day(4).toDate(),
+                        x: now.minus({months: 2}).plus({day: 4}).toJSDate(),
                         y: 27.90
                     },
                     {
-                        x: moment().subtract(2, 'months').day(7).toDate(),
+                        x: now.minus({months: 2}).plus({day: 7}).toJSDate(),
                         y: 30.71
                     },
                     {
-                        x: moment().subtract(2, 'months').day(10).toDate(),
+                        x: now.minus({months: 2}).plus({day: 10}).toJSDate(),
                         y: 28.02
                     },
                     {
-                        x: moment().subtract(2, 'months').day(13).toDate(),
+                        x: now.minus({months: 2}).plus({day: 13}).toJSDate(),
                         y: 23.82
                     },
                     {
-                        x: moment().subtract(2, 'months').day(16).toDate(),
+                        x: now.minus({months: 2}).plus({day: 16}).toJSDate(),
                         y: 18.83
                     },
                     {
-                        x: moment().subtract(2, 'months').day(19).toDate(),
+                        x: now.minus({months: 2}).plus({day: 19}).toJSDate(),
                         y: 14.48
                     },
                     {
-                        x: moment().subtract(2, 'months').day(22).toDate(),
+                        x: now.minus({months: 2}).plus({day: 22}).toJSDate(),
                         y: 11.76
                     },
                     {
-                        x: moment().subtract(2, 'months').day(25).toDate(),
+                        x: now.minus({months: 2}).plus({day: 25}).toJSDate(),
                         y: 12.75
                     },
                     {
-                        x: moment().subtract(2, 'months').day(28).toDate(),
+                        x: now.minus({months: 2}).plus({day: 28}).toJSDate(),
                         y: 11.36
                     },
                     {
-                        x: moment().subtract(1, 'months').day(1).toDate(),
+                        x: now.minus({months: 1}).plus({day: 1}).toJSDate(),
                         y: 11.60
                     },
                     {
-                        x: moment().subtract(1, 'months').day(4).toDate(),
+                        x: now.minus({months: 1}).plus({day: 4}).toJSDate(),
                         y: 15.24
                     },
                     {
-                        x: moment().subtract(1, 'months').day(7).toDate(),
+                        x: now.minus({months: 1}).plus({day: 7}).toJSDate(),
                         y: 13.05
                     },
                     {
-                        x: moment().subtract(1, 'months').day(10).toDate(),
+                        x: now.minus({months: 1}).plus({day: 10}).toJSDate(),
                         y: 17.25
                     },
                     {
-                        x: moment().subtract(1, 'months').day(13).toDate(),
+                        x: now.minus({months: 1}).plus({day: 13}).toJSDate(),
                         y: 18.50
                     },
                     {
-                        x: moment().subtract(1, 'months').day(16).toDate(),
+                        x: now.minus({months: 1}).plus({day: 16}).toJSDate(),
                         y: 23.04
                     },
                     {
-                        x: moment().subtract(1, 'months').day(19).toDate(),
+                        x: now.minus({months: 1}).plus({day: 19}).toJSDate(),
                         y: 21.87
                     },
                     {
-                        x: moment().subtract(1, 'months').day(22).toDate(),
+                        x: now.minus({months: 1}).plus({day: 22}).toJSDate(),
                         y: 25.97
                     },
                     {
-                        x: moment().subtract(1, 'months').day(25).toDate(),
+                        x: now.minus({months: 1}).plus({day: 25}).toJSDate(),
                         y: 22.46
                     },
                     {
-                        x: moment().subtract(1, 'months').day(28).toDate(),
+                        x: now.minus({months: 1}).plus({day: 28}).toJSDate(),
                         y: 17.67
                     }
                 ]
@@ -988,14 +991,14 @@ export const finance = {
     },
     previousStatement : {
         status : 'paid',
-        date   : moment().startOf('day').subtract(15, 'days').format('LL'),
+        date   : now.startOf('day').minus({days: 15}).toFormat('DDD'),
         limit  : 34500,
         spent  : 27221.21,
         minimum: 7331.94
     },
     currentStatement  : {
         status : 'pending',
-        date   : moment().startOf('day').subtract(15, 'days').add(1, 'month').format('LL'),
+        date   : now.startOf('day').minus({days: 15}).plus({month: 1}).toFormat('DDD'),
         limit  : 34500,
         spent  : 39819.41,
         minimum: 9112.51

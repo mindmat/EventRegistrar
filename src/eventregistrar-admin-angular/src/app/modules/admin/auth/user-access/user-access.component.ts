@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatLegacySelectChange as MatSelectChange } from '@angular/material/legacy-select';
+import { MatSelectChange } from '@angular/material/select';
 import { AccessRequestOfEvent, RoleDescription, UserInEventDisplayItem, UserInEventRole } from 'app/api/api';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { UserAccessRequestsService } from './user-access-requests.service';

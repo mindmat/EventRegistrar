@@ -79,6 +79,9 @@ export class SearchMockApi
 
                         // Add a link
                         result.link = '/apps/contacts/' + result.id;
+
+                        // Add the name as the value
+                        result.value = result.name;
                     });
 
                     // Add to the results
@@ -95,6 +98,8 @@ export class SearchMockApi
                     // Normalize the results
                     pagesResults.forEach((result: any) => {
 
+                        // Add the page title as the value
+                        result.value = result.title;
                     });
 
                     // Add to the results
@@ -113,6 +118,9 @@ export class SearchMockApi
 
                         // Add a link
                         result.link = '/apps/tasks/' + result.id;
+
+                        // Add the title as the value
+                        result.value = result.title;
                     });
 
                     // Add to the results

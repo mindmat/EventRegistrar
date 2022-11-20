@@ -87,10 +87,10 @@ export class AuthMockApi
             });
 
         // -----------------------------------------------------------------------------------------------------
-        // @ Verify and refresh the access token - POST
+        // @ Sign in using the access token - POST
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
-            .onPost('api/auth/refresh-access-token')
+            .onPost('api/auth/sign-in-with-token')
             .reply(({request}) => {
 
                 // Get the access token

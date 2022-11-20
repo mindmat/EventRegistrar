@@ -63,11 +63,15 @@
         -webkit-text-fill-color: currentColor;
     }
 
+    /* Set the background and foreground colors */
     body, .dark, .light {
         @apply text-default bg-default #{'!important'};
     }
 
-    *, *::before, *::after {
+    /* Set the border color */
+    *,
+    ::before,
+    ::after {
         --tw-border-opacity: 1 !important;
         border-color: rgba(var(--fuse-border-rgb), var(--tw-border-opacity));
 
@@ -116,6 +120,7 @@
         }
     }
 
+    /* Set the foreground color for disabled elements */
     [disabled] * {
         @apply text-disabled #{'!important'};
     }
