@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { RegistrationDisplayItem, SpotDisplayInfo, SpotDisplayItem } from 'app/api/api';
-import { NavigationService } from 'app/core/navigation/navigation.service';
 import { Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../navigator.service';
 import { RegistrationService } from './registration.service';

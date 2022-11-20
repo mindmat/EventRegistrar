@@ -1,0 +1,109 @@
+<div class="flex flex-col flex-auto md:w-160 md:min-w-160 max-h-3/4 -m-6 overflow-y-auto">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">{{ 'Registrable' | translate }}</div>
+        <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="registrableForm" (ngSubmit)="onSubmit()" class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto">
+
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Name -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'Name' | translate }}</mat-label>
+                    <input [formControlName]="'name'" matInput>
+                </mat-form-field>
+            </div>
+            <!-- Secondary Name -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'NameSecondary' | translate }}</mat-label>
+                    <input [formControlName]="'nameSecondary'" matInput>
+                </mat-form-field>
+            </div>
+            <!-- Tag -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'Tag' | translate }}</mat-label>
+                    <input [formControlName]="'tag'" matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- Type -->
+            <div class="col-span-4">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'RegistrableType' | translate }}</mat-label>
+                    <mat-select [formControlName]="'type'">
+                        <mat-option *ngFor="let type of registrableTypes" [value]="type.type">{{ type.text }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- single spot limit -->
+            <div class="col-span-3 items-center flex flex-row" *ngIf="registrableForm.value.type==registrableType.Single">
+                <div class="cursor-pointer" (click)="singleMax.toggle()">
+                    <div class="leading-6 font-medium">{{ 'HasSingleMax' | translate }}</div>
+                    <div class="text-md text-secondary">{{ 'HasSingleMaxSecondary' | translate }}</div>
+                </div>
+                <mat-slide-toggle class="ml-auto" [color]="'primary'" [formControlName]="'hasSingleMax'" #singleMax>
+                </mat-slide-toggle>
+            </div>
+            <div class="col-span-1" *ngIf="registrableForm.value.type==registrableType.Single">
+                <div class=" w-full">
+                    <mat-form-field [subscriptSizing]="'dynamic'" *ngIf="registrableForm.value.hasSingleMax">
+                        <input [formControlName]="'maximumSingleSpots'" type="number" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- double spot limit -->
+            <div class="col-span-3 items-center flex flex-row" *ngIf="registrableForm.value.type==registrableType.Double">
+                <div class="cursor-pointer" (click)="doubleMax.toggle()">
+                    <div class="leading-6 font-medium">{{ 'HasDoubleMax' | translate }}</div>
+                    <div class="text-md text-secondary">{{ 'HasDoubleMaxSecondary' | translate }}</div>
+                </div>
+                <mat-slide-toggle class="ml-auto" [color]="'primary'" [formControlName]="'hasDoubleMax'" #doubleMax>
+                </mat-slide-toggle>
+            </div>
+            <div class="col-span-1" *ngIf="registrableForm.value.type==registrableType.Double">
+                <div class="w-full ml-1 -mr-1">
+                    <mat-form-field [subscriptSizing]="'dynamic'" *ngIf="registrableForm.value.hasDoubleMax">
+                        <input [formControlName]="'maximumDoubleSpots'" type="number" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+            <!-- imbalance limit -->
+            <div class="col-span-4 items-center flex flex-row" *ngIf="registrableForm.value.type==registrableType.Double">
+                <div class="cursor-pointer">
+                    <div class="leading-6 font-medium">{{ 'MaxAllowedImbalance' | translate }}</div>
+                    <div class="text-md text-secondary">{{ 'MaxAllowedImbalanceSecondary' | translate }}</div>
+                </div>
+                <mat-form-field class="ml-auto" [subscriptSizing]="'dynamic'">
+                    <input [formControlName]="'maximumAllowedImbalance'" type="number" matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- waiting list -->
+            <div class="col-span-3 items-center flex flex-row" *ngIf="canHaveWaitingList()">
+                <div class="cursor-pointer" (click)="waitingList.toggle()">
+                    <div class="leading-6 font-medium">{{ 'HasWaitingList' | translate }}</div>
+                    <div class="text-md text-secondary">{{ 'HasWaitingListSecondary' | translate }}</div>
+                </div>
+                <mat-slide-toggle class="ml-auto" [color]="'primary'" [formControlName]="'hasWaitingList'" #waitingList>
+                </mat-slide-toggle>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button mat-stroked-button type="button" [matDialogClose]="'cancelled'"> {{ 'Cancel' | translate }} </button>
+            <button class="ml-4" mat-flat-button type="submit" [color]="'primary'" [matDialogClose]="'confirmed'">{{ 'Save' | translate }} </button>
+        </div>
+    </form>
+
+</div>

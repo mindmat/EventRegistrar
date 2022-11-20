@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v13.16.1.0 (NJsonSchema v10.7.2.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "My Title",
@@ -975,38 +975,6 @@
         }
       }
     },
-    "/api/CreateRegistrableCommand": {
-      "post": {
-        "tags": [
-          "CreateRegistrable"
-        ],
-        "operationId": "CreateRegistrable_Command",
-        "requestBody": {
-          "x-name": "CreateRegistrableCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateRegistrableCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/DeleteRegistrableCommand": {
       "post": {
         "tags": [
@@ -1099,6 +1067,73 @@
                   "items": {
                     "$ref": "#/components/schemas/RegistrableDisplayItem"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/RegistrableTypesQuery": {
+      "post": {
+        "tags": [
+          "RegistrableTypes"
+        ],
+        "operationId": "RegistrableTypes_Query",
+        "requestBody": {
+          "x-name": "RegistrableTypesQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrableTypesQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegistrableTypeOption"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SaveRegistrableCommand": {
+      "post": {
+        "tags": [
+          "SaveRegistrable"
+        ],
+        "operationId": "SaveRegistrable_Command",
+        "requestBody": {
+          "x-name": "SaveRegistrableCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveRegistrableCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
                 }
               }
             }
@@ -5552,35 +5587,6 @@
           }
         }
       },
-      "CreateRegistrableCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "parameters": {
-            "$ref": "#/components/schemas/CreateRegistrableParameters"
-          },
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "CreateRegistrableParameters": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "name": {
-            "type": "string"
-          },
-          "isDoubleRegistrable": {
-            "type": "boolean"
-          }
-        }
-      },
       "DeleteRegistrableCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -5818,6 +5824,75 @@
           "eventId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "RegistrableTypeOption": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/RegistrableType"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "RegistrableTypesQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "SaveRegistrableCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrableId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "nameSecondary": {
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "$ref": "#/components/schemas/RegistrableType"
+          },
+          "maximumSingleSpots": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maximumDoubleSpots": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maximumAllowedImbalance": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hasWaitingList": {
+            "type": "boolean"
+          },
+          "tag": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

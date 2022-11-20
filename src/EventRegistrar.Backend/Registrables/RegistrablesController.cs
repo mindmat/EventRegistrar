@@ -55,8 +55,7 @@ public class RegistrablesController : Controller
                              });
     }
 
-    [HttpPost(
-        "api/events/{eventAcronym}/registrables/{registrableId:guid}/tryPromoteFromWaitingList/{registrationId:guid}")]
+    [HttpPost("api/events/{eventAcronym}/registrables/{registrableId:guid}/tryPromoteFromWaitingList/{registrationId:guid}")]
     [HttpPost("api/events/{eventAcronym}/registrables/{registrableId:guid}/tryPromoteFromWaitingList")]
     public async Task TryPromoteFromWaitingList(string eventAcronym, Guid registrableId, Guid? registrationId)
     {
@@ -68,23 +67,6 @@ public class RegistrablesController : Controller
                              });
     }
 
-    [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}")]
-    public async Task CreateRegistrable(string eventAcronym,
-                                        Guid registrableId,
-                                        [FromBody] CreateRegistrableParameters parameters)
-    {
-        if (parameters == null)
-        {
-            throw new ArgumentNullException(nameof(parameters));
-        }
-
-        parameters.Id = registrableId;
-        await _mediator.Send(new CreateRegistrableCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 Parameters = parameters
-                             });
-    }
 
     [HttpDelete("api/events/{eventAcronym}/registrables/{registrableId:guid}")]
     public async Task DeleteRegistrable(string eventAcronym, Guid registrableId)

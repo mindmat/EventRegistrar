@@ -1507,57 +1507,6 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    createRegistrable_Command(createRegistrableCommand: CreateRegistrableCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/CreateRegistrableCommand";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(createRegistrableCommand);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCreateRegistrable_Command(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processCreateRegistrable_Command(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Unit>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Unit>;
-        }));
-    }
-
-    protected processCreateRegistrable_Command(response: HttpResponseBase): Observable<Unit> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     deleteRegistrable_Command(deleteRegistrableCommand: DeleteRegistrableCommand | undefined): Observable<Unit> {
         let url_ = this.baseUrl + "/api/DeleteRegistrableCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -1701,6 +1650,108 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as RegistrableDisplayItem[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    registrableTypes_Query(registrableTypesQuery: RegistrableTypesQuery | undefined): Observable<RegistrableTypeOption[]> {
+        let url_ = this.baseUrl + "/api/RegistrableTypesQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(registrableTypesQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRegistrableTypes_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRegistrableTypes_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<RegistrableTypeOption[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<RegistrableTypeOption[]>;
+        }));
+    }
+
+    protected processRegistrableTypes_Query(response: HttpResponseBase): Observable<RegistrableTypeOption[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as RegistrableTypeOption[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    saveRegistrable_Command(saveRegistrableCommand: SaveRegistrableCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/SaveRegistrableCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(saveRegistrableCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveRegistrable_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveRegistrable_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processSaveRegistrable_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -7167,17 +7218,6 @@ export interface FormPathsQuery {
     eventId?: string;
 }
 
-export interface CreateRegistrableCommand {
-    parameters?: CreateRegistrableParameters;
-    eventId?: string;
-}
-
-export interface CreateRegistrableParameters {
-    id?: string;
-    name?: string;
-    isDoubleRegistrable?: boolean;
-}
-
 export interface DeleteRegistrableCommand {
     eventId?: string;
     registrableId?: string;
@@ -7250,6 +7290,28 @@ export interface RegistrableDisplayItem {
 
 export interface RegistrablesQuery {
     eventId?: string;
+}
+
+export interface RegistrableTypeOption {
+    type?: RegistrableType;
+    text?: string;
+}
+
+export interface RegistrableTypesQuery {
+    eventId?: string;
+}
+
+export interface SaveRegistrableCommand {
+    eventId?: string;
+    registrableId?: string;
+    name?: string | null;
+    nameSecondary?: string | null;
+    type?: RegistrableType;
+    maximumSingleSpots?: number | null;
+    maximumDoubleSpots?: number | null;
+    maximumAllowedImbalance?: number | null;
+    hasWaitingList?: boolean;
+    tag?: string | null;
 }
 
 export interface SetDoubleRegistrableLimitsCommand {

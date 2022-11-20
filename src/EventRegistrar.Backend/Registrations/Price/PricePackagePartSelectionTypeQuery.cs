@@ -17,7 +17,7 @@ public class PricePackagePartSelectionTypeQueryHandler : IRequestHandler<PricePa
         _enumTranslator = enumTranslator;
     }
 
-    public Task<IEnumerable<PricePackagePartSelectionTypeOption>> Handle(PricePackagePartSelectionTypeQuery request,
+    public Task<IEnumerable<PricePackagePartSelectionTypeOption>> Handle(PricePackagePartSelectionTypeQuery query,
                                                                          CancellationToken cancellationToken)
     {
         var mappings = _enumTranslator.TranslateAll<PricePackagePartSelectionType>()

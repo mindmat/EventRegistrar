@@ -26,8 +26,13 @@ public class Registrable : Entity
     public int? MaximumAllowedImbalance { get; set; }
     public int? MaximumDoubleSeats { get; set; }
     public int? MaximumSingleSeats { get; set; }
+
+    [Obsolete("Use PricePackage instead")]
     public decimal? Price { get; set; }
+
+    [Obsolete("Use PricePackage instead")]
     public decimal? ReducedPrice { get; set; }
+
     public int? ShowInMailListOrder { get; set; }
     public string? CheckinListColumn { get; set; }
     public string? Tag { get; set; }

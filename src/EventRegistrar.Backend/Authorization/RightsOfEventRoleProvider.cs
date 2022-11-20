@@ -149,7 +149,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(ActivateAutomaticPromotionCommand);
             yield return nameof(DeactivateAutomaticPromotionCommand);
             yield return nameof(IgnorePaymentCommand);
-            yield return nameof(CreateRegistrableCommand);
+            yield return nameof(SaveRegistrableCommand);
             yield return nameof(FetchBankStatementsFileCommand);
             yield return nameof(ProcessFetchedBankStatementsFileCommand);
             yield return nameof(SendPaymentDueMailCommand);

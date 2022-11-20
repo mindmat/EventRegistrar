@@ -2,9 +2,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { OverviewService } from './overview.service';
 import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDisplayItem';
-import { DoubleRegistrableDisplayItem, RegistrablesOverview, SingleRegistrableDisplayItem } from 'app/api/api';
+import { DoubleRegistrableDisplayItem, RegistrablesOverview, RegistrableTypeOption, SingleRegistrableDisplayItem } from 'app/api/api';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatDialog } from '@angular/material/dialog';
+import { RegistrableDetailComponent } from './registrable-detail/registrable-detail.component';
+import { RegistrablesService } from '../pricing/registrables.service';
 
 @Component({
     selector: 'app-overview',
@@ -19,6 +22,7 @@ export class OverviewComponent implements OnInit, OnDestroy
     doubleRegistrables: DoubleRegistrableDisplayItem[];
     filteredSingleRegistrables: SingleRegistrableDisplayItem[];
     filteredDoubleRegistrables: DoubleRegistrableDisplayItem[];
+
     filters: {
         categoryTag$: BehaviorSubject<string>;
         query$: BehaviorSubject<string>;
@@ -31,7 +35,10 @@ export class OverviewComponent implements OnInit, OnDestroy
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    constructor(private _changeDetectorRef: ChangeDetectorRef, private overviewService: OverviewService) { }
+    constructor(private changeDetectorRef: ChangeDetectorRef,
+        private overviewService: OverviewService,
+        private registrableService: RegistrablesService,
+        private matDialog: MatDialog) { }
 
     ngOnInit(): void
     {
@@ -43,7 +50,7 @@ export class OverviewComponent implements OnInit, OnDestroy
                 this.tags = tags;
 
                 // Mark for check
-                this._changeDetectorRef.markForCheck();
+                this.changeDetectorRef.markForCheck();
             });
 
         // Get the registrables
@@ -55,7 +62,7 @@ export class OverviewComponent implements OnInit, OnDestroy
                 this.doubleRegistrables = this.filteredDoubleRegistrables = registrables.doubleRegistrables;
 
                 // Mark for check
-                this._changeDetectorRef.markForCheck();
+                this.changeDetectorRef.markForCheck();
             });
 
         // Filter the courses
@@ -86,6 +93,16 @@ export class OverviewComponent implements OnInit, OnDestroy
                     // this.filteredCourses = this.filteredCourses.filter(course => course.progress.completed === 0);
                 }
             });
+    }
+
+    addRegistrable(): void
+    {
+        this.matDialog.open(RegistrableDetailComponent, {
+            autoFocus: true,
+            data: {
+                note: {}
+            }
+        });
     }
 
     ngOnDestroy(): void

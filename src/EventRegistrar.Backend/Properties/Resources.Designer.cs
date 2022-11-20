@@ -687,6 +687,60 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Maximale Anzahl Paar-Plätze.
+        /// </summary>
+        internal static string HasDoubleMax {
+            get {
+                return ResourceManager.GetString("HasDoubleMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to z.B. 20 = 20 Leader &amp; 20 Follower.
+        /// </summary>
+        internal static string HasDoubleMaxSecondary {
+            get {
+                return ResourceManager.GetString("HasDoubleMaxSecondary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximale Anzahl Teilnehmer.
+        /// </summary>
+        internal static string HasSingleMax {
+            get {
+                return ResourceManager.GetString("HasSingleMax", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        internal static string HasSingleMaxSecondary {
+            get {
+                return ResourceManager.GetString("HasSingleMaxSecondary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warteliste.
+        /// </summary>
+        internal static string HasWaitingList {
+            get {
+                return ResourceManager.GetString("HasWaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ohne Warteliste werden überzählige Anmeldungen abgelehnt.
+        /// </summary>
+        internal static string HasWaitingListSecondary {
+            get {
+                return ResourceManager.GetString("HasWaitingListSecondary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ausblenden:.
         /// </summary>
         internal static string Hide {
@@ -1164,6 +1218,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Maximales Ungleichgewicht.
+        /// </summary>
+        internal static string MaxAllowedImbalance {
+            get {
+                return ResourceManager.GetString("MaxAllowedImbalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to zwischen Leadern und Followern.
+        /// </summary>
+        internal static string MaxAllowedImbalanceSecondary {
+            get {
+                return ResourceManager.GetString("MaxAllowedImbalanceSecondary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fehlbetrag.
         /// </summary>
         internal static string MissingAmount {
@@ -1178,6 +1250,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Name {
             get {
                 return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name 2.
+        /// </summary>
+        internal static string NameSecondary {
+            get {
+                return ResourceManager.GetString("NameSecondary", resourceCulture);
             }
         }
         
@@ -1461,11 +1542,47 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Track.
+        /// </summary>
+        internal static string Registrable {
+            get {
+                return ResourceManager.GetString("Registrable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} ist leider ausverkauft.
         /// </summary>
         internal static string RegistrableSoldOut {
             get {
                 return ResourceManager.GetString("RegistrableSoldOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Typ des Tracks.
+        /// </summary>
+        internal static string RegistrableType {
+            get {
+                return ResourceManager.GetString("RegistrableType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Leader &amp; Follower.
+        /// </summary>
+        internal static string RegistrableType_Double {
+            get {
+                return ResourceManager.GetString("RegistrableType_Double", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Einzel.
+        /// </summary>
+        internal static string RegistrableType_Single {
+            get {
+                return ResourceManager.GetString("RegistrableType_Single", resourceCulture);
             }
         }
         
@@ -1808,6 +1925,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string subject {
             get {
                 return ResourceManager.GetString("subject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tag.
+        /// </summary>
+        internal static string Tag {
+            get {
+                return ResourceManager.GetString("Tag", resourceCulture);
             }
         }
         

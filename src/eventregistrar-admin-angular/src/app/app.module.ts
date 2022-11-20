@@ -69,7 +69,7 @@ import { CreateEventComponent } from './modules/admin/events/select-event/create
 import { FormMappingComponent } from './modules/admin/registration-forms/form-mapping/form-mapping.component';
 import { TagsPickerComponent } from './shared/tags-picker/tags-picker.component';
 import { PricingComponent } from './modules/admin/pricing/pricing.component';
-// import { RegistrableDetailComponent } from './modules/admin/overview/registrable-detail/registrable-detail.component';
+import { RegistrableDetailComponent } from './modules/admin/overview/registrable-detail/registrable-detail.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -81,6 +81,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
+import { MatOptionModule } from '@angular/material/core';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -112,7 +113,7 @@ const routerConfig: ExtraOptions = {
         FormMappingComponent,
         TagsPickerComponent,
         PricingComponent,
-        // RegistrableDetailComponent
+        RegistrableDetailComponent
     ],
     providers: [
         AuthServiceFuse,
@@ -170,6 +171,7 @@ const routerConfig: ExtraOptions = {
         MatMenuModule,
         MatSidenavModule,
         MatDialogModule,
+        MatOptionModule,
 
         FroalaEditorModule.forRoot(),
         FroalaViewModule.forRoot(),

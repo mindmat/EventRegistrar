@@ -324,6 +324,24 @@
   <data name="German" xml:space="preserve">
     <value>Deutsch</value>
   </data>
+  <data name="HasDoubleMax" xml:space="preserve">
+    <value>Maximale Anzahl Paar-Plätze</value>
+  </data>
+  <data name="HasDoubleMaxSecondary" xml:space="preserve">
+    <value>z.B. 20 = 20 Leader &amp; 20 Follower</value>
+  </data>
+  <data name="HasSingleMax" xml:space="preserve">
+    <value>Maximale Anzahl Teilnehmer</value>
+  </data>
+  <data name="HasSingleMaxSecondary" xml:space="preserve">
+    <value></value>
+  </data>
+  <data name="HasWaitingList" xml:space="preserve">
+    <value>Warteliste</value>
+  </data>
+  <data name="HasWaitingListSecondary" xml:space="preserve">
+    <value>Ohne Warteliste werden überzählige Anmeldungen abgelehnt</value>
+  </data>
   <data name="Hide" xml:space="preserve">
     <value>Ausblenden:</value>
   </data>
@@ -483,11 +501,20 @@
   <data name="Mapping" xml:space="preserve">
     <value>Zuordnung</value>
   </data>
+  <data name="MaxAllowedImbalance" xml:space="preserve">
+    <value>Maximales Ungleichgewicht</value>
+  </data>
+  <data name="MaxAllowedImbalanceSecondary" xml:space="preserve">
+    <value>zwischen Leadern und Followern</value>
+  </data>
   <data name="MissingAmount" xml:space="preserve">
     <value>Fehlbetrag</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
+  </data>
+  <data name="NameSecondary" xml:space="preserve">
+    <value>Name 2</value>
   </data>
   <data name="NewEvent" xml:space="preserve">
     <value>Neuen Event erstellen</value>
@@ -582,9 +609,21 @@
   <data name="Reduction" xml:space="preserve">
     <value>Reduktion</value>
   </data>
+  <data name="Registrable" xml:space="preserve">
+    <value>Track</value>
+  </data>
   <data name="RegistrableSoldOut" xml:space="preserve">
     <value>{0} ist leider ausverkauft</value>
     <comment>{0}: Registrable name</comment>
+  </data>
+  <data name="RegistrableType" xml:space="preserve">
+    <value>Typ des Tracks</value>
+  </data>
+  <data name="RegistrableType_Double" xml:space="preserve">
+    <value>Leader &amp; Follower</value>
+  </data>
+  <data name="RegistrableType_Single" xml:space="preserve">
+    <value>Einzel</value>
   </data>
   <data name="RegistrationCandidatesForIncomingPayment" xml:space="preserve">
     <value>Zahlungseingang für:</value>
@@ -699,6 +738,9 @@
   </data>
   <data name="subject" xml:space="preserve">
     <value>Betreff</value>
+  </data>
+  <data name="Tag" xml:space="preserve">
+    <value>Tag</value>
   </data>
   <data name="to" xml:space="preserve">
     <value>an</value>
