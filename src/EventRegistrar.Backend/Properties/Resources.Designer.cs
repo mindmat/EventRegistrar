@@ -295,6 +295,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Track löschen.
+        /// </summary>
+        internal static string DeleteRegistrable {
+            get {
+                return ResourceManager.GetString("DeleteRegistrable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einzahlungen.
         /// </summary>
         internal static string Deposits {
@@ -327,6 +336,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Edit {
             get {
                 return ResourceManager.GetString("Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bearbeiten.
+        /// </summary>
+        internal static string EditRegistrable {
+            get {
+                return ResourceManager.GetString("EditRegistrable", resourceCulture);
             }
         }
         

@@ -15,8 +15,8 @@
                     </mat-select>
                 </mat-form-field>
 
-                <button class="ml-auto" mat-icon-button (click)="addRegistrable()">
-                    <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                <button class="ml-auto self-start mt-1" mat-icon-button (click)="addRegistrable()">
+                    <mat-icon class="icon-size-8" [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
                 </button>
 
                 <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
@@ -44,6 +44,28 @@
                                             {{category.text}}
                                         </div>
                                     </ng-container>
+                                </div>
+                                <!-- context menu -->
+                                <div class="flex items-center">
+                                    <div class="ml-auto -mt-2">
+                                        <button mat-icon-button [matMenuTriggerFor]="registrableMenu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                                        </button>
+                                        <mat-menu #registrableMenu="matMenu">
+                                            <button mat-menu-item (click)="changeDoubleRegistrable(doubleRegistrable)">
+                                                <span class="flex items-center">
+                                                    <!-- <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:credit-card'"></mat-icon> -->
+                                                    <span>{{ 'EditRegistrable' | translate }}</span>
+                                                </span>
+                                            </button>
+                                            <!-- <button mat-menu-item>
+                                                    <span class="flex items-center">
+                                                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:cash'"></mat-icon>
+                                                        <span>Spending breakdown</span>
+                                                    </span>
+                                                </button> -->
+                                        </mat-menu>
+                                    </div>
                                 </div>
 
                                 <!-- Registrable title & description -->
@@ -187,6 +209,28 @@
                                             {{category.text}}
                                         </div>
                                     </ng-container>
+                                </div>
+                                <!-- context menu -->
+                                <div class="flex items-center">
+                                    <div class="ml-auto -mt-2">
+                                        <button mat-icon-button [matMenuTriggerFor]="registrableMenu">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                                        </button>
+                                        <mat-menu #registrableMenu="matMenu">
+                                            <button mat-menu-item (click)="changeSingleRegistrable(singleRegistrable)">
+                                                <span class="flex items-center">
+                                                    <!-- <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:credit-card'"></mat-icon> -->
+                                                    <span>{{ 'EditRegistrable' | translate }}</span>
+                                                </span>
+                                            </button>
+                                            <!-- <button mat-menu-item>
+                                                                                    <span class="flex items-center">
+                                                                                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:cash'"></mat-icon>
+                                                                                        <span>Spending breakdown</span>
+                                                                                    </span>
+                                                                                </button> -->
+                                        </mat-menu>
+                                    </div>
                                 </div>
 
                                 <!-- Registrable title & description -->

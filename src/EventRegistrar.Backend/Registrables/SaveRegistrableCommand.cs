@@ -82,19 +82,21 @@ public class SaveRegistrableCommandHandler : IRequestHandler<SaveRegistrableComm
             registrable.Type = command.Type;
         }
 
-        if (registrable.Type == RegistrableType.Single)
+        switch (registrable.Type)
         {
-            registrable.MaximumSingleSeats = command.MaximumSingleSpots;
-            registrable.MaximumDoubleSeats = null;
-            registrable.MaximumAllowedImbalance = null;
-            registrable.HasWaitingList = command.HasWaitingList && command.MaximumSingleSpots != null;
-        }
-        else if (registrable.Type == RegistrableType.Double)
-        {
-            registrable.MaximumSingleSeats = null;
-            registrable.MaximumDoubleSeats = command.MaximumDoubleSpots;
-            registrable.MaximumAllowedImbalance = command.MaximumAllowedImbalance;
-            registrable.HasWaitingList = command.HasWaitingList && command.MaximumDoubleSpots != null;
+            case RegistrableType.Single:
+                registrable.MaximumSingleSeats = command.MaximumSingleSpots;
+                registrable.MaximumDoubleSeats = null;
+                registrable.MaximumAllowedImbalance = null;
+                registrable.HasWaitingList = command.HasWaitingList && command.MaximumSingleSpots != null;
+                break;
+
+            case RegistrableType.Double:
+                registrable.MaximumSingleSeats = null;
+                registrable.MaximumDoubleSeats = command.MaximumDoubleSpots;
+                registrable.MaximumAllowedImbalance = command.MaximumAllowedImbalance;
+                registrable.HasWaitingList = command.HasWaitingList && command.MaximumDoubleSpots != null;
+                break;
         }
 
         _commandQueue.EnqueueCommand(new UpdateReadModelCommand

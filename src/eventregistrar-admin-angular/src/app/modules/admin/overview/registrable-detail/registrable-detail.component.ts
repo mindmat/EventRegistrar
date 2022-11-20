@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { RegistrableDisplayItem, RegistrableType, RegistrableTypeOption, SaveRegistrableCommand } from 'app/api/api';
+import { DoubleRegistrableDisplayItem, RegistrableDisplayItem, RegistrableType, RegistrableTypeOption, SaveRegistrableCommand, SingleRegistrableDisplayItem } from 'app/api/api';
 import { EventService } from '../../events/event.service';
 import { RegistrablesService } from '../../pricing/registrables.service';
 import { v4 as createUuid } from 'uuid';
@@ -17,7 +17,7 @@ export class RegistrableDetailComponent
   registrableTypes: RegistrableTypeOption[];
   registrableType = RegistrableType;
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) private data: { registrable?: RegistrableDisplayItem; },
+    @Inject(MAT_DIALOG_DATA) private data: { singleRegistrable?: SingleRegistrableDisplayItem; doubleRegistrable?: DoubleRegistrableDisplayItem; },
     private registrablesService: RegistrablesService,
     public matDialogRef: MatDialogRef<RegistrableDetailComponent>,
     private fb: FormBuilder,
@@ -25,22 +25,65 @@ export class RegistrableDetailComponent
 
   ngOnInit(): void
   {
-    this.registrableForm = this.fb.group<SaveRegistrableCommand & { hasSingleMax: boolean; hasDoubleMax: boolean; }>({
-      eventId: this.eventService.selectedId,
-      registrableId: createUuid(),
-      name: '',
-      nameSecondary: null,
-      tag: null,
-      hasWaitingList: false,
-      type: RegistrableType.Single,
+    if (this.data.singleRegistrable != null)
+    {
+      this.registrableForm = this.fb.group<SaveRegistrableCommand & { hasSingleMax: boolean; hasDoubleMax: boolean; }>({
+        eventId: this.eventService.selectedId,
+        registrableId: this.data.singleRegistrable.id,
+        name: this.data.singleRegistrable.name,
+        nameSecondary: this.data.singleRegistrable.nameSecondary,
+        tag: this.data.singleRegistrable.tag,
+        hasWaitingList: this.data.singleRegistrable.hasWaitingList,
+        type: RegistrableType.Single,
 
-      hasSingleMax: false,
-      maximumSingleSpots: null,
+        hasSingleMax: this.data.singleRegistrable.spotsAvailable != null,
+        maximumSingleSpots: this.data.singleRegistrable.spotsAvailable,
 
-      hasDoubleMax: false,
-      maximumDoubleSpots: null,
-      maximumAllowedImbalance: null
-    });
+        hasDoubleMax: false,
+        maximumDoubleSpots: null,
+        maximumAllowedImbalance: null
+      });
+    }
+    else if (this.data.doubleRegistrable != null)
+    {
+      this.registrableForm = this.fb.group<SaveRegistrableCommand & { hasSingleMax: boolean; hasDoubleMax: boolean; }>({
+        eventId: this.eventService.selectedId,
+        registrableId: this.data.doubleRegistrable.id,
+        name: this.data.doubleRegistrable.name,
+        nameSecondary: this.data.doubleRegistrable.nameSecondary,
+        tag: this.data.doubleRegistrable.tag,
+        hasWaitingList: this.data.doubleRegistrable.hasWaitingList,
+        type: RegistrableType.Double,
+
+        hasSingleMax: false,
+        maximumSingleSpots: null,
+
+        hasDoubleMax: this.data.doubleRegistrable.spotsAvailable != null,
+        maximumDoubleSpots: this.data.doubleRegistrable.spotsAvailable,
+        maximumAllowedImbalance: this.data.doubleRegistrable.maximumAllowedImbalance
+      });
+    }
+    else
+    {
+      // new
+      this.registrableForm = this.fb.group<SaveRegistrableCommand & { hasSingleMax: boolean; hasDoubleMax: boolean; }>({
+        eventId: this.eventService.selectedId,
+        registrableId: createUuid(),
+        name: '',
+        nameSecondary: null,
+        tag: null,
+        hasWaitingList: false,
+        type: RegistrableType.Single,
+
+        hasSingleMax: false,
+        maximumSingleSpots: null,
+
+        hasDoubleMax: false,
+        maximumDoubleSpots: null,
+        maximumAllowedImbalance: null
+      });
+    }
+
     this.changeDetectorRef.markForCheck();
 
     this.registrablesService.getRegistrableTypes().subscribe(types =>

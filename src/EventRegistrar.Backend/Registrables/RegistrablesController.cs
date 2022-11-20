@@ -28,33 +28,6 @@ public class RegistrablesController : Controller
                                     });
     }
 
-    [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/coupleLimits")]
-    public async Task SetCoupleLimits(string eventAcronym,
-                                      Guid registrableId,
-                                      [FromBody] SetDoubleRegistrableLimitsCommand limits)
-    {
-        await _mediator.Send(new SetDoubleRegistrableLimitsCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 MaximumCouples = limits.MaximumCouples,
-                                 RegistrableId = registrableId,
-                                 MaximumImbalance = limits.MaximumImbalance
-                             });
-    }
-
-    [HttpPut("api/events/{eventAcronym}/registrables/{registrableId:guid}/singleLimits")]
-    public async Task SetSingleLimits(string eventAcronym,
-                                      Guid registrableId,
-                                      [FromBody] SetSingleRegistrableLimitsCommand limits)
-    {
-        await _mediator.Send(new SetSingleRegistrableLimitsCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 MaximumParticipants = limits.MaximumParticipants,
-                                 RegistrableId = registrableId
-                             });
-    }
-
     [HttpPost("api/events/{eventAcronym}/registrables/{registrableId:guid}/tryPromoteFromWaitingList/{registrationId:guid}")]
     [HttpPost("api/events/{eventAcronym}/registrables/{registrableId:guid}/tryPromoteFromWaitingList")]
     public async Task TryPromoteFromWaitingList(string eventAcronym, Guid registrableId, Guid? registrationId)

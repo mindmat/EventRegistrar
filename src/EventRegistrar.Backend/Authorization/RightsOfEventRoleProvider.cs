@@ -120,8 +120,6 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(AddSpotCommand);
             yield return nameof(RemoveSpotCommand);
             yield return nameof(SavePaymentFileCommand);
-            yield return nameof(SetDoubleRegistrableLimitsCommand);
-            yield return nameof(SetSingleRegistrableLimitsCommand);
             yield return nameof(CreateBulkMailsCommand);
             yield return nameof(ReleaseBulkMailsCommand);
             yield return nameof(TryPromoteFromWaitingListCommand);

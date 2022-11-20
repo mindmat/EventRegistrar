@@ -165,6 +165,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="EditRegistrable" xml:space="preserve">
+    <value>Edit</value>
+  </data>
   <data name="CopyAccessRights" xml:space="preserve">
     <value>Copy access rights</value>
   </data>
@@ -194,6 +197,9 @@
   </data>
   <data name="DeleteAll" xml:space="preserve">
     <value>Delete all</value>
+  </data>
+  <data name="DeleteRegistrable" xml:space="preserve">
+    <value>Delete track</value>
   </data>
   <data name="Deposits" xml:space="preserve">
     <value>Deposits</value>

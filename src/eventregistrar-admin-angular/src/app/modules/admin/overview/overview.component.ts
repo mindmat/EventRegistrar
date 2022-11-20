@@ -7,7 +7,6 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { RegistrableDetailComponent } from './registrable-detail/registrable-detail.component';
-import { RegistrablesService } from '../pricing/registrables.service';
 
 @Component({
     selector: 'app-overview',
@@ -33,18 +32,17 @@ export class OverviewComponent implements OnInit, OnDestroy
             hideCompleted$: new BehaviorSubject(false)
         };
 
-    private _unsubscribeAll: Subject<any> = new Subject<any>();
+    private unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(private changeDetectorRef: ChangeDetectorRef,
         private overviewService: OverviewService,
-        private registrableService: RegistrablesService,
         private matDialog: MatDialog) { }
 
     ngOnInit(): void
     {
         // Get the tags
         this.overviewService.registrableTags$
-            .pipe(takeUntil(this._unsubscribeAll))
+            .pipe(takeUntil(this.unsubscribeAll))
             .subscribe((tags: RegistrableTagDisplayItem[]) =>
             {
                 this.tags = tags;
@@ -55,7 +53,7 @@ export class OverviewComponent implements OnInit, OnDestroy
 
         // Get the registrables
         this.overviewService.registrables$
-            .pipe(takeUntil(this._unsubscribeAll))
+            .pipe(takeUntil(this.unsubscribeAll))
             .subscribe((registrables: RegistrablesOverview) =>
             {
                 this.singleRegistrables = this.filteredSingleRegistrables = registrables.singleRegistrables;
@@ -97,19 +95,14 @@ export class OverviewComponent implements OnInit, OnDestroy
 
     addRegistrable(): void
     {
-        this.matDialog.open(RegistrableDetailComponent, {
-            autoFocus: true,
-            data: {
-                note: {}
-            }
-        });
+        this.matDialog.open(RegistrableDetailComponent, { autoFocus: true });
     }
 
     ngOnDestroy(): void
     {
         // Unsubscribe from all subscriptions
-        this._unsubscribeAll.next(null);
-        this._unsubscribeAll.complete();
+        this.unsubscribeAll.next(null);
+        this.unsubscribeAll.complete();
     }
 
     filterByQuery(query: string): void
@@ -125,6 +118,22 @@ export class OverviewComponent implements OnInit, OnDestroy
     toggleCompleted(change: MatSlideToggleChange): void
     {
         this.filters.hideCompleted$.next(change.checked);
+    }
+
+    changeDoubleRegistrable(doubleRegistrable: DoubleRegistrableDisplayItem)
+    {
+        this.matDialog.open(RegistrableDetailComponent, {
+            autoFocus: true,
+            data: { doubleRegistrable }
+        });
+    }
+
+    changeSingleRegistrable(singleRegistrable: SingleRegistrableDisplayItem)
+    {
+        this.matDialog.open(RegistrableDetailComponent, {
+            autoFocus: true,
+            data: { singleRegistrable }
+        });
     }
 
     trackByFn(index: number, item: any): any
