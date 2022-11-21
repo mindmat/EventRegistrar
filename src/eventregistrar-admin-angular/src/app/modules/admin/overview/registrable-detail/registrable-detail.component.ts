@@ -16,6 +16,7 @@ export class RegistrableDetailComponent
   registrableForm: FormGroup;
   registrableTypes: RegistrableTypeOption[];
   registrableType = RegistrableType;
+
   constructor(private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) private data: { singleRegistrable?: SingleRegistrableDisplayItem; doubleRegistrable?: DoubleRegistrableDisplayItem; },
     private registrablesService: RegistrablesService,

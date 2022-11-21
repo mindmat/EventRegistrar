@@ -97,7 +97,10 @@ export class OverviewComponent implements OnInit, OnDestroy
 
     addRegistrable(): void
     {
-        this.matDialog.open(RegistrableDetailComponent, { autoFocus: true });
+        this.matDialog.open(RegistrableDetailComponent, {
+            autoFocus: true,
+            data: { singleRegistrable: null, doubleRegistrable: null }
+        });
     }
 
     ngOnDestroy(): void
@@ -126,7 +129,7 @@ export class OverviewComponent implements OnInit, OnDestroy
     {
         this.matDialog.open(RegistrableDetailComponent, {
             autoFocus: true,
-            data: { doubleRegistrable }
+            data: { singleRegistrable: null, doubleRegistrable }
         });
     }
 
@@ -134,7 +137,7 @@ export class OverviewComponent implements OnInit, OnDestroy
     {
         this.matDialog.open(RegistrableDetailComponent, {
             autoFocus: true,
-            data: { singleRegistrable }
+            data: { singleRegistrable, doubleRegistrable: null }
         });
     }
 
