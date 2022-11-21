@@ -22,6 +22,8 @@ public class RegistrablesQueryHandler : IRequestHandler<RegistrablesQuery, IEnum
                                                              {
                                                                  Id = rbl.Id,
                                                                  Name = rbl.Name,
+                                                                 NameSecondary = rbl.NameSecondary,
+                                                                 DisplayName = rbl.DisplayName,
                                                                  HasWaitingList = rbl.HasWaitingList,
                                                                  IsDoubleRegistrable = rbl.MaximumDoubleSeats.HasValue,
                                                                  ShowInMailListOrder = rbl.ShowInMailListOrder

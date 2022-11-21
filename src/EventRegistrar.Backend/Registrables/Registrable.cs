@@ -20,6 +20,7 @@ public class Registrable : Entity
 
     public string Name { get; set; } = null!;
     public string? NameSecondary { get; set; } = null!;
+    public string DisplayName { get; set; } = null!;
     public bool HasWaitingList { get; set; }
     public bool AutomaticPromotionFromWaitingList { get; set; }
     public bool IsCore { get; set; }

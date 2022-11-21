@@ -90,7 +90,6 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(PartyOverviewQuery);
             yield return nameof(PossibleMailTypesQuery);
             yield return nameof(UnassignedIncomingPaymentsQuery);
-            yield return nameof(RegistrationsOnWaitingListQuery);
             yield return nameof(NotReceivedMailsQuery);
             yield return nameof(PricingQuery);
             yield return nameof(EventQuery);

@@ -29,6 +29,6 @@ public class
         var registrationFollower = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId_Follower);
         var registrable = _registrables.FirstOrDefault(reg => reg.Id == domainEvent.RegistrableId);
         return
-            $"{registrationLeader?.RespondentFirstName} {registrationLeader?.RespondentLastName} und {registrationFollower?.RespondentFirstName} {registrationFollower?.RespondentLastName} sind in {registrable?.Name} von der Warteliste nachgerückt";
+            $"{registrationLeader?.RespondentFirstName} {registrationLeader?.RespondentLastName} und {registrationFollower?.RespondentFirstName} {registrationFollower?.RespondentLastName} sind in {registrable?.DisplayName} von der Warteliste nachgerückt";
     }
 }

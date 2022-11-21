@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Authorization;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Matching;
@@ -36,9 +37,9 @@ public class RegistrationsWithUnmatchedPartnerQueryHandler : IRequestHandler<Reg
                                                       Partner = reg.PartnerOriginal,
                                                       IsWaitingList = reg.IsWaitingList == true,
                                                       Registrables = reg.Seats_AsLeader
-                                                                        .Select(spt => spt.Registrable.Name)
+                                                                        .Select(spt => spt.Registrable.DisplayName)
                                                                         .Union(reg.Seats_AsFollower.Select(spt =>
-                                                                            spt.Registrable.Name))
+                                                                                                               spt.Registrable.DisplayName))
                                                                         .ToArray()
                                                   })
                                    .ToListAsync(cancellationToken);

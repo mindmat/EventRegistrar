@@ -125,7 +125,7 @@ public class PartnerRegistrationProcessor
                                                        ? string.Empty
                                                        : registration.SoldOutMessage + Environment.NewLine)
                                                 + string.Format(Properties.Resources.RegistrableSoldOut,
-                                                                registrable.Registrable.Name);
+                                                                registrable.Registrable.DisplayName);
                 }
                 else
                 {
@@ -150,7 +150,7 @@ public class PartnerRegistrationProcessor
                                                        ? string.Empty
                                                        : registration.SoldOutMessage + Environment.NewLine)
                                                 + string.Format(Properties.Resources.RegistrableSoldOut,
-                                                                registrable.Registrable.Name);
+                                                                registrable.Registrable.DisplayName);
                 }
                 else
                 {

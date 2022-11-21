@@ -234,13 +234,13 @@ public class MailComposer
                 text = "- " + text;
             }
 
-            text = text.Replace("{Name}", seat.Registrable.Name, StringComparison.InvariantCultureIgnoreCase)
+            text = text.Replace("{Name}", seat.Registrable.DisplayName, StringComparison.InvariantCultureIgnoreCase)
                        .Replace("{Role}", role.ToString(), StringComparison.InvariantCultureIgnoreCase);
             text = Regex.Replace(text, "{.*?}", mtc => FillResponse(mtc, responses));
         }
         else
         {
-            text = $"- {seat.Registrable.Name}";
+            text = $"- {seat.Registrable.DisplayName}";
             if (seat.Registrable.MaximumDoubleSeats.HasValue)
             {
                 // enrich info, e.g. "Lindy Hop Intermediate, Role: {role}, Partner: {email}"

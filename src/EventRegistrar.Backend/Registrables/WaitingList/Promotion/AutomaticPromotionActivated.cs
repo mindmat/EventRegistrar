@@ -19,6 +19,6 @@ public class AutomaticPromotionActivatedUserTranslation : IEventToUserTranslatio
     public string GetText(AutomaticPromotionActivated domainEvent)
     {
         var registrable = _registrables.FirstOrDefault(reg => reg.Id == domainEvent.RegistrableId);
-        return $"Automatisches Nachrücken für {registrable?.Name} aktiviert";
+        return $"Automatisches Nachrücken für {registrable?.DisplayName} aktiviert";
     }
 }

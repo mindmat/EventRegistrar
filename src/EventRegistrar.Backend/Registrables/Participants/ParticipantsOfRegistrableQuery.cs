@@ -31,7 +31,7 @@ public class ParticipantsOfRegistrableQueryHandler : IRequestHandler<Participant
 
         if (registrable.EventId != query.EventId)
         {
-            throw new ArgumentException($"Registrable {registrable.Name}  ({registrable.Id}) is not part of requested event {query.EventId}");
+            throw new ArgumentException($"Registrable {registrable.DisplayName}  ({registrable.Id}) is not part of requested event {query.EventId}");
         }
 
         var participants = await _seats.Where(spot => spot.RegistrableId == query.RegistrableId

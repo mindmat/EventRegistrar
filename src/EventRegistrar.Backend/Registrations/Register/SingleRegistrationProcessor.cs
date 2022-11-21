@@ -274,7 +274,7 @@ public class SingleRegistrationProcessor
         if (soldOutRegistrableIds.Any())
         {
             var soldOutRegistrableNames = await _registrables.Where(rbl => soldOutRegistrableIds.Contains(rbl.Id))
-                                                             .Select(rbl => rbl.Name)
+                                                             .Select(rbl => rbl.DisplayName)
                                                              .ToListAsync();
             registration.SoldOutMessage = soldOutRegistrableNames
                                           .Select(rbn => string.Format(Properties.Resources.RegistrableSoldOut, rbn))

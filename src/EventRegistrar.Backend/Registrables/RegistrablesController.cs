@@ -19,15 +19,6 @@ public class RegistrablesController : Controller
     }
 
 
-    [HttpGet("api/events/{eventAcronym}/registrationsOnWaitingList")]
-    public async Task<IEnumerable<WaitingListSpot>> GetRegistrationsOnWaitingList(string eventAcronym)
-    {
-        return await _mediator.Send(new RegistrationsOnWaitingListQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
-
     [HttpPost("api/events/{eventAcronym}/registrables/{registrableId:guid}/tryPromoteFromWaitingList/{registrationId:guid}")]
     [HttpPost("api/events/{eventAcronym}/registrables/{registrableId:guid}/tryPromoteFromWaitingList")]
     public async Task TryPromoteFromWaitingList(string eventAcronym, Guid registrableId, Guid? registrationId)
@@ -37,17 +28,6 @@ public class RegistrablesController : Controller
                                  EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                                  RegistrableId = registrableId,
                                  RegistrationId = registrationId
-                             });
-    }
-
-
-    [HttpDelete("api/events/{eventAcronym}/registrables/{registrableId:guid}")]
-    public async Task DeleteRegistrable(string eventAcronym, Guid registrableId)
-    {
-        await _mediator.Send(new DeleteRegistrableCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 RegistrableId = registrableId
                              });
     }
 

@@ -61,7 +61,7 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
                                               .Select(rbl => new
                                                              {
                                                                  RegistrableId = rbl.Id,
-                                                                 rbl.Name,
+                                                                 rbl.DisplayName,
                                                                  Price = rbl.Price!.Value,
                                                                  SpotsAvailable = rbl.MaximumSingleSeats ?? rbl.MaximumDoubleSeats.Value * 2,
                                                                  LeaderCount = rbl.Spots!
@@ -93,7 +93,7 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
                    PotentialOfOpenSpots = registrables.Select(rbl => new OpenSpotsPotential
                                                                      {
                                                                          RegistrableId = rbl.RegistrableId,
-                                                                         Name = rbl.Name,
+                                                                         Name = rbl.DisplayName,
                                                                          SpotsAvailable = Math.Max(0, rbl.SpotsAvailable - rbl.LeaderCount - rbl.FollowerCount),
                                                                          PotentialIncome = Math.Max(0, rbl.SpotsAvailable - rbl.LeaderCount - rbl.FollowerCount)
                                                                                          * rbl.Price

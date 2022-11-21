@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Infrastructure;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Matching;
@@ -31,29 +32,34 @@ public class PotentialPartnersQueryHandler : IRequestHandler<PotentialPartnersQu
                                                                      reg.PartnerNormalized,
                                                                      PartnerSpotAsLeader =
                                                                          reg.Seats_AsLeader.FirstOrDefault(spt =>
-                                                                             spt.Registrable.MaximumDoubleSeats
-                                                                                 .HasValue),
+                                                                                                               spt.Registrable.MaximumDoubleSeats
+                                                                                                                  .HasValue),
                                                                      PartnerSpotAsFollower =
                                                                          reg.Seats_AsFollower.FirstOrDefault(spt =>
-                                                                             spt.Registrable.MaximumDoubleSeats
-                                                                                 .HasValue)
+                                                                                                                 spt.Registrable.MaximumDoubleSeats
+                                                                                                                    .HasValue)
                                                                  })
                                                   .FirstAsync(cancellationToken);
         var searchParts = (query.SearchString ?? ownRegistration.PartnerNormalized)?.Split(" ");
-        if (searchParts == null || searchParts.Length == 0) throw new ArgumentException("No search string");
+        if (searchParts == null || searchParts.Length == 0)
+        {
+            throw new ArgumentException("No search string");
+        }
 
-        var partnerRegistrableId = ownRegistration.PartnerSpotAsLeader?.RegistrableId ??
-                                   ownRegistration.PartnerSpotAsFollower?.RegistrableId;
-        if (!partnerRegistrableId.HasValue) throw new ArgumentException("No partner spot found");
+        var partnerRegistrableId = ownRegistration.PartnerSpotAsLeader?.RegistrableId ?? ownRegistration.PartnerSpotAsFollower?.RegistrableId;
+        if (!partnerRegistrableId.HasValue)
+        {
+            throw new ArgumentException("No partner spot found");
+        }
 
         var otherRole = ownRegistration.PartnerSpotAsLeader != null ? Role.Follower : Role.Leader;
         return await _registrations.Where(reg => reg.EventId == query.EventId)
                                    .WhereIf(otherRole == Role.Leader,
-                                       reg => reg.Seats_AsLeader.Any(spt =>
-                                           !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
+                                            reg => reg.Seats_AsLeader.Any(spt =>
+                                                                              !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
                                    .WhereIf(otherRole == Role.Follower,
-                                       reg => reg.Seats_AsFollower.Any(spt =>
-                                           !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
+                                            reg => reg.Seats_AsFollower.Any(spt =>
+                                                                                !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
                                    .Select(reg => new
                                                   {
                                                       RegistrationId = reg.Id,
@@ -64,24 +70,20 @@ public class PotentialPartnersQueryHandler : IRequestHandler<PotentialPartnersQu
                                                       Partner = reg.PartnerOriginal,
                                                       EmailMatch = searchParts.Any(prt => prt == reg.RespondentEmail),
                                                       FirstNameMatch = searchParts.Any(prt =>
-                                                          prt == reg.RespondentFirstName),
+                                                                                           prt == reg.RespondentFirstName),
                                                       LastNameMatch = searchParts.Any(prt =>
-                                                          prt == reg.RespondentLastName),
+                                                                                          prt == reg.RespondentLastName),
                                                       reg.IsWaitingList,
                                                       reg.RegistrationId_Partner,
                                                       MatchedPartner =
-                                                          (reg.Registration_Partner.RespondentFirstName ??
-                                                           string.Empty) + " " +
-                                                          (reg.Registration_Partner.RespondentLastName ?? string.Empty),
+                                                          (reg.Registration_Partner.RespondentFirstName ?? string.Empty) + " " + (reg.Registration_Partner.RespondentLastName ?? string.Empty),
                                                       Registrables = reg.Seats_AsLeader
-                                                                        .Select(spt => spt.Registrable.Name)
+                                                                        .Select(spt => spt.Registrable.DisplayName)
                                                                         .Union(reg.Seats_AsFollower.Select(spt =>
-                                                                            spt.Registrable.Name))
+                                                                                                               spt.Registrable.DisplayName))
                                                   })
                                    .Where(mat => mat.EmailMatch || mat.FirstNameMatch || mat.LastNameMatch)
-                                   .OrderByDescending(mat => (mat.EmailMatch ? 5 : 0) +
-                                                             (mat.FirstNameMatch ? 1 : 0) +
-                                                             (mat.LastNameMatch ? 1 : 0))
+                                   .OrderByDescending(mat => (mat.EmailMatch ? 5 : 0) + (mat.FirstNameMatch ? 1 : 0) + (mat.LastNameMatch ? 1 : 0))
                                    .Select(mat => new PotentialPartnerMatch
                                                   {
                                                       RegistrationId = mat.RegistrationId,

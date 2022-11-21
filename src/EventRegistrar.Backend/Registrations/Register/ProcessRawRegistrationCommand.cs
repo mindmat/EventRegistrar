@@ -151,7 +151,7 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
                                   FirstName = registration.RespondentFirstName,
                                   LastName = registration.RespondentLastName,
                                   Email = registration.RespondentEmail,
-                                  Registrables = spots?.Select(spt => spt.Registrable?.Name).ToArray()
+                                  Registrables = spots?.Select(spt => spt.Registrable?.DisplayName).ToArray()
                               });
             rawRegistration.Processed = _dateTimeProvider.Now;
         }

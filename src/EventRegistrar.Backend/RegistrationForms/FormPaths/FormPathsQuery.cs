@@ -52,7 +52,6 @@ public class FormPathsQueryHandler : IRequestHandler<FormPathsQuery, IEnumerable
                                                                                                                                         {
                                                                                                                                             map.RegistrableId,
                                                                                                                                             map.Type,
-                                                                                                                                            map.Registrable!.Name,
                                                                                                                                             map.Language
                                                                                                                                         })
                                                                                                                  })

@@ -79,8 +79,8 @@ public class RegistrablesOverviewUpdater : ReadModelUpdater<RegistrablesOverview
                                                                    {
                                                                        Id = rbl.Id,
                                                                        Name = rbl.Name,
-                                                                       Tag = rbl.Tag,
                                                                        NameSecondary = rbl.NameSecondary,
+                                                                       Tag = rbl.Tag,
                                                                        SpotsAvailable = rbl.MaximumDoubleSeats,
                                                                        HasWaitingList = rbl.HasWaitingList,
                                                                        AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,

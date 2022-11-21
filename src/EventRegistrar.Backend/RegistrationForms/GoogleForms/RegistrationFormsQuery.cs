@@ -72,7 +72,6 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
                                                                                                                                     {
                                                                                                                                         map.RegistrableId,
                                                                                                                                         map.Type,
-                                                                                                                                        map.Registrable!.Name,
                                                                                                                                         map.Language
                                                                                                                                     })
                                                                                                                      })

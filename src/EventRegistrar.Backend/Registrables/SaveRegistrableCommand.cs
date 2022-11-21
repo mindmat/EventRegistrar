@@ -66,6 +66,10 @@ public class SaveRegistrableCommandHandler : IRequestHandler<SaveRegistrableComm
 
         registrable.Name = command.Name;
         registrable.NameSecondary = command.NameSecondary;
+        registrable.DisplayName = Enumerable.Empty<string?>()
+                                            .Append(registrable.Name)
+                                            .Append(registrable.NameSecondary)
+                                            .StringJoinNullable(" - ");
         registrable.Tag = command.Tag;
         if (registrable.Type != command.Type)
         {

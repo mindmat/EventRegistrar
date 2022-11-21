@@ -32,13 +32,13 @@ public class RegistrablesTests : IClassFixture<IntegrationTestEnvironment>
         var registrables = (await response.Content.ReadAsAsync<IEnumerable<DoubleRegistrableDisplayItem>>()).ToList();
         registrables.Count.ShouldBe(3);
         registrables.ShouldContain(rbl => rbl.Id == _integrationTestEnvironment.Scenario.RegistrableDouble1.Id
-                                       && rbl.Name == _integrationTestEnvironment.Scenario.RegistrableDouble1.Name
+                                       && rbl.Name == _integrationTestEnvironment.Scenario.RegistrableDouble1.DisplayName
                                        && rbl.SpotsAvailable == _integrationTestEnvironment.Scenario.RegistrableDouble1.MaximumDoubleSeats);
         registrables.ShouldContain(rbl => rbl.Id == _integrationTestEnvironment.Scenario.RegistrableDouble2.Id
-                                       && rbl.Name == _integrationTestEnvironment.Scenario.RegistrableDouble2.Name
+                                       && rbl.Name == _integrationTestEnvironment.Scenario.RegistrableDouble2.DisplayName
                                        && rbl.SpotsAvailable == _integrationTestEnvironment.Scenario.RegistrableDouble2.MaximumDoubleSeats);
         registrables.ShouldContain(rbl => rbl.Id == _integrationTestEnvironment.Scenario.RegistrableDouble3.Id
-                                       && rbl.Name == _integrationTestEnvironment.Scenario.RegistrableDouble3.Name
+                                       && rbl.Name == _integrationTestEnvironment.Scenario.RegistrableDouble3.DisplayName
                                        && rbl.SpotsAvailable == _integrationTestEnvironment.Scenario.RegistrableDouble3.MaximumDoubleSeats);
     }
 
@@ -52,10 +52,10 @@ public class RegistrablesTests : IClassFixture<IntegrationTestEnvironment>
         var registrables = (await response.Content.ReadAsAsync<IEnumerable<SingleRegistrableDisplayItem>>()).ToList();
         registrables.Count.ShouldBe(2);
         registrables.ShouldContain(rbl => rbl.Id == _integrationTestEnvironment.Scenario.RegistrableSingle1.Id
-                                       && rbl.Name == _integrationTestEnvironment.Scenario.RegistrableSingle1.Name
+                                       && rbl.Name == _integrationTestEnvironment.Scenario.RegistrableSingle1.DisplayName
                                        && rbl.SpotsAvailable == _integrationTestEnvironment.Scenario.RegistrableSingle1.MaximumSingleSeats);
         registrables.ShouldContain(rbl => rbl.Id == _integrationTestEnvironment.Scenario.RegistrableSingle2.Id
-                                       && rbl.Name == _integrationTestEnvironment.Scenario.RegistrableSingle2.Name
+                                       && rbl.Name == _integrationTestEnvironment.Scenario.RegistrableSingle2.DisplayName
                                        && rbl.SpotsAvailable == _integrationTestEnvironment.Scenario.RegistrableSingle2.MaximumSingleSeats);
     }
 }

@@ -62,7 +62,7 @@ public class SpotRemover
                               Reason = reason,
                               WasSpotOnWaitingList = spot.IsWaitingList,
                               Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}",
-                              Registrable = registrable.Name
+                              Registrable = registrable.DisplayName
                           });
     }
 }

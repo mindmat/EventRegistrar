@@ -155,6 +155,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                                                    MaximumAllowedImbalance = sourceRegistrable.MaximumAllowedImbalance,
                                                    Name = sourceRegistrable.Name,
                                                    NameSecondary = sourceRegistrable.NameSecondary,
+                                                   DisplayName = sourceRegistrable.DisplayName,
                                                    CheckinListColumn = sourceRegistrable.CheckinListColumn,
                                                    HasWaitingList = sourceRegistrable.HasWaitingList,
                                                    ShowInMailListOrder = sourceRegistrable.ShowInMailListOrder,

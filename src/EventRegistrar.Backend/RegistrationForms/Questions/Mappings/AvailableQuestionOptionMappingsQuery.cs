@@ -26,7 +26,7 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
                                                     .Select(rbl => new
                                                                    {
                                                                        rbl.Id,
-                                                                       rbl.Name,
+                                                                       rbl.DisplayName,
                                                                        SortKey = rbl.ShowInMailListOrder ?? int.MaxValue
                                                                    })
                                                     .ToListAsync(cancellationToken);
@@ -40,19 +40,19 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
                                                          {
                                                              Type = MappingType.PartnerRegistrableLeader,
                                                              Id = rbl.Id,
-                                                             Name = $"{rbl.Name} ({Properties.Resources.Leader})"
+                                                             Name = $"{rbl.DisplayName} ({Properties.Resources.Leader})"
                                                          },
                                                          new AvailableQuestionOptionMapping
                                                          {
                                                              Type = MappingType.PartnerRegistrableFollower,
                                                              Id = rbl.Id,
-                                                             Name = $"{rbl.Name} ({Properties.Resources.Follower})"
+                                                             Name = $"{rbl.DisplayName} ({Properties.Resources.Follower})"
                                                          },
                                                          new AvailableQuestionOptionMapping
                                                          {
                                                              Type = MappingType.PartnerRegistrable,
                                                              Id = rbl.Id,
-                                                             Name = rbl.Name
+                                                             Name = rbl.DisplayName
                                                          }
                                                      };
                                           }));
@@ -64,7 +64,7 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
                                                                    {
                                                                        Type = MappingType.SingleRegistrable,
                                                                        Id = rbl.Id,
-                                                                       Name = rbl.Name
+                                                                       Name = rbl.DisplayName
                                                                    })
                                                     .ToListAsync(cancellationToken);
         result.AddRange(singleRegistrables);

@@ -3,6 +3,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList;
@@ -60,7 +61,10 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
                 var spotsToPromote = spots.Where(spt => spt.IsWaitingList)
                                           .OrderBy(spt => spt.FirstPartnerJoined)
                                           .Take(spotsAvailable);
-                foreach (var spot in spotsToPromote) await PromoteSpotFromWaitingList(spot);
+                foreach (var spot in spotsToPromote)
+                {
+                    await PromoteSpotFromWaitingList(spot);
+                }
             }
         }
         else if (registrableToCheck.MaximumDoubleSeats.HasValue)
@@ -87,7 +91,10 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
                 || command.RegistrationId != null)
             {
                 var nextSpotOnWaitingList = waitinglist.FirstOrDefault();
-                if (nextSpotOnWaitingList == null) break;
+                if (nextSpotOnWaitingList == null)
+                {
+                    break;
+                }
 
                 if (nextSpotOnWaitingList.IsPartnerSpot)
                 {
@@ -99,8 +106,8 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
                 var firstSingleRole = nextSpotOnWaitingList.GetSingleRole();
                 var otherRole = firstSingleRole.GetOtherRole();
                 var nextSingleInOtherRole = waitinglist.FirstOrDefault(spt => otherRole == Role.Leader
-                    ? spt.IsSingleLeaderSpot()
-                    : spt.IsSingleFollowerSpot());
+                                                                                  ? spt.IsSingleLeaderSpot()
+                                                                                  : spt.IsSingleFollowerSpot());
                 var nextPartnerRegistration = waitinglist.FirstOrDefault(spt => spt.IsPartnerSpot);
                 if (nextSingleInOtherRole == null)
                 {
@@ -131,7 +138,7 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
                     {
                         // who should be first: the two singles or partner?
                         var averageOfSingles = GetAverage(nextSpotOnWaitingList.FirstPartnerJoined,
-                            nextSingleInOtherRole.FirstPartnerJoined);
+                                                          nextSingleInOtherRole.FirstPartnerJoined);
                         if (averageOfSingles > nextPartnerRegistration.FirstPartnerJoined)
                         {
                             // partner registration wins
@@ -163,10 +170,15 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
         {
             // follower spot available, find follower on waiting list
             var nextFollowerOnWaitingList = waitinglist.FirstOrDefault(spt => spt.IsSingleFollowerSpot());
-            if (nextFollowerOnWaitingList?.RegistrationId_Follower == null) return false;
+            if (nextFollowerOnWaitingList?.RegistrationId_Follower == null)
+            {
+                return false;
+            }
+
             if (nextFollowerOnWaitingList.RegistrationId != null)
-                throw new Exception(
-                    "Unexpected situation: single spot on waiting list has both leader and follower set");
+            {
+                throw new Exception("Unexpected situation: single spot on waiting list has both leader and follower set");
+            }
 
             seatToComplement.RegistrationId_Follower = nextFollowerOnWaitingList.RegistrationId_Follower;
             nextFollowerOnWaitingList.IsCancelled = true;
@@ -175,7 +187,7 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
             await _spots.InsertOrUpdateEntity(seatToComplement);
             await _spots.InsertOrUpdateEntity(nextFollowerOnWaitingList);
             PublishPromotedEvent(seatToComplement.RegistrableId,
-                nextFollowerOnWaitingList.RegistrationId_Follower.Value);
+                                 nextFollowerOnWaitingList.RegistrationId_Follower.Value);
             return true;
         }
 
@@ -183,10 +195,15 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
         {
             // follower spot available, find follower on waiting list
             var nextLeaderOnWaitingList = waitinglist.FirstOrDefault(spt => spt.IsSingleLeaderSpot());
-            if (nextLeaderOnWaitingList?.RegistrationId == null) return false;
+            if (nextLeaderOnWaitingList?.RegistrationId == null)
+            {
+                return false;
+            }
+
             if (nextLeaderOnWaitingList.RegistrationId_Follower != null)
-                throw new Exception(
-                    "Unexpected situation: single spot on waiting list has both leader and follower set");
+            {
+                throw new Exception("Unexpected situation: single spot on waiting list has both leader and follower set");
+            }
 
             seatToComplement.RegistrationId = nextLeaderOnWaitingList.RegistrationId;
             nextLeaderOnWaitingList.IsCancelled = true;
@@ -209,7 +226,7 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
                           {
                               Id = Guid.NewGuid(),
                               RegistrableId = registrableId,
-                              Registrable = registrable.Name,
+                              Registrable = registrable.DisplayName,
                               RegistrationId = registrationId,
                               Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}"
                           });
@@ -241,10 +258,15 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
         }
         else
         {
-            if (spot.RegistrationId.HasValue) PublishPromotedEvent(spot.RegistrableId, spot.RegistrationId.Value);
+            if (spot.RegistrationId.HasValue)
+            {
+                PublishPromotedEvent(spot.RegistrableId, spot.RegistrationId.Value);
+            }
 
             if (spot.RegistrationId_Follower.HasValue)
+            {
                 PublishPromotedEvent(spot.RegistrableId, spot.RegistrationId_Follower.Value);
+            }
         }
     }
 }

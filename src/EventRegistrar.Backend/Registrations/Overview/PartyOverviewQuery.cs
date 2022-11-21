@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Compositions;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Overview;
@@ -76,48 +77,44 @@ public class PartyOverviewQueryHandler : IRequestHandler<PartyOverviewQuery, IEn
                                               .Select(rbl => new
                                                              {
                                                                  rbl.Id,
-                                                                 rbl.Name,
+                                                                 rbl.DisplayName,
                                                                  rbl.ShowInMailListOrder,
                                                                  Participants = rbl.Spots.Where(spt =>
-                                                                         !spt.IsCancelled && !spt.IsWaitingList)
-                                                                     .Select(spt =>
-                                                                         (spt.RegistrationId.HasValue ? 1 : 0) +
-                                                                         (spt.RegistrationId_Follower.HasValue ? 1 : 0))
-                                                                     .Sum(),
-                                                                 Potential = rbl.MaximumSingleSeats ??
-                                                                             (rbl.MaximumDoubleSeats ?? 0) * 2
+                                                                                                    !spt.IsCancelled && !spt.IsWaitingList)
+                                                                                   .Select(spt =>
+                                                                                               (spt.RegistrationId.HasValue ? 1 : 0) + (spt.RegistrationId_Follower.HasValue ? 1 : 0))
+                                                                                   .Sum(),
+                                                                 Potential = rbl.MaximumSingleSeats ?? (rbl.MaximumDoubleSeats ?? 0) * 2
                                                              })
                                               .ToDictionaryAsync(rbl => rbl.Id, cancellationToken);
 
         var overview = mappings.Select(map => new PartyItem
                                               {
                                                   Id = map.PartyId,
-                                                  Name = participants[map.PartyId].Name,
+                                                  Name = participants[map.PartyId].DisplayName,
                                                   SortyKey = participants[map.PartyId].ShowInMailListOrder,
                                                   Direct = participants[map.PartyId].Participants,
                                                   Total = participants[map.PartyId].Participants
                                                         + participants.Values.Where(rbl =>
-                                                                          map.DependentRegistrablesIds.Contains(rbl.Id))
+                                                                                        map.DependentRegistrablesIds.Contains(rbl.Id))
                                                                       .Sum(rbl => rbl.Participants)
                                                         + partyPassFallbacksOnWaitingList,
                                                   Potential = participants
                                                               .Values.Where(rbl =>
-                                                                  map.DependentRegistrablesIds.Contains(rbl.Id))
+                                                                                map.DependentRegistrablesIds.Contains(rbl.Id))
                                                               .Sum(rbl => Math.Max(0,
-                                                                  rbl.Potential - rbl.Participants)),
+                                                                                   rbl.Potential - rbl.Participants)),
                                                   PartyPassFallbacksOnWaitingList = partyPassFallbacksOnWaitingList,
-                                                  PotentialOnWaitingList = registrationsOnWaitinglist -
-                                                                           partyPassFallbacksOnWaitingList,
+                                                  PotentialOnWaitingList = registrationsOnWaitinglist - partyPassFallbacksOnWaitingList,
                                                   Details = participants
                                                             .Values.Where(rbl =>
-                                                                map.DependentRegistrablesIds.Contains(rbl.Id))
+                                                                              map.DependentRegistrablesIds.Contains(rbl.Id))
                                                             .Select(rbl => new PartyDetailItem
                                                                            {
                                                                                Id = rbl.Id,
-                                                                               Name = rbl.Name,
+                                                                               Name = rbl.DisplayName,
                                                                                Participants = rbl.Participants,
-                                                                               Potential = rbl.Potential -
-                                                                                   rbl.Participants
+                                                                               Potential = rbl.Potential - rbl.Participants
                                                                            })
                                               })
                                .OrderBy(map => map.SortyKey);

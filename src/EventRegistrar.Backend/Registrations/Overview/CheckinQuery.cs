@@ -27,11 +27,11 @@ public class CheckinQueryHandler : IRequestHandler<CheckinQuery, CheckinView>
     {
         var columns = (await _registrables.Where(rbl => rbl.EventId == query.EventId
                                                      && rbl.CheckinListColumn != null)
-                                          .Select(rbl => new { rbl.Id, rbl.Name, rbl.CheckinListColumn })
+                                          .Select(rbl => new { rbl.Id, rbl.DisplayName, rbl.CheckinListColumn })
                                           .ToListAsync(cancellationToken)
                       )
                       .GroupBy(rbl => rbl.CheckinListColumn)
-                      .ToDictionary(grp => grp.Key, grp => grp.Select(rbl => new { rbl.Id, rbl.Name }));
+                      .ToDictionary(grp => grp.Key, grp => grp.Select(rbl => new { rbl.Id, rbl.DisplayName }));
         var registrations = await _registrations
                                   .Where(reg => reg.RegistrationForm.EventId == query.EventId
                                              && reg.IsWaitingList == false
@@ -73,7 +73,7 @@ public class CheckinQueryHandler : IRequestHandler<CheckinQuery, CheckinView>
                                                                                     reg.SeatsAsLeader.Any(seat => seat.RegistrableId == rbl.Id)
                                                                                  || reg.SeatsAsFollower.Any(seat =>
                                                                                                                 seat.RegistrableId == rbl.Id))
-                                                                   .Select(rbl => rbl.Name)
+                                                                   .Select(rbl => rbl.DisplayName)
                                                                    .StringJoin())
                                    })
                     .OrderBy(reg => reg.LastName)
