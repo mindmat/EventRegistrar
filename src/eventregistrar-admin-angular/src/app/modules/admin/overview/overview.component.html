@@ -54,16 +54,16 @@
                                         <mat-menu #registrableMenu="matMenu">
                                             <button mat-menu-item (click)="changeDoubleRegistrable(doubleRegistrable)">
                                                 <span class="flex items-center">
-                                                    <!-- <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:credit-card'"></mat-icon> -->
+                                                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
                                                     <span>{{ 'EditRegistrable' | translate }}</span>
                                                 </span>
                                             </button>
-                                            <!-- <button mat-menu-item>
-                                                    <span class="flex items-center">
-                                                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:cash'"></mat-icon>
-                                                        <span>Spending breakdown</span>
-                                                    </span>
-                                                </button> -->
+                                            <button mat-menu-item (click)="deleteRegistrable(doubleRegistrable.id)">
+                                                <span class="flex items-center">
+                                                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                                    <span>{{ 'Delete' | translate }}</span>
+                                                </span>
+                                            </button>
                                         </mat-menu>
                                     </div>
                                 </div>
@@ -219,16 +219,16 @@
                                         <mat-menu #registrableMenu="matMenu">
                                             <button mat-menu-item (click)="changeSingleRegistrable(singleRegistrable)">
                                                 <span class="flex items-center">
-                                                    <!-- <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:credit-card'"></mat-icon> -->
+                                                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
                                                     <span>{{ 'EditRegistrable' | translate }}</span>
                                                 </span>
                                             </button>
-                                            <!-- <button mat-menu-item>
-                                                                                    <span class="flex items-center">
-                                                                                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:cash'"></mat-icon>
-                                                                                        <span>Spending breakdown</span>
-                                                                                    </span>
-                                                                                </button> -->
+                                            <button mat-menu-item (click)="deleteRegistrable(singleRegistrable.id)">
+                                                <span class="flex items-center">
+                                                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                                    <span>{{ 'Delete' | translate }}</span>
+                                                </span>
+                                            </button>
                                         </mat-menu>
                                     </div>
                                 </div>

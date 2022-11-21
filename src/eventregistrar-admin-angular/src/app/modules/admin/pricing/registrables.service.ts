@@ -37,4 +37,8 @@ export class RegistrablesService extends FetchService<RegistrableDisplayItem[]> 
     throw this.api.saveRegistrable_Command(command).subscribe();
   }
 
+  deleteRegistrable(registrableId: string)
+  {
+    throw this.api.deleteRegistrable_Command({ eventId: this.eventService.selectedId, registrableId }).subscribe();
+  }
 }

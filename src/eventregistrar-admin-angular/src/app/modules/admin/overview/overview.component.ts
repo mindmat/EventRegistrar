@@ -7,6 +7,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { RegistrableDetailComponent } from './registrable-detail/registrable-detail.component';
+import { RegistrablesService } from '../pricing/registrables.service';
 
 @Component({
     selector: 'app-overview',
@@ -36,6 +37,7 @@ export class OverviewComponent implements OnInit, OnDestroy
 
     constructor(private changeDetectorRef: ChangeDetectorRef,
         private overviewService: OverviewService,
+        private registrableService: RegistrablesService,
         private matDialog: MatDialog) { }
 
     ngOnInit(): void
@@ -134,6 +136,11 @@ export class OverviewComponent implements OnInit, OnDestroy
             autoFocus: true,
             data: { singleRegistrable }
         });
+    }
+
+    deleteRegistrable(registrableId: string)
+    {
+        this.registrableService.deleteRegistrable(registrableId);
     }
 
     trackByFn(index: number, item: any): any
