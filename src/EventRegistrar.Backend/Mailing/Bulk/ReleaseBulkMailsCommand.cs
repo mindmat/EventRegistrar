@@ -1,9 +1,6 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Mailing.Bulk;
 
@@ -27,7 +24,7 @@ public class ReleaseBulkMailsCommandHandler : IRequestHandler<ReleaseBulkMailsCo
 
     public async Task<Unit> Handle(ReleaseBulkMailsCommand command, CancellationToken cancellationToken)
     {
-        var withheldMails = await _mails.Where(mail => mail.MailTemplate!.BulkMailKey == command.BulkMailKey
+        var withheldMails = await _mails.Where(mail => mail.BulkMailKey == command.BulkMailKey
                                                     && mail.EventId == command.EventId
                                                     && mail.Withhold
                                                     && !mail.Discarded)

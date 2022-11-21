@@ -1,18 +1,15 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure;
+﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
 
-using MediatR;
-
 using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.Mailing.Compose;
 
-public class ComposeAndSendMailCommand : IRequest, IEventBoundRequest
+public class ComposeAndSendBulkMailCommand : IRequest, IEventBoundRequest
 {
     public bool AllowDuplicate { get; set; }
     public string BulkMailKey { get; set; }
@@ -23,7 +20,7 @@ public class ComposeAndSendMailCommand : IRequest, IEventBoundRequest
     public object Data { get; set; }
 }
 
-public class ComposeAndSendMailCommandHandler : IRequestHandler<ComposeAndSendMailCommand>
+public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSendBulkMailCommand>
 {
     public const string FallbackLanguage = Language.English;
 
@@ -35,13 +32,13 @@ public class ComposeAndSendMailCommandHandler : IRequestHandler<ComposeAndSendMa
     private readonly CommandQueue _commandQueue;
     private readonly IQueryable<MailTemplate> _templates;
 
-    public ComposeAndSendMailCommandHandler(IQueryable<MailTemplate> templates,
-                                            IQueryable<Registration> registrations,
-                                            IRepository<Mail> mails,
-                                            IRepository<MailToRegistration> mailsToRegistrations,
-                                            MailComposer mailComposer,
-                                            CommandQueue commandQueue,
-                                            ILogger log)
+    public ComposeAndSendBulkMailCommandHandler(IQueryable<MailTemplate> templates,
+                                                IQueryable<Registration> registrations,
+                                                IRepository<Mail> mails,
+                                                IRepository<MailToRegistration> mailsToRegistrations,
+                                                MailComposer mailComposer,
+                                                CommandQueue commandQueue,
+                                                ILogger log)
     {
         _templates = templates;
         _registrations = registrations;
@@ -52,7 +49,7 @@ public class ComposeAndSendMailCommandHandler : IRequestHandler<ComposeAndSendMa
         _log = log;
     }
 
-    public async Task<Unit> Handle(ComposeAndSendMailCommand command, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(ComposeAndSendBulkMailCommand command, CancellationToken cancellationToken)
     {
         string dataTypeFullName = null;
         string dataJson = null;
@@ -83,8 +80,7 @@ public class ComposeAndSendMailCommandHandler : IRequestHandler<ComposeAndSendMa
             }
         }
 
-        var registration =
-            await _registrations.FirstOrDefaultAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
+        var registration = await _registrations.FirstOrDefaultAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
         var templates = await _templates.Where(mtp => mtp.EventId == registration.EventId
                                                    && !mtp.IsDeleted)
                                         .WhereIf(command.MailType != null, mtp => mtp.Type == command.MailType)
@@ -122,7 +118,7 @@ public class ComposeAndSendMailCommandHandler : IRequestHandler<ComposeAndSendMa
                    {
                        Id = Guid.NewGuid(),
                        EventId = registration.EventId,
-                       MailTemplateId = template.Id,
+                       //BulkMailTemplateId = template.Id, // ToDo
                        Type = command.MailType,
                        BulkMailKey = command.BulkMailKey,
                        SenderMail = template.SenderMail,

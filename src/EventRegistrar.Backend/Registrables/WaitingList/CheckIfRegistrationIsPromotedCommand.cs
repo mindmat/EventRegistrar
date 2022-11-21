@@ -4,8 +4,6 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrations;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Registrables.WaitingList;
 
 public class CheckIfRegistrationIsPromotedCommand : IRequest
@@ -60,12 +58,12 @@ public class CheckIfRegistrationIsPromotedCommandHandler : IRequestHandler<Check
             registration.AdmittedAt ??= _dateTimeProvider.Now;
 
             // registration is now accepted, send Mail
-            var sendMailCommand = new ComposeAndSendMailCommand
+            var sendMailCommand = new ComposeAndSendAutoMailCommand
                                   {
+                                      EventId = registration.EventId,
                                       MailType = registration.RegistrationId_Partner.HasValue
                                                      ? MailType.PartnerRegistrationMatchedAndAccepted
                                                      : MailType.SingleRegistrationAccepted,
-                                      //Withhold = true,
                                       RegistrationId = registration.Id
                                   };
             _commandQueue.EnqueueCommand(sendMailCommand);

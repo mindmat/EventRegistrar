@@ -21,24 +21,24 @@ public class MailsController : Controller
         _eventAcronymResolver = eventAcronymResolver;
     }
 
-    [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails/create")]
-    public async Task CreateMailForRegistration(string eventAcronym,
-                                                Guid registrationId,
-                                                MailType? mailType,
-                                                string bulkMailKey,
-                                                bool withhold,
-                                                bool allowDuplicate)
-    {
-        await _mediator.Send(new ComposeAndSendMailCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 RegistrationId = registrationId,
-                                 MailType = mailType,
-                                 BulkMailKey = bulkMailKey,
-                                 Withhold = true,
-                                 AllowDuplicate = allowDuplicate
-                             });
-    }
+    //[HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails/create")]
+    //public async Task CreateMailForRegistration(string eventAcronym,
+    //                                            Guid registrationId,
+    //                                            MailType? mailType,
+    //                                            string bulkMailKey,
+    //                                            bool withhold,
+    //                                            bool allowDuplicate)
+    //{
+    //    await _mediator.Send(new ComposeAndSendMailCommand
+    //                         {
+    //                             EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+    //                             RegistrationId = registrationId,
+    //                             MailType = mailType,
+    //                             BulkMailKey = bulkMailKey,
+    //                             Withhold = true,
+    //                             AllowDuplicate = allowDuplicate
+    //                         });
+    //}
 
     [HttpDelete("api/events/{eventAcronym}/mails/{mailId:guid}")]
     public async Task DeleteMail(string eventAcronym, Guid mailId)

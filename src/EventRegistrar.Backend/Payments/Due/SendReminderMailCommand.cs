@@ -1,11 +1,8 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrations;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Due;
 
@@ -39,7 +36,8 @@ public class SendReminderMailCommandHandler : IRequestHandler<SendReminderMailCo
 
     public async Task<Unit> Handle(SendReminderMailCommand command, CancellationToken cancellationToken)
     {
-        var tmp = await _registrations.Where(reg => reg.Id == command.RegistrationId)
+        var tmp = await _registrations.Where(reg => reg.Id == command.RegistrationId
+                                                 && reg.EventId == command.EventId)
                                       .Select(reg => new
                                                      {
                                                          Registration = reg,
@@ -117,11 +115,11 @@ public class SendReminderMailCommandHandler : IRequestHandler<SendReminderMailCo
 
                 if (mailType != null)
                 {
-                    _commandQueue.EnqueueCommand(new ComposeAndSendMailCommand
+                    _commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
                                                  {
+                                                     EventId = command.EventId,
                                                      MailType = mailType.Value,
                                                      RegistrationId = registration.Id,
-                                                     //Withhold = true,
                                                      AllowDuplicate = false
                                                  });
                 }

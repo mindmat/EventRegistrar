@@ -10,6 +10,7 @@ public class MailConfiguration : IConfigurationItem
     public bool SingleRegistrationPossible { get; set; }
     public bool PartnerRegistrationPossible { get; set; }
     public IEnumerable<string> AvailableLanguages { get; set; } = null!;
+    public string? FallbackLanguage { get; set; }
 }
 
 public class DefaultMailConfiguration : MailConfiguration, IDefaultConfigurationItem
@@ -21,5 +22,6 @@ public class DefaultMailConfiguration : MailConfiguration, IDefaultConfiguration
         PartnerRegistrationPossible = true;
         SenderMail = "registration@leapinlindy.ch";
         SenderName = "Leapin' Lindy";
+        FallbackLanguage = Language.English;
     }
 }

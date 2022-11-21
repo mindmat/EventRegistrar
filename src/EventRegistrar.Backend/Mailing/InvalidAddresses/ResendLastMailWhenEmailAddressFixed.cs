@@ -1,7 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Payments.Due;
-using MediatR;
 
 namespace EventRegistrar.Backend.Mailing.InvalidAddresses;
 
@@ -19,26 +18,28 @@ public class ResendLastMailWhenEmailAddressFixed : IEventToCommandTranslation<In
 
     public IEnumerable<IRequest> Translate(InvalidEmailAddressFixed e)
     {
-        if (e.EventId.HasValue)
+        if (e.EventId != null)
         {
-            var lastMail = _mails.Where(mail => mail.RegistrationId == e.RegistrationId
-                                             && mail.Mail.Type.HasValue
-                                             && !_duePaymentConfiguration.MailTypes_Reminder1.Contains(mail.Mail.Type
-                                                    .Value)
-                                             && !_duePaymentConfiguration.MailTypes_Reminder2.Contains(mail.Mail.Type
-                                                    .Value))
-                                 .OrderByDescending(mail => mail.Mail.Sent)
-                                 .First();
+            var lastMailType = _mails.Where(mail => mail.RegistrationId == e.RegistrationId
+                                                 && mail.Mail!.Type != null
+                                                 && !_duePaymentConfiguration.MailTypes_Reminder1.Contains(mail.Mail.Type.Value)
+                                                 && !_duePaymentConfiguration.MailTypes_Reminder2.Contains(mail.Mail.Type.Value))
+                                     .Include(mail => mail.Mail)
+                                     .OrderByDescending(mail => mail.Mail!.Sent)
+                                     .Select(mail => mail.Mail!.Type)
+                                     .First();
 
-            if (lastMail.Mail.Type != null)
-                yield return new ComposeAndSendMailCommand
+            if (lastMailType != null)
+            {
+                yield return new ComposeAndSendAutoMailCommand
                              {
                                  EventId = e.EventId.Value,
                                  AllowDuplicate = true,
                                  Withhold = true,
                                  RegistrationId = e.RegistrationId,
-                                 MailType = lastMail.Mail.Type.Value
+                                 MailType = lastMailType.Value
                              };
+            }
         }
     }
 }

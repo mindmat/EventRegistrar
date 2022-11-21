@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations.Cancel;
-using MediatR;
 
 namespace EventRegistrar.Backend.Mailing.Compose;
 
@@ -8,11 +7,14 @@ public class SendMailAfterCancellation : IEventToCommandTranslation<Registration
 {
     public IEnumerable<IRequest> Translate(RegistrationCancelled e)
     {
-        yield return new ComposeAndSendMailCommand
-                     {
-                         MailType = MailType.RegistrationCancelled,
-                         //Withhold = true,
-                         RegistrationId = e.RegistrationId
-                     };
+        if (e.EventId != null)
+        {
+            yield return new ComposeAndSendAutoMailCommand
+                         {
+                             EventId = e.EventId.Value,
+                             MailType = MailType.RegistrationCancelled,
+                             RegistrationId = e.RegistrationId
+                         };
+        }
     }
 }

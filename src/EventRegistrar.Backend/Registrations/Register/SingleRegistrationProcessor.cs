@@ -330,8 +330,9 @@ public class SingleRegistrationProcessor
             }
         }
 
-        _commandQueue.EnqueueCommand(new ComposeAndSendMailCommand
+        _commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
                                      {
+                                         EventId = registration.EventId,
                                          MailType = mailToSend,
                                          RegistrationId = registration.Id,
                                          AllowDuplicate = false

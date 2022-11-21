@@ -15,6 +15,7 @@ public class AutoMailTemplate : Entity
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
     public bool ReleaseImmediately { get; set; }
+    public ICollection<Mail>? Mails { get; set; }
 }
 
 public class AutoMailTemplateMap : EntityMap<AutoMailTemplate>

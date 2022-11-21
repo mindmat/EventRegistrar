@@ -152,11 +152,10 @@ public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPart
         var mailType = isWaitingList
                            ? MailType.PartnerRegistrationMatchedOnWaitingList
                            : MailType.PartnerRegistrationMatchedAndAccepted;
-        _commandQueue.EnqueueCommand(new ComposeAndSendMailCommand
+        _commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
                                      {
                                          EventId = command.EventId,
                                          RegistrationId = registrationLeader.Id,
-                                         //Withhold = true,
                                          MailType = mailType
                                      });
 

@@ -83,8 +83,7 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
             //    throw new ApplicationException("Registration form is not yet assigned to an event");
             //}
 
-            var registration = await _registrations.FirstOrDefaultAsync(
-                                   reg => reg.ExternalIdentifier == rawRegistration.RegistrationExternalIdentifier, cancellationToken);
+            var registration = await _registrations.FirstOrDefaultAsync(reg => reg.ExternalIdentifier == rawRegistration.RegistrationExternalIdentifier, cancellationToken);
             if (registration != null)
             {
                 throw new ApplicationException($"Registration with external identifier '{rawRegistration.RegistrationExternalIdentifier}' already exists");

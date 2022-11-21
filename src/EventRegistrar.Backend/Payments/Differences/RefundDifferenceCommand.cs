@@ -58,8 +58,9 @@ public class RefundDifferenceCommandHandler : IRequestHandler<RefundDifferenceCo
                             };
         await _payoutRequests.InsertOrUpdateEntity(payoutRequest, cancellationToken);
 
-        var sendMailCommand = new ComposeAndSendMailCommand
+        var sendMailCommand = new ComposeAndSendAutoMailCommand
                               {
+                                  EventId = command.EventId,
                                   MailType = MailType.TooMuchPaid,
                                   RegistrationId = command.RegistrationId,
                                   Data = data

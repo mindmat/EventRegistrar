@@ -1,10 +1,7 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
+﻿using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrations;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Differences;
 
@@ -41,8 +38,9 @@ public class SendPaymentDueMailCommandHandler : IRequestHandler<SendPaymentDueMa
             throw new Exception("No money owed");
         }
 
-        var sendMailCommand = new ComposeAndSendMailCommand
+        var sendMailCommand = new ComposeAndSendAutoMailCommand
                               {
+                                  EventId = command.EventId,
                                   MailType = MailType.MoneyOwed,
                                   RegistrationId = command.RegistrationId,
                                   Data = data

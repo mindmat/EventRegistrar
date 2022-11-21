@@ -189,11 +189,11 @@ public class PartnerRegistrationProcessor
         var mailType = isOnWaitingList
                            ? MailType.PartnerRegistrationMatchedOnWaitingList
                            : MailType.PartnerRegistrationMatchedAndAccepted;
-        _commandQueue.EnqueueCommand(new ComposeAndSendMailCommand
+        _commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
                                      {
+                                         EventId = registration.EventId,
                                          MailType = mailType,
                                          RegistrationId = registration.Id,
-                                         //Withhold = true,
                                          AllowDuplicate = false
                                      });
 

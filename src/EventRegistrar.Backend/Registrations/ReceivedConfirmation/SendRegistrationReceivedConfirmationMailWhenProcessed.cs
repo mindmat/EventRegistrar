@@ -25,7 +25,7 @@ internal class SendRegistrationReceivedConfirmationMailWhenProcessed : IEventToC
             var eventId = _eventContext.EventId ?? e.EventId;
             if (eventId != null)
             {
-                yield return new ComposeAndSendMailCommand
+                yield return new ComposeAndSendAutoMailCommand
                              {
                                  EventId = eventId.Value,
                                  MailType = MailType.RegistrationReceived,

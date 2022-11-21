@@ -123,7 +123,8 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(ReleaseBulkMailsCommand);
             yield return nameof(TryPromoteFromWaitingListCommand);
             yield return nameof(AssignIncomingPaymentCommand);
-            yield return nameof(ComposeAndSendMailCommand);
+            yield return nameof(ComposeAndSendAutoMailCommand);
+            yield return nameof(ComposeAndSendBulkMailCommand);
             yield return nameof(CancelRegistrationCommand);
             yield return nameof(SendSmsCommand);
             yield return nameof(SwapFirstLastNameCommand);

@@ -11,8 +11,11 @@ public class Mail : Entity
 {
     public Guid? EventId { get; set; }
     public Event? Event { get; set; }
-    public Guid? MailTemplateId { get; set; }
-    public MailTemplate? MailTemplate { get; set; }
+    public Guid? AutoMailTemplateId { get; set; }
+
+    public AutoMailTemplate? AutoMailTemplate { get; set; }
+    //public Guid? BulkMailTemplateId { get; set; }
+    //public BulkMailTemplate? BulkMailTemplate { get; set; }
 
     public ICollection<MailEvent>? Events { get; set; }
     public ICollection<MailToRegistration>? Registrations { get; set; }
@@ -49,8 +52,8 @@ public class MailMap : EntityMap<Mail>
                .WithMany()
                .HasForeignKey(map => map.EventId);
 
-        builder.HasOne(map => map.MailTemplate)
+        builder.HasOne(map => map.AutoMailTemplate)
                .WithMany(mail => mail.Mails)
-               .HasForeignKey(map => map.MailTemplateId);
+               .HasForeignKey(map => map.AutoMailTemplateId);
     }
 }
