@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList;
@@ -30,9 +31,11 @@ public class SetFallbackToPartyPassCommandHandler : IRequestHandler<SetFallbackT
                                                                && reg.Id == command.RegistrationId, cancellationToken);
 
         if (registration.FallbackToPartyPass != true
-         && registration.IsWaitingList == true
+         && registration.IsOnWaitingList == true
          && registration.State == RegistrationState.Received)
+        {
             registration.FallbackToPartyPass = true;
+        }
 
         _eventBus.Publish(new FallbackToPartyPassSet { RegistrationId = registration.Id, EventId = command.EventId });
 

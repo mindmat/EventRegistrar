@@ -65,7 +65,7 @@ public class PartyOverviewQueryHandler : IRequestHandler<PartyOverviewQuery, IEn
         registrableIdsPartyParticipants.AddRange(mappings.SelectMany(map => map.DependentRegistrablesIds));
 
         var registrationsOnWaitingList = await _registrations.Where(reg => reg.EventId == query.EventId
-                                                                        && reg.IsWaitingList == true
+                                                                        && reg.IsOnWaitingList == true
                                                                         && reg.State == RegistrationState.Received)
                                                              .ToListAsync(cancellationToken);
         var partyPassFallbacksOnWaitingList = registrationsOnWaitingList.Count(reg => reg.FallbackToPartyPass == true);

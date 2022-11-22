@@ -30,7 +30,7 @@ public class SendPaymentDueMailCommandHandler : IRequestHandler<SendPaymentDueMa
                                                .FirstAsync(cancellationToken);
         var data = new PaymentDueMailData
                    {
-                       Price = registration.Price ?? 0m,
+                       Price = registration.Price_AdmittedAndReduced,
                        AmountPaid = registration.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
                    };
         if (data.Price <= data.AmountPaid)

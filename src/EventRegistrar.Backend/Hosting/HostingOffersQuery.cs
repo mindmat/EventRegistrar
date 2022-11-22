@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Hosting;
@@ -24,13 +25,12 @@ public class HostingOffersQueryHandler : IRequestHandler<HostingOffersQuery, Hos
     public async Task<HostingOffers> Handle(HostingOffersQuery query, CancellationToken cancellationToken)
     {
         var hostingOffers = await _registrations.Where(reg => reg.EventId == query.EventId
-                                                           && reg.IsWaitingList == false
+                                                           && reg.IsOnWaitingList == false
                                                            && (reg.State == RegistrationState.Received
                                                             || reg.State == RegistrationState.Paid)
                                                            && reg.Seats_AsLeader.Any(spt => !spt.IsCancelled
-                                                               && !spt.IsWaitingList
-                                                               && spt.RegistrableId ==
-                                                                  _configuration.RegistrableId_HostingOffer))
+                                                                                         && !spt.IsWaitingList
+                                                                                         && spt.RegistrableId == _configuration.RegistrableId_HostingOffer))
                                                 .Include(reg => reg.Responses)
                                                 .ToListAsync(cancellationToken);
         return new HostingOffers
@@ -50,10 +50,10 @@ public class HostingOffersQueryHandler : IRequestHandler<HostingOffersQuery, Hos
                                                Columns = _configuration
                                                          .ColumnsOffers
                                                          .ToDictionary(col => col.Key,
-                                                             col => reg.Responses
-                                                                       .FirstOrDefault(rsp =>
-                                                                           rsp.QuestionId == col.Value)
-                                                                       ?.ResponseString)
+                                                                       col => reg.Responses
+                                                                                 .FirstOrDefault(rsp =>
+                                                                                                     rsp.QuestionId == col.Value)
+                                                                                 ?.ResponseString)
                                            })
                             .OrderBy(reg => reg.AdmittedAt ?? DateTime.MaxValue)
                             .ToList()

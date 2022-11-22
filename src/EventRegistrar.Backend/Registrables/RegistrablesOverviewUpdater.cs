@@ -37,7 +37,7 @@ public class RegistrablesOverviewUpdater : ReadModelUpdater<RegistrablesOverview
                                               .ToListAsync(cancellationToken);
 
         var registrationsOnWaitingList = new HashSet<Guid>(_registrations.Where(reg => reg.EventId == eventId
-                                                                                    && reg.IsWaitingList == true)
+                                                                                    && reg.IsOnWaitingList == true)
                                                                          .Select(reg => reg.Id));
 
         var userCanDeleteRegistrable = await _authorizationChecker.UserHasRight(eventId, nameof(DeleteRegistrableCommand));

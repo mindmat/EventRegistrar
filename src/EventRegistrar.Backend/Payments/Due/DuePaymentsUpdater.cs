@@ -1,4 +1,6 @@
-﻿using EventRegistrar.Backend.Infrastructure;
+﻿using System.Collections.Immutable;
+
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.PhoneMessages;
@@ -12,14 +14,14 @@ public class DuePaymentsUpdater : ReadModelUpdater<IEnumerable<DuePaymentItem>>
 {
     public const int DefaultPaymentGracePeriod = 6;
 
-    public static readonly HashSet<MailType?> MailTypes_Accepted =
-        new() { MailType.PartnerRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted };
+    public static readonly ImmutableHashSet<MailType?> MailTypes_Accepted =
+        new HashSet<MailType?> { MailType.PartnerRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted }.ToImmutableHashSet();
 
-    public static readonly HashSet<MailType?> MailTypes_Reminder1 =
-        new() { MailType.PartnerRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder };
+    public static readonly ImmutableHashSet<MailType?> MailTypes_Reminder1 =
+        new HashSet<MailType?> { MailType.PartnerRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder }.ToImmutableHashSet();
 
-    public static readonly HashSet<MailType?> MailTypes_Reminder2 =
-        new() { MailType.PartnerRegistrationSecondReminder, MailType.SingleRegistrationSecondReminder };
+    public static readonly ImmutableHashSet<MailType?> MailTypes_Reminder2 =
+        new HashSet<MailType?> { MailType.PartnerRegistrationSecondReminder, MailType.SingleRegistrationSecondReminder }.ToImmutableHashSet();
 
     private readonly IQueryable<Registration> _registrations;
     private readonly IDateTimeProvider _dateTimeProvider;
@@ -41,15 +43,15 @@ public class DuePaymentsUpdater : ReadModelUpdater<IEnumerable<DuePaymentItem>>
         var reminderDueFrom = now.AddDays(-DefaultPaymentGracePeriod);
         var data = await _registrations.Where(reg => reg.RegistrationForm!.EventId == eventId
                                                   && reg.State == RegistrationState.Received
-                                                  && reg.IsWaitingList != true
-                                                  && reg.OriginalPrice > 0)
+                                                  && reg.IsOnWaitingList != true
+                                                  && reg.Price_AdmittedAndReduced > 0)
                                        .Select(reg => new
                                                       {
                                                           reg.Id,
                                                           FirstName = reg.RespondentFirstName,
                                                           LastName = reg.RespondentLastName,
                                                           Email = reg.RespondentEmail,
-                                                          reg.Price,
+                                                          reg.Price_AdmittedAndReduced,
                                                           reg.ReceivedAt,
                                                           reg.PhoneNormalized,
                                                           reg.ReminderLevel,
@@ -72,7 +74,7 @@ public class DuePaymentsUpdater : ReadModelUpdater<IEnumerable<DuePaymentItem>>
                                             tmp.FirstName,
                                             tmp.LastName,
                                             tmp.Email,
-                                            tmp.Price,
+                                            tmp.Price_AdmittedAndReduced,
                                             tmp.ReceivedAt,
                                             tmp.PhoneNormalized,
                                             tmp.ReminderLevel,
@@ -113,7 +115,7 @@ public class DuePaymentsUpdater : ReadModelUpdater<IEnumerable<DuePaymentItem>>
                                             FirstName = reg.FirstName,
                                             LastName = reg.LastName,
                                             Email = reg.Email,
-                                            Price = reg.Price,
+                                            Price = reg.Price_AdmittedAndReduced,
                                             Paid = reg.Paid,
                                             ReceivedAt = reg.ReceivedAt,
                                             AcceptedMail = reg.AcceptedMail,

@@ -11,9 +11,15 @@ public class IndividualReduction : Entity
     public Registration? Registration { get; set; }
     public Guid UserId { get; set; }
     public User? User { get; set; }
-
+    public IndividualReductionType Type { get; set; }
     public decimal Amount { get; set; }
     public string? Reason { get; set; }
+}
+
+public enum IndividualReductionType
+{
+    Reduction = 1,
+    OverwritePrice = 2
 }
 
 public class IndividualReductionMap : EntityMap<IndividualReduction>

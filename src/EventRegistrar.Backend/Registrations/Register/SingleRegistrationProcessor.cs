@@ -286,15 +286,17 @@ public class SingleRegistrationProcessor
         }
 
         var isOnWaitingList = spots.Any(seat => seat.IsWaitingList);
-        registration.IsWaitingList = isOnWaitingList;
-        if (registration.IsWaitingList == false
+        registration.IsOnWaitingList = isOnWaitingList;
+        if (registration.IsOnWaitingList == false
          && registration.AdmittedAt == null)
         {
             registration.AdmittedAt = _dateTimeProvider.Now;
         }
 
-        registration.OriginalPrice = await _priceCalculator.CalculatePrice(registration, spots);
-        registration.Price = registration.OriginalPrice;
+        var (original, admitted, admittedAndReduced) = await _priceCalculator.CalculatePrice(registration, spots);
+        registration.Price_Original = original;
+        registration.Price_Admitted = admitted;
+        registration.Price_AdmittedAndReduced = admittedAndReduced;
 
         await _registrations.InsertOrUpdateEntity(registration);
 
@@ -304,7 +306,7 @@ public class SingleRegistrationProcessor
                                           && spots.Any(spot => spot.PartnerEmail != null
                                                             && (spot.RegistrationId == null || spot.RegistrationId_Follower == null));
         MailType mailToSend;
-        if (registration.OriginalPrice == 0m && !string.IsNullOrEmpty(registration.SoldOutMessage))
+        if (registration.Price_Admitted == 0m && !string.IsNullOrEmpty(registration.SoldOutMessage))
         {
             mailToSend = MailType.SoldOut;
         }

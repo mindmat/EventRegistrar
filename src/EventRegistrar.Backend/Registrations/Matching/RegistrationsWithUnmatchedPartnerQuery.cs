@@ -35,7 +35,7 @@ public class RegistrationsWithUnmatchedPartnerQueryHandler : IRequestHandler<Reg
                                                       LastName = reg.RespondentLastName,
                                                       State = reg.State.ToString(),
                                                       Partner = reg.PartnerOriginal,
-                                                      IsWaitingList = reg.IsWaitingList == true,
+                                                      IsWaitingList = reg.IsOnWaitingList == true,
                                                       Registrables = reg.Seats_AsLeader
                                                                         .Select(spt => spt.Registrable.DisplayName)
                                                                         .Union(reg.Seats_AsFollower.Select(spt =>

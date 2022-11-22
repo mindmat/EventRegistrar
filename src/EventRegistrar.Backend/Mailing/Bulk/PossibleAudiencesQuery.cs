@@ -34,8 +34,7 @@ public class PossibleAudiencesQueryHandler : IRequestHandler<PossibleAudiencesQu
         var registrations = await _registrations.Where(reg => reg.EventId == query.EventId)
                                                 .Select(reg => new
                                                                {
-                                                                   reg.State,
-                                                                   reg.IsWaitingList
+                                                                   reg.State, IsWaitingList = reg.IsOnWaitingList
                                                                })
                                                 .ToListAsync(cancellationToken);
         var result = new List<PossibleAudience>

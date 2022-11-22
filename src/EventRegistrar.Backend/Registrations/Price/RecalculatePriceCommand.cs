@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Price;
 
@@ -29,23 +28,25 @@ public class RecalculatePriceCommandHandler : IRequestHandler<RecalculatePriceCo
         var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
                                                .Include(reg => reg.IndividualReductions)
                                                .FirstAsync(cancellationToken);
-        var oldPrice = registration.Price ?? 0m;
-        var individualReductions = registration.IndividualReductions
-                                               .Select(ird => ird.Amount)
-                                               .Sum();
-        var oldOriginalPrice = registration.OriginalPrice ?? 0m;
-        var newOriginalPrice = await _priceCalculator.CalculatePrice(command.RegistrationId);
-        var newPrice = newOriginalPrice - individualReductions;
-        if (oldOriginalPrice != newOriginalPrice || oldPrice != newPrice)
+        var oldOriginal = registration.Price_Original;
+        var oldAdmitted = registration.Price_Admitted;
+        var oldAdmittedAndReduced = registration.Price_AdmittedAndReduced;
+
+        var (newOriginal, newAdmitted, newAdmittedAndReduced) = await _priceCalculator.CalculatePrice(command.RegistrationId, registration.IndividualReductions!);
+
+        if (oldOriginal != newOriginal
+         || oldAdmitted != newAdmitted
+         || oldAdmittedAndReduced != newAdmittedAndReduced)
         {
-            registration.OriginalPrice = newOriginalPrice;
-            registration.Price = newPrice;
+            registration.Price_Original = newOriginal;
+            registration.Price_Admitted = oldAdmitted;
+            registration.Price_AdmittedAndReduced = oldAdmittedAndReduced;
             _eventBus.Publish(new PriceChanged
                               {
                                   EventId = registration.EventId,
                                   RegistrationId = registration.Id,
-                                  OldPrice = oldPrice,
-                                  NewPrice = registration.Price ?? 0m
+                                  OldPrice = oldAdmittedAndReduced,
+                                  NewPrice = newAdmittedAndReduced
                               });
         }
 

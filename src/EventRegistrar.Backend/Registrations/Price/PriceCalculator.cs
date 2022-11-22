@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrables.Pricing;
+using EventRegistrar.Backend.Registrations.IndividualReductions;
 using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations.Price;
@@ -19,7 +20,8 @@ public class PriceCalculator
         _registrations = registrations;
     }
 
-    public async Task<decimal> CalculatePrice(Guid registrationId)
+    public async Task<(decimal Total, decimal Admitted, decimal AdmittedAndReduced)> CalculatePrice(Guid registrationId,
+                                                                                                    IEnumerable<IndividualReduction> individualReductions)
     {
         var registration = await _registrations.FirstAsync(reg => reg.Id == registrationId);
         var spots = await _spots.Where(spot => spot.RegistrationId == registrationId
@@ -28,10 +30,12 @@ public class PriceCalculator
                                 .Include(spot => spot.Registrable)
                                 .ToListAsync();
 
-        return await CalculatePrice(registration, spots);
+        return await CalculatePrice(registration, spots, individualReductions);
     }
 
-    public async Task<decimal> CalculatePrice(Registration registration, IEnumerable<Seat> spots)
+    public async Task<(decimal Total, decimal Admitted, decimal AdmittedAndReduced)> CalculatePrice(Registration registration,
+                                                                                                    IEnumerable<Seat> spots,
+                                                                                                    IEnumerable<IndividualReduction>? individualReductions = null)
     {
         var notCancelledSpots = spots.Where(spot => !spot.IsCancelled
                                                  && (spot.RegistrationId == registration.Id
@@ -103,7 +107,11 @@ public class PriceCalculator
         }
 
         var price = matchingPackages.Sum(ppk => ppk.Price);
-        return price;
+        var individualReduction = registration.IndividualReductions!
+                                              .Select(ird => ird.Amount)
+                                              .Sum();
+
+        return (price, price, price); // ToDo
     }
 
     private static (bool Match,

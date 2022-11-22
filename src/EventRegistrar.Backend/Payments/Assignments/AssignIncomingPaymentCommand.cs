@@ -1,13 +1,10 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Events.UsersInEvents;
+﻿using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
 
@@ -68,7 +65,7 @@ public class AssignIncomingPaymentCommandHandler : IRequestHandler<AssignIncomin
 
         if (command.AcceptDifference)
         {
-            var difference = (registration.Price ?? 0m)
+            var difference = registration.Price_AdmittedAndReduced
                            - registration.PaymentAssignments!.Sum(pmt => pmt.PayoutRequestId == null ? pmt.Amount : -pmt.Amount);
             await _individualReductions.InsertOrUpdateEntity(new IndividualReduction
                                                              {

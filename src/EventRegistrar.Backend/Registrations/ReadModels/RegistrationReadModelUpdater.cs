@@ -7,8 +7,6 @@ using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Spots;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Registrations.ReadModels;
 
 public class RegistrationReadModelUpdater : ReadModelUpdater<RegistrationDisplayItem>
@@ -39,8 +37,8 @@ public class RegistrationReadModelUpdater : ReadModelUpdater<RegistrationDisplay
                                           .Select(reg => new RegistrationDisplayItem
                                                          {
                                                              Id = reg.Id,
-                                                             IsWaitingList = reg.IsWaitingList,
-                                                             Price = reg.Price,
+                                                             IsWaitingList = reg.IsOnWaitingList,
+                                                             Price = reg.Price_AdmittedAndReduced,
                                                              Status = reg.State,
                                                              StatusText = reg.State.ToString(),
                                                              Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null

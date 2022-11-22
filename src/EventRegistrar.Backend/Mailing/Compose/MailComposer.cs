@@ -123,10 +123,10 @@ public class MailComposer
                 else if (placeholderKey == MailPlaceholder.Price)
                 {
                     var price = parts.prefix == null
-                                    ? registration.Price + (partnerRegistration == null ? 0m : partnerRegistration.Price)
-                                    : (registrationForPrefix ?? registration).Price;
+                                    ? registration.Price_AdmittedAndReduced + (partnerRegistration?.Price_AdmittedAndReduced ?? 0m)
+                                    : (registrationForPrefix ?? registration).Price_AdmittedAndReduced;
 
-                    templateFiller[key] = (price ?? 0m).ToString("F2"); // HACK: format hardcoded
+                    templateFiller[key] = price.ToString("F2"); // HACK: format hardcoded
                 }
                 else if (placeholderKey == MailPlaceholder.PaidAmount)
                 {
@@ -137,10 +137,9 @@ public class MailComposer
                 else if (placeholderKey is MailPlaceholder.DueAmount or MailPlaceholder.OverpaidAmount)
                 {
                     var paid = await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id);
-                    var price = (parts.prefix == null
-                                     ? registration.Price + (partnerRegistration == null ? 0m : partnerRegistration.Price)
-                                     : (registrationForPrefix ?? registration).Price)
-                             ?? 0m;
+                    var price = parts.prefix == null
+                                    ? registration.Price_AdmittedAndReduced + (partnerRegistration?.Price_AdmittedAndReduced ?? 0m)
+                                    : (registrationForPrefix ?? registration).Price_AdmittedAndReduced;
                     var difference = price - paid;
                     if (placeholderKey == MailPlaceholder.OverpaidAmount)
                     {
@@ -153,11 +152,11 @@ public class MailComposer
                 {
                     var currency = (await _events.FirstAsync(evt => evt.Id == registration.EventId, cancellationToken))
                         ?.Currency;
-                    var unpaidAmount = (registration.Price ?? 0m)
+                    var unpaidAmount = registration.Price_AdmittedAndReduced
                                      - await _paidAmountSummarizer.GetPaidAmount(registration.Id)
                                      + (partnerRegistration == null
                                             ? 0m
-                                            : (partnerRegistration.Price ?? 0m) - await _paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
+                                            : partnerRegistration.Price_AdmittedAndReduced - await _paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
                     if (unpaidAmount > 0m)
                     {
                         templateFiller[key] =

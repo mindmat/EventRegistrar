@@ -162,26 +162,30 @@ public class PartnerRegistrationProcessor
         var isOnWaitingList = spots.Any(seat => seat.IsWaitingList);
 
         // finalize follower registration
-        followerRegistration.IsWaitingList = isOnWaitingList;
-        if (followerRegistration.IsWaitingList == false && followerRegistration.AdmittedAt == null)
+        followerRegistration.IsOnWaitingList = isOnWaitingList;
+        if (followerRegistration.IsOnWaitingList == false && followerRegistration.AdmittedAt == null)
         {
             followerRegistration.AdmittedAt = _dateTimeProvider.Now;
         }
 
-        followerRegistration.OriginalPrice = await _priceCalculator.CalculatePrice(followerRegistration, spots);
-        followerRegistration.Price = followerRegistration.OriginalPrice;
+        var (totalFollower, admittedFollower, admittedAndReducedFollower) = await _priceCalculator.CalculatePrice(followerRegistration, spots);
+        followerRegistration.Price_Original = totalFollower;
+        followerRegistration.Price_Admitted = admittedFollower;
+        followerRegistration.Price_AdmittedAndReduced = admittedAndReducedFollower;
 
         await _registrations.InsertOrUpdateEntity(followerRegistration);
 
         // finalize leader registration
-        registration.IsWaitingList = isOnWaitingList;
-        if (registration.IsWaitingList == false && registration.AdmittedAt == null)
+        registration.IsOnWaitingList = isOnWaitingList;
+        if (registration.IsOnWaitingList == false && registration.AdmittedAt == null)
         {
             registration.AdmittedAt = _dateTimeProvider.Now;
         }
 
-        registration.OriginalPrice = await _priceCalculator.CalculatePrice(registration, spots);
-        registration.Price = registration.OriginalPrice;
+        var (total, admitted, admittedAndReduced) = await _priceCalculator.CalculatePrice(registration, spots);
+        registration.Price_Original = total;
+        registration.Price_Admitted = admitted;
+        registration.Price_AdmittedAndReduced = admittedAndReduced;
 
         await _registrations.InsertOrUpdateEntity(registration);
 

@@ -1,8 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-
-using MediatR;
-
-namespace EventRegistrar.Backend.Payments.Refunds;
+﻿namespace EventRegistrar.Backend.Payments.Refunds;
 
 public class PayoutQuery : IRequest<IEnumerable<PayoutDisplayItem>>, IEventBoundRequest
 {
@@ -27,7 +23,7 @@ public class PayoutQueryHandler : IRequestHandler<PayoutQuery, IEnumerable<Payou
                                                               Amount = por.Amount,
                                                               FirstName = por.Registration!.RespondentFirstName,
                                                               LastName = por.Registration.RespondentLastName,
-                                                              Price = por.Registration.Price ?? 0m,
+                                                              Price = por.Registration.Price_AdmittedAndReduced,
                                                               Paid = por.Registration.PaymentAssignments!.Sum(ass => ass.PayoutRequestId == null
                                                                                                                          ? ass.Amount
                                                                                                                          : -ass.Amount),

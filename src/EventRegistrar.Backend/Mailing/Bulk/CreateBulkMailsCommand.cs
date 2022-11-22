@@ -77,14 +77,14 @@ public class CreateBulkMailsCommandHandler : IRequestHandler<CreateBulkMailsComm
             {
                 receivers.AddRange(registrationsForTemplate.Where(reg => reg.State == RegistrationState.Received
                                                                       && (reg.Language == mailTemplate.Language || reg.Language == null)
-                                                                      && reg.IsWaitingList != true));
+                                                                      && reg.IsOnWaitingList != true));
             }
 
             if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.WaitingList) == true)
             {
                 receivers.AddRange(registrationsForTemplate.Where(reg => reg.State == RegistrationState.Received
                                                                       && (reg.Language == mailTemplate.Language || reg.Language == null)
-                                                                      && reg.IsWaitingList == true));
+                                                                      && reg.IsOnWaitingList == true));
             }
 
             if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.PredecessorEvent) == true)

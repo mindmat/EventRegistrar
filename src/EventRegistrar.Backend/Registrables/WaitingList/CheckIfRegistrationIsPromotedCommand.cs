@@ -33,16 +33,16 @@ public class CheckIfRegistrationIsPromotedCommandHandler : IRequestHandler<Check
                                                .Include(reg => reg.Seats_AsFollower)
                                                .FirstAsync(cancellationToken);
 
-        var isWaitingListBefore = registration.IsWaitingList == true;
-        registration.IsWaitingList = registration.Seats_AsLeader!.Any(spt =>
-                                                                          (spt.RegistrableId == command.RegistrationId || spt.RegistrationId_Follower == command.RegistrationId)
-                                                                       && spt.IsWaitingList
-                                                                       && !spt.IsCancelled)
-                                  || registration.Seats_AsFollower!.Any(spt =>
+        var isWaitingListBefore = registration.IsOnWaitingList == true;
+        registration.IsOnWaitingList = registration.Seats_AsLeader!.Any(spt =>
                                                                             (spt.RegistrableId == command.RegistrationId || spt.RegistrationId_Follower == command.RegistrationId)
                                                                          && spt.IsWaitingList
-                                                                         && !spt.IsCancelled);
-        if (isWaitingListBefore && registration.IsWaitingList == false)
+                                                                         && !spt.IsCancelled)
+                                    || registration.Seats_AsFollower!.Any(spt =>
+                                                                              (spt.RegistrableId == command.RegistrationId || spt.RegistrationId_Follower == command.RegistrationId)
+                                                                           && spt.IsWaitingList
+                                                                           && !spt.IsCancelled);
+        if (isWaitingListBefore && registration.IsOnWaitingList == false)
         {
             // non-core spots are also not on waiting list anymore
             foreach (var spot in registration.Seats_AsLeader!.Where(st => !st.IsCancelled && st.IsWaitingList))

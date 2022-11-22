@@ -73,7 +73,7 @@ public class PotentialPartnersQueryHandler : IRequestHandler<PotentialPartnersQu
                                                                                            prt == reg.RespondentFirstName),
                                                       LastNameMatch = searchParts.Any(prt =>
                                                                                           prt == reg.RespondentLastName),
-                                                      reg.IsWaitingList,
+                                                      IsWaitingList = reg.IsOnWaitingList,
                                                       reg.RegistrationId_Partner,
                                                       MatchedPartner =
                                                           (reg.Registration_Partner.RespondentFirstName ?? string.Empty) + " " + (reg.Registration_Partner.RespondentLastName ?? string.Empty),

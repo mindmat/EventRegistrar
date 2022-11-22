@@ -61,7 +61,7 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
             yield return MailType.RegistrationCancelled;
         }
 
-        if (registration.OriginalPrice == 0m && !string.IsNullOrEmpty(registration.SoldOutMessage))
+        if (registration.Price_Admitted == 0m && !string.IsNullOrEmpty(registration.SoldOutMessage))
         {
             yield return MailType.SoldOut;
         }
@@ -70,7 +70,7 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
         {
             if (registration.RegistrationId_Partner == null)
             {
-                yield return registration.IsWaitingList == true
+                yield return registration.IsOnWaitingList == true
                                  ? MailType.PartnerRegistrationFirstPartnerOnWaitingList
                                  : MailType.PartnerRegistrationFirstPartnerAccepted;
             }
@@ -80,7 +80,7 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
 
             if (paidCount == 0)
             {
-                yield return registration.IsWaitingList == true
+                yield return registration.IsOnWaitingList == true
                                  ? MailType.PartnerRegistrationMatchedOnWaitingList
                                  : MailType.PartnerRegistrationMatchedAndAccepted;
             }
@@ -97,7 +97,7 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
         }
         else
         {
-            if (registration.IsWaitingList == true)
+            if (registration.IsOnWaitingList == true)
             {
                 yield return MailType.SingleRegistrationOnWaitingList;
                 yield return MailType.OptionsForRegistrationsOnWaitingList;

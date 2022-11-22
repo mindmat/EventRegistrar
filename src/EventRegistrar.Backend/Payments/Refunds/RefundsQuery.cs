@@ -29,7 +29,7 @@ public class RefundsQueryHandler : IRequestHandler<RefundsQuery, IEnumerable<Ref
                                                RegistrationId = cnc.RegistrationId,
                                                FirstName = cnc.Registration.RespondentFirstName,
                                                LastName = cnc.Registration.RespondentLastName,
-                                               Price = (cnc.Registration.Price ?? 0m) - cnc.Registration.IndividualReductions.Sum(red => red.Amount),
+                                               Price = cnc.Registration.Price_AdmittedAndReduced - cnc.Registration.IndividualReductions!.Sum(red => red.Amount),
                                                Paid = cnc.Registration.PaymentAssignments.Sum(asn => asn.PayoutRequestId == null
                                                                                                          ? asn.Amount
                                                                                                          : -asn.Amount),

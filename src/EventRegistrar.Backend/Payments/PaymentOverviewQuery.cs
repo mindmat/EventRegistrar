@@ -1,9 +1,6 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Payments.Files;
+﻿using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Payments;
 
@@ -41,13 +38,13 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
                                          .FirstOrDefaultAsync(cancellationToken);
 
         var activeRegistrations = await _registrations.Where(reg => reg.EventId == query.EventId
-                                                                 && reg.IsWaitingList != true
+                                                                 && reg.IsOnWaitingList != true
                                                                  && reg.State != RegistrationState.Cancelled)
                                                       .Select(reg => new
                                                                      {
                                                                          reg.Id,
                                                                          reg.State,
-                                                                         reg.Price,
+                                                                         reg.Price_AdmittedAndReduced,
                                                                          Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null
                                                                                                                                  ? asn.Amount
                                                                                                                                  : -asn.Amount)
@@ -87,9 +84,8 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
                    ReceivedMoney = activeRegistrations.Sum(reg => reg.Paid ?? 0m),
                    PaidRegistrations = activeRegistrations.Count(reg => reg.State == RegistrationState.Paid),
                    OutstandingAmount = activeRegistrations.Where(reg => reg.State == RegistrationState.Received)
-                                                          .Sum(reg => (reg.Price ?? 0m) - (reg.Paid ?? 0m)),
-                   NotFullyPaidRegistrations =
-                       activeRegistrations.Count(reg => reg.State == RegistrationState.Received),
+                                                          .Sum(reg => reg.Price_AdmittedAndReduced - (reg.Paid ?? 0m)),
+                   NotFullyPaidRegistrations = activeRegistrations.Count(reg => reg.State == RegistrationState.Received),
                    PotentialOfOpenSpots = registrables.Select(rbl => new OpenSpotsPotential
                                                                      {
                                                                          RegistrableId = rbl.RegistrableId,

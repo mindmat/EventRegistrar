@@ -4,8 +4,6 @@ using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrations;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Payments.Assignments.Candidates;
 
 public class PaymentAssignmentsUpdater : ReadModelUpdater<PaymentAssignments>
@@ -63,8 +61,8 @@ public class PaymentAssignmentsUpdater : ReadModelUpdater<PaymentAssignments>
                                                                    FirstName = pas.Registration!.RespondentFirstName,
                                                                    LastName = pas.Registration.RespondentLastName,
                                                                    Email = pas.Registration.RespondentEmail,
-                                                                   IsWaitingList = pas.Registration.IsWaitingList == true,
-                                                                   Price = pas.Registration.Price ?? 0m,
+                                                                   IsWaitingList = pas.Registration.IsOnWaitingList == true,
+                                                                   Price = pas.Registration.Price_AdmittedAndReduced,
                                                                    AssignedAmount = pas.Amount
                                                                })
                                                 .ToList();
@@ -88,8 +86,8 @@ public class PaymentAssignmentsUpdater : ReadModelUpdater<PaymentAssignments>
                                                                    FirstName = pas.Registration!.RespondentFirstName,
                                                                    LastName = pas.Registration.RespondentLastName,
                                                                    Email = pas.Registration.RespondentEmail,
-                                                                   IsWaitingList = pas.Registration.IsWaitingList == true,
-                                                                   Price = pas.Registration.Price ?? 0m,
+                                                                   IsWaitingList = pas.Registration.IsOnWaitingList == true,
+                                                                   Price = pas.Registration.Price_AdmittedAndReduced,
                                                                    AssignedAmount = pas.Amount
                                                                })
                                                 .ToList();
@@ -112,11 +110,11 @@ public class PaymentAssignmentsUpdater : ReadModelUpdater<PaymentAssignments>
                                                                        FirstName = reg.RespondentFirstName,
                                                                        LastName = reg.RespondentLastName,
                                                                        Email = reg.RespondentEmail,
-                                                                       Price = reg.Price ?? 0m,
+                                                                       Price = reg.Price_AdmittedAndReduced,
                                                                        AmountPaid = reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null && asn.OutgoingPaymentId == null
                                                                                                                            ? asn.Amount
                                                                                                                            : -asn.Amount),
-                                                                       IsWaitingList = reg.IsWaitingList == true,
+                                                                       IsWaitingList = reg.IsOnWaitingList == true,
                                                                        State = reg.State
                                                                    })
                                                     .WhereIf(result.Type == PaymentType.Incoming, reg => reg.Price > reg.AmountPaid)

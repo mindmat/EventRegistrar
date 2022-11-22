@@ -28,13 +28,13 @@ public class CheckRegistrationAfterPaymentCommandHandler : IRequestHandler<Check
                                                .Include(reg => reg.PaymentAssignments)
                                                .Include(reg => reg.IndividualReductions)
                                                .FirstAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
-        if (registration.IsWaitingList == true)
+        if (registration.IsOnWaitingList == true)
         {
             return Unit.Value;
         }
 
-        var difference = registration.Price
-                       - registration.PaymentAssignments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
+        var difference = registration.Price_AdmittedAndReduced
+                       - registration.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
         if (registration.State == RegistrationState.Received
          && (difference <= 0m || registration.WillPayAtCheckin))
         {
@@ -57,7 +57,7 @@ public class CheckRegistrationAfterPaymentCommandHandler : IRequestHandler<Check
                                                 .Include(reg => reg.PaymentAssignments)
                                                 .Include(reg => reg.IndividualReductions)
                                                 .FirstAsync(cancellationToken);
-                var partnerRegistrationAccepted = partnerRegistration.State == RegistrationState.Paid && registration.IsWaitingList == false;
+                var partnerRegistrationAccepted = partnerRegistration.State == RegistrationState.Paid && registration.IsOnWaitingList == false;
                 if (partnerRegistrationAccepted)
                 {
                     _eventBus.Publish(new PartnerRegistrationPaid

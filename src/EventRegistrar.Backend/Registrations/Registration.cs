@@ -39,15 +39,19 @@ public class Registration : Entity
     public string ExternalIdentifier { get; set; } = null!;
     public DateTimeOffset ExternalTimestamp { get; set; }
     public bool? FallbackToPartyPass { get; set; }
+
+    [Obsolete("Use pricing for reductions")]
     public bool IsReduced { get; set; }
-    public bool? IsWaitingList { get; set; }
+
+    public bool? IsOnWaitingList { get; set; }
     public string? Language { get; set; }
-    public decimal? OriginalPrice { get; set; }
+    public decimal Price_Original { get; set; }
+    public decimal Price_Admitted { get; set; }
+    public decimal Price_AdmittedAndReduced { get; set; }
     public string? PartnerNormalized { get; set; }
     public string? PartnerOriginal { get; set; }
     public string? Phone { get; set; }
     public string? PhoneNormalized { get; set; }
-    public decimal? Price { get; set; }
     public DateTimeOffset ReceivedAt { get; set; }
     public string? Remarks { get; set; }
     public bool RemarksProcessed { get; set; }

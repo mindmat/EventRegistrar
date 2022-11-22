@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Registrations;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Hosting;
@@ -24,13 +25,14 @@ public class HostingRequestsQueryHandler : IRequestHandler<HostingRequestsQuery,
     public async Task<HostingRequests> Handle(HostingRequestsQuery query, CancellationToken cancellationToken)
     {
         var hostingRequests = await _registrations.Where(reg => reg.EventId == query.EventId
-                                                             && reg.IsWaitingList == false
+                                                             && reg.IsOnWaitingList == false
                                                              && (reg.State == RegistrationState.Received
                                                               || reg.State == RegistrationState.Paid)
                                                              && reg.Seats_AsLeader.Any(spt => !spt.IsCancelled
-                                                                 && !spt.IsWaitingList
-                                                                 && spt.RegistrableId == _configuration
-                                                                        .RegistrableId_HostingRequest))
+                                                                                           && !spt.IsWaitingList
+                                                                                           && spt.RegistrableId
+                                                                                           == _configuration
+                                                                                                  .RegistrableId_HostingRequest))
                                                   .Include(reg => reg.Responses)
                                                   .ToListAsync(cancellationToken);
         return new HostingRequests
@@ -50,10 +52,10 @@ public class HostingRequestsQueryHandler : IRequestHandler<HostingRequestsQuery,
                                                  Columns = _configuration
                                                            .ColumnsRequests
                                                            .ToDictionary(col => col.Key,
-                                                               col => reg.Responses
-                                                                         .FirstOrDefault(rsp =>
-                                                                             rsp.QuestionId == col.Value)
-                                                                         ?.ResponseString)
+                                                                         col => reg.Responses
+                                                                                   .FirstOrDefault(rsp =>
+                                                                                                       rsp.QuestionId == col.Value)
+                                                                                   ?.ResponseString)
                                              })
                               .OrderBy(reg => reg.AdmittedAt ?? DateTime.MaxValue)
                               .ToList()

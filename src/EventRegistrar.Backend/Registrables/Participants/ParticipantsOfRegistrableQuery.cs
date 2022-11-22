@@ -65,7 +65,7 @@ public class ParticipantsOfRegistrableQueryHandler : IRequestHandler<Participant
                                                            PlaceholderPartner = seat.IsPartnerSpot && (seat.RegistrationId == null || seat.RegistrationId_Follower == null)
                                                                                     ? seat.PartnerEmail
                                                                                     : null,
-                                                           IsOnWaitingList = seat.IsWaitingList || (seat.Registration != null && seat.Registration.IsWaitingList == true),
+                                                           IsOnWaitingList = seat.IsWaitingList || (seat.Registration != null && seat.Registration.IsOnWaitingList == true),
                                                            IsPartnerRegistration = seat.IsPartnerSpot || seat.PartnerEmail != null
                                                        })
                                        .ToListAsync(cancellationToken);

@@ -51,7 +51,7 @@ public class SendReminderMailCommandHandler : IRequestHandler<SendReminderMailCo
 
         var registration = tmp.Registration;
 
-        if (registration.IsWaitingList == true)
+        if (registration.IsOnWaitingList == true)
         {
             _logger.LogInformation($"Registration {command.RegistrationId} is on the waiting list and doesn't have to pay yet");
             return Unit.Value;
