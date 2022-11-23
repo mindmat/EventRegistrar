@@ -28,12 +28,12 @@ public class IndividualReductionMap : EntityMap<IndividualReduction>
     {
         builder.ToTable("IndividualReductions");
 
-        builder.HasOne(map => map.Registration)
-               .WithMany(mail => mail.IndividualReductions)
-               .HasForeignKey(map => map.RegistrationId);
+        builder.HasOne(idr => idr.Registration)
+               .WithMany(reg => reg.IndividualReductions)
+               .HasForeignKey(idr => idr.RegistrationId);
 
-        builder.HasOne(map => map.User)
+        builder.HasOne(idr => idr.User)
                .WithMany()
-               .HasForeignKey(map => map.UserId);
+               .HasForeignKey(idr => idr.UserId);
     }
 }

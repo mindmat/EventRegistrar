@@ -21,7 +21,7 @@ public class PriceCalculator
     }
 
     public async Task<(decimal Total, decimal Admitted, decimal AdmittedAndReduced)> CalculatePrice(Guid registrationId,
-                                                                                                    IEnumerable<IndividualReduction> individualReductions)
+                                                                                                    IEnumerable<IndividualReduction>? individualReductions)
     {
         var registration = await _registrations.FirstAsync(reg => reg.Id == registrationId);
         var spots = await _spots.Where(spot => spot.RegistrationId == registrationId
@@ -42,12 +42,42 @@ public class PriceCalculator
                                                   || spot.RegistrationId_Follower == registration.Id))
                                      .ToList();
 
-        var bookedRegistrableIds = new HashSet<Guid>(notCancelledSpots.Select(seat => seat.RegistrableId));
-
         var packages = await _pricePackages.Where(ppg => ppg.EventId == registration.EventId)
                                            .Include(ppg => ppg.Parts!)
                                            .ThenInclude(ppp => ppp.Registrables!)
                                            .ToListAsync();
+        var priceOriginal = CalculatePriceOfSpots(notCancelledSpots, packages);
+
+        var admittedSpots = notCancelledSpots.Where(spot => !spot.IsWaitingList);
+        var priceAdmitted = CalculatePriceOfSpots(admittedSpots, packages);
+
+        var priceAdmittedAndReduced = GetReducedPrice(priceAdmitted, registration.IndividualReductions);
+        return (priceOriginal, priceAdmitted, priceAdmittedAndReduced);
+    }
+
+    private static decimal GetReducedPrice(decimal priceNotReduced, ICollection<IndividualReduction>? individualReductions)
+    {
+        if (individualReductions == null)
+        {
+            return priceNotReduced;
+        }
+
+        var overwrite = individualReductions.Where(idr => idr.Type == IndividualReductionType.OverwritePrice)
+                                            .MinBy(idr => idr.Amount);
+        if (overwrite != null)
+        {
+            return overwrite.Amount;
+        }
+
+        var totalReduction = individualReductions.Select(ird => ird.Amount)
+                                                 .Sum();
+        var priceAdmittedAndReduced = Math.Max(0m, priceNotReduced - totalReduction);
+        return priceAdmittedAndReduced;
+    }
+
+    private static decimal CalculatePriceOfSpots(IEnumerable<Seat> spots, List<PricePackage> packages)
+    {
+        var bookedRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId));
         List<(PricePackage Package, IReadOnlyCollection<Guid> MatchingRequiredRegistrableId, IReadOnlyCollection<Guid> MatchingOptionalRegistrableId, decimal Price)> matchingPackages = new();
         foreach (var package in packages)
         {
@@ -107,11 +137,7 @@ public class PriceCalculator
         }
 
         var price = matchingPackages.Sum(ppk => ppk.Price);
-        var individualReduction = registration.IndividualReductions!
-                                              .Select(ird => ird.Amount)
-                                              .Sum();
-
-        return (price, price, price); // ToDo
+        return price;
     }
 
     private static (bool Match,

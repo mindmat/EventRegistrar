@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Spots;
 
@@ -146,7 +147,8 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
                                                              IEventToCommandTranslation<OutgoingPaymentAssigned>,
                                                              IEventToCommandTranslation<OutgoingPaymentUnassigned>,
                                                              IEventToCommandTranslation<IncomingPaymentUnassigned>,
-                                                             IEventToCommandTranslation<IncomingPaymentAssigned>
+                                                             IEventToCommandTranslation<IncomingPaymentAssigned>,
+                                                             IEventToCommandTranslation<PriceChanged>
 {
     private readonly IDateTimeProvider _dateTimeProvider;
 
@@ -220,6 +222,20 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
                              QueryName = nameof(RegistrationQuery),
                              EventId = e.EventId.Value,
                              RowId = e.RegistrationId.Value,
+                             DirtyMoment = _dateTimeProvider.Now
+                         };
+        }
+    }
+
+    public IEnumerable<IRequest> Translate(PriceChanged e)
+    {
+        if (e.EventId != null)
+        {
+            yield return new UpdateReadModelCommand
+                         {
+                             QueryName = nameof(RegistrationQuery),
+                             EventId = e.EventId.Value,
+                             RowId = e.RegistrationId,
                              DirtyMoment = _dateTimeProvider.Now
                          };
         }

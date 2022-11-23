@@ -39,8 +39,8 @@ public class RecalculatePriceCommandHandler : IRequestHandler<RecalculatePriceCo
          || oldAdmittedAndReduced != newAdmittedAndReduced)
         {
             registration.Price_Original = newOriginal;
-            registration.Price_Admitted = oldAdmitted;
-            registration.Price_AdmittedAndReduced = oldAdmittedAndReduced;
+            registration.Price_Admitted = newAdmitted;
+            registration.Price_AdmittedAndReduced = newAdmittedAndReduced;
             _eventBus.Publish(new PriceChanged
                               {
                                   EventId = registration.EventId,
