@@ -3,8 +3,6 @@
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing.Feedback;
 
-using MediatR;
-
 using SendGrid;
 using SendGrid.Helpers.Mail;
 

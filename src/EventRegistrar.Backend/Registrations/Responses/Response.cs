@@ -24,7 +24,7 @@ public class ResponseMap : EntityMap<Response>
         builder.ToTable("Responses");
 
         builder.HasOne(rsp => rsp.Question)
-               .WithMany()
+               .WithMany(qst => qst.Responses)
                .HasForeignKey(rsp => rsp.QuestionId);
 
         builder.HasOne(rsp => rsp.Registration)
@@ -32,7 +32,7 @@ public class ResponseMap : EntityMap<Response>
                .HasForeignKey(rsp => rsp.RegistrationId);
 
         builder.HasOne(rsp => rsp.QuestionOption)
-               .WithMany()
+               .WithMany(qso => qso.Responses)
                .HasForeignKey(rsp => rsp.QuestionOptionId);
     }
 }

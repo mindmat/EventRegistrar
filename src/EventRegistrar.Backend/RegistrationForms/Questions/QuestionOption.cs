@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Registrations.Responses;
 
 namespace EventRegistrar.Backend.RegistrationForms.Questions;
 
@@ -11,6 +12,7 @@ public class QuestionOption : Entity
     public IEnumerable<Mappings.QuestionOptionMapping>? Mappings { get; set; }
 
     public string Answer { get; set; } = null!;
+    public ICollection<Response>? Responses { get; set; }
 }
 
 public class QuestionOptionMap : EntityMap<QuestionOption>

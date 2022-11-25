@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.RegistrationForms.Questions;
+using EventRegistrar.Backend.Registrations.Responses;
 
 using Newtonsoft.Json;
 
@@ -19,6 +20,7 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IRepository<RegistrationForm> _forms;
     private readonly IRepository<QuestionOption> _questionOptions;
+    private readonly IRepository<Response> _responses;
     private readonly IRepository<Question> _questions;
     private readonly IRepository<RawRegistrationForm> _rawForms;
 
@@ -26,6 +28,7 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
                                                 IRepository<RawRegistrationForm> rawForms,
                                                 IRepository<Question> questions,
                                                 IRepository<QuestionOption> questionOptions,
+                                                IRepository<Response> responses,
                                                 IQueryable<Event> events,
                                                 IDateTimeProvider dateTimeProvider)
     {
@@ -33,6 +36,7 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
         _rawForms = rawForms;
         _questions = questions;
         _questionOptions = questionOptions;
+        _responses = responses;
         _events = events;
         _dateTimeProvider = dateTimeProvider;
     }
@@ -78,14 +82,15 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
 
         // update questions
         var existingQuestions = await _questions.Where(qst => qst.RegistrationFormId == form.Id)
+                                                .Include(qst => qst.Responses)
                                                 .AsTracking()
                                                 .ToListAsync(cancellationToken);
         string section = null;
         foreach (var receivedQuestion in formDescription.Questions.OrderBy(que => que.Index))
         {
-            var type = (Questions.QuestionType)receivedQuestion.Type;
-            if (type is Questions.QuestionType.SectionHeader
-                or Questions.QuestionType.PageBreak)
+            var type = (QuestionType)receivedQuestion.Type;
+            if (type is QuestionType.SectionHeader
+                or QuestionType.PageBreak)
             {
                 section = receivedQuestion.Title;
             }
@@ -153,14 +158,17 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
                     foreach (var existingOption in existingOptions)
                     {
                         _questionOptions.Remove(existingOption);
+                        existingOption.Responses?.ForEach(rsp => _responses.Remove(rsp)); // "cascaded delete"
                     }
                 }
             }
         }
 
+        // Remove the questions that were not delivered anymore
         foreach (var existingQuestion in existingQuestions)
         {
             _questions.Remove(existingQuestion);
+            existingQuestion.Responses?.ForEach(rsp => _responses.Remove(rsp)); // "cascaded delete"
         }
 
         rawForm.Processed = _dateTimeProvider.Now;

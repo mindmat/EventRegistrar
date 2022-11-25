@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Registrations.Responses;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,6 +20,8 @@ public class Question : Entity
 
     public QuestionMappingType? Mapping { get; set; }
     public string? TemplateKey { get; set; }
+
+    public ICollection<Response>? Responses { get; set; }
 }
 
 public class QuestionMap : EntityMap<Question>
