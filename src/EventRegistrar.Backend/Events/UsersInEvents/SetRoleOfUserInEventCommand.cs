@@ -43,7 +43,7 @@ public class SetRoleOfUserInEventCommandHandler : IRequestHandler<SetRoleOfUserI
             userInEvent.Role = command.Role;
         }
 
-        _eventBus.Publish(new ReadModelUpdated
+        _eventBus.Publish(new QueryChanged
                           {
                               EventId = command.EventId,
                               QueryName = nameof(UsersOfEventQuery)

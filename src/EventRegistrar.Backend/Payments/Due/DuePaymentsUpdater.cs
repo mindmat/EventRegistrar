@@ -10,7 +10,7 @@ using Resources = EventRegistrar.Backend.Properties.Resources;
 
 namespace EventRegistrar.Backend.Payments.Due;
 
-public class DuePaymentsUpdater : ReadModelUpdater<IEnumerable<DuePaymentItem>>
+public class DuePaymentsCalculator : ReadModelCalculator<IEnumerable<DuePaymentItem>>
 {
     public const int DefaultPaymentGracePeriod = 6;
 
@@ -27,8 +27,8 @@ public class DuePaymentsUpdater : ReadModelUpdater<IEnumerable<DuePaymentItem>>
     private readonly IDateTimeProvider _dateTimeProvider;
 
 
-    public DuePaymentsUpdater(IQueryable<Registration> registrations,
-                              IDateTimeProvider dateTimeProvider)
+    public DuePaymentsCalculator(IQueryable<Registration> registrations,
+                                 IDateTimeProvider dateTimeProvider)
     {
         _registrations = registrations;
         _dateTimeProvider = dateTimeProvider;

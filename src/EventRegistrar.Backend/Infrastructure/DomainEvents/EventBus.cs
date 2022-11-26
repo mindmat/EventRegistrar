@@ -18,7 +18,7 @@ public class EventBus : IEventBus
     private readonly CommandQueue _commandQueue;
     private readonly AuthenticatedUserId _user;
     private readonly IHubContext<NotificationHub, INotificationConsumer> _hub;
-    private readonly IList<ReadModelUpdated> _notifications = new List<ReadModelUpdated>();
+    private readonly IList<QueryChanged> _notifications = new List<QueryChanged>();
 
     public EventBus(Container container,
                     CommandQueue commandQueue,
@@ -51,9 +51,9 @@ public class EventBus : IEventBus
             _commandQueue.EnqueueCommand(command);
         }
 
-        if (@event is ReadModelUpdated readModelUpdatedEvent)
+        if (@event is QueryChanged queryChangedEvent)
         {
-            _notifications.Add(readModelUpdatedEvent);
+            _notifications.Add(queryChangedEvent);
         }
         else
         {

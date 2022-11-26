@@ -6,7 +6,7 @@ using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Payments.Assignments.Candidates;
 
-public class PaymentAssignmentsUpdater : ReadModelUpdater<PaymentAssignments>
+public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignments>
 {
     public override string QueryName => nameof(PaymentAssignmentsQuery);
     public override bool IsDateDependent => false;
@@ -15,8 +15,8 @@ public class PaymentAssignmentsUpdater : ReadModelUpdater<PaymentAssignments>
     private readonly IQueryable<Payment> _payments;
     private readonly IQueryable<Registration> _registrations;
 
-    public PaymentAssignmentsUpdater(IQueryable<Registration> registrations,
-                                     IQueryable<Payment> payments)
+    public PaymentAssignmentsCalculator(IQueryable<Registration> registrations,
+                                        IQueryable<Payment> payments)
     {
         _registrations = registrations;
         _payments = payments;

@@ -10,8 +10,7 @@ public class PartnerSpotPromotedFromWaitingList : DomainEvent
     public Guid? RegistrationId_Follower { get; set; }
 }
 
-public class
-    PartnerSpotPromotedFromWaitingListUserTranslation : IEventToUserTranslation<PartnerSpotPromotedFromWaitingList>
+public class PartnerSpotPromotedFromWaitingListUserTranslation : IEventToUserTranslation<PartnerSpotPromotedFromWaitingList>
 {
     private readonly IQueryable<Registration> _registrations;
     private readonly IQueryable<Registrable> _registrables;

@@ -7,15 +7,15 @@ using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrables;
 
-public class RegistrablesOverviewUpdater : ReadModelUpdater<RegistrablesOverview>
+public class RegistrablesOverviewCalculator : ReadModelCalculator<RegistrablesOverview>
 {
     private readonly IQueryable<Registration> _registrations;
     private readonly IQueryable<Registrable> _registrables;
     private readonly IAuthorizationChecker _authorizationChecker;
 
-    public RegistrablesOverviewUpdater(IQueryable<Registration> registrations,
-                                       IQueryable<Registrable> registrables,
-                                       IAuthorizationChecker authorizationChecker)
+    public RegistrablesOverviewCalculator(IQueryable<Registration> registrations,
+                                          IQueryable<Registrable> registrables,
+                                          IAuthorizationChecker authorizationChecker)
     {
         _registrations = registrations;
         _registrables = registrables;

@@ -10,7 +10,7 @@ using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations.ReadModels;
 
-public class RegistrationReadModelUpdater : ReadModelUpdater<RegistrationDisplayItem>
+public class RegistrationReadModelCalculator : ReadModelCalculator<RegistrationDisplayItem>
 {
     public override string QueryName => nameof(RegistrationQuery);
     public override bool IsDateDependent => false;
@@ -20,10 +20,10 @@ public class RegistrationReadModelUpdater : ReadModelUpdater<RegistrationDisplay
     private readonly IQueryable<PaymentAssignment> _assignments;
     private readonly EnumTranslator _enumTranslator;
 
-    public RegistrationReadModelUpdater(IQueryable<Registration> registrations,
-                                        IQueryable<Seat> spots,
-                                        EnumTranslator enumTranslator,
-                                        IQueryable<PaymentAssignment> assignments)
+    public RegistrationReadModelCalculator(IQueryable<Registration> registrations,
+                                           IQueryable<Seat> spots,
+                                           EnumTranslator enumTranslator,
+                                           IQueryable<PaymentAssignment> assignments)
     {
         _registrations = registrations;
         _spots = spots;

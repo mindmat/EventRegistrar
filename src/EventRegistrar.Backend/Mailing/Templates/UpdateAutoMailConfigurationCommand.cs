@@ -45,7 +45,7 @@ public class UpdateAutoMailConfigurationCommandHandler : IRequestHandler<UpdateA
 
         await _configurationRegistry.UpdateConfiguration(command.EventId, config);
 
-        _eventBus.Publish(new ReadModelUpdated
+        _eventBus.Publish(new QueryChanged
                           {
                               EventId = command.EventId,
                               QueryName = nameof(AutoMailTemplatesQuery)

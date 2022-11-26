@@ -79,11 +79,11 @@ public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand,
                       };
             _accessRequests.InsertObjectTree(request);
 
-            _eventBus.Publish(new ReadModelUpdated
+            _eventBus.Publish(new QueryChanged
                               {
                                   QueryName = nameof(EventsOfUserQuery)
                               });
-            _eventBus.Publish(new ReadModelUpdated
+            _eventBus.Publish(new QueryChanged
                               {
                                   EventId = command.EventId,
                                   QueryName = nameof(AccessRequestsOfEventQuery)

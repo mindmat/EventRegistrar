@@ -36,7 +36,7 @@ public class UpdateAutoMailTemplateCommandHandler : IRequestHandler<UpdateAutoMa
             template.ContentHtml = command.ContentHtml;
         }
 
-        _eventBus.Publish(new ReadModelUpdated
+        _eventBus.Publish(new QueryChanged
                           {
                               QueryName = nameof(AutoMailPreviewQuery),
                               EventId = command.EventId,

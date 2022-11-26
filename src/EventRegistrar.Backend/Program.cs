@@ -129,7 +129,8 @@ container.Register(() => new AuthenticatedUserId(container.GetInstance<IAuthenti
                                                           .Result));
 container.Register(() => container.GetInstance<IAuthenticatedUserProvider>()
                                   .GetAuthenticatedUser());
-container.Collection.Register(typeof(IReadModelUpdater), assemblies);
+container.Collection.Register(typeof(IReadModelCalculator), assemblies);
+container.Register<ReadModelUpdater>();
 
 container.Register<IEventAcronymResolver, EventAcronymResolver>();
 container.Register<IAuthorizationChecker, AuthorizationChecker>();

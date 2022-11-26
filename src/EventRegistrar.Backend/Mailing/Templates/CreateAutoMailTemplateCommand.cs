@@ -43,7 +43,7 @@ public class CreateAutoMailTemplateCommandHandler : IRequestHandler<CreateAutoMa
                                                    ReleaseImmediately = templatesOfType.FirstOrDefault()?.ReleaseImmediately ?? false // copy from other language
                                                });
 
-        _eventBus.Publish(new ReadModelUpdated
+        _eventBus.Publish(new QueryChanged
                           {
                               EventId = command.EventId,
                               QueryName = nameof(AutoMailTemplatesQuery)

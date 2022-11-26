@@ -1,10 +1,11 @@
 ﻿using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Payments.Assignments;
+using EventRegistrar.Backend.Payments.Assignments.Candidates;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 
@@ -16,23 +17,20 @@ public class StartUpdateReadModelsOfEventCommand : IRequest
 
 public class StartUpdateReadModelsOfEventCommandHandler : IRequestHandler<StartUpdateReadModelsOfEventCommand>
 {
-    private readonly CommandQueue _commandQueue;
     private readonly IQueryable<Event> _events;
     private readonly IQueryable<Registration> _registrations;
     private readonly IQueryable<Payment> _payments;
-    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly ReadModelUpdater _readModelUpdater;
 
-    public StartUpdateReadModelsOfEventCommandHandler(CommandQueue commandQueue,
-                                                      IQueryable<Event> events,
+    public StartUpdateReadModelsOfEventCommandHandler(IQueryable<Event> events,
                                                       IQueryable<Registration> registrations,
                                                       IQueryable<Payment> payments,
-                                                      IDateTimeProvider dateTimeProvider)
+                                                      ReadModelUpdater readModelUpdater)
     {
-        _commandQueue = commandQueue;
         _events = events;
         _registrations = registrations;
         _payments = payments;
-        _dateTimeProvider = dateTimeProvider;
+        _readModelUpdater = readModelUpdater;
     }
 
     public async Task<Unit> Handle(StartUpdateReadModelsOfEventCommand command, CancellationToken cancellationToken)
@@ -44,22 +42,12 @@ public class StartUpdateReadModelsOfEventCommandHandler : IRequestHandler<StartU
         {
             if (command.QueryNames?.Contains(nameof(RegistrablesOverviewQuery)) != false)
             {
-                _commandQueue.EnqueueCommand(new UpdateReadModelCommand
-                                             {
-                                                 QueryName = nameof(RegistrablesOverviewQuery),
-                                                 EventId = eventId,
-                                                 DirtyMoment = _dateTimeProvider.Now
-                                             });
+                _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, eventId);
             }
 
             if (command.QueryNames?.Contains(nameof(DuePaymentsQuery)) != false)
             {
-                _commandQueue.EnqueueCommand(new UpdateReadModelCommand
-                                             {
-                                                 QueryName = nameof(DuePaymentsQuery),
-                                                 EventId = eventId,
-                                                 DirtyMoment = _dateTimeProvider.Now
-                                             });
+                _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, eventId);
             }
 
             if (command.QueryNames?.Contains(nameof(RegistrationQuery)) != false)
@@ -70,13 +58,7 @@ public class StartUpdateReadModelsOfEventCommandHandler : IRequestHandler<StartU
 
                 foreach (var registrationId in registrationIds)
                 {
-                    _commandQueue.EnqueueCommand(new UpdateReadModelCommand
-                                                 {
-                                                     QueryName = nameof(RegistrationQuery),
-                                                     EventId = eventId,
-                                                     RowId = registrationId,
-                                                     DirtyMoment = _dateTimeProvider.Now
-                                                 });
+                    _readModelUpdater.TriggerUpdate<RegistrationReadModelCalculator>(registrationId, eventId);
                 }
             }
 
@@ -88,13 +70,7 @@ public class StartUpdateReadModelsOfEventCommandHandler : IRequestHandler<StartU
 
                 foreach (var paymentId in paymentIds)
                 {
-                    _commandQueue.EnqueueCommand(new UpdateReadModelCommand
-                                                 {
-                                                     QueryName = nameof(PaymentAssignmentsQuery),
-                                                     EventId = eventId,
-                                                     RowId = paymentId,
-                                                     DirtyMoment = _dateTimeProvider.Now
-                                                 });
+                    _readModelUpdater.TriggerUpdate<PaymentAssignmentsCalculator>(paymentId, eventId);
                 }
             }
         }

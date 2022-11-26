@@ -1,8 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Registrables;
 
@@ -16,18 +14,15 @@ public class DeleteRegistrableCommandHandler : IRequestHandler<DeleteRegistrable
 {
     private readonly IQueryable<Event> _events;
     private readonly IRepository<Registrable> _registrables;
-    private readonly CommandQueue _commandQueue;
-    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly ReadModelUpdater _readModelUpdater;
 
     public DeleteRegistrableCommandHandler(IQueryable<Event> events,
                                            IRepository<Registrable> registrables,
-                                           CommandQueue commandQueue,
-                                           IDateTimeProvider dateTimeProvider)
+                                           ReadModelUpdater readModelUpdater)
     {
         _events = events;
         _registrables = registrables;
-        _commandQueue = commandQueue;
-        _dateTimeProvider = dateTimeProvider;
+        _readModelUpdater = readModelUpdater;
     }
 
     public async Task<Unit> Handle(DeleteRegistrableCommand command, CancellationToken cancellationToken)
@@ -49,12 +44,7 @@ public class DeleteRegistrableCommandHandler : IRequestHandler<DeleteRegistrable
 
         _registrables.Remove(registrable);
 
-        _commandQueue.EnqueueCommand(new UpdateReadModelCommand
-                                     {
-                                         QueryName = nameof(RegistrablesOverviewQuery),
-                                         EventId = command.EventId,
-                                         DirtyMoment = _dateTimeProvider.Now
-                                     });
+        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
 
         return Unit.Value;
     }

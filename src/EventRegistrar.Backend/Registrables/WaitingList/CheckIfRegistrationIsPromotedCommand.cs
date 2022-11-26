@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
@@ -16,14 +17,17 @@ public class CheckIfRegistrationIsPromotedCommandHandler : IRequestHandler<Check
     private readonly IQueryable<Registration> _registrations;
     private readonly CommandQueue _commandQueue;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly ReadModelUpdater _readModelUpdater;
 
     public CheckIfRegistrationIsPromotedCommandHandler(IQueryable<Registration> registrations,
                                                        CommandQueue commandQueue,
-                                                       IDateTimeProvider dateTimeProvider)
+                                                       IDateTimeProvider dateTimeProvider,
+                                                       ReadModelUpdater readModelUpdater)
     {
         _registrations = registrations;
         _commandQueue = commandQueue;
         _dateTimeProvider = dateTimeProvider;
+        _readModelUpdater = readModelUpdater;
     }
 
     public async Task<Unit> Handle(CheckIfRegistrationIsPromotedCommand command, CancellationToken cancellationToken)
@@ -65,6 +69,8 @@ public class CheckIfRegistrationIsPromotedCommandHandler : IRequestHandler<Check
                                       RegistrationId = registration.Id
                                   };
             _commandQueue.EnqueueCommand(sendMailCommand);
+
+            _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(registration.Id, registration.EventId);
         }
 
         return Unit.Value;

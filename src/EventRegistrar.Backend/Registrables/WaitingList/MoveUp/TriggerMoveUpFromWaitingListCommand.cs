@@ -1,8 +1,6 @@
-﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
 
@@ -20,8 +18,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
     private readonly IEventBus _eventBus;
     private readonly ImbalanceManager _imbalanceManager;
     private readonly ILogger _log;
-    private readonly CommandQueue _commandQueue;
-    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly ReadModelUpdater _readModelUpdater;
     private readonly IQueryable<Registrable> _registrables;
     private readonly IQueryable<Registration> _registrations;
     private readonly IRepository<Seat> _spots;
@@ -32,8 +29,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
                                                       ImbalanceManager imbalanceManager,
                                                       IEventBus eventBus,
                                                       ILogger log,
-                                                      CommandQueue commandQueue,
-                                                      IDateTimeProvider dateTimeProvider)
+                                                      ReadModelUpdater readModelUpdater)
     {
         _registrables = registrables;
         _registrations = registrations;
@@ -41,8 +37,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
         _imbalanceManager = imbalanceManager;
         _eventBus = eventBus;
         _log = log;
-        _commandQueue = commandQueue;
-        _dateTimeProvider = dateTimeProvider;
+        _readModelUpdater = readModelUpdater;
     }
 
     public async Task<Unit> Handle(TriggerMoveUpFromWaitingListCommand command, CancellationToken cancellationToken)
@@ -162,13 +157,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
             }
         }
 
-        _commandQueue.EnqueueCommand(new UpdateReadModelCommand
-                                     {
-                                         EventId = command.EventId,
-                                         QueryName = nameof(RegistrablesOverviewQuery),
-                                         RowId = command.RegistrableId,
-                                         DirtyMoment = _dateTimeProvider.Now
-                                     });
+        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(command.RegistrableId, command.EventId);
         return Unit.Value;
     }
 
@@ -245,7 +234,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
                           });
     }
 
-    private async Task PromoteSpotFromWaitingList(Seat spot, ICollection<Seat> waitinglist = null)
+    private async Task PromoteSpotFromWaitingList(Seat spot, ICollection<Seat> waitingList = null)
     {
         var registrationId = spot.RegistrationId ?? spot.RegistrationId_Follower;
         if (registrationId == null)
@@ -257,7 +246,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
         spot.IsWaitingList = false;
         await _spots.InsertOrUpdateEntity(spot);
 
-        waitinglist?.Remove(spot);
+        waitingList?.Remove(spot);
 
         if (spot.IsPartnerSpot)
         {

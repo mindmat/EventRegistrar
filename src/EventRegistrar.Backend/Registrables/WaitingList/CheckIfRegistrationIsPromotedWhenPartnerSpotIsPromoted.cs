@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList;
@@ -10,8 +11,13 @@ public class
     public IEnumerable<IRequest> Translate(PartnerSpotPromotedFromWaitingList e)
     {
         if (e.RegistrationId.HasValue)
+        {
             yield return new CheckIfRegistrationIsPromotedCommand { RegistrationId = e.RegistrationId.Value };
+        }
+
         if (e.RegistrationId_Follower.HasValue)
+        {
             yield return new CheckIfRegistrationIsPromotedCommand { RegistrationId = e.RegistrationId_Follower.Value };
+        }
     }
 }

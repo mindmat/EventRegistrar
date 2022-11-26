@@ -2,7 +2,6 @@
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Registrables;
 
@@ -23,19 +22,16 @@ public class SaveRegistrableCommand : IRequest, IEventBoundRequest
 public class SaveRegistrableCommandHandler : IRequestHandler<SaveRegistrableCommand>
 {
     private readonly IRepository<Registrable> _registrables;
-    private readonly CommandQueue _commandQueue;
-    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IQueryable<Event> _events;
+    private readonly ReadModelUpdater _readModelUpdater;
 
     public SaveRegistrableCommandHandler(IRepository<Registrable> registrables,
-                                         CommandQueue commandQueue,
-                                         IDateTimeProvider dateTimeProvider,
-                                         IQueryable<Event> events)
+                                         IQueryable<Event> events,
+                                         ReadModelUpdater readModelUpdater)
     {
         _registrables = registrables;
-        _commandQueue = commandQueue;
-        _dateTimeProvider = dateTimeProvider;
         _events = events;
+        _readModelUpdater = readModelUpdater;
     }
 
     public async Task<Unit> Handle(SaveRegistrableCommand command, CancellationToken cancellationToken)
@@ -103,12 +99,8 @@ public class SaveRegistrableCommandHandler : IRequestHandler<SaveRegistrableComm
                 break;
         }
 
-        _commandQueue.EnqueueCommand(new UpdateReadModelCommand
-                                     {
-                                         QueryName = nameof(RegistrablesOverviewQuery),
-                                         EventId = command.EventId,
-                                         DirtyMoment = _dateTimeProvider.Now
-                                     });
+        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+
         return Unit.Value;
     }
 }

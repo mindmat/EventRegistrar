@@ -6,7 +6,7 @@ import { filter, map, mergeMap, Observable, ReplaySubject, Subject } from 'rxjs'
 @Injectable({ providedIn: 'root' })
 export class NotificationService
 {
-    private serverEvents$ = new Subject<ReadModelUpdated>();
+    private serverEvents$ = new Subject<QueryChanged>();
     private hubConnection: HubConnection;
     private connectionEstablished$ = new Subject<Boolean>();
     private subscription$ = new ReplaySubject<string>();
@@ -31,7 +31,7 @@ export class NotificationService
                 eventId,
                 queryName,
                 rowId
-            } as ReadModelUpdated;
+            } as QueryChanged;
             console.log(notification);
             // this.serverEvents$.next(notification);
             this.zone.run(() =>
@@ -55,7 +55,7 @@ export class NotificationService
         );
     }
 
-    public subscribe(queryName: string): Observable<ReadModelUpdated>
+    public subscribe(queryName: string): Observable<QueryChanged>
     {
         return this.serverEvents$.pipe(
             filter(ntf => ntf.queryName.toLowerCase() === queryName.toLowerCase())
@@ -107,7 +107,7 @@ export class NotificationService
 
 export const RECONNECTED = Symbol('reconnected');
 
-export class ReadModelUpdated 
+export class QueryChanged 
 {
     public queryName: string;
     public rowId: string;

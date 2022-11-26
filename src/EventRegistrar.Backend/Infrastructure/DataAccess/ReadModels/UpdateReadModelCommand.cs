@@ -1,8 +1,50 @@
 ﻿using System.Text.Json;
 
+using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+
+public class ReadModelUpdater
+{
+    private readonly CommandQueue _commandQueue;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly EventContext _eventContext;
+    private readonly IEnumerable<IReadModelCalculator> _calculators;
+
+    public ReadModelUpdater(CommandQueue commandQueue,
+                            IDateTimeProvider dateTimeProvider,
+                            EventContext eventContext,
+                            IEnumerable<IReadModelCalculator> calculators)
+    {
+        _commandQueue = commandQueue;
+        _dateTimeProvider = dateTimeProvider;
+        _eventContext = eventContext;
+        _calculators = calculators;
+    }
+
+    public void TriggerUpdate<T>(Guid? rowId = null, Guid? eventId = null)
+        where T : IReadModelCalculator
+    {
+        eventId ??= _eventContext.EventId;
+        if (eventId == null)
+        {
+            throw new ArgumentNullException(nameof(eventId));
+        }
+
+        var queryName = _calculators.First(cal => cal.GetType() == typeof(T))
+                                    .QueryName;
+
+        _commandQueue.EnqueueCommand(new UpdateReadModelCommand
+                                     {
+                                         QueryName = queryName,
+                                         EventId = eventId.Value,
+                                         RowId = rowId,
+                                         DirtyMoment = _dateTimeProvider.Now
+                                     });
+    }
+}
 
 public class UpdateReadModelCommand : IRequest
 {
@@ -14,18 +56,18 @@ public class UpdateReadModelCommand : IRequest
 
 public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelCommand>
 {
-    private readonly IEnumerable<IReadModelUpdater> _updaters;
+    private readonly IEnumerable<IReadModelCalculator> _calculators;
     private readonly DbContext _dbContext;
     private readonly IEventBus _eventBus;
     private readonly IDateTimeProvider _dateTimeProvider;
     private static readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerDefaults.Web);
 
-    public UpdateReadModelCommandHandler(IEnumerable<IReadModelUpdater> updaters,
+    public UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> calculators,
                                          DbContext dbContext,
                                          IEventBus eventBus,
                                          IDateTimeProvider dateTimeProvider)
     {
-        _updaters = updaters;
+        _calculators = calculators;
         _dbContext = dbContext;
         _eventBus = eventBus;
         _dateTimeProvider = dateTimeProvider;
@@ -34,7 +76,7 @@ public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelComm
     public async Task<Unit> Handle(UpdateReadModelCommand command, CancellationToken cancellationToken)
     {
         var now = _dateTimeProvider.Now;
-        var updater = _updaters.First(rmu => rmu.QueryName == command.QueryName);
+        var updater = _calculators.First(rmu => rmu.QueryName == command.QueryName);
 
         var readModels = _dbContext.Set<ReadModel>();
 
@@ -45,7 +87,7 @@ public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelComm
                                         .FirstOrDefaultAsync(cancellationToken);
         if (readModel?.LastUpdate >= command.DirtyMoment)
         {
-            // Not perfect (time vs rowversion)
+            // Not perfect (time vs row version)
             return Unit.Value;
         }
 
@@ -65,7 +107,7 @@ public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelComm
                         };
             var entry = readModels.Attach(readModel);
             entry.State = EntityState.Added;
-            _eventBus.Publish(new ReadModelUpdated
+            _eventBus.Publish(new QueryChanged
                               {
                                   QueryName = command.QueryName,
                                   EventId = command.EventId,
@@ -77,7 +119,7 @@ public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelComm
             readModel.ContentJson = contentJson;
             if (_dbContext.Entry(readModel).State == EntityState.Modified)
             {
-                _eventBus.Publish(new ReadModelUpdated
+                _eventBus.Publish(new QueryChanged
                                   {
                                       QueryName = command.QueryName,
                                       EventId = command.EventId,
@@ -90,14 +132,14 @@ public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelComm
     }
 }
 
-public interface IReadModelUpdater
+public interface IReadModelCalculator
 {
     string QueryName { get; }
     bool IsDateDependent { get; }
     Task<object> Calculate(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
 }
 
-public abstract class ReadModelUpdater<T> : IReadModelUpdater
+public abstract class ReadModelCalculator<T> : IReadModelCalculator
     where T : class
 {
     public abstract string QueryName { get; }

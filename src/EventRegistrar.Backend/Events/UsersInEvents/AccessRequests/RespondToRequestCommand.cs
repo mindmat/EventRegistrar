@@ -52,12 +52,12 @@ public class RespondToRequestCommandHandler : IRequestHandler<RespondToRequestCo
             await _usersInEvents.InsertOrUpdateEntity(userInEvent, cancellationToken);
         }
 
-        _eventBus.Publish(new ReadModelUpdated
+        _eventBus.Publish(new QueryChanged
                           {
                               EventId = command.EventId,
                               QueryName = nameof(UsersOfEventQuery)
                           });
-        _eventBus.Publish(new ReadModelUpdated
+        _eventBus.Publish(new QueryChanged
                           {
                               EventId = command.EventId,
                               QueryName = nameof(AccessRequestsOfEventQuery)
