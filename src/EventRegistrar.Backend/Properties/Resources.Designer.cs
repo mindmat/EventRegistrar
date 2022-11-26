@@ -1974,6 +1974,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nachrücken auslösen.
+        /// </summary>
+        internal static string TriggerMoveUp {
+            get {
+                return ResourceManager.GetString("TriggerMoveUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Admin.
         /// </summary>
         internal static string UserInEventRole_Admin {

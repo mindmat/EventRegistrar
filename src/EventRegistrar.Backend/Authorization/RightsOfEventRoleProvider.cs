@@ -30,7 +30,7 @@ using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.Registrables.Tags;
 using EventRegistrar.Backend.Registrables.WaitingList;
-using EventRegistrar.Backend.Registrables.WaitingList.Promotion;
+using EventRegistrar.Backend.Registrables.WaitingList.MoveUp;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 using EventRegistrar.Backend.Registrations;
@@ -121,7 +121,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SavePaymentFileCommand);
             yield return nameof(CreateBulkMailsCommand);
             yield return nameof(ReleaseBulkMailsCommand);
-            yield return nameof(TryPromoteFromWaitingListCommand);
+            yield return nameof(TriggerMoveUpFromWaitingListCommand);
             yield return nameof(AssignIncomingPaymentCommand);
             yield return nameof(ComposeAndSendAutoMailCommand);
             yield return nameof(ComposeAndSendBulkMailCommand);

@@ -165,9 +165,6 @@
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
-  <data name="EditRegistrable" xml:space="preserve">
-    <value>Bearbeiten</value>
-  </data>
   <data name="CopyAccessRights" xml:space="preserve">
     <value>Zugriffsrechte kopieren</value>
   </data>
@@ -211,6 +208,9 @@
     <value>Ausstehende Zahlungen</value>
   </data>
   <data name="Edit" xml:space="preserve">
+    <value>Bearbeiten</value>
+  </data>
+  <data name="EditRegistrable" xml:space="preserve">
     <value>Bearbeiten</value>
   </data>
   <data name="EMail" xml:space="preserve">
@@ -753,6 +753,9 @@
   </data>
   <data name="Town" xml:space="preserve">
     <value>Wohnort</value>
+  </data>
+  <data name="TriggerMoveUp" xml:space="preserve">
+    <value>Nachrücken auslösen</value>
   </data>
   <data name="UserInEventRole_Admin" xml:space="preserve">
     <value>Admin</value>

@@ -39,4 +39,10 @@ export class ParticipantsService
       })
     );
   }
+
+  triggerMoveUp(registrableId: string)
+  {
+    return this.api.triggerMoveUpFromWaitingList_Command({ eventId: this.eventService.selectedId, registrableId })
+      .subscribe();
+  }
 }

@@ -165,9 +165,6 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
-  <data name="EditRegistrable" xml:space="preserve">
-    <value>Edit</value>
-  </data>
   <data name="CopyAccessRights" xml:space="preserve">
     <value>Copy access rights</value>
   </data>
@@ -211,6 +208,9 @@
     <value>Due payments</value>
   </data>
   <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="EditRegistrable" xml:space="preserve">
     <value>Edit</value>
   </data>
   <data name="EMail" xml:space="preserve">
@@ -662,6 +662,9 @@
   </data>
   <data name="Town" xml:space="preserve">
     <value>Town</value>
+  </data>
+  <data name="TriggerMoveUp" xml:space="preserve">
+    <value>Trigger move up</value>
   </data>
   <data name="UserInEventRole_Admin" xml:space="preserve">
     <value>Admin</value>

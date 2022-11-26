@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { ParticipantsService } from '../participants.service';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { RegistrableDisplayInfo, RegistrationDisplayInfo, SpotDisplayInfo } from 'app/api/api';
 
 @Component({
@@ -10,7 +10,8 @@ import { RegistrableDisplayInfo, RegistrationDisplayInfo, SpotDisplayInfo } from
 })
 export class ParticipantsDoubleComponent implements OnInit
 {
-  constructor(private service: ParticipantsService, private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private service: ParticipantsService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   private unsubscribeAll: Subject<any> = new Subject<any>();
   registrable: RegistrableDisplayInfo;
@@ -27,6 +28,14 @@ export class ParticipantsDoubleComponent implements OnInit
         // Mark for check
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  triggerMoveUp(): void
+  {
+    if (this.registrable?.id != null)
+    {
+      this.service.triggerMoveUp(this.registrable.id);
+    }
   }
 
   participantsDropped(event: CdkDragDrop<SpotDisplayInfo | RegistrationDisplayInfo>): void

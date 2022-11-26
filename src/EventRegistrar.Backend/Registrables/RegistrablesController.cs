@@ -1,6 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Registrables.WaitingList;
-using EventRegistrar.Backend.Registrables.WaitingList.Promotion;
+using EventRegistrar.Backend.Registrables.WaitingList.MoveUp;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +23,7 @@ public class RegistrablesController : Controller
     [HttpPost("api/events/{eventAcronym}/registrables/{registrableId:guid}/tryPromoteFromWaitingList")]
     public async Task TryPromoteFromWaitingList(string eventAcronym, Guid registrableId, Guid? registrationId)
     {
-        await _mediator.Send(new TryPromoteFromWaitingListCommand
+        await _mediator.Send(new TriggerMoveUpFromWaitingListCommand
                              {
                                  EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                                  RegistrableId = registrableId,

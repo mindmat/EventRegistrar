@@ -1141,70 +1141,6 @@
         }
       }
     },
-    "/api/SetDoubleRegistrableLimitsCommand": {
-      "post": {
-        "tags": [
-          "SetDoubleRegistrableLimits"
-        ],
-        "operationId": "SetDoubleRegistrableLimits_Command",
-        "requestBody": {
-          "x-name": "SetDoubleRegistrableLimitsCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SetDoubleRegistrableLimitsCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SetSingleRegistrableLimitsCommand": {
-      "post": {
-        "tags": [
-          "SetSingleRegistrableLimits"
-        ],
-        "operationId": "SetSingleRegistrableLimits_Command",
-        "requestBody": {
-          "x-name": "SetSingleRegistrableLimitsCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SetSingleRegistrableLimitsCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/CheckIfRegistrationIsPromotedCommand": {
       "post": {
         "tags": [
@@ -1230,73 +1166,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/TryPromoteFromWaitingListCommand": {
-      "post": {
-        "tags": [
-          "TryPromoteFromWaitingList"
-        ],
-        "operationId": "TryPromoteFromWaitingList_Command",
-        "requestBody": {
-          "x-name": "TryPromoteFromWaitingListCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TryPromoteFromWaitingListCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/RegistrationsOnWaitingListQuery": {
-      "post": {
-        "tags": [
-          "RegistrationsOnWaitingList"
-        ],
-        "operationId": "RegistrationsOnWaitingList_Query",
-        "requestBody": {
-          "x-name": "RegistrationsOnWaitingListQuery",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RegistrationsOnWaitingListQuery"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/WaitingListSpot"
-                  }
                 }
               }
             }
@@ -1381,6 +1250,38 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/DeactivateAutomaticPromotionCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TriggerMoveUpFromWaitingListCommand": {
+      "post": {
+        "tags": [
+          "TriggerMoveUpFromWaitingList"
+        ],
+        "operationId": "TriggerMoveUpFromWaitingList_Command",
+        "requestBody": {
+          "x-name": "TriggerMoveUpFromWaitingListCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TriggerMoveUpFromWaitingListCommand"
               }
             }
           },
@@ -3510,19 +3411,51 @@
         }
       }
     },
-    "/api/ComposeAndSendMailCommand": {
+    "/api/ComposeAndSendAutoMailCommand": {
       "post": {
         "tags": [
-          "ComposeAndSendMail"
+          "ComposeAndSendAutoMail"
         ],
-        "operationId": "ComposeAndSendMail_Command",
+        "operationId": "ComposeAndSendAutoMail_Command",
         "requestBody": {
-          "x-name": "ComposeAndSendMailCommand",
+          "x-name": "ComposeAndSendAutoMailCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ComposeAndSendMailCommand"
+                "$ref": "#/components/schemas/ComposeAndSendAutoMailCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ComposeAndSendBulkMailCommand": {
+      "post": {
+        "tags": [
+          "ComposeAndSendBulkMail"
+        ],
+        "operationId": "ComposeAndSendBulkMail_Command",
+        "requestBody": {
+          "x-name": "ComposeAndSendBulkMailCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComposeAndSendBulkMailCommand"
               }
             }
           },
@@ -5805,6 +5738,13 @@
           "name": {
             "type": "string"
           },
+          "nameSecondary": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string"
+          },
           "showInMailListOrder": {
             "type": "integer",
             "format": "int32",
@@ -5896,132 +5836,11 @@
           }
         }
       },
-      "SetDoubleRegistrableLimitsCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "maximumCouples": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maximumImbalance": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "registrableId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "SetSingleRegistrableLimitsCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "maximumParticipants": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "registrableId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
       "CheckIfRegistrationIsPromotedCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "registrationId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "TryPromoteFromWaitingListCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "registrableId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "registrationId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          }
-        }
-      },
-      "WaitingListSpot": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "follower": {
-            "$ref": "#/components/schemas/WaitingListRegistration"
-          },
-          "isOnWaitingList": {
-            "type": "boolean"
-          },
-          "isPartnerRegistration": {
-            "type": "boolean"
-          },
-          "joined": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "leader": {
-            "$ref": "#/components/schemas/WaitingListRegistration"
-          },
-          "placeholderPartner": {
-            "type": "string"
-          },
-          "registrableName": {
-            "type": "string"
-          }
-        }
-      },
-      "WaitingListRegistration": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "firstName": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "optionsSent": {
-            "type": "boolean"
-          },
-          "state": {
-            "$ref": "#/components/schemas/RegistrationState"
-          }
-        }
-      },
-      "RegistrationsOnWaitingListQuery": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
             "type": "string",
             "format": "guid"
           }
@@ -6069,6 +5888,25 @@
           "registrableId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "TriggerMoveUpFromWaitingListCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrableId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
           }
         }
       },
@@ -6258,6 +6096,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
           "name": {
             "type": "string"
           },
@@ -8690,7 +8532,33 @@
           }
         }
       },
-      "ComposeAndSendMailCommand": {
+      "ComposeAndSendAutoMailCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "allowDuplicate": {
+            "type": "boolean"
+          },
+          "mailType": {
+            "$ref": "#/components/schemas/MailType"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "withhold": {
+            "type": "boolean"
+          },
+          "data": {
+            "nullable": true
+          }
+        }
+      },
+      "ComposeAndSendBulkMailCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {

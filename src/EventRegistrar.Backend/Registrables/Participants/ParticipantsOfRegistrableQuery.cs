@@ -72,6 +72,7 @@ public class ParticipantsOfRegistrableQueryHandler : IRequestHandler<Participant
 
         var result = new RegistrableDisplayInfo
                      {
+                         Id = registrable.Id,
                          Name = registrable.Name,
                          NameSecondary = registrable.NameSecondary,
                          MaximumDoubleSeats = registrable.MaximumDoubleSeats,

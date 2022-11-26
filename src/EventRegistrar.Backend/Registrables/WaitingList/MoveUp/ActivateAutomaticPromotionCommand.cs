@@ -1,9 +1,7 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using MediatR;
 
-namespace EventRegistrar.Backend.Registrables.WaitingList.Promotion;
+namespace EventRegistrar.Backend.Registrables.WaitingList.MoveUp;
 
 public class ActivateAutomaticPromotionCommand : IRequest, IEventBoundRequest
 {
@@ -29,11 +27,16 @@ public class ActivateAutomaticPromotionCommandHandler : IRequestHandler<Activate
         var registrable = await _registrables.FirstAsync(rbl => rbl.Id == command.RegistrableId);
         if (registrable.AutomaticPromotionFromWaitingList)
             // already activated
+        {
             return Unit.Value;
+        }
 
         registrable.AutomaticPromotionFromWaitingList = true;
         if (command.TryPromoteImmediately)
+        {
             _eventBus.Publish(new AutomaticPromotionActivated { RegistrableId = command.RegistrableId });
+        }
+
         return Unit.Value;
     }
 }

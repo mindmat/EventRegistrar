@@ -1,8 +1,6 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-using MediatR;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 
-namespace EventRegistrar.Backend.Registrables.WaitingList.Promotion;
+namespace EventRegistrar.Backend.Registrables.WaitingList.MoveUp;
 
 public class DeactivateAutomaticPromotionCommand : IRequest, IEventBoundRequest
 {
@@ -24,7 +22,9 @@ public class DeactivateAutomaticPromotionCommandHandler : IRequestHandler<Deacti
         var registrable = await _registrables.FirstAsync(rbl => rbl.Id == command.RegistrableId);
         if (registrable.AutomaticPromotionFromWaitingList == false)
             // already activated
+        {
             return Unit.Value;
+        }
 
         registrable.AutomaticPromotionFromWaitingList = false;
         return Unit.Value;

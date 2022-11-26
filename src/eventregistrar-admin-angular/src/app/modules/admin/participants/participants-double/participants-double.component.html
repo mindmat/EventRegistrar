@@ -64,10 +64,16 @@
                 <!-- Waiting list -->
                 <div class="flex-0 w-144 p-2 rounded-2xl bg-default">
 
-                    <div class="font-medium">Warteliste</div>
+                    <div class="flex flex-row">
+                        <div class="font-medium">Warteliste</div>
+
+                        <button class="ml-auto" *ngIf="registrable.waitingList.length > 0" mat-flat-button [color]="'primary'" (click)="triggerMoveUp()">
+                            {{ 'TriggerMoveUp' | translate }}
+                        </button>
+                    </div>
 
                     <!-- Spots -->
-                    <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+                    <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border" *ngIf="registrable.waitingList.length > 0">
                         <div [id]="'participants'" class="p-3 pb-0">
                             <!-- header -->
                             <div class="flex flex-row items-center m-3 space-x-4">

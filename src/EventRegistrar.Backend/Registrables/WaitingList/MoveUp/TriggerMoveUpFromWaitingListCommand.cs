@@ -1,35 +1,39 @@
-﻿using EventRegistrar.Backend.Authorization;
+﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
 
-using MediatR;
+namespace EventRegistrar.Backend.Registrables.WaitingList.MoveUp;
 
-namespace EventRegistrar.Backend.Registrables.WaitingList;
-
-public class TryPromoteFromWaitingListCommand : IRequest, IEventBoundRequest
+public class TriggerMoveUpFromWaitingListCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
     public Guid RegistrableId { get; set; }
     public Guid? RegistrationId { get; set; }
 }
 
-public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromoteFromWaitingListCommand>
+public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<TriggerMoveUpFromWaitingListCommand>
 {
     private readonly IEventBus _eventBus;
     private readonly ImbalanceManager _imbalanceManager;
     private readonly ILogger _log;
+    private readonly CommandQueue _commandQueue;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IQueryable<Registrable> _registrables;
     private readonly IQueryable<Registration> _registrations;
     private readonly IRepository<Seat> _spots;
 
-    public TryPromoteFromWaitingListCommandHandler(IQueryable<Registrable> registrables,
-                                                   IQueryable<Registration> registrations,
-                                                   IRepository<Seat> spots,
-                                                   ImbalanceManager imbalanceManager,
-                                                   IEventBus eventBus,
-                                                   ILogger log)
+    public TriggerMoveUpFromWaitingListCommandHandler(IQueryable<Registrable> registrables,
+                                                      IQueryable<Registration> registrations,
+                                                      IRepository<Seat> spots,
+                                                      ImbalanceManager imbalanceManager,
+                                                      IEventBus eventBus,
+                                                      ILogger log,
+                                                      CommandQueue commandQueue,
+                                                      IDateTimeProvider dateTimeProvider)
     {
         _registrables = registrables;
         _registrations = registrations;
@@ -37,16 +41,18 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
         _imbalanceManager = imbalanceManager;
         _eventBus = eventBus;
         _log = log;
+        _commandQueue = commandQueue;
+        _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Unit> Handle(TryPromoteFromWaitingListCommand command, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(TriggerMoveUpFromWaitingListCommand command, CancellationToken cancellationToken)
     {
         var registrableToCheck = await _registrables.Where(rbl => rbl.Id == command.RegistrableId
                                                                && rbl.EventId == command.EventId)
                                                     .Include(rbl => rbl.Spots)
-                                                    .FirstOrDefaultAsync(cancellationToken);
-        var spots = registrableToCheck.Spots.Where(spt => !spt.IsCancelled).ToList();
-        if (registrableToCheck.MaximumSingleSeats.HasValue)
+                                                    .FirstAsync(cancellationToken);
+        var spots = registrableToCheck.Spots!.Where(spt => !spt.IsCancelled).ToList();
+        if (registrableToCheck.MaximumSingleSeats != null)
         {
             var acceptedSpotCount = spots.Count(spt => !spt.IsWaitingList);
             var spotsAvailable = registrableToCheck.MaximumSingleSeats.Value - acceptedSpotCount;
@@ -67,14 +73,14 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
                 }
             }
         }
-        else if (registrableToCheck.MaximumDoubleSeats.HasValue)
+        else if (registrableToCheck.MaximumDoubleSeats != null)
         {
             var singleSpotsAccepted = new Queue<Seat>(spots.Where(spt => !spt.IsWaitingList
                                                                       && !spt.IsPartnerSpot
                                                                       && (spt.RegistrationId == null
                                                                        || spt.RegistrationId_Follower == null)));
 
-            var waitinglist = spots.Where(spt => spt.IsWaitingList
+            var waitingList = spots.Where(spt => spt.IsWaitingList
                                               && (command.RegistrationId == null
                                                || command.RegistrationId == spt.RegistrationId
                                                || command.RegistrationId == spt.RegistrationId_Follower))
@@ -84,13 +90,13 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
             while (singleSpotsAccepted.Any())
             {
                 var spotToComplement = singleSpotsAccepted.Dequeue();
-                await ComplementSeatFromWaitingList(spotToComplement, waitinglist);
+                await ComplementSeatFromWaitingList(spotToComplement, waitingList);
             }
 
             while (registrableToCheck.MaximumDoubleSeats.Value - spots.Count(spt => !spt.IsWaitingList) > 0
                 || command.RegistrationId != null)
             {
-                var nextSpotOnWaitingList = waitinglist.FirstOrDefault();
+                var nextSpotOnWaitingList = waitingList.FirstOrDefault();
                 if (nextSpotOnWaitingList == null)
                 {
                     break;
@@ -98,17 +104,17 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
 
                 if (nextSpotOnWaitingList.IsPartnerSpot)
                 {
-                    await PromoteSpotFromWaitingList(nextSpotOnWaitingList, waitinglist);
+                    await PromoteSpotFromWaitingList(nextSpotOnWaitingList, waitingList);
                     continue;
                 }
 
                 // next spot is single spot. decide: match with other role or take next partner spot?
                 var firstSingleRole = nextSpotOnWaitingList.GetSingleRole();
                 var otherRole = firstSingleRole.GetOtherRole();
-                var nextSingleInOtherRole = waitinglist.FirstOrDefault(spt => otherRole == Role.Leader
+                var nextSingleInOtherRole = waitingList.FirstOrDefault(spt => otherRole == Role.Leader
                                                                                   ? spt.IsSingleLeaderSpot()
                                                                                   : spt.IsSingleFollowerSpot());
-                var nextPartnerRegistration = waitinglist.FirstOrDefault(spt => spt.IsPartnerSpot);
+                var nextPartnerRegistration = waitingList.FirstOrDefault(spt => spt.IsPartnerSpot);
                 if (nextSingleInOtherRole == null)
                 {
                     if (nextPartnerRegistration == null)
@@ -121,15 +127,15 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
                          && command.RegistrationId == null) // manual promotion doesn't stick to the rules
                         {
                             // no promotion due to imbalance
-                            waitinglist.Remove(nextSpotOnWaitingList);
+                            waitingList.Remove(nextSpotOnWaitingList);
                             continue;
                         }
 
-                        await PromoteSpotFromWaitingList(nextSpotOnWaitingList, waitinglist);
+                        await PromoteSpotFromWaitingList(nextSpotOnWaitingList, waitingList);
                     }
                     else
                     {
-                        await PromoteSpotFromWaitingList(nextPartnerRegistration, waitinglist);
+                        await PromoteSpotFromWaitingList(nextPartnerRegistration, waitingList);
                     }
                 }
                 else
@@ -142,7 +148,7 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
                         if (averageOfSingles > nextPartnerRegistration.FirstPartnerJoined)
                         {
                             // partner registration wins
-                            await PromoteSpotFromWaitingList(nextPartnerRegistration, waitinglist);
+                            await PromoteSpotFromWaitingList(nextPartnerRegistration, waitingList);
                             continue;
                         }
                     }
@@ -150,12 +156,19 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
                     nextSpotOnWaitingList.MergeSingleSpots(nextSingleInOtherRole);
                     await PromoteSpotFromWaitingList(nextSpotOnWaitingList);
                     await _spots.InsertOrUpdateEntity(nextSingleInOtherRole, cancellationToken);
-                    waitinglist.Remove(nextSpotOnWaitingList);
-                    waitinglist.Remove(nextSingleInOtherRole);
+                    waitingList.Remove(nextSpotOnWaitingList);
+                    waitingList.Remove(nextSingleInOtherRole);
                 }
             }
         }
 
+        _commandQueue.EnqueueCommand(new UpdateReadModelCommand
+                                     {
+                                         EventId = command.EventId,
+                                         QueryName = nameof(RegistrablesOverviewQuery),
+                                         RowId = command.RegistrableId,
+                                         DirtyMoment = _dateTimeProvider.Now
+                                     });
         return Unit.Value;
     }
 
@@ -164,12 +177,12 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
         return new DateTime((dateTime1.Ticks + dateTime2.Ticks) / 2);
     }
 
-    private async Task<bool> ComplementSeatFromWaitingList(Seat seatToComplement, List<Seat> waitinglist)
+    private async Task<bool> ComplementSeatFromWaitingList(Seat seatToComplement, ICollection<Seat> waitingList)
     {
         if (seatToComplement.IsSingleLeaderSpot())
         {
             // follower spot available, find follower on waiting list
-            var nextFollowerOnWaitingList = waitinglist.FirstOrDefault(spt => spt.IsSingleFollowerSpot());
+            var nextFollowerOnWaitingList = waitingList.FirstOrDefault(spt => spt.IsSingleFollowerSpot());
             if (nextFollowerOnWaitingList?.RegistrationId_Follower == null)
             {
                 return false;
@@ -182,7 +195,7 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
 
             seatToComplement.RegistrationId_Follower = nextFollowerOnWaitingList.RegistrationId_Follower;
             nextFollowerOnWaitingList.IsCancelled = true;
-            waitinglist.Remove(nextFollowerOnWaitingList);
+            waitingList.Remove(nextFollowerOnWaitingList);
 
             await _spots.InsertOrUpdateEntity(seatToComplement);
             await _spots.InsertOrUpdateEntity(nextFollowerOnWaitingList);
@@ -194,7 +207,7 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
         if (seatToComplement.IsSingleFollowerSpot())
         {
             // follower spot available, find follower on waiting list
-            var nextLeaderOnWaitingList = waitinglist.FirstOrDefault(spt => spt.IsSingleLeaderSpot());
+            var nextLeaderOnWaitingList = waitingList.FirstOrDefault(spt => spt.IsSingleLeaderSpot());
             if (nextLeaderOnWaitingList?.RegistrationId == null)
             {
                 return false;
@@ -207,7 +220,7 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
 
             seatToComplement.RegistrationId = nextLeaderOnWaitingList.RegistrationId;
             nextLeaderOnWaitingList.IsCancelled = true;
-            waitinglist.Remove(nextLeaderOnWaitingList);
+            waitingList.Remove(nextLeaderOnWaitingList);
 
             await _spots.InsertOrUpdateEntity(seatToComplement);
             await _spots.InsertOrUpdateEntity(nextLeaderOnWaitingList);
@@ -232,7 +245,7 @@ public class TryPromoteFromWaitingListCommandHandler : IRequestHandler<TryPromot
                           });
     }
 
-    private async Task PromoteSpotFromWaitingList(Seat spot, List<Seat> waitinglist = null)
+    private async Task PromoteSpotFromWaitingList(Seat spot, ICollection<Seat> waitinglist = null)
     {
         var registrationId = spot.RegistrationId ?? spot.RegistrationId_Follower;
         if (registrationId == null)

@@ -1762,108 +1762,6 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    setDoubleRegistrableLimits_Command(setDoubleRegistrableLimitsCommand: SetDoubleRegistrableLimitsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/SetDoubleRegistrableLimitsCommand";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(setDoubleRegistrableLimitsCommand);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSetDoubleRegistrableLimits_Command(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processSetDoubleRegistrableLimits_Command(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Unit>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Unit>;
-        }));
-    }
-
-    protected processSetDoubleRegistrableLimits_Command(response: HttpResponseBase): Observable<Unit> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    setSingleRegistrableLimits_Command(setSingleRegistrableLimitsCommand: SetSingleRegistrableLimitsCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/SetSingleRegistrableLimitsCommand";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(setSingleRegistrableLimitsCommand);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSetSingleRegistrableLimits_Command(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processSetSingleRegistrableLimits_Command(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Unit>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Unit>;
-        }));
-    }
-
-    protected processSetSingleRegistrableLimits_Command(response: HttpResponseBase): Observable<Unit> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     checkIfRegistrationIsPromoted_Command(checkIfRegistrationIsPromotedCommand: CheckIfRegistrationIsPromotedCommand | undefined): Observable<Unit> {
         let url_ = this.baseUrl + "/api/CheckIfRegistrationIsPromotedCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -1905,108 +1803,6 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    tryPromoteFromWaitingList_Command(tryPromoteFromWaitingListCommand: TryPromoteFromWaitingListCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/TryPromoteFromWaitingListCommand";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(tryPromoteFromWaitingListCommand);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processTryPromoteFromWaitingList_Command(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processTryPromoteFromWaitingList_Command(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<Unit>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<Unit>;
-        }));
-    }
-
-    protected processTryPromoteFromWaitingList_Command(response: HttpResponseBase): Observable<Unit> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    registrationsOnWaitingList_Query(registrationsOnWaitingListQuery: RegistrationsOnWaitingListQuery | undefined): Observable<WaitingListSpot[]> {
-        let url_ = this.baseUrl + "/api/RegistrationsOnWaitingListQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(registrationsOnWaitingListQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRegistrationsOnWaitingList_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRegistrationsOnWaitingList_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<WaitingListSpot[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<WaitingListSpot[]>;
-        }));
-    }
-
-    protected processRegistrationsOnWaitingList_Query(response: HttpResponseBase): Observable<WaitingListSpot[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as WaitingListSpot[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -2150,6 +1946,57 @@ export class Api {
     }
 
     protected processDeactivateAutomaticPromotion_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    triggerMoveUpFromWaitingList_Command(triggerMoveUpFromWaitingListCommand: TriggerMoveUpFromWaitingListCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/TriggerMoveUpFromWaitingListCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(triggerMoveUpFromWaitingListCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processTriggerMoveUpFromWaitingList_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processTriggerMoveUpFromWaitingList_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processTriggerMoveUpFromWaitingList_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5439,11 +5286,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    composeAndSendMail_Command(composeAndSendMailCommand: ComposeAndSendMailCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/ComposeAndSendMailCommand";
+    composeAndSendAutoMail_Command(composeAndSendAutoMailCommand: ComposeAndSendAutoMailCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/ComposeAndSendAutoMailCommand";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(composeAndSendMailCommand);
+        const content_ = JSON.stringify(composeAndSendAutoMailCommand);
 
         let options_ : any = {
             body: content_,
@@ -5456,11 +5303,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processComposeAndSendMail_Command(response_);
+            return this.processComposeAndSendAutoMail_Command(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processComposeAndSendMail_Command(response_ as any);
+                    return this.processComposeAndSendAutoMail_Command(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<Unit>;
                 }
@@ -5469,7 +5316,58 @@ export class Api {
         }));
     }
 
-    protected processComposeAndSendMail_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processComposeAndSendAutoMail_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    composeAndSendBulkMail_Command(composeAndSendBulkMailCommand: ComposeAndSendBulkMailCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/ComposeAndSendBulkMailCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(composeAndSendBulkMailCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processComposeAndSendBulkMail_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processComposeAndSendBulkMail_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processComposeAndSendBulkMail_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -7284,6 +7182,8 @@ export interface RegistrableDisplayItem {
     id?: string;
     isDoubleRegistrable?: boolean;
     name?: string;
+    nameSecondary?: string | null;
+    displayName?: string;
     showInMailListOrder?: number | null;
     sortKey?: number | null;
 }
@@ -7314,49 +7214,8 @@ export interface SaveRegistrableCommand {
     tag?: string | null;
 }
 
-export interface SetDoubleRegistrableLimitsCommand {
-    eventId?: string;
-    maximumCouples?: number;
-    maximumImbalance?: number;
-    registrableId?: string;
-}
-
-export interface SetSingleRegistrableLimitsCommand {
-    eventId?: string;
-    maximumParticipants?: number;
-    registrableId?: string;
-}
-
 export interface CheckIfRegistrationIsPromotedCommand {
     registrationId?: string;
-}
-
-export interface TryPromoteFromWaitingListCommand {
-    eventId?: string;
-    registrableId?: string;
-    registrationId?: string | null;
-}
-
-export interface WaitingListSpot {
-    follower?: WaitingListRegistration;
-    isOnWaitingList?: boolean;
-    isPartnerRegistration?: boolean;
-    joined?: Date | null;
-    leader?: WaitingListRegistration;
-    placeholderPartner?: string;
-    registrableName?: string;
-}
-
-export interface WaitingListRegistration {
-    firstName?: string;
-    id?: string | null;
-    lastName?: string;
-    optionsSent?: boolean;
-    state?: RegistrationState;
-}
-
-export interface RegistrationsOnWaitingListQuery {
-    eventId?: string;
 }
 
 export interface SetFallbackToPartyPassCommand {
@@ -7373,6 +7232,12 @@ export interface ActivateAutomaticPromotionCommand {
 export interface DeactivateAutomaticPromotionCommand {
     eventId?: string;
     registrableId?: string;
+}
+
+export interface TriggerMoveUpFromWaitingListCommand {
+    eventId?: string;
+    registrableId?: string;
+    registrationId?: string | null;
 }
 
 export interface RegistrableTagDisplayItem {
@@ -7432,6 +7297,7 @@ export interface SetRegistrablesPricesCommand {
 }
 
 export interface RegistrableDisplayInfo {
+    id?: string;
     name?: string;
     nameSecondary?: string | null;
     hasWaitingList?: boolean;
@@ -8213,7 +8079,16 @@ export interface AutoMailPlaceholderQuery {
     mailType?: MailType;
 }
 
-export interface ComposeAndSendMailCommand {
+export interface ComposeAndSendAutoMailCommand {
+    eventId?: string;
+    allowDuplicate?: boolean;
+    mailType?: MailType;
+    registrationId?: string;
+    withhold?: boolean;
+    data?: any | null;
+}
+
+export interface ComposeAndSendBulkMailCommand {
     allowDuplicate?: boolean;
     bulkMailKey?: string;
     eventId?: string;
