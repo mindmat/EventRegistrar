@@ -103,7 +103,7 @@ public class MailComposer
                 _              => registration
             };
 
-            if (Enum.TryParse<MailPlaceholder>(parts.key, true, out var placeholderKey))
+            if (Enum.TryParse<MailPlaceholder>(parts.key, true, out var placeholderKey) || parts.key?.ToUpperInvariant() == "SEATLIST")
             {
                 if (placeholderKey == MailPlaceholder.FirstName)
                 {
