@@ -25,14 +25,12 @@ public class RecalculatePriceCommandHandler : IRequestHandler<RecalculatePriceCo
 
     public async Task<Unit> Handle(RecalculatePriceCommand command, CancellationToken cancellationToken)
     {
-        var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
-                                               .Include(reg => reg.IndividualReductions)
-                                               .FirstAsync(cancellationToken);
+        var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
         var oldOriginal = registration.Price_Original;
         var oldAdmitted = registration.Price_Admitted;
         var oldAdmittedAndReduced = registration.Price_AdmittedAndReduced;
 
-        var (newOriginal, newAdmitted, newAdmittedAndReduced) = await _priceCalculator.CalculatePrice(command.RegistrationId, registration.IndividualReductions!);
+        var (newOriginal, newAdmitted, newAdmittedAndReduced, _, _) = await _priceCalculator.CalculatePrice(command.RegistrationId, cancellationToken);
 
         if (oldOriginal != newOriginal
          || oldAdmitted != newAdmitted

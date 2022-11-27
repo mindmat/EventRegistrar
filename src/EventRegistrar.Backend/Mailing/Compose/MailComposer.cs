@@ -1,10 +1,12 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Text;
+using System.Text.RegularExpressions;
 
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Spots;
 
@@ -16,6 +18,7 @@ public class MailComposer
     private const string PrefixFollower = "FOLLOWER";
     private const string PrefixLeader = "LEADER";
     private readonly DuePaymentConfiguration _duePaymentConfiguration;
+    private readonly PriceCalculator _priceCalculator;
     private readonly IQueryable<Event> _events;
     private readonly IQueryable<SpotMailLine> _spotMailLines;
     private readonly ILogger _log;
@@ -27,7 +30,8 @@ public class MailComposer
                         IQueryable<SpotMailLine> spotMailLines,
                         ILogger log,
                         PaidAmountSummarizer paidAmountSummarizer,
-                        DuePaymentConfiguration duePaymentConfiguration)
+                        DuePaymentConfiguration duePaymentConfiguration,
+                        PriceCalculator priceCalculator)
     {
         _registrations = registrations;
         _events = events;
@@ -35,6 +39,7 @@ public class MailComposer
         _log = log;
         _paidAmountSummarizer = paidAmountSummarizer;
         _duePaymentConfiguration = duePaymentConfiguration;
+        _priceCalculator = priceCalculator;
     }
 
     public async Task<string> Compose(Guid registrationId,
@@ -112,9 +117,9 @@ public class MailComposer
                 {
                     templateFiller[key] = registrationForPrefix?.Phone;
                 }
-                else if (placeholderKey == MailPlaceholder.SpotList && registrationForPrefix != null)
+                else if ((placeholderKey == MailPlaceholder.SpotList || parts.key.ToUpperInvariant() == "SEATLIST") && registrationForPrefix != null)
                 {
-                    templateFiller[key] = GetSeatList(registrationForPrefix, language);
+                    templateFiller[key] = await GetSpotList(registrationForPrefix, language);
                 }
                 else if (placeholderKey == MailPlaceholder.PartnerName)
                 {
@@ -130,8 +135,7 @@ public class MailComposer
                 }
                 else if (placeholderKey == MailPlaceholder.PaidAmount)
                 {
-                    templateFiller[key] =
-                        (await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id))
+                    templateFiller[key] = (await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id))
                         .ToString("F2"); // HACK: format hardcoded
                 }
                 else if (placeholderKey is MailPlaceholder.DueAmount or MailPlaceholder.OverpaidAmount)
@@ -213,7 +217,7 @@ public class MailComposer
                    : (null, key);
     }
 
-    private string GetSeatText(Seat seat,
+    private string GetSpotText(Seat seat,
                                Role role,
                                string language,
                                ICollection<Response> responses)
@@ -270,15 +274,42 @@ public class MailComposer
         return text;
     }
 
-    private string FillResponse(Match match, ICollection<Response> responses)
+    private string? FillResponse(Match match, ICollection<Response> responses)
     {
         var questionId = Guid.Parse(match.Value);
         var response = responses.FirstOrDefault(rsp => rsp.QuestionId == questionId)?.ResponseString;
         return response;
     }
 
-    private string GetSeatList(Registration registration, string language)
+    private async Task<string> GetSpotList(Registration registration, string language)
     {
+        var (priceOriginal, priceAdmitted, _, packagesOriginal, packagesAdmitted) = await _priceCalculator.CalculatePrice(registration.Id);
+
+        var result = new StringBuilder();
+        result.AppendLine("<table>");
+        result.AppendLine("<tbody>");
+        foreach (var package in packagesAdmitted)
+        {
+            // Package header
+            result.AppendLine("<tr>");
+            result.AppendLine($"<td><strong>{package.Name}</strong></td>");
+            result.AppendLine($"<td style=\"text-align: right;\"><strong>{package.Price}</strong></td>");
+            result.AppendLine("</tr>");
+
+            // Package content
+            foreach (var matchingPackageSpot in package.Spots)
+            {
+                result.AppendLine("<tr>");
+                result.AppendLine($"<td>- {matchingPackageSpot.Name}</td>");
+                result.AppendLine($"<td style=\"text-align: right;\">{matchingPackageSpot.PriceAdjustment?.ToString("F2")}</td>");
+                result.AppendLine("</tr>");
+            }
+        }
+
+        result.AppendLine("</tbody>");
+        result.AppendLine("</table>");
+
+        return result.ToString();
         var seatLines = new List<(int sortKey, string seatLine)>();
         if (registration.Seats_AsLeader != null)
         {
@@ -286,7 +317,7 @@ public class MailComposer
                                            .Where(seat => seat.Registrable.ShowInMailListOrder.HasValue
                                                        && !seat.IsCancelled)
                                            .Select(seat => (seat.Registrable.ShowInMailListOrder ?? int.MaxValue,
-                                                               GetSeatText(seat, Role.Leader, language, registration.Responses))));
+                                                               GetSpotText(seat, Role.Leader, language, registration.Responses))));
         }
 
         if (registration.Seats_AsFollower != null)
@@ -295,7 +326,7 @@ public class MailComposer
                                            .Where(seat => seat.Registrable.ShowInMailListOrder.HasValue
                                                        && !seat.IsCancelled)
                                            .Select(seat => (seat.Registrable.ShowInMailListOrder ?? int.MaxValue,
-                                                               GetSeatText(seat, Role.Follower, language, registration.Responses))));
+                                                               GetSpotText(seat, Role.Follower, language, registration.Responses))));
         }
 
         var seatList = string.Join("<br />", seatLines.OrderBy(tmp => tmp.sortKey)
