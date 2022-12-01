@@ -1,7 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Payments.Files;
-
-using MediatR;
+﻿using EventRegistrar.Backend.Payments.Files;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
 

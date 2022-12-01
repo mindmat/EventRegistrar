@@ -7,6 +7,7 @@ using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Payments.Assignments.Candidates;
 using EventRegistrar.Backend.Payments.Files.Camt;
 using EventRegistrar.Backend.Payments.Files.Slips;
 using EventRegistrar.Backend.Payments.Settlements;
@@ -31,6 +32,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
 
     private readonly CamtParser _camtParser;
     private readonly IEventBus _eventBus;
+    private readonly ReadModelUpdater _readModelUpdater;
     private readonly IQueryable<Event> _events;
     private readonly ILogger _log;
     private readonly IRepository<PaymentsFile> _paymentFiles;
@@ -43,7 +45,8 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                                          IQueryable<Event> events,
                                          CamtParser camtParser,
                                          ILogger log,
-                                         IEventBus eventBus)
+                                         IEventBus eventBus,
+                                         ReadModelUpdater readModelUpdater)
     {
         _paymentFiles = paymentFiles;
         _payments = payments;
@@ -52,6 +55,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
         _camtParser = camtParser;
         _log = log;
         _eventBus = eventBus;
+        _readModelUpdater = readModelUpdater;
     }
 
     public async Task<Unit> Handle(SavePaymentFileCommand command, CancellationToken cancellationToken)
@@ -183,15 +187,19 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                                                       DebitorIban = camtEntry.DebitorIban
                                                   }
                                    };
-            await _payments.InsertOrUpdateEntity(newPayment, cancellationToken);
+            _payments.InsertObjectTree(newPayment);
             newPayments.Add(newPayment);
+
+            _readModelUpdater.TriggerUpdate<PaymentAssignmentsCalculator>(newPayment.Id, eventId);
         }
 
         if (@event != null)
         {
             _eventBus.Publish(new PaymentFileProcessed
                               {
-                                  EventId = eventId, Account = camt.Account, Balance = camt.Balance,
+                                  EventId = eventId,
+                                  Account = camt.Account,
+                                  Balance = camt.Balance,
                                   EntriesCount = camt.Entries.Count
                               });
         }

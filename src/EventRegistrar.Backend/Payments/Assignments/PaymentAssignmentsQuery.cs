@@ -1,9 +1,6 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.Mediator;
 using EventRegistrar.Backend.Payments.Assignments.Candidates;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
 
