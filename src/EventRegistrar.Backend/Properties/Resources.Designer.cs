@@ -88,6 +88,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kontoauszug.
+        /// </summary>
+        internal static string AccountStatement {
+            get {
+                return ResourceManager.GetString("AccountStatement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kürzel.
         /// </summary>
         internal static string Acronym {
@@ -201,6 +210,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Cancel {
             get {
                 return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Klicken zum Hochladen.
+        /// </summary>
+        internal static string ClickToUpload {
+            get {
+                return ResourceManager.GetString("ClickToUpload", resourceCulture);
             }
         }
         
@@ -1308,6 +1326,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to oder Drag &amp; Drop.
+        /// </summary>
+        internal static string OrDragDrop {
+            get {
+                return ResourceManager.GetString("OrDragDrop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Weitere Events.
         /// </summary>
         internal static string OtherEvents {
@@ -1979,6 +2006,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string TriggerMoveUp {
             get {
                 return ResourceManager.GetString("TriggerMoveUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {{filename}} hochladen....
+        /// </summary>
+        internal static string Uploading {
+            get {
+                return ResourceManager.GetString("Uploading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File erfolgreich hochgeladen.
+        /// </summary>
+        internal static string UploadSuccessful {
+            get {
+                return ResourceManager.GetString("UploadSuccessful", resourceCulture);
             }
         }
         

@@ -1,16 +1,21 @@
 <div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden">
 
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+    <div class="flex flex-col items-start space-x-4 sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
         <!-- Title -->
-        <div class="flex-1 min-w-0">
-            <div class="text-4xl font-extrabold tracking-tight leading-none">Kontoauszug</div>
-            <!-- <div class="mt-1.5 text-lg text-secondary">{{filteredBookingDays.length}}</div> -->
+        <div>
+            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'AccountStatement' | translate }}</div>
+            <!-- <div class="mt-1.5 text-lg text-secondary">{{ filteredBookingDays.length }}</div> -->
         </div>
+
+        <app-file-upload fileTypes="camt.053" [uploadUrl]="uploadUrl">
+
+        </app-file-upload>
+
         <!-- Filters -->
-        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+        <mat-form-field class="fuse-mat-no-subscript w-full ml-auto sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
             <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-            <input (input)="filterByQuery(query.value)" placeholder="Search by title or description" matInput #query>
+            <input (input)="filterByQuery(query.value)" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" matInput #query>
         </mat-form-field>
     </div>
 

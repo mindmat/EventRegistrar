@@ -1,8 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Payments.Files.Fetch;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Payments.Files;

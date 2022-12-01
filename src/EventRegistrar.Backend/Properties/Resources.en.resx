@@ -126,6 +126,9 @@
   <data name="Accounting" xml:space="preserve">
     <value>Accounting</value>
   </data>
+  <data name="AccountStatement" xml:space="preserve">
+    <value>Account statement</value>
+  </data>
   <data name="Acronym" xml:space="preserve">
     <value>Acronym</value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
+  </data>
+  <data name="ClickToUpload" xml:space="preserve">
+    <value>Click to upload</value>
   </data>
   <data name="CopyAccessRights" xml:space="preserve">
     <value>Copy access rights</value>
@@ -450,6 +456,9 @@
   <data name="NoSearchResults" xml:space="preserve">
     <value>No results found</value>
   </data>
+  <data name="OrDragDrop" xml:space="preserve">
+    <value>or drag &amp; drop</value>
+  </data>
   <data name="OtherEvents" xml:space="preserve">
     <value>Other Events</value>
   </data>
@@ -665,6 +674,12 @@
   </data>
   <data name="TriggerMoveUp" xml:space="preserve">
     <value>Trigger move up</value>
+  </data>
+  <data name="Uploading" xml:space="preserve">
+    <value>uploading {{filename}}...</value>
+  </data>
+  <data name="UploadSuccessful" xml:space="preserve">
+    <value>Upload successful</value>
   </data>
   <data name="UserInEventRole_Admin" xml:space="preserve">
     <value>Admin</value>

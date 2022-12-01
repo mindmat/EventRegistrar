@@ -82,6 +82,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
+import { SharedModule } from './shared/shared.module';
+import { FileUploadComponent } from './modules/admin/infrastructure/file-upload/file-upload.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -113,7 +115,8 @@ const routerConfig: ExtraOptions = {
         FormMappingComponent,
         TagsPickerComponent,
         PricingComponent,
-        RegistrableDetailComponent
+        RegistrableDetailComponent,
+        FileUploadComponent
     ],
     providers: [
         AuthServiceFuse,
@@ -142,6 +145,7 @@ const routerConfig: ExtraOptions = {
 
         // Layout module of your application
         LayoutModule,
+        SharedModule,
 
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),

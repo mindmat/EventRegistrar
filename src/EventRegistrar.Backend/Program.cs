@@ -14,6 +14,7 @@ using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ErrorHandling;
 using EventRegistrar.Backend.Infrastructure.Mediator;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using EventRegistrar.Backend.Payments.Files;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -216,9 +217,11 @@ app.UseEndpoints(endpoints =>
 {
     endpoints.MapRequests(container);
     endpoints.MapHub<NotificationHub>("/notifications");
-    endpoints.MapGet("/", () => container.GetInstance<HomeController>().Index()).AllowAnonymous();
 });
 
+app.MapGet("/", () => container.GetInstance<HomeController>().Index()).AllowAnonymous();
+
+app.MapPost("api/events/{eventAcronym}/paymentfiles/upload", (string eventAcronym, IFormFile file) => container.GetInstance<PaymentFileController>().UploadFile(eventAcronym, file));
 
 app.Run();
 

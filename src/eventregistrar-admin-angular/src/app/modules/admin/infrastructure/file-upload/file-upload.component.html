@@ -1,0 +1,15 @@
+<div class="flex items-center justify-center w-full" (dragenter)="onDragEnter($event)" (dragover)="onDragOver($event)" (dragleave)="isDragging=false" (drop)="onFileDropped($event)">
+    <label for="dropzone-file"
+        class="flex flex-col items-center justify-center w-full min-h-8 border-2 p-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+        [ngClass]="{'bg-gray-300': isDragging}">
+        <div class="flex flex-row justify-center py-1 place-items-center">
+            <mat-icon svgIcon="mat_outline:upload_file" class="icon-size-8"></mat-icon>
+            <div class="flex flex-col items-center justify-center py-1 ml-2">
+                <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">{{ 'ClickToUpload' | translate }}</span>&nbsp;{{ 'OrDragDrop' | translate }}</p>
+                <p *ngIf="info" class="text-xs text-gray-500 dark:text-gray-400">{{ info }}</p>
+                <p *ngIf="lastError" class="text-xs text-red-500">{{ lastError }}</p>
+            </div>
+        </div>
+        <input id="dropzone-file" type="file" class="hidden" accept=".xml" (change)="fileSelected($event)" />
+    </label>
+</div>

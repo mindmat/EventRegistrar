@@ -1,20 +1,18 @@
-﻿using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
-using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Files.Camt;
 using EventRegistrar.Backend.Payments.Files.Slips;
+using EventRegistrar.Backend.Payments.Settlements;
+using EventRegistrar.Backend.Payments.Statements;
 
 using ICSharpCode.SharpZipLib.Tar;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Files;
 
@@ -81,6 +79,8 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                                                command.FileStream,
                                                cancellationToken);
                 break;
+
+            default: throw new ArgumentOutOfRangeException($"Invalid content typ {command.ContentType}");
         }
 
         return Unit.Value;
@@ -196,6 +196,8 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                               });
         }
 
+        _eventBus.Publish(new QueryChanged { EventId = eventId, QueryName = nameof(BookingsByStateQuery) });
+        _eventBus.Publish(new QueryChanged { EventId = eventId, QueryName = nameof(PaymentsByDayQuery) });
         return newPayments;
     }
 
@@ -205,13 +207,13 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
         await using var tarStream = new TarInputStream(zipStream, Encoding.UTF8);
         var newLines = new List<Payment>();
 
-        while (tarStream.GetNextEntry() is { } entry)
+        while (await tarStream.GetNextEntryAsync(cancellationToken) is { } entry)
         {
             var outStream = new MemoryStream();
 
             if (entry.Name.EndsWith(".xml"))
             {
-                tarStream.CopyEntryContents(outStream);
+                await tarStream.CopyEntryContentsAsync(outStream, cancellationToken);
                 outStream.Position = 0;
                 newLines.AddRange(await SaveCamt(eventId, outStream, cancellationToken));
             }
@@ -219,7 +221,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
             {
                 var fileInfo = new FileInfo(entry.Name);
                 var matches = Regex.Match(entry.Name, PostfinancePaymentSlipFilenameRegex);
-                tarStream.CopyEntryContents(outStream);
+                await tarStream.CopyEntryContentsAsync(outStream, cancellationToken);
                 outStream.Position = 0;
                 var reference = matches.Groups["ID"].Value;
                 var iban = matches.Groups["IBAN"].Value;

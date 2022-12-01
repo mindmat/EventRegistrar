@@ -126,6 +126,9 @@
   <data name="Accounting" xml:space="preserve">
     <value>Buchhaltung</value>
   </data>
+  <data name="AccountStatement" xml:space="preserve">
+    <value>Kontoauszug</value>
+  </data>
   <data name="Acronym" xml:space="preserve">
     <value>Kürzel</value>
   </data>
@@ -164,6 +167,9 @@
   </data>
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
+  </data>
+  <data name="ClickToUpload" xml:space="preserve">
+    <value>Klicken zum Hochladen</value>
   </data>
   <data name="CopyAccessRights" xml:space="preserve">
     <value>Zugriffsrechte kopieren</value>
@@ -531,6 +537,9 @@
   <data name="NoSearchResults" xml:space="preserve">
     <value>Keine Treffer gefunden</value>
   </data>
+  <data name="OrDragDrop" xml:space="preserve">
+    <value>oder Drag &amp; Drop</value>
+  </data>
   <data name="OtherEvents" xml:space="preserve">
     <value>Weitere Events</value>
   </data>
@@ -756,6 +765,12 @@
   </data>
   <data name="TriggerMoveUp" xml:space="preserve">
     <value>Nachrücken auslösen</value>
+  </data>
+  <data name="Uploading" xml:space="preserve">
+    <value>{{filename}} hochladen...</value>
+  </data>
+  <data name="UploadSuccessful" xml:space="preserve">
+    <value>File erfolgreich hochgeladen</value>
   </data>
   <data name="UserInEventRole_Admin" xml:space="preserve">
     <value>Admin</value>
