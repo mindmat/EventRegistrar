@@ -61,7 +61,8 @@
             <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <!-- Booking -->
                 <ng-container *ngFor="let candidate of candidates">
-                    <app-assignment-candidate-registration [paymentType]="paymentType" [candidate]="candidate" (assign)="assign($event)"></app-assignment-candidate-registration>
+                    <app-assignment-candidate-registration [paymentType]="paymentType" [candidate]="candidate" [openPaymentAmount]="openAmount" (assign)="assign($event)">
+                    </app-assignment-candidate-registration>
                 </ng-container>
             </div>
         </div>

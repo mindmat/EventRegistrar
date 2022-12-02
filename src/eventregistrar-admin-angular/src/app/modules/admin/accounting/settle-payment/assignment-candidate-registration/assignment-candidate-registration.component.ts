@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PaymentType } from 'app/api/api';
 import { NavigatorService } from 'app/modules/admin/navigator.service';
@@ -11,13 +11,17 @@ import { AssignmentCandidateRegistrationEditItem } from '../settle-payment.compo
 export class AssignmentCandidateRegistrationComponent implements OnInit, OnChanges
 {
   public candidateForm: FormGroup;
-  public possibleAmount: number;
+  public difference: number;
+  public openRegistrationAmount: number;
+  public maxAmountToAssign: number;
+  @Input() openPaymentAmount: number = 0;
   @Input() candidate?: AssignmentCandidateRegistrationEditItem;
   @Input() paymentType?: PaymentType;
   @Output() assign = new EventEmitter<AssignmentRequest>();
 
   constructor(private fb: FormBuilder,
-    public navigator: NavigatorService) { }
+    public navigator: NavigatorService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
   {
@@ -29,15 +33,30 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
     // Active item id
     if ('candidate' in changes)
     {
-      this.possibleAmount = this.paymentType == PaymentType.Incoming
+      this.openRegistrationAmount = this.paymentType == PaymentType.Incoming
         ? Math.max(0, this.candidate.price - this.candidate.amountPaid)
         : Math.max(0, this.candidate.amountPaid);
+      this.maxAmountToAssign = this.paymentType == PaymentType.Incoming
+        ? Math.min(Math.max(0, this.openPaymentAmount), Math.max(0, this.candidate.price - this.candidate.amountPaid))
+        : Math.max(0, this.candidate.amountPaid);
       this.candidateForm = this.fb.group({
-        amountAssigned: [this.possibleAmount, [Validators.required, Validators.min(0.01), Validators.max(this.possibleAmount)]],
+        amountAssigned: [this.maxAmountToAssign, [Validators.required, Validators.min(0.01), Validators.max(this.maxAmountToAssign)]],
         acceptDifference: [false, Validators.required],
         acceptDifferenceReason: ['']
       });
+      this.checkDifference(this.candidateForm.value);
+
+      this.candidateForm.valueChanges.subscribe(values =>
+      {
+        this.checkDifference(values);
+      });
     }
+  }
+
+  private checkDifference(values: any)
+  {
+    this.difference = this.candidate.price - this.candidate.amountPaid - values.amountAssigned;
+    this.changeDetectorRef.markForCheck();
   }
 
   public emitAssign(): void

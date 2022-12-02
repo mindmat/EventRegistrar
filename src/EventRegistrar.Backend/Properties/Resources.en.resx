@@ -117,6 +117,15 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AcceptDifferenceAmount" xml:space="preserve">
+    <value>Accept difference of {{difference}}</value>
+  </data>
+  <data name="AcceptDifferenceExplanation" xml:space="preserve">
+    <value>Marks the registration as paid despite the incomplete payment</value>
+  </data>
+  <data name="AcceptDifferenceReason" xml:space="preserve">
+    <value>Reason</value>
+  </data>
   <data name="AcceptedMail" xml:space="preserve">
     <value>Accepted mail</value>
   </data>
