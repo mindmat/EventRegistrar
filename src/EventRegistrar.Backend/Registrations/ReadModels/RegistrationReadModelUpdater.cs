@@ -66,14 +66,26 @@ public class RegistrationReadModelCalculator : ReadModelCalculator<RegistrationD
                                                                                : $"{reg.Registration_Partner!.RespondentFirstName} {reg.Registration_Partner.RespondentLastName}",
                                                              PartnerId = reg.RegistrationId_Partner,
                                                              IsReduced = reg.IsReduced,
-                                                             WillPayAtCheckin = reg.WillPayAtCheckin
+                                                             WillPayAtCheckin = reg.WillPayAtCheckin,
+                                                             Mails = reg.Mails!.Select(mir => new MailDisplayItem
+                                                                                              {
+                                                                                                  MailId = mir.MailId,
+                                                                                                  Subject = mir.Mail!.Subject,
+                                                                                                  Created = mir.Mail.Created,
+                                                                                                  SentAt = mir.Mail.Sent,
+                                                                                                  State = mir.Mail.State
+                                                                                              })
                                                          })
                                           .FirstAsync(cancellationToken);
 
+        content.Mails = content.Mails
+                               ?.OrderBy(mail => mail.SentAt ?? mail.Created)
+                               .ToList();
+
         content.Spots = await _spots.Where(spot => (spot.Registration!.EventId == eventId
-                                                 || spot.Registration_Follower!.EventId == eventId)
-                                                && (spot.RegistrationId == registrationId
-                                                 || spot.RegistrationId_Follower == registrationId))
+                                                 && spot.RegistrationId == registrationId)
+                                                || (spot.Registration_Follower!.EventId == eventId
+                                                 && spot.RegistrationId_Follower == registrationId))
                                     .Where(spot => !spot.IsCancelled)
                                     .OrderByDescending(spot => spot.Registrable!.IsCore)
                                     .ThenBy(spot => spot.Registrable!.ShowInMailListOrder)
@@ -105,40 +117,39 @@ public class RegistrationReadModelCalculator : ReadModelCalculator<RegistrationD
                                                     })
                                     .ToListAsync(cancellationToken);
 
-        var data = await _assignments.Where(ass => ass.Registration!.EventId == eventId
-                                                && ass.RegistrationId == registrationId
-                                                && ass.PaymentAssignmentId_Counter == null)
-                                     .Select(ass => new
-                                                    {
-                                                        ass.Id,
-                                                        ass.Amount,
-                                                        ass.IncomingPaymentId,
-                                                        ass.OutgoingPaymentId,
-                                                        Currency_Incoming = ass.IncomingPayment!.Payment!.Currency,
-                                                        BookingDate_Incoming = (DateTime?)ass.IncomingPayment.Payment.BookingDate,
-                                                        Currency_Outgoing = ass.OutgoingPayment!.Payment!.Currency,
-                                                        BookingDate_Outgoing = (DateTime?)ass.OutgoingPayment.Payment.BookingDate
-                                                    })
-                                     .ToListAsync(cancellationToken);
+        var dataAssignments = await _assignments.Where(ass => ass.Registration!.EventId == eventId
+                                                           && ass.RegistrationId == registrationId
+                                                           && ass.PaymentAssignmentId_Counter == null)
+                                                .Select(ass => new
+                                                               {
+                                                                   ass.Id,
+                                                                   ass.Amount,
+                                                                   ass.IncomingPaymentId,
+                                                                   ass.OutgoingPaymentId,
+                                                                   Currency_Incoming = ass.IncomingPayment!.Payment!.Currency,
+                                                                   BookingDate_Incoming = (DateTime?)ass.IncomingPayment.Payment.BookingDate,
+                                                                   Currency_Outgoing = ass.OutgoingPayment!.Payment!.Currency,
+                                                                   BookingDate_Outgoing = (DateTime?)ass.OutgoingPayment.Payment.BookingDate
+                                                               })
+                                                .ToListAsync(cancellationToken);
 
-        content.Payments = data.Where(ass => ass.IncomingPaymentId != null)
-                               .Select(ass => new AssignedPaymentDisplayItem
-                                              {
-                                                  PaymentAssignmentId = ass.Id,
-                                                  Amount = ass.Amount,
-                                                  Currency = ass.Currency_Incoming,
-                                                  BookingDate = ass.BookingDate_Incoming!.Value
-                                              })
-                               .Concat(data.Where(ass => ass.OutgoingPaymentId != null)
-                                           .Select(ass => new AssignedPaymentDisplayItem
-                                                          {
-                                                              PaymentAssignmentId = ass.Id,
-                                                              Amount = -ass.Amount,
-                                                              Currency = ass.Currency_Outgoing,
-                                                              BookingDate = ass.BookingDate_Outgoing!.Value
-                                                          }))
-                               .ToList();
-        content.Paid = content.Payments.Sum(pmt => pmt.Amount);
+        content.Payments = dataAssignments.Where(ass => ass.IncomingPaymentId != null)
+                                          .Select(ass => new AssignedPaymentDisplayItem
+                                                         {
+                                                             PaymentAssignmentId = ass.Id,
+                                                             Amount = ass.Amount,
+                                                             Currency = ass.Currency_Incoming,
+                                                             BookingDate = ass.BookingDate_Incoming!.Value
+                                                         })
+                                          .Concat(dataAssignments.Where(ass => ass.OutgoingPaymentId != null)
+                                                                 .Select(ass => new AssignedPaymentDisplayItem
+                                                                                {
+                                                                                    PaymentAssignmentId = ass.Id,
+                                                                                    Amount = -ass.Amount,
+                                                                                    Currency = ass.Currency_Outgoing,
+                                                                                    BookingDate = ass.BookingDate_Outgoing!.Value
+                                                                                }))
+                                          .ToList();
         return content;
     }
 }

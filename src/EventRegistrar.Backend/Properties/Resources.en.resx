@@ -366,6 +366,9 @@
   <data name="MailPlaceholder_UnpaidAmount" xml:space="preserve">
     <value>Remark about unpaid amount</value>
   </data>
+  <data name="Mails" xml:space="preserve">
+    <value>Mails</value>
+  </data>
   <data name="MailSubject" xml:space="preserve">
     <value>Subject</value>
   </data>
@@ -668,6 +671,9 @@
   </data>
   <data name="SMS" xml:space="preserve">
     <value>SMS</value>
+  </data>
+  <data name="Spots" xml:space="preserve">
+    <value>Spots</value>
   </data>
   <data name="subject" xml:space="preserve">
     <value>subject</value>

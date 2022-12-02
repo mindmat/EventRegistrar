@@ -4113,7 +4113,7 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    mailsOfRegistration_Query(mailsOfRegistrationQuery: MailsOfRegistrationQuery | undefined): Observable<MailDisplayItem[]> {
+    mailsOfRegistration_Query(mailsOfRegistrationQuery: MailsOfRegistrationQuery | undefined): Observable<MailDisplayItem2[]> {
         let url_ = this.baseUrl + "/api/MailsOfRegistrationQuery";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -4136,14 +4136,14 @@ export class Api {
                 try {
                     return this.processMailsOfRegistration_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<MailDisplayItem[]>;
+                    return _observableThrow(e) as any as Observable<MailDisplayItem2[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<MailDisplayItem[]>;
+                return _observableThrow(response_) as any as Observable<MailDisplayItem2[]>;
         }));
     }
 
-    protected processMailsOfRegistration_Query(response: HttpResponseBase): Observable<MailDisplayItem[]> {
+    protected processMailsOfRegistration_Query(response: HttpResponseBase): Observable<MailDisplayItem2[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4153,7 +4153,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as MailDisplayItem[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as MailDisplayItem2[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -6782,6 +6782,7 @@ export interface RegistrationDisplayItem {
     fallbackToPartyPass?: boolean | null;
     spots?: SpotDisplayItem[] | null;
     payments?: AssignedPaymentDisplayItem[] | null;
+    mails?: MailDisplayItem[] | null;
 }
 
 export enum RegistrationState {
@@ -6795,6 +6796,29 @@ export interface AssignedPaymentDisplayItem {
     bookingDate?: Date;
     currency?: string | null;
     paymentAssignmentId?: string;
+}
+
+export interface MailDisplayItem {
+    mailId?: string;
+    subject?: string | null;
+    state?: MailState | null;
+    created?: Date;
+    sentAt?: Date | null;
+}
+
+export enum MailState {
+    Unknown = 0,
+    Processed = 1,
+    Dropped = 2,
+    Delivered = 3,
+    Deferred = 4,
+    Bounce = 5,
+    Open = 6,
+    Click = 7,
+    SpamReport = 8,
+    Unsubscribe = 9,
+    GroupUnsubscribe = 10,
+    GroupResubscribe = 11,
 }
 
 export interface RegistrationQuery {
@@ -7805,7 +7829,7 @@ export interface DeleteMailCommand {
     mailId?: string;
 }
 
-export interface MailDisplayItem {
+export interface MailDisplayItem2 {
     contentHtml?: string;
     created?: Date;
     events?: MailEventDisplayItem[];
@@ -7823,21 +7847,6 @@ export interface MailEventDisplayItem {
     state?: MailState;
     stateText?: string;
     when?: Date;
-}
-
-export enum MailState {
-    Unknown = 0,
-    Processed = 1,
-    Dropped = 2,
-    Delivered = 3,
-    Deferred = 4,
-    Bounce = 5,
-    Open = 6,
-    Click = 7,
-    SpamReport = 8,
-    Unsubscribe = 9,
-    GroupUnsubscribe = 10,
-    GroupResubscribe = 11,
 }
 
 export interface MailsOfRegistrationQuery {

@@ -58,14 +58,14 @@
     </div>
 
     <!-- Main -->
-    <div class="flex flex-auto justify-center w-full max-w-5xl mx-auto p-6 sm:p-8">
+    <div class="flex flex-auto justify-center w-full max-w-5xl mx-auto p-6 space-x-8 sm:p-8">
 
         <!-- Column -->
-        <div class="flex flex-col items-start mr-8 space-y-4">
+        <div class="flex flex-col items-start space-y-4">
 
             <!-- Participant -->
             <fuse-card class="flex flex-col w-80 p-8">
-                <div class="text-2xl font-semibold leading-tight">Übersicht</div>
+                <div class="text-2xl font-semibold leading-tight">{{ 'Overview' | translate }}</div>
                 <hr class="w-full border-t my-6">
                 <div class="flex flex-col">
                     <div class="flex items-center">
@@ -101,11 +101,11 @@
                 <div class="flex items-center justify-between">
                     <div class="text-2xl font-semibold leading-tight">Zahlungen</div>
                     <div class="-mr-3">
-                        <button mat-icon-button [matMenuTriggerFor]="listCard04Menu">
+                        <button mat-icon-button [matMenuTriggerFor]="paymentsMenu">
                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                         </button>
-                        <mat-menu #listCard04Menu="matMenu">
-                            <button mat-menu-item>Clear activities</button>
+                        <mat-menu #paymentsMenu="matMenu">
+                            <!-- <button mat-menu-item>Clear activities</button> -->
                         </mat-menu>
                     </div>
                 </div>
@@ -131,13 +131,13 @@
             <!-- Spots -->
             <fuse-card class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
                 <div class="flex items-center justify-between">
-                    <div class="text-2xl font-semibold leading-tight">Plätze</div>
+                    <div class="text-2xl font-semibold leading-tight">{{ 'Spots' | translate }}</div>
                     <div class="-mr-3">
-                        <button mat-icon-button [matMenuTriggerFor]="listCard04Menu">
+                        <button mat-icon-button [matMenuTriggerFor]="spotsMenu">
                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                         </button>
-                        <mat-menu #listCard04Menu="matMenu">
-                            <button mat-menu-item>Clear activities</button>
+                        <mat-menu #spotsMenu="matMenu">
+                            <!-- <button mat-menu-item>Clear activities</button> -->
                         </mat-menu>
                     </div>
                 </div>
@@ -171,6 +171,38 @@
 
         </div>
 
+        <!-- Column -->
+        <div class="flex flex-col items-start space-y-4">
+
+            <!-- Mails -->
+            <fuse-card class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div class="text-2xl font-semibold leading-tight">{{ 'Mails' | translate }}</div>
+                    <div class="-mr-3">
+                        <button mat-icon-button [matMenuTriggerFor]="mailsMenu">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                        </button>
+                        <mat-menu #mailsMenu="matMenu">
+                            <!-- <button mat-menu-item>Clear activities</button> -->
+                        </mat-menu>
+                    </div>
+                </div>
+                <hr class="w-full border-t my-6">
+                <div class="flex flex-col space-y-4 mb-4">
+                    <ng-container *ngFor="let mail of registration.mails">
+                        <div class="flex flex-col rounded-xl bg-default shadow p-3">
+                            <div class="flex flex-col">
+                                <div>{{ mail.subject }}</div>
+                                <div class="text-md leading-none text-secondary mt-1" *ngIf="mail.sentAt">{{ mail.sentAt | date: 'dd.MM.yy hh:mm' }}</div>
+                                <div class="text-md leading-none text-secondary mt-1" *ngIf="!mail.sentAt">({{ mail.created | date: 'dd.MM.yy hh:mm' }})</div>
+                                <!-- <mat-icon class="icon-size-5 absolute right-0" *ngIf="!mail.sentAt" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon> -->
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </fuse-card>
+
+        </div>
     </div>
 
 </div>

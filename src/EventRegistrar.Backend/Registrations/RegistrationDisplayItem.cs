@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Payments.Assignments;
+﻿using EventRegistrar.Backend.Mailing;
+using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations;
@@ -31,4 +32,14 @@ public class RegistrationDisplayItem
 
     public IEnumerable<SpotDisplayItem>? Spots { get; set; }
     public IEnumerable<AssignedPaymentDisplayItem>? Payments { get; set; }
+    public IEnumerable<MailDisplayItem>? Mails { get; set; }
+}
+
+public class MailDisplayItem
+{
+    public Guid MailId { get; set; }
+    public string? Subject { get; set; }
+    public MailState? State { get; set; }
+    public DateTimeOffset Created { get; set; }
+    public DateTimeOffset? SentAt { get; set; }
 }
