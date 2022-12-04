@@ -38,6 +38,8 @@ import { FormMappingComponent } from './modules/admin/registration-forms/form-ma
 import { FormMappingResolver } from './modules/admin/registration-forms/form-mapping/form-mapping.resolver';
 import { PricingResolver } from './modules/admin/pricing/pricing.resolver';
 import { PricingComponent } from './modules/admin/pricing/pricing.component';
+import { MailViewerComponent } from './modules/admin/mailing/mails/mail-viewer/mail-viewer.component';
+import { MailViewerResolver } from './modules/admin/mailing/mails/mail-viewer/mail-viewer.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -131,6 +133,14 @@ export const appRoutes: Route[] =
                     canActivate: [AuthGuard],
                     component: AutoMailPreviewComponent,
                     resolve: { initialData: AutoMailPreviewResolver }
+                },
+
+                // mail view (no layout)
+                {
+                    path: 'mail-viewer/:mailId',
+                    canActivate: [AuthGuard],
+                    component: MailViewerComponent,
+                    resolve: { initialData: MailViewerResolver }
                 },
 
                 // Admin routes

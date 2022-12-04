@@ -84,6 +84,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
 import { SharedModule } from './shared/shared.module';
 import { FileUploadComponent } from './modules/admin/infrastructure/file-upload/file-upload.component';
+import { MailViewerComponent } from './modules/admin/mailing/mails/mail-viewer/mail-viewer.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -116,7 +117,8 @@ const routerConfig: ExtraOptions = {
         TagsPickerComponent,
         PricingComponent,
         RegistrableDetailComponent,
-        FileUploadComponent
+        FileUploadComponent,
+        MailViewerComponent
     ],
     providers: [
         AuthServiceFuse,

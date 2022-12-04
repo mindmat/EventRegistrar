@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MailType, MailTypeItem, RegistrationDisplayItem, SpotDisplayInfo, SpotDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
+import { EventService } from '../events/event.service';
 import { NavigatorService } from '../navigator.service';
 import { RegistrationService } from './registration.service';
 
@@ -17,7 +18,8 @@ export class RegistrationComponent implements OnInit
   constructor(
     private service: RegistrationService,
     public navigator: NavigatorService,
-    private changeDetectorRef: ChangeDetectorRef) { }
+    private changeDetectorRef: ChangeDetectorRef,
+    private eventService: EventService) { }
 
   ngOnInit(): void
   {
@@ -49,6 +51,12 @@ export class RegistrationComponent implements OnInit
       this.service.createAutoMail(this.registration.id, mailTypeItem.type)
         .subscribe();
     }
+  }
+
+  viewMail(mailId: string)
+  {
+    var url = `${this.eventService.selected.acronym}/mail-viewer/${mailId}`;
+    window.open(url, '_blank', 'location=yes,height=1000,width=800,scrollbars=yes,status=yes'); // Open new window
   }
 
   getRegistrableUrl(spot: SpotDisplayItem): string

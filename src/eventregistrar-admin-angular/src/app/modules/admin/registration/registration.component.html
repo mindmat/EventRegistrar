@@ -195,7 +195,12 @@
                     <ng-container *ngFor="let mail of registration.mails">
                         <div class="flex flex-col rounded-xl bg-default shadow p-3">
                             <div class="flex flex-col">
-                                <div>{{ mail.subject }}</div>
+                                <div class="flex flex-row items-center">
+                                    <div>{{ mail.subject }}</div>
+                                    <button mat-icon-button (click)="viewMail(mail.mailId)" class="ml-auto">
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:eye'"></mat-icon>
+                                    </button>
+                                </div>
                                 <div class="text-md leading-none text-secondary mt-1" *ngIf="mail.sentAt">{{ mail.sentAt | date: 'dd.MM.yy hh:mm' }}</div>
                                 <div class="text-md leading-none text-secondary mt-1" *ngIf="!mail.sentAt">({{ mail.created | date: 'dd.MM.yy hh:mm' }})</div>
                                 <!-- <mat-icon class="icon-size-5 absolute right-0" *ngIf="!mail.sentAt" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon> -->
