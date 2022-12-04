@@ -143,7 +143,7 @@ container.RegisterSingleton<IDateTimeProvider, DateTimeProvider>();
 container.RegisterSingleton(() =>
 {
     var cs = builder.Configuration.GetValue<string>("ServiceBus_ConnectionString");
-    return cs == null
+    return cs != null
                ? new ServiceBusClient(cs)
                : new ServiceBusClient(builder.Configuration.GetValue<string>("ServiceBusNamespace"), new DefaultAzureCredential());
 });
