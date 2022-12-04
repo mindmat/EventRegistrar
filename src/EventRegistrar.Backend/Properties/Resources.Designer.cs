@@ -295,6 +295,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mail erstellen.
+        /// </summary>
+        internal static string CreateMail {
+            get {
+                return ResourceManager.GetString("CreateMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nachfolge-Event erstellen.
         /// </summary>
         internal static string CreateSuccessorEvent {

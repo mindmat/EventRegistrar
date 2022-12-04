@@ -1,11 +1,8 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Events;
+﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Mailing.Bulk;
 

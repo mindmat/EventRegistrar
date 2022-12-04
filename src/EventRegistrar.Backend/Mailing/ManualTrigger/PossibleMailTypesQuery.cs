@@ -1,4 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
+﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
 
@@ -13,13 +13,16 @@ public class PossibleMailTypesQuery : IRequest<IEnumerable<MailTypeItem>>, IEven
 public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQuery, IEnumerable<MailTypeItem>>
 {
     private readonly IQueryable<MailTemplate> _mailTemplates;
+    private readonly EnumTranslator _enumTranslator;
     private readonly IQueryable<Registration> _registrations;
 
     public PossibleMailTypesQueryHandler(IQueryable<Registration> registrations,
-                                         IQueryable<MailTemplate> mailTemplates)
+                                         IQueryable<MailTemplate> mailTemplates,
+                                         EnumTranslator enumTranslator)
     {
         _registrations = registrations;
         _mailTemplates = mailTemplates;
+        _enumTranslator = enumTranslator;
     }
 
     public async Task<IEnumerable<MailTypeItem>> Handle(PossibleMailTypesQuery query,
@@ -40,15 +43,17 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
                                                              && tpl.BulkMailKey != null
                                                              && !tpl.IsDeleted
                                                              && tpl.Mails!.Any())
-                                                  .Select(tpl =>
-                                                              new MailTypeItem
-                                                              { BulkMailKey = tpl.BulkMailKey, UserText = tpl.Subject })
+                                                  .Select(tpl => new MailTypeItem
+                                                                 {
+                                                                     BulkMailKey = tpl.BulkMailKey,
+                                                                     UserText = tpl.Subject
+                                                                 })
                                                   .ToListAsync(cancellationToken);
 
         return possibleMailTypes.Select(typ => new MailTypeItem
                                                {
                                                    Type = typ,
-                                                   UserText = Properties.Resources.ResourceManager.GetString($"MailType_{typ}") ?? typ.ToString()
+                                                   UserText = _enumTranslator.Translate(typ)
                                                })
                                 .Union(activeBulkMails);
     }
@@ -117,5 +122,5 @@ public class MailTypeItem
 {
     public string? BulkMailKey { get; set; }
     public MailType? Type { get; set; }
-    public string UserText { get; set; } = null!;
+    public string? UserText { get; set; }
 }

@@ -58,7 +58,7 @@ public class StartUpdateReadModelsOfEventCommandHandler : IRequestHandler<StartU
 
                 foreach (var registrationId in registrationIds)
                 {
-                    _readModelUpdater.TriggerUpdate<RegistrationReadModelCalculator>(registrationId, eventId);
+                    _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registrationId, eventId);
                 }
             }
 

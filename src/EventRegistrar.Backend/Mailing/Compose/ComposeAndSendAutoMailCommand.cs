@@ -1,9 +1,11 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.ReadModels;
 
 using Newtonsoft.Json;
 
@@ -24,6 +26,7 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
     public const string FallbackLanguage = Language.English;
 
     private readonly ILogger _log;
+    private readonly ReadModelUpdater _readModelUpdater;
     private readonly MailComposer _mailComposer;
     private readonly IRepository<Mail> _mails;
     private readonly IRepository<MailToRegistration> _mailsToRegistrations;
@@ -41,7 +44,8 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
                                                 MailComposer mailComposer,
                                                 CommandQueue commandQueue,
                                                 IDateTimeProvider dateTimeProvider,
-                                                ILogger log)
+                                                ILogger log,
+                                                ReadModelUpdater readModelUpdater)
     {
         _templates = templates;
         _registrations = registrations;
@@ -52,12 +56,13 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
         _commandQueue = commandQueue;
         _dateTimeProvider = dateTimeProvider;
         _log = log;
+        _readModelUpdater = readModelUpdater;
     }
 
     public async Task<Unit> Handle(ComposeAndSendAutoMailCommand command, CancellationToken cancellationToken)
     {
-        string dataTypeFullName = null;
-        string dataJson = null;
+        string? dataTypeFullName = null;
+        string? dataJson = null;
         if (command.Data != null)
         {
             try
@@ -107,13 +112,13 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
 
         var content = await _mailComposer.Compose(command.RegistrationId, template.ContentHtml, language, cancellationToken);
 
-        var mappings = new List<Registration> { registration };
+        var registrations_Recipients = new List<Registration> { registration };
         if (registration.RegistrationId_Partner != null
          && partnerRegistration != null
          && command.MailType != MailType.OptionsForRegistrationsOnWaitingList
          && command.MailType != MailType.RegistrationCancelled)
         {
-            mappings.Add(partnerRegistration);
+            registrations_Recipients.Add(partnerRegistration);
         }
 
         var withhold = !template.ReleaseImmediately
@@ -127,21 +132,21 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
                        SenderMail = _configuration.SenderMail,
                        SenderName = _configuration.SenderName,
                        Subject = template.Subject,
-                       Recipients = mappings.Select(reg => reg.RespondentEmail?.ToLowerInvariant())
-                                            .Distinct()
-                                            .StringJoinNullable(";"),
+                       Recipients = registrations_Recipients.Select(reg => reg.RespondentEmail?.ToLowerInvariant())
+                                                            .Distinct()
+                                                            .StringJoinNullable(";"),
                        Withhold = withhold,
                        Created = _dateTimeProvider.Now,
                        ContentHtml = content
                    };
 
         _mails.InsertObjectTree(mail);
-        foreach (var mailToRegistration in mappings.Select(reg => new MailToRegistration
-                                                                  {
-                                                                      Id = Guid.NewGuid(),
-                                                                      MailId = mail.Id,
-                                                                      RegistrationId = reg.Id
-                                                                  }))
+        foreach (var mailToRegistration in registrations_Recipients.Select(reg => new MailToRegistration
+                                                                                  {
+                                                                                      Id = Guid.NewGuid(),
+                                                                                      MailId = mail.Id,
+                                                                                      RegistrationId = reg.Id
+                                                                                  }))
         {
             await _mailsToRegistrations.InsertOrUpdateEntity(mailToRegistration, cancellationToken);
         }
@@ -160,16 +165,18 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
                                                    Email = mail.SenderMail,
                                                    Name = mail.SenderName
                                                },
-                                      To = mappings.Select(reg =>
-                                                               new EmailAddress
-                                                               {
-                                                                   Email = reg.RespondentEmail,
-                                                                   Name = reg.RespondentFirstName
-                                                               })
-                                                   .ToList()
+                                      To = registrations_Recipients.Select(reg =>
+                                                                               new EmailAddress
+                                                                               {
+                                                                                   Email = reg.RespondentEmail,
+                                                                                   Name = reg.RespondentFirstName
+                                                                               })
+                                                                   .ToList()
                                   };
             _commandQueue.EnqueueCommand(sendMailCommand);
         }
+
+        registrations_Recipients.ForEach(reg => _readModelUpdater.TriggerUpdate<RegistrationCalculator>(reg.Id, reg.EventId));
 
         // ToDo
         //foreach (var registrable in registrablesToCheckWaitingList)

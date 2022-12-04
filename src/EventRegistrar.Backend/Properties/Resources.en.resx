@@ -195,6 +195,9 @@
   <data name="Create" xml:space="preserve">
     <value>Create</value>
   </data>
+  <data name="CreateMail" xml:space="preserve">
+    <value>Create mail</value>
+  </data>
   <data name="CreateSuccessorEvent" xml:space="preserve">
     <value>Create successor event</value>
   </data>

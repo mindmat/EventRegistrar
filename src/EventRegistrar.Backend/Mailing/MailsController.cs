@@ -74,16 +74,6 @@ public class MailsController : Controller
                                     });
     }
 
-    [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails")]
-    public async Task<IEnumerable<MailDisplayItem>> GetMailsOfRegistration(string eventAcronym, Guid registrationId)
-    {
-        return await _mediator.Send(new MailsOfRegistrationQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                        RegistrationId = registrationId
-                                    });
-    }
-
     [HttpGet("api/events/{eventAcronym}/mails/notreceived")]
     public async Task<IEnumerable<NotReceivedMail>> GetNotReceivedMails(string eventAcronym)
     {
@@ -93,15 +83,6 @@ public class MailsController : Controller
                                     });
     }
 
-    [HttpGet("api/events/{eventAcronym}/registrations/{registrationId:guid}/possibleMailTypes")]
-    public async Task<IEnumerable<MailTypeItem>> GetPossibleMailTypes(string eventAcronym, Guid registrationId)
-    {
-        return await _mediator.Send(new PossibleMailTypesQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                        RegistrationId = registrationId
-                                    });
-    }
 
     [HttpPost("api/events/{eventAcronym}/mails/import")]
     public async Task ImportMails(string eventAcronym)

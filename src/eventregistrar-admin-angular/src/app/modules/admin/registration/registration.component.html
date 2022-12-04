@@ -179,11 +179,14 @@
                 <div class="flex items-center justify-between">
                     <div class="text-2xl font-semibold leading-tight">{{ 'Mails' | translate }}</div>
                     <div class="-mr-3">
-                        <button mat-icon-button [matMenuTriggerFor]="mailsMenu">
+                        <button mat-icon-button [matMenuTriggerFor]="mailsMenu" (click)="fetchPossibleMailTypes()">
                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                         </button>
                         <mat-menu #mailsMenu="matMenu">
-                            <!-- <button mat-menu-item>Clear activities</button> -->
+                            <button mat-menu-item [matMenuTriggerFor]="mailTypesMenu">{{ 'CreateMail' | translate }}</button>
+                        </mat-menu>
+                        <mat-menu #mailTypesMenu>
+                            <button *ngFor="let mailType of possibleMailTypes" mat-menu-item (click)="createMail(mailType)">{{ mailType.userText }}</button>
                         </mat-menu>
                     </div>
                 </div>

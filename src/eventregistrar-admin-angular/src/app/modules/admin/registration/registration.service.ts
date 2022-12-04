@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, RegistrationDisplayItem } from 'app/api/api';
+import { Api, MailType, MailTypeItem, RegistrationDisplayItem } from 'app/api/api';
 import { tap, BehaviorSubject, filter, map, Observable } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { NotificationService } from '../infrastructure/notification.service';
@@ -44,5 +44,34 @@ export class RegistrationService
         return reg;
       })
     );
+  }
+
+  getPossibleMailTypes(registrationId: string): Observable<MailTypeItem[]>
+  {
+    return this.api.possibleMailTypes_Query({ eventId: this.eventService.selectedId, registrationId: registrationId });
+  }
+
+  createAutoMail(registrationId: string, mailType: MailType): Observable<any>
+  {
+    return this.api.composeAndSendAutoMail_Command(
+      {
+        eventId: this.eventService.selectedId,
+        registrationId,
+        allowDuplicate: true,
+        withhold: true,
+        mailType
+      });
+  }
+
+  createBulkMail(registrationId: string, bulkMailKey: string): Observable<any>
+  {
+    return this.api.composeAndSendBulkMail_Command(
+      {
+        eventId: this.eventService.selectedId,
+        registrationId,
+        allowDuplicate: true,
+        withhold: true,
+        bulkMailKey
+      });
   }
 }
