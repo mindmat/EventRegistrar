@@ -252,6 +252,9 @@
   <data name="EventState_Setup" xml:space="preserve">
     <value>Setup</value>
   </data>
+  <data name="ExistingAssignments" xml:space="preserve">
+    <value>Existing assignments</value>
+  </data>
   <data name="FirstName" xml:space="preserve">
     <value>First Name</value>
   </data>
@@ -626,6 +629,9 @@
   </data>
   <data name="SearchByNameIbanMessage" xml:space="preserve">
     <value>Search by name, IBAN, message</value>
+  </data>
+  <data name="SearchByNameMailPhone" xml:space="preserve">
+    <value>Search by name, mail, phone</value>
   </data>
   <data name="SearchPlaceholder" xml:space="preserve">
     <value>Search...</value>

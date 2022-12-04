@@ -46,10 +46,10 @@
 
                 <!-- payment completion -->
                 <div class="relative h-0.5">
-                    <div class="z-10 absolute inset-x-0 h-6" matTooltip="{{ match.amountPaid | number: '1.2-2' }} von {{ match.amount | number : '1.2-2' }} bezahlt" [matTooltipPosition]="'above'"
+                    <div class="z-10 absolute inset-x-0 h-6" matTooltip="{{ match.amountPaid | number: '1.2-2' }} von {{ match.price | number : '1.2-2' }} bezahlt" [matTooltipPosition]="'above'"
                         [matTooltipClass]="'-mb-0.5'">
                     </div>
-                    <mat-progress-bar class="h-0.5" [value]="100 * match.amountPaid / match.amount">
+                    <mat-progress-bar class="h-0.5" [value]="100 * match.amountPaid / match.price">
                     </mat-progress-bar>
                 </div>
 

@@ -14,9 +14,8 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
   public difference: number;
   public openRegistrationAmount: number;
   public maxAmountToAssign: number;
-  @Input() openPaymentAmount: number = 0;
-  @Input() candidate?: AssignmentCandidateRegistrationEditItem;
-  @Input() paymentType?: PaymentType;
+  @Input() payment: Payment;
+  @Input() candidate?: SettlementCandidate;
   @Output() assign = new EventEmitter<AssignmentRequest>();
 
   constructor(private fb: FormBuilder,
@@ -33,11 +32,11 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
     // Active item id
     if ('candidate' in changes)
     {
-      this.openRegistrationAmount = this.paymentType == PaymentType.Incoming
+      this.openRegistrationAmount = this.payment.type == PaymentType.Incoming
         ? Math.max(0, this.candidate.price - this.candidate.amountPaid)
         : Math.max(0, this.candidate.amountPaid);
-      this.maxAmountToAssign = this.paymentType == PaymentType.Incoming
-        ? Math.min(Math.max(0, this.openPaymentAmount), Math.max(0, this.candidate.price - this.candidate.amountPaid))
+      this.maxAmountToAssign = this.payment.type == PaymentType.Incoming
+        ? Math.min(Math.max(0, this.payment.openAmount), Math.max(0, this.candidate.price - this.candidate.amountPaid))
         : Math.max(0, this.candidate.amountPaid);
       this.candidateForm = this.fb.group({
         amountAssigned: [this.maxAmountToAssign, [Validators.required, Validators.min(0.01), Validators.max(this.maxAmountToAssign)]],
@@ -45,7 +44,6 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
         acceptDifferenceReason: ['']
       });
       this.checkDifference(this.candidateForm.value);
-
       this.candidateForm.valueChanges.subscribe(values =>
       {
         this.checkDifference(values);
@@ -64,7 +62,7 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
     if (!this.candidate.locked)
     {
       this.assign.emit({
-        paymentId: this.candidate.paymentId,
+        paymentId: this.payment.id,
         registrationId: this.candidate.registrationId,
         amount: this.candidateForm.get('amountAssigned').value,
         acceptDifference: this.candidateForm.get('acceptDifference').value,
@@ -81,4 +79,23 @@ export interface AssignmentRequest
   amount: number;
   acceptDifference: boolean;
   acceptDifferenceReason: string;
+}
+
+export interface SettlementCandidate
+{
+  registrationId?: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  price?: number;
+  amountPaid?: number;
+  amountMatch: boolean;
+  locked: boolean;
+}
+
+export interface Payment
+{
+  id: string;
+  type: PaymentType;
+  openAmount: number;
+  // locked: boolean;
 }

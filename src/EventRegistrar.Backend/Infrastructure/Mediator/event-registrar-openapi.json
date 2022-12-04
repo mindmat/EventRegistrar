@@ -4725,7 +4725,7 @@
           "state": {
             "$ref": "#/components/schemas/RegistrationState"
           },
-          "amount": {
+          "price": {
             "type": "number",
             "format": "decimal"
           },

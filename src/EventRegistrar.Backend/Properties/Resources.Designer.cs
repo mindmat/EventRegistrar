@@ -61,6 +61,33 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Differenz von {{difference}} akzeptieren.
+        /// </summary>
+        internal static string AcceptDifferenceAmount {
+            get {
+                return ResourceManager.GetString("AcceptDifferenceAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Damit gilt die Anmeldung trotz unvollständiger Zahlung als bezahlt.
+        /// </summary>
+        internal static string AcceptDifferenceExplanation {
+            get {
+                return ResourceManager.GetString("AcceptDifferenceExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Begründung.
+        /// </summary>
+        internal static string AcceptDifferenceReason {
+            get {
+                return ResourceManager.GetString("AcceptDifferenceReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bestätigungsmail.
         /// </summary>
         internal static string AcceptedMail {
@@ -678,6 +705,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bestehende Zuordnungen.
+        /// </summary>
+        internal static string ExistingAssignments {
+            get {
+                return ResourceManager.GetString("ExistingAssignments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vorname.
         /// </summary>
         internal static string FirstName {
@@ -1025,6 +1061,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string MailPlaceholder_UnpaidAmount {
             get {
                 return ResourceManager.GetString("MailPlaceholder_UnpaidAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mails.
+        /// </summary>
+        internal static string Mails {
+            get {
+                return ResourceManager.GetString("Mails", resourceCulture);
             }
         }
         
@@ -1830,6 +1875,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Suche nach Name, Mail, Phone.
+        /// </summary>
+        internal static string SearchByNameMailPhone {
+            get {
+                return ResourceManager.GetString("SearchByNameMailPhone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Suche....
         /// </summary>
         internal static string SearchPlaceholder {
@@ -1961,6 +2015,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string SMS {
             get {
                 return ResourceManager.GetString("SMS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plätze.
+        /// </summary>
+        internal static string Spots {
+            get {
+                return ResourceManager.GetString("Spots", resourceCulture);
             }
         }
         

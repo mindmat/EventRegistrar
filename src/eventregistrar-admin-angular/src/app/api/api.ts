@@ -6838,7 +6838,7 @@ export interface RegistrationMatch {
     email?: string | null;
     isWaitingList?: boolean;
     state?: RegistrationState;
-    amount?: number;
+    price?: number;
     amountPaid?: number;
     stateText?: string;
     spots?: SpotShort[];

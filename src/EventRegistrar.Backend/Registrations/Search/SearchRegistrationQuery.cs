@@ -54,7 +54,7 @@ public class SearchRegistrationQueryHandler : IRequestHandler<SearchRegistration
                                                LastName = reg.LastName,
                                                Email = reg.Email,
                                                ReceivedAt = reg.ReceivedAt,
-                                               Amount = reg.Price ?? 0m,
+                                               Price = reg.Price ?? 0m,
                                                AmountPaid = reg.Paid,
                                                State = reg.Status,
                                                StateText = reg.Status.ToString(),
@@ -78,7 +78,7 @@ public class RegistrationMatch
     public string? Email { get; set; }
     public bool IsWaitingList { get; set; }
     public RegistrationState State { get; set; }
-    public decimal Amount { get; set; }
+    public decimal Price { get; set; }
     public decimal AmountPaid { get; set; }
     public string StateText { get; set; }
     public IEnumerable<SpotShort> Spots { get; set; } = null!;

@@ -4,14 +4,14 @@
     <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
         <!-- Title -->
         <div class="flex-1 min-w-0">
-            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ (paymentType === PaymentType.Incoming ? 'AssignIncoming' : 'AssignOutgoing') | translate }}</div>
-            <div *ngIf="openAmount !== null" class="mt-1.5 text-lg text-secondary">Offen {{ openAmount | number: '1.2-2' }}</div>
+            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ (payment.type === PaymentType.Incoming ? 'AssignIncoming' : 'AssignOutgoing') | translate }}</div>
+            <div *ngIf="payment.openAmount !== null" class="mt-1.5 text-lg text-secondary">Offen {{ payment.openAmount | number: '1.2-2' }}</div>
         </div>
         <!-- Filters -->
-        <!-- <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
             <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-            <input (input)="filterByQuery(query.value)" placeholder="Search by title or description" matInput #query>
-        </mat-form-field> -->
+            <input (input)="searchCandidates(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query>
+        </mat-form-field>
     </div>
 
     <div class="flex flex-col p-6 sm:p-8 sm:pt-4 overflow-y-auto">
@@ -20,7 +20,7 @@
         <div *ngIf="existingAssignments?.length > 0" class="p-2 rounded-xl bg-default">
 
             <div class="flex flex-row items-baseline gap-x-2 ml-6">
-                <div class="font-medium">Bestehende Zuordnungen</div>
+                <div class="font-medium">{{ 'ExistingAssignments' | translate }}</div>
                 <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
             </div>
 
@@ -50,18 +50,24 @@
         </div>
 
         <!-- Registration candidates -->
-        <div *ngIf="candidates?.length > 0" class="p-2 rounded-xl bg-default">
+        <div *ngIf="candidates?.length > 0 || searchMatches?.length > 0" class="p-2 rounded-xl bg-default">
 
             <div class="flex flex-row items-baseline gap-x-2 ml-6">
-                <div class="font-medium">{{ (paymentType === PaymentType.Incoming ? 'RegistrationCandidatesForIncomingPayment' : 'RegistrationCandidatesForOutgoingPayment') | translate }}</div>
+                <div class="font-medium">{{ (payment.type === PaymentType.Incoming ? 'RegistrationCandidatesForIncomingPayment' : 'RegistrationCandidatesForOutgoingPayment') | translate }}</div>
                 <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
             </div>
 
             <!-- Bookings -->
-            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
-                <!-- Booking -->
+            <div *ngIf="!query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <ng-container *ngFor="let candidate of candidates">
-                    <app-assignment-candidate-registration [paymentType]="paymentType" [candidate]="candidate" [openPaymentAmount]="openAmount" (assign)="assign($event)">
+                    <app-assignment-candidate-registration [payment]="payment" [candidate]="candidate" (assign)="assign($event)">
+                    </app-assignment-candidate-registration>
+                </ng-container>
+            </div>
+
+            <div *ngIf="query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+                <ng-container *ngFor="let searchMatch of searchMatches">
+                    <app-assignment-candidate-registration [payment]="payment" [candidate]="searchMatch" (assign)="assign($event)">
                     </app-assignment-candidate-registration>
                 </ng-container>
             </div>

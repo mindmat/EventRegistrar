@@ -10,7 +10,15 @@ import { NotificationService } from '../../infrastructure/notification.service';
 })
 export class SettlePaymentService extends FetchService<PaymentAssignments>
 {
-  private paymentId: string;
+  private _paymentId: string;
+  public get paymentId(): string
+  {
+    return this._paymentId;
+  }
+  private set paymentId(value: string)
+  {
+    this._paymentId = value;
+  }
 
   constructor(private api: Api,
     private eventService: EventService,

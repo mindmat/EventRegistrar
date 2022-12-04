@@ -1,9 +1,10 @@
-import { AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType } from 'app/api/api';
-import { BehaviorSubject, combineLatest, combineLatestWith, filter, fromEvent, merge, Observable, Subject, takeUntil, tap } from 'rxjs';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType, RegistrationMatch } from 'app/api/api';
+import { BehaviorSubject, debounce, debounceTime, filter, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
-import { AssignmentRequest } from './assignment-candidate-registration/assignment-candidate-registration.component';
+import { AssignmentRequest, Payment, SettlementCandidate } from './assignment-candidate-registration/assignment-candidate-registration.component';
+import { SearchRegistrationsForSettlementService } from './search-registrations-for-settlement.service';
 import { SettlePaymentService } from './settle-payment.service';
 
 @Component({
@@ -14,19 +15,20 @@ export class SettlePaymentComponent implements OnInit
 {
   private unsubscribeAll: Subject<any> = new Subject<any>();
   private paymentId$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+  private searchQuery$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   private assignmentRequests: BehaviorSubject<AssignmentRequest | null> = new BehaviorSubject(null);
 
   existingAssignments: ExistingAssignment[];
   candidates: AssignmentCandidateRegistrationEditItem[];
-  openAmount?: number = null;
-  paymentType?: PaymentType = null;
-
+  searchMatches: (RegistrationMatch & { locked: boolean; amountMatch: boolean; })[];
+  payment?: Payment | null = null;
   PaymentType = PaymentType;
 
   constructor(private service: SettlePaymentService,
     public navigator: NavigatorService,
     private changeDetectorRef: ChangeDetectorRef,
-    private route: ActivatedRoute) { }
+    private route: ActivatedRoute,
+    private searchRegistrationsService: SearchRegistrationsForSettlementService) { }
 
   ngOnInit(): void
   {
@@ -34,8 +36,11 @@ export class SettlePaymentComponent implements OnInit
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe((assignments: PaymentAssignments) =>
       {
-        this.openAmount = assignments.openAmount;
-        this.paymentType = assignments.type;
+        this.payment = {
+          id: this.service.paymentId,
+          openAmount: assignments.openAmount,
+          type: assignments.type
+        };
         this.existingAssignments = assignments.existingAssignments;
         this.candidates = assignments.registrationCandidates?.map(candidate => (
           {
@@ -57,17 +62,33 @@ export class SettlePaymentComponent implements OnInit
         takeUntil(this.unsubscribeAll),
         filter(request => !!request))
       .subscribe((request) => this.service.assign(
-        this.paymentType,
+        this.payment.type,
         request.paymentId,
         request.registrationId,
         request.amount,
         request.acceptDifference,
         request.acceptDifferenceReason));
+
+    this.searchQuery$.pipe(
+      debounceTime(300),
+    ).subscribe(query => this.searchRegistrationsService.fetchItemsOf(query));
+
+    this.searchRegistrationsService.matches$.subscribe(matches =>
+    {
+      this.searchMatches = matches?.map(match =>
+      {
+        return {
+          ...match,
+          locked: false,
+          amountMatch: this.payment.openAmount == (match.price - match.amountPaid)
+        };
+      });
+      this.changeDetectorRef.markForCheck();
+    });
   }
 
   assign(request: AssignmentRequest): void
   {
-    console.log(request);
     this.assignmentRequests.next(request);
   }
 
@@ -81,12 +102,19 @@ export class SettlePaymentComponent implements OnInit
     candidate.amountToAssign = amountToAssign;
     candidate.difference = candidate.price - candidate.amountPaid - candidate.amountToAssign;
   }
+
+  searchCandidates(query: string)
+  {
+    this.searchQuery$.next(query);
+  }
 }
 
 
-export interface AssignmentCandidateRegistrationEditItem extends AssignmentCandidateRegistration
+export interface AssignmentCandidateRegistrationEditItem extends AssignmentCandidateRegistration, SettlementCandidate
 {
+  firstName: string;
+  lastName: string;
   amountToAssign: number;
   difference: number;
-  locked: boolean;
+  amountMatch: boolean;
 }
