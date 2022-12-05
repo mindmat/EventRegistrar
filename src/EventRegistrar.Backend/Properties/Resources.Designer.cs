@@ -97,6 +97,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zugriffsanfragen.
+        /// </summary>
+        internal static string AccessRequests {
+            get {
+                return ResourceManager.GetString("AccessRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Berechtigungen.
         /// </summary>
         internal static string AccessRights {
@@ -2051,6 +2060,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Tag {
             get {
                 return ResourceManager.GetString("Tag", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teammitglieder.
+        /// </summary>
+        internal static string TeamMembers {
+            get {
+                return ResourceManager.GetString("TeamMembers", resourceCulture);
             }
         }
         

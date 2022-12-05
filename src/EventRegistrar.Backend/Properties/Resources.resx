@@ -129,6 +129,9 @@
   <data name="AcceptedMail" xml:space="preserve">
     <value>Bestätigungsmail</value>
   </data>
+  <data name="AccessRequests" xml:space="preserve">
+    <value>Zugriffsanfragen</value>
+  </data>
   <data name="AccessRights" xml:space="preserve">
     <value>Berechtigungen</value>
   </data>
@@ -780,6 +783,9 @@
   </data>
   <data name="Tag" xml:space="preserve">
     <value>Tag</value>
+  </data>
+  <data name="TeamMembers" xml:space="preserve">
+    <value>Teammitglieder</value>
   </data>
   <data name="to" xml:space="preserve">
     <value>an</value>

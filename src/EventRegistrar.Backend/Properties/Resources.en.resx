@@ -129,6 +129,9 @@
   <data name="AcceptedMail" xml:space="preserve">
     <value>Accepted mail</value>
   </data>
+  <data name="AccessRequests" xml:space="preserve">
+    <value>Access requests</value>
+  </data>
   <data name="AccessRights" xml:space="preserve">
     <value>Access rights</value>
   </data>
@@ -689,6 +692,9 @@
   </data>
   <data name="Tag" xml:space="preserve">
     <value>Tag</value>
+  </data>
+  <data name="TeamMembers" xml:space="preserve">
+    <value>Team members</value>
   </data>
   <data name="to" xml:space="preserve">
     <value>to</value>
