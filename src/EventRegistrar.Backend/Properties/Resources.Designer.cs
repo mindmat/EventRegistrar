@@ -1317,6 +1317,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Partner zuordnen.
+        /// </summary>
+        internal static string MatchPartners {
+            get {
+                return ResourceManager.GetString("MatchPartners", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maximales Ungleichgewicht.
         /// </summary>
         internal static string MaxAllowedImbalance {
@@ -1385,6 +1394,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string NoSearchResults {
             get {
                 return ResourceManager.GetString("NoSearchResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alle Partner sind zugeordnet.
+        /// </summary>
+        internal static string NoUnmatchedRegistrations {
+            get {
+                return ResourceManager.GetString("NoUnmatchedRegistrations", resourceCulture);
             }
         }
         
@@ -2096,6 +2114,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string TriggerMoveUp {
             get {
                 return ResourceManager.GetString("TriggerMoveUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nicht zugeordnete Anmeldungen.
+        /// </summary>
+        internal static string UnmatchedRegistrations {
+            get {
+                return ResourceManager.GetString("UnmatchedRegistrations", resourceCulture);
             }
         }
         

@@ -59,7 +59,7 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
     }
 
     private static IEnumerable<MailType> GetPossibleMailTypes(Registration registration,
-                                                              Registration partnerRegistration)
+                                                              Registration? partnerRegistration)
     {
         if (registration.State == RegistrationState.Cancelled)
         {

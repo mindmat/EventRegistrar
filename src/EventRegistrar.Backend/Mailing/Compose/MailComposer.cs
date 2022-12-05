@@ -50,12 +50,12 @@ public class MailComposer
         var registration = await _registrations.Where(reg => reg.Id == registrationId)
                                                .Include(reg => reg.Seats_AsLeader!)
                                                .ThenInclude(seat => seat.Registrable)
-                                               .Include(reg => reg.Seats_AsFollower)
+                                               .Include(reg => reg.Seats_AsFollower!)
                                                .ThenInclude(seat => seat.Registrable)
-                                               .Include(reg => reg.Responses)
+                                               .Include(reg => reg.Responses!)
                                                .ThenInclude(rsp => rsp.Question)
                                                .Include(reg => reg.Cancellations)
-                                               .Include(reg => reg.Mails)
+                                               .Include(reg => reg.Mails!)
                                                .ThenInclude(map => map.Mail)
                                                .FirstAsync(cancellationToken);
 
@@ -70,14 +70,14 @@ public class MailComposer
         {
             _log.LogInformation($"Prefixes {string.Join(",", templateFiller.Prefixes)}");
             partnerRegistration = await _registrations.Where(reg => reg.Id == registration.RegistrationId_Partner)
-                                                      .Include(reg => reg.Seats_AsLeader)
+                                                      .Include(reg => reg.Seats_AsLeader!)
                                                       .ThenInclude(seat => seat.Registrable)
-                                                      .Include(reg => reg.Seats_AsFollower)
+                                                      .Include(reg => reg.Seats_AsFollower!)
                                                       .ThenInclude(seat => seat.Registrable)
-                                                      .Include(reg => reg.Responses)
+                                                      .Include(reg => reg.Responses!)
                                                       .ThenInclude(rsp => rsp.Question)
                                                       .Include(reg => reg.Cancellations)
-                                                      .Include(reg => reg.Mails)
+                                                      .Include(reg => reg.Mails!)
                                                       .ThenInclude(map => map.Mail)
                                                       .FirstOrDefaultAsync(cancellationToken);
             if (mainRegistrationRole == Role.Leader)

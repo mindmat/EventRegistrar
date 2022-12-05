@@ -32,7 +32,7 @@ public class SecretReader
         return response.Value.Value;
     }
 
-    private SecretClient? CreateSecretClient(IConfiguration configuration)
+    private SecretClient CreateSecretClient(IConfiguration configuration)
     {
         var keyVaultUri = configuration.GetValue<string>(_keyVaultConfigKey)
                        ?? throw new ConfigurationException(_keyVaultConfigKey);

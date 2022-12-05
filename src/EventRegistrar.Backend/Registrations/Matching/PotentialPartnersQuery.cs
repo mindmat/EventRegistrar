@@ -93,7 +93,7 @@ public class PotentialPartnersQueryHandler : IRequestHandler<PotentialPartnersQu
                                                       State = mat.State,
                                                       Partner = mat.Partner,
                                                       Registrables = mat.Registrables.ToArray(),
-                                                      IsWaitingList = mat.IsWaitingList == true,
+                                                      IsOnWaitingList = mat.IsWaitingList == true,
                                                       MatchedPartner = mat.MatchedPartner,
                                                       RegistrationId_Partner = mat.RegistrationId_Partner
                                                   })

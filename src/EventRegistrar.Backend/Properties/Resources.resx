@@ -534,6 +534,9 @@
   <data name="Mapping" xml:space="preserve">
     <value>Zuordnung</value>
   </data>
+  <data name="MatchPartners" xml:space="preserve">
+    <value>Partner zuordnen</value>
+  </data>
   <data name="MaxAllowedImbalance" xml:space="preserve">
     <value>Maximales Ungleichgewicht</value>
   </data>
@@ -557,6 +560,9 @@
   </data>
   <data name="NoSearchResults" xml:space="preserve">
     <value>Keine Treffer gefunden</value>
+  </data>
+  <data name="NoUnmatchedRegistrations" xml:space="preserve">
+    <value>Alle Partner sind zugeordnet</value>
   </data>
   <data name="OrDragDrop" xml:space="preserve">
     <value>oder Drag &amp; Drop</value>
@@ -795,6 +801,9 @@
   </data>
   <data name="TriggerMoveUp" xml:space="preserve">
     <value>Nachrücken auslösen</value>
+  </data>
+  <data name="UnmatchedRegistrations" xml:space="preserve">
+    <value>Nicht zugeordnete Anmeldungen</value>
   </data>
   <data name="Uploading" xml:space="preserve">
     <value>{{filename}} hochladen...</value>

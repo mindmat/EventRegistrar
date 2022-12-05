@@ -1,0 +1,84 @@
+<div class="flex flex-col w-full min-w-0 sm:absolute sm:inset-0 sm:overflow-hidden">
+    <mat-drawer-container class="flex-auto sm:h-full">
+
+        <!-- Drawer -->
+        <mat-drawer class="sm:w-96 dark:bg-gray-900" [autoFocus]="false" [opened]="true" [mode]="'side'" #drawer>
+            <!-- Header -->
+            <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
+                <!-- Title -->
+                <div class="text-xl font-extrabold tracking-tight leading-none">{{ 'UnmatchedRegistrations' | translate }}</div>
+                <!-- Close button -->
+                <div class="lg:hidden">
+                    <button mat-icon-button (click)="drawer.close()">
+                        <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Unmatched Registrations -->
+            <div class="flex flex-col divide-y border-t border-b">
+                <ng-container *ngIf="unmatchedRegistrations?.length > 0; else noUnmatchedRegistrations">
+                    <ng-container *ngFor="let unmatchedRegistration of unmatchedRegistrations">
+                        <div class="flex px-8 py-5 cursor-pointer"
+                            [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedUnmatchedRegistration || selectedUnmatchedRegistration.registrationId !== unmatchedRegistration.registrationId,
+                                                                                    'bg-primary-50 dark:bg-hover': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId  === unmatchedRegistration.registrationId}"
+                            (click)="selectUnmatchedRegistration(unmatchedRegistration)">
+                            <!-- <mat-icon
+                                    [ngClass]="{'text-hint': !selectedUnmatchedRegistration || selectedUnmatchedRegistration.registrationId !== unmatchedRegistration.registrationId,
+                                                                                        'text-primary dark:text-primary-500': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId  === unmatchedRegistration.registrationId}"
+                                    [svgIcon]="panel.icon">
+                                </mat-icon> -->
+                            <div class="ml-3">
+                                <div class="font-medium leading-6"
+                                    [ngClass]="{'text-primary dark:text-primary-500': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId  === unmatchedRegistration.registrationId}">
+                                    {{ unmatchedRegistration.firstName }} {{ unmatchedRegistration.lastName }}
+                                </div>
+                                <div class="mt-0.5 text-secondary">
+                                    {{ unmatchedRegistration.partner }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="z-20 flex items-center py-5 px-4 cursor-pointer border-t border-b" [routerLink]="[unmatchedRegistration.registrationId]"
+                                [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedUnmatchedRegistration || selectedUnmatchedRegistration.registrationId !== unmatchedRegistration.registrationId,
+                                                'bg-primary-50 dark:bg-hover': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId  === unmatchedRegistration.registrationId}" (click)="selectUnmatchedRegistration(unmatchedRegistration)">
+                                <div class="flex flex-col pl-2">
+                                    <div class="min-w-0">
+                                        <div class="font-medium leading-5 truncate">{{ booking.amount | number: '1.2-2' }}</div>
+                                        <div class="leading-5 truncate text-secondary" [class.text-primary]="!booking.settled" [class.dark:text-primary-500]="booking.settled">
+                                            <div *ngIf="booking.typ === CreditDebit.CRDT">von {{ booking.debitorName }}</div>
+                                            <div *ngIf="booking.typ === CreditDebit.DBIT">an {{ booking.creditorName }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col items-end self-start ml-auto pl-2">
+                                        <ng-container *ngIf="unmatchedRegistration.isWaitingList">
+                                            <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div> -->
+                    </ng-container>
+                </ng-container>
+            </div>
+        </mat-drawer>
+
+        <!-- No bookings template -->
+        <ng-template #noUnmatchedRegistrations>
+            <div class="flex flex-auto flex-col items-center justify-center h-full">
+                <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
+                <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">{{ 'NoUnmatchedRegistrations' | translate }}</div>
+            </div>
+        </ng-template>
+
+        <!-- Conversation -->
+        <ng-container *ngIf="unmatchedRegistrations?.length > 0">
+            <div class="flex-auto border-l" [ngClass]="{'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId,
+                                'hidden lg:flex': !selectedUnmatchedRegistration || !selectedUnmatchedRegistration.registrationId}">
+                <router-outlet></router-outlet>
+            </div>
+        </ng-container>
+
+
+    </mat-drawer-container>
+
+</div>

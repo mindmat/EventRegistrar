@@ -85,6 +85,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { SharedModule } from './shared/shared.module';
 import { FileUploadComponent } from './modules/admin/infrastructure/file-upload/file-upload.component';
 import { MailViewerComponent } from './modules/admin/mailing/mails/mail-viewer/mail-viewer.component';
+import { MatchPartnersComponent } from './modules/admin/registrations/match-partners/match-partners.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -118,7 +119,8 @@ const routerConfig: ExtraOptions = {
         PricingComponent,
         RegistrableDetailComponent,
         FileUploadComponent,
-        MailViewerComponent
+        MailViewerComponent,
+        MatchPartnersComponent
     ],
     providers: [
         AuthServiceFuse,

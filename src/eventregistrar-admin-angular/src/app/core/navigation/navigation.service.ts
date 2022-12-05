@@ -67,6 +67,13 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'heroicons_outline:user',
                                     link: `/${e.acronym}/registrations/search-registration`,
+                                },
+                                {
+                                    id: 'match-partners',
+                                    title: translateService.instant('MatchPartners'),
+                                    type: 'basic',
+                                    icon: 'heroicons_outline:users',
+                                    link: `/${e.acronym}/registrations/match-partners`,
                                 }
                             ]
                         },

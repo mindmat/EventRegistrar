@@ -1,16 +1,11 @@
-﻿using EventRegistrar.Backend.Authorization;
-
-using MediatR;
-
-namespace EventRegistrar.Backend.Registrations.Matching;
+﻿namespace EventRegistrar.Backend.Registrations.Matching;
 
 public class RegistrationsWithUnmatchedPartnerQuery : IEventBoundRequest, IRequest<IEnumerable<PotentialPartnerMatch>>
 {
     public Guid EventId { get; set; }
 }
 
-public class RegistrationsWithUnmatchedPartnerQueryHandler : IRequestHandler<RegistrationsWithUnmatchedPartnerQuery,
-    IEnumerable<PotentialPartnerMatch>>
+public class RegistrationsWithUnmatchedPartnerQueryHandler : IRequestHandler<RegistrationsWithUnmatchedPartnerQuery, IEnumerable<PotentialPartnerMatch>>
 {
     private readonly IQueryable<Registration> _registrations;
 
@@ -35,11 +30,10 @@ public class RegistrationsWithUnmatchedPartnerQueryHandler : IRequestHandler<Reg
                                                       LastName = reg.RespondentLastName,
                                                       State = reg.State.ToString(),
                                                       Partner = reg.PartnerOriginal,
-                                                      IsWaitingList = reg.IsOnWaitingList == true,
-                                                      Registrables = reg.Seats_AsLeader
-                                                                        .Select(spt => spt.Registrable.DisplayName)
-                                                                        .Union(reg.Seats_AsFollower.Select(spt =>
-                                                                                                               spt.Registrable.DisplayName))
+                                                      IsOnWaitingList = reg.IsOnWaitingList == true,
+                                                      Registrables = reg.Seats_AsLeader!
+                                                                        .Select(spt => spt.Registrable!.DisplayName)
+                                                                        .Union(reg.Seats_AsFollower!.Select(spt => spt.Registrable!.DisplayName))
                                                                         .ToArray()
                                                   })
                                    .ToListAsync(cancellationToken);

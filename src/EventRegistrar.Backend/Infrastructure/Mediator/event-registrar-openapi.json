@@ -5048,22 +5048,27 @@
         "additionalProperties": false,
         "properties": {
           "email": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "firstName": {
-            "type": "string"
-          },
-          "isWaitingList": {
-            "type": "boolean"
+            "type": "string",
+            "nullable": true
           },
           "lastName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
+          },
+          "isOnWaitingList": {
+            "type": "boolean"
           },
           "matchedPartner": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "partner": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "registrables": {
             "type": "array",
@@ -8386,7 +8391,8 @@
             ]
           },
           "userText": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },

@@ -6947,12 +6947,12 @@ export interface MatchPartnerRegistrationsCommand {
 }
 
 export interface PotentialPartnerMatch {
-    email?: string;
-    firstName?: string;
-    isWaitingList?: boolean;
-    lastName?: string;
-    matchedPartner?: string;
-    partner?: string;
+    email?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    isOnWaitingList?: boolean;
+    matchedPartner?: string | null;
+    partner?: string | null;
     registrables?: string[];
     registrationId?: string;
     registrationId_Partner?: string | null;
@@ -8018,7 +8018,7 @@ export interface SendMailCommand {
 export interface MailTypeItem {
     bulkMailKey?: string | null;
     type?: MailType | null;
-    userText?: string;
+    userText?: string | null;
 }
 
 export interface PossibleMailTypesQuery {

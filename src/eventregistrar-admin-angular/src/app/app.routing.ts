@@ -40,6 +40,8 @@ import { PricingResolver } from './modules/admin/pricing/pricing.resolver';
 import { PricingComponent } from './modules/admin/pricing/pricing.component';
 import { MailViewerComponent } from './modules/admin/mailing/mails/mail-viewer/mail-viewer.component';
 import { MailViewerResolver } from './modules/admin/mailing/mails/mail-viewer/mail-viewer.resolver';
+import { MatchPartnersComponent } from './modules/admin/registrations/match-partners/match-partners.component';
+import { MatchPartnersResolver } from './modules/admin/registrations/match-partners/match-partners.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -206,10 +208,23 @@ export const appRoutes: Route[] =
                             path: 'search-registration', canActivate: [AuthGuard], component: SearchRegistrationComponent
                         },
                         {
+                            path: 'match-partners',
+                            canActivate: [AuthGuard],
+                            component: MatchPartnersComponent,
+                            resolve: { initialData: MatchPartnersResolver },
+                            // children: [
+                            //     {
+                            //         path: ':id',
+                            //         component: SettlePaymentComponent,
+                            //         resolve: { initialData: SettlePaymentResolver }
+                            //     }
+                            // ]
+                        },
+                        {
                             path: ':id',
                             component: RegistrationComponent,
                             resolve: { initialData: RegistrationResolver }
-                        }
+                        },
                     ]
                 },
                 {
