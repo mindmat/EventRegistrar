@@ -25,7 +25,7 @@
                             </ng-container>
                             <ng-container *ngIf="!user.userAvatarUrl">
                                 <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                                    {{ user.userDisplayName.charAt(0) }}
+                                    {{ user.userDisplayName?.charAt(0) }}
                                 </div>
                             </ng-container>
                         </div>
@@ -73,7 +73,7 @@
                             </ng-container> -->
                             <ng-container>
                                 <div class="flex items-center justify-center w-full h-full rounded-full text-lg uppercase bg-gray-200 text-gray-600 dark:bg-gray-700 dark:text-gray-200">
-                                    {{ request.firstName.charAt(0) }}
+                                    {{ request.firstName?.charAt(0) }}{{ request.lastName?.charAt(0) }}
                                 </div>
                             </ng-container>
                         </div>
