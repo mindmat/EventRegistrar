@@ -71,6 +71,13 @@ public class AutoMailPlaceholderQueryHandler : IRequestHandler<AutoMailPlacehold
 
     private IEnumerable<PlaceholderDescription> GetPossiblePlaceholders(MailType mailType, MailPlaceholder placeholder)
     {
+        yield return new PlaceholderDescription
+                     {
+                         Key = placeholder.ToString(),
+                         Placeholder = $"{{{{{placeholder}}}}}",
+                         Description = _enumTranslator.Translate(placeholder)
+                     };
+
         if (mailType.HasAttribute<PartnerMailTypeAttribute>()
          && placeholder.HasAttribute<PartnerPlaceholderAttribute>())
         {
@@ -87,15 +94,6 @@ public class AutoMailPlaceholderQueryHandler : IRequestHandler<AutoMailPlacehold
                              Key = keyFollower,
                              Placeholder = $"{{{{{keyFollower}}}}}",
                              Description = $"{_enumTranslator.Translate(Role.Follower)}: {_enumTranslator.Translate(placeholder)}"
-                         };
-        }
-        else
-        {
-            yield return new PlaceholderDescription
-                         {
-                             Key = placeholder.ToString(),
-                             Placeholder = $"{{{{{placeholder}}}}}",
-                             Description = _enumTranslator.Translate(placeholder)
                          };
         }
     }

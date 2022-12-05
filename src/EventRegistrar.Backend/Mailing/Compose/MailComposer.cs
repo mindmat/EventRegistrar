@@ -103,7 +103,9 @@ public class MailComposer
                 _              => registration
             };
 
-            if (Enum.TryParse<MailPlaceholder>(parts.key, true, out var placeholderKey) || parts.key?.ToUpperInvariant() == "SEATLIST")
+            if (Enum.TryParse<MailPlaceholder>(parts.key, true, out var placeholderKey)
+             || parts.key?.ToUpperInvariant() == "SEATLIST"
+             || parts.key?.ToUpperInvariant() == "PARTNER")
             {
                 if (placeholderKey == MailPlaceholder.FirstName)
                 {
@@ -121,7 +123,7 @@ public class MailComposer
                 {
                     templateFiller[key] = await GetSpotList(registrationForPrefix, language);
                 }
-                else if (placeholderKey == MailPlaceholder.PartnerName)
+                else if (placeholderKey == MailPlaceholder.PartnerName || parts.key?.ToUpperInvariant() == "PARTNER")
                 {
                     templateFiller[key] = registrationForPrefix?.PartnerOriginal;
                 }
