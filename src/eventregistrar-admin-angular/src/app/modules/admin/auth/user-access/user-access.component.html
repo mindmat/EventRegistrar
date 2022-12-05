@@ -15,7 +15,7 @@
         </div> -->
 
         <!-- Team members -->
-        <div class="text-xl">{{ 'TeamMembers' | translate }}</div>
+        <div class="text-xl mb-2">{{ 'TeamMembers' | translate }}</div>
 
         <div class="flex flex-col divide-y border-t border-b">
             <ng-container *ngFor="let user of usersWithAccess; trackBy: trackByFn;">
@@ -65,9 +65,9 @@
         </div>
 
         <!-- Access requests -->
-        <div class="mt-8 text-xl">{{ 'AccessRequests' | translate }}</div>
+        <div *ngIf="requests?.length > 0" class="mt-8 mb-2 text-xl">{{ 'AccessRequests' | translate }}</div>
 
-        <div class="flex flex-col divide-y border-t border-b" *ngIf="requests?.length > 0">
+        <div *ngIf="requests?.length > 0" class="flex flex-col divide-y border-t border-b">
             <ng-container *ngFor="let request of filteredRequests; trackBy: trackByFn;">
                 <div class="flex flex-col sm:flex-row sm:items-center py-6">
                     <div class="flex items-center">
