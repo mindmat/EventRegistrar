@@ -4,10 +4,13 @@ using Azure.Core;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 
+using EventRegistrar.Backend.Infrastructure.ErrorHandling;
+
 namespace EventRegistrar.Backend.Infrastructure;
 
 public class SecretReader
 {
+    private const string _keyVaultConfigKey = "KeyVaultUri";
     private readonly ILogger _logger;
     private readonly Lazy<SecretClient?> _secretClient;
 
@@ -31,22 +34,23 @@ public class SecretReader
 
     private SecretClient? CreateSecretClient(IConfiguration configuration)
     {
+        var keyVaultUri = configuration.GetValue<string>(_keyVaultConfigKey)
+                       ?? throw new ConfigurationException(_keyVaultConfigKey);
+
+        TokenCredential credential = Debugger.IsAttached
+                                         ? new InteractiveBrowserCredential() // ManagedIdentityCredential doesn't work for local dev 
+                                         : new ManagedIdentityCredential();
+        var client = new SecretClient(new Uri(keyVaultUri), credential);
+
         try
         {
-            var keyVaultUri = configuration["KeyVaultUri"];
-
-            TokenCredential credential = Debugger.IsAttached
-                                             ? new InteractiveBrowserCredential() // ManagedIdentityCredential doesn't work for local dev 
-                                             : new ManagedIdentityCredential();
-            var client = new SecretClient(new Uri(keyVaultUri), credential);
-            var accessTest = client.GetPropertiesOfSecrets().ToList();
-
-            return client;
+            var _ = client.GetPropertiesOfSecrets().ToList();
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Could not create SecretClient");
-            return null;
+            _logger.LogError(ex, $"Could not create SecretClient. Credential type {credential.GetType().Name}");
         }
+
+        return client;
     }
 }

@@ -16,6 +16,7 @@ using EventRegistrar.Backend.Infrastructure.Mediator;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Payments.Files;
 
+using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
@@ -86,6 +87,7 @@ builder.Services.AddApplicationInsightsTelemetry(options =>
     options.ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
     options.DeveloperMode = builder.Environment.IsDevelopment();
 });
+builder.Services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
 
 var app = builder.Build();
 
