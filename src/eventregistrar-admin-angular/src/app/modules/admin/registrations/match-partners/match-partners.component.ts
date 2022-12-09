@@ -40,16 +40,6 @@ export class MatchPartnersComponent implements OnInit
         // Mark for check
         this.changeDetectorRef.markForCheck();
       });
-
-    // this.service.candidates$
-    //   .pipe(takeUntil(this.unsubscribeAll))
-    //   .subscribe((candidates: AssignmentCandidate[]) =>
-    //   {
-    //     this.candidates = candidates;
-
-    //     // Mark for check
-    //     this.changeDetectorRef.markForCheck();
-    //   });
   }
 
   selectUnmatchedRegistration(unmatchedRegistration: PotentialPartnerMatch)

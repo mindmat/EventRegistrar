@@ -218,8 +218,7 @@ export const appRoutes: Route[] =
                             children: [
                                 {
                                     path: ':id',
-                                    component: MatchPartnerComponent,
-                                    resolve: { initialData: MatchPartnerResolver }
+                                    component: MatchPartnerComponent
                                 }
                             ]
                         },

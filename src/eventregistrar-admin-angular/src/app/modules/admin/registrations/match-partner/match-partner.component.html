@@ -2,15 +2,15 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
         <!-- Title -->
-        <div class="flex-1 min-w-0">
-            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'FindPartnerOf' | translate: { name: candidates.name } }}</div>
+        <div *ngIf="candidates" class="flex-1 min-w-0">
+            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'FindPartnerOf' | translate: { name: candidates?.name } }}</div>
             <div class="mt-1.5 flex flex-row">
-                <div class="text-lg text-secondary">{{ candidates.email }}</div>
-                <ng-container *ngIf="candidates.isOnWaitingList">
+                <div class="text-lg text-secondary">{{ candidates?.email }}</div>
+                <ng-container *ngIf="candidates?.isOnWaitingList">
                     <mat-icon class="ml-1 icon-size-5 text-hint" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
                 </ng-container>
             </div>
-            <div class="text-lg text-secondary">{{ candidates.tracks.join(', ') }}</div>
+            <div class="text-lg text-secondary">{{ candidates?.tracks.join(', ') }}</div>
             <button mat-stroked-button class="mt-1" (click)="transformToSingle()">{{ 'TransformToSingle' | translate }} </button>
         </div>
 

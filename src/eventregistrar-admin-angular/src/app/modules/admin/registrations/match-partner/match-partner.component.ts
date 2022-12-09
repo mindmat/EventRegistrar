@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PotentialPartnerMatch, PotentialPartners } from 'app/api/api';
-import { BehaviorSubject, combineLatest, debounce, distinct, interval, of, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounce, debounceTime, distinct, interval, of, Subject, takeUntil, tap } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { MatchPartnerService } from './match-partner.service';
 
@@ -12,7 +12,6 @@ import { MatchPartnerService } from './match-partner.service';
 })
 export class MatchPartnerComponent implements OnInit
 {
-
   private unsubscribeAll: Subject<any> = new Subject<any>();
   private registrationId$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   private searchQuery$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
@@ -30,21 +29,28 @@ export class MatchPartnerComponent implements OnInit
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe((candidates: PotentialPartners) =>
       {
-        var registrationChanged = this.candidates?.registrationId !== candidates?.registrationId;
-        this.candidates = candidates;
-        if (registrationChanged)
+        if (this.registrationId$.value !== candidates?.registrationId)
         {
-          this.searchElement.nativeElement.value = candidates.declaredPartner;
+          // deprecate old request
+          return;
         }
 
-        // Mark for check
+        if (this.candidates?.registrationId !== candidates?.registrationId)
+        {
+          this.searchElement.nativeElement.value = candidates?.declaredPartner;
+        }
+
+        this.candidates = candidates;
+
         this.changeDetectorRef.markForCheck();
       });
 
     this.route.params.subscribe(params => 
     {
+      this.candidates = null;
       this.registrationId$.next(params.id);
       this.searchQuery$.next(null);
+      this.changeDetectorRef.markForCheck();
     });
 
     var searchDebounced = this.searchQuery$.pipe(
@@ -54,11 +60,11 @@ export class MatchPartnerComponent implements OnInit
         {
           return interval(300);
         }
-        return of();
-      })
+        return interval(0);
+      }),
     );
+
     combineLatest([this.registrationId$, searchDebounced])
-      .pipe(distinct())
       .subscribe(([registrationId, searchString]) => this.service.fetchCandidates(registrationId, searchString).subscribe());
   }
 
