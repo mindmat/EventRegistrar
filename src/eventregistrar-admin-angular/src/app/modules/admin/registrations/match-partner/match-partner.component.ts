@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PotentialPartnerMatch, PotentialPartners } from 'app/api/api';
-import { BehaviorSubject, combineLatest, debounceTime, merge, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounce, distinct, interval, of, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { MatchPartnerService } from './match-partner.service';
 
@@ -44,9 +44,21 @@ export class MatchPartnerComponent implements OnInit
     this.route.params.subscribe(params => 
     {
       this.registrationId$.next(params.id);
+      this.searchQuery$.next(null);
     });
 
-    combineLatest([this.registrationId$, this.searchQuery$.pipe(debounceTime(300))])
+    var searchDebounced = this.searchQuery$.pipe(
+      debounce(query =>
+      {
+        if (query != null)
+        {
+          return interval(300);
+        }
+        return of();
+      })
+    );
+    combineLatest([this.registrationId$, searchDebounced])
+      .pipe(distinct())
       .subscribe(([registrationId, searchString]) => this.service.fetchCandidates(registrationId, searchString).subscribe());
   }
 
