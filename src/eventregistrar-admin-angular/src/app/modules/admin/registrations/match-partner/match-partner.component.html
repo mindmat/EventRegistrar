@@ -43,7 +43,7 @@
 
                     <div class="text-secondary leading-tight">{{ candidate.email }}</div>
                     <div class="text-secondary leading-tight">{{ 'Partner' | translate }}: {{ candidate.declaredPartner }}</div>
-                    <a *ngIf="candidate.registrationId_Partner" class="hover:underline text-xl leading-tight" [routerLink]="navigator.getRegistrationUrl(candidate.registrationId_Partner)">
+                    <a *ngIf="candidate.registrationId_Partner" class="hover:underline leading-tight" [routerLink]="navigator.getRegistrationUrl(candidate.registrationId_Partner)">
                         {{ 'Assigned' | translate }}: {{ candidate.matchedPartner }}</a>
                     <div class="flex flex-row items-baseline gap-x-1">
                         <div *ngFor="let track of candidate?.tracks" class="flex flex-row items-baseline gap-x-2">
