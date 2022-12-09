@@ -1,9 +1,7 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing.Bulk;
-using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Mailing.InvalidAddresses;
-using EventRegistrar.Backend.Mailing.ManualTrigger;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,15 +38,6 @@ public class MailsController : Controller
     //                         });
     //}
 
-    [HttpDelete("api/events/{eventAcronym}/mails/{mailId:guid}")]
-    public async Task DeleteMail(string eventAcronym, Guid mailId)
-    {
-        await _mediator.Send(new DeleteMailCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 MailId = mailId
-                             });
-    }
 
     [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/fixEmailAddress")]
     public async Task FixInvalidMailAddress(string eventAcronym,

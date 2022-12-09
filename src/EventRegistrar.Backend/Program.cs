@@ -9,6 +9,7 @@ using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.DirtyTags;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ErrorHandling;
@@ -179,6 +180,8 @@ foreach (var configType in configTypes)
                                 () => GetSingletonConfig(container, configType));
 }
 
+container.Collection.Register(typeof(IDirtySegment), assemblies);
+container.Register<DirtyTagger>();
 
 container.RegisterSingleton<SecretReader>();
 container.RegisterSingleton<MessageQueueReceiver>();

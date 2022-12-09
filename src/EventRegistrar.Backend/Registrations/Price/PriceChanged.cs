@@ -1,5 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Registrations.Price;
 

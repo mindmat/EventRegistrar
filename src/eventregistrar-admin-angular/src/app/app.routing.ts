@@ -42,6 +42,8 @@ import { MailViewerComponent } from './modules/admin/mailing/mails/mail-viewer/m
 import { MailViewerResolver } from './modules/admin/mailing/mails/mail-viewer/mail-viewer.resolver';
 import { MatchPartnersComponent } from './modules/admin/registrations/match-partners/match-partners.component';
 import { MatchPartnersResolver } from './modules/admin/registrations/match-partners/match-partners.resolver';
+import { MatchPartnerComponent } from './modules/admin/registrations/match-partner/match-partner.component';
+import { MatchPartnerResolver } from './modules/admin/registrations/match-partner/match-partner.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -210,15 +212,16 @@ export const appRoutes: Route[] =
                         {
                             path: 'match-partners',
                             canActivate: [AuthGuard],
+                            canActivateChild: [AuthGuard],
                             component: MatchPartnersComponent,
                             resolve: { initialData: MatchPartnersResolver },
-                            // children: [
-                            //     {
-                            //         path: ':id',
-                            //         component: SettlePaymentComponent,
-                            //         resolve: { initialData: SettlePaymentResolver }
-                            //     }
-                            // ]
+                            children: [
+                                {
+                                    path: ':id',
+                                    component: MatchPartnerComponent,
+                                    resolve: { initialData: MatchPartnerResolver }
+                                }
+                            ]
                         },
                         {
                             path: ':id',

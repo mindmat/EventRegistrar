@@ -165,6 +165,9 @@
   <data name="AssignBankStatements" xml:space="preserve">
     <value>Assign bank statements</value>
   </data>
+  <data name="Assigned" xml:space="preserve">
+    <value>Assigned</value>
+  </data>
   <data name="AssignIncoming" xml:space="preserve">
     <value>Assign incoming payment</value>
   </data>
@@ -260,6 +263,9 @@
   </data>
   <data name="ExistingAssignments" xml:space="preserve">
     <value>Existing assignments</value>
+  </data>
+  <data name="FindPartnerOf" xml:space="preserve">
+    <value>Find partner of {{name}}</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>First Name</value>
@@ -707,6 +713,9 @@
   </data>
   <data name="Town" xml:space="preserve">
     <value>Town</value>
+  </data>
+  <data name="TransformToSingle" xml:space="preserve">
+    <value>Transform to single registration</value>
   </data>
   <data name="TriggerMoveUp" xml:space="preserve">
     <value>Trigger move up</value>

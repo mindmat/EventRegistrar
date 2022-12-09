@@ -29,12 +29,12 @@ public class RegistrationsWithUnmatchedPartnerQueryHandler : IRequestHandler<Reg
                                                       FirstName = reg.RespondentFirstName,
                                                       LastName = reg.RespondentLastName,
                                                       State = reg.State.ToString(),
-                                                      Partner = reg.PartnerOriginal,
+                                                      DeclaredPartner = reg.PartnerOriginal,
                                                       IsOnWaitingList = reg.IsOnWaitingList == true,
-                                                      Registrables = reg.Seats_AsLeader!
-                                                                        .Select(spt => spt.Registrable!.DisplayName)
-                                                                        .Union(reg.Seats_AsFollower!.Select(spt => spt.Registrable!.DisplayName))
-                                                                        .ToArray()
+                                                      Tracks = reg.Seats_AsLeader!
+                                                                  .Select(spt => new TrackMatch { Name = spt.Registrable!.DisplayName })
+                                                                  .Union(reg.Seats_AsFollower!.Select(spt => new TrackMatch { Name = spt.Registrable!.DisplayName }))
+                                                                  .ToArray()
                                                   })
                                    .ToListAsync(cancellationToken);
     }

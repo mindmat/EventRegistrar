@@ -3,11 +3,11 @@ using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList.MoveUp;
 
-public class TryPromoteFromWaitingListWhenSpotRemoved : IEventToCommandTranslation<SpotRemoved>
+public class TryMoveUpFromWaitingListWhenSpotRemoved : IEventToCommandTranslation<SpotRemoved>
 {
     public IEnumerable<IRequest> Translate(SpotRemoved e)
     {
-        if (e.WasSpotOnWaitingList && e.Reason == RemoveSpotReason.Modification)
+        if (e.SpotWasOnWaitingList && e.Reason == RemoveSpotReason.Modification)
         {
             yield return new TriggerMoveUpFromWaitingListCommand { RegistrableId = e.RegistrableId };
         }

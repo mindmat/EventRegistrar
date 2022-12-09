@@ -110,8 +110,7 @@ public class PriceCalculator
             foreach (var part in package.Parts!)
             {
                 var partMatches = PartMatches(part.SelectionType,
-                                              part.Registrables!
-                                                  .Select(rip => rip.RegistrableId)
+                                              part.Registrables!.Select(rip => rip.RegistrableId)
                                                   .ToList(),
                                               bookedRegistrableIds);
                 if (partMatches.Match)

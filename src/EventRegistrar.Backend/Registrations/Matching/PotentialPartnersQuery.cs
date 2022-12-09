@@ -1,18 +1,15 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure;
-
-using MediatR;
+﻿using EventRegistrar.Backend.Infrastructure;
 
 namespace EventRegistrar.Backend.Registrations.Matching;
 
-public class PotentialPartnersQuery : IEventBoundRequest, IRequest<IEnumerable<PotentialPartnerMatch>>
+public class PotentialPartnersQuery : IEventBoundRequest, IRequest<PotentialPartners>
 {
     public Guid EventId { get; set; }
     public Guid RegistrationId { get; set; }
-    public string SearchString { get; set; }
+    public string? SearchString { get; set; }
 }
 
-public class PotentialPartnersQueryHandler : IRequestHandler<PotentialPartnersQuery, IEnumerable<PotentialPartnerMatch>>
+public class PotentialPartnersQueryHandler : IRequestHandler<PotentialPartnersQuery, PotentialPartners>
 {
     private readonly IQueryable<Registration> _registrations;
 
@@ -21,82 +18,128 @@ public class PotentialPartnersQueryHandler : IRequestHandler<PotentialPartnersQu
         _registrations = registrations;
     }
 
-    public async Task<IEnumerable<PotentialPartnerMatch>> Handle(PotentialPartnersQuery query,
-                                                                 CancellationToken cancellationToken)
+    public async Task<PotentialPartners> Handle(PotentialPartnersQuery query,
+                                                CancellationToken cancellationToken)
     {
         var ownRegistration = await _registrations.Where(reg => reg.EventId == query.EventId
                                                              && reg.Id == query.RegistrationId)
                                                   .Select(reg => new
                                                                  {
                                                                      reg.Id,
+                                                                     reg.RespondentFirstName,
+                                                                     reg.RespondentLastName,
+                                                                     reg.RespondentEmail,
+                                                                     reg.State,
                                                                      reg.PartnerNormalized,
-                                                                     PartnerSpotAsLeader =
-                                                                         reg.Seats_AsLeader.FirstOrDefault(spt =>
-                                                                                                               spt.Registrable.MaximumDoubleSeats
-                                                                                                                  .HasValue),
-                                                                     PartnerSpotAsFollower =
-                                                                         reg.Seats_AsFollower.FirstOrDefault(spt =>
-                                                                                                                 spt.Registrable.MaximumDoubleSeats
-                                                                                                                    .HasValue)
+                                                                     reg.PartnerOriginal,
+                                                                     IsOnWaitingList = reg.IsOnWaitingList == true,
+                                                                     PartnerRegistrableAsLeader = reg.Seats_AsLeader!.Where(spt => spt.Registrable!.MaximumDoubleSeats != null)
+                                                                                                     .Select(trk => trk.Registrable!),
+                                                                     PartnerRegistrableAsFollower = reg.Seats_AsFollower!.Where(spt => spt.Registrable!.MaximumDoubleSeats != null)
+                                                                                                       .Select(trk => trk.Registrable!)
                                                                  })
                                                   .FirstAsync(cancellationToken);
+
+        var ownPartnerTracks = ownRegistration.PartnerRegistrableAsLeader
+                                              .Union(ownRegistration.PartnerRegistrableAsFollower)
+                                              .ToList();
+        var ownPartnerTrackIds = ownPartnerTracks.Select(trk => trk.Id)
+                                                 .ToList();
+
         var searchParts = (query.SearchString ?? ownRegistration.PartnerNormalized)?.Split(" ");
         if (searchParts == null || searchParts.Length == 0)
         {
             throw new ArgumentException("No search string");
         }
 
-        var partnerRegistrableId = ownRegistration.PartnerSpotAsLeader?.RegistrableId ?? ownRegistration.PartnerSpotAsFollower?.RegistrableId;
-        if (!partnerRegistrableId.HasValue)
+        var partnerRegistrableId = ownRegistration.PartnerRegistrableAsLeader.FirstOrDefault()?.Id
+                                ?? ownRegistration.PartnerRegistrableAsFollower.FirstOrDefault()?.Id;
+        if (partnerRegistrableId == null)
         {
             throw new ArgumentException("No partner spot found");
         }
 
-        var otherRole = ownRegistration.PartnerSpotAsLeader != null ? Role.Follower : Role.Leader;
-        return await _registrations.Where(reg => reg.EventId == query.EventId)
-                                   .WhereIf(otherRole == Role.Leader,
-                                            reg => reg.Seats_AsLeader.Any(spt =>
-                                                                              !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
-                                   .WhereIf(otherRole == Role.Follower,
-                                            reg => reg.Seats_AsFollower.Any(spt =>
-                                                                                !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
-                                   .Select(reg => new
-                                                  {
-                                                      RegistrationId = reg.Id,
-                                                      Email = reg.RespondentEmail,
-                                                      FirstName = reg.RespondentFirstName,
-                                                      LastName = reg.RespondentLastName,
-                                                      State = reg.State.ToString(),
-                                                      Partner = reg.PartnerOriginal,
-                                                      EmailMatch = searchParts.Any(prt => prt == reg.RespondentEmail),
-                                                      FirstNameMatch = searchParts.Any(prt =>
-                                                                                           prt == reg.RespondentFirstName),
-                                                      LastNameMatch = searchParts.Any(prt =>
-                                                                                          prt == reg.RespondentLastName),
-                                                      IsWaitingList = reg.IsOnWaitingList,
-                                                      reg.RegistrationId_Partner,
-                                                      MatchedPartner =
-                                                          (reg.Registration_Partner.RespondentFirstName ?? string.Empty) + " " + (reg.Registration_Partner.RespondentLastName ?? string.Empty),
-                                                      Registrables = reg.Seats_AsLeader
-                                                                        .Select(spt => spt.Registrable.DisplayName)
-                                                                        .Union(reg.Seats_AsFollower.Select(spt =>
-                                                                                                               spt.Registrable.DisplayName))
-                                                  })
-                                   .Where(mat => mat.EmailMatch || mat.FirstNameMatch || mat.LastNameMatch)
-                                   .OrderByDescending(mat => (mat.EmailMatch ? 5 : 0) + (mat.FirstNameMatch ? 1 : 0) + (mat.LastNameMatch ? 1 : 0))
-                                   .Select(mat => new PotentialPartnerMatch
-                                                  {
-                                                      RegistrationId = mat.RegistrationId,
-                                                      Email = mat.Email,
-                                                      FirstName = mat.FirstName,
-                                                      LastName = mat.LastName,
-                                                      State = mat.State,
-                                                      Partner = mat.Partner,
-                                                      Registrables = mat.Registrables.ToArray(),
-                                                      IsOnWaitingList = mat.IsWaitingList == true,
-                                                      MatchedPartner = mat.MatchedPartner,
-                                                      RegistrationId_Partner = mat.RegistrationId_Partner
-                                                  })
-                                   .ToListAsync(cancellationToken);
+        var otherRole = ownRegistration.PartnerRegistrableAsLeader.FirstOrDefault() != null
+                            ? Role.Follower
+                            : Role.Leader;
+
+        var queryable = _registrations.Where(reg => reg.EventId == query.EventId)
+                                      .WhereIf(otherRole == Role.Leader, reg => reg.Seats_AsLeader!.Any(spt => !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
+                                      .WhereIf(otherRole == Role.Follower, reg => reg.Seats_AsFollower!.Any(spt => !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
+                                      .Select(reg => new
+                                                     {
+                                                         RegistrationId = reg.Id,
+                                                         Email = reg.RespondentEmail,
+                                                         FirstName = reg.RespondentFirstName,
+                                                         LastName = reg.RespondentLastName,
+                                                         State = reg.State.ToString(),
+                                                         Partner = reg.PartnerOriginal,
+                                                         IsWaitingList = reg.IsOnWaitingList,
+                                                         reg.RegistrationId_Partner,
+                                                         MatchedPartnerFirstName = reg.Registration_Partner!.RespondentFirstName,
+                                                         MatchedPartnerLastName = reg.Registration_Partner.RespondentLastName,
+                                                         Registrables = reg.Seats_AsLeader!.Where(spt => spt.Registrable!.MaximumDoubleSeats != null)
+                                                                           .Select(spt => spt.Registrable!)
+                                                                           .Union(reg.Seats_AsFollower!.Where(spt => spt.Registrable!.MaximumDoubleSeats != null).Select(spt => spt.Registrable!))
+                                                     });
+        foreach (var searchPart in searchParts)
+        {
+            queryable = queryable.Where(mat => EF.Functions.Like(mat.Email!, $"%{searchPart}%")
+                                            || EF.Functions.Like(mat.FirstName!, $"%{searchPart}%")
+                                            || EF.Functions.Like(mat.LastName!, $"%{searchPart}%"));
+        }
+
+        var matches = await queryable.Select(mat => new PotentialPartnerMatch
+                                                    {
+                                                        RegistrationId = mat.RegistrationId,
+                                                        Email = mat.Email,
+                                                        FirstName = mat.FirstName,
+                                                        LastName = mat.LastName,
+                                                        State = mat.State,
+                                                        DeclaredPartner = mat.Partner,
+                                                        Tracks = mat.Registrables.Select(trk => new TrackMatch
+                                                                                                {
+                                                                                                    Name = trk.DisplayName,
+                                                                                                    Match = ownPartnerTrackIds.Contains(trk.Id)
+                                                                                                                ? TracksMatch.Some
+                                                                                                                : TracksMatch.None
+                                                                                                }),
+                                                        IsOnWaitingList = mat.IsWaitingList == true,
+                                                        MatchedPartner = $"{mat.MatchedPartnerFirstName} {mat.MatchedPartnerLastName}",
+                                                        RegistrationId_Partner = mat.RegistrationId_Partner
+                                                    })
+                                     .ToListAsync(cancellationToken);
+
+        foreach (var match in matches)
+        {
+            if (match.Tracks!.All(trk => trk.Match == TracksMatch.Some))
+            {
+                match.Tracks!.ForEach(trk => trk.Match = TracksMatch.All);
+            }
+        }
+
+        return new PotentialPartners
+               {
+                   RegistrationId = ownRegistration.Id,
+                   Name = $"{ownRegistration.RespondentFirstName} {ownRegistration.RespondentLastName}",
+                   Email = ownRegistration.RespondentEmail,
+                   IsOnWaitingList = ownRegistration.IsOnWaitingList,
+                   DeclaredPartner = ownRegistration.PartnerOriginal,
+                   State = ownRegistration.State,
+                   Tracks = ownPartnerTracks.Select(trk => trk.DisplayName).ToList(),
+                   Matches = matches
+               };
     }
+}
+
+public class PotentialPartners
+{
+    public Guid RegistrationId { get; set; }
+    public string? Name { get; set; }
+    public string? Email { get; set; }
+    public bool IsOnWaitingList { get; set; }
+    public RegistrationState State { get; set; }
+    public string? DeclaredPartner { get; set; }
+    public IEnumerable<string>? Tracks { get; set; }
+    public IEnumerable<PotentialPartnerMatch>? Matches { get; set; }
 }

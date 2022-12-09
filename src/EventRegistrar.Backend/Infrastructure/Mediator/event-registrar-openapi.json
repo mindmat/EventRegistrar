@@ -530,10 +530,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PotentialPartnerMatch"
-                  }
+                  "$ref": "#/components/schemas/PotentialPartners"
                 }
               }
             }
@@ -5043,13 +5040,55 @@
           }
         }
       },
+      "PotentialPartners": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "isOnWaitingList": {
+            "type": "boolean"
+          },
+          "state": {
+            "$ref": "#/components/schemas/RegistrationState"
+          },
+          "declaredPartner": {
+            "type": "string",
+            "nullable": true
+          },
+          "tracks": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "matches": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PotentialPartnerMatch"
+            }
+          }
+        }
+      },
       "PotentialPartnerMatch": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "email": {
+          "registrationId": {
             "type": "string",
-            "nullable": true
+            "format": "guid"
           },
           "firstName": {
             "type": "string",
@@ -5059,36 +5098,64 @@
             "type": "string",
             "nullable": true
           },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
           "isOnWaitingList": {
             "type": "boolean"
+          },
+          "declaredPartner": {
+            "type": "string",
+            "nullable": true
           },
           "matchedPartner": {
             "type": "string",
             "nullable": true
-          },
-          "partner": {
-            "type": "string",
-            "nullable": true
-          },
-          "registrables": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "registrationId": {
-            "type": "string",
-            "format": "guid"
           },
           "registrationId_Partner": {
             "type": "string",
             "format": "guid",
             "nullable": true
           },
+          "tracks": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TrackMatch"
+            }
+          },
           "state": {
             "type": "string"
           }
         }
+      },
+      "TrackMatch": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "match": {
+            "$ref": "#/components/schemas/TracksMatch"
+          }
+        }
+      },
+      "TracksMatch": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "None",
+          "Some",
+          "All"
+        ],
+        "enum": [
+          1,
+          2,
+          3
+        ]
       },
       "PotentialPartnersQuery": {
         "type": "object",
@@ -5103,7 +5170,8 @@
             "format": "guid"
           },
           "searchString": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },

@@ -3,26 +3,26 @@ using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList;
 
-public class PartnerSpotPromotedFromWaitingList : DomainEvent
+public class PartnerSpotMovedUpFromWaitingList : DomainEvent
 {
     public Guid RegistrableId { get; set; }
     public Guid? RegistrationId { get; set; }
     public Guid? RegistrationId_Follower { get; set; }
 }
 
-public class PartnerSpotPromotedFromWaitingListUserTranslation : IEventToUserTranslation<PartnerSpotPromotedFromWaitingList>
+public class PartnerSpotMovedUpFromWaitingListUserTranslation : IEventToUserTranslation<PartnerSpotMovedUpFromWaitingList>
 {
     private readonly IQueryable<Registration> _registrations;
     private readonly IQueryable<Registrable> _registrables;
 
-    public PartnerSpotPromotedFromWaitingListUserTranslation(IQueryable<Registration> registrations,
-                                                             IQueryable<Registrable> registrables)
+    public PartnerSpotMovedUpFromWaitingListUserTranslation(IQueryable<Registration> registrations,
+                                                            IQueryable<Registrable> registrables)
     {
         _registrations = registrations;
         _registrables = registrables;
     }
 
-    public string GetText(PartnerSpotPromotedFromWaitingList domainEvent)
+    public string GetText(PartnerSpotMovedUpFromWaitingList domainEvent)
     {
         var registrationLeader = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
         var registrationFollower = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId_Follower);

@@ -224,7 +224,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
     {
         var registrable = _registrables.First(rbl => rbl.Id == registrableId);
         var registration = _registrations.First(reg => reg.Id == registrationId);
-        _eventBus.Publish(new SingleSpotPromotedFromWaitingList
+        _eventBus.Publish(new SingleSpotMovedUpFromWaitingList
                           {
                               Id = Guid.NewGuid(),
                               RegistrableId = registrableId,
@@ -250,7 +250,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
 
         if (spot.IsPartnerSpot)
         {
-            _eventBus.Publish(new PartnerSpotPromotedFromWaitingList
+            _eventBus.Publish(new PartnerSpotMovedUpFromWaitingList
                               {
                                   Id = Guid.NewGuid(),
                                   RegistrableId = spot.RegistrableId,

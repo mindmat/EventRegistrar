@@ -1,10 +1,13 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.DirtyTags;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
 using EventRegistrar.Backend.Mailing.Templates;
+using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.ReadModels;
 
 using Newtonsoft.Json;
@@ -27,6 +30,7 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
 
     private readonly ILogger _log;
     private readonly ReadModelUpdater _readModelUpdater;
+    private readonly DirtyTagger _dirtyTagger;
     private readonly MailComposer _mailComposer;
     private readonly IRepository<Mail> _mails;
     private readonly IRepository<MailToRegistration> _mailsToRegistrations;
@@ -45,7 +49,8 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
                                                 CommandQueue commandQueue,
                                                 IDateTimeProvider dateTimeProvider,
                                                 ILogger log,
-                                                ReadModelUpdater readModelUpdater)
+                                                ReadModelUpdater readModelUpdater,
+                                                DirtyTagger dirtyTagger)
     {
         _templates = templates;
         _registrations = registrations;
@@ -57,10 +62,13 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
         _dateTimeProvider = dateTimeProvider;
         _log = log;
         _readModelUpdater = readModelUpdater;
+        _dirtyTagger = dirtyTagger;
     }
 
     public async Task<Unit> Handle(ComposeAndSendAutoMailCommand command, CancellationToken cancellationToken)
     {
+        await _dirtyTagger.WaitForRemovedTags(command.RegistrationId, typeof(PriceSegment), typeof(RegistrationOnWaitingListSegment));
+
         string? dataTypeFullName = null;
         string? dataJson = null;
         if (command.Data != null)

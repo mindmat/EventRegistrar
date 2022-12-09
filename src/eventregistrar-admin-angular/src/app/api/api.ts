@@ -793,7 +793,7 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    potentialPartners_Query(potentialPartnersQuery: PotentialPartnersQuery | undefined): Observable<PotentialPartnerMatch[]> {
+    potentialPartners_Query(potentialPartnersQuery: PotentialPartnersQuery | undefined): Observable<PotentialPartners> {
         let url_ = this.baseUrl + "/api/PotentialPartnersQuery";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -816,14 +816,14 @@ export class Api {
                 try {
                     return this.processPotentialPartners_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<PotentialPartnerMatch[]>;
+                    return _observableThrow(e) as any as Observable<PotentialPartners>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<PotentialPartnerMatch[]>;
+                return _observableThrow(response_) as any as Observable<PotentialPartners>;
         }));
     }
 
-    protected processPotentialPartners_Query(response: HttpResponseBase): Observable<PotentialPartnerMatch[]> {
+    protected processPotentialPartners_Query(response: HttpResponseBase): Observable<PotentialPartners> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -833,7 +833,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PotentialPartnerMatch[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PotentialPartners;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -6946,23 +6946,45 @@ export interface MatchPartnerRegistrationsCommand {
     registrationId2?: string;
 }
 
-export interface PotentialPartnerMatch {
+export interface PotentialPartners {
+    registrationId?: string;
+    name?: string | null;
     email?: string | null;
+    isOnWaitingList?: boolean;
+    state?: RegistrationState;
+    declaredPartner?: string | null;
+    tracks?: string[] | null;
+    matches?: PotentialPartnerMatch[] | null;
+}
+
+export interface PotentialPartnerMatch {
+    registrationId?: string;
     firstName?: string | null;
     lastName?: string | null;
+    email?: string | null;
     isOnWaitingList?: boolean;
+    declaredPartner?: string | null;
     matchedPartner?: string | null;
-    partner?: string | null;
-    registrables?: string[];
-    registrationId?: string;
     registrationId_Partner?: string | null;
+    tracks?: TrackMatch[] | null;
     state?: string;
+}
+
+export interface TrackMatch {
+    name?: string | null;
+    match?: TracksMatch;
+}
+
+export enum TracksMatch {
+    None = 1,
+    Some = 2,
+    All = 3,
 }
 
 export interface PotentialPartnersQuery {
     eventId?: string;
     registrationId?: string;
-    searchString?: string;
+    searchString?: string | null;
 }
 
 export interface RegistrationsWithUnmatchedPartnerQuery {

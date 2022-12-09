@@ -205,6 +205,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zugeordnet.
+        /// </summary>
+        internal static string Assigned {
+            get {
+                return ResourceManager.GetString("Assigned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zahlungseingang zuordnen.
         /// </summary>
         internal static string AssignIncoming {
@@ -728,6 +737,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string ExistingAssignments {
             get {
                 return ResourceManager.GetString("ExistingAssignments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Partner für {{name}} finden.
+        /// </summary>
+        internal static string FindPartnerOf {
+            get {
+                return ResourceManager.GetString("FindPartnerOf", resourceCulture);
             }
         }
         
@@ -2105,6 +2123,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Town {
             get {
                 return ResourceManager.GetString("Town", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zu Einzelanmeldung umwandeln.
+        /// </summary>
+        internal static string TransformToSingle {
+            get {
+                return ResourceManager.GetString("TransformToSingle", resourceCulture);
             }
         }
         

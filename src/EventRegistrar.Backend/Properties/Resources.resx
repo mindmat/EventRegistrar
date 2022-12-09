@@ -165,6 +165,9 @@
   <data name="AssignBankStatements" xml:space="preserve">
     <value>Kontobewegungen zuorden</value>
   </data>
+  <data name="Assigned" xml:space="preserve">
+    <value>Zugeordnet</value>
+  </data>
   <data name="AssignIncoming" xml:space="preserve">
     <value>Zahlungseingang zuordnen</value>
   </data>
@@ -338,6 +341,9 @@
   </data>
   <data name="ExistingAssignments" xml:space="preserve">
     <value>Bestehende Zuordnungen</value>
+  </data>
+  <data name="FindPartnerOf" xml:space="preserve">
+    <value>Partner für {{name}} finden</value>
   </data>
   <data name="FirstName" xml:space="preserve">
     <value>Vorname</value>
@@ -798,6 +804,9 @@
   </data>
   <data name="Town" xml:space="preserve">
     <value>Wohnort</value>
+  </data>
+  <data name="TransformToSingle" xml:space="preserve">
+    <value>Zu Einzelanmeldung umwandeln</value>
   </data>
   <data name="TriggerMoveUp" xml:space="preserve">
     <value>Nachrücken auslösen</value>

@@ -19,7 +19,7 @@
             <div class="flex flex-col divide-y border-t border-b">
                 <ng-container *ngIf="unmatchedRegistrations?.length > 0; else noUnmatchedRegistrations">
                     <ng-container *ngFor="let unmatchedRegistration of unmatchedRegistrations">
-                        <div class="flex px-8 py-5 cursor-pointer"
+                        <div class="flex px-8 py-5 cursor-pointer" [routerLink]="[unmatchedRegistration.registrationId]"
                             [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedUnmatchedRegistration || selectedUnmatchedRegistration.registrationId !== unmatchedRegistration.registrationId,
                                                                                     'bg-primary-50 dark:bg-hover': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId  === unmatchedRegistration.registrationId}"
                             (click)="selectUnmatchedRegistration(unmatchedRegistration)">
@@ -34,7 +34,7 @@
                                     {{ unmatchedRegistration.firstName }} {{ unmatchedRegistration.lastName }}
                                 </div>
                                 <div class="mt-0.5 text-secondary">
-                                    {{ unmatchedRegistration.partner }}
+                                    {{ unmatchedRegistration.declaredPartner }}
                                 </div>
                             </div>
                         </div>
@@ -70,10 +70,10 @@
             </div>
         </ng-template>
 
-        <!-- Conversation -->
+        <!-- Detail -->
         <ng-container *ngIf="unmatchedRegistrations?.length > 0">
-            <div class="flex-auto border-l" [ngClass]="{'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId,
-                                'hidden lg:flex': !selectedUnmatchedRegistration || !selectedUnmatchedRegistration.registrationId}">
+            <div class="flex-auto border-l" [ngClass]="{'z-20 lg:static lg:inset-auto flex': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId,
+                 'hidden lg:flex': !selectedUnmatchedRegistration || !selectedUnmatchedRegistration.registrationId}">
                 <router-outlet></router-outlet>
             </div>
         </ng-container>
