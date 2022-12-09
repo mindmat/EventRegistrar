@@ -46,6 +46,11 @@ public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPart
 
     public async Task<Unit> Handle(MatchPartnerRegistrationsCommand command, CancellationToken cancellationToken)
     {
+        if (command.RegistrationId1 == command.RegistrationId2)
+        {
+            throw new ArgumentException($"Can't assign {command.RegistrationId1} to itself");
+        }
+
         var registration1 = await _registrations.Where(reg => reg.EventId == command.EventId
                                                            && reg.Id == command.RegistrationId1)
                                                 .Include(reg => reg.Seats_AsLeader!.Where(spt => !spt.IsCancelled && spt.Registrable!.MaximumDoubleSeats != null))

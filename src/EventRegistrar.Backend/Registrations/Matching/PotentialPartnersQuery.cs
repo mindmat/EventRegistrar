@@ -63,7 +63,8 @@ public class PotentialPartnersQueryHandler : IRequestHandler<PotentialPartnersQu
                             ? Role.Follower
                             : Role.Leader;
 
-        var queryable = _registrations.Where(reg => reg.EventId == query.EventId)
+        var queryable = _registrations.Where(reg => reg.EventId == query.EventId
+                                                 && reg.Id != ownRegistration.Id)
                                       .WhereIf(otherRole == Role.Leader, reg => reg.Seats_AsLeader!.Any(spt => !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
                                       .WhereIf(otherRole == Role.Follower, reg => reg.Seats_AsFollower!.Any(spt => !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
                                       .Select(reg => new
