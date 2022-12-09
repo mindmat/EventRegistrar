@@ -21,7 +21,7 @@
         </mat-form-field>
     </div>
 
-    <div *ngIf="candidates?.matches?.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 bg-default">
+    <div *ngIf="candidates?.matches?.length > 0" class="flex flex-wrap gap-4 m-4 bg-default">
 
         <!-- Partner candidates -->
         <ng-container *ngFor="let candidate of candidates?.matches">
