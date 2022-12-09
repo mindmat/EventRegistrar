@@ -25,25 +25,30 @@ public class SearchRegistrationQueryHandler : IRequestHandler<SearchRegistration
     public async Task<IEnumerable<RegistrationMatch>> Handle(SearchRegistrationQuery query,
                                                              CancellationToken cancellationToken)
     {
-        var allowedStates = query.States?.Any() == true ? query.States : new[] { RegistrationState.Received };
-        var searchString = query.SearchString?.Trim();
-        if (searchString == null)
+        var allowedStates = query.States?.Any() == true
+                                ? query.States
+                                : new[] { RegistrationState.Received, RegistrationState.Paid };
+        var searchParts = query.SearchString?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        if (searchParts?.Any() != true)
         {
             return Enumerable.Empty<RegistrationMatch>();
         }
 
-        var registrationIds = await _registrations.Where(reg => reg.EventId == query.EventId)
-                                                  .WhereIf(!string.IsNullOrWhiteSpace(query.SearchString),
-                                                           reg => reg.RespondentFirstName!.Contains(searchString)
-                                                               || reg.RespondentLastName!.Contains(searchString)
-                                                               || reg.RespondentEmail!.Contains(searchString)
-                                                               || reg.PhoneNormalized!.Contains(searchString))
-                                                  .Where(reg => allowedStates.Contains(reg.State))
-                                                  .OrderBy(reg => reg.RespondentFirstName)
-                                                  .ThenBy(reg => reg.RespondentLastName)
-                                                  .Take(20)
-                                                  .Select(reg => reg.Id)
-                                                  .ToListAsync(cancellationToken);
+        var queryable = _registrations.Where(reg => reg.EventId == query.EventId);
+        foreach (var searchPart in searchParts)
+        {
+            queryable = queryable.Where(reg => reg.RespondentFirstName!.Contains(searchPart)
+                                            || reg.RespondentLastName!.Contains(searchPart)
+                                            || reg.RespondentEmail!.Contains(searchPart)
+                                            || reg.PhoneNormalized!.Contains(searchPart));
+        }
+
+        var registrationIds = await queryable.Where(reg => allowedStates.Contains(reg.State))
+                                             .OrderBy(reg => reg.RespondentFirstName)
+                                             .ThenBy(reg => reg.RespondentLastName)
+                                             .Take(20)
+                                             .Select(reg => reg.Id)
+                                             .ToListAsync(cancellationToken);
 
         var registrations = await _readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery), query.EventId, registrationIds, cancellationToken);
 

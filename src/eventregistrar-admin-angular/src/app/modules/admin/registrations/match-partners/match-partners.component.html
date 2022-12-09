@@ -16,8 +16,8 @@
             </div>
 
             <!-- Unmatched Registrations -->
-            <div class="flex flex-col divide-y border-t border-b">
-                <ng-container *ngIf="unmatchedRegistrations?.length > 0; else noUnmatchedRegistrations">
+            <ng-container *ngIf="unmatchedRegistrations?.length > 0; else noUnmatchedRegistrations">
+                <div class="flex flex-col divide-y border-t border-b">
                     <ng-container *ngFor="let unmatchedRegistration of unmatchedRegistrations">
                         <div class="flex px-8 py-5 cursor-pointer" [routerLink]="[unmatchedRegistration.registrationId]"
                             [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedUnmatchedRegistration || selectedUnmatchedRegistration.registrationId !== unmatchedRegistration.registrationId,
@@ -58,14 +58,14 @@
                                 </div>
                             </div> -->
                     </ng-container>
-                </ng-container>
-            </div>
+                </div>
+            </ng-container>
         </mat-drawer>
 
         <!-- No bookings template -->
         <ng-template #noUnmatchedRegistrations>
-            <div class="flex flex-auto flex-col items-center justify-center h-full">
-                <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
+            <div class="flex flex-auto flex-col items-center justify-center h-3/4">
+                <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:users'"></mat-icon>
                 <div class="mt-4 text-2xl font-semibold tracking-tight text-secondary">{{ 'NoUnmatchedRegistrations' | translate }}</div>
             </div>
         </ng-template>
