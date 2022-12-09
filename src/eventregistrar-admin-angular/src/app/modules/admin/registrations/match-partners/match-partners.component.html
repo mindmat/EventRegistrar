@@ -19,44 +19,22 @@
             <ng-container *ngIf="unmatchedRegistrations?.length > 0; else noUnmatchedRegistrations">
                 <div class="flex flex-col divide-y border-t border-b">
                     <ng-container *ngFor="let unmatchedRegistration of unmatchedRegistrations">
-                        <div class="flex px-8 py-5 cursor-pointer" [routerLink]="[unmatchedRegistration.registrationId]"
-                            [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedUnmatchedRegistration || selectedUnmatchedRegistration.registrationId !== unmatchedRegistration.registrationId,
-                                                                                    'bg-primary-50 dark:bg-hover': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId  === unmatchedRegistration.registrationId}"
+                        <div class="flex px-8 py-5 cursor-pointer" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedUnmatchedRegistration || selectedUnmatchedRegistration.registrationId !== unmatchedRegistration.registrationId,
+                                        'bg-primary-50 dark:bg-hover': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId  === unmatchedRegistration.registrationId}"
                             (click)="selectUnmatchedRegistration(unmatchedRegistration)">
-                            <!-- <mat-icon
-                                    [ngClass]="{'text-hint': !selectedUnmatchedRegistration || selectedUnmatchedRegistration.registrationId !== unmatchedRegistration.registrationId,
-                                                                                        'text-primary dark:text-primary-500': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId  === unmatchedRegistration.registrationId}"
-                                    [svgIcon]="panel.icon">
-                                </mat-icon> -->
                             <div class="ml-3">
                                 <div class="font-medium leading-6"
                                     [ngClass]="{'text-primary dark:text-primary-500': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId  === unmatchedRegistration.registrationId}">
                                     {{ unmatchedRegistration.firstName }} {{ unmatchedRegistration.lastName }}
                                 </div>
-                                <div class="mt-0.5 text-secondary">
-                                    {{ unmatchedRegistration.declaredPartner }}
+                                <div class="mt-0.5 flex flex-row">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:users'"></mat-icon>
+                                    <div class="text-secondary ml-1">
+                                        {{ unmatchedRegistration.declaredPartner }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- <div class="z-20 flex items-center py-5 px-4 cursor-pointer border-t border-b" [routerLink]="[unmatchedRegistration.registrationId]"
-                                [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedUnmatchedRegistration || selectedUnmatchedRegistration.registrationId !== unmatchedRegistration.registrationId,
-                                                'bg-primary-50 dark:bg-hover': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId  === unmatchedRegistration.registrationId}" (click)="selectUnmatchedRegistration(unmatchedRegistration)">
-                                <div class="flex flex-col pl-2">
-                                    <div class="min-w-0">
-                                        <div class="font-medium leading-5 truncate">{{ booking.amount | number: '1.2-2' }}</div>
-                                        <div class="leading-5 truncate text-secondary" [class.text-primary]="!booking.settled" [class.dark:text-primary-500]="booking.settled">
-                                            <div *ngIf="booking.typ === CreditDebit.CRDT">von {{ booking.debitorName }}</div>
-                                            <div *ngIf="booking.typ === CreditDebit.DBIT">an {{ booking.creditorName }}</div>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col items-end self-start ml-auto pl-2">
-                                        <ng-container *ngIf="unmatchedRegistration.isWaitingList">
-                                            <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
-                                        </ng-container>
-                                    </div>
-                                </div>
-                            </div> -->
                     </ng-container>
                 </div>
             </ng-container>
