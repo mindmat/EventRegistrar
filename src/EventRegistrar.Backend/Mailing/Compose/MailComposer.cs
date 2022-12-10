@@ -129,7 +129,7 @@ public class MailComposer
                 }
                 else if (placeholderKey == MailPlaceholder.Comments)
                 {
-                    templateFiller[key] = registrationForPrefix?.Remarks?.ReplaceLineEndings("<br/>");
+                    templateFiller[key] = registrationForPrefix?.Remarks?.ReplaceLineEndings("<br/>") ?? string.Empty;
                 }
                 else if (placeholderKey == MailPlaceholder.Price)
                 {
@@ -203,9 +203,8 @@ public class MailComposer
                 else if (parts.key != null && key != null && registrationForPrefix?.Responses != null)
                 {
                     // check responses with Question.TemplateKey
-                    templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp =>
-                                                                                             string.Equals(rsp.Question?.TemplateKey, parts.key,
-                                                                                                           StringComparison.InvariantCultureIgnoreCase))
+                    templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp => string.Equals(rsp.Question?.TemplateKey, parts.key,
+                                                                                                              StringComparison.InvariantCultureIgnoreCase))
                                                                ?.ResponseString;
                 }
             }
