@@ -98,10 +98,19 @@ public class SingleRegistrationProcessor
                     //    }
                     case QuestionMappingType.Remarks:
                         {
-                            registration.Remarks = response.ResponseString;
+                            if (!string.IsNullOrWhiteSpace(response.ResponseString))
+                            {
+                                break;
+                            }
+
+                            var text = $"{question.Section}: {response.ResponseString}";
                             if (string.IsNullOrEmpty(registration.Remarks))
                             {
-                                registration.Remarks = null;
+                                registration.Remarks = text;
+                            }
+                            else
+                            {
+                                registration.Remarks += "\r\n" + text;
                             }
 
                             break;
@@ -258,8 +267,7 @@ public class SingleRegistrationProcessor
                 {
                     registration.RegistrationId_Partner = spot.GetOtherRegistrationId(registration.Id);
                     // set own id as partner id of partner registration
-                    var partnerRegistration =
-                        await _registrations.FirstOrDefaultAsync(reg => reg.Id == registration.RegistrationId_Partner);
+                    var partnerRegistration = await _registrations.FirstOrDefaultAsync(reg => reg.Id == registration.RegistrationId_Partner);
                     if (partnerRegistration != null)
                     {
                         partnerRegistration.RegistrationId_Partner = registration.Id;

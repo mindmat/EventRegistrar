@@ -121,7 +121,7 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
                                            QuestionOptionId = questionOptionId
                                        };
                         registration.Responses.Add(response);
-                        await _responses.InsertOrUpdateEntity(response, cancellationToken);
+                        _responses.InsertObjectTree(response);
                     }
                 }
                 else
@@ -136,7 +136,7 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
                                        QuestionId = responseLookup.questionId
                                    };
                     registration.Responses.Add(response);
-                    await _responses.InsertOrUpdateEntity(response, cancellationToken);
+                    _responses.InsertObjectTree(response);
                 }
             }
 
