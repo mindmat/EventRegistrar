@@ -145,22 +145,4 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
 
         return forms;
     }
-
-    private static string GetName(MappingType? type, string registrableName, string? language)
-    {
-        return type switch
-        {
-            MappingType.Language => language switch
-            {
-                "en" => $"{Properties.Resources.Language}: {Properties.Resources.English}",
-                "de" => $"{Properties.Resources.Language}: {Properties.Resources.German}",
-                _    => $"{Properties.Resources.Language}: ?"
-            },
-            MappingType.PartnerRegistrableLeader   => $"{registrableName} ({Properties.Resources.Leader})",
-            MappingType.PartnerRegistrableFollower => $"{registrableName} ({Properties.Resources.Follower})",
-            MappingType.RoleLeader                 => $"{Properties.Resources.Role}: {Properties.Resources.Leader}",
-            MappingType.RoleFollower               => $"{Properties.Resources.Role}: {Properties.Resources.Follower}",
-            _                                      => registrableName
-        };
-    }
 }

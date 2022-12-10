@@ -59,7 +59,6 @@ public class SavePricingCommandHandler : IRequestHandler<SavePricingCommand>
                                                        PricePackageId = package.Id
                                                    });
 
-
                 part.SelectionType = partToSave.SelectionType;
                 part.PriceAdjustment = partToSave.PriceAdjustment;
 

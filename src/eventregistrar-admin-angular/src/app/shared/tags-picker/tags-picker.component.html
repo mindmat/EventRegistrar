@@ -2,7 +2,7 @@
     <div class="flex flex-wrap items-center -m-1.5">
         <!-- Tags -->
         <ng-container *ngIf="selectedTagIds.length">
-            <ng-container *ngFor="let tag of (selectedTagIds | fuseFindByKey:idProperty:allTags); trackBy: trackByFn">
+            <ng-container *ngFor="let tag of selectedTags">
                 <div class="flex items-center justify-center px-4 m-1.5 rounded-full leading-9 text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
                     <span class="text-md font-medium whitespace-nowrap">{{tag[textProperty]}}</span>
                     <mat-icon class="icon-size-5 ml-2 cursor-pointer" [svgIcon]="'mat_outline:link_off'" (click)="removeTag(tag)" [matTooltip]="'RemoveLink' | translate"></mat-icon>

@@ -33,6 +33,7 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
   public filteredTags: any[];
   private tagsPanelOverlayRef: OverlayRef;
   private tagFilter$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  selectedTags: any[];
   templatePortal: TemplatePortal<any>;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
@@ -67,6 +68,10 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
     if (changes['allTags'])
     {
       this.applyTagFilter();
+    }
+    if (changes['selectedTagIds'])
+    {
+      this.updateSelectedTags();
     }
   }
 
@@ -121,6 +126,7 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
     // Add the tag
     this.selectedTagIds.unshift(tag[this.idProperty]);
     this.closeTagOverlay();
+    this.updateSelectedTags();
 
     this.changeDetectorRef.markForCheck();
     this.onChange(this.selectedTagIds);
@@ -132,6 +138,7 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
 
     // Remove the tag
     this.selectedTagIds.splice(this.selectedTagIds.findIndex(id => id === tag[this.idProperty]), 1);
+    this.updateSelectedTags();
 
     this.changeDetectorRef.markForCheck();
     this.onChange(this.selectedTagIds);
@@ -151,7 +158,16 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
 
   trackByFn(index: number, item: any): any
   {
-    return item[this.idProperty] || index;
+    return item === null || item == undefined
+      ? index
+      : item[this.idProperty] || index;
+  }
+
+  updateSelectedTags()
+  {
+    this.selectedTags = this.selectedTagIds.map(sel => this.allTags.find(tag => tag[this.idProperty] === sel))
+      .filter(tag => tag !== null && tag !== undefined);
+    this.changeDetectorRef.markForCheck();
   }
 
   markAsTouched()
@@ -227,5 +243,5 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
       // Detach it
       this.templatePortal.detach();
     }
-  };
+  }
 }
