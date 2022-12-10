@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations.Reductions;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Price;
@@ -8,6 +9,6 @@ public class RecalculatePriceWhenReductionChanged : IEventToCommandTranslation<R
 {
     public IEnumerable<IRequest> Translate(ReductionChanged e)
     {
-        yield return new RecalculatePriceCommand { RegistrationId = e.RegistrationId };
+        yield return new RecalculatePriceAndWaitingListCommand { RegistrationId = e.RegistrationId };
     }
 }

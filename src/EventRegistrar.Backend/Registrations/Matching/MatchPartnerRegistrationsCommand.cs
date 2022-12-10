@@ -6,7 +6,6 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrables;
-using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.ReadModels;
 using EventRegistrar.Backend.Spots;
@@ -145,10 +144,8 @@ public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPart
         }
 
         // update waiting list
-        _dirtyTagger.UpdateSegment<PriceSegment>(registration1.Id);
-        _dirtyTagger.UpdateSegment<PriceSegment>(registration2.Id);
-        _dirtyTagger.UpdateSegment<RegistrationOnWaitingListSegment>(registration1.Id);
-        _dirtyTagger.UpdateSegment<RegistrationOnWaitingListSegment>(registration2.Id);
+        _dirtyTagger.UpdateSegment<RegistrationPriceAndWaitingListSegment>(registration1.Id);
+        _dirtyTagger.UpdateSegment<RegistrationPriceAndWaitingListSegment>(registration2.Id);
 
         var mailType = isWaitingList
                            ? MailType.PartnerRegistrationMatchedOnWaitingList

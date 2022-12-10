@@ -1,7 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Spots;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList;
 
@@ -11,7 +10,7 @@ public class CheckIfRegistrationIsOnWaitingListWhenSpotRemoved : IEventToCommand
     {
         if (e.Reason == RemoveSpotReason.Modification)
         {
-            yield return new CheckIfRegistrationHasMovedUpCommand { RegistrationId = e.RegistrationId };
+            yield return new RecalculatePriceAndWaitingListCommand { RegistrationId = e.RegistrationId };
         }
     }
 }

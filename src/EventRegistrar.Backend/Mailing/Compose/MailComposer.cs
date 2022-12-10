@@ -289,7 +289,7 @@ public class MailComposer
 
     private async Task<string> GetSpotList(Registration registration, string language)
     {
-        var (priceOriginal, priceAdmitted, _, packagesOriginal, packagesAdmitted) = await _priceCalculator.CalculatePrice(registration.Id);
+        var (_, _, _, _, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registration.Id);
 
         var result = new StringBuilder();
         result.AppendLine("<table>");

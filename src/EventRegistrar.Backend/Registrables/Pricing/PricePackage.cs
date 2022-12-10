@@ -13,6 +13,8 @@ public class PricePackage : Entity
     public string Name { get; set; } = null!;
     public decimal Price { get; set; }
     public ICollection<PricePackagePart>? Parts { get; set; }
+
+    public bool AllowAsFallback { get; set; }
 }
 
 public class PricePackageMap : EntityMap<PricePackage>

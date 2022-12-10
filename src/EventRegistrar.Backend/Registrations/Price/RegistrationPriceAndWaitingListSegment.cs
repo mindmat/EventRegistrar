@@ -3,13 +3,13 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Registrations.Price;
 
-public class PriceSegment : IDirtySegment
+public class RegistrationPriceAndWaitingListSegment : IDirtySegment
 {
     public void EnqueueCommand(CommandQueue commandQueue, Guid entityId)
     {
-        commandQueue.EnqueueCommand(new RecalculatePriceCommand { RegistrationId = entityId });
+        commandQueue.EnqueueCommand(new RecalculatePriceAndWaitingListCommand { RegistrationId = entityId });
     }
 
     public string Entity => nameof(Registration);
-    public string Name => nameof(PriceSegment);
+    public string Name => nameof(RegistrationPriceAndWaitingListSegment);
 }

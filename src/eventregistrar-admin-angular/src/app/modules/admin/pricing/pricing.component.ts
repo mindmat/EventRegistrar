@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { PricePackageDto, PricePackagePartDto, PricePackagePartSelectionTypeOption, RegistrableDisplayItem } from 'app/api/api';
+import { PricePackageDto, PricePackagePartSelectionTypeOption, RegistrableDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { PricingService } from './pricing.service';
 import { RegistrablesService } from './registrables.service';

@@ -48,6 +48,7 @@ public class SavePricingCommandHandler : IRequestHandler<SavePricingCommand>
 
             package.Name = packageToSave.Name ?? string.Empty;
             package.Price = packageToSave.Price;
+            package.AllowAsFallback = packageToSave.AllowAsFallback;
 
             foreach (var partToSave in packageToSave.Parts ?? Enumerable.Empty<PricePackagePartDto>())
             {

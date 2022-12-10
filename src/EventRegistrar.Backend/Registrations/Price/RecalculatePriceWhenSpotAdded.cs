@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Spots;
+
 using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Price;
@@ -8,6 +9,9 @@ public class RecalculatePriceWhenSpotAdded : IEventToCommandTranslation<SpotAdde
 {
     public IEnumerable<IRequest> Translate(SpotAdded e)
     {
-        if (!e.IsInitialProcessing) yield return new RecalculatePriceCommand { RegistrationId = e.RegistrationId };
+        if (!e.IsInitialProcessing)
+        {
+            yield return new RecalculatePriceAndWaitingListCommand { RegistrationId = e.RegistrationId };
+        }
     }
 }

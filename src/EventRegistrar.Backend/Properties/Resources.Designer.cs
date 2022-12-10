@@ -178,6 +178,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Als Fallback möglich.
+        /// </summary>
+        internal static string AllowAsFallback {
+            get {
+                return ResourceManager.GetString("AllowAsFallback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Damit kann dieses Paket für eine:n Teilnehmer:in verwendet werden, wenn ein geplantes Paket (noch) nicht verfügbar ist.
+        /// </summary>
+        internal static string AllowAsFallbackExplanation {
+            get {
+                return ResourceManager.GetString("AllowAsFallbackExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Angebotene Sprachen.
         /// </summary>
         internal static string AngeboteneSprachen {

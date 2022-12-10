@@ -156,6 +156,12 @@
   <data name="AddPricePart" xml:space="preserve">
     <value>Neue Auswahl erstellen</value>
   </data>
+  <data name="AllowAsFallback" xml:space="preserve">
+    <value>Als Fallback möglich</value>
+  </data>
+  <data name="AllowAsFallbackExplanation" xml:space="preserve">
+    <value>Damit kann dieses Paket für eine:n Teilnehmer:in verwendet werden, wenn ein geplantes Paket (noch) nicht verfügbar ist</value>
+  </data>
   <data name="AngeboteneSprachen" xml:space="preserve">
     <value>Angebotene Sprachen</value>
   </data>

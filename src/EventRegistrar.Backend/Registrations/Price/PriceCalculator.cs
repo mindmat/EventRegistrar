@@ -26,8 +26,8 @@ public class PriceCalculator
     }
 
     public async Task<(decimal priceOriginal, decimal priceAdmitted, decimal priceAdmittedAndReduced, IReadOnlyCollection<MatchingPackageResult> packagesOriginal,
-        IReadOnlyCollection<MatchingPackageResult>
-        packagesAdmitted)> CalculatePrice(Guid registrationId, CancellationToken cancellationToken = default)
+            IReadOnlyCollection<MatchingPackageResult> packagesAdmitted, bool isOnWaitingList)>
+        CalculatePrice(Guid registrationId, CancellationToken cancellationToken = default)
     {
         var registration = await _registrations.Where(reg => reg.Id == registrationId)
                                                .Include(reg => reg.IndividualReductions)
@@ -42,10 +42,11 @@ public class PriceCalculator
     }
 
     public async Task<(decimal priceOriginal, decimal priceAdmitted, decimal priceAdmittedAndReduced, IReadOnlyCollection<MatchingPackageResult> packagesOriginal,
-        IReadOnlyCollection<MatchingPackageResult>
-        packagesAdmitted)> CalculatePrice(Registration registration,
-                                          IEnumerable<Seat> spots)
+            IReadOnlyCollection<MatchingPackageResult> packagesAdmitted, bool isOnWaitingList)>
+        CalculatePrice(Registration registration,
+                       IEnumerable<Seat> spots)
     {
+        var isOnWaitingList = false;
         var notCancelledSpots = spots.Where(spot => !spot.IsCancelled
                                                  && (spot.RegistrationId == registration.Id
                                                   || spot.RegistrationId_Follower == registration.Id))
@@ -58,9 +59,25 @@ public class PriceCalculator
                                            .ToListAsync();
         var (priceOriginal, packagesOriginal) = CalculatePriceOfSpots(registration.Id, notCancelledSpots, packages);
 
-        var admittedSpots = notCancelledSpots.Where(spot => !spot.IsWaitingList)
-                                             .ToList();
-        var (priceAdmitted, packagesAdmitted) = CalculatePriceOfSpots(registration.Id, admittedSpots, packages);
+        var hasSpotsOnWaitingList = notCancelledSpots.Any(spot => spot.IsWaitingList);
+        var priceAdmitted = priceOriginal;
+        var packagesAdmitted = packagesOriginal;
+        if (hasSpotsOnWaitingList)
+        {
+            var admittedSpots = notCancelledSpots.Where(spot => !spot.IsWaitingList)
+                                                 .ToList();
+            (priceAdmitted, packagesAdmitted) = CalculatePriceOfSpots(registration.Id, admittedSpots, packages);
+
+            var fallbackPackages = packagesAdmitted.Where(adm => !packagesOriginal.Select(ori => ori.Id).Contains(adm.Id))
+                                                   .ToList();
+            if (fallbackPackages.Any(ppk => !ppk.AllowAsFallback))
+            {
+                // don't allow fallback
+                priceAdmitted = 0m;
+                packagesAdmitted = new List<MatchingPackageResult>(0);
+                isOnWaitingList = true;
+            }
+        }
 
         var (priceAdmittedAndReduced, reductionPackage) = GetReducedPrice(priceAdmitted, registration.IndividualReductions);
         if (reductionPackage != null)
@@ -68,7 +85,7 @@ public class PriceCalculator
             packagesAdmitted = packagesAdmitted.Append(reductionPackage.Value).ToList();
         }
 
-        return (priceOriginal, priceAdmitted, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted);
+        return (priceOriginal, priceAdmitted, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, isOnWaitingList);
     }
 
     private static (decimal Price, MatchingPackageResult? ReductionPackage) GetReducedPrice(decimal priceNotReduced, ICollection<IndividualReduction>? individualReductions)
@@ -83,20 +100,26 @@ public class PriceCalculator
         if (overwrite != null)
         {
             var reducedPrice = Math.Max(priceNotReduced, overwrite.Amount);
-            return (overwrite.Amount, new MatchingPackageResult(overwrite.Reason ?? Resources.Reduction,
+            return (overwrite.Amount, new MatchingPackageResult(null,
+                                                                overwrite.Reason ?? Resources.Reduction,
                                                                 reducedPrice - priceNotReduced,
+                                                                false,
                                                                 new List<MatchingPackageSpot>()));
         }
 
         var totalReduction = individualReductions.Select(ird => ird.Amount)
                                                  .Sum();
         var priceAdmittedAndReduced = Math.Max(0m, priceNotReduced - totalReduction);
-        return (priceAdmittedAndReduced, new MatchingPackageResult(Resources.Reduction,
+        return (priceAdmittedAndReduced, new MatchingPackageResult(null,
+                                                                   Resources.Reduction,
                                                                    -totalReduction,
+                                                                   false,
                                                                    individualReductions.Select(ird => new MatchingPackageSpot(ird.Reason ?? Resources.Reduction, -ird.Amount))));
     }
 
-    private (decimal Price, IReadOnlyCollection<MatchingPackageResult> matchingPackages) CalculatePriceOfSpots(Guid registrationId, IReadOnlyCollection<Seat> spots, List<PricePackage> packages)
+    private (decimal Price, IReadOnlyCollection<MatchingPackageResult> matchingPackages) CalculatePriceOfSpots(Guid registrationId,
+                                                                                                               IReadOnlyCollection<Seat> spots,
+                                                                                                               List<PricePackage> packages)
     {
         var bookedRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId));
         List<MatchingPackage> matchingPackages = new();
@@ -169,11 +192,13 @@ public class PriceCalculator
 
         var price = matchingPackages.Sum(ppk => ppk.Price);
         return (price, matchingPackages.Select(pkg => new MatchingPackageResult
-                                                      {
-                                                          Name = pkg.Package.Name,
-                                                          Price = pkg.Price,
-                                                          Spots = pkg.Spots
-                                                      })
+                                               (
+                                                   pkg.Package.Id,
+                                                   pkg.Package.Name,
+                                                   pkg.Price,
+                                                   pkg.Package.AllowAsFallback,
+                                                   pkg.Spots
+                                               ))
                                        .ToList());
     }
 
@@ -225,8 +250,10 @@ public record struct MatchingPackage(PricePackage Package,
                                      decimal Price,
                                      IEnumerable<MatchingPackageSpot> Spots);
 
-public record struct MatchingPackageResult(string Name,
+public record struct MatchingPackageResult(Guid? Id,
+                                           string Name,
                                            decimal Price,
+                                           bool AllowAsFallback,
                                            IEnumerable<MatchingPackageSpot> Spots);
 
 public record MatchingPackageSpot(string Name,

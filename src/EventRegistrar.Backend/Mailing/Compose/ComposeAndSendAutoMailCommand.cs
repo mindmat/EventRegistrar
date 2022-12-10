@@ -5,7 +5,6 @@ using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
 using EventRegistrar.Backend.Mailing.Templates;
-using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.ReadModels;
@@ -67,7 +66,7 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
 
     public async Task<Unit> Handle(ComposeAndSendAutoMailCommand command, CancellationToken cancellationToken)
     {
-        await _dirtyTagger.WaitForRemovedTags(command.RegistrationId, typeof(PriceSegment), typeof(RegistrationOnWaitingListSegment));
+        await _dirtyTagger.WaitForRemovedTags(command.RegistrationId, typeof(RegistrationPriceAndWaitingListSegment));
 
         string? dataTypeFullName = null;
         string? dataJson = null;

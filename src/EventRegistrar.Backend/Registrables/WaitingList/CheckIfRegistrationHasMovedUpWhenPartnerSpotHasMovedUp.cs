@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Registrations.Price;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList;
 
@@ -8,12 +9,12 @@ public class CheckIfRegistrationHasMovedUpWhenPartnerSpotHasMovedUp : IEventToCo
     {
         if (e.RegistrationId != null)
         {
-            yield return new CheckIfRegistrationHasMovedUpCommand { RegistrationId = e.RegistrationId.Value };
+            yield return new RecalculatePriceAndWaitingListCommand { RegistrationId = e.RegistrationId.Value };
         }
 
         if (e.RegistrationId_Follower != null)
         {
-            yield return new CheckIfRegistrationHasMovedUpCommand { RegistrationId = e.RegistrationId_Follower.Value };
+            yield return new RecalculatePriceAndWaitingListCommand { RegistrationId = e.RegistrationId_Follower.Value };
         }
     }
 }
