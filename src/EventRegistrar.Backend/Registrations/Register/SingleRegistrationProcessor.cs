@@ -98,7 +98,7 @@ public class SingleRegistrationProcessor
                     //    }
                     case QuestionMappingType.Remarks:
                         {
-                            if (!string.IsNullOrWhiteSpace(response.ResponseString))
+                            if (string.IsNullOrWhiteSpace(response.ResponseString))
                             {
                                 break;
                             }
