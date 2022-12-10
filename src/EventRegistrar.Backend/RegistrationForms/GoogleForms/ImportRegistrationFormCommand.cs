@@ -1,6 +1,8 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations.Responses;
 
@@ -18,6 +20,7 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
 {
     private readonly IQueryable<Event> _events;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IEventBus _eventBus;
     private readonly IRepository<RegistrationForm> _forms;
     private readonly IRepository<QuestionOption> _questionOptions;
     private readonly IRepository<Response> _responses;
@@ -30,7 +33,8 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
                                                 IRepository<QuestionOption> questionOptions,
                                                 IRepository<Response> responses,
                                                 IQueryable<Event> events,
-                                                IDateTimeProvider dateTimeProvider)
+                                                IDateTimeProvider dateTimeProvider,
+                                                IEventBus eventBus)
     {
         _forms = forms;
         _rawForms = rawForms;
@@ -39,6 +43,7 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
         _responses = responses;
         _events = events;
         _dateTimeProvider = dateTimeProvider;
+        _eventBus = eventBus;
     }
 
     public async Task<Unit> Handle(ImportRegistrationFormCommand command, CancellationToken cancellationToken)
@@ -172,7 +177,11 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
         }
 
         rawForm.Processed = _dateTimeProvider.Now;
-
+        _eventBus.Publish(new QueryChanged
+                          {
+                              EventId = command.EventId,
+                              QueryName = nameof(RegistrationFormsQuery)
+                          });
         return Unit.Value;
     }
 }
