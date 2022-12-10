@@ -210,12 +210,6 @@ public class SingleRegistrationProcessor
                                 break;
                             }
 
-                        case MappingType.Reduction:
-                            {
-                                registration.IsReduced = true;
-                                break;
-                            }
-
                         case MappingType.RoleLeader:
                             {
                                 defaultRole = Role.Leader;

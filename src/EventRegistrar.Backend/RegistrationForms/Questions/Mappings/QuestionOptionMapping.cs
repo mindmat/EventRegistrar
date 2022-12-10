@@ -39,7 +39,6 @@ public enum MappingType
     PartnerRegistrableLeader = 3,
     PartnerRegistrableFollower = 4,
     Language = 5,
-    Reduction = 6,
     RoleLeader = 7,
     RoleFollower = 8
 }

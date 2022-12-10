@@ -156,7 +156,6 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
                 "de" => $"{Properties.Resources.Language}: {Properties.Resources.German}",
                 _    => $"{Properties.Resources.Language}: ?"
             },
-            MappingType.Reduction                  => Properties.Resources.Reduction,
             MappingType.PartnerRegistrableLeader   => $"{registrableName} ({Properties.Resources.Leader})",
             MappingType.PartnerRegistrableFollower => $"{registrableName} ({Properties.Resources.Follower})",
             MappingType.RoleLeader                 => $"{Properties.Resources.Role}: {Properties.Resources.Leader}",

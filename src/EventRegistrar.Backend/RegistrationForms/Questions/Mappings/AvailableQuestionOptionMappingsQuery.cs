@@ -69,13 +69,6 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
                                                     .ToListAsync(cancellationToken);
         result.AddRange(singleRegistrables);
 
-        // Reduction
-        result.Add(new AvailableQuestionOptionMapping
-                   {
-                       Type = MappingType.Reduction,
-                       Name = Properties.Resources.Reduction
-                   });
-
         // Languages
         result.Add(new AvailableQuestionOptionMapping
                    {
