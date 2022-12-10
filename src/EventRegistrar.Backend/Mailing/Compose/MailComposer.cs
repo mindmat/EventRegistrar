@@ -129,7 +129,7 @@ public class MailComposer
                 }
                 else if (placeholderKey == MailPlaceholder.Comments)
                 {
-                    templateFiller[key] = registrationForPrefix?.Remarks;
+                    templateFiller[key] = registrationForPrefix?.Remarks?.ReplaceLineEndings("<br/>");
                 }
                 else if (placeholderKey == MailPlaceholder.Price)
                 {
