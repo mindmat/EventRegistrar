@@ -127,6 +127,10 @@ public class MailComposer
                 {
                     templateFiller[key] = registrationForPrefix?.PartnerOriginal;
                 }
+                else if (placeholderKey == MailPlaceholder.Comments)
+                {
+                    templateFiller[key] = registrationForPrefix?.Remarks;
+                }
                 else if (placeholderKey == MailPlaceholder.Price)
                 {
                     var price = parts.prefix == null

@@ -50,7 +50,10 @@ public enum MailPlaceholder
     UnpaidAmount = 10,
     CancellationReason = 11,
     AcceptedDate = 12,
-    Reminder1Date = 13
+    Reminder1Date = 13,
+
+    [PartnerPlaceholder]
+    Comments = 14
 }
 
 public class AutoMailPlaceholderQueryHandler : IRequestHandler<AutoMailPlaceholderQuery, IEnumerable<PlaceholderDescription>>
