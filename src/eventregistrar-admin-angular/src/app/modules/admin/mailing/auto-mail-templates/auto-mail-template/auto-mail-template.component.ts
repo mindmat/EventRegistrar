@@ -16,7 +16,7 @@ import FroalaEditor from "froala-editor";
 export class AutoMailTemplateComponent implements OnInit
 {
   editorRef: FroalaEditor;
-  @ViewChild('editor', { static: true }) editor: ElementRef<HTMLElement>;
+  @ViewChild('editor', { static: false }) editor: ElementRef<HTMLElement>;
 
   private unsubscribeAll: Subject<any> = new Subject<any>();
   private placeholders: PlaceholderDescription[];
@@ -46,29 +46,7 @@ export class AutoMailTemplateComponent implements OnInit
       },
     });
 
-  public options = {
-    htmlRemoveTags: [],
-    Key: '',
-    events: {
-      initialized: e =>
-      {
-        this.editorRef = e.getEditor();
-        this.tribute.attach(this.editor.nativeElement);
-        if (this.initialHtml)
-        {
-          this.editorRef.html.set(this.initialHtml);
-        }
-        // pick mention with Enter, don't propagate to the html editor 
-        this.editor.nativeElement.addEventListener('keydown', e =>
-        {
-          if (e.key == FroalaEditor.KEYCODE.ENTER && this.tribute.isActive)
-          {
-            return false;
-          }
-        }, true);
-      }
-    }
-  };
+  public options = null;
 
   constructor(private service: AutoMailTemplateService,
     private fb: FormBuilder,
@@ -111,6 +89,7 @@ export class AutoMailTemplateComponent implements OnInit
             if (this.initialHtml)
             {
               this.editorRef.html.set(this.initialHtml);
+              this.changeDetectorRef.markForCheck();
             }
             // pick mention with Enter, don't propagate to the html editor 
             this.editor.nativeElement.addEventListener('keydown', e =>
