@@ -79,7 +79,7 @@ public class PriceCalculator
                 if (fallbackPackages.All(ppk => ppk.AllowAsFallback))
                 {
                     // allow fallback
-                    isOnWaitingList = allCoveredAdmitted;
+                    isOnWaitingList = !allCoveredAdmitted;
                 }
                 else
                 {
