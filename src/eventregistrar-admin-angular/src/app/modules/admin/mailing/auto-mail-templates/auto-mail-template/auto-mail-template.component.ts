@@ -80,7 +80,7 @@ export class AutoMailTemplateComponent implements OnInit
     {
       this.options = {
         htmlRemoveTags: [],
-        Key: key,
+        key: key,
         events: {
           initialized: e =>
           {
