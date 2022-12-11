@@ -55,6 +55,6 @@ public class TemplateFiller
         var key = match.Groups["property"].Value.ToUpper();
         return _parameters.TryGetValue(key, out var value) && value != null
                    ? value
-                   : "?";
+                   : string.Empty;
     }
 }
