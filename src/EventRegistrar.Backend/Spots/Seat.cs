@@ -17,7 +17,7 @@ public class Seat : Entity
     public Guid? RegistrationId_Follower { get; set; }
     public Registration? Registration_Follower { get; set; }
 
-    public DateTime FirstPartnerJoined { get; set; }
+    public DateTimeOffset FirstPartnerJoined { get; set; }
     public bool IsCancelled { get; set; }
     public bool IsPartnerSpot { get; set; }
     public bool IsWaitingList { get; set; }

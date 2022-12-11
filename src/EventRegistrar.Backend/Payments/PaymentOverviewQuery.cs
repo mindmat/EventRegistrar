@@ -60,13 +60,13 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
                                                                  RegistrableId = rbl.Id,
                                                                  rbl.DisplayName,
                                                                  Price = rbl.Price!.Value,
-                                                                 SpotsAvailable = rbl.MaximumSingleSeats ?? rbl.MaximumDoubleSeats.Value * 2,
+                                                                 SpotsAvailable = rbl.MaximumSingleSeats ?? rbl.MaximumDoubleSeats!.Value * 2,
                                                                  LeaderCount = rbl.Spots!
-                                                                                  .Where(seat => !seat.IsCancelled && !seat.IsWaitingList)
-                                                                                  .Count(seat => seat.RegistrationId != null),
-                                                                 FollowerCount = rbl.Spots
-                                                                                    .Where(seat => !seat.IsCancelled && !seat.IsWaitingList)
-                                                                                    .Count(seat => seat.RegistrationId_Follower != null)
+                                                                                  .Where(spot => !spot.IsCancelled && !spot.IsWaitingList)
+                                                                                  .Count(spot => spot.RegistrationId != null),
+                                                                 FollowerCount = rbl.Spots!
+                                                                                    .Where(spot => !spot.IsCancelled && !spot.IsWaitingList)
+                                                                                    .Count(spot => spot.RegistrationId_Follower != null)
                                                              })
                                               .ToListAsync(cancellationToken);
 

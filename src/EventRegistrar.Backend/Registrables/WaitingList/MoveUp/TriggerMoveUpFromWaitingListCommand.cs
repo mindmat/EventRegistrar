@@ -161,9 +161,9 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
         return Unit.Value;
     }
 
-    private static DateTime GetAverage(DateTime dateTime1, DateTime dateTime2)
+    private static DateTimeOffset GetAverage(DateTimeOffset dateTime1, DateTimeOffset dateTime2)
     {
-        return new DateTime((dateTime1.Ticks + dateTime2.Ticks) / 2);
+        return new DateTimeOffset((dateTime1.Ticks + dateTime2.Ticks) / 2, dateTime1.Offset);
     }
 
     private async Task<bool> ComplementSeatFromWaitingList(Seat seatToComplement, ICollection<Seat> waitingList)
@@ -234,7 +234,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
                           });
     }
 
-    private async Task PromoteSpotFromWaitingList(Seat spot, ICollection<Seat> waitingList = null)
+    private async Task PromoteSpotFromWaitingList(Seat spot, ICollection<Seat>? waitingList = null)
     {
         var registrationId = spot.RegistrationId ?? spot.RegistrationId_Follower;
         if (registrationId == null)
@@ -260,7 +260,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
         }
         else
         {
-            if (spot.RegistrationId.HasValue)
+            if (spot.RegistrationId != null)
             {
                 PublishPromotedEvent(spot.RegistrableId, spot.RegistrationId.Value);
             }

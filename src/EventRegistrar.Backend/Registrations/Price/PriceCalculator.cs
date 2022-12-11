@@ -57,25 +57,37 @@ public class PriceCalculator
                                            .ThenInclude(ppp => ppp.Registrables!)
                                            .ThenInclude(rip => rip.Registrable)
                                            .ToListAsync();
-        var (priceOriginal, packagesOriginal) = CalculatePriceOfSpots(registration.Id, notCancelledSpots, packages);
+        var (priceOriginal, packagesOriginal, allCoveredOriginal) = CalculatePriceOfSpots(registration.Id, notCancelledSpots, packages);
 
         var hasSpotsOnWaitingList = notCancelledSpots.Any(spot => spot.IsWaitingList);
         var priceAdmitted = priceOriginal;
         var packagesAdmitted = packagesOriginal;
-        if (hasSpotsOnWaitingList)
+        var originalPackageIds = packagesOriginal.Select(pkg => pkg.Id).ToList();
+
+        if (hasSpotsOnWaitingList || !allCoveredOriginal)
         {
+            isOnWaitingList = true;
             var admittedSpots = notCancelledSpots.Where(spot => !spot.IsWaitingList)
                                                  .ToList();
-            (priceAdmitted, packagesAdmitted) = CalculatePriceOfSpots(registration.Id, admittedSpots, packages);
+            (priceAdmitted, packagesAdmitted, var allCoveredAdmitted) = CalculatePriceOfSpots(registration.Id, admittedSpots, packages);
 
-            var fallbackPackages = packagesAdmitted.Where(adm => !packagesOriginal.Select(ori => ori.Id).Contains(adm.Id))
-                                                   .ToList();
-            if (fallbackPackages.Any(ppk => !ppk.AllowAsFallback))
+            var samePackages = packagesAdmitted.Select(pkg => pkg.Id).All(pid => originalPackageIds.Contains(pid));
+            if (!samePackages)
             {
-                // don't allow fallback
-                priceAdmitted = 0m;
-                packagesAdmitted = new List<MatchingPackageResult>(0);
-                isOnWaitingList = true;
+                var fallbackPackages = packagesAdmitted.Where(adm => !packagesOriginal.Select(ori => ori.Id).Contains(adm.Id))
+                                                       .ToList();
+                if (fallbackPackages.All(ppk => ppk.AllowAsFallback))
+                {
+                    // allow fallback
+                    isOnWaitingList = allCoveredAdmitted;
+                }
+                else
+                {
+                    // don't allow fallback
+                    priceAdmitted = 0m;
+                    packagesAdmitted = new List<MatchingPackageResult>(0);
+                    isOnWaitingList = true;
+                }
             }
         }
 
@@ -117,9 +129,9 @@ public class PriceCalculator
                                                                    individualReductions.Select(ird => new MatchingPackageSpot(ird.Reason ?? Resources.Reduction, -ird.Amount))));
     }
 
-    private (decimal Price, IReadOnlyCollection<MatchingPackageResult> matchingPackages) CalculatePriceOfSpots(Guid registrationId,
-                                                                                                               IReadOnlyCollection<Seat> spots,
-                                                                                                               List<PricePackage> packages)
+    private (decimal Price, IReadOnlyCollection<MatchingPackageResult> matchingPackages, bool allSpotsCovered) CalculatePriceOfSpots(Guid registrationId,
+        IReadOnlyCollection<Seat> spots,
+        List<PricePackage> packages)
     {
         var bookedRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId));
         List<MatchingPackage> matchingPackages = new();
@@ -190,16 +202,19 @@ public class PriceCalculator
             }
         }
 
+        var notCoveredRegistrableIds = bookedRegistrableIds.Except(matchingPackages.SelectMany(pkg => pkg.MatchingRequiredRegistrableId.Concat(pkg.MatchingOptionalRegistrableId)));
         var price = matchingPackages.Sum(ppk => ppk.Price);
-        return (price, matchingPackages.Select(pkg => new MatchingPackageResult
-                                               (
-                                                   pkg.Package.Id,
-                                                   pkg.Package.Name,
-                                                   pkg.Price,
-                                                   pkg.Package.AllowAsFallback,
-                                                   pkg.Spots
-                                               ))
-                                       .ToList());
+        return (price,
+                   matchingPackages.Select(pkg => new MatchingPackageResult
+                                           (
+                                               pkg.Package.Id,
+                                               pkg.Package.Name,
+                                               pkg.Price,
+                                               pkg.Package.AllowAsFallback,
+                                               pkg.Spots
+                                           ))
+                                   .ToList(),
+                   notCoveredRegistrableIds.Any());
     }
 
     private string GetRegistrableName(Guid registrationId,

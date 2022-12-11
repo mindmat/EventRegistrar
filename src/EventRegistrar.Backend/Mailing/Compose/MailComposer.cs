@@ -1,14 +1,9 @@
 ﻿using System.Text;
-using System.Text.RegularExpressions;
 
 using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Payments.Due;
-using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Price;
-using EventRegistrar.Backend.Registrations.Responses;
-using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Mailing.Compose;
 
@@ -20,14 +15,12 @@ public class MailComposer
     private readonly DuePaymentConfiguration _duePaymentConfiguration;
     private readonly PriceCalculator _priceCalculator;
     private readonly IQueryable<Event> _events;
-    private readonly IQueryable<SpotMailLine> _spotMailLines;
     private readonly ILogger _log;
     private readonly PaidAmountSummarizer _paidAmountSummarizer;
     private readonly IQueryable<Registration> _registrations;
 
     public MailComposer(IQueryable<Registration> registrations,
                         IQueryable<Event> events,
-                        IQueryable<SpotMailLine> spotMailLines,
                         ILogger log,
                         PaidAmountSummarizer paidAmountSummarizer,
                         DuePaymentConfiguration duePaymentConfiguration,
@@ -35,7 +28,6 @@ public class MailComposer
     {
         _registrations = registrations;
         _events = events;
-        _spotMailLines = spotMailLines;
         _log = log;
         _paidAmountSummarizer = paidAmountSummarizer;
         _duePaymentConfiguration = duePaymentConfiguration;
@@ -121,7 +113,7 @@ public class MailComposer
                 }
                 else if ((placeholderKey == MailPlaceholder.SpotList || parts.key.ToUpperInvariant() == "SEATLIST") && registrationForPrefix != null)
                 {
-                    templateFiller[key] = await GetSpotList(registrationForPrefix, language);
+                    templateFiller[key] = await GetSpotList(registrationForPrefix.Id, language);
                 }
                 else if (placeholderKey == MailPlaceholder.PartnerName || parts.key?.ToUpperInvariant() == "PARTNER")
                 {
@@ -222,73 +214,9 @@ public class MailComposer
                    : (null, key);
     }
 
-    private string GetSpotText(Seat seat,
-                               Role role,
-                               string language,
-                               ICollection<Response> responses)
+    private async Task<string> GetSpotList(Guid registrationId, string language)
     {
-        if (seat?.Registrable == null)
-        {
-            return "?";
-        }
-
-        var text = _spotMailLines
-                   .FirstOrDefault(sml => sml.RegistrableId == seat.RegistrableId && sml.Language == language)
-                   ?.Text;
-        if (text != null)
-        {
-            if (!text.StartsWith("- "))
-            {
-                text = "- " + text;
-            }
-
-            text = text.Replace("{Name}", seat.Registrable.DisplayName, StringComparison.InvariantCultureIgnoreCase)
-                       .Replace("{Role}", role.ToString(), StringComparison.InvariantCultureIgnoreCase);
-            text = Regex.Replace(text, "{.*?}", mtc => FillResponse(mtc, responses));
-        }
-        else
-        {
-            text = $"- {seat.Registrable.DisplayName}";
-            if (seat.Registrable.MaximumDoubleSeats.HasValue)
-            {
-                // enrich info, e.g. "Lindy Hop Intermediate, Role: {role}, Partner: {email}"
-                // HACK: hardcoded
-                //var role = responses.Lookup("ROLE", "?");
-                //var partner = responses.Lookup("PARTNER", "?");
-                if (language == Language.German)
-                {
-                    text += $", Rolle: {role}"; // + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
-                }
-                else
-                {
-                    text += $", Role: {role}"; // + (seat.PartnerEmail == null ? string.Empty : $", Partner: {partner}");
-                }
-            }
-        }
-
-        if (seat.IsCancelled)
-        {
-            text += language == Language.German ? " (storniert)" : " (cancelled)";
-        }
-
-        if (seat.IsWaitingList)
-        {
-            text += language == Language.German ? " (Warteliste)" : " (waiting list)";
-        }
-
-        return text;
-    }
-
-    private string? FillResponse(Match match, ICollection<Response> responses)
-    {
-        var questionId = Guid.Parse(match.Value);
-        var response = responses.FirstOrDefault(rsp => rsp.QuestionId == questionId)?.ResponseString;
-        return response;
-    }
-
-    private async Task<string> GetSpotList(Registration registration, string language)
-    {
-        var (_, _, _, _, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registration.Id);
+        var (_, _, _, _, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registrationId);
 
         var result = new StringBuilder();
         result.AppendLine("<table>");
@@ -315,34 +243,11 @@ public class MailComposer
         result.AppendLine("</table>");
 
         return result.ToString();
-        var seatLines = new List<(int sortKey, string seatLine)>();
-        if (registration.Seats_AsLeader != null)
-        {
-            seatLines.AddRange(registration.Seats_AsLeader
-                                           .Where(seat => seat.Registrable.ShowInMailListOrder.HasValue
-                                                       && !seat.IsCancelled)
-                                           .Select(seat => (seat.Registrable.ShowInMailListOrder ?? int.MaxValue,
-                                                               GetSpotText(seat, Role.Leader, language, registration.Responses))));
-        }
 
-        if (registration.Seats_AsFollower != null)
-        {
-            seatLines.AddRange(registration.Seats_AsFollower
-                                           .Where(seat => seat.Registrable.ShowInMailListOrder.HasValue
-                                                       && !seat.IsCancelled)
-                                           .Select(seat => (seat.Registrable.ShowInMailListOrder ?? int.MaxValue,
-                                                               GetSpotText(seat, Role.Follower, language, registration.Responses))));
-        }
 
-        var seatList = string.Join("<br />", seatLines.OrderBy(tmp => tmp.sortKey)
-                                                      .Select(tmp => tmp.seatLine));
-
-        if (registration.SoldOutMessage != null)
-        {
-            seatList += $"<br /><br />{registration.SoldOutMessage.Replace(Environment.NewLine, "<br />")}";
-        }
-
-        _log.LogInformation($"seat list {seatList}");
-        return seatList;
+        //if (registration.SoldOutMessage != null)
+        //{
+        //    seatList += $"<br /><br />{registration.SoldOutMessage.Replace(Environment.NewLine, "<br />")}";
+        //}
     }
 }

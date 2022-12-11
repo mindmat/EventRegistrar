@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Spots;
@@ -8,6 +9,7 @@ namespace EventRegistrar.Backend.Registrations.Register;
 public class SpotManager
 {
     private readonly IEventBus _eventBus;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly ImbalanceManager _imbalanceManager;
     private readonly ILogger _logger;
     private readonly IQueryable<Registration> _registrations;
@@ -19,7 +21,8 @@ public class SpotManager
                        ILogger logger,
                        IQueryable<Registration> registrations,
                        IQueryable<Registrable> registrables,
-                       IEventBus eventBus)
+                       IEventBus eventBus,
+                       IDateTimeProvider dateTimeProvider)
     {
         _seats = seats;
         _imbalanceManager = imbalanceManager;
@@ -27,15 +30,16 @@ public class SpotManager
         _registrations = registrations;
         _registrables = registrables;
         _eventBus = eventBus;
+        _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Seat> ReservePartnerSpot(Guid eventId,
-                                               Registrable registrable,
-                                               Guid registrationId_Leader,
-                                               Guid registrationId_Follower,
-                                               bool initialProcessing)
+    public async Task<Seat?> ReservePartnerSpot(Guid eventId,
+                                                Registrable registrable,
+                                                Guid registrationId_Leader,
+                                                Guid registrationId_Follower,
+                                                bool initialProcessing)
     {
-        var seats = registrable.Spots.Where(st => !st.IsCancelled).ToList();
+        var seats = registrable.Spots!.Where(st => !st.IsCancelled).ToList();
         if (registrable.MaximumSingleSeats.HasValue)
         {
             throw new InvalidOperationException("Unexpected: Attempt to reserve single spot as partner spot");
@@ -48,7 +52,7 @@ public class SpotManager
                        RegistrationId_Follower = registrationId_Follower,
                        RegistrableId = registrable.Id,
                        IsPartnerSpot = true,
-                       FirstPartnerJoined = DateTime.UtcNow
+                       FirstPartnerJoined = _dateTimeProvider.Now
                    };
         if (registrable.MaximumDoubleSeats.HasValue)
         {

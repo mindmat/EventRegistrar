@@ -4,7 +4,7 @@ namespace EventRegistrar.Backend.Spots;
 
 public class SpotDisplayItem
 {
-    public DateTime FirstPartnerJoined { get; set; }
+    public DateTimeOffset FirstPartnerJoined { get; set; }
     public Guid Id { get; set; }
     public bool IsCore { get; set; }
     public bool IsWaitingList { get; set; }
