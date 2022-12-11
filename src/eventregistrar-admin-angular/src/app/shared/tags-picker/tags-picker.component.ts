@@ -45,6 +45,7 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
   writeValue(selectedTagIds: string[]): void
   {
     this.selectedTagIds = selectedTagIds ?? [];
+    this.updateSelectedTags();
     this.changeDetectorRef.markForCheck();
   }
 

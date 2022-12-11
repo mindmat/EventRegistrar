@@ -53,8 +53,7 @@ public class SendMailCommandHandler : IRequestHandler<SendMailCommand>
         var response = await client.SendEmailAsync(msg, cancellationToken);
         if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Accepted)
         {
-            _logger.LogWarning(
-                $"ComposeAndSendMailCommandHandler status {response.StatusCode}, Body {await response.Body.ReadAsStringAsync()}");
+            _logger.LogWarning($"ComposeAndSendMailCommandHandler status {response.StatusCode}, Body {await response.Body.ReadAsStringAsync()}");
         }
         else
         {

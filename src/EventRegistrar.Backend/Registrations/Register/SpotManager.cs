@@ -254,17 +254,18 @@ public class SpotManager
         return seat;
     }
 
-    public async Task<Seat> ReserveSingleSpot(Guid? eventId,
-                                              Guid registrableId,
-                                              Guid registrationId,
-                                              bool initialProcessing)
+    public async Task<Seat?> ReserveSingleSpot(Guid? eventId,
+                                               Guid registrableId,
+                                               Guid registrationId,
+                                               bool initialProcessing)
     {
         var registrable = await _registrables.Where(rbl => rbl.Id == registrableId)
                                              .Include(rbl => rbl.Spots)
-                                             .FirstOrDefaultAsync();
-        var seats = registrable.Spots.Where(st => !st.IsCancelled)
+                                             .FirstAsync();
+        var seats = registrable.Spots!
+                               .Where(st => !st.IsCancelled)
                                .ToList();
-        if (registrable.MaximumDoubleSeats.HasValue)
+        if (registrable.MaximumDoubleSeats != null)
         {
             throw new InvalidOperationException("Unexpected: Attempt to reserve single spot as partner spot");
         }
@@ -276,7 +277,7 @@ public class SpotManager
                        RegistrableId = registrable.Id,
                        FirstPartnerJoined = DateTime.UtcNow
                    };
-        if (registrable.MaximumSingleSeats.HasValue)
+        if (registrable.MaximumSingleSeats != null)
         {
             var waitingList = seats.Any(st => st.IsWaitingList);
             var seatAvailable = !waitingList && seats.Count < registrable.MaximumSingleSeats.Value;
@@ -289,7 +290,7 @@ public class SpotManager
             seat.IsWaitingList = !seatAvailable;
         }
 
-        await _seats.InsertOrUpdateEntity(seat);
+        _seats.InsertObjectTree(seat);
         _eventBus.Publish(new SpotAdded
                           {
                               Id = Guid.NewGuid(),

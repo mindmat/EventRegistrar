@@ -80,14 +80,6 @@ public class RecalculatePriceAndWaitingListCommandHandler : IRequestHandler<Reca
         {
             registration.IsOnWaitingList = isOnWaitingList;
 
-            // non-core spots are also not on waiting list anymore
-            registration.Seats_AsLeader!
-                        .Where(spt => !spt.Registrable!.HasWaitingList && spt.IsWaitingList)
-                        .ForEach(spt => spt.IsWaitingList = false);
-            registration.Seats_AsFollower!
-                        .Where(spt => !spt.Registrable!.HasWaitingList && spt.IsWaitingList)
-                        .ForEach(spt => spt.IsWaitingList = false);
-
             registration.AdmittedAt ??= _dateTimeProvider.Now;
 
             _eventBus.Publish(new RegistrationMovedUpFromWaitingList { RegistrationId = registration.Id });

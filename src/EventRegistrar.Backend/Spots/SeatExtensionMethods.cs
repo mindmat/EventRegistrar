@@ -6,8 +6,15 @@ public static class SeatExtensionMethods
 {
     public static Guid? GetOtherRegistrationId(this Seat seat, Guid registrationId)
     {
-        if (seat.RegistrationId == registrationId) return seat.RegistrationId_Follower;
-        if (seat.RegistrationId_Follower == registrationId) return seat.RegistrationId;
+        if (seat.RegistrationId == registrationId)
+        {
+            return seat.RegistrationId_Follower;
+        }
+
+        if (seat.RegistrationId_Follower == registrationId)
+        {
+            return seat.RegistrationId;
+        }
 
         return null;
     }
@@ -15,22 +22,31 @@ public static class SeatExtensionMethods
     public static Role GetSingleRole(this Seat spot)
     {
         if (spot.IsPartnerSpot || spot.PartnerEmail != null)
+        {
             throw new ArgumentException($"Spot {spot.Id} is not a single seat");
+        }
+
         if (spot.RegistrationId == null && spot.RegistrationId_Follower == null)
+        {
             throw new ArgumentException($"Unexpected situation: Spot {spot.Id} has neither leader nor follower set");
+        }
+
         if (spot.RegistrationId != null && spot.RegistrationId_Follower != null)
+        {
             throw new ArgumentException($"Unexpected situation: Spot {spot.Id} has leader and follower set");
+        }
 
         return spot.RegistrationId != null
-            ? Role.Leader
-            : Role.Follower;
+                   ? Role.Leader
+                   : Role.Follower;
     }
 
     public static bool IsMatchedPartnerSpot(this Seat spot)
     {
         return spot.IsPartnerSpot
             && spot.PartnerEmail != null
-            && spot.RegistrationId != null && spot.RegistrationId_Follower != null; // both set
+            && spot.RegistrationId != null
+            && spot.RegistrationId_Follower != null; // both set
     }
 
     public static bool IsSingleFollowerSpot(this Seat spot)
