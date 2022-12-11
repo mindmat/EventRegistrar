@@ -225,9 +225,10 @@ public class MailComposer
         foreach (var package in packagesAdmitted)
         {
             // Package header
+            var price = package.Price - package.Spots.Sum(spot => spot.PriceAdjustment ?? 0m);
             result.AppendLine("<tr>");
             result.AppendLine($"<td><strong>{package.Name}</strong></td>");
-            result.AppendLine($"<td style=\"text-align: right;\"><strong>{package.Price}</strong></td>");
+            result.AppendLine($"<td style=\"text-align: right;\"><strong>{price}</strong></td>");
             result.AppendLine("</tr>");
 
             // Package content
@@ -255,9 +256,10 @@ public class MailComposer
             foreach (var package in packagesOnWaitingList)
             {
                 // Package header
+                var price = package.Price - package.Spots.Sum(spot => spot.PriceAdjustment ?? 0m);
                 result.AppendLine("<tr>");
                 result.AppendLine($"<td><strong>{package.Name}</strong></td>");
-                result.AppendLine($"<td style=\"text-align: right;\"><strong>{package.Price}</strong></td>");
+                result.AppendLine($"<td style=\"text-align: right;\"><strong>{price}</strong></td>");
                 result.AppendLine("</tr>");
 
                 // Package content
