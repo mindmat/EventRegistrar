@@ -41,6 +41,8 @@ public class MailComposer
                                       string language,
                                       CancellationToken cancellationToken)
     {
+        var cultureInfoBefore = CultureInfo.CurrentUICulture;
+        CultureInfo.CurrentUICulture = new CultureInfo(language);
         var registration = await _registrations.Where(reg => reg.Id == registrationId)
                                                .Include(reg => reg.Seats_AsLeader!)
                                                .ThenInclude(seat => seat.Registrable)
@@ -205,6 +207,7 @@ public class MailComposer
         }
 
         var content = templateFiller.Fill();
+        CultureInfo.CurrentUICulture = cultureInfoBefore;
         return content;
     }
 
@@ -219,8 +222,11 @@ public class MailComposer
     private async Task<string> GetSpotList(Guid registrationId, string language)
     {
         var (_, priceAdmitted, _, packagesOriginal, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registrationId);
-        var resourceSet = Resources.ResourceManager.GetResourceSet(new CultureInfo(language), false, false);
         var result = new StringBuilder();
+
+        // Label
+        result.AppendLine($"<p>{Resources.SpotListLabelAccepted}</p>");
+
         result.AppendLine("<table>");
         result.AppendLine("<tbody>");
         foreach (var package in packagesAdmitted)
@@ -244,7 +250,7 @@ public class MailComposer
 
         // Total
         result.AppendLine("<tr>");
-        result.AppendLine($"<td><strong>{resourceSet?.GetString(nameof(Resources.Total)) ?? Resources.Total}</strong></td>");
+        result.AppendLine($"<td><strong>{Resources.Total}</strong></td>");
         result.AppendLine($"<td style=\"text-align: right;\">{priceAdmitted.ToString("F2")}</td>");
         result.AppendLine("</tr>");
 
@@ -256,8 +262,11 @@ public class MailComposer
                                                     .ToList();
         if (packagesOnWaitingList.Any())
         {
+            // Label
             result.AppendLine("<br/>");
-            result.AppendLine($"<p>{resourceSet?.GetString(nameof(Resources.WaitingList)) ?? Resources.WaitingList}:</p>");
+            result.AppendLine($"<p>{Resources.SpotListLabelWaitingList}</p>");
+
+            // Table
             result.AppendLine("<table>");
             result.AppendLine("<tbody>");
             foreach (var package in packagesOnWaitingList)

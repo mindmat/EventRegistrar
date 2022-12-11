@@ -793,6 +793,12 @@
   <data name="SMS" xml:space="preserve">
     <value>SMS</value>
   </data>
+  <data name="SpotListLabelAccepted" xml:space="preserve">
+    <value>Du bist dabei bei:</value>
+  </data>
+  <data name="SpotListLabelWaitingList" xml:space="preserve">
+    <value>Du bist auf der Warteliste von:</value>
+  </data>
   <data name="Spots" xml:space="preserve">
     <value>Plätze</value>
   </data>

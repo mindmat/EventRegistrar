@@ -2091,6 +2091,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Du bist dabei bei:.
+        /// </summary>
+        internal static string SpotListLabelAccepted {
+            get {
+                return ResourceManager.GetString("SpotListLabelAccepted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Du bist auf der Warteliste von:.
+        /// </summary>
+        internal static string SpotListLabelWaitingList {
+            get {
+                return ResourceManager.GetString("SpotListLabelWaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plätze.
         /// </summary>
         internal static string Spots {

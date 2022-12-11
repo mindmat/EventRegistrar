@@ -615,6 +615,9 @@
   <data name="ReleaseMails" xml:space="preserve">
     <value>Release mails</value>
   </data>
+  <data name="Remarks" xml:space="preserve">
+    <value>Comments</value>
+  </data>
   <data name="ReminderMail1" xml:space="preserve">
     <value>Reminder mail 1</value>
   </data>
@@ -698,6 +701,12 @@
   </data>
   <data name="SMS" xml:space="preserve">
     <value>SMS</value>
+  </data>
+  <data name="SpotListLabelAccepted" xml:space="preserve">
+    <value>You have been accepted for:</value>
+  </data>
+  <data name="SpotListLabelWaitingList" xml:space="preserve">
+    <value>You are on the waiting list for:</value>
   </data>
   <data name="Spots" xml:space="preserve">
     <value>Spots</value>
