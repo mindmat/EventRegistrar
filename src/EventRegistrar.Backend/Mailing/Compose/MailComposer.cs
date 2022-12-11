@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Payments.Due;
@@ -218,7 +219,7 @@ public class MailComposer
     private async Task<string> GetSpotList(Guid registrationId, string language)
     {
         var (_, priceAdmitted, _, packagesOriginal, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registrationId);
-
+        var resourceSet = Resources.ResourceManager.GetResourceSet(new CultureInfo(language), false, false);
         var result = new StringBuilder();
         result.AppendLine("<table>");
         result.AppendLine("<tbody>");
@@ -243,7 +244,7 @@ public class MailComposer
 
         // Total
         result.AppendLine("<tr>");
-        result.AppendLine($"<td><strong>{Resources.Total}</strong></td>");
+        result.AppendLine($"<td><strong>{resourceSet?.GetString(nameof(Resources.Total)) ?? Resources.Total}</strong></td>");
         result.AppendLine($"<td style=\"text-align: right;\">{priceAdmitted.ToString("F2")}</td>");
         result.AppendLine("</tr>");
 
@@ -256,7 +257,7 @@ public class MailComposer
         if (packagesOnWaitingList.Any())
         {
             result.AppendLine("<br/>");
-            result.AppendLine($"<p>{Resources.WaitingList}:</p>");
+            result.AppendLine($"<p>{resourceSet?.GetString(nameof(Resources.WaitingList)) ?? Resources.WaitingList}:</p>");
             result.AppendLine("<table>");
             result.AppendLine("<tbody>");
             foreach (var package in packagesOnWaitingList)
