@@ -48,7 +48,7 @@ export class AutoMailTemplateComponent implements OnInit
 
   public options = {
     htmlRemoveTags: [],
-    key: '',
+    Key: '',
     events: {
       initialized: e =>
       {
@@ -100,7 +100,29 @@ export class AutoMailTemplateComponent implements OnInit
 
     this.api.froalaKey_Query({}).subscribe(key =>
     {
-      this.options.key = key;
+      this.options = {
+        htmlRemoveTags: [],
+        Key: key,
+        events: {
+          initialized: e =>
+          {
+            this.editorRef = e.getEditor();
+            this.tribute.attach(this.editor.nativeElement);
+            if (this.initialHtml)
+            {
+              this.editorRef.html.set(this.initialHtml);
+            }
+            // pick mention with Enter, don't propagate to the html editor 
+            this.editor.nativeElement.addEventListener('keydown', e =>
+            {
+              if (e.key == FroalaEditor.KEYCODE.ENTER && this.tribute.isActive)
+              {
+                return false;
+              }
+            }, true);
+          }
+        }
+      };
       this.changeDetectorRef.markForCheck();
     });
   }
