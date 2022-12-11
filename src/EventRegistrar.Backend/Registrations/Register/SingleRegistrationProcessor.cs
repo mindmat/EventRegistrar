@@ -287,18 +287,17 @@ public class SingleRegistrationProcessor
             }
         }
 
-        var isOnWaitingList = spots.Any(seat => seat.IsWaitingList);
+        var (original, admitted, admittedAndReduced, _, _, isOnWaitingList) = await _priceCalculator.CalculatePrice(registration, spots);
+        registration.Price_Original = original;
+        registration.Price_Admitted = admitted;
+        registration.Price_AdmittedAndReduced = admittedAndReduced;
+
         registration.IsOnWaitingList = isOnWaitingList;
         if (registration.IsOnWaitingList == false
          && registration.AdmittedAt == null)
         {
             registration.AdmittedAt = _dateTimeProvider.Now;
         }
-
-        var (original, admitted, admittedAndReduced, _, _, _) = await _priceCalculator.CalculatePrice(registration, spots);
-        registration.Price_Original = original;
-        registration.Price_Admitted = admitted;
-        registration.Price_AdmittedAndReduced = admittedAndReduced;
 
         await _registrations.InsertOrUpdateEntity(registration);
 
