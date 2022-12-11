@@ -2247,6 +2247,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Warteliste.
+        /// </summary>
+        internal static string WaitingList {
+            get {
+                return ResourceManager.GetString("WaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zugriffsanfragen.
         /// </summary>
         internal static string Zugriffsanfragen {

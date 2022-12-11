@@ -2,6 +2,7 @@
 
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Payments.Due;
+using EventRegistrar.Backend.Properties;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Price;
 
@@ -216,7 +217,7 @@ public class MailComposer
 
     private async Task<string> GetSpotList(Guid registrationId, string language)
     {
-        var (_, _, _, _, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registrationId);
+        var (_, _, _, packagesOriginal, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registrationId);
 
         var result = new StringBuilder();
         result.AppendLine("<table>");
@@ -241,6 +242,37 @@ public class MailComposer
 
         result.AppendLine("</tbody>");
         result.AppendLine("</table>");
+
+
+        var packagesOnWaitingList = packagesOriginal.ExceptBy(packagesAdmitted.Select(pkg => pkg.Id), pkg => pkg.Id)
+                                                    .ToList();
+        if (packagesOnWaitingList.Any())
+        {
+            result.AppendLine("<br/>");
+            result.AppendLine($"<p>{Resources.WaitingList}:</p>");
+            result.AppendLine("<table>");
+            result.AppendLine("<tbody>");
+            foreach (var package in packagesOnWaitingList)
+            {
+                // Package header
+                result.AppendLine("<tr>");
+                result.AppendLine($"<td><strong>{package.Name}</strong></td>");
+                result.AppendLine($"<td style=\"text-align: right;\"><strong>{package.Price}</strong></td>");
+                result.AppendLine("</tr>");
+
+                // Package content
+                foreach (var matchingPackageSpot in package.Spots)
+                {
+                    result.AppendLine("<tr>");
+                    result.AppendLine($"<td>- {matchingPackageSpot.Name}</td>");
+                    result.AppendLine($"<td style=\"text-align: right;\">{matchingPackageSpot.PriceAdjustment?.ToString("F2")}</td>");
+                    result.AppendLine("</tr>");
+                }
+            }
+
+            result.AppendLine("</tbody>");
+            result.AppendLine("</table>");
+        }
 
         return result.ToString();
 

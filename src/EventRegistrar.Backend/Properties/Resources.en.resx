@@ -741,6 +741,9 @@
   <data name="UserInEventRole_Writer" xml:space="preserve">
     <value>Write</value>
   </data>
+  <data name="WaitingList" xml:space="preserve">
+    <value>Waiting list</value>
+  </data>
   <data name="Zugriffsanfragen" xml:space="preserve">
     <value>Access requests</value>
   </data>

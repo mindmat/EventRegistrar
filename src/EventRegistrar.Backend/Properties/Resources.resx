@@ -847,6 +847,9 @@
   <data name="UserInEventRole_Writer_Description" xml:space="preserve">
     <value>Kann das Tagesgeschäft erledigen</value>
   </data>
+  <data name="WaitingList" xml:space="preserve">
+    <value>Warteliste</value>
+  </data>
   <data name="Zugriffsanfragen" xml:space="preserve">
     <value>Zugriffsanfragen</value>
   </data>
