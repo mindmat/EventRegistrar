@@ -48,6 +48,7 @@ export class AutoMailTemplateComponent implements OnInit
 
   public options = {
     htmlRemoveTags: [],
+    key: '',
     events: {
       initialized: e =>
       {
@@ -96,6 +97,12 @@ export class AutoMailTemplateComponent implements OnInit
         // Mark for check
         this.changeDetectorRef.markForCheck();
       });
+
+    this.api.froalaKey_Query({}).subscribe(key =>
+    {
+      this.options.key = key;
+      this.changeDetectorRef.markForCheck();
+    });
   }
 
   updatePlaceholders(type: MailType)

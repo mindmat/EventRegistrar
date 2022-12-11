@@ -343,19 +343,19 @@
         }
       }
     },
-    "/api/RecalculatePriceCommand": {
+    "/api/RecalculatePriceAndWaitingListCommand": {
       "post": {
         "tags": [
-          "RecalculatePrice"
+          "RecalculatePriceAndWaitingList"
         ],
-        "operationId": "RecalculatePrice_Command",
+        "operationId": "RecalculatePriceAndWaitingList_Command",
         "requestBody": {
-          "x-name": "RecalculatePriceCommand",
+          "x-name": "RecalculatePriceAndWaitingListCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RecalculatePriceCommand"
+                "$ref": "#/components/schemas/RecalculatePriceAndWaitingListCommand"
               }
             }
           },
@@ -1119,38 +1119,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SaveRegistrableCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/CheckIfRegistrationIsPromotedCommand": {
-      "post": {
-        "tags": [
-          "CheckIfRegistrationIsPromoted"
-        ],
-        "operationId": "CheckIfRegistrationIsPromoted_Command",
-        "requestBody": {
-          "x-name": "CheckIfRegistrationIsPromotedCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CheckIfRegistrationIsPromotedCommand"
               }
             }
           },
@@ -3571,6 +3539,38 @@
         }
       }
     },
+    "/api/FroalaKeyQuery": {
+      "post": {
+        "tags": [
+          "FroalaKey"
+        ],
+        "operationId": "FroalaKey_Query",
+        "requestBody": {
+          "x-name": "FroalaKeyQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FroalaKeyQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/TranslationQuery": {
       "post": {
         "tags": [
@@ -4858,7 +4858,7 @@
           }
         }
       },
-      "RecalculatePriceCommand": {
+      "RecalculatePriceAndWaitingListCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -5371,7 +5371,6 @@
           "PartnerRegistrableLeader",
           "PartnerRegistrableFollower",
           "Language",
-          "Reduction",
           "RoleLeader",
           "RoleFollower"
         ],
@@ -5381,7 +5380,6 @@
           3,
           4,
           5,
-          6,
           7,
           8
         ]
@@ -5979,16 +5977,6 @@
           }
         }
       },
-      "CheckIfRegistrationIsPromotedCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "registrationId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
       "SetFallbackToPartyPassCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -6148,6 +6136,9 @@
           "price": {
             "type": "number",
             "format": "decimal"
+          },
+          "allowAsFallback": {
+            "type": "boolean"
           },
           "parts": {
             "type": "array",
@@ -8769,6 +8760,10 @@
           }
         }
       },
+      "FroalaKeyQuery": {
+        "type": "object",
+        "additionalProperties": false
+      },
       "TranslationQuery": {
         "type": "object",
         "additionalProperties": false,
@@ -9109,12 +9104,12 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "deleteTestData": {
-            "type": "boolean"
-          },
           "eventId": {
             "type": "string",
             "format": "guid"
+          },
+          "deleteTestData": {
+            "type": "boolean"
           }
         }
       },

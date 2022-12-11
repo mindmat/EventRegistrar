@@ -3,6 +3,7 @@ using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Hosting;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Bulk;
@@ -40,6 +41,7 @@ using EventRegistrar.Backend.Registrations.Matching;
 using EventRegistrar.Backend.Registrations.Overview;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Reductions;
+using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Registrations.Search;
 using EventRegistrar.Backend.Spots;
 
@@ -108,6 +110,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(UserInEventRolesQuery);
             yield return nameof(EventByAcronymQuery);
             yield return nameof(UpdateUserInfoCommand);
+            yield return nameof(FroalaKeyQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)

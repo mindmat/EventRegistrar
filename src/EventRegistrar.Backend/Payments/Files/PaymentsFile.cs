@@ -25,8 +25,8 @@ public class PaymentsFileMap : EntityMap<PaymentsFile>
     {
         builder.ToTable("PaymentsFiles");
 
-        builder.HasOne(bbf => bbf.Event)
+        builder.HasOne(pmf => pmf.Event)
                .WithMany()
-               .HasForeignKey(bbf => bbf.EventId);
+               .HasForeignKey(pmf => pmf.EventId);
     }
 }
