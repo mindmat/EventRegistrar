@@ -714,6 +714,9 @@
   <data name="to" xml:space="preserve">
     <value>to</value>
   </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
   <data name="Town" xml:space="preserve">
     <value>Town</value>
   </data>

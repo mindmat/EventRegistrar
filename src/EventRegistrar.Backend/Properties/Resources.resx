@@ -808,6 +808,9 @@
   <data name="to" xml:space="preserve">
     <value>an</value>
   </data>
+  <data name="Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
   <data name="Town" xml:space="preserve">
     <value>Wohnort</value>
   </data>

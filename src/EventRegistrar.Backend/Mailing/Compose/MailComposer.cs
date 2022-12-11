@@ -217,7 +217,7 @@ public class MailComposer
 
     private async Task<string> GetSpotList(Guid registrationId, string language)
     {
-        var (_, _, _, packagesOriginal, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registrationId);
+        var (priceOriginal, priceAdmitted, _, packagesOriginal, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registrationId);
 
         var result = new StringBuilder();
         result.AppendLine("<table>");
@@ -240,6 +240,12 @@ public class MailComposer
                 result.AppendLine("</tr>");
             }
         }
+
+        // Total
+        result.AppendLine("<tr>");
+        result.AppendLine($"<td><strong>{Resources.Total}</strong></td>");
+        result.AppendLine($"<td style=\"text-align: right;\">{priceOriginal.ToString("F2")}</td>");
+        result.AppendLine("</tr>");
 
         result.AppendLine("</tbody>");
         result.AppendLine("</table>");
@@ -271,6 +277,12 @@ public class MailComposer
                     result.AppendLine("</tr>");
                 }
             }
+
+            // Total
+            result.AppendLine("<tr>");
+            result.AppendLine($"<td><strong>{Resources.Total}</strong></td>");
+            result.AppendLine($"<td style=\"text-align: right;\">{priceAdmitted.ToString("F2")}</td>");
+            result.AppendLine("</tr>");
 
             result.AppendLine("</tbody>");
             result.AppendLine("</table>");
