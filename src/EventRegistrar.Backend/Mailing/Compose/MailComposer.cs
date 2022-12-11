@@ -192,13 +192,13 @@ public class MailComposer
                         templateFiller[key] = reminder1Date.Value.ToString(DateFormat);
                     }
                 }
-                else if (parts.key != null && key != null && registrationForPrefix?.Responses != null)
-                {
-                    // check responses with Question.TemplateKey
-                    templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp => string.Equals(rsp.Question?.TemplateKey, parts.key,
-                                                                                                              StringComparison.InvariantCultureIgnoreCase))
-                                                               ?.ResponseString;
-                }
+            }
+            else if (parts.key != null && key != null && registrationForPrefix?.Responses != null)
+            {
+                // check responses with Question.TemplateKey
+                templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp => string.Equals(rsp.Question?.TemplateKey, parts.key,
+                                                                                                          StringComparison.InvariantCultureIgnoreCase))
+                                                           ?.ResponseString;
             }
         }
 
