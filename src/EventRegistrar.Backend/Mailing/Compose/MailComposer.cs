@@ -239,7 +239,7 @@ public class MailComposer
             result.AppendLine("</tr>");
 
             // Package content
-            foreach (var matchingPackageSpot in package.Spots)
+            foreach (var matchingPackageSpot in package.Spots.OrderBy(spt => spt.SortKey ?? int.MaxValue))
             {
                 result.AppendLine("<tr>");
                 result.AppendLine($"<td>- {matchingPackageSpot.Name}</td>");
@@ -279,7 +279,7 @@ public class MailComposer
                 result.AppendLine("</tr>");
 
                 // Package content
-                foreach (var matchingPackageSpot in package.Spots)
+                foreach (var matchingPackageSpot in package.Spots.OrderBy(spt => spt.SortKey ?? int.MaxValue))
                 {
                     result.AppendLine("<tr>");
                     result.AppendLine($"<td>- {matchingPackageSpot.Name}</td>");

@@ -152,9 +152,16 @@ public class PriceCalculator
                 {
                     matchingRequiredRegistrableIds.AddRange(partMatches.MatchingRequiredRegistrableIds);
                     matchingOptionalRegistrableIds.AddRange(partMatches.MatchingOptionalRegistrableIds);
-                    var matchingSpotsOfPart = partMatches.MatchingRequiredRegistrableIds.Select(mtc => new MatchingPackageSpot(GetRegistrableName(registrationId, mtc, part.Registrables!, spots)))
-                                                         .Concat(partMatches.MatchingOptionalRegistrableIds.Select(
-                                                                     mtc => new MatchingPackageSpot(GetRegistrableName(registrationId, mtc, part.Registrables!, spots))))
+                    var matchingSpotsOfPart = partMatches.MatchingRequiredRegistrableIds.Select(mtc =>
+                                                         {
+                                                             var (name, sortKey) = GetRegistrable(registrationId, mtc, part.Registrables!, spots);
+                                                             return new MatchingPackageSpot(name, null, sortKey);
+                                                         })
+                                                         .Concat(partMatches.MatchingOptionalRegistrableIds.Select(mtc =>
+                                                         {
+                                                             var (name, sortKey) = GetRegistrable(registrationId, mtc, part.Registrables!, spots);
+                                                             return new MatchingPackageSpot(name, null, sortKey);
+                                                         }))
                                                          .ToList();
                     if (part.PriceAdjustment != null)
                     {
@@ -217,10 +224,10 @@ public class PriceCalculator
                    notCoveredRegistrableIds.Any());
     }
 
-    private string GetRegistrableName(Guid registrationId,
-                                      Guid registrableId,
-                                      IEnumerable<RegistrableInPricePackagePart> registrableInPricePackageParts,
-                                      IReadOnlyCollection<Seat> spots)
+    private (string Name, int? SortKey) GetRegistrable(Guid registrationId,
+                                                       Guid registrableId,
+                                                       IEnumerable<RegistrableInPricePackagePart> registrableInPricePackageParts,
+                                                       IReadOnlyCollection<Seat> spots)
     {
         var registrable = registrableInPricePackageParts.First(rip => rip.RegistrableId == registrableId);
         if (registrable.Registrable!.Type == RegistrableType.Double)
@@ -229,10 +236,10 @@ public class PriceCalculator
             var role = spot.RegistrationId_Follower == registrationId
                            ? Role.Follower
                            : Role.Leader;
-            return $"{registrable.Registrable.DisplayName} ({_enumTranslator.Translate(role)})";
+            return ($"{registrable.Registrable.DisplayName} ({_enumTranslator.Translate(role)})", registrable.Registrable.ShowInMailListOrder);
         }
 
-        return registrable.Registrable.DisplayName;
+        return (registrable.Registrable.DisplayName, registrable.Registrable.ShowInMailListOrder);
     }
 
     private static (bool Match,
@@ -272,7 +279,8 @@ public record struct MatchingPackageResult(Guid? Id,
                                            IEnumerable<MatchingPackageSpot> Spots);
 
 public record MatchingPackageSpot(string Name,
-                                  decimal? PriceAdjustment = null)
+                                  decimal? PriceAdjustment = null,
+                                  int? SortKey = int.MaxValue)
 {
     public decimal? PriceAdjustment { get; set; } = PriceAdjustment;
 }
