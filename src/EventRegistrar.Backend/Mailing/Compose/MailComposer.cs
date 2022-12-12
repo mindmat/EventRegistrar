@@ -117,7 +117,7 @@ public class MailComposer
                 }
                 else if ((placeholderKey == MailPlaceholder.SpotList || parts.key.ToUpperInvariant() == "SEATLIST") && registrationForPrefix != null)
                 {
-                    templateFiller[key] = await GetSpotList(registrationForPrefix.Id, language);
+                    templateFiller[key] = await GetSpotList(registrationForPrefix.Id);
                 }
                 else if (placeholderKey == MailPlaceholder.PartnerName || parts.key?.ToUpperInvariant() == "PARTNER")
                 {
@@ -219,7 +219,7 @@ public class MailComposer
                    : (null, key);
     }
 
-    private async Task<string> GetSpotList(Guid registrationId, string language)
+    private async Task<string> GetSpotList(Guid registrationId)
     {
         var (_, priceAdmitted, _, packagesOriginal, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registrationId);
         var result = new StringBuilder();

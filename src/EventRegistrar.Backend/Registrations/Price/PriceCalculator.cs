@@ -10,6 +10,7 @@ namespace EventRegistrar.Backend.Registrations.Price;
 public class PriceCalculator
 {
     private readonly IQueryable<Registration> _registrations;
+    private readonly IQueryable<Registrable> _tracks;
     private readonly EnumTranslator _enumTranslator;
     private readonly IQueryable<Seat> _spots;
     private readonly IQueryable<PricePackage> _pricePackages;
@@ -17,11 +18,13 @@ public class PriceCalculator
     public PriceCalculator(IQueryable<Seat> spots,
                            IQueryable<PricePackage> pricePackages,
                            IQueryable<Registration> registrations,
+                           IQueryable<Registrable> tracks,
                            EnumTranslator enumTranslator)
     {
         _spots = spots;
         _pricePackages = pricePackages;
         _registrations = registrations;
+        _tracks = tracks;
         _enumTranslator = enumTranslator;
     }
 
@@ -46,6 +49,8 @@ public class PriceCalculator
         CalculatePrice(Registration registration,
                        IEnumerable<Seat> spots)
     {
+        var coreTracks = await _tracks.Where(trk => trk.EventId == registration.EventId && trk.IsCore)
+                                      .ToListAsync();
         var isOnWaitingList = false;
         var notCancelledSpots = spots.Where(spot => !spot.IsCancelled
                                                  && (spot.RegistrationId == registration.Id
@@ -57,7 +62,7 @@ public class PriceCalculator
                                            .ThenInclude(ppp => ppp.Registrables!)
                                            .ThenInclude(rip => rip.Registrable)
                                            .ToListAsync();
-        var (priceOriginal, packagesOriginal, allCoveredOriginal) = CalculatePriceOfSpots(registration.Id, notCancelledSpots, packages);
+        var (priceOriginal, packagesOriginal, allCoveredOriginal) = CalculatePriceOfSpots(registration.Id, notCancelledSpots, packages, coreTracks);
 
         var hasSpotsOnWaitingList = notCancelledSpots.Any(spot => spot.IsWaitingList);
         var priceAdmitted = priceOriginal;
@@ -69,7 +74,7 @@ public class PriceCalculator
             isOnWaitingList = true;
             var admittedSpots = notCancelledSpots.Where(spot => !spot.IsWaitingList)
                                                  .ToList();
-            (priceAdmitted, packagesAdmitted, var allCoveredAdmitted) = CalculatePriceOfSpots(registration.Id, admittedSpots, packages);
+            (priceAdmitted, packagesAdmitted, var allCoveredAdmitted) = CalculatePriceOfSpots(registration.Id, admittedSpots, packages, coreTracks);
 
             var samePackages = packagesAdmitted.Select(pkg => pkg.Id).All(pid => originalPackageIds.Contains(pid));
             if (!samePackages)
@@ -131,9 +136,11 @@ public class PriceCalculator
 
     private (decimal Price, IReadOnlyCollection<MatchingPackageResult> matchingPackages, bool allSpotsCovered) CalculatePriceOfSpots(Guid registrationId,
         IReadOnlyCollection<Seat> spots,
-        List<PricePackage> packages)
+        IReadOnlyCollection<PricePackage> packages,
+        IReadOnlyCollection<Registrable> coreTracks)
     {
         var bookedRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId));
+        var bookedCoreRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId).Where(rid => coreTracks.Select(trk => trk.Id).Contains(rid)));
         List<MatchingPackage> matchingPackages = new();
         foreach (var package in packages)
         {
@@ -197,7 +204,7 @@ public class PriceCalculator
                                                                                     + ppk.MatchingOptionalRegistrableId.Count)
                                                             .ToList())
             {
-                if (matchingPackage.MatchingRequiredRegistrableId.All(mri => coveredRegistrableIds.Contains(mri)))
+                if (matchingPackage.MatchingRequiredRegistrableId.All(coveredRegistrableIds.Contains))
                 {
                     matchingPackages.Remove(matchingPackage);
                 }
@@ -209,7 +216,7 @@ public class PriceCalculator
             }
         }
 
-        var notCoveredRegistrableIds = bookedRegistrableIds.Except(matchingPackages.SelectMany(pkg => pkg.MatchingRequiredRegistrableId.Concat(pkg.MatchingOptionalRegistrableId)));
+        var notCoveredRegistrableIds = bookedCoreRegistrableIds.Except(matchingPackages.SelectMany(pkg => pkg.MatchingRequiredRegistrableId.Concat(pkg.MatchingOptionalRegistrableId)));
         var price = matchingPackages.Sum(ppk => ppk.Price);
         return (price,
                    matchingPackages.Select(pkg => new MatchingPackageResult
