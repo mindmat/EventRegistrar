@@ -7999,10 +7999,16 @@ export interface MailView {
     recipientsNames?: string | null;
     from?: EmailAddress;
     created?: Date;
+    recipients?: MailRecipient[] | null;
 }
 
 export interface EmailAddress {
     email?: string;
+    name?: string;
+}
+
+export interface MailRecipient {
+    registrationId?: string;
     name?: string;
 }
 

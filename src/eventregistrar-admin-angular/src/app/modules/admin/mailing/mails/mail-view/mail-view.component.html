@@ -57,7 +57,12 @@
                             <!-- To -->
                             <div class="flex items-center mt-0.5 leading-5">
                                 <div>{{ 'to' | translate }}</div>
-                                <div class="ml-1 font-semibold">{{ mail.recipientsNames }}</div>
+                                <div class="ml-1">
+                                    <a *ngFor="let recipient of mail.recipients">
+                                        <a class="hover:underline font-semibold leading-tight" [routerLink]="navigator.getRegistrationUrl(recipient.registrationId)">
+                                            {{ recipient.name }}</a>
+                                    </a>
+                                </div>
 
                                 <!-- Info details panel button -->
                                 <button class="w-5 h-5 min-h-5 ml-1" mat-icon-button (click)="openInfoDetailsPanel()" #infoDetailsPanelOrigin>
