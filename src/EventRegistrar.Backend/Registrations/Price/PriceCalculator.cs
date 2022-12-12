@@ -221,7 +221,7 @@ public class PriceCalculator
                                                pkg.Spots
                                            ))
                                    .ToList(),
-                   notCoveredRegistrableIds.Any());
+                   !notCoveredRegistrableIds.Any());
     }
 
     private (string Name, int? SortKey) GetRegistrable(Guid registrationId,
