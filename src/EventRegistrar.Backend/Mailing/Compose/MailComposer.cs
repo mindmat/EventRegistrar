@@ -227,36 +227,42 @@ public class MailComposer
         // Label
         result.AppendLine($"<p>{Resources.SpotListLabelAccepted}</p>");
 
-        result.AppendLine("<table>");
-        result.AppendLine("<tbody>");
-        foreach (var package in packagesAdmitted)
+        if (packagesAdmitted.Any())
         {
-            // Package header
-            var price = package.Price - package.Spots.Sum(spot => spot.PriceAdjustment ?? 0m);
+            result.AppendLine("<table>");
+            result.AppendLine("<tbody>");
+            foreach (var package in packagesAdmitted)
+            {
+                // Package header
+                var price = package.Price - package.Spots.Sum(spot => spot.PriceAdjustment ?? 0m);
+                result.AppendLine("<tr>");
+                result.AppendLine($"<td><strong>{package.Name}</strong></td>");
+                result.AppendLine($"<td style=\"text-align: right;\"><strong>{price}</strong></td>");
+                result.AppendLine("</tr>");
+
+                // Package content
+                foreach (var matchingPackageSpot in package.Spots.Where(spt => spt.SortKey != null).OrderBy(spt => spt.SortKey))
+                {
+                    result.AppendLine("<tr>");
+                    result.AppendLine($"<td>- {matchingPackageSpot.Name}</td>");
+                    result.AppendLine($"<td style=\"text-align: right;\">{matchingPackageSpot.PriceAdjustment?.ToString("F2")}</td>");
+                    result.AppendLine("</tr>");
+                }
+            }
+
+            // Total
             result.AppendLine("<tr>");
-            result.AppendLine($"<td><strong>{package.Name}</strong></td>");
-            result.AppendLine($"<td style=\"text-align: right;\"><strong>{price}</strong></td>");
+            result.AppendLine($"<td><strong>{Resources.Total}</strong></td>");
+            result.AppendLine($"<td style=\"text-align: right;\">{priceAdmitted.ToString("F2")}</td>");
             result.AppendLine("</tr>");
 
-            // Package content
-            foreach (var matchingPackageSpot in package.Spots.OrderBy(spt => spt.SortKey ?? int.MaxValue))
-            {
-                result.AppendLine("<tr>");
-                result.AppendLine($"<td>- {matchingPackageSpot.Name}</td>");
-                result.AppendLine($"<td style=\"text-align: right;\">{matchingPackageSpot.PriceAdjustment?.ToString("F2")}</td>");
-                result.AppendLine("</tr>");
-            }
+            result.AppendLine("</tbody>");
+            result.AppendLine("</table>");
         }
-
-        // Total
-        result.AppendLine("<tr>");
-        result.AppendLine($"<td><strong>{Resources.Total}</strong></td>");
-        result.AppendLine($"<td style=\"text-align: right;\">{priceAdmitted.ToString("F2")}</td>");
-        result.AppendLine("</tr>");
-
-        result.AppendLine("</tbody>");
-        result.AppendLine("</table>");
-
+        else
+        {
+            result.AppendLine("<p>-</p>");
+        }
 
         var packagesOnWaitingList = packagesOriginal.ExceptBy(packagesAdmitted.Select(pkg => pkg.Id), pkg => pkg.Id)
                                                     .ToList();
@@ -279,7 +285,7 @@ public class MailComposer
                 result.AppendLine("</tr>");
 
                 // Package content
-                foreach (var matchingPackageSpot in package.Spots.OrderBy(spt => spt.SortKey ?? int.MaxValue))
+                foreach (var matchingPackageSpot in package.Spots.Where(spt => spt.SortKey != null).OrderBy(spt => spt.SortKey))
                 {
                     result.AppendLine("<tr>");
                     result.AppendLine($"<td>- {matchingPackageSpot.Name}</td>");

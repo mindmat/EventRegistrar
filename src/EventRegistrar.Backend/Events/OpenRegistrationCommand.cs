@@ -1,12 +1,9 @@
-﻿using DocumentFormat.OpenXml.InkML;
-
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Feedback;
 using EventRegistrar.Backend.Payments;
-using EventRegistrar.Backend.Payments.Assignments.Candidates;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.RegistrationForms;
