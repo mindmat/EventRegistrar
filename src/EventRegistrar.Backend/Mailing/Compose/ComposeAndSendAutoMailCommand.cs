@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.DirtyTags;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
 using EventRegistrar.Backend.Mailing.Templates;
@@ -30,6 +31,7 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
     private readonly ILogger _log;
     private readonly ReadModelUpdater _readModelUpdater;
     private readonly DirtyTagger _dirtyTagger;
+    private readonly IEventBus _eventBus;
     private readonly MailComposer _mailComposer;
     private readonly IRepository<Mail> _mails;
     private readonly IRepository<MailToRegistration> _mailsToRegistrations;
@@ -49,7 +51,8 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
                                                 IDateTimeProvider dateTimeProvider,
                                                 ILogger log,
                                                 ReadModelUpdater readModelUpdater,
-                                                DirtyTagger dirtyTagger)
+                                                DirtyTagger dirtyTagger,
+                                                IEventBus eventBus)
     {
         _templates = templates;
         _registrations = registrations;
@@ -62,6 +65,7 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
         _log = log;
         _readModelUpdater = readModelUpdater;
         _dirtyTagger = dirtyTagger;
+        _eventBus = eventBus;
     }
 
     public async Task<Unit> Handle(ComposeAndSendAutoMailCommand command, CancellationToken cancellationToken)
@@ -184,7 +188,11 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
         }
 
         registrations_Recipients.ForEach(reg => _readModelUpdater.TriggerUpdate<RegistrationCalculator>(reg.Id, reg.EventId));
-
+        _eventBus.Publish(new QueryChanged
+                          {
+                              EventId = command.EventId,
+                              QueryName = nameof(PendingMailsQuery)
+                          });
         // ToDo
         //foreach (var registrable in registrablesToCheckWaitingList)
         //{
