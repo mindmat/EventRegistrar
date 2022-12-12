@@ -1,8 +1,10 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
+using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Mailing;
 
@@ -17,14 +19,20 @@ public class ReleaseMailCommandHandler : IRequestHandler<ReleaseMailCommand>
     private readonly IRepository<Mail> _mails;
     private readonly CommandQueue _commandQueue;
     private readonly IEventBus _eventBus;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly ReadModelUpdater _readModelUpdater;
 
     public ReleaseMailCommandHandler(IRepository<Mail> mails,
                                      CommandQueue commandQueue,
-                                     IEventBus eventBus)
+                                     IEventBus eventBus,
+                                     IDateTimeProvider dateTimeProvider,
+                                     ReadModelUpdater readModelUpdater)
     {
         _mails = mails;
         _commandQueue = commandQueue;
         _eventBus = eventBus;
+        _dateTimeProvider = dateTimeProvider;
+        _readModelUpdater = readModelUpdater;
     }
 
     public async Task<Unit> Handle(ReleaseMailCommand command, CancellationToken cancellationToken)
@@ -61,7 +69,7 @@ public class ReleaseMailCommandHandler : IRequestHandler<ReleaseMailCommand>
                               };
 
         withheldMail.Withhold = false;
-        withheldMail.Sent = DateTime.UtcNow;
+        withheldMail.Sent = _dateTimeProvider.Now;
 
         _commandQueue.EnqueueCommand(sendMailCommand);
 
@@ -71,6 +79,8 @@ public class ReleaseMailCommandHandler : IRequestHandler<ReleaseMailCommand>
                               To = sendMailCommand.To.Select(to => $"{to.Name} - {to.Email}").StringJoin(),
                               Subject = sendMailCommand.Subject
                           });
+
+        withheldMail.Registrations.ForEach(reg => _readModelUpdater.TriggerUpdate<RegistrationCalculator>(reg.RegistrationId, command.EventId));
 
         return Unit.Value;
     }

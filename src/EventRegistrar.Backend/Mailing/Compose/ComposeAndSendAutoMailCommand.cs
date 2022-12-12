@@ -193,6 +193,7 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
                               EventId = command.EventId,
                               QueryName = nameof(PendingMailsQuery)
                           });
+
         // ToDo
         //foreach (var registrable in registrablesToCheckWaitingList)
         //{
