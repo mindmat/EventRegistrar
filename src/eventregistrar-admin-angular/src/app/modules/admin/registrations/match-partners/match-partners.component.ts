@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PotentialPartnerMatch } from 'app/api/api';
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { MatchPartnersService } from './match-partners.service';
 
@@ -14,6 +14,7 @@ export class MatchPartnersComponent implements OnInit
 {
   private unsubscribeAll: Subject<any> = new Subject<any>();
   unmatchedRegistrations: PotentialPartnerMatch[];
+  filteredUnmatchedRegistrations: PotentialPartnerMatch[];
   selectedUnmatchedRegistration: PotentialPartnerMatch;
 
   // candidates: AssignmentCandidate[];
@@ -27,14 +28,22 @@ export class MatchPartnersComponent implements OnInit
 
   ngOnInit(): void
   {
-    this.service.unmatchedPartners$
+    combineLatest([this.service.unmatchedPartners$, this.query$])
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe((registrations: PotentialPartnerMatch[]) =>
+      .subscribe(([registrations, query]) =>
       {
         this.unmatchedRegistrations = registrations;
-        if (!this.selectedUnmatchedRegistration && this.unmatchedRegistrations.length > 0)        
+        this.filteredUnmatchedRegistrations = registrations;
+        if (!this.selectedUnmatchedRegistration && this.filteredUnmatchedRegistrations.length > 0)        
         {
-          this.selectUnmatchedRegistration(this.unmatchedRegistrations[0]);
+          this.selectUnmatchedRegistration(this.filteredUnmatchedRegistrations[0]);
+        }
+        if (query !== '')
+        {
+          this.filteredUnmatchedRegistrations = this.unmatchedRegistrations.filter(reg =>
+            reg.firstName.toLowerCase().includes(query.toLowerCase())
+            || reg.lastName?.toLowerCase().includes(query.toLowerCase())
+            || reg.declaredPartner?.toLowerCase().includes(query.toLowerCase()));
         }
 
         // Mark for check
@@ -49,5 +58,10 @@ export class MatchPartnersComponent implements OnInit
 
     // Mark for check
     this.changeDetectorRef.markForCheck();
+  }
+
+  filter(search: string)
+  {
+    this.query$.next(search);
   }
 }

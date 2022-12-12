@@ -4,21 +4,24 @@
         <!-- Drawer -->
         <mat-drawer class="sm:w-96 dark:bg-gray-900" [autoFocus]="false" [opened]="true" [mode]="'side'" #drawer>
             <!-- Header -->
-            <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
+            <div class="flex flex-col flex-0 py-4 px-8 border-b bg-gray-50 dark:bg-transparent">
                 <!-- Title -->
                 <div class="text-xl font-extrabold tracking-tight leading-none">{{ 'UnmatchedRegistrations' | translate }}</div>
-                <!-- Close button -->
-                <div class="lg:hidden">
-                    <button mat-icon-button (click)="drawer.close()">
-                        <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
-                    </button>
+
+                <!-- Search -->
+                <div class="mt-4">
+                    <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full" [floatLabel]="'always'">
+                        <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+                        <input matInput [autocomplete]="'off'" placeholder="{{ 'Search' | translate }}" (input)="filter(searchField.value)" #searchField>
+                    </mat-form-field>
                 </div>
+
             </div>
 
             <!-- Unmatched Registrations -->
-            <ng-container *ngIf="unmatchedRegistrations?.length > 0; else noUnmatchedRegistrations">
+            <ng-container *ngIf="filteredUnmatchedRegistrations?.length > 0; else noUnmatchedRegistrations">
                 <div class="flex flex-col divide-y border-t border-b">
-                    <ng-container *ngFor="let unmatchedRegistration of unmatchedRegistrations">
+                    <ng-container *ngFor="let unmatchedRegistration of filteredUnmatchedRegistrations">
                         <div class="flex px-8 py-5 cursor-pointer" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedUnmatchedRegistration || selectedUnmatchedRegistration.registrationId !== unmatchedRegistration.registrationId,
                                         'bg-primary-50 dark:bg-hover': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId  === unmatchedRegistration.registrationId}"
                             (click)="selectUnmatchedRegistration(unmatchedRegistration)">
@@ -49,7 +52,7 @@
         </ng-template>
 
         <!-- Detail -->
-        <ng-container *ngIf="unmatchedRegistrations?.length > 0">
+        <ng-container *ngIf="filteredUnmatchedRegistrations?.length > 0">
             <div class="flex-auto border-l" [ngClass]="{'z-20 lg:static lg:inset-auto flex': selectedUnmatchedRegistration && selectedUnmatchedRegistration.registrationId,
                  'hidden lg:flex': !selectedUnmatchedRegistration || !selectedUnmatchedRegistration.registrationId}">
                 <router-outlet></router-outlet>
