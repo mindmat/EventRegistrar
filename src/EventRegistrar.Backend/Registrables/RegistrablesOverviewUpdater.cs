@@ -152,11 +152,11 @@ public class RegistrablesOverviewCalculator : ReadModelCalculator<RegistrablesOv
     }
 }
 
-public class UpdateRegistrationReadModel : IEventToCommandTranslation<RegistrationProcessed>
+public class UpdateTrackOverviewReadModel : IEventToCommandTranslation<RegistrationProcessed>
 {
     private readonly IDateTimeProvider _dateTimeProvider;
 
-    public UpdateRegistrationReadModel(IDateTimeProvider dateTimeProvider)
+    public UpdateTrackOverviewReadModel(IDateTimeProvider dateTimeProvider)
     {
         _dateTimeProvider = dateTimeProvider;
     }

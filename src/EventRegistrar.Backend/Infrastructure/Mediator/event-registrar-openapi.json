@@ -241,6 +241,70 @@
         }
       }
     },
+    "/api/StartProcessAllPendingRawRegistrationsCommand": {
+      "post": {
+        "tags": [
+          "StartProcessAllPendingRawRegistrations"
+        ],
+        "operationId": "StartProcessAllPendingRawRegistrations_Command",
+        "requestBody": {
+          "x-name": "StartProcessAllPendingRawRegistrationsCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StartProcessAllPendingRawRegistrationsCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UnprocessedRawRegistrationCountQuery": {
+      "post": {
+        "tags": [
+          "UnprocessedRawRegistrationCount"
+        ],
+        "operationId": "UnprocessedRawRegistrationCount_Query",
+        "requestBody": {
+          "x-name": "UnprocessedRawRegistrationCountQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnprocessedRawRegistrationCountQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnprocessedRawRegistrationsInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/SetReductionCommand": {
       "post": {
         "tags": [
@@ -4787,6 +4851,62 @@
         "additionalProperties": false,
         "properties": {
           "rawRegistrationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "StartProcessAllPendingRawRegistrationsCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "UnprocessedRawRegistrationsInfo": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstUnprocessed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastUnprocessed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "firstProcessed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastProcessed": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "processingErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UnprocessedRawRegistrationCountQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
             "type": "string",
             "format": "guid"
           }

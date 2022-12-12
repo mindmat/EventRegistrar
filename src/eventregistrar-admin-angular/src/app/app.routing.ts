@@ -44,6 +44,7 @@ import { MatchPartnersComponent } from './modules/admin/registrations/match-part
 import { MatchPartnersResolver } from './modules/admin/registrations/match-partners/match-partners.resolver';
 import { MatchPartnerComponent } from './modules/admin/registrations/match-partner/match-partner.component';
 import { MatchPartnerResolver } from './modules/admin/registrations/match-partner/match-partner.resolver';
+import { SearchRegistrationResolver } from './modules/admin/registrations/search-registration/search-registration.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -207,7 +208,10 @@ export const appRoutes: Route[] =
                     resolve: { initialData: InitialDataResolver },
                     children: [
                         {
-                            path: 'search-registration', canActivate: [AuthGuard], component: SearchRegistrationComponent
+                            path: 'search-registration',
+                            canActivate: [AuthGuard],
+                            component: SearchRegistrationComponent,
+                            resolve: { initialData: SearchRegistrationResolver }
                         },
                         {
                             path: 'match-partners',

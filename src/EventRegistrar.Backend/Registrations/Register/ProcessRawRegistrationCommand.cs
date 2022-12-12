@@ -1,9 +1,12 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
+using EventRegistrar.Backend.Registrations.Matching;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Responses;
 
@@ -140,7 +143,7 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
                 }
             }
 
-            var spots = await _registrationProcessorDelegator.Process(registration);
+            var spots = (await _registrationProcessorDelegator.Process(registration)).ToList();
 
             _eventBus.Publish(new RegistrationProcessed
                               {
@@ -150,8 +153,33 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
                                   FirstName = registration.RespondentFirstName,
                                   LastName = registration.RespondentLastName,
                                   Email = registration.RespondentEmail,
-                                  Registrables = spots?.Select(spt => spt.Registrable?.DisplayName).ToArray()
+                                  Registrables = spots.Select(spt => spt.Registrable?.DisplayName ?? string.Empty).ToArray()
                               });
+            _eventBus.Publish(new QueryChanged
+                              {
+                                  EventId = form.EventId,
+                                  QueryName = nameof(UnprocessedRawRegistrationCountQuery)
+                              });
+            foreach (var trackId in spots.Select(spt => spt.RegistrableId))
+            {
+                _eventBus.Publish(new QueryChanged
+                                  {
+                                      EventId = form.EventId,
+                                      QueryName = nameof(ParticipantsOfRegistrableQuery),
+                                      RowId = trackId
+                                  });
+            }
+
+            if ((registration.PartnerNormalized != null && registration.RegistrationId_Partner == null) || registration.RegistrationId_Partner != null)
+            {
+                _eventBus.Publish(new QueryChanged
+                                  {
+                                      EventId = form.EventId,
+                                      QueryName = nameof(RegistrationsWithUnmatchedPartnerQuery)
+                                  });
+            }
+
+
             rawRegistration.Processed = _dateTimeProvider.Now;
         }
         catch (Exception ex)

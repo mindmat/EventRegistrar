@@ -903,6 +903,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Importieren.
+        /// </summary>
+        internal static string Import {
+            get {
+                return ResourceManager.GetString("Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Neue Version importieren.
         /// </summary>
         internal static string ImportNewVersion {
@@ -2195,6 +2204,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string UnmatchedRegistrations {
             get {
                 return ResourceManager.GetString("UnmatchedRegistrations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nicht importierte Anmeldungen {{count}}.
+        /// </summary>
+        internal static string UnprocessedRawRegistrationCount {
+            get {
+                return ResourceManager.GetString("UnprocessedRawRegistrationCount", resourceCulture);
             }
         }
         

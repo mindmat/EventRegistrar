@@ -312,6 +312,9 @@
   <data name="Ignored" xml:space="preserve">
     <value>Ignored</value>
   </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
   <data name="ImportNewVersion" xml:space="preserve">
     <value>Import new version</value>
   </data>
@@ -737,6 +740,9 @@
   </data>
   <data name="UnmatchedRegistrations" xml:space="preserve">
     <value>Unmatched partners</value>
+  </data>
+  <data name="UnprocessedRawRegistrationCount" xml:space="preserve">
+    <value>Not importet registrations: {{count}}</value>
   </data>
   <data name="Uploading" xml:space="preserve">
     <value>uploading {{filename}}...</value>

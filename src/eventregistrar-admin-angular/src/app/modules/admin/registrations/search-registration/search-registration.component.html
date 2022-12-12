@@ -7,10 +7,22 @@
             <div class="text-4xl font-extrabold tracking-tight leading-none">Teilnehmer</div>
             <div *ngIf="matches?.length > 0" class="mt-1.5 text-lg text-secondary">({{matches.length}})</div>
         </div>
+
+
+        <div class="max-w-120" *ngIf="unprocessedRawRegistrationsInfo?.count > 0">
+            <fuse-alert [appearance]="'outline'" [type]="'warning'" class="flex flex-col">
+                {{ 'UnprocessedRawRegistrationCount' | translate:{count: unprocessedRawRegistrationsInfo?.count } }}
+                <button class="ml-auto" mat-button [color]="'primary'" (click)="startProcessAllPendingRawRegistrationsCommand()">
+                    {{ 'Import' | translate }}
+                </button>
+            </fuse-alert>
+        </div>
+
+
         <!-- Filters -->
         <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
             <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-            <input (input)="filterByQuery(query.value)" placeholder="Search by name, mail, phone" matInput #query [value]="filters.searchString$.value" autofocus>
+            <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query [value]="filters.searchString$.value" autofocus>
         </mat-form-field>
     </div>
 

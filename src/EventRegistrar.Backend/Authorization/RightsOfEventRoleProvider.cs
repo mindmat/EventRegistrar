@@ -111,6 +111,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(EventByAcronymQuery);
             yield return nameof(UpdateUserInfoCommand);
             yield return nameof(FroalaKeyQuery);
+            yield return nameof(UnprocessedRawRegistrationCountQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
@@ -159,6 +160,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(UpdateAutoMailConfigurationCommand);
             yield return nameof(CreateAutoMailTemplateCommand);
             yield return nameof(SetReleaseMailCommand);
+            yield return nameof(StartProcessAllPendingRawRegistrationsCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

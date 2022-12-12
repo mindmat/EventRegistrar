@@ -87,6 +87,7 @@ import { FileUploadComponent } from './modules/admin/infrastructure/file-upload/
 import { MailViewerComponent } from './modules/admin/mailing/mails/mail-viewer/mail-viewer.component';
 import { MatchPartnersComponent } from './modules/admin/registrations/match-partners/match-partners.component';
 import { MatchPartnerComponent } from './modules/admin/registrations/match-partner/match-partner.component';
+import { FuseAlertModule } from '@fuse/components/alert';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -144,6 +145,7 @@ const routerConfig: ExtraOptions = {
         FuseMockApiModule.forRoot(mockApiServices),
         FuseFindByKeyPipeModule,
         FuseCardModule,
+        FuseAlertModule,
         SearchModule,
 
         // Core module of your application

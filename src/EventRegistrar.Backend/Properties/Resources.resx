@@ -396,6 +396,9 @@
   <data name="Ignored" xml:space="preserve">
     <value>Ignorierte</value>
   </data>
+  <data name="Import" xml:space="preserve">
+    <value>Importieren</value>
+  </data>
   <data name="ImportNewVersion" xml:space="preserve">
     <value>Neue Version importieren</value>
   </data>
@@ -828,6 +831,9 @@
   </data>
   <data name="UnmatchedRegistrations" xml:space="preserve">
     <value>Nicht zugeordnete Anmeldungen</value>
+  </data>
+  <data name="UnprocessedRawRegistrationCount" xml:space="preserve">
+    <value>Nicht importierte Anmeldungen {{count}}</value>
   </data>
   <data name="Uploading" xml:space="preserve">
     <value>{{filename}} hochladen...</value>

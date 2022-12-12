@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Api, RegistrationMatch, RegistrationState } from 'app/api/api';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { EventService } from '../../events/event.service';
 
 @Injectable({
@@ -17,12 +17,11 @@ export class SearchRegistrationService
     return this.list.asObservable();
   }
 
-  fetchItemsOf(searchString: string)
+  fetchItemsOf(searchString: string): Observable<RegistrationMatch[]>
   {
-    this.api.searchRegistration_Query({ eventId: this.eventService.selectedId, searchString, states: [RegistrationState.Received, RegistrationState.Paid, RegistrationState.Cancelled] })
-      .subscribe(newItems =>
-      {
-        this.list.next(newItems);
-      });
+    return this.api.searchRegistration_Query({ eventId: this.eventService.selectedId, searchString, states: [RegistrationState.Received, RegistrationState.Paid, RegistrationState.Cancelled] })
+      .pipe(
+        tap(newItems => this.list.next(newItems))
+      );
   }
 }

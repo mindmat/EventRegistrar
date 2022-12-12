@@ -1,5 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Registrables;
 
 namespace EventRegistrar.Backend.Registrations.Register;
 

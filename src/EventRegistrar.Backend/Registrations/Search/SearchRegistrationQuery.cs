@@ -29,18 +29,17 @@ public class SearchRegistrationQueryHandler : IRequestHandler<SearchRegistration
                                 ? query.States
                                 : new[] { RegistrationState.Received, RegistrationState.Paid };
         var searchParts = query.SearchString?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-        if (searchParts?.Any() != true)
-        {
-            return Enumerable.Empty<RegistrationMatch>();
-        }
 
         var queryable = _registrations.Where(reg => reg.EventId == query.EventId);
-        foreach (var searchPart in searchParts)
+        if (searchParts != null)
         {
-            queryable = queryable.Where(reg => reg.RespondentFirstName!.Contains(searchPart)
-                                            || reg.RespondentLastName!.Contains(searchPart)
-                                            || reg.RespondentEmail!.Contains(searchPart)
-                                            || reg.PhoneNormalized!.Contains(searchPart));
+            foreach (var searchPart in searchParts)
+            {
+                queryable = queryable.Where(reg => reg.RespondentFirstName!.Contains(searchPart)
+                                                || reg.RespondentLastName!.Contains(searchPart)
+                                                || reg.RespondentEmail!.Contains(searchPart)
+                                                || reg.PhoneNormalized!.Contains(searchPart));
+            }
         }
 
         var registrationIds = await queryable.Where(reg => allowedStates.Contains(reg.State))

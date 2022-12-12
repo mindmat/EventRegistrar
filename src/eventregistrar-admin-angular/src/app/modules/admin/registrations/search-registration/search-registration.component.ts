@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RegistrationMatch } from 'app/api/api';
+import { RegistrationMatch, UnprocessedRawRegistrationsInfo } from 'app/api/api';
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
+import { UnprocessedRawRegistrationsService } from '../unprocessed-raw-registrations.service';
 import { SearchRegistrationService } from './search-registration.service';
 
 @Component({
@@ -11,9 +12,9 @@ import { SearchRegistrationService } from './search-registration.service';
 })
 export class SearchRegistrationComponent implements OnInit
 {
-
   private unsubscribeAll: Subject<any> = new Subject<any>();
   matches: RegistrationMatch[];
+  unprocessedRawRegistrationsInfo: UnprocessedRawRegistrationsInfo;
 
   filters: {
     // categoryTag$: BehaviorSubject<string>;
@@ -26,6 +27,7 @@ export class SearchRegistrationComponent implements OnInit
     };
 
   constructor(private service: SearchRegistrationService,
+    private unprocessedRawRegistrationsService: UnprocessedRawRegistrationsService,
     public navigator: NavigatorService,
     private changeDetectorRef: ChangeDetectorRef,
     private route: ActivatedRoute,
@@ -50,12 +52,19 @@ export class SearchRegistrationComponent implements OnInit
         this.changeDetectorRef.markForCheck();
       });
 
-    // Filter the courses
+    // Filter
     combineLatest([this.filters.searchString$]).pipe(debounceTime(200))
       .subscribe(([searchString]) =>
       {
         searchString = searchString.toLowerCase();
-        this.service.fetchItemsOf(searchString);
+        this.service.fetchItemsOf(searchString).subscribe();
+      });
+
+    this.unprocessedRawRegistrationsService.unprocessedRawRegistrationsInfo$
+      .subscribe(info =>
+      {
+        this.unprocessedRawRegistrationsInfo = info;
+        this.changeDetectorRef.markForCheck();
       });
   }
 
@@ -70,6 +79,10 @@ export class SearchRegistrationComponent implements OnInit
         queryParams: { search: searchString },
         queryParamsHandling: 'merge'
       });
+  }
 
+  startProcessAllPendingRawRegistrationsCommand()
+  {
+    this.unprocessedRawRegistrationsService.startProcessAllPendingRawRegistrationsCommand();
   }
 }
