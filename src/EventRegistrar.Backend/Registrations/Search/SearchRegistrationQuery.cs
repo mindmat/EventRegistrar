@@ -45,7 +45,7 @@ public class SearchRegistrationQueryHandler : IRequestHandler<SearchRegistration
         var registrationIds = await queryable.Where(reg => allowedStates.Contains(reg.State))
                                              .OrderBy(reg => reg.RespondentFirstName)
                                              .ThenBy(reg => reg.RespondentLastName)
-                                             .Take(20)
+                                             .Take(21)
                                              .Select(reg => reg.Id)
                                              .ToListAsync(cancellationToken);
 

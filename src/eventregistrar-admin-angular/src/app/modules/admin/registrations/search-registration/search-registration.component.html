@@ -5,7 +5,8 @@
         <!-- Title -->
         <div class="flex min-w-0 flex-row items-baseline gap-2">
             <div class="text-4xl font-extrabold tracking-tight leading-none">Teilnehmer</div>
-            <div *ngIf="matches?.length > 0" class="mt-1.5 text-lg text-secondary">({{matches.length}})</div>
+            <div *ngIf="matches?.length > 0 && matches?.length <= 20" class="mt-1.5 text-lg text-secondary">({{matches.length}})</div>
+            <div *ngIf="matches?.length > 20" class="mt-1.5 text-lg text-secondary">(> 20)</div>
         </div>
 
 
