@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MailType, MailTypeItem, RegistrationDisplayItem, SpotDisplayInfo, SpotDisplayItem } from 'app/api/api';
+import { IndividualReductionType, MailType, MailTypeItem, RegistrationDisplayItem, SpotDisplayInfo, SpotDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { NavigatorService } from '../navigator.service';
@@ -16,6 +16,7 @@ export class RegistrationComponent implements OnInit
   public registration: RegistrationDisplayItem;
   private unsubscribeAll: Subject<any> = new Subject<any>();
   public possibleMailTypes: MailTypeItem[];
+  IndividualReductionType = IndividualReductionType;
 
   constructor(
     private service: RegistrationService,

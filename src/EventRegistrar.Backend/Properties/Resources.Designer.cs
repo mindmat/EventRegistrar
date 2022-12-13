@@ -1785,6 +1785,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reduktionen.
+        /// </summary>
+        internal static string Reductions {
+            get {
+                return ResourceManager.GetString("Reductions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Track.
         /// </summary>
         internal static string Registrable {

@@ -690,6 +690,9 @@
   <data name="Reduction" xml:space="preserve">
     <value>Reduktion</value>
   </data>
+  <data name="Reductions" xml:space="preserve">
+    <value>Reduktionen</value>
+  </data>
   <data name="Registrable" xml:space="preserve">
     <value>Track</value>
   </data>

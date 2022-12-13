@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Payments.Assignments;
+using EventRegistrar.Backend.Registrations.IndividualReductions;
 using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations;
@@ -33,6 +34,7 @@ public class RegistrationDisplayItem
     public IEnumerable<SpotDisplayItem>? Spots { get; set; }
     public IEnumerable<AssignedPaymentDisplayItem>? Payments { get; set; }
     public IEnumerable<MailDisplayItem>? Mails { get; set; }
+    public IEnumerable<IndividualReductionDisplayItem>? Reductions { get; set; }
 }
 
 public class MailDisplayItem
@@ -42,4 +44,12 @@ public class MailDisplayItem
     public MailState? State { get; set; }
     public DateTimeOffset Created { get; set; }
     public DateTimeOffset? SentAt { get; set; }
+}
+
+public class IndividualReductionDisplayItem
+{
+    public Guid Id { get; set; }
+    public IndividualReductionType Type { get; set; }
+    public decimal Amount { get; set; }
+    public string? Reason { get; set; }
 }

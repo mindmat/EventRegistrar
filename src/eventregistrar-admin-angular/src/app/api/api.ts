@@ -6885,6 +6885,7 @@ export interface RegistrationDisplayItem {
     spots?: SpotDisplayItem[] | null;
     payments?: AssignedPaymentDisplayItem[] | null;
     mails?: MailDisplayItem[] | null;
+    reductions?: IndividualReductionDisplayItem[] | null;
 }
 
 export enum RegistrationState {
@@ -6921,6 +6922,18 @@ export enum MailState {
     Unsubscribe = 9,
     GroupUnsubscribe = 10,
     GroupResubscribe = 11,
+}
+
+export interface IndividualReductionDisplayItem {
+    id?: string;
+    type?: IndividualReductionType;
+    amount?: number;
+    reason?: string | null;
+}
+
+export enum IndividualReductionType {
+    Reduction = 1,
+    OverwritePrice = 2,
 }
 
 export interface RegistrationQuery {
@@ -7122,11 +7135,6 @@ export interface AddIndividualReductionCommand {
     type?: IndividualReductionType;
     amount?: number;
     reason?: string | null;
-}
-
-export enum IndividualReductionType {
-    Reduction = 1,
-    OverwritePrice = 2,
 }
 
 export interface CheckRegistrationAfterPaymentCommand {

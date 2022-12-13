@@ -4630,6 +4630,13 @@
             "items": {
               "$ref": "#/components/schemas/MailDisplayItem"
             }
+          },
+          "reductions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/IndividualReductionDisplayItem"
+            }
           }
         }
       },
@@ -4730,6 +4737,39 @@
           9,
           10,
           11
+        ]
+      },
+      "IndividualReductionDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/IndividualReductionType"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "IndividualReductionType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Reduction",
+          "OverwritePrice"
+        ],
+        "enum": [
+          1,
+          2
         ]
       },
       "RegistrationQuery": {
@@ -5347,18 +5387,6 @@
             "nullable": true
           }
         }
-      },
-      "IndividualReductionType": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Reduction",
-          "OverwritePrice"
-        ],
-        "enum": [
-          1,
-          2
-        ]
       },
       "CheckRegistrationAfterPaymentCommand": {
         "type": "object",

@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrations.IndividualReductions;
 using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Spots;
@@ -65,8 +66,14 @@ public class RegistrationCalculator : ReadModelCalculator<RegistrationDisplayIte
                                                                                ? null
                                                                                : $"{reg.Registration_Partner!.RespondentFirstName} {reg.Registration_Partner.RespondentLastName}",
                                                              PartnerId = reg.RegistrationId_Partner,
-                                                             IsReduced = reg.IsReduced,
                                                              WillPayAtCheckin = reg.WillPayAtCheckin,
+                                                             Reductions = reg.IndividualReductions!.Select(ird => new IndividualReductionDisplayItem
+                                                                                                                  {
+                                                                                                                      Id = ird.Id,
+                                                                                                                      Type = ird.Type,
+                                                                                                                      Amount = ird.Amount,
+                                                                                                                      Reason = ird.Reason
+                                                                                                                  }),
                                                              Mails = reg.Mails!.Select(mir => new MailDisplayItem
                                                                                               {
                                                                                                   MailId = mir.MailId,
