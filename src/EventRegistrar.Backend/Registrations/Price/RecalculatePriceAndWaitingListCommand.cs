@@ -8,6 +8,7 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.WaitingList;
+using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Registrations.Price;
 
@@ -95,7 +96,8 @@ public class RecalculatePriceAndWaitingListCommandHandler : IRequestHandler<Reca
                                   };
             _commandQueue.EnqueueCommand(sendMailCommand);
 
-            _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(registration.Id, registration.EventId);
+            _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, registration.EventId);
+            _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
         }
 
         _dirtyTagger.RemoveDirtyTags(dirtyTags);

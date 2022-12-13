@@ -162,6 +162,9 @@
   <data name="AllowAsFallbackExplanation" xml:space="preserve">
     <value>Damit kann dieses Paket für eine:n Teilnehmer:in verwendet werden, wenn ein geplantes Paket (noch) nicht verfügbar ist</value>
   </data>
+  <data name="Amount" xml:space="preserve">
+    <value>Betrag</value>
+  </data>
   <data name="AngeboteneSprachen" xml:space="preserve">
     <value>Angebotene Sprachen</value>
   </data>
@@ -189,6 +192,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
+  <data name="CancelRegistration" xml:space="preserve">
+    <value>Anmeldung stornieren</value>
+  </data>
   <data name="ClickToUpload" xml:space="preserve">
     <value>Klicken zum Hochladen</value>
   </data>
@@ -206,6 +212,9 @@
   </data>
   <data name="Create" xml:space="preserve">
     <value>Erstellen</value>
+  </data>
+  <data name="CreateIndividualReduction" xml:space="preserve">
+    <value>Individuelle Reduktion erstellen</value>
   </data>
   <data name="CreateMail" xml:space="preserve">
     <value>Mail erstellen</value>
@@ -401,6 +410,15 @@
   </data>
   <data name="ImportNewVersion" xml:space="preserve">
     <value>Neue Version importieren</value>
+  </data>
+  <data name="IndividualReductionType" xml:space="preserve">
+    <value>Reduktionsart</value>
+  </data>
+  <data name="IndividualReductionType_OverwritePrice" xml:space="preserve">
+    <value>Preis überschreiben</value>
+  </data>
+  <data name="IndividualReductionType_Reduction" xml:space="preserve">
+    <value>Reduktion</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Sprache</value>
@@ -603,6 +621,9 @@
   <data name="PaymentProgressTS" xml:space="preserve">
     <value>{{ paid }} von {{ total }} bezahlt</value>
   </data>
+  <data name="Payments" xml:space="preserve">
+    <value>Zahlungen</value>
+  </data>
   <data name="Payouts" xml:space="preserve">
     <value>Auszahlungen</value>
   </data>
@@ -662,6 +683,9 @@
   </data>
   <data name="QuestionMappingType_Town" xml:space="preserve">
     <value>Wohnort</value>
+  </data>
+  <data name="Reason" xml:space="preserve">
+    <value>Begründung</value>
   </data>
   <data name="Reduction" xml:space="preserve">
     <value>Reduktion</value>

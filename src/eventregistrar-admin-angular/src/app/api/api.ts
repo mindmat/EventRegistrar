@@ -7116,11 +7116,17 @@ export interface UnbindPartnerRegistrationCommand {
 }
 
 export interface AddIndividualReductionCommand {
-    amount?: number;
     eventId?: string;
-    reason?: string;
     reductionId?: string;
     registrationId?: string;
+    type?: IndividualReductionType;
+    amount?: number;
+    reason?: string | null;
+}
+
+export enum IndividualReductionType {
+    Reduction = 1,
+    OverwritePrice = 2,
 }
 
 export interface CheckRegistrationAfterPaymentCommand {

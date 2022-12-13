@@ -221,7 +221,7 @@ public class MailComposer
 
     private async Task<string> GetSpotList(Guid registrationId)
     {
-        var (_, priceAdmitted, _, packagesOriginal, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registrationId);
+        var (_, _, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registrationId);
         var result = new StringBuilder();
 
         // Label
@@ -253,7 +253,7 @@ public class MailComposer
             // Total
             result.AppendLine("<tr>");
             result.AppendLine($"<td><strong>{Resources.Total}</strong></td>");
-            result.AppendLine($"<td style=\"text-align: right;\">{priceAdmitted.ToString("F2")}</td>");
+            result.AppendLine($"<td style=\"text-align: right;\">{priceAdmittedAndReduced.ToString("F2")}</td>");
             result.AppendLine("</tr>");
 
             result.AppendLine("</tbody>");

@@ -1,0 +1,54 @@
+<div class="flex flex-col flex-auto md:w-160 md:min-w-160 max-h-3/4 -m-6 overflow-y-auto">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">{{ 'CreateIndividualReduction' | translate }}</div>
+        <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="reductionForm" (ngSubmit)="onSubmit()" class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto">
+
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+
+            <!-- Type -->
+            <div class="col-span-4">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'IndividualReductionType' | translate }}</mat-label>
+                    <mat-select [formControlName]="'type'">
+                        <mat-option [value]="IndividualReductionType.OverwritePrice">{{ 'IndividualReductionType_OverwritePrice' | translate }}</mat-option>
+                        <mat-option [value]="IndividualReductionType.Reduction">{{ 'IndividualReductionType_Reduction' | translate }}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+
+            <!-- Amount -->
+            <div class="col-span-1">
+                <div class="w-full ml-1 -mr-1">
+                    <mat-form-field [subscriptSizing]="'dynamic'">
+                        <mat-label>{{ 'Amount' | translate }}</mat-label>
+                        <input [formControlName]="'amount'" type="number" matInput>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Reason -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'Reason' | translate }}</mat-label>
+                    <input [formControlName]="'reason'" matInput>
+                </mat-form-field>
+            </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button mat-stroked-button type="button" [matDialogClose]="'cancelled'"> {{ 'Cancel' | translate }} </button>
+            <button class="ml-4" mat-flat-button type="submit" [color]="'primary'" [matDialogClose]="'confirmed'">{{ 'Save' | translate }} </button>
+        </div>
+    </form>
+
+</div>

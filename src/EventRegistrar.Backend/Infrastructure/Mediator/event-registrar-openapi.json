@@ -5323,16 +5323,9 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "amount": {
-            "type": "number",
-            "format": "decimal"
-          },
           "eventId": {
             "type": "string",
             "format": "guid"
-          },
-          "reason": {
-            "type": "string"
           },
           "reductionId": {
             "type": "string",
@@ -5341,8 +5334,31 @@
           "registrationId": {
             "type": "string",
             "format": "guid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/IndividualReductionType"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
           }
         }
+      },
+      "IndividualReductionType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Reduction",
+          "OverwritePrice"
+        ],
+        "enum": [
+          1,
+          2
+        ]
       },
       "CheckRegistrationAfterPaymentCommand": {
         "type": "object",

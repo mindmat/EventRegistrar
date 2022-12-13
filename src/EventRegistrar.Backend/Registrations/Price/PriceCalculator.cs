@@ -116,17 +116,17 @@ public class PriceCalculator
                                             .MinBy(idr => idr.Amount);
         if (overwrite != null)
         {
-            var reducedPrice = Math.Max(priceNotReduced, overwrite.Amount);
-            return (overwrite.Amount, new MatchingPackageResult(null,
-                                                                overwrite.Reason ?? Resources.Reduction,
-                                                                reducedPrice - priceNotReduced,
-                                                                false,
-                                                                new List<MatchingPackageSpot>()));
+            var reducedPrice = Math.Clamp(overwrite.Amount, 0, priceNotReduced);
+            return (reducedPrice, new MatchingPackageResult(null,
+                                                            $"{Resources.Reduction}: {overwrite.Reason}",
+                                                            reducedPrice - priceNotReduced,
+                                                            false,
+                                                            Array.Empty<MatchingPackageSpot>()));
         }
 
         var totalReduction = individualReductions.Select(ird => ird.Amount)
                                                  .Sum();
-        var priceAdmittedAndReduced = Math.Max(0m, priceNotReduced - totalReduction);
+        var priceAdmittedAndReduced = Math.Clamp(priceNotReduced - totalReduction, 0, priceNotReduced);
         return (priceAdmittedAndReduced, new MatchingPackageResult(null,
                                                                    Resources.Reduction,
                                                                    -totalReduction,

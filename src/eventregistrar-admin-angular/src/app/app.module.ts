@@ -88,6 +88,7 @@ import { MailViewerComponent } from './modules/admin/mailing/mails/mail-viewer/m
 import { MatchPartnersComponent } from './modules/admin/registrations/match-partners/match-partners.component';
 import { MatchPartnerComponent } from './modules/admin/registrations/match-partner/match-partner.component';
 import { FuseAlertModule } from '@fuse/components/alert';
+import { CreateIndividualReductionComponent } from './modules/admin/registration/create-individual-reduction/create-individual-reduction.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -123,7 +124,8 @@ const routerConfig: ExtraOptions = {
         FileUploadComponent,
         MailViewerComponent,
         MatchPartnersComponent,
-        MatchPartnerComponent
+        MatchPartnerComponent,
+        CreateIndividualReductionComponent
     ],
     providers: [
         AuthServiceFuse,

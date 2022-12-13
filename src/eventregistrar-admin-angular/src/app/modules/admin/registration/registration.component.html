@@ -65,7 +65,18 @@
 
             <!-- Participant -->
             <fuse-card class="flex flex-col w-80 p-8">
-                <div class="text-2xl font-semibold leading-tight">{{ 'Overview' | translate }}</div>
+                <div class="flex items-center justify-between">
+                    <div class="text-2xl font-semibold leading-tight">{{ 'Overview' | translate }}</div>
+                    <div class="-mr-3">
+                        <button mat-icon-button [matMenuTriggerFor]="paymentsMenu">
+                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                        </button>
+                        <mat-menu #paymentsMenu="matMenu">
+                            <button mat-menu-item (click)="addReduction()">{{ 'CreateIndividualReduction' | translate }}</button>
+                            <!-- <button mat-menu-item>{{ 'CancelRegistration' | translate }}</button> -->
+                        </mat-menu>
+                    </div>
+                </div>
                 <hr class="w-full border-t my-6">
                 <div class="flex flex-col">
                     <div class="flex items-center">
@@ -99,7 +110,7 @@
             <!-- Payments -->
             <fuse-card class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
                 <div class="flex items-center justify-between">
-                    <div class="text-2xl font-semibold leading-tight">Zahlungen</div>
+                    <div class="text-2xl font-semibold leading-tight">{{ 'Payments' | translate }}</div>
                     <div class="-mr-3">
                         <button mat-icon-button [matMenuTriggerFor]="paymentsMenu">
                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>

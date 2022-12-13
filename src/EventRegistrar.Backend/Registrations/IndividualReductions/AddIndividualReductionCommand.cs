@@ -1,23 +1,25 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Events.UsersInEvents;
+﻿using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using MediatR;
+using EventRegistrar.Backend.Payments.Due;
 
 namespace EventRegistrar.Backend.Registrations.IndividualReductions;
 
 public class AddIndividualReductionCommand : IRequest, IEventBoundRequest
 {
-    public decimal Amount { get; set; }
     public Guid EventId { get; set; }
-    public string Reason { get; set; }
     public Guid ReductionId { get; set; }
     public Guid RegistrationId { get; set; }
+    public IndividualReductionType Type { get; set; }
+    public decimal Amount { get; set; }
+    public string? Reason { get; set; }
 }
 
 public class AddIndividualReductionCommandHandler : IRequestHandler<AddIndividualReductionCommand>
 {
     private readonly IEventBus _eventBus;
+    private readonly ReadModelUpdater _readModelUpdater;
     private readonly IRepository<IndividualReduction> _reductions;
     private readonly IQueryable<Registration> _registrations;
     private readonly AuthenticatedUserId _userId;
@@ -25,12 +27,14 @@ public class AddIndividualReductionCommandHandler : IRequestHandler<AddIndividua
     public AddIndividualReductionCommandHandler(IQueryable<Registration> registrations,
                                                 IRepository<IndividualReduction> reductions,
                                                 AuthenticatedUserId userId,
-                                                IEventBus eventBus)
+                                                IEventBus eventBus,
+                                                ReadModelUpdater readModelUpdater)
     {
         _registrations = registrations;
         _reductions = reductions;
         _userId = userId;
         _eventBus = eventBus;
+        _readModelUpdater = readModelUpdater;
     }
 
     public async Task<Unit> Handle(AddIndividualReductionCommand command, CancellationToken cancellationToken)
@@ -42,11 +46,12 @@ public class AddIndividualReductionCommandHandler : IRequestHandler<AddIndividua
                         {
                             Id = command.ReductionId,
                             RegistrationId = command.RegistrationId,
+                            Type = command.Type,
                             Amount = command.Amount,
                             Reason = command.Reason,
-                            UserId = _userId.UserId.Value
+                            UserId = _userId.UserId!.Value
                         };
-        await _reductions.InsertOrUpdateEntity(reduction, cancellationToken);
+        _reductions.InsertObjectTree(reduction);
 
         _eventBus.Publish(new IndividualReductionAdded
                           {
@@ -54,6 +59,9 @@ public class AddIndividualReductionCommandHandler : IRequestHandler<AddIndividua
                               Amount = command.Amount,
                               Reason = command.Reason
                           });
+
+        _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
+
         return Unit.Value;
     }
 }

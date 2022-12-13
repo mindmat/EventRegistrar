@@ -196,6 +196,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Betrag.
+        /// </summary>
+        internal static string Amount {
+            get {
+                return ResourceManager.GetString("Amount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Angebotene Sprachen.
         /// </summary>
         internal static string AngeboteneSprachen {
@@ -277,6 +286,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anmeldung stornieren.
+        /// </summary>
+        internal static string CancelRegistration {
+            get {
+                return ResourceManager.GetString("CancelRegistration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Klicken zum Hochladen.
         /// </summary>
         internal static string ClickToUpload {
@@ -327,6 +345,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Create {
             get {
                 return ResourceManager.GetString("Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Individuelle Reduktion erstellen.
+        /// </summary>
+        internal static string CreateIndividualReduction {
+            get {
+                return ResourceManager.GetString("CreateIndividualReduction", resourceCulture);
             }
         }
         
@@ -917,6 +944,33 @@ namespace EventRegistrar.Backend.Properties {
         internal static string ImportNewVersion {
             get {
                 return ResourceManager.GetString("ImportNewVersion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reduktionsart.
+        /// </summary>
+        internal static string IndividualReductionType {
+            get {
+                return ResourceManager.GetString("IndividualReductionType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preis überschreiben.
+        /// </summary>
+        internal static string IndividualReductionType_OverwritePrice {
+            get {
+                return ResourceManager.GetString("IndividualReductionType_OverwritePrice", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reduktion.
+        /// </summary>
+        internal static string IndividualReductionType_Reduction {
+            get {
+                return ResourceManager.GetString("IndividualReductionType_Reduction", resourceCulture);
             }
         }
         
@@ -1524,6 +1578,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zahlungen.
+        /// </summary>
+        internal static string Payments {
+            get {
+                return ResourceManager.GetString("Payments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Auszahlungen.
         /// </summary>
         internal static string Payouts {
@@ -1700,6 +1763,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string QuestionMappingType_Town {
             get {
                 return ResourceManager.GetString("QuestionMappingType_Town", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Begründung.
+        /// </summary>
+        internal static string Reason {
+            get {
+                return ResourceManager.GetString("Reason", resourceCulture);
             }
         }
         

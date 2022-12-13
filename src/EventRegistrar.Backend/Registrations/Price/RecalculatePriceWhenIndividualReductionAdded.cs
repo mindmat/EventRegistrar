@@ -1,8 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Registrations.Price;
 
 public class RecalculatePriceWhenIndividualReductionAdded : IEventToCommandTranslation<IndividualReductionAdded>

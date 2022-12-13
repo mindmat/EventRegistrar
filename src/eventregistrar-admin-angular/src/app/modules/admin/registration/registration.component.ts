@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MailType, MailTypeItem, RegistrationDisplayItem, SpotDisplayInfo, SpotDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { NavigatorService } from '../navigator.service';
+import { CreateIndividualReductionComponent } from './create-individual-reduction/create-individual-reduction.component';
 import { RegistrationService } from './registration.service';
 
 @Component({
@@ -19,7 +21,8 @@ export class RegistrationComponent implements OnInit
     private service: RegistrationService,
     public navigator: NavigatorService,
     private changeDetectorRef: ChangeDetectorRef,
-    private eventService: EventService) { }
+    private eventService: EventService,
+    private matDialog: MatDialog) { }
 
   ngOnInit(): void
   {
@@ -62,5 +65,13 @@ export class RegistrationComponent implements OnInit
   getRegistrableUrl(spot: SpotDisplayItem): string
   {
     return this.navigator.getRegistrableUrl(spot.registrableId, spot.type);
+  }
+
+  addReduction()
+  {
+    this.matDialog.open(CreateIndividualReductionComponent, {
+      autoFocus: true,
+      data: { registrationId: this.registration.id, price: this.registration.price }
+    });
   }
 }
