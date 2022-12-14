@@ -1,11 +1,8 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure;
+﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Spots;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Cancel;
 
@@ -13,7 +10,7 @@ public class CancelRegistrationCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
     public bool IgnorePayments { get; set; }
-    public string Reason { get; set; }
+    public string? Reason { get; set; }
     public decimal RefundPercentage { get; set; }
     public Guid RegistrationId { get; set; }
     public DateTimeOffset? Received { get; set; }
@@ -51,13 +48,13 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
         var refundPercentage = command.RefundPercentage > 1m
                                    ? command.RefundPercentage / 100m
                                    : command.RefundPercentage;
-        refundPercentage = Math.Max(Math.Min(refundPercentage, 1m), 0m);
+        refundPercentage = Math.Clamp(refundPercentage, 0m, 1m);
 
         var registration = await _registrations.Include(reg => reg.PaymentAssignments)
                                                .Include(reg => reg.RegistrationForm)
                                                .FirstAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
 
-        if (registration.PaymentAssignments.Any() && !command.IgnorePayments)
+        if (registration.PaymentAssignments!.Any() && !command.IgnorePayments)
         {
             throw new ApplicationException($"There are already payments for registration {command.RegistrationId}");
         }
@@ -69,8 +66,7 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
 
         if (registration.State == RegistrationState.Paid && !command.IgnorePayments)
         {
-            throw new ApplicationException(
-                $"Registration {command.RegistrationId} is already paid and cannot be cancelled anymore");
+            throw new ApplicationException($"Registration {command.RegistrationId} is already paid and cannot be cancelled anymore");
         }
 
         registration.State = RegistrationState.Cancelled;

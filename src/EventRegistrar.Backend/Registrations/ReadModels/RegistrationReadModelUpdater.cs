@@ -4,7 +4,7 @@ using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Registrables;
-using EventRegistrar.Backend.Registrations.IndividualReductions;
+using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Spots;
@@ -162,6 +162,9 @@ public class RegistrationCalculator : ReadModelCalculator<RegistrationDisplayIte
 }
 
 public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTranslation<RegistrationProcessed>,
+                                                             IEventToCommandTranslation<RegistrationCancelled>,
+                                                             IEventToCommandTranslation<SpotRemoved>,
+                                                             IEventToCommandTranslation<SpotAdded>,
                                                              IEventToCommandTranslation<OutgoingPaymentAssigned>,
                                                              IEventToCommandTranslation<OutgoingPaymentUnassigned>,
                                                              IEventToCommandTranslation<IncomingPaymentUnassigned>,
@@ -179,13 +182,31 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
     {
         if (e.EventId != null)
         {
-            yield return new UpdateReadModelCommand
-                         {
-                             QueryName = nameof(RegistrationQuery),
-                             EventId = e.EventId.Value,
-                             RowId = e.RegistrationId,
-                             DirtyMoment = _dateTimeProvider.Now
-                         };
+            yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId);
+        }
+    }
+
+    public IEnumerable<IRequest> Translate(RegistrationCancelled e)
+    {
+        if (e.EventId != null)
+        {
+            yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId);
+        }
+    }
+
+    public IEnumerable<IRequest> Translate(SpotAdded e)
+    {
+        if (!e.IsInitialProcessing)
+        {
+            yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId);
+        }
+    }
+
+    public IEnumerable<IRequest> Translate(SpotRemoved e)
+    {
+        if (e.Reason == RemoveSpotReason.Modification)
+        {
+            yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId);
         }
     }
 
@@ -193,13 +214,7 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
     {
         if (e.EventId != null && e.RegistrationId != null)
         {
-            yield return new UpdateReadModelCommand
-                         {
-                             QueryName = nameof(RegistrationQuery),
-                             EventId = e.EventId.Value,
-                             RowId = e.RegistrationId.Value,
-                             DirtyMoment = _dateTimeProvider.Now
-                         };
+            yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId!.Value);
         }
     }
 
@@ -207,13 +222,7 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
     {
         if (e.EventId != null && e.RegistrationId != null)
         {
-            yield return new UpdateReadModelCommand
-                         {
-                             QueryName = nameof(RegistrationQuery),
-                             EventId = e.EventId.Value,
-                             RowId = e.RegistrationId.Value,
-                             DirtyMoment = _dateTimeProvider.Now
-                         };
+            yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId!.Value);
         }
     }
 
@@ -221,13 +230,7 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
     {
         if (e.EventId != null && e.RegistrationId != null)
         {
-            yield return new UpdateReadModelCommand
-                         {
-                             QueryName = nameof(RegistrationQuery),
-                             EventId = e.EventId.Value,
-                             RowId = e.RegistrationId.Value,
-                             DirtyMoment = _dateTimeProvider.Now
-                         };
+            yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId!.Value);
         }
     }
 
@@ -235,13 +238,7 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
     {
         if (e.EventId != null && e.RegistrationId != null)
         {
-            yield return new UpdateReadModelCommand
-                         {
-                             QueryName = nameof(RegistrationQuery),
-                             EventId = e.EventId.Value,
-                             RowId = e.RegistrationId.Value,
-                             DirtyMoment = _dateTimeProvider.Now
-                         };
+            yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId!.Value);
         }
     }
 
@@ -249,13 +246,18 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
     {
         if (e.EventId != null)
         {
-            yield return new UpdateReadModelCommand
-                         {
-                             QueryName = nameof(RegistrationQuery),
-                             EventId = e.EventId.Value,
-                             RowId = e.RegistrationId,
-                             DirtyMoment = _dateTimeProvider.Now
-                         };
+            yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId);
         }
+    }
+
+    private UpdateReadModelCommand CreateUpdateCommand(Guid eventId, Guid registrationId)
+    {
+        return new UpdateReadModelCommand
+               {
+                   QueryName = nameof(RegistrationQuery),
+                   EventId = eventId,
+                   RowId = registrationId,
+                   DirtyMoment = _dateTimeProvider.Now
+               };
     }
 }

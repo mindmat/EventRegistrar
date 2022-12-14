@@ -71,6 +71,7 @@ import { TagsPickerComponent } from './shared/tags-picker/tags-picker.component'
 import { PricingComponent } from './modules/admin/pricing/pricing.component';
 import { RegistrableDetailComponent } from './modules/admin/overview/registrable-detail/registrable-detail.component';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -89,6 +90,7 @@ import { MatchPartnersComponent } from './modules/admin/registrations/match-part
 import { MatchPartnerComponent } from './modules/admin/registrations/match-partner/match-partner.component';
 import { FuseAlertModule } from '@fuse/components/alert';
 import { CreateIndividualReductionComponent } from './modules/admin/registration/create-individual-reduction/create-individual-reduction.component';
+import { CancelRegistrationComponent } from './modules/admin/registration/cancel-registration/cancel-registration.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -125,7 +127,8 @@ const routerConfig: ExtraOptions = {
         MailViewerComponent,
         MatchPartnersComponent,
         MatchPartnerComponent,
-        CreateIndividualReductionComponent
+        CreateIndividualReductionComponent,
+        CancelRegistrationComponent
     ],
     providers: [
         AuthServiceFuse,
@@ -186,6 +189,7 @@ const routerConfig: ExtraOptions = {
         MatSidenavModule,
         MatDialogModule,
         MatOptionModule,
+        MatDatepickerModule,
 
         FroalaEditorModule.forRoot(),
         FroalaViewModule.forRoot(),

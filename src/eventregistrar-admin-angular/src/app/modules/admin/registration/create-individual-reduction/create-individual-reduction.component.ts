@@ -26,7 +26,6 @@ export class CreateIndividualReductionComponent
 
   ngOnInit(): void
   {
-    // new
     this.reductionForm = this.fb.group<AddIndividualReductionCommand>({
       eventId: this.eventService.selectedId,
       registrationId: this.data.registrationId,

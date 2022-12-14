@@ -23,7 +23,7 @@ public class SpotRemover
     {
         if (spot.RegistrationId == registrationId)
         {
-            if (spot.RegistrationId_Follower.HasValue)
+            if (spot.RegistrationId_Follower != null)
             {
                 // double spot, leave the partner in
                 spot.RegistrationId = null;
@@ -38,7 +38,7 @@ public class SpotRemover
         }
         else if (spot.RegistrationId_Follower == registrationId)
         {
-            if (spot.RegistrationId.HasValue)
+            if (spot.RegistrationId != null)
             {
                 // double spot, leave the partner in
                 spot.RegistrationId_Follower = null;

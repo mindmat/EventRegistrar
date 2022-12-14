@@ -5,7 +5,7 @@ namespace EventRegistrar.Backend.Registrations.Cancel;
 public class RegistrationCancelled : DomainEvent
 {
     public Guid RegistrationId { get; set; }
-    public string Reason { get; set; }
+    public string? Reason { get; set; }
     public decimal Refund { get; set; }
     public DateTimeOffset Received { get; set; }
     public string Participant { get; set; }

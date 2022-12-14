@@ -73,7 +73,7 @@
                         </button>
                         <mat-menu #paymentsMenu="matMenu">
                             <button mat-menu-item (click)="addReduction()">{{ 'CreateIndividualReduction' | translate }}</button>
-                            <!-- <button mat-menu-item>{{ 'CancelRegistration' | translate }}</button> -->
+                            <button mat-menu-item (click)="cancelRegistration()">{{ 'CancelRegistration' | translate }}</button>
                         </mat-menu>
                     </div>
                 </div>

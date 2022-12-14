@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Spots;
 
@@ -152,7 +153,10 @@ public class RegistrablesOverviewCalculator : ReadModelCalculator<RegistrablesOv
     }
 }
 
-public class UpdateTrackOverviewReadModel : IEventToCommandTranslation<RegistrationProcessed>
+public class UpdateTrackOverviewReadModel : IEventToCommandTranslation<RegistrationProcessed>,
+                                            IEventToCommandTranslation<RegistrationCancelled>,
+                                            IEventToCommandTranslation<SpotAdded>,
+                                            IEventToCommandTranslation<SpotRemoved>
 {
     private readonly IDateTimeProvider _dateTimeProvider;
 
@@ -165,13 +169,43 @@ public class UpdateTrackOverviewReadModel : IEventToCommandTranslation<Registrat
     {
         if (e.EventId != null)
         {
-            yield return new UpdateReadModelCommand
-                         {
-                             QueryName = nameof(RegistrablesOverviewQuery),
-                             EventId = e.EventId.Value,
-                             DirtyMoment = _dateTimeProvider.Now
-                         };
+            yield return CreateUpdateCommand(e.EventId.Value);
         }
+    }
+
+
+    public IEnumerable<IRequest> Translate(RegistrationCancelled e)
+    {
+        if (e.EventId != null)
+        {
+            yield return CreateUpdateCommand(e.EventId.Value);
+        }
+    }
+
+    public IEnumerable<IRequest> Translate(SpotAdded e)
+    {
+        if (e.EventId != null)
+        {
+            yield return CreateUpdateCommand(e.EventId.Value);
+        }
+    }
+
+    public IEnumerable<IRequest> Translate(SpotRemoved e)
+    {
+        if (e.EventId != null)
+        {
+            yield return CreateUpdateCommand(e.EventId.Value);
+        }
+    }
+
+    private UpdateReadModelCommand CreateUpdateCommand(Guid eventId)
+    {
+        return new UpdateReadModelCommand
+               {
+                   QueryName = nameof(RegistrablesOverviewQuery),
+                   EventId = eventId,
+                   DirtyMoment = _dateTimeProvider.Now
+               };
     }
 }
 

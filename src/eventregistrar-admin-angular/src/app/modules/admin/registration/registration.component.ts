@@ -4,6 +4,7 @@ import { IndividualReductionType, MailType, MailTypeItem, RegistrationDisplayIte
 import { Subject, takeUntil } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { NavigatorService } from '../navigator.service';
+import { CancelRegistrationComponent } from './cancel-registration/cancel-registration.component';
 import { CreateIndividualReductionComponent } from './create-individual-reduction/create-individual-reduction.component';
 import { RegistrationService } from './registration.service';
 
@@ -73,6 +74,14 @@ export class RegistrationComponent implements OnInit
     this.matDialog.open(CreateIndividualReductionComponent, {
       autoFocus: true,
       data: { registrationId: this.registration.id, price: this.registration.price }
+    });
+  }
+
+  cancelRegistration()
+  {
+    this.matDialog.open(CancelRegistrationComponent, {
+      autoFocus: true,
+      data: { registrationId: this.registration.id, paid: this.registration.paid }
     });
   }
 }

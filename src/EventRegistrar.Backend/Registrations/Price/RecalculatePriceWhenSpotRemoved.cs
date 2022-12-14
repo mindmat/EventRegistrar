@@ -1,12 +1,18 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Spots;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Registrations.Price;
 
-public class RecalculatePriceWhenSpotRemoved : IEventToCommandTranslation<SpotRemoved>
+public class RecalculatePriceWhenSpotChanged : IEventToCommandTranslation<SpotRemoved>, IEventToCommandTranslation<SpotAdded>
 {
+    public IEnumerable<IRequest> Translate(SpotAdded e)
+    {
+        if (!e.IsInitialProcessing)
+        {
+            yield return new RecalculatePriceAndWaitingListCommand { RegistrationId = e.RegistrationId };
+        }
+    }
+
     public IEnumerable<IRequest> Translate(SpotRemoved e)
     {
         if (e.Reason == RemoveSpotReason.Modification)
