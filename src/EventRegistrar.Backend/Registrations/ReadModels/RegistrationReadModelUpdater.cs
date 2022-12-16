@@ -87,10 +87,6 @@ public class RegistrationCalculator : ReadModelCalculator<RegistrationDisplayIte
                                                          })
                                           .FirstAsync(cancellationToken);
 
-        content.Mails = content.Mails
-                               ?.OrderBy(mail => mail.SentAt ?? mail.Created)
-                               .ToList();
-
         content.Spots = await _spots.Where(spot => (spot.Registration!.EventId == eventId
                                                  && spot.RegistrationId == registrationId)
                                                 || (spot.Registration_Follower!.EventId == eventId

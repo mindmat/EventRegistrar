@@ -48,8 +48,8 @@ public class ReadModelUpdater
 
 public class UpdateReadModelCommand : IRequest
 {
-    public string QueryName { get; set; } = null!;
     public Guid EventId { get; set; }
+    public string QueryName { get; set; } = null!;
     public Guid? RowId { get; set; }
     public DateTimeOffset DirtyMoment { get; set; }
 }
