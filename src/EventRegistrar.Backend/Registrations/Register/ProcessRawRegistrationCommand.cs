@@ -21,7 +21,7 @@ public class ProcessRawRegistrationCommand : IRequest
     public Guid RawRegistrationId { get; set; }
 }
 
-public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRegistrationCommand>
+public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessRawRegistrationCommand>
 {
     private readonly IEventBus _eventBus;
     private readonly IQueryable<RegistrationForm> _forms;
@@ -51,14 +51,14 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
         _eventBus = eventBus;
     }
 
-    public async Task<Unit> Handle(ProcessRawRegistrationCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(ProcessRawRegistrationCommand command, CancellationToken cancellationToken)
     {
         var rawRegistration = await _rawRegistrations.AsTracking()
-                                                     .FirstOrDefaultAsync(reg => reg.Id == command.RawRegistrationId,
-                                                                          cancellationToken);
-        if (rawRegistration == null)
+                                                     .FirstAsync(reg => reg.Id == command.RawRegistrationId,
+                                                                 cancellationToken);
+        if (rawRegistration.Processed != null)
         {
-            throw new KeyNotFoundException($"Invalid RawRegistrationId received {command.RawRegistrationId}");
+            throw new KeyNotFoundException($"RawRegistrationId {command.RawRegistrationId} has already been processed at {rawRegistration.Processed}");
         }
 
         try
@@ -89,6 +89,19 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
             var registration = await _registrations.FirstOrDefaultAsync(reg => reg.ExternalIdentifier == rawRegistration.RegistrationExternalIdentifier, cancellationToken);
             if (registration != null)
             {
+                // Duplicate RawRegistration?
+                var processedDuplicate = await _rawRegistrations.Where(rrg => rrg.EventAcronym == rawRegistration.EventAcronym
+                                                                           && rrg.FormExternalIdentifier == rawRegistration.FormExternalIdentifier
+                                                                           && rrg.RegistrationExternalIdentifier == rawRegistration.RegistrationExternalIdentifier
+                                                                           && rrg.Processed != null)
+                                                                .FirstOrDefaultAsync(cancellationToken);
+                if (processedDuplicate != null
+                 && processedDuplicate.ReceivedMessage == rawRegistration.ReceivedMessage)
+                {
+                    _rawRegistrations.Remove(rawRegistration);
+                    return;
+                }
+
                 throw new ApplicationException($"Registration with external identifier '{rawRegistration.RegistrationExternalIdentifier}' already exists");
             }
 
@@ -186,8 +199,6 @@ public class ProcessRawRegistrationCommandHandler : IRequestHandler<ProcessRawRe
         {
             rawRegistration.LastProcessingError = ex.Message;
         }
-
-        return Unit.Value;
     }
 
     private static (Guid? questionId, IEnumerable<Guid> questionOptionId) LookupResponse(
