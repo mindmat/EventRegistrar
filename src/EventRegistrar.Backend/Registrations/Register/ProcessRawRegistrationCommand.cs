@@ -99,6 +99,11 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
                  && processedDuplicate.ReceivedMessage == rawRegistration.ReceivedMessage)
                 {
                     _rawRegistrations.Remove(rawRegistration);
+                    _eventBus.Publish(new QueryChanged
+                                      {
+                                          EventId = form.EventId,
+                                          QueryName = nameof(UnprocessedRawRegistrationCountQuery)
+                                      });
                     return;
                 }
 
