@@ -27,7 +27,6 @@ public class RegistrationDisplayItem
     public int SmsCount { get; set; }
     public string? SoldOutMessage { get; set; }
     public RegistrationState Status { get; set; }
-    public string StatusText { get; set; }
     public bool WillPayAtCheckin { get; set; }
     public bool? FallbackToPartyPass { get; set; }
 
@@ -43,6 +42,7 @@ public class MailDisplayItem
     public string? Subject { get; set; }
     public MailState? State { get; set; }
     public DateTimeOffset Created { get; set; }
+    public bool Withhold { get; set; }
     public DateTimeOffset? SentAt { get; set; }
 }
 

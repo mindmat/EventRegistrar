@@ -4419,6 +4419,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    resendSentMailsWithoutState_Command(resendSentMailsWithoutStateCommand: ResendSentMailsWithoutStateCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/ResendSentMailsWithoutStateCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(resendSentMailsWithoutStateCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processResendSentMailsWithoutState_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processResendSentMailsWithoutState_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processResendSentMailsWithoutState_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     autoMailPreview_Query(autoMailPreviewQuery: AutoMailPreviewQuery | undefined): Observable<AutoMailPreview> {
         let url_ = this.baseUrl + "/api/AutoMailPreviewQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -6879,7 +6930,6 @@ export interface RegistrationDisplayItem {
     smsCount?: number;
     soldOutMessage?: string | null;
     status?: RegistrationState;
-    statusText?: string;
     willPayAtCheckin?: boolean;
     fallbackToPartyPass?: boolean | null;
     spots?: SpotDisplayItem[] | null;
@@ -6906,6 +6956,7 @@ export interface MailDisplayItem {
     subject?: string | null;
     state?: MailState | null;
     created?: Date;
+    withhold?: boolean;
     sentAt?: Date | null;
 }
 
@@ -7144,7 +7195,7 @@ export interface CheckRegistrationAfterPaymentCommand {
 export interface CancelRegistrationCommand {
     eventId?: string;
     ignorePayments?: boolean;
-    reason?: string;
+    reason?: string | null;
     refundPercentage?: number;
     registrationId?: string;
     received?: Date | null;
@@ -8053,6 +8104,10 @@ export interface ReleaseMailCommand {
     mailId?: string;
 }
 
+export interface ResendSentMailsWithoutStateCommand {
+    eventId?: string;
+}
+
 export interface AutoMailPreview {
     subject?: string | null;
     contentHtml?: string | null;
@@ -8206,14 +8261,13 @@ export interface InvalidAddressesQuery {
 }
 
 export interface NotReceivedMail {
+    mailId?: string;
     created?: Date;
-    events?: string;
-    id?: string;
-    recipients?: string;
-    registrationId?: string;
     sent?: Date | null;
-    state?: string;
-    subject?: string;
+    recipients?: string | null;
+    registrationId?: string;
+    state?: string | null;
+    subject?: string | null;
 }
 
 export interface NotReceivedMailsQuery {

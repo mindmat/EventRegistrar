@@ -2851,6 +2851,38 @@
         }
       }
     },
+    "/api/ResendSentMailsWithoutStateCommand": {
+      "post": {
+        "tags": [
+          "ResendSentMailsWithoutState"
+        ],
+        "operationId": "ResendSentMailsWithoutState_Command",
+        "requestBody": {
+          "x-name": "ResendSentMailsWithoutStateCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResendSentMailsWithoutStateCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/AutoMailPreviewQuery": {
       "post": {
         "tags": [
@@ -4600,9 +4632,6 @@
           "status": {
             "$ref": "#/components/schemas/RegistrationState"
           },
-          "statusText": {
-            "type": "string"
-          },
           "willPayAtCheckin": {
             "type": "boolean"
           },
@@ -4699,6 +4728,9 @@
           "created": {
             "type": "string",
             "format": "date-time"
+          },
+          "withhold": {
+            "type": "boolean"
           },
           "sentAt": {
             "type": "string",
@@ -5410,7 +5442,8 @@
             "type": "boolean"
           },
           "reason": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "refundPercentage": {
             "type": "number",
@@ -8269,6 +8302,16 @@
           }
         }
       },
+      "ResendSentMailsWithoutStateCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "AutoMailPreview": {
         "type": "object",
         "additionalProperties": false,
@@ -8720,34 +8763,34 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "mailId": {
+            "type": "string",
+            "format": "guid"
+          },
           "created": {
             "type": "string",
             "format": "date-time"
-          },
-          "events": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string",
-            "format": "guid"
-          },
-          "recipients": {
-            "type": "string"
-          },
-          "registrationId": {
-            "type": "string",
-            "format": "guid"
           },
           "sent": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
+          "recipients": {
+            "type": "string",
+            "nullable": true
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
           "state": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "subject": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },

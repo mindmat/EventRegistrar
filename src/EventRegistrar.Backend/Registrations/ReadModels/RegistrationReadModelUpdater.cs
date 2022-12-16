@@ -42,7 +42,6 @@ public class RegistrationCalculator : ReadModelCalculator<RegistrationDisplayIte
                                                              IsWaitingList = reg.IsOnWaitingList,
                                                              Price = reg.Price_AdmittedAndReduced,
                                                              Status = reg.State,
-                                                             StatusText = reg.State.ToString(),
                                                              Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null
                                                                                                                      ? asn.Amount
                                                                                                                      : -asn.Amount)
@@ -74,14 +73,17 @@ public class RegistrationCalculator : ReadModelCalculator<RegistrationDisplayIte
                                                                                                                       Amount = ird.Amount,
                                                                                                                       Reason = ird.Reason
                                                                                                                   }),
-                                                             Mails = reg.Mails!.Select(mir => new MailDisplayItem
-                                                                                              {
-                                                                                                  MailId = mir.MailId,
-                                                                                                  Subject = mir.Mail!.Subject,
-                                                                                                  Created = mir.Mail.Created,
-                                                                                                  SentAt = mir.Mail.Sent,
-                                                                                                  State = mir.Mail.State
-                                                                                              })
+                                                             Mails = reg.Mails!
+                                                                        .OrderByDescending(mir => mir.Mail!.Created)
+                                                                        .Select(mir => new MailDisplayItem
+                                                                                       {
+                                                                                           MailId = mir.MailId,
+                                                                                           Subject = mir.Mail!.Subject,
+                                                                                           Created = mir.Mail.Created,
+                                                                                           Withhold = mir.Mail.Withhold,
+                                                                                           SentAt = mir.Mail.Sent,
+                                                                                           State = mir.State
+                                                                                       })
                                                          })
                                           .FirstAsync(cancellationToken);
 
