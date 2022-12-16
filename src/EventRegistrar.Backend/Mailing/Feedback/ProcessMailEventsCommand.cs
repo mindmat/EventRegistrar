@@ -68,8 +68,8 @@ public class ProcessMailEventsCommandHandler : IRequestHandler<ProcessMailEvents
             else
             {
                 mail.State = state;
-                // if addresed to multiple emails, save which receiver is concerned
-                foreach (var mailToRegistration in mail.Registrations.Where(mil => mil.Registration.RespondentEmail == sendGridEvent.Email))
+                // if addressed to multiple emails, save which receiver is concerned
+                foreach (var mailToRegistration in mail.Registrations!.Where(mil => mil.Registration!.RespondentEmail == sendGridEvent.Email))
                 {
                     mailToRegistration.State = state;
                 }

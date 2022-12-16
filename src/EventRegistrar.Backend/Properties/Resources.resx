@@ -492,6 +492,27 @@
   <data name="Mails" xml:space="preserve">
     <value>Mails</value>
   </data>
+  <data name="MailState_Bounce" xml:space="preserve">
+    <value>Bounce</value>
+  </data>
+  <data name="MailState_Click" xml:space="preserve">
+    <value>Angeklickt</value>
+  </data>
+  <data name="MailState_Deferred" xml:space="preserve">
+    <value>Zurückgestellt</value>
+  </data>
+  <data name="MailState_Delivered" xml:space="preserve">
+    <value>Geliefert</value>
+  </data>
+  <data name="MailState_Dropped" xml:space="preserve">
+    <value>Verworfen</value>
+  </data>
+  <data name="MailState_Open" xml:space="preserve">
+    <value>Geöffnet</value>
+  </data>
+  <data name="MailState_Processed" xml:space="preserve">
+    <value>Verarbeitet</value>
+  </data>
   <data name="MailSubject" xml:space="preserve">
     <value>Betreff</value>
   </data>
@@ -593,6 +614,9 @@
   </data>
   <data name="NoSearchResults" xml:space="preserve">
     <value>Keine Treffer gefunden</value>
+  </data>
+  <data name="NotReleased" xml:space="preserve">
+    <value>Nicht freigegeben</value>
   </data>
   <data name="NoUnmatchedRegistrations" xml:space="preserve">
     <value>Alle Partner sind zugeordnet</value>
@@ -891,9 +915,6 @@
   </data>
   <data name="WaitingList" xml:space="preserve">
     <value>Warteliste</value>
-  </data>
-  <data name="NotReleased" xml:space="preserve">
-    <value>Nicht freigegeben</value>
   </data>
   <data name="Zugriffsanfragen" xml:space="preserve">
     <value>Zugriffsanfragen</value>

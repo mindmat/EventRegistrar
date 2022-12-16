@@ -91,6 +91,9 @@ import { MatchPartnerComponent } from './modules/admin/registrations/match-partn
 import { FuseAlertModule } from '@fuse/components/alert';
 import { CreateIndividualReductionComponent } from './modules/admin/registration/create-individual-reduction/create-individual-reduction.component';
 import { CancelRegistrationComponent } from './modules/admin/registration/cancel-registration/cancel-registration.component';
+import { AgoPipe } from './modules/admin/infrastructure/ago.pipe';
+import { UserHasRightDirective } from './core/auth/user-has-right.directive';
+import { TranslateEnumPipe } from './modules/admin/infrastructure/translate-enum.pipe';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -128,7 +131,10 @@ const routerConfig: ExtraOptions = {
         MatchPartnersComponent,
         MatchPartnerComponent,
         CreateIndividualReductionComponent,
-        CancelRegistrationComponent
+        CancelRegistrationComponent,
+        AgoPipe,
+        TranslateEnumPipe,
+        UserHasRightDirective
     ],
     providers: [
         AuthServiceFuse,

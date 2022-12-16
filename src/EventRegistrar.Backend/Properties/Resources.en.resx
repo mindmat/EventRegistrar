@@ -408,6 +408,27 @@
   <data name="Mails" xml:space="preserve">
     <value>Mails</value>
   </data>
+  <data name="MailState_Bounce" xml:space="preserve">
+    <value>Bounce</value>
+  </data>
+  <data name="MailState_Click" xml:space="preserve">
+    <value>Clicked</value>
+  </data>
+  <data name="MailState_Deferred" xml:space="preserve">
+    <value>Deferred</value>
+  </data>
+  <data name="MailState_Delivered" xml:space="preserve">
+    <value>Delivered</value>
+  </data>
+  <data name="MailState_Dropped" xml:space="preserve">
+    <value>Dropped</value>
+  </data>
+  <data name="MailState_Open" xml:space="preserve">
+    <value>Opened</value>
+  </data>
+  <data name="MailState_Processed" xml:space="preserve">
+    <value>Processed</value>
+  </data>
   <data name="MailSubject" xml:space="preserve">
     <value>Subject</value>
   </data>
