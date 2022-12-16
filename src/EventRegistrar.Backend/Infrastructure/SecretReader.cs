@@ -37,10 +37,7 @@ public class SecretReader
         var keyVaultUri = configuration.GetValue<string>(_keyVaultConfigKey)
                        ?? throw new ConfigurationException(_keyVaultConfigKey);
 
-        TokenCredential credential = Debugger.IsAttached
-                                         ? new InteractiveBrowserCredential() // ManagedIdentityCredential doesn't work for local dev 
-                                         : new ManagedIdentityCredential();
-        var client = new SecretClient(new Uri(keyVaultUri), credential);
+        var client = new SecretClient(new Uri(keyVaultUri), new DefaultAzureCredential());
 
         try
         {
@@ -48,7 +45,7 @@ public class SecretReader
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, $"Could not create SecretClient. Credential type {credential.GetType().Name}");
+            _logger.LogError(ex, "Could not create SecretClient.");
         }
 
         return client;

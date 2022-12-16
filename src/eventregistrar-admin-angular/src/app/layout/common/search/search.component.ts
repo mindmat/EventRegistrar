@@ -5,6 +5,7 @@ import { fuseAnimations } from '@fuse/animations/public-api';
 import { Api, RegistrationMatch, RegistrationState } from 'app/api/api';
 import { EventService } from 'app/modules/admin/events/event.service';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { NavigatorService } from 'app/modules/admin/navigator.service';
 
 @Component({
     selector: 'search',
@@ -18,6 +19,7 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     @Input() appearance: 'basic' | 'bar' = 'basic';
     @Input() debounce: number = 300;
     @Input() minLength: number = 2;
+    @Input() navigate: boolean = true;
     @Output() search: EventEmitter<any> = new EventEmitter<any>();
     @Output() selected: EventEmitter<SearchResult> = new EventEmitter<SearchResult>();
 
@@ -31,14 +33,10 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
      * Constructor
      */
     constructor(
-        private _elementRef: ElementRef,
         private api: Api,
         private eventService: EventService,
-        private _renderer2: Renderer2,
-        private changeDetector: ChangeDetectorRef
-    )
-    {
-    }
+        private changeDetector: ChangeDetectorRef,
+        public navigator: NavigatorService) { }
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -142,7 +140,6 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
                 this.api.searchRegistration_Query({ eventId: this.eventService.selectedId, searchString: value, states: [RegistrationState.Received, RegistrationState.Paid, RegistrationState.Cancelled] })
                     .subscribe((resultSets: RegistrationMatch[]) =>
                     {
-
                         // Store the result sets
                         this.resultSets = [{
                             id: 'registrations',
@@ -167,7 +164,16 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
     selectOption(e: MatAutocompleteSelectedEvent)
     {
         const item: SearchResult = e.option.value;
-        this.selected.next(item);
+        if (this.navigate)
+        {
+            this.navigator.goToRegistration(item.value);
+            this.close();
+            this.resultSets = null;
+        }
+        else
+        {
+            this.selected.next(item);
+        }
     }
 
     displayResult(option: SearchResult)

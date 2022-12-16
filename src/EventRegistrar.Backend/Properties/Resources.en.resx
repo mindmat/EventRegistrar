@@ -510,6 +510,9 @@
   <data name="NoSearchResults" xml:space="preserve">
     <value>No results found</value>
   </data>
+  <data name="NotReleased" xml:space="preserve">
+    <value>Not released</value>
+  </data>
   <data name="NoUnmatchedRegistrations" xml:space="preserve">
     <value>All partners are matched</value>
   </data>

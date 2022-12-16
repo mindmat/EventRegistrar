@@ -74,6 +74,7 @@ public class RegistrationCalculator : ReadModelCalculator<RegistrationDisplayIte
                                                                                                                       Reason = ird.Reason
                                                                                                                   }),
                                                              Mails = reg.Mails!
+                                                                        .Where(mir => !mir.Mail!.Discarded)
                                                                         .OrderByDescending(mir => mir.Mail!.Created)
                                                                         .Select(mir => new MailDisplayItem
                                                                                        {

@@ -892,6 +892,9 @@
   <data name="WaitingList" xml:space="preserve">
     <value>Warteliste</value>
   </data>
+  <data name="NotReleased" xml:space="preserve">
+    <value>Nicht freigegeben</value>
+  </data>
   <data name="Zugriffsanfragen" xml:space="preserve">
     <value>Zugriffsanfragen</value>
   </data>

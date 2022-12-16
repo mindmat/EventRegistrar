@@ -219,15 +219,21 @@
                                     <button mat-icon-button (click)="viewMail(mail.mailId)" class="ml-auto">
                                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:eye'"></mat-icon>
                                     </button>
+                                    <button mat-icon-button [matMenuTriggerFor]="mailMenu" class="-ml-2" (click)="fetchPossibleMailTypes()">
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                                    </button>
+                                    <mat-menu #mailMenu="matMenu">
+                                        <button mat-menu-item>{{ 'Release' | translate }}</button>
+                                        <button mat-menu-item>{{ 'Delete' | translate }}</button>
+                                    </mat-menu>
                                 </div>
-                                <div class="flex flex-row items-center">
-                                    <mat-icon *ngIf="mail.withhold" class="icon-size-5 absolute right-0" [svgIcon]="'heroicons_solid:lock-closed'" matTooltip="Warteliste"></mat-icon>
-                                    <mat-icon *ngIf="mail.state === MailState.Delivered" class="icon-size-5 ml-1" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
-                                    <mat-icon *ngIf="mail.state === MailState.Open || mail.state === MailState.Click" class="icon-size-5 ml-1 text-green-600"
+                                <div class="flex flex-row items-center space-x-1">
+                                    <mat-icon *ngIf="mail.withhold" class="icon-size-5" [svgIcon]="'heroicons_solid:lock-closed'" [matTooltip]="'NotReleased' | translate"></mat-icon>
+                                    <mat-icon *ngIf="mail.state === MailState.Delivered" class="icon-size-5" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                                    <mat-icon *ngIf="mail.state === MailState.Open || mail.state === MailState.Click" class="icon-size-5 text-green-600"
                                         [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
                                     <!-- <mat-icon *ngIf="mail.withhold" class="icon-size-5 absolute right-0" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon> -->
-                                    <div *ngIf="mail.sentAt" class="text-md leading-none text-secondary mt-1">{{ mail.sentAt | date: 'dd.MM.yy hh:mm' }}</div>
-                                    <div *ngIf="!mail.sentAt" class="text-md leading-none text-secondary mt-1">({{ mail.created | date: 'dd.MM.yy hh:mm' }})</div>
+                                    <div class="text-md leading-none text-secondary">{{ mail.sentAt ?? mail.created | date: 'dd.MM.yy hh:mm' }}</div>
                                 </div>
                             </div>
                         </div>
