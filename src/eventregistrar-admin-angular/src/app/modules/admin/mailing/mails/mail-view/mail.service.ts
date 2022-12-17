@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class MailViewService extends FetchService<MailView>
+export class MailService extends FetchService<MailView>
 {
   constructor(private api: Api,
     private eventService: EventService,

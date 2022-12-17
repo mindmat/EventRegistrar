@@ -223,8 +223,8 @@
                                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                                     </button>
                                     <mat-menu #mailMenu="matMenu">
-                                        <button *ngIf="!mail.sentAt" mat-menu-item>{{ 'Release' | translate }}</button>
-                                        <button *ngIf="!mail.sentAt" mat-menu-item>{{ 'Delete' | translate }}</button>
+                                        <button *ngIf="!mail.sentAt" mat-menu-item (click)="releaseMail(mail.mailId)">{{ 'Release' | translate }}</button>
+                                        <button *ngIf="!mail.sentAt" mat-menu-item (click)="deleteMail(mail.mailId)">{{ 'Delete' | translate }}</button>
                                     </mat-menu>
                                 </div>
                                 <div class="flex flex-row items-center space-x-1">

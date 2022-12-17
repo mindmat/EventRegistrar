@@ -38,7 +38,7 @@ export class MatchPartnersComponent implements OnInit
         {
           this.selectUnmatchedRegistration(this.filteredUnmatchedRegistrations[0]);
         }
-        if (query !== '')
+        if (!!query)
         {
           this.filteredUnmatchedRegistrations = this.unmatchedRegistrations.filter(reg =>
             reg.firstName.toLowerCase().includes(query.toLowerCase())

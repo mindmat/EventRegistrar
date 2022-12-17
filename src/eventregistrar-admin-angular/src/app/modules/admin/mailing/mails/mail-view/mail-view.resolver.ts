@@ -1,19 +1,14 @@
 import { Injectable } from '@angular/core';
-import
-{
-  Router, Resolve,
-  RouterStateSnapshot,
-  ActivatedRouteSnapshot
-} from '@angular/router';
+import { Router, Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { catchError, Observable, of, throwError } from 'rxjs';
-import { MailViewService } from './mail-view.service';
+import { MailService } from './mail.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MailViewResolver implements Resolve<boolean>
 {
-  constructor(private router: Router, private service: MailViewService) { }
+  constructor(private router: Router, private service: MailService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> 
   {

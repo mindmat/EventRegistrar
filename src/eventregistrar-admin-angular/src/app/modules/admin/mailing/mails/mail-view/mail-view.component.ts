@@ -5,7 +5,7 @@ import { MatButton } from '@angular/material/button';
 import { MailView } from 'app/api/api';
 import { NavigatorService } from 'app/modules/admin/navigator.service';
 import { Subject, takeUntil } from 'rxjs';
-import { MailViewService } from './mail-view.service';
+import { MailService } from './mail.service';
 
 @Component({
   selector: 'app-mail-view',
@@ -21,7 +21,7 @@ export class MailViewComponent implements OnInit
 
   mail: MailView;
 
-  constructor(private service: MailViewService,
+  constructor(private service: MailService,
     private overlay: Overlay,
     public navigator: NavigatorService,
     private changeDetectorRef: ChangeDetectorRef,

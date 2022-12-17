@@ -1,8 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { IndividualReductionType, MailState, MailType, MailTypeItem, RegistrationDisplayItem, SpotDisplayInfo, SpotDisplayItem } from 'app/api/api';
+import { IndividualReductionType, MailState, MailTypeItem, RegistrationDisplayItem, SpotDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { EventService } from '../events/event.service';
+import { MailService } from '../mailing/mails/mail-view/mail.service';
 import { NavigatorService } from '../navigator.service';
 import { CancelRegistrationComponent } from './cancel-registration/cancel-registration.component';
 import { CreateIndividualReductionComponent } from './create-individual-reduction/create-individual-reduction.component';
@@ -14,6 +15,7 @@ import { RegistrationService } from './registration.service';
 })
 export class RegistrationComponent implements OnInit
 {
+
   public registration: RegistrationDisplayItem;
   private unsubscribeAll: Subject<any> = new Subject<any>();
   public possibleMailTypes: MailTypeItem[];
@@ -25,7 +27,8 @@ export class RegistrationComponent implements OnInit
     public navigator: NavigatorService,
     private changeDetectorRef: ChangeDetectorRef,
     private eventService: EventService,
-    private matDialog: MatDialog) { }
+    private matDialog: MatDialog,
+    private mailService: MailService) { }
 
   ngOnInit(): void
   {
@@ -84,5 +87,15 @@ export class RegistrationComponent implements OnInit
       autoFocus: true,
       data: { registrationId: this.registration.id, paid: this.registration.paid }
     });
+  }
+
+  deleteMail(mailId: string)
+  {
+    this.mailService.deleteMail(mailId);
+  }
+
+  releaseMail(mailId: string)
+  {
+    this.mailService.releaseMail(mailId);
   }
 }

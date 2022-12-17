@@ -29,11 +29,12 @@ export class ReleaseMailsComponent implements OnInit
         this.filteredPendingMails = mails;
 
         // Filter by search query
-        if (query !== '' && query !== null)
+        if (!!query)
         {
-          this.filteredPendingMails = this.pendingMails.filter(mail => mail.recipientsEmails?.toLowerCase().includes(query?.toLowerCase())
-            || mail.recipientsNames?.toLowerCase().includes(query?.toLowerCase())
-            || mail.subject?.toLowerCase().includes(query?.toLowerCase()));
+          this.filteredPendingMails = this.pendingMails.filter(
+            mail => mail.recipientsEmails?.toLowerCase().includes(query.toLowerCase())
+              || mail.recipientsNames?.toLowerCase().includes(query.toLowerCase())
+              || mail.subject?.toLowerCase().includes(query.toLowerCase()));
         }
 
         // Mark for check
