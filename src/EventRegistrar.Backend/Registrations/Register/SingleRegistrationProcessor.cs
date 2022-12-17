@@ -248,6 +248,7 @@ public class SingleRegistrationProcessor
                                                                          registration.Id,
                                                                          ownIdentification,
                                                                          registration.PartnerNormalized,
+                                                                         null,
                                                                          partnerRegistrableRequest.Role,
                                                                          true);
             if (spot == null)

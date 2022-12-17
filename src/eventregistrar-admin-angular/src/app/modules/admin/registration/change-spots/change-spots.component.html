@@ -1,0 +1,61 @@
+<div class="flex flex-col flex-auto md:w-170 md:min-w-170 max-h-screen -m-6">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">{{ 'ChangeSpots' | translate }}</div>
+        <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Tracks -->
+    <div class="flex flex-col mt-8 divide-y border-t border-b overflow-y-auto">
+        <ng-container *ngFor="let registrable of spotsOfRegistration">
+            <div class="flex flex-col sm:flex-row sm:items-center py-6">
+                <div class="flex items-center">
+                    <div class="ml-4">
+                        <div class="font-medium">{{ registrable.name }}</div>
+                        <div class="text-secondary">{{ registrable.nameSecondary }}</div>
+                    </div>
+                </div>
+                <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
+                    <div class="order-1 sm:order-2 sm:ml-3">
+                        <button mat-icon-button (click)="removeSpot(registrable.registrableId)">
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+
+        <ng-container *ngFor="let registrable of availableRegistrables">
+            <div class="flex flex-col sm:flex-row sm:items-center py-6 mt-6">
+                <div class="flex items-center">
+                    <div class="ml-4">
+                        <div class="font-medium">{{ registrable.name }}</div>
+                        <div class="text-secondary">{{ registrable.nameSecondary }}</div>
+                    </div>
+                </div>
+                <div class="flex items-center mt-4 sm:mt-0 sm:ml-auto">
+                    <div *ngIf="!registrable.isPartnerRegistrable" class="order-1 sm:order-2 sm:ml-3">
+                        <button mat-icon-button (click)="addSpot(registrable.registrableId)">
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                        </button>
+                    </div>
+                    <div *ngIf="registrable.isPartnerRegistrable" class="order-1 sm:order-2 sm:ml-3 flex items-center ">
+                        <button mat-icon-button (click)="addSpot(registrable.registrableId)">
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                        </button>
+                        <div class="font-medium">L</div>
+                    </div>
+                    <div *ngIf="registrable.isPartnerRegistrable" class="order-1 sm:order-2 sm:ml-3 flex items-center">
+                        <button mat-icon-button (click)="addSpot(registrable.registrableId, true)">
+                            <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                        </button>
+                        <div class="font-medium">F</div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</div>

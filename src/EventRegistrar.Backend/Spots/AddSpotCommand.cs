@@ -39,13 +39,14 @@ public class AddSpotCommandHandler : IRequestHandler<AddSpotCommand>
                                                         && rbl.EventId == command.EventId)
                                              .Include(rbl => rbl.Spots)
                                              .FirstAsync(cancellationToken);
-        if (registrable.MaximumDoubleSeats.HasValue)
+        if (registrable.MaximumDoubleSeats != null)
         {
             await _spotManager.ReserveSinglePartOfPartnerSpot(command.EventId,
                                                               registrable.Id,
                                                               registration.Id,
                                                               new RegistrationIdentification(registration),
-                                                              null,
+                                                              registration.PartnerOriginal,
+                                                              registration.RegistrationId_Partner,
                                                               command.AsFollower ? Role.Follower : Role.Leader,
                                                               false);
         }

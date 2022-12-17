@@ -195,6 +195,12 @@
   <data name="CancelRegistration" xml:space="preserve">
     <value>Anmeldung stornieren</value>
   </data>
+  <data name="Change" xml:space="preserve">
+    <value>Ändern</value>
+  </data>
+  <data name="ChangeSpots" xml:space="preserve">
+    <value>Plätze ändern</value>
+  </data>
   <data name="ClickToUpload" xml:space="preserve">
     <value>Klicken zum Hochladen</value>
   </data>

@@ -27,4 +27,14 @@ export class SpotsService
       })
     );
   }
+
+  addSpot(registrationId: string, registrableId: string, asFollower: boolean)
+  {
+    this.api.addSpot_Command({ eventId: this.eventService.selectedId, registrationId, registrableId, asFollower }).subscribe(x => console.log(x));
+  }
+
+  removeSpot(registrationId: string, registrableId: string)
+  {
+    this.api.removeSpot_Command({ eventId: this.eventService.selectedId, registrationId, registrableId }).subscribe(x => console.log(x));
+  }
 }

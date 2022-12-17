@@ -54,7 +54,7 @@ public class SpotManager
                        IsPartnerSpot = true,
                        FirstPartnerJoined = _dateTimeProvider.Now
                    };
-        if (registrable.MaximumDoubleSeats.HasValue)
+        if (registrable.MaximumDoubleSeats != null)
         {
             var waitingListForPartnerRegistrations = seats.Any(st => st.IsWaitingList && st.IsPartnerSpot);
             var seatAvailable = !waitingListForPartnerRegistrations && seats.Count < registrable.MaximumDoubleSeats.Value;
@@ -67,7 +67,7 @@ public class SpotManager
             seat.IsWaitingList = !seatAvailable;
         }
 
-        await _seats.InsertOrUpdateEntity(seat);
+        _seats.InsertObjectTree(seat);
         _eventBus.Publish(new SpotAdded
                           {
                               Id = Guid.NewGuid(),
@@ -96,14 +96,15 @@ public class SpotManager
                                                             Guid registrationId,
                                                             RegistrationIdentification ownIdentification,
                                                             string? partner,
+                                                            Guid? registrationId_Partner,
                                                             Role? role,
                                                             bool initialProcessing)
     {
         Seat seat;
         var registrable = await _registrables.Where(rbl => rbl.Id == registrableId)
                                              .Include(rbl => rbl.Spots)
-                                             .FirstOrDefaultAsync();
-        var spots = registrable.Spots.Where(st => !st.IsCancelled)
+                                             .FirstAsync();
+        var spots = registrable.Spots!.Where(st => !st.IsCancelled)
                                .ToList();
         if (registrable.MaximumSingleSeats != null)
         {
@@ -117,7 +118,7 @@ public class SpotManager
 
             seat = new Seat
                    {
-                       FirstPartnerJoined = DateTime.UtcNow,
+                       FirstPartnerJoined = _dateTimeProvider.Now,
                        RegistrationId = registrationId,
                        RegistrableId = registrable.Id,
                        IsWaitingList = !spotAvailable
@@ -130,13 +131,14 @@ public class SpotManager
                 throw new Exception("No role found");
             }
 
-            var isPartnerRegistration = !string.IsNullOrEmpty(partner);
+            var isPartnerRegistration = !string.IsNullOrEmpty(partner) || registrationId_Partner != null;
             var ownRole = role.Value;
             var waitingList = spots.Where(st => st.IsWaitingList).ToList();
             if (isPartnerRegistration)
             {
                 // complement existing partner seat
-                var existingPartnerSeat = await FindPartnerSeat(eventId, ownIdentification, partner, ownRole, spots);
+                var existingPartnerSeat = await FindPartnerSeat(eventId, ownIdentification, partner, registrationId_Partner, ownRole,
+                                                                spots);
 
                 if (existingPartnerSeat != null)
                 {
@@ -164,7 +166,7 @@ public class SpotManager
 
                 seat = new Seat
                        {
-                           FirstPartnerJoined = DateTime.UtcNow,
+                           FirstPartnerJoined = _dateTimeProvider.Now,
                            PartnerEmail = partner?.ToLowerInvariant(),
                            RegistrationId = ownRole == Role.Leader ? registrationId : (Guid?)null,
                            RegistrationId_Follower = ownRole == Role.Follower ? registrationId : (Guid?)null,
@@ -219,7 +221,7 @@ public class SpotManager
 
                 seat = new Seat
                        {
-                           FirstPartnerJoined = DateTime.UtcNow,
+                           FirstPartnerJoined = _dateTimeProvider.Now,
                            RegistrationId = ownRole == Role.Leader ? registrationId : (Guid?)null,
                            RegistrationId_Follower = ownRole == Role.Follower ? registrationId : (Guid?)null,
                            RegistrableId = registrable.Id,
@@ -234,7 +236,7 @@ public class SpotManager
                    {
                        RegistrationId = registrationId,
                        RegistrableId = registrable.Id,
-                       FirstPartnerJoined = DateTime.UtcNow
+                       FirstPartnerJoined = _dateTimeProvider.Now
                    };
         }
 
@@ -275,7 +277,7 @@ public class SpotManager
                        Id = Guid.NewGuid(),
                        RegistrationId = registrationId,
                        RegistrableId = registrable.Id,
-                       FirstPartnerJoined = DateTime.UtcNow
+                       FirstPartnerJoined = _dateTimeProvider.Now
                    };
         if (registrable.MaximumSingleSeats != null)
         {
@@ -328,11 +330,12 @@ public class SpotManager
                                           && ((ownRole == Role.Leader && !seat.RegistrationId.HasValue) || (ownRole == Role.Follower && !seat.RegistrationId_Follower.HasValue)));
     }
 
-    private async Task<Seat> FindPartnerSeat(Guid eventId,
-                                             RegistrationIdentification ownIdentification,
-                                             string partner,
-                                             Role ownRole,
-                                             ICollection<Seat> existingSeats)
+    private async Task<Seat?> FindPartnerSeat(Guid eventId,
+                                              RegistrationIdentification ownIdentification,
+                                              string? partner,
+                                              Guid? registrationId_Partner,
+                                              Role ownRole,
+                                              ICollection<Seat> existingSeats)
     {
         var potentialPartnerSeats = existingSeats.Where(seat => seat.IsPartnerSpot
                                                                 // own part still available
@@ -343,11 +346,8 @@ public class SpotManager
                                                 .ToList();
         if (!partnerSeats.Any())
         {
-            partnerSeats = potentialPartnerSeats.Where(seat =>
-                                                           $" {seat.PartnerEmail} ".Contains(
-                                                               $" {ownIdentification.FirstName} ")
-                                                        && $" {seat.PartnerEmail} ".Contains(
-                                                               $" {ownIdentification.LastName} "))
+            partnerSeats = potentialPartnerSeats.Where(seat => $" {seat.PartnerEmail} ".Contains($" {ownIdentification.FirstName} ")
+                                                            && $" {seat.PartnerEmail} ".Contains($" {ownIdentification.LastName} "))
                                                 .ToList();
             if (!partnerSeats.Any())
             {
@@ -359,37 +359,25 @@ public class SpotManager
 
         var otherRole = ownRole == Role.Leader ? Role.Follower : Role.Leader;
         var partnerRegistrationIds = partnerSeats
-                                     .Select(seat =>
-                                                 otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower)
+                                     .Select(seat => otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower)
                                      .ToList();
-        var registrationsThatReferenceOwnRegistration = await _registrations.Where(reg =>
-                                                                                       reg.RegistrationForm.EventId == eventId
-                                                                                    && (reg.RegistrationId_Partner == null || reg.RegistrationId_Partner == ownIdentification.Id)
-                                                                                    && partnerRegistrationIds.Contains(reg.Id))
+        var registrationsThatReferenceOwnRegistration = await _registrations.Where(reg => reg.RegistrationForm!.EventId == eventId
+                                                                                       && (reg.RegistrationId_Partner == null || reg.RegistrationId_Partner == ownIdentification.Id)
+                                                                                       && partnerRegistrationIds.Contains(reg.Id))
                                                                             .ToListAsync();
         _logger.LogInformation(
             $"Partner registrations with this partner mail: {string.Join(", ", registrationsThatReferenceOwnRegistration.Select(reg => $"{reg.Id} ({reg.RespondentFirstName} {reg.RespondentLastName} - {reg.RespondentEmail})"))}");
-        var partnerRegistrationId = registrationsThatReferenceOwnRegistration.FirstOrDefault(reg =>
-                                                                                                 string.Equals(reg.RespondentEmail,
-                                                                                                               partner,
-                                                                                                               StringComparison
-                                                                                                                   .InvariantCultureIgnoreCase))
-                                                                             ?.Id;
-        if (partnerRegistrationId == null)
-        {
-            partnerRegistrationId = registrationsThatReferenceOwnRegistration.FirstOrDefault(reg =>
-                                                                                                 $" {partner} ".Contains(
-                                                                                                     $" {reg.RespondentFirstName} ",
-                                                                                                     StringComparison
-                                                                                                         .InvariantCultureIgnoreCase)
-                                                                                              && $" {partner} ".Contains(
-                                                                                                     $" {reg.RespondentLastName} ",
-                                                                                                     StringComparison
-                                                                                                         .InvariantCultureIgnoreCase))
-                                                                             ?.Id;
-        }
 
-        return partnerSeats.FirstOrDefault(seat =>
-                                               partnerRegistrationId == (otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower));
+        registrationId_Partner ??= registrationsThatReferenceOwnRegistration.FirstOrDefault(reg => string.Equals(reg.RespondentEmail,
+                                                                                                                 partner,
+                                                                                                                 StringComparison.InvariantCultureIgnoreCase))
+                                                                            ?.Id
+                                ?? registrationsThatReferenceOwnRegistration.FirstOrDefault(reg => $" {partner} ".Contains($" {reg.RespondentFirstName} ",
+                                                                                                                           StringComparison.InvariantCultureIgnoreCase)
+                                                                                                && $" {partner} ".Contains($" {reg.RespondentLastName} ",
+                                                                                                                           StringComparison.InvariantCultureIgnoreCase))
+                                                                            ?.Id;
+
+        return partnerSeats.FirstOrDefault(seat => registrationId_Partner == (otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower));
     }
 }

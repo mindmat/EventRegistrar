@@ -31,6 +31,11 @@ export class FetchService<TItem>
         return this.result.asObservable();
     }
 
+    public get current(): TItem | null
+    {
+        return this.result.getValue();
+    }
+
     protected fetchItems(fetch: Observable<TItem>, rowId: string | null = null, eventId: string | null = null): Observable<TItem>
     {
         this.rowId = rowId;

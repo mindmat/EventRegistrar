@@ -50,7 +50,7 @@ public class ProcessMailEventsCommandHandler : IRequestHandler<ProcessMailEvents
                 continue;
             }
 
-            // deduplication
+            // dedup
             if (!string.IsNullOrEmpty(sendGridEvent.Sg_event_id))
             {
                 var existingEvent = await _mailEvents.FirstOrDefaultAsync(mev => mev.ExternalIdentifier == sendGridEvent.Sg_event_id,

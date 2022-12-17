@@ -192,6 +192,12 @@
   <data name="CancelRegistration" xml:space="preserve">
     <value>Cancel registration</value>
   </data>
+  <data name="Change" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="ChangeSpots" xml:space="preserve">
+    <value>Change spots</value>
+  </data>
   <data name="ClickToUpload" xml:space="preserve">
     <value>Click to upload</value>
   </data>

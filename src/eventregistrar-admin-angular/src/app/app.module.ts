@@ -94,6 +94,7 @@ import { CancelRegistrationComponent } from './modules/admin/registration/cancel
 import { AgoPipe } from './modules/admin/infrastructure/ago.pipe';
 import { UserHasRightDirective } from './core/auth/user-has-right.directive';
 import { TranslateEnumPipe } from './modules/admin/infrastructure/translate-enum.pipe';
+import { ChangeSpotsComponent } from './modules/admin/registration/change-spots/change-spots.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -134,7 +135,8 @@ const routerConfig: ExtraOptions = {
         CancelRegistrationComponent,
         AgoPipe,
         TranslateEnumPipe,
-        UserHasRightDirective
+        UserHasRightDirective,
+        ChangeSpotsComponent
     ],
     providers: [
         AuthServiceFuse,

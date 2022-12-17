@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndividualReductionType, MailState, MailTypeItem, RegistrationDisplayItem, SpotDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { MailService } from '../mailing/mails/mail-view/mail.service';
 import { NavigatorService } from '../navigator.service';
 import { CancelRegistrationComponent } from './cancel-registration/cancel-registration.component';
+import { ChangeSpotsComponent } from './change-spots/change-spots.component';
 import { CreateIndividualReductionComponent } from './create-individual-reduction/create-individual-reduction.component';
 import { RegistrationService } from './registration.service';
 
@@ -15,12 +16,12 @@ import { RegistrationService } from './registration.service';
 })
 export class RegistrationComponent implements OnInit
 {
-
   public registration: RegistrationDisplayItem;
   private unsubscribeAll: Subject<any> = new Subject<any>();
   public possibleMailTypes: MailTypeItem[];
   IndividualReductionType = IndividualReductionType;
   MailState = MailState;
+  changeSpotsDialog: MatDialogRef<ChangeSpotsComponent> | null;
 
   constructor(
     private service: RegistrationService,
@@ -38,6 +39,10 @@ export class RegistrationComponent implements OnInit
       .subscribe((registration: RegistrationDisplayItem) =>
       {
         this.registration = registration;
+        if (!!this.changeSpotsDialog)
+        {
+          this.changeSpotsDialog.componentInstance.updateSpots(this.registration.spots);
+        }
 
         // Mark for check
         this.changeDetectorRef.markForCheck();
@@ -86,6 +91,14 @@ export class RegistrationComponent implements OnInit
     this.matDialog.open(CancelRegistrationComponent, {
       autoFocus: true,
       data: { registrationId: this.registration.id, paid: this.registration.paid }
+    });
+  }
+
+  changeSpots()
+  {
+    this.changeSpotsDialog = this.matDialog.open(ChangeSpotsComponent, {
+      autoFocus: true,
+      data: { registrationId: this.registration.id, spots: this.registration.spots }
     });
   }
 

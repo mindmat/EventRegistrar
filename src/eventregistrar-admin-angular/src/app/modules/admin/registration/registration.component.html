@@ -68,10 +68,10 @@
                 <div class="flex items-center justify-between">
                     <div class="text-2xl font-semibold leading-tight">{{ 'Overview' | translate }}</div>
                     <div class="-mr-3">
-                        <button mat-icon-button [matMenuTriggerFor]="paymentsMenu">
+                        <button mat-icon-button [matMenuTriggerFor]="overviewMenu">
                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                         </button>
-                        <mat-menu #paymentsMenu="matMenu">
+                        <mat-menu #overviewMenu="matMenu">
                             <button mat-menu-item (click)="addReduction()">{{ 'CreateIndividualReduction' | translate }}</button>
                             <button mat-menu-item (click)="cancelRegistration()">{{ 'CancelRegistration' | translate }}</button>
                         </mat-menu>
@@ -156,7 +156,7 @@
                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                         </button>
                         <mat-menu #spotsMenu="matMenu">
-                            <!-- <button mat-menu-item>Clear activities</button> -->
+                            <button mat-menu-item (click)="changeSpots()">{{ 'Change' | translate }}</button>
                         </mat-menu>
                     </div>
                 </div>
