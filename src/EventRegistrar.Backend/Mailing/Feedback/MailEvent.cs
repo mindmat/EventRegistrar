@@ -14,6 +14,8 @@ public class MailEvent : Entity
     public string? ExternalIdentifier { get; set; }
     public string? RawEvent { get; set; }
     public MailState State { get; set; }
+    public string? Reason { get; set; }
+    public string? BounceClassification { get; set; }
 }
 
 public class MailEventMap : EntityMap<MailEvent>
