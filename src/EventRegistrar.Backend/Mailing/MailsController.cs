@@ -54,24 +54,6 @@ public class MailsController : Controller
                              });
     }
 
-    [HttpGet("api/events/{eventAcronym}/invalidMailAddresses")]
-    public async Task<IEnumerable<InvalidAddress>> GetInvalidMailAddresses(string eventAcronym)
-    {
-        return await _mediator.Send(new InvalidAddressesQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
-
-    [HttpGet("api/events/{eventAcronym}/mails/notreceived")]
-    public async Task<IEnumerable<NotReceivedMail>> GetNotReceivedMails(string eventAcronym)
-    {
-        return await _mediator.Send(new NotReceivedMailsQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
-    }
-
 
     [HttpPost("api/events/{eventAcronym}/mails/import")]
     public async Task ImportMails(string eventAcronym)

@@ -156,6 +156,7 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
                                                                                   {
                                                                                       Id = Guid.NewGuid(),
                                                                                       MailId = mail.Id,
+                                                                                      Email = reg.RespondentEmail?.ToLowerInvariant(),
                                                                                       RegistrationId = reg.Id
                                                                                   }))
         {

@@ -453,6 +453,9 @@
   <data name="MailingAudience_WaitingList" xml:space="preserve">
     <value>Warteliste</value>
   </data>
+  <data name="MailMonitor" xml:space="preserve">
+    <value>Mail-Tracking</value>
+  </data>
   <data name="MailPlaceholder" xml:space="preserve">
     <value>Platzhalter für Mails</value>
   </data>

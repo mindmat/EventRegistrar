@@ -95,6 +95,7 @@ import { AgoPipe } from './modules/admin/infrastructure/ago.pipe';
 import { UserHasRightDirective } from './core/auth/user-has-right.directive';
 import { TranslateEnumPipe } from './modules/admin/infrastructure/translate-enum.pipe';
 import { ChangeSpotsComponent } from './modules/admin/registration/change-spots/change-spots.component';
+import { ProblematicEmailsComponent } from './modules/admin/mailing/problematic-emails/problematic-emails.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -136,7 +137,8 @@ const routerConfig: ExtraOptions = {
         AgoPipe,
         TranslateEnumPipe,
         UserHasRightDirective,
-        ChangeSpotsComponent
+        ChangeSpotsComponent,
+        ProblematicEmailsComponent
     ],
     providers: [
         AuthServiceFuse,

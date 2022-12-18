@@ -45,6 +45,8 @@ import { MatchPartnersResolver } from './modules/admin/registrations/match-partn
 import { MatchPartnerComponent } from './modules/admin/registrations/match-partner/match-partner.component';
 import { MatchPartnerResolver } from './modules/admin/registrations/match-partner/match-partner.resolver';
 import { SearchRegistrationResolver } from './modules/admin/registrations/search-registration/search-registration.resolver';
+import { ProblematicEmailsComponent } from './modules/admin/mailing/problematic-emails/problematic-emails.component';
+import { ProblematicEmailsResolver } from './modules/admin/mailing/problematic-emails/problematic-emails.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -265,7 +267,12 @@ export const appRoutes: Route[] =
                                     resolve: { initialData: MailViewResolver }
                                 }
                             ]
-
+                        },
+                        {
+                            path: 'problematic-emails',
+                            canActivate: [AuthGuard],
+                            component: ProblematicEmailsComponent,
+                            resolve: { initialData: ProblematicEmailsResolver }
                         }
                     ]
                 },

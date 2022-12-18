@@ -3332,7 +3332,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/NotReceivedMail"
+                    "$ref": "#/components/schemas/ProblematicEmail"
                   }
                 }
               }
@@ -8805,6 +8805,25 @@
           }
         }
       },
+      "ProblematicEmail": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "notReceivedMails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NotReceivedMail"
+            }
+          }
+        }
+      },
       "NotReceivedMail": {
         "type": "object",
         "additionalProperties": false,
@@ -8847,6 +8866,10 @@
           "eventId": {
             "type": "string",
             "format": "guid"
+          },
+          "searchString": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

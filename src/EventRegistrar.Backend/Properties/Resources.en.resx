@@ -369,6 +369,9 @@
   <data name="MailingAudience_WaitingList" xml:space="preserve">
     <value>waiting list</value>
   </data>
+  <data name="MailMonitor" xml:space="preserve">
+    <value>Mail tracking</value>
+  </data>
   <data name="MailPlaceholder" xml:space="preserve">
     <value>Mail placeholder</value>
   </data>

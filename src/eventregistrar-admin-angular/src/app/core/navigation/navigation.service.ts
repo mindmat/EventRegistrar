@@ -62,6 +62,13 @@ export class NavigationService
                                     link: `/${e.acronym}/mailing/release-mails`,
                                 },
                                 {
+                                    id: 'problematic-emails',
+                                    title: translateService.instant('MailMonitor'),
+                                    type: 'basic',
+                                    icon: 'mat_outline:mail',
+                                    link: `/${e.acronym}/mailing/problematic-emails`,
+                                },
+                                {
                                     id: 'search-registration',
                                     title: translateService.instant('SearchRegistration'),
                                     type: 'basic',

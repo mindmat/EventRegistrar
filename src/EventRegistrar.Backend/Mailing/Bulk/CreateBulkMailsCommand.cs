@@ -143,12 +143,13 @@ public class CreateBulkMailsCommandHandler : IRequestHandler<CreateBulkMailsComm
                        EventId = mailTemplate.EventId
                        //MailTemplateId = mailTemplate.Id //ToDo
                    };
-        await _mails.InsertOrUpdateEntity(mail, cancellationToken);
-        await _mailsToRegistrations.InsertOrUpdateEntity(new MailToRegistration
-                                                         {
-                                                             Id = Guid.NewGuid(),
-                                                             RegistrationId = registration.Id,
-                                                             MailId = mail.Id
-                                                         }, cancellationToken);
+        _mails.InsertObjectTree(mail);
+        _mailsToRegistrations.InsertObjectTree(new MailToRegistration
+                                               {
+                                                   Id = Guid.NewGuid(),
+                                                   RegistrationId = registration.Id,
+                                                   Email = registration.RespondentEmail?.ToLowerInvariant(),
+                                                   MailId = mail.Id
+                                               });
     }
 }

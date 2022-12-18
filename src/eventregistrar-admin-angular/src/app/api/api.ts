@@ -5133,7 +5133,7 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    notReceivedMails_Query(notReceivedMailsQuery: NotReceivedMailsQuery | undefined): Observable<NotReceivedMail[]> {
+    notReceivedMails_Query(notReceivedMailsQuery: NotReceivedMailsQuery | undefined): Observable<ProblematicEmail[]> {
         let url_ = this.baseUrl + "/api/NotReceivedMailsQuery";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -5156,14 +5156,14 @@ export class Api {
                 try {
                     return this.processNotReceivedMails_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<NotReceivedMail[]>;
+                    return _observableThrow(e) as any as Observable<ProblematicEmail[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<NotReceivedMail[]>;
+                return _observableThrow(response_) as any as Observable<ProblematicEmail[]>;
         }));
     }
 
-    protected processNotReceivedMails_Query(response: HttpResponseBase): Observable<NotReceivedMail[]> {
+    protected processNotReceivedMails_Query(response: HttpResponseBase): Observable<ProblematicEmail[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -5173,7 +5173,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as NotReceivedMail[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ProblematicEmail[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -8316,6 +8316,12 @@ export interface InvalidAddressesQuery {
     eventId?: string;
 }
 
+export interface ProblematicEmail {
+    email?: string;
+    registrationId?: string;
+    notReceivedMails?: NotReceivedMail[];
+}
+
 export interface NotReceivedMail {
     mailId?: string;
     created?: Date;
@@ -8328,6 +8334,7 @@ export interface NotReceivedMail {
 
 export interface NotReceivedMailsQuery {
     eventId?: string;
+    searchString?: string | null;
 }
 
 export interface ImportMailsFromImapCommand {
