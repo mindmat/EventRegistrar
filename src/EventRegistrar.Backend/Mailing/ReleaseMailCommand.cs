@@ -81,6 +81,11 @@ public class ReleaseMailCommandHandler : IRequestHandler<ReleaseMailCommand>
                           });
 
         withheldMail.Registrations.ForEach(reg => _readModelUpdater.TriggerUpdate<RegistrationCalculator>(reg.RegistrationId, command.EventId));
+        _eventBus.Publish(new QueryChanged
+                          {
+                              EventId = command.EventId,
+                              QueryName = nameof(PendingMailsQuery)
+                          });
 
         return Unit.Value;
     }

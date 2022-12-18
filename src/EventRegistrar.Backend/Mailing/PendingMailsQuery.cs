@@ -12,16 +12,6 @@ public class PendingMailsQuery : IRequest<IEnumerable<PendingMailListItem>>, IEv
     public Guid EventId { get; set; }
 }
 
-public class PendingMailListItem
-{
-    public Guid Id { get; set; }
-    public string? RecipientsEmails { get; set; }
-    public string? RecipientsNames { get; set; }
-    public string? Subject { get; set; }
-    public string? ContentStart { get; set; }
-    public DateTimeOffset Created { get; set; }
-}
-
 public class PendingMailsQueryHandler : IRequestHandler<PendingMailsQuery, IEnumerable<PendingMailListItem>>
 {
     private readonly IQueryable<Mail> _mails;
@@ -74,4 +64,14 @@ public class PendingMailsQueryHandler : IRequestHandler<PendingMailsQuery, IEnum
 
         return stringBuilder.ToString();
     }
+}
+
+public class PendingMailListItem
+{
+    public Guid Id { get; set; }
+    public string? RecipientsEmails { get; set; }
+    public string? RecipientsNames { get; set; }
+    public string? Subject { get; set; }
+    public string? ContentStart { get; set; }
+    public DateTimeOffset Created { get; set; }
 }
