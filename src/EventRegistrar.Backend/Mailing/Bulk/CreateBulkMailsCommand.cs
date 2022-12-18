@@ -127,7 +127,9 @@ public class CreateBulkMailsCommandHandler : IRequestHandler<CreateBulkMailsComm
                                   Registration registration,
                                   CancellationToken cancellationToken)
     {
-        var content = await _mailComposer.Compose(registration.Id, mailTemplate.Template, mailTemplate.Language,
+        var content = await _mailComposer.Compose(registration.Id,
+                                                  mailTemplate.Template,
+                                                  mailTemplate.Language,
                                                   cancellationToken);
         var mail = new Mail
                    {

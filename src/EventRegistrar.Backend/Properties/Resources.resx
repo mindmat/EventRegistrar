@@ -444,6 +444,15 @@
   <data name="Leader" xml:space="preserve">
     <value>Leader</value>
   </data>
+  <data name="MailDeliverySeverity_LastSucceeded" xml:space="preserve">
+    <value>Letztes Mail angekommen</value>
+  </data>
+  <data name="MailDeliverySeverity_NoneSucceeded" xml:space="preserve">
+    <value>Kein Mail angekommen</value>
+  </data>
+  <data name="MailDeliverySeverity_SomeSucceeded" xml:space="preserve">
+    <value>Mails z.T. angekommen</value>
+  </data>
   <data name="MailingAudience_Paid" xml:space="preserve">
     <value>bezahlt</value>
   </data>

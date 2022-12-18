@@ -360,6 +360,15 @@
   <data name="Leader" xml:space="preserve">
     <value>Leader</value>
   </data>
+  <data name="MailDeliverySeverity_LastSucceeded" xml:space="preserve">
+    <value>Last mail succeeded</value>
+  </data>
+  <data name="MailDeliverySeverity_NoneSucceeded" xml:space="preserve">
+    <value>No mail delivered</value>
+  </data>
+  <data name="MailDeliverySeverity_SomeSucceeded" xml:space="preserve">
+    <value>Some mails delivered</value>
+  </data>
   <data name="MailingAudience_Paid" xml:space="preserve">
     <value>paid</value>
   </data>

@@ -8816,11 +8816,22 @@
             "type": "string",
             "format": "guid"
           },
-          "notReceivedMails": {
+          "mails": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/NotReceivedMail"
             }
+          },
+          "participantFirstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "participantLastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "severity": {
+            "$ref": "#/components/schemas/MailDeliverySeverity"
           }
         }
       },
@@ -8841,7 +8852,7 @@
             "format": "date-time",
             "nullable": true
           },
-          "recipients": {
+          "recipient": {
             "type": "string",
             "nullable": true
           },
@@ -8850,14 +8861,36 @@
             "format": "guid"
           },
           "state": {
-            "type": "string",
-            "nullable": true
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MailState"
+              }
+            ]
           },
           "subject": {
             "type": "string",
             "nullable": true
+          },
+          "stateText": {
+            "type": "string",
+            "nullable": true
           }
         }
+      },
+      "MailDeliverySeverity": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "NoneSucceeded",
+          "SomeSucceeded",
+          "LastSucceeded"
+        ],
+        "enum": [
+          1,
+          2,
+          3
+        ]
       },
       "NotReceivedMailsQuery": {
         "type": "object",

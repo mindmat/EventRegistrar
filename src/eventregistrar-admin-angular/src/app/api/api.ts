@@ -8319,17 +8319,27 @@ export interface InvalidAddressesQuery {
 export interface ProblematicEmail {
     email?: string;
     registrationId?: string;
-    notReceivedMails?: NotReceivedMail[];
+    mails?: NotReceivedMail[];
+    participantFirstName?: string | null;
+    participantLastName?: string | null;
+    severity?: MailDeliverySeverity;
 }
 
 export interface NotReceivedMail {
     mailId?: string;
     created?: Date;
     sent?: Date | null;
-    recipients?: string | null;
+    recipient?: string | null;
     registrationId?: string;
-    state?: string | null;
+    state?: MailState | null;
     subject?: string | null;
+    stateText?: string | null;
+}
+
+export enum MailDeliverySeverity {
+    NoneSucceeded = 1,
+    SomeSucceeded = 2,
+    LastSucceeded = 3,
 }
 
 export interface NotReceivedMailsQuery {
