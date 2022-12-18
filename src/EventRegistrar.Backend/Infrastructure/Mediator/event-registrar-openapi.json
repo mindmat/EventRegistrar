@@ -701,6 +701,38 @@
         }
       }
     },
+    "/api/RemoveIndividualReductionCommand": {
+      "post": {
+        "tags": [
+          "RemoveIndividualReduction"
+        ],
+        "operationId": "RemoveIndividualReduction_Command",
+        "requestBody": {
+          "x-name": "RemoveIndividualReductionCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemoveIndividualReductionCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/CheckRegistrationAfterPaymentCommand": {
       "post": {
         "tags": [
@@ -5420,6 +5452,20 @@
           }
         }
       },
+      "RemoveIndividualReductionCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "reductionId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "CheckRegistrationAfterPaymentCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -9103,12 +9149,12 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "queryName": {
-            "type": "string"
-          },
           "eventId": {
             "type": "string",
             "format": "guid"
+          },
+          "queryName": {
+            "type": "string"
           },
           "rowId": {
             "type": "string",

@@ -138,6 +138,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(AssignOutgoingPaymentCommand);
             yield return nameof(FixInvalidAddressCommand);
             yield return nameof(AddIndividualReductionCommand);
+            yield return nameof(RemoveIndividualReductionCommand);
             yield return nameof(ImportMailsFromImapCommand);
             yield return nameof(UnbindPartnerRegistrationCommand);
             yield return nameof(SetFallbackToPartyPassCommand);

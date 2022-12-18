@@ -103,6 +103,10 @@
                             <span class="leading-none">{{ reduction.reason }}:</span>
                             <span class="leading-none ml-auto" *ngIf="reduction.type==IndividualReductionType.Reduction">-{{ reduction.amount | number : '1.2-2' }}</span>
                             <span class="leading-none ml-auto" *ngIf="reduction.type==IndividualReductionType.OverwritePrice">-> {{ reduction.amount | number : '1.2-2' }}</span>
+                            <button mat-icon-button (click)="removeReduction(reduction.id)">
+                                <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                            </button>
+
                         </div>
                     </div>
                     <div class="flex items-center mt-4" *ngIf="registration.partnerOriginal">

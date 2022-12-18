@@ -8,6 +8,7 @@ import { NavigatorService } from '../navigator.service';
 import { CancelRegistrationComponent } from './cancel-registration/cancel-registration.component';
 import { ChangeSpotsComponent } from './change-spots/change-spots.component';
 import { CreateIndividualReductionComponent } from './create-individual-reduction/create-individual-reduction.component';
+import { IndividualReductionService } from './create-individual-reduction/individual-reduction.service';
 import { RegistrationService } from './registration.service';
 
 @Component({
@@ -29,7 +30,8 @@ export class RegistrationComponent implements OnInit
     private changeDetectorRef: ChangeDetectorRef,
     private eventService: EventService,
     private matDialog: MatDialog,
-    private mailService: MailService) { }
+    private mailService: MailService,
+    private reductionService: IndividualReductionService) { }
 
   ngOnInit(): void
   {
@@ -84,6 +86,11 @@ export class RegistrationComponent implements OnInit
       autoFocus: true,
       data: { registrationId: this.registration.id, price: this.registration.price }
     });
+  }
+
+  removeReduction(reductionId: string)
+  {
+    this.reductionService.removeReduction(reductionId);
   }
 
   cancelRegistration()
