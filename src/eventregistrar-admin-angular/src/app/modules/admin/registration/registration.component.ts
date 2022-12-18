@@ -46,6 +46,8 @@ export class RegistrationComponent implements OnInit
           this.changeSpotsDialog.componentInstance.updateSpots(this.registration.spots);
         }
 
+        this.possibleMailTypes = null;
+
         // Mark for check
         this.changeDetectorRef.markForCheck();
       });

@@ -240,7 +240,7 @@
                                     <mat-icon *ngIf="mail.state === MailState.Open || mail.state === MailState.Click" class="icon-size-5 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"
                                         [matTooltip]="mail.state | translateEnum: MailState : 'MailState'"></mat-icon>
                                     <!-- <mat-icon *ngIf="mail.withhold" class="icon-size-5 absolute right-0" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon> -->
-                                    <div class="text-md leading-none text-secondary">{{ mail.sentAt ?? mail.created | date: 'dd.MM.yy hh:mm' }}</div>
+                                    <div class="text-md leading-none text-secondary">{{ mail.sentAt ?? mail.created | date: 'dd.MM.yy HH:mm' }}</div>
                                 </div>
                             </div>
                         </div>
