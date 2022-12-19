@@ -195,6 +195,9 @@
   <data name="Change" xml:space="preserve">
     <value>Change</value>
   </data>
+  <data name="ChangeEmail" xml:space="preserve">
+    <value>Change email address</value>
+  </data>
   <data name="ChangeSpots" xml:space="preserve">
     <value>Change spots</value>
   </data>

@@ -6,6 +6,7 @@ import { EventService } from '../events/event.service';
 import { MailService } from '../mailing/mails/mail-view/mail.service';
 import { NavigatorService } from '../navigator.service';
 import { CancelRegistrationComponent } from './cancel-registration/cancel-registration.component';
+import { ChangeEmailComponent } from './change-email/change-email.component';
 import { ChangeSpotsComponent } from './change-spots/change-spots.component';
 import { CreateIndividualReductionComponent } from './create-individual-reduction/create-individual-reduction.component';
 import { IndividualReductionService } from './create-individual-reduction/individual-reduction.service';
@@ -100,6 +101,14 @@ export class RegistrationComponent implements OnInit
     this.matDialog.open(CancelRegistrationComponent, {
       autoFocus: true,
       data: { registrationId: this.registration.id, paid: this.registration.paid }
+    });
+  }
+
+  changeEmail()
+  {
+    this.matDialog.open(ChangeEmailComponent, {
+      autoFocus: true,
+      data: { registrationId: this.registration.id, oldEmailAddress: this.registration.email }
     });
   }
 

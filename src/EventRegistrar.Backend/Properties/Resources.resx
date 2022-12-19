@@ -198,6 +198,9 @@
   <data name="Change" xml:space="preserve">
     <value>Ändern</value>
   </data>
+  <data name="ChangeEmail" xml:space="preserve">
+    <value>E-Mail ändern</value>
+  </data>
   <data name="ChangeSpots" xml:space="preserve">
     <value>Plätze ändern</value>
   </data>
