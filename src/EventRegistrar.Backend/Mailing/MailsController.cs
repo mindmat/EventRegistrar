@@ -1,7 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Import;
-using EventRegistrar.Backend.Mailing.InvalidAddresses;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,41 +16,6 @@ public class MailsController : Controller
     {
         _mediator = mediator;
         _eventAcronymResolver = eventAcronymResolver;
-    }
-
-    //[HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/mails/create")]
-    //public async Task CreateMailForRegistration(string eventAcronym,
-    //                                            Guid registrationId,
-    //                                            MailType? mailType,
-    //                                            string bulkMailKey,
-    //                                            bool withhold,
-    //                                            bool allowDuplicate)
-    //{
-    //    await _mediator.Send(new ComposeAndSendMailCommand
-    //                         {
-    //                             EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-    //                             RegistrationId = registrationId,
-    //                             MailType = mailType,
-    //                             BulkMailKey = bulkMailKey,
-    //                             Withhold = true,
-    //                             AllowDuplicate = allowDuplicate
-    //                         });
-    //}
-
-
-    [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/fixEmailAddress")]
-    public async Task FixInvalidMailAddress(string eventAcronym,
-                                            Guid registrationId,
-                                            string oldEmailAddress,
-                                            string newEmailAddress)
-    {
-        await _mediator.Send(new FixInvalidAddressCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 RegistrationId = registrationId,
-                                 OldEmailAddress = oldEmailAddress,
-                                 NewEmailAddress = newEmailAddress
-                             });
     }
 
 
