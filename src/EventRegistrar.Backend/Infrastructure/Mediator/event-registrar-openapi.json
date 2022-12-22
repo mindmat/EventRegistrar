@@ -244,6 +244,38 @@
         }
       }
     },
+    "/api/SetRemarksProcessedStateCommand": {
+      "post": {
+        "tags": [
+          "SetRemarksProcessedState"
+        ],
+        "operationId": "SetRemarksProcessedState_Command",
+        "requestBody": {
+          "x-name": "SetRemarksProcessedStateCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetRemarksProcessedStateCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/ProcessRawRegistrationCommand": {
       "post": {
         "tags": [
@@ -5018,6 +5050,23 @@
             "format": "guid"
           },
           "onlyUnprocessed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SetRemarksProcessedStateCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "newProcessedState": {
             "type": "boolean"
           }
         }

@@ -24,4 +24,10 @@ export class RemarksOverviewService extends FetchService<RemarksDisplayItem[] | 
   {
     return this.fetchItems(this.api.remarksOverview_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
+
+  setProcessedState(registrationId: string, processed: boolean)
+  {
+    return this.api.setRemarksProcessedState_Command({ eventId: this.eventService.selectedId, registrationId, newProcessedState: processed })
+      .subscribe();
+  }
 }

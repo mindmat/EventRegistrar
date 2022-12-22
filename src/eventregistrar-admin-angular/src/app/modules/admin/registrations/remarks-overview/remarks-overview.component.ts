@@ -14,6 +14,7 @@ export class RemarksOverviewComponent implements OnInit
 {
   remarksUnprocessed: RemarksDisplayItem[];
   remarksProcessed: RemarksDisplayItem[];
+  totalRemarkCount: number;
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
@@ -29,12 +30,15 @@ export class RemarksOverviewComponent implements OnInit
       {
         this.remarksUnprocessed = remarks.filter(rmk => !rmk.processed);
         this.remarksProcessed = remarks.filter(rmk => !!rmk.processed);
+        this.totalRemarkCount = remarks.length;
 
         // Mark for check
         this.changeDetectorRef.markForCheck();
       });
-
   }
 
-
+  processedChanged(registrationId: string, processed: boolean)
+  {
+    this.remarksService.setProcessedState(registrationId, processed);
+  }
 }

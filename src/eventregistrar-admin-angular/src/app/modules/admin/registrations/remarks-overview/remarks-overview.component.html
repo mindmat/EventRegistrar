@@ -5,7 +5,7 @@
         <!-- Title -->
         <div class="flex min-w-0 flex-row items-baseline gap-2">
             <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'Remarks' | translate }}</div>
-            <div class="mt-1.5 text-lg text-secondary">({{ remarksUnprocessed.length }})</div>
+            <div class="mt-1.5 text-lg text-secondary">({{ remarksUnprocessed.length }} / {{ totalRemarkCount }})</div>
         </div>
 
         <!-- Filters -->
@@ -94,7 +94,7 @@
                         {{ 'AcceptDifferenceExplanation' | translate }}
                     </div> -->
                 </div>
-                <mat-slide-toggle class="ml-2" [color]="'primary'" #processedToggle>
+                <mat-slide-toggle class="ml-2" [color]="'primary'" #processedToggle [checked]="remark.processed" (change)="processedChanged(remark.registrationId, processedToggle.checked)">
                 </mat-slide-toggle>
             </div>
         </div>

@@ -165,6 +165,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SetReleaseMailCommand);
             yield return nameof(StartProcessAllPendingRawRegistrationsCommand);
             yield return nameof(ResendSentMailsWithoutStateCommand);
+            yield return nameof(SetRemarksProcessedStateCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))
