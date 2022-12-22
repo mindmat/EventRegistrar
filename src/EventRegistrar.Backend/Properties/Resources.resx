@@ -411,6 +411,9 @@
   <data name="HoldMailBack" xml:space="preserve">
     <value>Zurückhalten</value>
   </data>
+  <data name="Ignore" xml:space="preserve">
+    <value>Ignorieren</value>
+  </data>
   <data name="Ignored" xml:space="preserve">
     <value>Ignorierte</value>
   </data>

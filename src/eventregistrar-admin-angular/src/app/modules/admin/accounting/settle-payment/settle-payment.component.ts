@@ -107,6 +107,14 @@ export class SettlePaymentComponent implements OnInit
   {
     this.searchQuery$.next(query);
   }
+
+  ignorePayment()
+  {
+    if (!!this.payment?.id)
+    {
+      this.service.ignorePayment(this.payment.id);
+    }
+  }
 }
 
 

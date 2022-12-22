@@ -58,4 +58,10 @@ export class SettlePaymentService extends FetchService<PaymentAssignments>
         .subscribe(x => console.log(x));
     }
   }
+
+  ignorePayment(paymentId: string)
+  {
+    this.api.ignorePayment_Command({ eventId: this.eventService.selectedId, paymentId })
+      .subscribe();
+  }
 }

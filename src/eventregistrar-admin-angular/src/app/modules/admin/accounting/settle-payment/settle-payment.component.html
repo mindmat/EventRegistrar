@@ -7,6 +7,22 @@
             <div class="text-4xl font-extrabold tracking-tight leading-none">{{ (payment.type === PaymentType.Incoming ? 'AssignIncoming' : 'AssignOutgoing') | translate }}</div>
             <div *ngIf="payment.openAmount !== null" class="mt-1.5 text-lg text-secondary">Offen {{ payment.openAmount | number: '1.2-2' }}</div>
         </div>
+
+        <!-- context menu -->
+        <div class="flex items-center ml-auto">
+            <button mat-icon-button [matMenuTriggerFor]="paymentMenu">
+                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+            </button>
+            <mat-menu #paymentMenu="matMenu">
+                <button mat-menu-item (click)="ignorePayment()">
+                    <span class="flex items-center">
+                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:eye-off'"></mat-icon>
+                        <span>{{ 'Ignore' | translate }}</span>
+                    </span>
+                </button>
+            </mat-menu>
+        </div>
+
         <!-- Filters -->
         <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
             <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
