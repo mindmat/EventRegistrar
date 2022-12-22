@@ -39,7 +39,8 @@ export class SettlePaymentComponent implements OnInit
         this.payment = {
           id: this.service.paymentId,
           openAmount: assignments.openAmount,
-          type: assignments.type
+          type: assignments.type,
+          ignored: assignments.ignored
         };
         this.existingAssignments = assignments.existingAssignments;
         this.candidates = assignments.registrationCandidates?.map(candidate => (

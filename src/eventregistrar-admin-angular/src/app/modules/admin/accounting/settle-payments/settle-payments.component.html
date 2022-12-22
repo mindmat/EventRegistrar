@@ -90,15 +90,16 @@
                                                 <div *ngIf="booking.typ === CreditDebit.DBIT">an {{ booking.creditorName }}</div>
                                             </div>
                                         </div>
-                                        <div class="flex flex-col items-end self-start ml-auto pl-2">
-                                            <ng-container *ngIf="booking.ignore">
-                                                <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:volume-off'"></mat-icon>
-                                            </ng-container>
-                                        </div>
                                         <div *ngIf="selectedBooking && selectedBooking.id === booking.id && booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
                                             <span class="leading-none">{{ booking.message }}</span>
                                         </div>
+                                    </div>
 
+                                    <!-- Ignored -->
+                                    <div class="flex flex-col items-center ml-auto pl-2">
+                                        <ng-container *ngIf="booking.ignore">
+                                            <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                                        </ng-container>
                                     </div>
                                 </div>
                             </ng-container>

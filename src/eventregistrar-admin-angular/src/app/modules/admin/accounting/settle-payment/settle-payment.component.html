@@ -14,7 +14,7 @@
                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
             </button>
             <mat-menu #paymentMenu="matMenu">
-                <button mat-menu-item (click)="ignorePayment()">
+                <button *ngIf="!payment.ignored" mat-menu-item (click)="ignorePayment()">
                     <span class="flex items-center">
                         <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:eye-off'"></mat-icon>
                         <span>{{ 'Ignore' | translate }}</span>

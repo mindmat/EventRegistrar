@@ -97,5 +97,6 @@ export interface Payment
   id: string;
   type: PaymentType;
   openAmount: number;
+  ignored: boolean;
   // locked: boolean;
 }

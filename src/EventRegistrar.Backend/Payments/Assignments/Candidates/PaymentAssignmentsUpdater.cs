@@ -38,7 +38,10 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
         }
 
         var otherParty = string.Empty;
-        var result = new PaymentAssignments();
+        var result = new PaymentAssignments
+                     {
+                         Ignored = payment.Ignore
+                     };
         if (payment.Incoming != null)
         {
             otherParty = payment.Incoming.DebitorName;
@@ -245,6 +248,7 @@ public class PaymentAssignments
 {
     public decimal OpenAmount { get; set; }
     public PaymentType Type { get; set; }
+    public bool Ignored { get; set; }
     public IEnumerable<AssignmentCandidateRegistration>? RegistrationCandidates { get; set; }
     public IEnumerable<ExistingAssignment>? ExistingAssignments { get; set; }
 }

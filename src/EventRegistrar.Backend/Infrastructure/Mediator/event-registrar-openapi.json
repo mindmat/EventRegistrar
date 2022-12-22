@@ -8085,6 +8085,9 @@
           "type": {
             "$ref": "#/components/schemas/PaymentType"
           },
+          "ignored": {
+            "type": "boolean"
+          },
           "registrationCandidates": {
             "type": "array",
             "nullable": true,

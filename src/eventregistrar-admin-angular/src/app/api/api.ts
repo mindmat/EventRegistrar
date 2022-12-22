@@ -8199,6 +8199,7 @@ export interface AssignRepaymentCommand {
 export interface PaymentAssignments {
     openAmount?: number;
     type?: PaymentType;
+    ignored?: boolean;
     registrationCandidates?: AssignmentCandidateRegistration[] | null;
     existingAssignments?: ExistingAssignment[] | null;
 }
