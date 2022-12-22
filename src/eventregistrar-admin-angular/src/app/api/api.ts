@@ -7079,6 +7079,7 @@ export interface RegistrationDisplayItem {
     price?: number | null;
     receivedAt?: Date;
     remarks?: string | null;
+    remarksProcessed?: boolean;
     reminderLevel?: number;
     smsCount?: number;
     soldOutMessage?: string | null;

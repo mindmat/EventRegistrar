@@ -23,6 +23,7 @@ public class RegistrationDisplayItem
     public decimal? Price { get; set; }
     public DateTimeOffset ReceivedAt { get; set; }
     public string? Remarks { get; set; }
+    public bool RemarksProcessed { get; set; }
     public int ReminderLevel { get; set; }
     public int SmsCount { get; set; }
     public string? SoldOutMessage { get; set; }

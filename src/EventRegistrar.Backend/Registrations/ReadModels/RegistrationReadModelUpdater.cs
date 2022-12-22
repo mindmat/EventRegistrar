@@ -50,6 +50,7 @@ public class RegistrationCalculator : ReadModelCalculator<RegistrationDisplayIte
                                                              ReceivedAt = reg.ReceivedAt,
                                                              ReminderLevel = reg.ReminderLevel,
                                                              Remarks = reg.Remarks,
+                                                             RemarksProcessed = reg.RemarksProcessed,
                                                              Email = reg.RespondentEmail,
                                                              FirstName = reg.RespondentFirstName,
                                                              LastName = reg.RespondentLastName,

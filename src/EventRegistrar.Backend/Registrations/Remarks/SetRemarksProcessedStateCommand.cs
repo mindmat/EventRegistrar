@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Registrations.Remarks;
 
@@ -15,12 +16,15 @@ public class SetRemarksProcessedStateCommandHandler : AsyncRequestHandler<SetRem
 {
     private readonly IRepository<Registration> _registrations;
     private readonly IEventBus _eventBus;
+    private readonly ReadModelUpdater _readModelUpdater;
 
     public SetRemarksProcessedStateCommandHandler(IRepository<Registration> registrations,
-                                                  IEventBus eventBus)
+                                                  IEventBus eventBus,
+                                                  ReadModelUpdater readModelUpdater)
     {
         _registrations = registrations;
         _eventBus = eventBus;
+        _readModelUpdater = readModelUpdater;
     }
 
     protected override async Task Handle(SetRemarksProcessedStateCommand command, CancellationToken cancellationToken)
@@ -35,5 +39,6 @@ public class SetRemarksProcessedStateCommandHandler : AsyncRequestHandler<SetRem
                               EventId = command.EventId,
                               QueryName = nameof(RemarksOverviewQuery)
                           });
+        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
     }
 }

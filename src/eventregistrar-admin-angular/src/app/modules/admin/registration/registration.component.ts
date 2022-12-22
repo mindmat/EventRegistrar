@@ -5,6 +5,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { MailService } from '../mailing/mails/mail-view/mail.service';
 import { NavigatorService } from '../navigator.service';
+import { RemarksOverviewService } from '../registrations/remarks-overview/remarks-overview.service';
 import { CancelRegistrationComponent } from './cancel-registration/cancel-registration.component';
 import { ChangeEmailComponent } from './change-email/change-email.component';
 import { ChangeSpotsComponent } from './change-spots/change-spots.component';
@@ -32,7 +33,8 @@ export class RegistrationComponent implements OnInit
     private eventService: EventService,
     private matDialog: MatDialog,
     private mailService: MailService,
-    private reductionService: IndividualReductionService) { }
+    private reductionService: IndividualReductionService,
+    private remarksService: RemarksOverviewService) { }
 
   ngOnInit(): void
   {
@@ -128,5 +130,10 @@ export class RegistrationComponent implements OnInit
   releaseMail(mailId: string)
   {
     this.mailService.releaseMail(mailId);
+  }
+
+  processedChanged(registrationId: string, processed: boolean)
+  {
+    this.remarksService.setProcessedState(registrationId, processed);
   }
 }
