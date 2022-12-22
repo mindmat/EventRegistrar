@@ -42,6 +42,7 @@ using EventRegistrar.Backend.Registrations.Overview;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Reductions;
 using EventRegistrar.Backend.Registrations.Register;
+using EventRegistrar.Backend.Registrations.Remarks;
 using EventRegistrar.Backend.Registrations.Search;
 using EventRegistrar.Backend.Spots;
 
@@ -112,6 +113,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(UpdateUserInfoCommand);
             yield return nameof(FroalaKeyQuery);
             yield return nameof(UnprocessedRawRegistrationCountQuery);
+            yield return nameof(RemarksOverviewQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)

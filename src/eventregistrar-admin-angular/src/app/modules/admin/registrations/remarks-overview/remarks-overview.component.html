@@ -1,0 +1,102 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-auto">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <!-- Title -->
+        <div class="flex min-w-0 flex-row items-baseline gap-2">
+            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'Remarks' | translate }}</div>
+            <div class="mt-1.5 text-lg text-secondary">({{ remarksUnprocessed.length }})</div>
+        </div>
+
+        <!-- Filters -->
+        <!-- <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query [value]="searchString$.value" autofocus>
+        </mat-form-field> -->
+    </div>
+
+    <!-- Unprocessed -->
+    <div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
+        <div class="text-xl font-bold tracking-tight leading-none">{{ 'RemarksUnprocessed' | translate }}</div>
+        <div class="mt-1.5 text-lg text-secondary">({{ remarksUnprocessed.length }})</div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-10">
+
+        <ng-container *ngFor="let remark of remarksUnprocessed">
+            <!-- Match -->
+            <ng-container *ngTemplateOutlet="remarktemplate; context: {$implicit: remark}"></ng-container>
+        </ng-container>
+
+    </div>
+
+    <!-- Processed -->
+    <div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
+        <div class="text-xl font-bold tracking-tight leading-none">{{ 'RemarksProcessed' | translate }}</div>
+        <div class="mt-1.5 text-lg text-secondary">({{ remarksProcessed.length }})</div>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-10">
+
+        <ng-container *ngFor="let remark of remarksProcessed">
+            <!-- Match -->
+            <ng-container *ngTemplateOutlet="remarktemplate; context: {$implicit: remark}"></ng-container>
+        </ng-container>
+
+    </div>
+</div>
+
+<!-- Page result template -->
+<ng-template #remarktemplate let-remark>
+    <div class="flex flex-col min-h-32 shadow rounded-2xl overflow-hidden bg-card">
+        <div class="flex m-4">
+            <a class="grow flex-col w-full hover:underline" [routerLink]="navigator.getRegistrationUrl(remark.registrationId)">
+                <!-- <div class="flex items-center justify-between">
+                                    
+                                    <ng-container *ngIf="(doubleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
+                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
+                                                                                        'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.sortKey === 2,
+                                                                                        'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.sortKey === 3,
+                                                                                        'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.sortKey === 4}">
+                                            {{category.text}}
+                                        </div>
+                                    </ng-container>
+                                </div> -->
+
+                <!-- Registrable title & description -->
+                <div class="text-lg font-medium">{{ remark.displayName }}</div>
+                <div class="line-clamp-2 text-secondary">{{ remark.email }}</div>
+                <div class="w-12 h-1 mt-2 border-t-2"></div>
+
+            </a>
+            <!-- <mat-icon class="none icon-size-5 justify-middle" *ngIf="match.isWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon> -->
+
+        </div>
+
+        <!-- payment completion -->
+        <!-- <div class="relative h-0.5">
+                                <div class="z-10 absolute inset-x-0 h-6" matTooltip="{{ match.amountPaid | number: '1.2-2' }} von {{ match.price | number : '1.2-2' }} bezahlt" [matTooltipPosition]="'above'"
+                                    [matTooltipClass]="'-mb-0.5'">
+                                </div>
+                                <mat-progress-bar class="h-0.5" [value]="100 * match.amountPaid / match.price">
+                                </mat-progress-bar>
+                            </div> -->
+
+        <div class="max-w-none m-4 prose prose-sm" [innerHTML]="remark.remarks"></div>
+
+        <!-- Footer -->
+        <div class="flex flex-col w-full mt-auto border-t">
+            <!-- Processed -->
+            <div class="flex flex-row px-6 py-4 items-center justify-between bg-gray-50 dark:bg-transparent">
+                <div class="flex-auto cursor-pointer" (click)="processedToggle.toggle()">
+                    <div class="leading-6 font-medium">{{ 'Processed' | translate }}</div>
+                    <!-- <div class="text-md text-secondary">
+                        {{ 'AcceptDifferenceExplanation' | translate }}
+                    </div> -->
+                </div>
+                <mat-slide-toggle class="ml-2" [color]="'primary'" #processedToggle>
+                </mat-slide-toggle>
+            </div>
+        </div>
+    </div>
+</ng-template>

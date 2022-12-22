@@ -621,6 +621,9 @@
   <data name="Pricing" xml:space="preserve">
     <value>Pricing</value>
   </data>
+  <data name="Processed" xml:space="preserve">
+    <value>Processed</value>
+  </data>
   <data name="QuestionMappingType_Email" xml:space="preserve">
     <value>Email address</value>
   </data>
@@ -691,7 +694,13 @@
     <value>Release mails</value>
   </data>
   <data name="Remarks" xml:space="preserve">
-    <value>Comments</value>
+    <value>Remarks</value>
+  </data>
+  <data name="RemarksProcessed" xml:space="preserve">
+    <value>Remarks processed</value>
+  </data>
+  <data name="RemarksUnprocessed" xml:space="preserve">
+    <value>Remarks not yet processed</value>
   </data>
   <data name="ReminderMail1" xml:space="preserve">
     <value>Reminder mail 1</value>

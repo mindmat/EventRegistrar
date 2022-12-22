@@ -705,6 +705,9 @@
   <data name="Pricing" xml:space="preserve">
     <value>Preisgestaltung</value>
   </data>
+  <data name="Processed" xml:space="preserve">
+    <value>Verarbeitet</value>
+  </data>
   <data name="QuestionMappingType_Email" xml:space="preserve">
     <value>E-Mail</value>
   </data>
@@ -783,6 +786,12 @@
   </data>
   <data name="Remarks" xml:space="preserve">
     <value>Bemerkungen</value>
+  </data>
+  <data name="RemarksProcessed" xml:space="preserve">
+    <value>Bemerkungen verarbeitet</value>
+  </data>
+  <data name="RemarksUnprocessed" xml:space="preserve">
+    <value>Bemerkungen noch nicht verarbeitet</value>
   </data>
   <data name="ReminderMail1" xml:space="preserve">
     <value>Mail Zahlungserinnerung 1</value>

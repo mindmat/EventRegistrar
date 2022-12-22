@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Router, UrlTree } from '@angular/router';
+import { Router } from '@angular/router';
 import { RegistrableType } from 'app/api/api';
 import { EventService } from './events/event.service';
 

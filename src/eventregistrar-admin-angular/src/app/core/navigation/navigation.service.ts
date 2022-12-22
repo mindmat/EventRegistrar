@@ -62,13 +62,6 @@ export class NavigationService
                                     link: `/${e.acronym}/mailing/release-mails`,
                                 },
                                 {
-                                    id: 'problematic-emails',
-                                    title: translateService.instant('MailMonitor'),
-                                    type: 'basic',
-                                    icon: 'mat_outline:mail',
-                                    link: `/${e.acronym}/mailing/problematic-emails`,
-                                },
-                                {
                                     id: 'search-registration',
                                     title: translateService.instant('SearchRegistration'),
                                     type: 'basic',
@@ -81,7 +74,21 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'heroicons_outline:users',
                                     link: `/${e.acronym}/registrations/match-partners`,
-                                }
+                                },
+                                {
+                                    id: 'problematic-emails',
+                                    title: translateService.instant('MailMonitor'),
+                                    type: 'basic',
+                                    icon: 'mat_outline:mail',
+                                    link: `/${e.acronym}/mailing/problematic-emails`,
+                                },
+                                {
+                                    id: 'remarks-overview',
+                                    title: translateService.instant('Remarks'),
+                                    type: 'basic',
+                                    icon: 'heroicons_outline:chat-alt',
+                                    link: `/${e.acronym}/registrations/remarks-overview`,
+                                },
                             ]
                         },
                         {

@@ -47,6 +47,8 @@ import { MatchPartnerResolver } from './modules/admin/registrations/match-partne
 import { SearchRegistrationResolver } from './modules/admin/registrations/search-registration/search-registration.resolver';
 import { ProblematicEmailsComponent } from './modules/admin/mailing/problematic-emails/problematic-emails.component';
 import { ProblematicEmailsResolver } from './modules/admin/mailing/problematic-emails/problematic-emails.resolver';
+import { RemarksOverviewComponent } from './modules/admin/registrations/remarks-overview/remarks-overview.component';
+import { RemarksOverviewResolver } from './modules/admin/registrations/remarks-overview/remarks-overview.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -229,10 +231,16 @@ export const appRoutes: Route[] =
                             ]
                         },
                         {
+                            path: 'remarks-overview',
+                            canActivate: [AuthGuard],
+                            component: RemarksOverviewComponent,
+                            resolve: { initialData: RemarksOverviewResolver }
+                        },
+                        {
                             path: ':id',
                             component: RegistrationComponent,
                             resolve: { initialData: RegistrationResolver }
-                        },
+                        }
                     ]
                 },
                 {

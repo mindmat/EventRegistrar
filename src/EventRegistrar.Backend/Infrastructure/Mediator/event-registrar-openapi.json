@@ -209,6 +209,41 @@
         }
       }
     },
+    "/api/RemarksOverviewQuery": {
+      "post": {
+        "tags": [
+          "RemarksOverview"
+        ],
+        "operationId": "RemarksOverview_Query",
+        "requestBody": {
+          "x-name": "RemarksOverviewQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RemarksOverviewQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RemarksDisplayItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/ProcessRawRegistrationCommand": {
       "post": {
         "tags": [
@@ -4950,6 +4985,43 @@
           }
         }
       },
+      "RemarksDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "remarks": {
+            "type": "string"
+          },
+          "processed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RemarksOverviewQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "onlyUnprocessed": {
+            "type": "boolean"
+          }
+        }
+      },
       "ProcessRawRegistrationCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -8751,10 +8823,12 @@
             "format": "guid"
           },
           "newEmailAddress": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "oldEmailAddress": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "registrationId": {
             "type": "string",
