@@ -67,6 +67,7 @@ public class RegistrationCalculator : ReadModelCalculator<RegistrationDisplayIte
                                                                                : $"{reg.Registration_Partner!.RespondentFirstName} {reg.Registration_Partner.RespondentLastName}",
                                                              PartnerId = reg.RegistrationId_Partner,
                                                              WillPayAtCheckin = reg.WillPayAtCheckin,
+                                                             InternalNotes = reg.InternalNotes,
                                                              Reductions = reg.IndividualReductions!.Select(ird => new IndividualReductionDisplayItem
                                                                                                                   {
                                                                                                                       Id = ird.Id,

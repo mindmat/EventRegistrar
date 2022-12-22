@@ -62,6 +62,7 @@ public class Registration : Entity
     public string? SoldOutMessage { get; set; }
     public RegistrationState State { get; set; }
     public bool WillPayAtCheckin { get; set; }
+    public string? InternalNotes { get; set; }
 }
 
 public class RegistrationMap : EntityMap<Registration>

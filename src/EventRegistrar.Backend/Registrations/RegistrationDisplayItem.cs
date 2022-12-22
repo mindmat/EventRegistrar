@@ -30,6 +30,7 @@ public class RegistrationDisplayItem
     public RegistrationState Status { get; set; }
     public bool WillPayAtCheckin { get; set; }
     public bool? FallbackToPartyPass { get; set; }
+    public string? InternalNotes { get; set; }
 
     public IEnumerable<SpotDisplayItem>? Spots { get; set; }
     public IEnumerable<AssignedPaymentDisplayItem>? Payments { get; set; }

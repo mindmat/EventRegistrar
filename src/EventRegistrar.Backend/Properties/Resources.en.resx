@@ -345,6 +345,9 @@
   <data name="IndividualReductionType_Reduction" xml:space="preserve">
     <value>Reduction</value>
   </data>
+  <data name="InternalNotes" xml:space="preserve">
+    <value>Internal notes</value>
+  </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>
   </data>

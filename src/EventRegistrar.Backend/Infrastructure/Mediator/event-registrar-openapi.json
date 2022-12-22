@@ -736,6 +736,38 @@
         }
       }
     },
+    "/api/UpdateInternalNotesCommand": {
+      "post": {
+        "tags": [
+          "UpdateInternalNotes"
+        ],
+        "operationId": "UpdateInternalNotes_Command",
+        "requestBody": {
+          "x-name": "UpdateInternalNotesCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateInternalNotesCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/AddIndividualReductionCommand": {
       "post": {
         "tags": [
@@ -4741,6 +4773,10 @@
             "type": "boolean",
             "nullable": true
           },
+          "internalNotes": {
+            "type": "string",
+            "nullable": true
+          },
           "spots": {
             "type": "array",
             "nullable": true,
@@ -5544,6 +5580,24 @@
           "registrationId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "UpdateInternalNotesCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
