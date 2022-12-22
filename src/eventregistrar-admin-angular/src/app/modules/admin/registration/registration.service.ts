@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, MailType, MailTypeItem, RegistrationDisplayItem } from 'app/api/api';
+import { Api, MailType, MailTypeItem, RegistrationDisplayItem, Unit } from 'app/api/api';
 import { tap, BehaviorSubject, filter, map, Observable } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { NotificationService } from '../infrastructure/notification.service';
@@ -73,5 +73,10 @@ export class RegistrationService
         withhold: true,
         bulkMailKey
       });
+  }
+
+  updateNotes(registrationId: string, notes: string): Observable<any>
+  {
+    return this.api.updateInternalNotes_Command({ eventId: this.eventService.selectedId, registrationId, notes });
   }
 }

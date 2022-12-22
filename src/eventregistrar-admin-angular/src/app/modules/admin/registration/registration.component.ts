@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndividualReductionType, MailState, MailTypeItem, RegistrationDisplayItem, SpotDisplayItem } from 'app/api/api';
-import { Subject, takeUntil } from 'rxjs';
+import { catchError, finalize, Subject, takeUntil, tap, throwError } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { MailService } from '../mailing/mails/mail-view/mail.service';
 import { NavigatorService } from '../navigator.service';
@@ -22,6 +22,9 @@ export class RegistrationComponent implements OnInit
   public registration: RegistrationDisplayItem;
   private unsubscribeAll: Subject<any> = new Subject<any>();
   public possibleMailTypes: MailTypeItem[];
+  public notes: string | null = null;
+  public notesDirty: boolean;
+  public notesVersion: number;
   IndividualReductionType = IndividualReductionType;
   MailState = MailState;
   changeSpotsDialog: MatDialogRef<ChangeSpotsComponent> | null;
@@ -47,6 +50,11 @@ export class RegistrationComponent implements OnInit
         if (!!this.changeSpotsDialog)
         {
           this.changeSpotsDialog.componentInstance.updateSpots(this.registration.spots);
+        }
+        if (!this.notesDirty
+          && this.notes !== registration.internalNotes)
+        {
+          this.notes = registration.internalNotes;
         }
 
         this.possibleMailTypes = null;
@@ -135,5 +143,21 @@ export class RegistrationComponent implements OnInit
   processedChanged(registrationId: string, processed: boolean)
   {
     this.remarksService.setProcessedState(registrationId, processed);
+  }
+
+  notesChanged(notes: string)
+  {
+    this.notesDirty = true;
+    this.service.updateNotes(this.registration.id, notes)
+      .pipe(
+        tap(savedNotes =>
+        {
+          if (this.notes === savedNotes)
+          {
+            this.notesDirty = false;
+          }
+        })
+      )
+      .subscribe();
   }
 }

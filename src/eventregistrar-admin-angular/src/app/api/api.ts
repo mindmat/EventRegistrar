@@ -1150,7 +1150,7 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    updateInternalNotes_Command(updateInternalNotesCommand: UpdateInternalNotesCommand | undefined): Observable<Unit> {
+    updateInternalNotes_Command(updateInternalNotesCommand: UpdateInternalNotesCommand | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/UpdateInternalNotesCommand";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -1173,14 +1173,14 @@ export class Api {
                 try {
                     return this.processUpdateInternalNotes_Command(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<Unit>;
+                    return _observableThrow(e) as any as Observable<string>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<Unit>;
+                return _observableThrow(response_) as any as Observable<string>;
         }));
     }
 
-    protected processUpdateInternalNotes_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processUpdateInternalNotes_Command(response: HttpResponseBase): Observable<string> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -1190,7 +1190,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as string;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
