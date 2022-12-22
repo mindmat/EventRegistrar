@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndividualReductionType, MailState, MailTypeItem, RegistrationDisplayItem, SpotDisplayItem } from 'app/api/api';
-import { catchError, finalize, Subject, takeUntil, tap, throwError } from 'rxjs';
+import { BehaviorSubject, debounceTime, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { MailService } from '../mailing/mails/mail-view/mail.service';
 import { NavigatorService } from '../navigator.service';
@@ -28,6 +28,8 @@ export class RegistrationComponent implements OnInit
   IndividualReductionType = IndividualReductionType;
   MailState = MailState;
   changeSpotsDialog: MatDialogRef<ChangeSpotsComponent> | null;
+  public lastSentNotes: string | null;
+  notesToSave$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
   constructor(
     private service: RegistrationService,
@@ -51,7 +53,7 @@ export class RegistrationComponent implements OnInit
         {
           this.changeSpotsDialog.componentInstance.updateSpots(this.registration.spots);
         }
-        if (!this.notesDirty
+        if (!this.lastSentNotes
           && this.notes !== registration.internalNotes)
         {
           this.notes = registration.internalNotes;
@@ -62,6 +64,24 @@ export class RegistrationComponent implements OnInit
         // Mark for check
         this.changeDetectorRef.markForCheck();
       });
+
+    this.notesToSave$.pipe(
+      debounceTime(500),
+      switchMap(notes =>
+      {
+        this.lastSentNotes = notes;
+        this.changeDetectorRef.markForCheck();
+        return this.service.updateNotes(this.registration.id, notes);
+      }),
+      tap(savedNotes =>
+      {
+        if (this.lastSentNotes === savedNotes)
+        {
+          this.lastSentNotes = null;
+          this.changeDetectorRef.markForCheck();
+        }
+      }))
+      .subscribe();
   }
 
   fetchPossibleMailTypes()
@@ -147,17 +167,6 @@ export class RegistrationComponent implements OnInit
 
   notesChanged(notes: string)
   {
-    this.notesDirty = true;
-    this.service.updateNotes(this.registration.id, notes)
-      .pipe(
-        tap(savedNotes =>
-        {
-          if (this.notes === savedNotes)
-          {
-            this.notesDirty = false;
-          }
-        })
-      )
-      .subscribe();
+    this.notesToSave$.next(notes);
   }
 }

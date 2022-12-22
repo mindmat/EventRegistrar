@@ -278,15 +278,15 @@
             </fuse-card>
 
             <!-- Notes -->
-            <fuse-card *ngIf="!!registration.remarks" class="flex flex-col w-80 rounded-2xl">
+            <fuse-card class="flex flex-col w-80 rounded-2xl">
                 <div class="flex flex-col w-80 px-8 pt-6 pb-8 rounded-2xl">
                     <div class="flex items-center justify-between">
                         <div class="text-2xl font-semibold leading-tight">{{ 'InternalNotes' | translate }}</div>
                     </div>
-                    <hr class="w-full border-t my-6">
-                    <mat-progress-bar *ngIf="notesDirty" mode="indeterminate"></mat-progress-bar>
+                    <hr *ngIf="!lastSentNotes" class="w-full border-t my-6">
+                    <mat-progress-bar *ngIf="!!lastSentNotes" mode="indeterminate" class="w-full h-1 my-6"></mat-progress-bar>
                     <mat-form-field [subscriptSizing]="'dynamic'">
-                        <textarea class="textarea" matInput #notesInput [rows]="4" (change)="notesChanged(notesInput.value)" [value]="notes"></textarea>
+                        <textarea class="textarea" matInput #notesInput [rows]="4" [ngModel]="notes" (ngModelChange)="notesChanged(notesInput.value)"></textarea>
                     </mat-form-field>
                 </div>
             </fuse-card>

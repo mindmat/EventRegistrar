@@ -37,6 +37,7 @@ using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
+using EventRegistrar.Backend.Registrations.InternalNotes;
 using EventRegistrar.Backend.Registrations.Matching;
 using EventRegistrar.Backend.Registrations.Overview;
 using EventRegistrar.Backend.Registrations.Raw;
@@ -166,6 +167,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(StartProcessAllPendingRawRegistrationsCommand);
             yield return nameof(ResendSentMailsWithoutStateCommand);
             yield return nameof(SetRemarksProcessedStateCommand);
+            yield return nameof(UpdateInternalNotesCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

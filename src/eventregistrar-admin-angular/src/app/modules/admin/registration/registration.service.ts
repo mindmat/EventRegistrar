@@ -75,7 +75,7 @@ export class RegistrationService
       });
   }
 
-  updateNotes(registrationId: string, notes: string): Observable<any>
+  updateNotes(registrationId: string, notes: string | null): Observable<any>
   {
     return this.api.updateInternalNotes_Command({ eventId: this.eventService.selectedId, registrationId, notes });
   }

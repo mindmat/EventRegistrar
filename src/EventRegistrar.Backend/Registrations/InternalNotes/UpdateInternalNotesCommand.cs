@@ -30,7 +30,9 @@ public class UpdateInternalNotesCommandHandler : IRequestHandler<UpdateInternalN
         var registration = await _registrations.AsTracking()
                                                .FirstAsync(reg => reg.Id == command.RegistrationId
                                                                && reg.EventId == command.EventId, cancellationToken);
-        registration.InternalNotes = command.Notes;
+        registration.InternalNotes = string.IsNullOrWhiteSpace(command.Notes)
+                                         ? null
+                                         : command.Notes;
 
         //_eventBus.Publish(new QueryChanged
         //                  {
