@@ -183,6 +183,9 @@
   <data name="AutoMailTemplates" xml:space="preserve">
     <value>Mail templates</value>
   </data>
+  <data name="BackToRegistrationOverview" xml:space="preserve">
+    <value>Back to registration overview</value>
+  </data>
   <data name="BankStatement" xml:space="preserve">
     <value>Bank statements</value>
   </data>
@@ -575,6 +578,9 @@
   </data>
   <data name="Overviews" xml:space="preserve">
     <value>Overviews</value>
+  </data>
+  <data name="Participants" xml:space="preserve">
+    <value>Participants</value>
   </data>
   <data name="Partner" xml:space="preserve">
     <value>Partner</value>

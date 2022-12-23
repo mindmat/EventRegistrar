@@ -7,12 +7,12 @@
             <a class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['../../..']">
                 <span class="inline-flex items-center">
                     <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
-                    <span class="ml-1.5 font-medium leading-5">Zurück zur Anmeldungsübersicht</span>
+                    <span class="ml-1.5 font-medium leading-5">{{ 'BackToRegistrationOverview' | translate }}</span>
                 </span>
             </a>
             <!-- Title -->
-            <div class="text-4xl font-extrabold tracking-tight leading-none">{{registrable.name}}</div>
-            <div class="mt-1.5 text-lg text-secondary">{{registrable.nameSecondary}}</div>
+            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ registrable.name }}</div>
+            <div class="mt-1.5 text-lg text-secondary">{{ registrable.nameSecondary }}</div>
         </div>
     </div>
 
@@ -28,7 +28,7 @@
                 <!-- Participants -->
                 <div class="flex-0 w-144 p-2 rounded-2xl bg-default">
 
-                    <div class="font-medium">Teilnehmer</div>
+                    <div class="font-medium">{{ 'Participants' | translate }}</div>
 
                     <!-- Spots -->
                     <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
@@ -36,13 +36,13 @@
                             <!-- Header -->
                             <div class="flex flex-row items-center m-3 space-x-4">
                                 <div class="flex flex-row w-72">
-                                    <div class="font-normal">Leader</div>
+                                    <div class="font-normal">{{ 'Leader' | translate }}</div>
                                     <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
                                         {{registrable.acceptedLeaders}}
                                     </div>
                                 </div>
                                 <div class="flex flex-row w-72">
-                                    <div class="font-normal">Followers</div>
+                                    <div class="font-normal">{{ 'Follower' | translate }}</div>
                                     <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
                                         {{registrable.acceptedFollowers}}
                                     </div>
@@ -65,7 +65,7 @@
                 <div class="flex-0 w-144 p-2 rounded-2xl bg-default">
 
                     <div class="flex flex-row">
-                        <div class="font-medium">Warteliste</div>
+                        <div class="font-medium">{{ 'WaitingList' | translate }}</div>
 
                         <button class="ml-auto" *ngIf="registrable.waitingList.length > 0" mat-flat-button [color]="'primary'" (click)="triggerMoveUp()">
                             {{ 'TriggerMoveUp' | translate }}
@@ -78,13 +78,13 @@
                             <!-- header -->
                             <div class="flex flex-row items-center m-3 space-x-4">
                                 <div class="flex flex-row w-72">
-                                    <div class="font-normal">Leader</div>
+                                    <div class="font-normal">{{ 'Leader' | translate }}</div>
                                     <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
                                         {{registrable.leadersOnWaitingList}}
                                     </div>
                                 </div>
                                 <div class="flex flex-row w-72">
-                                    <div class="font-normal">Followers</div>
+                                    <div class="font-normal">{{ 'Follower' | translate }}</div>
                                     <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
                                         {{registrable.followersOnWaitingList}}
                                     </div>

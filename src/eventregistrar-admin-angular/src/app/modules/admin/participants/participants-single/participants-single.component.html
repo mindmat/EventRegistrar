@@ -7,12 +7,12 @@
             <a class="inline-flex items-center leading-6 text-primary hover:underline" [routerLink]="['../../..']">
                 <span class="inline-flex items-center">
                     <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:arrow-sm-left'"></mat-icon>
-                    <span class="ml-1.5 font-medium leading-5">Zurück zur Anmeldungsübersicht</span>
+                    <span class="ml-1.5 font-medium leading-5">{{ 'BackToRegistrationOverview' | translate }}</span>
                 </span>
             </a>
             <!-- Title -->
-            <div class="text-4xl font-extrabold tracking-tight leading-none">{{registrable.name}}</div>
-            <div class="mt-1.5 text-lg text-secondary">{{registrable.nameSecondary}}</div>
+            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ registrable.name }}</div>
+            <div class="mt-1.5 text-lg text-secondary">{{ registrable.nameSecondary }}</div>
         </div>
     </div>
 
@@ -22,7 +22,7 @@
         <!-- Participants -->
         <div class="p-2 rounded-2xl bg-default">
 
-            <div class="font-medium">Teilnehmer</div>
+            <div class="font-medium">{{ 'Participants' | translate }}</div>
 
             <!-- Spots -->
             <div class="flex flex-wrap mt-2 p-3 pb-0 gap-x-3 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
@@ -36,7 +36,7 @@
         <!-- Waiting list -->
         <div class="p-2 rounded-2xl bg-default">
 
-            <div class="font-medium">Warteliste</div>
+            <div class="font-medium">{{ 'WaitingList' | translate }}</div>
 
             <!-- Spots -->
             <div class="flex flex-wrap mt-2 p-3 pb-0 gap-x-3 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
