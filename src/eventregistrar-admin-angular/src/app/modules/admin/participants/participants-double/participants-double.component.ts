@@ -39,11 +39,11 @@ export class ParticipantsDoubleComponent implements OnInit
     }
   }
 
-  drop(eventData: SpotDisplayInfo | RegistrationDisplayInfo)
+  drop(dragData: SpotDisplayInfo | RegistrationDisplayInfo)
   {
-    var registrationId = (<RegistrationDisplayInfo>eventData).id
-      ?? (<SpotDisplayInfo>eventData).leader?.id
-      ?? (<SpotDisplayInfo>eventData).follower?.id;
+    var registrationId = (<RegistrationDisplayInfo>dragData).id
+      ?? (<SpotDisplayInfo>dragData).leader?.id
+      ?? (<SpotDisplayInfo>dragData).follower?.id;
 
     if (!!registrationId)
     {

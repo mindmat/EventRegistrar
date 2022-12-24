@@ -25,7 +25,9 @@
             <div class="font-medium">{{ 'Participants' | translate }}</div>
 
             <!-- Spots -->
-            <div class="flex flex-wrap mt-2 p-3 pb-0 gap-x-3 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+            <div id="participants" class="flex flex-wrap mt-2 p-3 pb-0 gap-x-3 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border"
+                [ngClass]="{'bg-primary-600': dragOverParticipants}" cdkDropList (cdkDropListDropped)="dragOverParticipants=false;drop($event.item.data)" cdkDropListConnectedTo="waitingList"
+                [cdkDropListData]="registrable.participants" (cdkDropListEntered)="dragOverParticipants=true" (cdkDropListExited)="dragOverParticipants=false">
                 <!-- Spot -->
                 <ng-container *ngFor="let spot of registrable.participants; trackBy: trackByFn">
                     <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner"></app-participant>
@@ -39,10 +41,11 @@
             <div class="font-medium">{{ 'WaitingList' | translate }}</div>
 
             <!-- Spots -->
-            <div class="flex flex-wrap mt-2 p-3 pb-0 gap-x-3 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+            <div id="waitingList" class="flex flex-wrap mt-2 p-3 pb-0 gap-x-3 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border" cdkDropList cdkDropListSortingDisabled
+                [cdkDropListData]="registrable.waitingList" cdkDropListConnectedTo="participants">
                 <!-- Spot -->
                 <ng-container *ngFor="let spot of registrable.waitingList; trackBy: trackByFn">
-                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner"></app-participant>
+                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" cdkDrag></app-participant>
                 </ng-container>
             </div>
         </div>
