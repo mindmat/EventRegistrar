@@ -31,20 +31,21 @@
                     <div class="font-medium">{{ 'Participants' | translate }}</div>
 
                     <!-- Spots -->
-                    <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
-                        <div [id]="'participants'" class="p-3 pb-0">
+                    <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border" [ngClass]="{'bg-primary-600': dragOverParticipants}">
+                        <div id="participants" class="p-3 pb-0" cdkDropList (cdkDropListDropped)="dragOverParticipants=false;drop($event.item.data)" cdkDropListConnectedTo="waitingList"
+                            [cdkDropListData]="registrable.participants" (cdkDropListEntered)="dragOverParticipants=true" (cdkDropListExited)="dragOverParticipants=false">
                             <!-- Header -->
                             <div class="flex flex-row items-center m-3 space-x-4">
                                 <div class="flex flex-row w-72">
                                     <div class="font-normal">{{ 'Leader' | translate }}</div>
                                     <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
-                                        {{registrable.acceptedLeaders}}
+                                        {{ registrable.acceptedLeaders }}
                                     </div>
                                 </div>
                                 <div class="flex flex-row w-72">
                                     <div class="font-normal">{{ 'Follower' | translate }}</div>
                                     <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
-                                        {{registrable.acceptedFollowers}}
+                                        {{ registrable.acceptedFollowers }}
                                     </div>
                                 </div>
                             </div>
@@ -74,29 +75,35 @@
 
                     <!-- Spots -->
                     <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border" *ngIf="registrable.waitingList.length > 0">
-                        <div [id]="'participants'" class="p-3 pb-0">
+                        <div id="waitingList" class="p-3 pb-0" cdkDropList cdkDropListSortingDisabled [cdkDropListData]="registrable.waitingList" cdkDropListConnectedTo="participants">
                             <!-- header -->
                             <div class="flex flex-row items-center m-3 space-x-4">
                                 <div class="flex flex-row w-72">
                                     <div class="font-normal">{{ 'Leader' | translate }}</div>
                                     <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
-                                        {{registrable.leadersOnWaitingList}}
+                                        {{ registrable.leadersOnWaitingList }}
                                     </div>
                                 </div>
                                 <div class="flex flex-row w-72">
                                     <div class="font-normal">{{ 'Follower' | translate }}</div>
                                     <div class="flex items-center justify-center min-w-6 ml-2 pl-1 pr-1 -mt-1 text-sm font-semibold leading-6 rounded-full bg-gray-300 text-secondary dark:bg-gray-700">
-                                        {{registrable.followersOnWaitingList}}
+                                        {{ registrable.followersOnWaitingList }}
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Spot -->
                             <ng-container *ngFor="let spot of registrable.waitingList; trackBy: trackByFn">
-                                <div class="flex flex-row items-center">
+                                <!-- Single registrations -->
+                                <div class="flex flex-row items-center" *ngIf="!spot.isPartnerRegistration">
+                                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" cdkDrag [cdkDragData]="spot.leader"></app-participant>
+                                    <div class="w-4 h-6 mb-2"></div>
+                                    <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner" cdkDrag [cdkDragData]="spot.follower"></app-participant>
+                                </div>
+                                <!-- Partner registration -->
+                                <div class="flex flex-row items-center" *ngIf="spot.isPartnerRegistration" cdkDrag [cdkDragData]="spot">
                                     <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner"></app-participant>
-                                    <div *ngIf="spot.isPartnerRegistration" class="w-4 h-6 mb-2 z-10 overflow-hidden bg-card"></div>
-                                    <div *ngIf="!spot.isPartnerRegistration" class="w-4 h-6 mb-2"></div>
+                                    <div class="w-4 h-6 mb-2 z-10 overflow-hidden bg-card"></div>
                                     <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner"></app-participant>
                                 </div>
                             </ng-container>

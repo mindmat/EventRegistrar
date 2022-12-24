@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ParticipantsService } from '../participants.service';
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { RegistrableDisplayInfo, RegistrationDisplayInfo, SpotDisplayInfo } from 'app/api/api';
 
 @Component({
@@ -15,6 +15,7 @@ export class ParticipantsDoubleComponent implements OnInit
 
   private unsubscribeAll: Subject<any> = new Subject<any>();
   registrable: RegistrableDisplayInfo;
+  dragOverParticipants: boolean;
 
   ngOnInit(): void
   {
@@ -38,28 +39,16 @@ export class ParticipantsDoubleComponent implements OnInit
     }
   }
 
-  participantsDropped(event: CdkDragDrop<SpotDisplayInfo | RegistrationDisplayInfo>): void
+  drop(eventData: SpotDisplayInfo | RegistrationDisplayInfo)
   {
-    // Move or transfer the item
-    if (event.previousContainer === event.container)
+    var registrationId = (<RegistrationDisplayInfo>eventData).id
+      ?? (<SpotDisplayInfo>eventData).leader?.id
+      ?? (<SpotDisplayInfo>eventData).follower?.id;
+
+    if (!!registrationId)
     {
-      // Move the item
-      // moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+      this.service.promoteFromWaitingList(this.registrable.id, registrationId);
     }
-    else
-    {
-      // Transfer the item
-      // transferArrayItem(event.previousContainer.data, event.container.data, event.previousIndex, event.currentIndex);
-
-      // Update the card's list it
-      // event.container.data[event.currentIndex].listId = event.container.id;
-    }
-
-    // // Calculate the positions
-    // const updated = this._calculatePositions(event);
-
-    // // Update the cards
-    // this._scrumboardService.updateCards(updated).subscribe();
   }
 
   trackByFn(index: number, item: any): any

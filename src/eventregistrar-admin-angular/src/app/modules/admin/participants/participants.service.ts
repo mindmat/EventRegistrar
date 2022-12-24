@@ -45,4 +45,10 @@ export class ParticipantsService
     return this.api.triggerMoveUpFromWaitingList_Command({ eventId: this.eventService.selectedId, registrableId })
       .subscribe();
   }
+
+  promoteFromWaitingList(registrableId: string, registrationId: string)
+  {
+    return this.api.triggerMoveUpFromWaitingList_Command({ eventId: this.eventService.selectedId, registrableId, registrationId })
+      .subscribe();
+  }
 }
