@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
@@ -77,6 +78,7 @@ public class UnassignPaymentCommandHandler : IRequestHandler<UnassignPaymentComm
         }
 
         _readModelUpdater.TriggerUpdate<RegistrationCalculator>(existingAssignment.RegistrationId, command.EventId);
+        _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
 
         return Unit.Value;
     }
