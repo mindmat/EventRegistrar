@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IndividualReductionType, MailState, MailTypeItem, RegistrationDisplayItem, SpotDisplayItem } from 'app/api/api';
-import { BehaviorSubject, debounceTime, Subject, switchMap, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, debounceTime, filter, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { MailService } from '../mailing/mails/mail-view/mail.service';
 import { NavigatorService } from '../navigator.service';
@@ -67,6 +67,7 @@ export class RegistrationComponent implements OnInit
 
     this.notesToSave$.pipe(
       debounceTime(500),
+      filter(notes => notes != null && notes != undefined),
       switchMap(notes =>
       {
         this.lastSentNotes = notes;

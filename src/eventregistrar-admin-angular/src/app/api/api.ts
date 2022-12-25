@@ -1150,6 +1150,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    internalNotes_Query(internalNotesQuery: InternalNotesQuery | undefined): Observable<NotesDisplayItem[]> {
+        let url_ = this.baseUrl + "/api/InternalNotesQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(internalNotesQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processInternalNotes_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processInternalNotes_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<NotesDisplayItem[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<NotesDisplayItem[]>;
+        }));
+    }
+
+    protected processInternalNotes_Query(response: HttpResponseBase): Observable<NotesDisplayItem[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as NotesDisplayItem[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     updateInternalNotes_Command(updateInternalNotesCommand: UpdateInternalNotesCommand | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/UpdateInternalNotesCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -7402,6 +7453,17 @@ export interface RegistrationsWithUnmatchedPartnerQuery {
 export interface UnbindPartnerRegistrationCommand {
     eventId?: string;
     registrationId?: string;
+}
+
+export interface NotesDisplayItem {
+    registrationId?: string;
+    displayName?: string | null;
+    email?: string | null;
+    notes?: string;
+}
+
+export interface InternalNotesQuery {
+    eventId?: string;
 }
 
 export interface UpdateInternalNotesCommand {

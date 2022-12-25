@@ -736,6 +736,41 @@
         }
       }
     },
+    "/api/InternalNotesQuery": {
+      "post": {
+        "tags": [
+          "InternalNotes"
+        ],
+        "operationId": "InternalNotes_Query",
+        "requestBody": {
+          "x-name": "InternalNotesQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InternalNotesQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NotesDisplayItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/UpdateInternalNotesCommand": {
       "post": {
         "tags": [
@@ -5578,6 +5613,37 @@
             "format": "guid"
           },
           "registrationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "NotesDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "InternalNotesQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
             "type": "string",
             "format": "guid"
           }

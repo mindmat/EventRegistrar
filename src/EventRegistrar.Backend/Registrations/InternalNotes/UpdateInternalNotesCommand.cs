@@ -34,11 +34,11 @@ public class UpdateInternalNotesCommandHandler : IRequestHandler<UpdateInternalN
                                          ? null
                                          : command.Notes;
 
-        //_eventBus.Publish(new QueryChanged
-        //                  {
-        //                      EventId = command.EventId,
-        //                      QueryName = nameof(RemarksOverviewQuery)
-        //                  });
+        _eventBus.Publish(new QueryChanged
+                          {
+                              EventId = command.EventId,
+                              QueryName = nameof(InternalNotesQuery)
+                          });
         _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
 
         return command.Notes;

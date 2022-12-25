@@ -49,6 +49,8 @@ import { ProblematicEmailsComponent } from './modules/admin/mailing/problematic-
 import { ProblematicEmailsResolver } from './modules/admin/mailing/problematic-emails/problematic-emails.resolver';
 import { RemarksOverviewComponent } from './modules/admin/registrations/remarks-overview/remarks-overview.component';
 import { RemarksOverviewResolver } from './modules/admin/registrations/remarks-overview/remarks-overview.resolver';
+import { NotesOverviewComponent } from './modules/admin/registrations/notes-overview/notes-overview.component';
+import { NotesOverviewResolver } from './modules/admin/registrations/notes-overview/notes-overview.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -235,6 +237,12 @@ export const appRoutes: Route[] =
                             canActivate: [AuthGuard],
                             component: RemarksOverviewComponent,
                             resolve: { initialData: RemarksOverviewResolver }
+                        },
+                        {
+                            path: 'notes-overview',
+                            canActivate: [AuthGuard],
+                            component: NotesOverviewComponent,
+                            resolve: { initialData: NotesOverviewResolver }
                         },
                         {
                             path: ':id',

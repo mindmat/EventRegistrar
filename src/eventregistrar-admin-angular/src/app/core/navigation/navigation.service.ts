@@ -89,6 +89,13 @@ export class NavigationService
                                     icon: 'heroicons_outline:chat-alt',
                                     link: `/${e.acronym}/registrations/remarks-overview`,
                                 },
+                                {
+                                    id: 'notes-overview',
+                                    title: translateService.instant('InternalNotes'),
+                                    type: 'basic',
+                                    icon: 'mat_solid:edit_note',
+                                    link: `/${e.acronym}/registrations/notes-overview`,
+                                },
                             ]
                         },
                         {

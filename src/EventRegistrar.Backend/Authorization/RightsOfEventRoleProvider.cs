@@ -115,6 +115,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(FroalaKeyQuery);
             yield return nameof(UnprocessedRawRegistrationCountQuery);
             yield return nameof(RemarksOverviewQuery);
+            yield return nameof(InternalNotesQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
