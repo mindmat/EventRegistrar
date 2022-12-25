@@ -137,7 +137,7 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
                                            RegistrationId = registration.Id,
                                            ResponseString = string.IsNullOrEmpty(rawResponse.Response)
                                                                 ? string.Join(", ", rawResponse.Responses)
-                                                                : rawResponse.Response,
+                                                                : rawResponse.Response.Trim(),
                                            QuestionId = responseLookup.questionId,
                                            QuestionOptionId = questionOptionId
                                        };
@@ -168,9 +168,9 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
                                   Id = Guid.NewGuid(),
                                   EventId = form.EventId,
                                   RegistrationId = registration.Id,
-                                  FirstName = registration.RespondentFirstName,
-                                  LastName = registration.RespondentLastName,
-                                  Email = registration.RespondentEmail,
+                                  FirstName = registration.RespondentFirstName?.Trim(),
+                                  LastName = registration.RespondentLastName?.Trim(),
+                                  Email = registration.RespondentEmail?.Trim(),
                                   Registrables = spots.Select(spt => spt.Registrable?.DisplayName ?? string.Empty).ToArray()
                               });
             _eventBus.Publish(new QueryChanged
