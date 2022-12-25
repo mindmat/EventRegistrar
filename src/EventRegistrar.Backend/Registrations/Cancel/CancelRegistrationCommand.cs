@@ -50,8 +50,11 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
                                    : command.RefundPercentage;
         refundPercentage = Math.Clamp(refundPercentage, 0m, 1m);
 
-        var registration = await _registrations.Include(reg => reg.PaymentAssignments)
+        var registration = await _registrations.AsTracking()
+                                               .Include(reg => reg.PaymentAssignments)
                                                .Include(reg => reg.RegistrationForm)
+                                               .Include(reg => reg.Mails!)
+                                               .ThenInclude(mtr => mtr.Mail)
                                                .FirstAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
 
         if (registration.PaymentAssignments!.Any() && !command.IgnorePayments)
@@ -71,12 +74,22 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
 
         registration.State = RegistrationState.Cancelled;
         registration.RegistrationId_Partner = null; // remove reference to partner
+
+        // cancel spots
         var spots = await _spots.Where(plc => plc.RegistrationId == command.RegistrationId
                                            || plc.RegistrationId_Follower == command.RegistrationId)
                                 .ToListAsync(cancellationToken);
         foreach (var spot in spots)
         {
             _spotRemover.RemoveSpot(spot, command.RegistrationId, RemoveSpotReason.CancellationOfRegistration);
+        }
+
+        // discard unsent mails
+        foreach (var unsentMail in registration.Mails!.Where(mtr => mtr.Mail!.Withhold
+                                                                 && !mtr.Mail.Discarded
+                                                                 && mtr.Mail.Sent == null))
+        {
+            unsentMail.Mail!.Discarded = true;
         }
 
         var cancellation = new RegistrationCancellation
@@ -87,22 +100,23 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
                                Created = _dateTimeProvider.Now,
                                RefundPercentage = refundPercentage,
                                Refund = refundPercentage
-                                      * registration.PaymentAssignments.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
+                                      * registration.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
                                Received = command.Received
                            };
-        await _cancellations.InsertOrUpdateEntity(cancellation, cancellationToken);
+        _cancellations.InsertObjectTree(cancellation);
 
         if (cancellation.Refund > 0m)
         {
             var payoutRequest = new PayoutRequest
                                 {
+                                    Id = Guid.NewGuid(),
                                     RegistrationId = command.RegistrationId,
                                     Amount = cancellation.Refund,
                                     Reason = command.Reason,
                                     State = PayoutState.Requested,
                                     Created = _dateTimeProvider.Now
                                 };
-            await _payoutRequests.InsertOrUpdateEntity(payoutRequest, cancellationToken);
+            _payoutRequests.InsertObjectTree(payoutRequest);
         }
 
         _eventBus.Publish(new RegistrationCancelled
