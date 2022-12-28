@@ -8,15 +8,9 @@ public class DefaultDuePaymentConfigurationItem : DuePaymentConfiguration, IDefa
     public DefaultDuePaymentConfigurationItem()
     {
         PaymentGracePeriod = 6;
-        MailTypes_Accepted =
-            new[] { MailType.PartnerRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted };
-        MailTypes_Reminder1 =
-            new[] { MailType.PartnerRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder };
-        MailTypes_Reminder2 = new[]
-                              {
-                                  MailType.PartnerRegistrationSecondReminder,
-                                  MailType.SingleRegistrationSecondReminder
-                              };
+        MailTypes_Accepted = new[] { MailType.PartnerRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted };
+        MailTypes_Reminder1 = new[] { MailType.PartnerRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder };
+        MailTypes_Reminder2 = new[] { MailType.PartnerRegistrationSecondReminder, MailType.SingleRegistrationSecondReminder };
     }
 }
 

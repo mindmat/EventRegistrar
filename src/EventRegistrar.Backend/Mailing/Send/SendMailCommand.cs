@@ -1,7 +1,8 @@
 ﻿using System.Net;
 
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Mailing.Feedback;
+using EventRegistrar.Backend.Payments.Due;
 
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -18,20 +19,23 @@ public class SendMailCommand : IRequest
     public IEnumerable<EmailAddress> To { get; set; }
 }
 
-public class SendMailCommandHandler : IRequestHandler<SendMailCommand>
+public class SendMailCommandHandler : AsyncRequestHandler<SendMailCommand>
 {
     private const string MessageIdHeader = "X-Message-Id";
     private readonly ILogger _logger;
     private readonly IRepository<Mail> _mails;
+    private readonly ReadModelUpdater _readModelUpdater;
 
     public SendMailCommandHandler(ILogger logger,
-                                  IRepository<Mail> mails)
+                                  IRepository<Mail> mails,
+                                  ReadModelUpdater readModelUpdater)
     {
         _logger = logger;
         _mails = mails;
+        _readModelUpdater = readModelUpdater;
     }
 
-    public async Task<Unit> Handle(SendMailCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(SendMailCommand command, CancellationToken cancellationToken)
     {
         var mail = await _mails.FirstAsync(mil => mil.Id == command.MailId, cancellationToken);
         var msg = new SendGridMessage
@@ -67,6 +71,9 @@ public class SendMailCommandHandler : IRequestHandler<SendMailCommand>
             }
         }
 
-        return Unit.Value;
+        if (mail.EventId != null)
+        {
+            _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, mail.EventId);
+        }
     }
 }

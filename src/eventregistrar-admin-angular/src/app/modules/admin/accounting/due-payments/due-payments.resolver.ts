@@ -1,12 +1,6 @@
 import { Injectable } from '@angular/core';
-import
-{
-  Router, Resolve,
-  RouterStateSnapshot,
-  ActivatedRouteSnapshot
-} from '@angular/router';
-import { DuePaymentsQuery } from 'app/api/api';
-import { Observable, of } from 'rxjs';
+import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { Observable } from 'rxjs';
 import { DuePaymentsService } from './due-payments.service';
 
 @Injectable({

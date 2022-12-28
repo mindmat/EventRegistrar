@@ -26,17 +26,6 @@ export class DuePaymentsComponent implements OnInit
 
   ngOnInit(): void
   {
-    // this.duePaymentsService.duePayments$
-    //   .pipe(takeUntil(this._unsubscribeAll))
-    //   .subscribe((duePayments: DuePaymentItem[]) =>
-    //   {
-    //     this.duePayments = duePayments;
-
-    //     // Mark for check
-    //     this._changeDetectorRef.markForCheck();
-    //   });
-
-
     // Filter the courses
     combineLatest([this.filters.query$, this.duePaymentsService.duePayments$])
       .pipe(takeUntil(this._unsubscribeAll))
@@ -78,7 +67,7 @@ export class DuePaymentsComponent implements OnInit
 
   sendReminderMail(duePayment: DuePaymentItem)
   {
-
+    this.duePaymentsService.sendReminderMail(duePayment.id);
   }
 
   sendReminderSms(duePayment: DuePaymentItem)

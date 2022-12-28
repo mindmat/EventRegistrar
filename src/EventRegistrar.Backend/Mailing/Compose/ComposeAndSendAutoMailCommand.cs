@@ -1,11 +1,11 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.DirtyTags;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
 using EventRegistrar.Backend.Mailing.Templates;
+using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.ReadModels;
@@ -189,6 +189,7 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
         }
 
         registrations_Recipients.ForEach(reg => _readModelUpdater.TriggerUpdate<RegistrationCalculator>(reg.Id, reg.EventId));
+        _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
         _eventBus.Publish(new QueryChanged
                           {
                               EventId = command.EventId,

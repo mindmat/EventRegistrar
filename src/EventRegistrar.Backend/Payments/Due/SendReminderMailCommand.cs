@@ -1,5 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
+﻿using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrations;
@@ -13,7 +12,7 @@ public class SendReminderMailCommand : IRequest, IEventBoundRequest
     public bool Withhold { get; set; }
 }
 
-public class SendReminderMailCommandHandler : IRequestHandler<SendReminderMailCommand>
+public class SendReminderMailCommandHandler : AsyncRequestHandler<SendReminderMailCommand>
 {
     private readonly ILogger _logger;
     private readonly IQueryable<MailToRegistration> _mailsToRegistrations;
@@ -34,18 +33,17 @@ public class SendReminderMailCommandHandler : IRequestHandler<SendReminderMailCo
         _commandQueue = commandQueue;
     }
 
-    public async Task<Unit> Handle(SendReminderMailCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(SendReminderMailCommand command, CancellationToken cancellationToken)
     {
         var tmp = await _registrations.Where(reg => reg.Id == command.RegistrationId
                                                  && reg.EventId == command.EventId)
                                       .Select(reg => new
                                                      {
                                                          Registration = reg,
-                                                         StartPaymentPeriodMail = reg.Mails!
-                                                                                     .Where(map => map.Mail!.Type.HasValue
-                                                                                                && _paymentConfiguration.MailTypes_Accepted.Contains(map.Mail.Type.Value))
-                                                                                     .Select(map => map.Mail!)
-                                                                                     .MaxBy(mail => mail.Created)
+                                                         StartPaymentPeriod = reg.Mails!
+                                                                                 .Where(map => _paymentConfiguration.MailTypes_Accepted.Contains(map.Mail!.Type!.Value))
+                                                                                 .Select(map => map.Mail)
+                                                                                 .Max(mail => mail!.Created)
                                                      })
                                       .FirstAsync(cancellationToken);
 
@@ -54,35 +52,35 @@ public class SendReminderMailCommandHandler : IRequestHandler<SendReminderMailCo
         if (registration.IsOnWaitingList == true)
         {
             _logger.LogInformation($"Registration {command.RegistrationId} is on the waiting list and doesn't have to pay yet");
-            return Unit.Value;
+            return;
         }
 
         if (registration.State == RegistrationState.Cancelled)
         {
             _logger.LogInformation($"Registration {command.RegistrationId} is cancelled, so no payment needed anymore");
-            return Unit.Value;
+            return;
         }
 
         if (registration.State == RegistrationState.Paid)
         {
             _logger.LogInformation($"Registration {command.RegistrationId} is already paid");
-            return Unit.Value;
+            return;
         }
 
-        if (tmp.StartPaymentPeriodMail == null)
+        if (tmp.StartPaymentPeriod == default)
         {
             _logger.LogInformation($"Registration {registration.Id} lacks the accepted mail");
-            return Unit.Value;
+            return;
         }
 
-        if (!IsPaymentDue(tmp.StartPaymentPeriodMail.Created, _paymentConfiguration.PaymentGracePeriod))
+        if (!IsPaymentDue(tmp.StartPaymentPeriod, _paymentConfiguration.PaymentGracePeriod))
         {
             _logger.LogInformation($"Registration {registration.Id} is not due yet");
-            return Unit.Value;
+            return;
         }
 
         var acceptedMail = await _mailsToRegistrations.Where(map => map.RegistrationId == command.RegistrationId
-                                                                 && map.Mail!.Type.HasValue
+                                                                 && map.Mail!.Type != null
                                                                  && _paymentConfiguration.MailTypes_Accepted.Contains(map.Mail.Type.Value))
                                                       .Include(map => map.Mail)
                                                       .OrderByDescending(map => map.Mail!.Created)
@@ -98,14 +96,14 @@ public class SendReminderMailCommandHandler : IRequestHandler<SendReminderMailCo
                 MailType? mailType = null;
                 if (newLevel == 1)
                 {
-                    mailType = registration.RegistrationId_Partner.HasValue
+                    mailType = registration.RegistrationId_Partner != null
                                    ? MailType.PartnerRegistrationFirstReminder
                                    : MailType.SingleRegistrationFirstReminder;
                     registration.ReminderLevel = newLevel;
                 }
                 else if (newLevel == 2)
                 {
-                    mailType = registration.RegistrationId_Partner.HasValue
+                    mailType = registration.RegistrationId_Partner != null
                                    ? MailType.PartnerRegistrationSecondReminder
                                    : MailType.SingleRegistrationSecondReminder;
                     registration.ReminderLevel = newLevel;
@@ -129,8 +127,6 @@ public class SendReminderMailCommandHandler : IRequestHandler<SendReminderMailCo
         {
             _logger.LogInformation("unexpected situation: no accepted mail found");
         }
-
-        return Unit.Value;
     }
 
     public bool IsPaymentDue(DateTimeOffset startOfGracePeriodUtc, int? paymentGracePeriod = null)

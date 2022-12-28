@@ -6,8 +6,6 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrations;
 
-using Resources = EventRegistrar.Backend.Properties.Resources;
-
 namespace EventRegistrar.Backend.Payments.Due;
 
 public class DuePaymentsCalculator : ReadModelCalculator<IEnumerable<DuePaymentItem>>
@@ -155,10 +153,10 @@ public class DuePaymentsCalculator : ReadModelCalculator<IEnumerable<DuePaymentI
     {
         var lastNotification = new[]
                                {
-                                   (Date: dpi.ReminderSmsSent, Type: Resources.SMS),
-                                   (Date: dpi.Reminder2Mail?.Sent, Type: Resources.ReminderMail1),
-                                   (Date: dpi.Reminder1Mail?.Sent, Type: Resources.ReminderMail2),
-                                   (Date: dpi.AcceptedMail?.Sent, Type: Resources.AcceptedMail)
+                                   (Date: dpi.ReminderSmsSent, Type: Properties.Resources.SMS),
+                                   (Date: dpi.Reminder2Mail?.Sent, Type: Properties.Resources.ReminderMail1),
+                                   (Date: dpi.Reminder1Mail?.Sent, Type: Properties.Resources.ReminderMail2),
+                                   (Date: dpi.AcceptedMail?.Sent, Type: Properties.Resources.AcceptedMail)
                                }.Where(ntf => ntf.Date != null)
                                 .DefaultIfEmpty((Date: null, Type: string.Empty))
                                 .MaxBy(ntf => ntf.Date);

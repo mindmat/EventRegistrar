@@ -26,4 +26,10 @@ export class DuePaymentsService extends FetchService<DuePaymentItem[]> {
   {
     return this.fetchItems(this.api.duePayments_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
+
+  sendReminderMail(registrationId: string)
+  {
+    return this.api.sendReminderMail_Command({ eventId: this.eventService.selectedId, registrationId })
+      .subscribe();
+  }
 }
