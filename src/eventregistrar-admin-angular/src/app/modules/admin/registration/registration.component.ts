@@ -32,7 +32,7 @@ export class RegistrationComponent implements OnInit
   notesToSave$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
 
   constructor(
-    private service: RegistrationService,
+    private registrationService: RegistrationService,
     public navigator: NavigatorService,
     private changeDetectorRef: ChangeDetectorRef,
     private eventService: EventService,
@@ -44,7 +44,7 @@ export class RegistrationComponent implements OnInit
   ngOnInit(): void
   {
     // Get the participants
-    this.service.registration$
+    this.registrationService.registration$
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe((registration: RegistrationDisplayItem) =>
       {
@@ -72,7 +72,7 @@ export class RegistrationComponent implements OnInit
       {
         this.lastSentNotes = notes;
         this.changeDetectorRef.markForCheck();
-        return this.service.updateNotes(this.registration.id, notes);
+        return this.registrationService.updateNotes(this.registration.id, notes);
       }),
       tap(savedNotes =>
       {
@@ -89,7 +89,7 @@ export class RegistrationComponent implements OnInit
   {
     if (!this.possibleMailTypes)
     {
-      this.service.getPossibleMailTypes(this.registration.id)
+      this.registrationService.getPossibleMailTypes(this.registration.id)
         .subscribe(types => this.possibleMailTypes = types);
     }
   }
@@ -98,7 +98,7 @@ export class RegistrationComponent implements OnInit
   {
     if (mailTypeItem.type)
     {
-      this.service.createAutoMail(this.registration.id, mailTypeItem.type)
+      this.registrationService.createAutoMail(this.registration.id, mailTypeItem.type)
         .subscribe();
     }
   }
@@ -169,5 +169,10 @@ export class RegistrationComponent implements OnInit
   notesChanged(notes: string)
   {
     this.notesToSave$.next(notes);
+  }
+
+  unbindPartnerRegistrations()
+  {
+    this.registrationService.unbindPartnerRegistrations(this.registration.id);
   }
 }

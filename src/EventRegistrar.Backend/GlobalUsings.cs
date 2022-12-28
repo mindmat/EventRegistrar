@@ -7,3 +7,4 @@ global using Microsoft.EntityFrameworkCore;
 global using MediatR;
 
 global using EventRegistrar.Backend.Authorization;
+global using EventRegistrar.Backend.Infrastructure.DataAccess;

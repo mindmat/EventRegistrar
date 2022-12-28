@@ -79,4 +79,9 @@ export class RegistrationService
   {
     return this.api.updateInternalNotes_Command({ eventId: this.eventService.selectedId, registrationId, notes });
   }
+
+  unbindPartnerRegistrations(registrationId: string)
+  {
+    return this.api.unbindPartnerRegistration_Command({ eventId: this.eventService.selectedId, registrationId });
+  }
 }

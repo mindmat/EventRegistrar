@@ -1,6 +1,5 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-using MediatR;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Registrations.Matching;
 
@@ -10,32 +9,54 @@ public class UnbindPartnerRegistrationCommand : IRequest, IEventBoundRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class UnbindPartnerRegistrationCommandHandler : IRequestHandler<UnbindPartnerRegistrationCommand>
+public class UnbindPartnerRegistrationCommandHandler : AsyncRequestHandler<UnbindPartnerRegistrationCommand>
 {
     private readonly IRepository<Registration> _registrations;
+    private readonly ReadModelUpdater _readModelUpdater;
 
-    public UnbindPartnerRegistrationCommandHandler(IRepository<Registration> registrations)
+    public UnbindPartnerRegistrationCommandHandler(IRepository<Registration> registrations,
+                                                   ReadModelUpdater readModelUpdater)
     {
         _registrations = registrations;
+        _readModelUpdater = readModelUpdater;
     }
 
-    public async Task<Unit> Handle(UnbindPartnerRegistrationCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(UnbindPartnerRegistrationCommand command, CancellationToken cancellationToken)
     {
-        var registration = await _registrations.Include(reg => reg.Seats_AsLeader)
+        var registration = await _registrations.AsTracking()
+                                               .Include(reg => reg.Seats_AsLeader)
                                                .Include(reg => reg.Seats_AsFollower)
                                                .FirstAsync(reg => reg.Id == command.RegistrationId
                                                                && reg.EventId == command.EventId, cancellationToken);
 
-        if (registration.RegistrationId_Partner != null) registration.RegistrationId_Partner = null;
+        Guid? registrationId_Partner = null;
+        if (registration.RegistrationId_Partner != null)
+        {
+            registrationId_Partner = registration.RegistrationId_Partner;
+            registration.RegistrationId_Partner = null;
+        }
 
         // unbind spots
         if (registration.Seats_AsLeader != null)
+        {
             foreach (var spot in registration.Seats_AsLeader.Where(spot => spot.IsPartnerSpot))
+            {
                 spot.IsPartnerSpot = false;
-        if (registration.Seats_AsFollower != null)
-            foreach (var spot in registration.Seats_AsFollower.Where(spot => spot.IsPartnerSpot))
-                spot.IsPartnerSpot = false;
+            }
+        }
 
-        return Unit.Value;
+        if (registration.Seats_AsFollower != null)
+        {
+            foreach (var spot in registration.Seats_AsFollower.Where(spot => spot.IsPartnerSpot))
+            {
+                spot.IsPartnerSpot = false;
+            }
+        }
+
+        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(command.EventId, registration.Id);
+        if (registrationId_Partner != null)
+        {
+            _readModelUpdater.TriggerUpdate<RegistrationCalculator>(command.EventId, registrationId_Partner);
+        }
     }
 }
