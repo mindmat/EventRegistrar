@@ -32,7 +32,7 @@
 
     <div class="flex flex-col p-6 sm:p-8 sm:pt-4 overflow-y-auto">
 
-        <!-- Assignment to registrations -->
+        <!-- Existing assignment to registrations -->
         <div *ngIf="existingAssignments?.length > 0" class="p-2 rounded-xl bg-default">
 
             <div class="flex flex-row items-baseline gap-x-2 ml-6">
@@ -65,7 +65,7 @@
             </div>
         </div>
 
-        <!-- Registration candidates -->
+        <!-- Possible registration candidates -->
         <div *ngIf="candidates?.length > 0 || searchMatches?.length > 0" class="p-2 rounded-xl bg-default">
 
             <div class="flex flex-row items-baseline gap-x-2 ml-6">
@@ -76,15 +76,33 @@
             <!-- Bookings -->
             <div *ngIf="!query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <ng-container *ngFor="let candidate of candidates">
-                    <app-assignment-candidate-registration [payment]="payment" [candidate]="candidate" (assign)="assign($event)">
+                    <!-- available -->
+                    <app-assignment-candidate-registration *ngIf="candidate.state===RegistrationState.Received" [payment]="payment" [candidate]="candidate" (assign)="assign($event)">
                     </app-assignment-candidate-registration>
+
+                    <!-- unavailable -->
+                    <fuse-card class="min-w-10 rounded-xl bg-gray-300 cursor-pointer" *ngIf="candidate.state!==RegistrationState.Received"
+                        [routerLink]="navigator.getRegistrationUrl(candidate.registrationId)">
+                        <div class="flex m-auto text-xl uppercase p-4">
+                            ({{ candidate.firstName?.charAt(0) }}{{ candidate.lastName?.charAt(0) }})
+                        </div>
+                    </fuse-card>
                 </ng-container>
             </div>
 
             <div *ngIf="query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <ng-container *ngFor="let searchMatch of searchMatches">
-                    <app-assignment-candidate-registration [payment]="payment" [candidate]="searchMatch" (assign)="assign($event)">
+                    <!-- available -->
+                    <app-assignment-candidate-registration *ngIf="searchMatch.state===RegistrationState.Received" [payment]="payment" [candidate]="searchMatch" (assign)="assign($event)">
                     </app-assignment-candidate-registration>
+
+                    <!-- unavailable -->
+                    <fuse-card class="min-w-10 rounded-xl bg-gray-300 cursor-pointer" *ngIf="searchMatch.state!==RegistrationState.Received"
+                        [routerLink]="navigator.getRegistrationUrl(searchMatch.registrationId)">
+                        <div class="flex m-auto text-xl uppercase p-4">
+                            ({{ searchMatch.firstName?.charAt(0) }}{{ searchMatch.lastName?.charAt(0) }})
+                        </div>
+                    </fuse-card>
                 </ng-container>
             </div>
         </div>

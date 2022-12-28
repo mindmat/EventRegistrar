@@ -3,6 +3,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Cancel;
 
 namespace EventRegistrar.Backend.Payments.Assignments.Candidates;
 
@@ -38,14 +39,10 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
         }
 
         var otherParty = string.Empty;
-        var result = new PaymentAssignments
-                     {
-                         Ignored = payment.Ignore
-                     };
+        var result = new PaymentAssignments { Ignored = payment.Ignore };
         if (payment.Incoming != null)
         {
             otherParty = payment.Incoming.DebitorName;
-
             result.Type = PaymentType.Incoming;
             result.OpenAmount = payment.Amount
                               - payment.Incoming.Assignments!.Sum(asn => asn.PayoutRequestId == null && asn.OutgoingPaymentId == null
@@ -176,7 +173,8 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
 public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTranslation<OutgoingPaymentAssigned>,
                                                            IEventToCommandTranslation<OutgoingPaymentUnassigned>,
                                                            IEventToCommandTranslation<IncomingPaymentUnassigned>,
-                                                           IEventToCommandTranslation<IncomingPaymentAssigned>
+                                                           IEventToCommandTranslation<IncomingPaymentAssigned>,
+                                                           IEventToCommandTranslation<RegistrationCancelled>
 
 
 {
@@ -191,13 +189,7 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
     {
         if (e.EventId != null)
         {
-            yield return new UpdateReadModelCommand
-                         {
-                             QueryName = nameof(PaymentAssignmentsQuery),
-                             EventId = e.EventId.Value,
-                             RowId = e.OutgoingPaymentId,
-                             DirtyMoment = _dateTimeProvider.Now
-                         };
+            yield return CreateUpdateCommand(e.EventId!.Value, e.OutgoingPaymentId);
         }
     }
 
@@ -205,13 +197,7 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
     {
         if (e.EventId != null)
         {
-            yield return new UpdateReadModelCommand
-                         {
-                             QueryName = nameof(PaymentAssignmentsQuery),
-                             EventId = e.EventId.Value,
-                             RowId = e.OutgoingPaymentId,
-                             DirtyMoment = _dateTimeProvider.Now
-                         };
+            yield return CreateUpdateCommand(e.EventId!.Value, e.OutgoingPaymentId);
         }
     }
 
@@ -219,13 +205,7 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
     {
         if (e.EventId != null)
         {
-            yield return new UpdateReadModelCommand
-                         {
-                             QueryName = nameof(PaymentAssignmentsQuery),
-                             EventId = e.EventId.Value,
-                             RowId = e.IncomingPaymentId,
-                             DirtyMoment = _dateTimeProvider.Now
-                         };
+            yield return CreateUpdateCommand(e.EventId!.Value, e.IncomingPaymentId);
         }
     }
 
@@ -233,14 +213,27 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
     {
         if (e.EventId != null)
         {
-            yield return new UpdateReadModelCommand
-                         {
-                             QueryName = nameof(PaymentAssignmentsQuery),
-                             EventId = e.EventId.Value,
-                             RowId = e.IncomingPaymentId,
-                             DirtyMoment = _dateTimeProvider.Now
-                         };
+            yield return CreateUpdateCommand(e.EventId!.Value, e.IncomingPaymentId);
         }
+    }
+
+    public IEnumerable<IRequest> Translate(RegistrationCancelled e)
+    {
+        if (e.EventId != null)
+        {
+            yield return CreateUpdateCommand(e.EventId!.Value, null);
+        }
+    }
+
+    private UpdateReadModelCommand CreateUpdateCommand(Guid eventId, Guid? paymentId)
+    {
+        return new UpdateReadModelCommand
+               {
+                   QueryName = nameof(RegistrationQuery),
+                   EventId = eventId,
+                   RowId = paymentId,
+                   DirtyMoment = _dateTimeProvider.Now
+               };
     }
 }
 
@@ -249,6 +242,7 @@ public class PaymentAssignments
     public decimal OpenAmount { get; set; }
     public PaymentType Type { get; set; }
     public bool Ignored { get; set; }
+
     public IEnumerable<AssignmentCandidateRegistration>? RegistrationCandidates { get; set; }
     public IEnumerable<ExistingAssignment>? ExistingAssignments { get; set; }
 }

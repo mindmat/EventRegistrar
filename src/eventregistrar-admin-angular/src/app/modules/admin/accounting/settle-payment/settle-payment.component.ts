@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType, RegistrationMatch } from 'app/api/api';
-import { BehaviorSubject, debounce, debounceTime, filter, Subject, takeUntil } from 'rxjs';
+import { AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType, RegistrationMatch, RegistrationState } from 'app/api/api';
+import { BehaviorSubject, debounceTime, filter, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { AssignmentRequest, Payment, SettlementCandidate } from './assignment-candidate-registration/assignment-candidate-registration.component';
 import { SearchRegistrationsForSettlementService } from './search-registrations-for-settlement.service';
@@ -23,6 +23,7 @@ export class SettlePaymentComponent implements OnInit
   searchMatches: (RegistrationMatch & { locked: boolean; amountMatch: boolean; })[];
   payment?: Payment | null = null;
   PaymentType = PaymentType;
+  RegistrationState = RegistrationState;
 
   constructor(private service: SettlePaymentService,
     public navigator: NavigatorService,
