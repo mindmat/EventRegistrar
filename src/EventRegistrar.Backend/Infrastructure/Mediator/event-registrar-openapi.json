@@ -3670,6 +3670,38 @@
         }
       }
     },
+    "/api/BulkMailTemplateQuery": {
+      "post": {
+        "tags": [
+          "BulkMailTemplate"
+        ],
+        "operationId": "BulkMailTemplate_Query",
+        "requestBody": {
+          "x-name": "BulkMailTemplateQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkMailTemplateQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkMailTemplateDisplayItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/BulkMailTemplatesQuery": {
       "post": {
         "tags": [
@@ -3846,6 +3878,38 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/ReleaseBulkMailsCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/UpdateBulkMailTemplateCommand": {
+      "post": {
+        "tags": [
+          "UpdateBulkMailTemplate"
+        ],
+        "operationId": "UpdateBulkMailTemplate_Command",
+        "requestBody": {
+          "x-name": "UpdateBulkMailTemplateCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateBulkMailTemplateCommand"
               }
             }
           },
@@ -9324,6 +9388,38 @@
           }
         }
       },
+      "BulkMailTemplateDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "subject": {
+            "type": "string",
+            "nullable": true
+          },
+          "contentHtml": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "BulkMailTemplateQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "bulkMailTemplateId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "BulkMailTemplates": {
         "type": "object",
         "additionalProperties": false,
@@ -9493,6 +9589,28 @@
           "eventId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "UpdateBulkMailTemplateCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "templateId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "subject": {
+            "type": "string",
+            "nullable": true
+          },
+          "contentHtml": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

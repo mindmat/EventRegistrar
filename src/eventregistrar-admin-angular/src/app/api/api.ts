@@ -5694,6 +5694,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    bulkMailTemplate_Query(bulkMailTemplateQuery: BulkMailTemplateQuery | undefined): Observable<BulkMailTemplateDisplayItem> {
+        let url_ = this.baseUrl + "/api/BulkMailTemplateQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(bulkMailTemplateQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processBulkMailTemplate_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processBulkMailTemplate_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BulkMailTemplateDisplayItem>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BulkMailTemplateDisplayItem>;
+        }));
+    }
+
+    protected processBulkMailTemplate_Query(response: HttpResponseBase): Observable<BulkMailTemplateDisplayItem> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BulkMailTemplateDisplayItem;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     bulkMailTemplates_Query(bulkMailTemplatesQuery: BulkMailTemplatesQuery | undefined): Observable<BulkMailTemplates> {
         let url_ = this.baseUrl + "/api/BulkMailTemplatesQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -5980,6 +6031,57 @@ export class Api {
     }
 
     protected processReleaseBulkMails_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    updateBulkMailTemplate_Command(updateBulkMailTemplateCommand: UpdateBulkMailTemplateCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/UpdateBulkMailTemplateCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(updateBulkMailTemplateCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processUpdateBulkMailTemplate_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processUpdateBulkMailTemplate_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processUpdateBulkMailTemplate_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -8731,6 +8833,17 @@ export interface ComposeAndSendBulkMailCommand {
     data?: any | null;
 }
 
+export interface BulkMailTemplateDisplayItem {
+    id?: string;
+    subject?: string | null;
+    contentHtml?: string | null;
+}
+
+export interface BulkMailTemplateQuery {
+    eventId?: string;
+    bulkMailTemplateId?: string;
+}
+
 export interface BulkMailTemplates {
     eventId?: string;
     senderMail?: string | null;
@@ -8789,6 +8902,13 @@ export interface PossibleAudiencesQuery {
 export interface ReleaseBulkMailsCommand {
     bulkMailKey?: string;
     eventId?: string;
+}
+
+export interface UpdateBulkMailTemplateCommand {
+    eventId?: string;
+    templateId?: string;
+    subject?: string | null;
+    contentHtml?: string | null;
 }
 
 export interface FroalaKeyQuery {

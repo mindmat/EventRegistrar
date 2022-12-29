@@ -1,20 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Api, AutoMailTemplateDisplayItem, MailType, PlaceholderDescription } from 'app/api/api';
-import { EventService } from 'app/modules/admin/events/event.service';
+import { Api, BulkMailTemplateDisplayItem, PlaceholderDescription } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
-import { AutoMailTemplateService } from './auto-mail-template.service';
-import { TributeItem } from 'tributejs';
+import { EventService } from '../../events/event.service';
 
-import Tribute from "tributejs";
+import Tribute, { TributeItem } from "tributejs";
 import FroalaEditor from "froala-editor";
+import { BulkMailTemplateService } from './bulk-mail-template.service';
 
 @Component({
-  selector: 'app-auto-mail-template',
-  templateUrl: './auto-mail-template.component.html',
+  selector: 'app-bulk-mail-template',
+  templateUrl: './bulk-mail-template.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AutoMailTemplateComponent implements OnInit
+export class BulkMailTemplateComponent implements OnInit
 {
   editorRef: FroalaEditor;
   @ViewChild('editor', { static: false }) editor: ElementRef<HTMLElement>;
@@ -23,7 +22,7 @@ export class AutoMailTemplateComponent implements OnInit
   private placeholders: PlaceholderDescription[];
   private initialHtml: string | null;
 
-  templateForm = this.fb.group<AutoMailTemplateDisplayItem>({
+  templateForm = this.fb.group<BulkMailTemplateDisplayItem>({
     id: '',
     subject: '',
     contentHtml: ''
@@ -49,7 +48,7 @@ export class AutoMailTemplateComponent implements OnInit
 
   public options = null;
 
-  constructor(private service: AutoMailTemplateService,
+  constructor(private service: BulkMailTemplateService,
     private fb: FormBuilder,
     private api: Api,
     private eventService: EventService,
@@ -59,19 +58,19 @@ export class AutoMailTemplateComponent implements OnInit
   {
     this.service.template$
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe((template: AutoMailTemplateDisplayItem) =>
+      .subscribe((template: BulkMailTemplateDisplayItem) =>
       {
         this.templateForm.patchValue(template);
         if (this.editorRef)
         {
-          this.editorRef.html.set(template.contentHtml);
+          this.editorRef.html.set(template?.contentHtml);
         }
         else
         {
-          this.initialHtml = template.contentHtml;
+          this.initialHtml = template?.contentHtml;
         }
 
-        this.updatePlaceholders(template.type);
+        // this.updatePlaceholders(template.type);
 
         // Mark for check
         this.changeDetectorRef.markForCheck();
@@ -107,26 +106,26 @@ export class AutoMailTemplateComponent implements OnInit
     });
   }
 
-  updatePlaceholders(type: MailType)
-  {
-    this.api.autoMailPlaceholder_Query({ mailType: type })
-      .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe((placeholders: PlaceholderDescription[]) =>
-      {
-        this.placeholders = placeholders;
-      });
-  }
+  // updatePlaceholders(type: MailType)
+  // {
+  //   this.api.autoMailPlaceholder_Query({ mailType: type })
+  //     .pipe(takeUntil(this.unsubscribeAll))
+  //     .subscribe((placeholders: PlaceholderDescription[]) =>
+  //     {
+  //       this.placeholders = placeholders;
+  //     });
+  // }
 
   openPreview()
   {
-    var url = `${this.eventService.selected.acronym}/auto-mail-preview/${this.templateForm.value.id}`;
-    window.open(url, '_blank', 'location=yes,height=900,width=700,scrollbars=yes,status=yes'); // Open new window
+    // var url = `${this.eventService.selected.acronym}/auto-mail-preview/${this.templateForm.value.id}`;
+    // window.open(url, '_blank', 'location=yes,height=900,width=700,scrollbars=yes,status=yes'); // Open new window
   }
 
   save()
   {
     let html = this.editorRef.html.get(true);
-    this.api.updateAutoMailTemplate_Command({
+    this.api.updateBulkMailTemplate_Command({
       eventId: this.eventService.selectedId,
       templateId: this.templateForm.value.id,
       subject: this.templateForm.value.subject,

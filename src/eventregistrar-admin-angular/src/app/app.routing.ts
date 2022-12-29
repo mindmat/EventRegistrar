@@ -53,6 +53,8 @@ import { NotesOverviewComponent } from './modules/admin/registrations/notes-over
 import { NotesOverviewResolver } from './modules/admin/registrations/notes-overview/notes-overview.resolver';
 import { BulkMailTemplatesComponent } from './modules/admin/mailing/bulk-mail-templates/bulk-mail-templates.component';
 import { BulkMailTemplatesResolver } from './modules/admin/mailing/bulk-mail-templates/bulk-mail-templates.resolver';
+import { BulkMailTemplateComponent } from './modules/admin/mailing/bulk-mail-template/bulk-mail-template.component';
+import { BulkMailTemplateResolver } from './modules/admin/mailing/bulk-mail-template/bulk-mail-template.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -278,13 +280,13 @@ export const appRoutes: Route[] =
                             canActivate: [AuthGuard],
                             component: BulkMailTemplatesComponent,
                             resolve: { initialData: BulkMailTemplatesResolver },
-                            // children: [
-                            //     {
-                            //         path: ':id',
-                            //         component: AutoMailTemplateComponent,
-                            //         resolve: { initialData: AutoMailTemplateResolver }
-                            //     }
-                            // ]
+                            children: [
+                                {
+                                    path: ':id',
+                                    component: BulkMailTemplateComponent,
+                                    resolve: { initialData: BulkMailTemplateResolver }
+                                }
+                            ]
                         },
                         {
                             path: 'release-mails',

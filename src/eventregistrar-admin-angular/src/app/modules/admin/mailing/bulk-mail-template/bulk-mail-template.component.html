@@ -1,0 +1,28 @@
+<div class="w-full">
+    <!-- Form -->
+    <form [formGroup]="templateForm">
+
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Name -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>{{ 'MailSubject' | translate }}</mat-label>
+                    <input [formControlName]="'subject'" matInput>
+                </mat-form-field>
+            </div>
+
+            <div class="sm:col-span-4" *ngIf="options">
+                <mat-label>{{ 'MailTemplate' | translate }}</mat-label>
+                <button mat-stroked-button type="button" [color]="'primary'" class="ml-2" (click)="openPreview()">{{ 'Preview' | translate }}</button>
+                <div class="mt-2" [froalaEditor]="options" #editor></div>
+            </div>
+
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end mt-8">
+            <button mat-stroked-button type="button">{{ 'Cancel' | translate }}</button>
+            <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="save()">{{ 'Save' | translate }}</button>
+        </div>
+    </form>
+</div>

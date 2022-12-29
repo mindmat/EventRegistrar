@@ -117,6 +117,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(RemarksOverviewQuery);
             yield return nameof(InternalNotesQuery);
             yield return nameof(BulkMailTemplatesQuery);
+            yield return nameof(BulkMailTemplateQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
@@ -171,6 +172,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SetRemarksProcessedStateCommand);
             yield return nameof(UpdateInternalNotesCommand);
             yield return nameof(CreateBulkMailTemplateCommand);
+            yield return nameof(UpdateBulkMailTemplateCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))
