@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BulkMailTemplateMetadataLanguage, BulkMailTemplates, BulkMailTemplateKey } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';

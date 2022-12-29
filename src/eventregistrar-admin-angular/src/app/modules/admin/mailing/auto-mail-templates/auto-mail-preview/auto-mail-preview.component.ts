@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { AutoMailPreview } from 'app/api/api';
+import { MailTemplatePreview } from 'app/api/api';
 import { SearchResult } from 'app/layout/common/search/search.component';
 import { Subject, takeUntil } from 'rxjs';
 import { AutoMailPreviewService } from './auto-mail-preview.service';
@@ -12,7 +12,7 @@ import { AutoMailPreviewService } from './auto-mail-preview.service';
 export class AutoMailPreviewComponent implements OnInit
 {
   private unsubscribeAll: Subject<any> = new Subject<any>();
-  preview: AutoMailPreview;
+  preview: MailTemplatePreview;
 
   constructor(
     private _changeDetectorRef: ChangeDetectorRef,
@@ -22,7 +22,7 @@ export class AutoMailPreviewComponent implements OnInit
   {
     this.mailPreviewService.preview$
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe((preview: AutoMailPreview) =>
+      .subscribe((preview: MailTemplatePreview) =>
       {
         this.preview = preview;
 

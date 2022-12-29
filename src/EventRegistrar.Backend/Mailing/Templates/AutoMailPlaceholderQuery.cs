@@ -1,7 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrations;
 
-namespace EventRegistrar.Backend.Mailing.Compose;
+namespace EventRegistrar.Backend.Mailing.Templates;
 
 public class AutoMailPlaceholderQuery : IRequest<IEnumerable<PlaceholderDescription>>
 {

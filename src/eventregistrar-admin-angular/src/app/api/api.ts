@@ -4725,11 +4725,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    autoMailPreview_Query(autoMailPreviewQuery: AutoMailPreviewQuery | undefined): Observable<AutoMailPreview> {
-        let url_ = this.baseUrl + "/api/AutoMailPreviewQuery";
+    autoMailPlaceholder_Query(autoMailPlaceholderQuery: AutoMailPlaceholderQuery | undefined): Observable<PlaceholderDescription[]> {
+        let url_ = this.baseUrl + "/api/AutoMailPlaceholderQuery";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(autoMailPreviewQuery);
+        const content_ = JSON.stringify(autoMailPlaceholderQuery);
 
         let options_ : any = {
             body: content_,
@@ -4742,20 +4742,20 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAutoMailPreview_Query(response_);
+            return this.processAutoMailPlaceholder_Query(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processAutoMailPreview_Query(response_ as any);
+                    return this.processAutoMailPlaceholder_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<AutoMailPreview>;
+                    return _observableThrow(e) as any as Observable<PlaceholderDescription[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<AutoMailPreview>;
+                return _observableThrow(response_) as any as Observable<PlaceholderDescription[]>;
         }));
     }
 
-    protected processAutoMailPreview_Query(response: HttpResponseBase): Observable<AutoMailPreview> {
+    protected processAutoMailPlaceholder_Query(response: HttpResponseBase): Observable<PlaceholderDescription[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4765,7 +4765,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AutoMailPreview;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PlaceholderDescription[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -4919,6 +4919,57 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as string;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    mailTemplatePreview_Query(mailTemplatePreviewQuery: MailTemplatePreviewQuery | undefined): Observable<MailTemplatePreview> {
+        let url_ = this.baseUrl + "/api/MailTemplatePreviewQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(mailTemplatePreviewQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMailTemplatePreview_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMailTemplatePreview_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<MailTemplatePreview>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<MailTemplatePreview>;
+        }));
+    }
+
+    protected processMailTemplatePreview_Query(response: HttpResponseBase): Observable<MailTemplatePreview> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as MailTemplatePreview;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -5541,57 +5592,6 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    autoMailPlaceholder_Query(autoMailPlaceholderQuery: AutoMailPlaceholderQuery | undefined): Observable<PlaceholderDescription[]> {
-        let url_ = this.baseUrl + "/api/AutoMailPlaceholderQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(autoMailPlaceholderQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processAutoMailPlaceholder_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processAutoMailPlaceholder_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<PlaceholderDescription[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<PlaceholderDescription[]>;
-        }));
-    }
-
-    protected processAutoMailPlaceholder_Query(response: HttpResponseBase): Observable<PlaceholderDescription[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PlaceholderDescription[];
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     composeAndSendAutoMail_Command(composeAndSendAutoMailCommand: ComposeAndSendAutoMailCommand | undefined): Observable<Unit> {
         let url_ = this.baseUrl + "/api/ComposeAndSendAutoMailCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -5684,6 +5684,108 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    bulkMailPlaceholder_Query(bulkMailPlaceholderQuery: BulkMailPlaceholderQuery | undefined): Observable<PlaceholderDescription[]> {
+        let url_ = this.baseUrl + "/api/BulkMailPlaceholderQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(bulkMailPlaceholderQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processBulkMailPlaceholder_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processBulkMailPlaceholder_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PlaceholderDescription[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PlaceholderDescription[]>;
+        }));
+    }
+
+    protected processBulkMailPlaceholder_Query(response: HttpResponseBase): Observable<PlaceholderDescription[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PlaceholderDescription[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    bulkMailPreview_Query(bulkMailPreviewQuery: BulkMailPreviewQuery | undefined): Observable<BulkMailPreview> {
+        let url_ = this.baseUrl + "/api/BulkMailPreviewQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(bulkMailPreviewQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processBulkMailPreview_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processBulkMailPreview_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BulkMailPreview>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BulkMailPreview>;
+        }));
+    }
+
+    protected processBulkMailPreview_Query(response: HttpResponseBase): Observable<BulkMailPreview> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BulkMailPreview;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -8611,22 +8713,14 @@ export interface ResendSentMailsWithoutStateCommand {
     eventId?: string;
 }
 
-export interface AutoMailPreview {
-    subject?: string | null;
-    contentHtml?: string | null;
+export interface PlaceholderDescription {
+    key?: string;
+    placeholder?: string;
+    description?: string;
 }
 
-export interface AutoMailPreviewQuery {
-    eventId?: string;
-    autoMailTemplateId?: string;
-    registrationId?: string | null;
-}
-
-export interface AutoMailTemplateDisplayItem {
-    id?: string;
-    type?: MailType;
-    subject?: string | null;
-    contentHtml?: string | null;
+export interface AutoMailPlaceholderQuery {
+    mailType?: MailType;
 }
 
 export enum MailType {
@@ -8649,6 +8743,13 @@ export enum MailType {
     PartnerRegistrationFirstReminder = 61,
     PartnerRegistrationSecondReminder = 62,
     OptionsForRegistrationsOnWaitingList = 101,
+}
+
+export interface AutoMailTemplateDisplayItem {
+    id?: string;
+    type?: MailType;
+    subject?: string | null;
+    contentHtml?: string | null;
 }
 
 export interface AutoMailTemplateQuery {
@@ -8692,6 +8793,17 @@ export interface CreateAutoMailTemplateCommand {
     eventId?: string;
     type?: MailType;
     language?: string;
+}
+
+export interface MailTemplatePreview {
+    subject?: string | null;
+    contentHtml?: string | null;
+}
+
+export interface MailTemplatePreviewQuery {
+    eventId?: string;
+    mailTemplateId?: string;
+    registrationId?: string | null;
 }
 
 export interface SetReleaseMailCommand {
@@ -8804,16 +8916,6 @@ export interface ProcessMailEventsCommand {
     rawMailEventsId?: string;
 }
 
-export interface PlaceholderDescription {
-    key?: string;
-    placeholder?: string;
-    description?: string;
-}
-
-export interface AutoMailPlaceholderQuery {
-    mailType?: MailType;
-}
-
 export interface ComposeAndSendAutoMailCommand {
     eventId?: string;
     allowDuplicate?: boolean;
@@ -8831,6 +8933,20 @@ export interface ComposeAndSendBulkMailCommand {
     mailType?: MailType | null;
     withhold?: boolean;
     data?: any | null;
+}
+
+export interface BulkMailPlaceholderQuery {
+}
+
+export interface BulkMailPreview {
+    subject?: string | null;
+    contentHtml?: string | null;
+}
+
+export interface BulkMailPreviewQuery {
+    eventId?: string;
+    bulkMailTemplateId?: string;
+    registrationId?: string | null;
 }
 
 export interface BulkMailTemplateDisplayItem {

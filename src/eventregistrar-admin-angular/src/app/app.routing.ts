@@ -144,7 +144,7 @@ export const appRoutes: Route[] =
 
                 // mail preview (no layout)
                 {
-                    path: 'auto-mail-preview/:templateId',
+                    path: 'mail-template-preview/:templateId',
                     canActivate: [AuthGuard],
                     component: AutoMailPreviewComponent,
                     resolve: { initialData: AutoMailPreviewResolver }

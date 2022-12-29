@@ -1,5 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Mailing.Templates;
@@ -38,7 +37,7 @@ public class UpdateAutoMailTemplateCommandHandler : IRequestHandler<UpdateAutoMa
 
         _eventBus.Publish(new QueryChanged
                           {
-                              QueryName = nameof(AutoMailPreviewQuery),
+                              QueryName = nameof(MailTemplatePreviewQuery),
                               EventId = command.EventId,
                               RowId = template.Id
                           });

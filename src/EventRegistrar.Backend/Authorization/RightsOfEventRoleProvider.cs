@@ -106,7 +106,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(DomainEventsQuery);
             yield return nameof(BookingsByStateQuery);
             yield return nameof(MailViewQuery);
-            yield return nameof(AutoMailPreviewQuery);
+            yield return nameof(MailTemplatePreviewQuery);
             yield return nameof(AccessRequestsOfEventQuery);
             yield return nameof(UsersOfEventQuery);
             yield return nameof(UserInEventRolesQuery);

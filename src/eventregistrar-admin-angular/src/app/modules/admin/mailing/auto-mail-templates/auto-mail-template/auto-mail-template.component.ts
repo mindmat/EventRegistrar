@@ -119,7 +119,7 @@ export class AutoMailTemplateComponent implements OnInit
 
   openPreview()
   {
-    var url = `${this.eventService.selected.acronym}/auto-mail-preview/${this.templateForm.value.id}`;
+    var url = `${this.eventService.selected.acronym}/mail-template-preview/${this.templateForm.value.id}`;
     window.open(url, '_blank', 'location=yes,height=900,width=700,scrollbars=yes,status=yes'); // Open new window
   }
 

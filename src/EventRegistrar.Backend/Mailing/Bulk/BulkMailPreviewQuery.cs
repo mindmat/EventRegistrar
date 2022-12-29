@@ -1,37 +1,36 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Mailing.Compose;
+﻿using EventRegistrar.Backend.Mailing.Compose;
 
-namespace EventRegistrar.Backend.Mailing.Templates;
+namespace EventRegistrar.Backend.Mailing.Bulk;
 
-public class AutoMailPreviewQuery : IEventBoundRequest, IRequest<AutoMailPreview>
+public class BulkMailPreviewQuery : IEventBoundRequest, IRequest<BulkMailPreview>
 {
     public Guid EventId { get; set; }
-    public Guid AutoMailTemplateId { get; set; }
+    public Guid BulkMailTemplateId { get; set; }
     public Guid? RegistrationId { get; set; }
 }
 
-public class AutoMailPreview
+public class BulkMailPreview
 {
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
 }
 
-public class AutoMailPreviewQueryHandler : IRequestHandler<AutoMailPreviewQuery, AutoMailPreview>
+public class BulkMailPreviewQueryHandler : IRequestHandler<BulkMailPreviewQuery, BulkMailPreview>
 {
-    private readonly IQueryable<AutoMailTemplate> _mailTemplates;
+    private readonly IQueryable<BulkMailTemplate> _mailTemplates;
     private readonly MailComposer _mailComposer;
 
-    public AutoMailPreviewQueryHandler(IQueryable<AutoMailTemplate> mailTemplates,
+    public BulkMailPreviewQueryHandler(IQueryable<BulkMailTemplate> mailTemplates,
                                        MailComposer mailComposer)
     {
         _mailTemplates = mailTemplates;
         _mailComposer = mailComposer;
     }
 
-    public async Task<AutoMailPreview> Handle(AutoMailPreviewQuery query, CancellationToken cancellationToken)
+    public async Task<BulkMailPreview> Handle(BulkMailPreviewQuery query, CancellationToken cancellationToken)
     {
         var template = await _mailTemplates.Where(mtp => mtp.EventId == query.EventId
-                                                      && mtp.Id == query.AutoMailTemplateId)
+                                                      && mtp.Id == query.BulkMailTemplateId)
                                            .FirstAsync(cancellationToken);
 
         var content = query.RegistrationId == null
@@ -40,7 +39,7 @@ public class AutoMailPreviewQueryHandler : IRequestHandler<AutoMailPreviewQuery,
                                                         template.ContentHtml ?? string.Empty,
                                                         template.Language,
                                                         cancellationToken);
-        return new AutoMailPreview
+        return new BulkMailPreview
                {
                    Subject = template.Subject,
                    ContentHtml = content

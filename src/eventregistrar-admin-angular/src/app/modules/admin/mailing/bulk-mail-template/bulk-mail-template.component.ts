@@ -70,11 +70,12 @@ export class BulkMailTemplateComponent implements OnInit
           this.initialHtml = template?.contentHtml;
         }
 
-        // this.updatePlaceholders(template.type);
-
         // Mark for check
         this.changeDetectorRef.markForCheck();
       });
+
+    this.service.getAvailablePlaceholders()
+      .subscribe(placeholders => this.placeholders = placeholders);
 
     this.api.froalaKey_Query({}).subscribe(key =>
     {
@@ -106,20 +107,10 @@ export class BulkMailTemplateComponent implements OnInit
     });
   }
 
-  // updatePlaceholders(type: MailType)
-  // {
-  //   this.api.autoMailPlaceholder_Query({ mailType: type })
-  //     .pipe(takeUntil(this.unsubscribeAll))
-  //     .subscribe((placeholders: PlaceholderDescription[]) =>
-  //     {
-  //       this.placeholders = placeholders;
-  //     });
-  // }
-
   openPreview()
   {
-    // var url = `${this.eventService.selected.acronym}/auto-mail-preview/${this.templateForm.value.id}`;
-    // window.open(url, '_blank', 'location=yes,height=900,width=700,scrollbars=yes,status=yes'); // Open new window
+    var url = `${this.eventService.selected.acronym}/mail-template-preview/${this.templateForm.value.id}`;
+    window.open(url, '_blank', 'location=yes,height=900,width=700,scrollbars=yes,status=yes'); // Open new window
   }
 
   save()

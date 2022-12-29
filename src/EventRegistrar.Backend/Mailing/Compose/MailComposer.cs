@@ -2,6 +2,7 @@
 using System.Text;
 
 using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Properties;
 using EventRegistrar.Backend.Registrations;

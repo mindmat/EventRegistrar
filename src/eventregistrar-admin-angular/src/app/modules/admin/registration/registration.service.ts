@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Api, MailType, MailTypeItem, RegistrationDisplayItem, Unit } from 'app/api/api';
-import { tap, BehaviorSubject, filter, map, Observable } from 'rxjs';
+import { Api, MailType, MailTypeItem, RegistrationDisplayItem } from 'app/api/api';
+import { BehaviorSubject, filter, map, Observable } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { NotificationService } from '../infrastructure/notification.service';
 
