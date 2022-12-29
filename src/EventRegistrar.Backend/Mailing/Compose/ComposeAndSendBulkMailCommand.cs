@@ -1,8 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Send;
-using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
 
 using Newtonsoft.Json;
@@ -11,13 +10,13 @@ namespace EventRegistrar.Backend.Mailing.Compose;
 
 public class ComposeAndSendBulkMailCommand : IRequest, IEventBoundRequest
 {
-    public bool AllowDuplicate { get; set; }
-    public string BulkMailKey { get; set; }
     public Guid EventId { get; set; }
-    public MailType? MailType { get; set; }
     public Guid RegistrationId { get; set; }
+    public bool AllowDuplicate { get; set; }
+    public string? BulkMailKey { get; set; }
+    public MailType? MailType { get; set; }
     public bool Withhold { get; set; }
-    public object Data { get; set; }
+    public object? Data { get; set; }
 }
 
 public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSendBulkMailCommand>
@@ -25,34 +24,45 @@ public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSe
     public const string FallbackLanguage = Language.English;
 
     private readonly ILogger _log;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly MailComposer _mailComposer;
+    private readonly MailConfiguration _configuration;
     private readonly IRepository<Mail> _mails;
     private readonly IRepository<MailToRegistration> _mailsToRegistrations;
     private readonly IQueryable<Registration> _registrations;
     private readonly CommandQueue _commandQueue;
-    private readonly IQueryable<MailTemplate> _templates;
+    private readonly IQueryable<BulkMailTemplate> _templates;
 
-    public ComposeAndSendBulkMailCommandHandler(IQueryable<MailTemplate> templates,
+    public ComposeAndSendBulkMailCommandHandler(IQueryable<BulkMailTemplate> templates,
                                                 IQueryable<Registration> registrations,
                                                 IRepository<Mail> mails,
                                                 IRepository<MailToRegistration> mailsToRegistrations,
                                                 MailComposer mailComposer,
+                                                MailConfiguration configuration,
                                                 CommandQueue commandQueue,
-                                                ILogger log)
+                                                ILogger log,
+                                                IDateTimeProvider dateTimeProvider)
     {
         _templates = templates;
         _registrations = registrations;
         _mails = mails;
         _mailsToRegistrations = mailsToRegistrations;
         _mailComposer = mailComposer;
+        _configuration = configuration;
         _commandQueue = commandQueue;
         _log = log;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(ComposeAndSendBulkMailCommand command, CancellationToken cancellationToken)
     {
-        string dataTypeFullName = null;
-        string dataJson = null;
+        if (string.IsNullOrWhiteSpace(command.BulkMailKey))
+        {
+            throw new ArgumentNullException(nameof(command.BulkMailKey));
+        }
+
+        string? dataTypeFullName = null;
+        string? dataJson = null;
         if (command.Data != null)
         {
             try
@@ -67,8 +77,7 @@ public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSe
         {
             var duplicate = await _mails.Where(ml => ml.Type == command.MailType
                                                   && !ml.Discarded
-                                                  && ml.Registrations.Any(map =>
-                                                                              map.RegistrationId == command.RegistrationId))
+                                                  && ml.Registrations!.Any(map => map.RegistrationId == command.RegistrationId))
                                         .WhereIf(dataJson != null && dataTypeFullName != null,
                                                  ml => ml.DataTypeFullName == dataTypeFullName && ml.DataJson == dataJson)
                                         .FirstOrDefaultAsync(cancellationToken);
@@ -81,9 +90,7 @@ public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSe
         }
 
         var registration = await _registrations.FirstOrDefaultAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
-        var templates = await _templates.Where(mtp => mtp.EventId == registration.EventId
-                                                   && !mtp.IsDeleted)
-                                        .WhereIf(command.MailType != null, mtp => mtp.Type == command.MailType)
+        var templates = await _templates.Where(mtp => mtp.EventId == registration.EventId)
                                         .WhereIf(command.BulkMailKey != null,
                                                  mtp => mtp.BulkMailKey == command.BulkMailKey)
                                         .ToListAsync(cancellationToken);
@@ -99,11 +106,13 @@ public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSe
                                                                                  cancellationToken)
                                       : null;
 
-        var content =
-            await _mailComposer.Compose(command.RegistrationId, template.Template, language, cancellationToken);
+        var content = await _mailComposer.Compose(command.RegistrationId,
+                                                  template.ContentHtml,
+                                                  language,
+                                                  cancellationToken);
 
         var mappings = new List<Registration> { registration };
-        if (registration.RegistrationId_Partner.HasValue
+        if (registration.RegistrationId_Partner != null
          && partnerRegistration != null
          && command.MailType != MailType.OptionsForRegistrationsOnWaitingList
          && command.MailType != MailType.RegistrationCancelled
@@ -112,8 +121,6 @@ public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSe
             mappings.Add(partnerRegistration);
         }
 
-        var withhold = !template.ReleaseImmediately
-                    || command.Withhold;
         var mail = new Mail
                    {
                        Id = Guid.NewGuid(),
@@ -121,14 +128,15 @@ public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSe
                        //BulkMailTemplateId = template.Id, // ToDo
                        Type = command.MailType,
                        BulkMailKey = command.BulkMailKey,
-                       SenderMail = template.SenderMail,
-                       SenderName = template.SenderName,
+                       SenderMail = _configuration.SenderMail,
+                       SenderName = _configuration.SenderName,
                        Subject = template.Subject,
                        Recipients = mappings.Select(reg => reg.RespondentEmail?.ToLowerInvariant())
                                             .Distinct()
                                             .StringJoin(";"),
-                       Withhold = withhold,
-                       Created = DateTime.UtcNow
+                       ContentHtml = content,
+                       Withhold = command.Withhold,
+                       Created = _dateTimeProvider.Now
                    };
         if (command.Data != null)
         {
@@ -140,16 +148,7 @@ public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSe
             finally { }
         }
 
-        if (template.ContentType == MailContentType.Html)
-        {
-            mail.ContentHtml = content;
-        }
-        else
-        {
-            mail.ContentPlainText = content;
-        }
-
-        await _mails.InsertOrUpdateEntity(mail, cancellationToken);
+        _mails.InsertObjectTree(mail);
         foreach (var mailToRegistration in mappings.Select(reg => new MailToRegistration
                                                                   {
                                                                       Id = Guid.NewGuid(),
@@ -157,7 +156,7 @@ public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSe
                                                                       RegistrationId = reg.Id
                                                                   }))
         {
-            await _mailsToRegistrations.InsertOrUpdateEntity(mailToRegistration, cancellationToken);
+            _mailsToRegistrations.InsertObjectTree(mailToRegistration);
         }
 
         var sendMailCommand = new SendMailCommand
@@ -180,9 +179,9 @@ public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSe
                                                .ToList()
                               };
 
-        if (!withhold)
+        if (!command.Withhold)
         {
-            mail.Sent = DateTime.UtcNow;
+            mail.Sent = _dateTimeProvider.Now;
             _commandQueue.EnqueueCommand(sendMailCommand);
         }
 

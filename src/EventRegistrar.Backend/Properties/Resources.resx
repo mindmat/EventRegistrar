@@ -192,6 +192,9 @@
   <data name="BankStatement" xml:space="preserve">
     <value>Kontobewegungen</value>
   </data>
+  <data name="BulkMailTemplates" xml:space="preserve">
+    <value>Massenmails</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
@@ -437,6 +440,9 @@
   </data>
   <data name="InternalNotes" xml:space="preserve">
     <value>Interne Notizen</value>
+  </data>
+  <data name="Key" xml:space="preserve">
+    <value>Schlüssel</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Sprache</value>

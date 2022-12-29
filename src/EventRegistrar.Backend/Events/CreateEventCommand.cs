@@ -1,9 +1,9 @@
 ﻿using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrables;
@@ -21,6 +21,7 @@ public class CreateEventCommand : IRequest
     public bool CopyAccessRights { get; set; }
     public bool CopyRegistrables { get; set; }
     public bool CopyAutoMailTemplates { get; set; }
+    public bool CopyBulkMailTemplates { get; set; }
     public bool CopyConfigurations { get; set; }
 }
 
@@ -93,6 +94,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                                            .Include(evt => evt.Registrables!)
                                            .ThenInclude(rbl => rbl.Compositions)
                                            .Include(evt => evt.AutoMailTemplates)
+                                           .Include(evt => evt.BulkMailTemplates)
                                            .FirstAsync(cancellationToken);
 
             var isUserAdminInOtherEvent = sourceEvent.Users!.Any(uie => uie.UserId == _authenticatedUserId.UserId);
@@ -126,6 +128,22 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                                                                            Subject = amt.Subject,
                                                                            ContentHtml = amt.ContentHtml,
                                                                            ReleaseImmediately = amt.ReleaseImmediately
+                                                                       })
+                                                        .ToList();
+            }
+
+            if (command.CopyBulkMailTemplates)
+            {
+                newEvent.BulkMailTemplates = sourceEvent.BulkMailTemplates!
+                                                        .Select(bmt => new BulkMailTemplate
+                                                                       {
+                                                                           Id = Guid.NewGuid(),
+                                                                           BulkMailKey = bmt.BulkMailKey,
+                                                                           Language = bmt.Language,
+                                                                           Subject = bmt.Subject,
+                                                                           ContentHtml = bmt.ContentHtml,
+                                                                           MailingAudience = bmt.MailingAudience,
+                                                                           RegistrableId = bmt.RegistrableId
                                                                        })
                                                         .ToList();
             }

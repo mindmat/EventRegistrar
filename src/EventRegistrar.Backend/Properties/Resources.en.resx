@@ -189,6 +189,9 @@
   <data name="BankStatement" xml:space="preserve">
     <value>Bank statements</value>
   </data>
+  <data name="BulkMailTemplates" xml:space="preserve">
+    <value>Bulk mails</value>
+  </data>
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
@@ -353,6 +356,9 @@
   </data>
   <data name="InternalNotes" xml:space="preserve">
     <value>Internal notes</value>
+  </data>
+  <data name="Key" xml:space="preserve">
+    <value>Key</value>
   </data>
   <data name="Language" xml:space="preserve">
     <value>Language</value>

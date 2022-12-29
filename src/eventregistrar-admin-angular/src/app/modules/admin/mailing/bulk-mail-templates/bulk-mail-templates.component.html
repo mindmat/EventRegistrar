@@ -1,0 +1,118 @@
+<div class="relative flex flex-auto w-full bg-card dark:bg-transparent">
+
+    <mat-drawer-container class="flex-auto h-full" [hasBackdrop]="false">
+
+        <!-- Drawer -->
+        <mat-drawer class="w-full px-6 sm:w-100 lg:border-r lg:shadow-none dark:bg-gray-900" [autoFocus]="false" [(opened)]="drawerOpened" #drawer>
+
+            <div class="flex flex-col flex-auto bg-card dark:bg-default">
+                <!-- Profile info -->
+                <div class="flex flex-col mt-8 mx-2">
+                    <mat-form-field>
+                        <mat-label>{{ 'Key' | translate }}</mat-label>
+                        <input matInput #newBulkMailKey>
+                    </mat-form-field>
+                    <div class="flex items-center justify-end mt-4">
+                        <button (click)="drawerOpened=false" mat-button>{{ 'Cancel' | translate}}</button>
+                        <button class="ml-2" mat-flat-button [color]="'primary'" (click)="createNewBulkMail(newBulkMailKey.value)">{{ 'Create' | translate }}</button>
+                    </div>
+                </div>
+            </div>
+
+        </mat-drawer>
+
+        <!-- Drawer content -->
+        <mat-drawer-content class="flex overflow-hidden">
+
+            <!-- Bookings list -->
+            <div class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100 bg-card dark:bg-transparent">
+
+                <!-- Header -->
+                <div class="flex flex-col flex-0 py-4 px-8 border-b bg-gray-50 dark:bg-transparent">
+                    <!-- <div class="flex items-center">
+                        <button class="ml-auto" mat-icon-button (click)="openNewChat()">
+                            <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                        </button>
+                    </div> -->
+                    <!-- Sender -->
+                    <div class="mt-4 space-y-4">
+                        <!-- <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full" [floatLabel]="'always'"> -->
+
+                        <!-- Name -->
+                        <div class="sm:col-span-4 flex-auto items-center justify-between">
+                            <div class="leading-6 font-medium">{{ 'SenderAlias' | translate }}</div>
+                            <div class="text-md text-secondary">{{ templates.senderAlias }}</div>
+                        </div>
+                        <!-- Mail -->
+                        <div class="sm:col-span-4 flex-auto items-center justify-between">
+                            <div class="leading-6 font-medium">{{ 'SenderMail' | translate }}</div>
+                            <div class="text-md text-secondary">{{ templates.senderMail }}</div>
+                        </div>
+
+                        <!-- Languages -->
+                        <div class="sm:col-span-4">
+                            <mat-label>{{ 'AngeboteneSprachen' | translate }}</mat-label>
+                            <div class="flex flex-row items-start space-x-3">
+                                <!-- templates (per language) -->
+                                <ng-container *ngFor="let lang of availableLangs">
+                                    <span class="flex items-center relative w-6 shadow rounded-sm overflow-hidden">
+                                        <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
+                                        <img class="w-full" [ngClass]="{'opacity-25': templates.availableLanguages.includes(lang.id)==false}"
+                                            [src]="'assets/images/flags/' + lang.flag?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + lang.label">
+                                    </span>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="ml-auto" mat-icon-button (click)="drawerOpened=true">
+                        <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                    </button>
+                </div>
+
+                <div class="flex-auto overflow-y-auto">
+                    <!-- template types -->
+                    <ng-container *ngFor="let key of templates.keys">
+                        <div class="z-20 flex flex-col py-5 px-4 cursor-pointer border-t border-b">
+                            <div class="font-medium leading-5 truncate items">{{ key.key }}</div>
+                            <div class="flex flex-row items-center justify-between space-x-3">
+                                <!-- templates (per language) -->
+                                <div class="flex flex-row items-start">
+                                    <ng-container *ngFor="let template of key.templates">
+                                        <button (click)="selectTemplate(template, key)" class="ml-2" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
+                                                'bg-primary-50 dark:bg-hover': selectedTemplate && selectedTemplate.id === template.id}">
+                                            <span class="flex items-center">
+                                                <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: template}"></ng-container>
+                                            </span>
+                                        </button>
+                                    </ng-container>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+
+            </div>
+
+            <!-- Conversation -->
+            <ng-container *ngIf="templates && templates.keys.length > 0">
+                <div class="flex-auto border-l" [ngClass]="{'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedTemplate && selectedTemplate.id,
+                                'hidden lg:flex': !selectedTemplate || !selectedTemplate.id}">
+                    <router-outlet></router-outlet>
+                </div>
+            </ng-container>
+
+        </mat-drawer-content>
+
+    </mat-drawer-container>
+
+</div>
+
+<!-- Flag image template -->
+<ng-template let-template #flagImage>
+    <span class="relative w-6 shadow rounded-sm overflow-hidden">
+        <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
+        <img class="w-full" [ngClass]="{'opacity-25': template.id===null}" [src]="'assets/images/flags/' + flagCodes[template.language]?.toUpperCase() + '.svg'"
+            [alt]="'Flag image for ' + template.language">
+    </span>
+</ng-template>

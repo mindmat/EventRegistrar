@@ -428,36 +428,27 @@ FROM [AZURE_EA].[event-admin].[dbo].[PaymentAssignments]              NEW
   INNER JOIN [AZURE_ER].[EventRegistrator].[dbo].[PaymentAssignments] OLD ON OLD.Id = NEW.Id
 
 
-INSERT INTO [AZURE_EA].[event-admin].[dbo].[MailTemplates]
+INSERT INTO [AZURE_EA].[event-admin].[dbo].[BulkMailTemplates]
            ([Id]
            ,[EventId]
            ,[RegistrableId]
            ,[BulkMailKey]
-           ,[ContentType]
            ,[Language]
            ,[MailingAudience]
-           ,[SenderMail]
-           ,[SenderName]
            ,[Subject]
-           ,[Template]
-           ,[Type]
-           ,[IsDeleted]
-           ,[ReleaseImmediately])
+           ,[ContentHtml])
      SELECT [Id]
            ,[EventId]
            ,[RegistrableId]
            ,[BulkMailKey]
-           ,[ContentType]
            ,[Language]
            ,[MailingAudience]
-           ,[SenderMail]
-           ,[SenderName]
            ,[Subject]
            ,[Template]
-           ,[Type]
-           ,[IsDeleted]
-           ,[ReleaseImmediately]
 FROM [AZURE_ER].[EventRegistrator].[dbo].[MailTemplates]
+WHERE BulkMailKey IS NOT NULL
+  AND Type = 0
+  AND IsDeleted = 0
 
 INSERT INTO [AZURE_EA].[event-admin].[dbo].AutoMailTemplates
            ([Id]

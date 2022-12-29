@@ -1,5 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
@@ -8,47 +8,50 @@ namespace EventRegistrar.Backend.Mailing.Bulk;
 
 public class CreateBulkMailsCommand : IRequest, IEventBoundRequest
 {
-    public string BulkMailKey { get; set; }
+    public string? BulkMailKey { get; set; }
     public Guid EventId { get; set; }
 }
 
-public class CreateBulkMailsCommandHandler : IRequestHandler<CreateBulkMailsCommand>
+public class CreateBulkMailsCommandHandler : AsyncRequestHandler<CreateBulkMailsCommand>
 {
     private readonly MailComposer _mailComposer;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IRepository<Mail> _mails;
     private readonly IRepository<MailToRegistration> _mailsToRegistrations;
-    private readonly IQueryable<MailTemplate> _mailTemplates;
+    private readonly MailConfiguration _configuration;
+    private readonly IQueryable<BulkMailTemplate> _mailTemplates;
     private readonly IQueryable<Registration> _registrations;
     private readonly IQueryable<Event> _events;
     private const int ChunkSize = 100;
 
-    public CreateBulkMailsCommandHandler(IQueryable<MailTemplate> mailTemplates,
+    public CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemplates,
                                          IQueryable<Registration> registrations,
                                          IQueryable<Event> events,
                                          IRepository<Mail> mails,
                                          IRepository<MailToRegistration> mailsToRegistrations,
-                                         MailComposer mailComposer)
+                                         MailConfiguration configuration,
+                                         MailComposer mailComposer,
+                                         IDateTimeProvider dateTimeProvider)
     {
         _mailTemplates = mailTemplates;
         _registrations = registrations;
         _events = events;
         _mails = mails;
         _mailsToRegistrations = mailsToRegistrations;
+        _configuration = configuration;
         _mailComposer = mailComposer;
+        _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Unit> Handle(CreateBulkMailsCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(CreateBulkMailsCommand command, CancellationToken cancellationToken)
     {
         var templates = await _mailTemplates.Where(mtp => mtp.EventId == command.EventId
-                                                       && mtp.BulkMailKey == command.BulkMailKey
-                                                       && mtp.Type == 0
-                                                       && !mtp.IsDeleted)
+                                                       && mtp.BulkMailKey == command.BulkMailKey)
                                             .ToListAsync(cancellationToken);
 
         var registrationsOfEvent = await _registrations.Where(reg => reg.EventId == command.EventId
                                                                   && reg.State != RegistrationState.Cancelled
-                                                                  && !reg.Mails.Any(mail =>
-                                                                                        mail.Mail.BulkMailKey == command.BulkMailKey))
+                                                                  && !reg.Mails!.Any(mail => mail.Mail!.BulkMailKey == command.BulkMailKey))
                                                        .Include(reg => reg.Seats_AsLeader)
                                                        .Include(reg => reg.Seats_AsFollower)
                                                        .ToListAsync(cancellationToken);
@@ -56,11 +59,10 @@ public class CreateBulkMailsCommandHandler : IRequestHandler<CreateBulkMailsComm
         {
             var registrationsForTemplate = mailTemplate.RegistrableId == null
                                                ? registrationsOfEvent
-                                               : registrationsOfEvent.Where(reg =>
-                                                                                reg.Seats_AsLeader.Any(spt =>
-                                                                                                           !spt.IsCancelled && spt.RegistrableId == mailTemplate.RegistrableId)
-                                                                             || reg.Seats_AsFollower.Any(spt =>
-                                                                                                             !spt.IsCancelled && spt.RegistrableId == mailTemplate.RegistrableId))
+                                               : registrationsOfEvent.Where(reg => reg.Seats_AsLeader!.Any(spt => !spt.IsCancelled
+                                                                                                               && spt.RegistrableId == mailTemplate.RegistrableId)
+                                                                                || reg.Seats_AsFollower!.Any(spt => !spt.IsCancelled
+                                                                                                                 && spt.RegistrableId == mailTemplate.RegistrableId))
                                                                      .Take(ChunkSize)
                                                                      .ToList();
             var receivers = new List<Registration>();
@@ -87,31 +89,26 @@ public class CreateBulkMailsCommandHandler : IRequestHandler<CreateBulkMailsComm
             if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.PredecessorEvent) == true)
             {
                 var alreadyCoveredMailAddresses = await _mails.Where(mail => mail.BulkMailKey == command.BulkMailKey)
-                                                              .SelectMany(mail => mail.Registrations)
-                                                              .Select(map => map.Registration.RespondentEmail)
+                                                              .SelectMany(mail => mail.Registrations!)
+                                                              .Select(map => map.Registration!.RespondentEmail)
                                                               .ToListAsync(cancellationToken);
 
-                // distinct by email, not registrationid
+                // distinct by email, not registration id
                 var predecessorReceivers = await _events.Where(evt => evt.Id == command.EventId)
-                                                        .SelectMany(evt => evt.PredecessorEvent.Registrations)
-                                                        .Where(reg =>
-                                                                   !alreadyCoveredMailAddresses.Contains(reg.RespondentEmail))
+                                                        .SelectMany(evt => evt.PredecessorEvent!.Registrations!)
+                                                        .Where(reg => !alreadyCoveredMailAddresses.Contains(reg.RespondentEmail))
                                                         .Take(ChunkSize)
                                                         .ToListAsync(cancellationToken);
                 if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.PrePredecessorEvent) == true)
                 {
                     predecessorReceivers.AddRange(await _events.Where(evt => evt.Id == command.EventId)
-                                                               .SelectMany(evt =>
-                                                                               evt.PredecessorEvent.PredecessorEvent.Registrations)
-                                                               .Where(reg =>
-                                                                          !alreadyCoveredMailAddresses.Contains(
-                                                                              reg.RespondentEmail))
+                                                               .SelectMany(evt => evt.PredecessorEvent!.PredecessorEvent!.Registrations!)
+                                                               .Where(reg => !alreadyCoveredMailAddresses.Contains(reg.RespondentEmail))
                                                                .Take(ChunkSize)
                                                                .ToListAsync(cancellationToken));
                 }
 
-                receivers.AddRange(
-                    predecessorReceivers.DistinctBy(reg => reg.RespondentEmail.ToLower()).Take(ChunkSize));
+                receivers.AddRange(predecessorReceivers.DistinctBy(reg => reg.RespondentEmail!.ToLower()).Take(ChunkSize));
             }
 
             foreach (var registration in receivers.DistinctBy(reg => reg.Id))
@@ -119,25 +116,23 @@ public class CreateBulkMailsCommandHandler : IRequestHandler<CreateBulkMailsComm
                 await CreateMail(mailTemplate, registration, cancellationToken);
             }
         }
-
-        return Unit.Value;
     }
 
-    private async Task CreateMail(MailTemplate mailTemplate,
+    private async Task CreateMail(BulkMailTemplate mailTemplate,
                                   Registration registration,
                                   CancellationToken cancellationToken)
     {
         var content = await _mailComposer.Compose(registration.Id,
-                                                  mailTemplate.Template,
+                                                  mailTemplate.ContentHtml,
                                                   mailTemplate.Language,
                                                   cancellationToken);
         var mail = new Mail
                    {
                        Id = Guid.NewGuid(),
-                       Created = DateTime.UtcNow,
+                       Created = _dateTimeProvider.Now,
                        Recipients = registration.RespondentEmail,
-                       SenderMail = mailTemplate.SenderMail,
-                       SenderName = mailTemplate.SenderName,
+                       SenderMail = _configuration.SenderMail,
+                       SenderName = _configuration.SenderName,
                        Subject = mailTemplate.Subject,
                        Withhold = true,
                        BulkMailKey = mailTemplate.BulkMailKey,

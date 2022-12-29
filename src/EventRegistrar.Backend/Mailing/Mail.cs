@@ -1,5 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Feedback;
 using EventRegistrar.Backend.Mailing.Templates;
 
@@ -14,8 +14,8 @@ public class Mail : Entity
     public Guid? AutoMailTemplateId { get; set; }
 
     public AutoMailTemplate? AutoMailTemplate { get; set; }
-    //public Guid? BulkMailTemplateId { get; set; }
-    //public BulkMailTemplate? BulkMailTemplate { get; set; }
+    public Guid? BulkMailTemplateId { get; set; }
+    public BulkMailTemplate? BulkMailTemplate { get; set; }
 
     public ICollection<MailEvent>? Events { get; set; }
     public ICollection<MailToRegistration>? Registrations { get; set; }

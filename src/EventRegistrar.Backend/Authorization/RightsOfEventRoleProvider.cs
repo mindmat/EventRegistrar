@@ -116,6 +116,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(UnprocessedRawRegistrationCountQuery);
             yield return nameof(RemarksOverviewQuery);
             yield return nameof(InternalNotesQuery);
+            yield return nameof(BulkMailTemplatesQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
@@ -149,7 +150,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SetReductionCommand);
             yield return nameof(WillPayAtCheckinCommand);
             yield return nameof(DeleteRegistrableCommand);
-            yield return nameof(DeleteMailTemplateCommand);
+            yield return nameof(DeleteBulkMailTemplateCommand);
             yield return nameof(SaveReductionCommand);
             yield return nameof(DeleteReductionCommand);
             yield return nameof(SetRegistrablesPricesCommand);
@@ -169,6 +170,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(ResendSentMailsWithoutStateCommand);
             yield return nameof(SetRemarksProcessedStateCommand);
             yield return nameof(UpdateInternalNotesCommand);
+            yield return nameof(CreateBulkMailTemplateCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

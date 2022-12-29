@@ -1,5 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Mailing.Templates;
+using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Mailing.ManualTrigger;
@@ -12,12 +12,12 @@ public class PossibleMailTypesQuery : IRequest<IEnumerable<MailTypeItem>>, IEven
 
 public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQuery, IEnumerable<MailTypeItem>>
 {
-    private readonly IQueryable<MailTemplate> _mailTemplates;
+    private readonly IQueryable<BulkMailTemplate> _mailTemplates;
     private readonly EnumTranslator _enumTranslator;
     private readonly IQueryable<Registration> _registrations;
 
     public PossibleMailTypesQueryHandler(IQueryable<Registration> registrations,
-                                         IQueryable<MailTemplate> mailTemplates,
+                                         IQueryable<BulkMailTemplate> mailTemplates,
                                          EnumTranslator enumTranslator)
     {
         _registrations = registrations;
@@ -40,8 +40,6 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
         var possibleMailTypes = GetPossibleMailTypes(registration, partnerRegistration);
 
         var activeBulkMails = await _mailTemplates.Where(tpl => tpl.EventId == query.EventId
-                                                             && tpl.BulkMailKey != null
-                                                             && !tpl.IsDeleted
                                                              && tpl.Mails!.Any())
                                                   .Select(tpl => new MailTypeItem
                                                                  {

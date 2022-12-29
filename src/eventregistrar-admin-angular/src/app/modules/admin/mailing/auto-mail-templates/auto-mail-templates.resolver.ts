@@ -8,9 +8,7 @@ import { AutoMailTemplatesService } from './auto-mail-templates.service';
 })
 export class AutoMailTemplatesResolver implements Resolve<boolean>
 {
-  constructor(private router: Router, private service: AutoMailTemplatesService)
-  {
-  }
+  constructor(private router: Router, private service: AutoMailTemplatesService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
   {

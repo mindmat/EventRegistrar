@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AutoMailTemplates, AutoMailTemplateMetadataLanguage, AutoMailTemplateMetadataType } from 'app/api/api';
@@ -7,7 +7,8 @@ import { AutoMailTemplatesService } from './auto-mail-templates.service';
 
 @Component({
   selector: 'app-auto-mail-templates',
-  templateUrl: './auto-mail-templates.component.html'
+  templateUrl: './auto-mail-templates.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AutoMailTemplatesComponent implements OnInit
 {

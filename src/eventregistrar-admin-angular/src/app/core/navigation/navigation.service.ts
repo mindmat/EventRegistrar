@@ -132,6 +132,20 @@ export class NavigationService
                             icon: 'mat_outline:mail',
                             children: [
                                 {
+                                    id: 'auto-mail-templates',
+                                    title: translateService.instant('AutoMailTemplates'),
+                                    type: 'basic',
+                                    icon: 'mat_outline:mail',
+                                    link: `/${e.acronym}/mailing/auto-mail-templates`,
+                                },
+                                {
+                                    id: 'bulk-mail-templates',
+                                    title: translateService.instant('BulkMailTemplates'),
+                                    type: 'basic',
+                                    icon: 'mat_outline:mail',
+                                    link: `/${e.acronym}/mailing/bulk-mail-templates`,
+                                },
+                                {
                                     id: 'user-access',
                                     title: translateService.instant('AccessRights'),
                                     type: 'basic',
@@ -152,13 +166,6 @@ export class NavigationService
                                     icon: 'heroicons_outline:cash',
                                     link: `/${e.acronym}/admin/pricing`,
                                 },
-                                {
-                                    id: 'auto-mail-templates',
-                                    title: translateService.instant('AutoMailTemplates'),
-                                    type: 'basic',
-                                    icon: 'mat_outline:mail',
-                                    link: `/${e.acronym}/mailing/auto-mail-templates`,
-                                }
                             ]
                         },
                     ]);

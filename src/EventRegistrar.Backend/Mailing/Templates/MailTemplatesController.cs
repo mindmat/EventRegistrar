@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Mailing.Bulk;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,7 +20,7 @@ public class MailTemplatesController : Controller
     [HttpDelete("api/events/{eventAcronym}/mailTemplates/{mailTemplateId:guid}")]
     public async Task DeleteMailTemplate(string eventAcronym, Guid mailTemplateId)
     {
-        await _mediator.Send(new DeleteMailTemplateCommand
+        await _mediator.Send(new DeleteBulkMailTemplateCommand
                              {
                                  EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
                                  MailTemplateId = mailTemplateId

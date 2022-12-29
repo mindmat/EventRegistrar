@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,8 +9,8 @@ public class AutoMailTemplate : Entity
     public Guid EventId { get; set; }
     public Event? Event { get; set; }
 
-    public string Language { get; set; } = null!;
     public MailType Type { get; set; }
+    public string Language { get; set; } = null!;
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
     public bool ReleaseImmediately { get; set; }

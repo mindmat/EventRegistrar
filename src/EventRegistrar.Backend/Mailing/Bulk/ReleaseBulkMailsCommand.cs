@@ -1,4 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
 
@@ -14,12 +14,15 @@ public class ReleaseBulkMailsCommandHandler : IRequestHandler<ReleaseBulkMailsCo
 {
     private readonly IRepository<Mail> _mails;
     private readonly CommandQueue _commandQueue;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
     public ReleaseBulkMailsCommandHandler(IRepository<Mail> mails,
-                                          CommandQueue commandQueue)
+                                          CommandQueue commandQueue,
+                                          IDateTimeProvider dateTimeProvider)
     {
         _mails = mails;
         _commandQueue = commandQueue;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<Unit> Handle(ReleaseBulkMailsCommand command, CancellationToken cancellationToken)
@@ -52,7 +55,7 @@ public class ReleaseBulkMailsCommandHandler : IRequestHandler<ReleaseBulkMailsCo
                                   };
 
             withheldMail.Withhold = false;
-            withheldMail.Sent = DateTime.UtcNow;
+            withheldMail.Sent = _dateTimeProvider.Now;
 
             _commandQueue.EnqueueCommand(sendMailCommand);
         }

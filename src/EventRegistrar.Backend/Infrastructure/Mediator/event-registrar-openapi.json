@@ -3178,38 +3178,6 @@
         }
       }
     },
-    "/api/DeleteMailTemplateCommand": {
-      "post": {
-        "tags": [
-          "DeleteMailTemplate"
-        ],
-        "operationId": "DeleteMailTemplate_Command",
-        "requestBody": {
-          "x-name": "DeleteMailTemplateCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DeleteMailTemplateCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/SetReleaseMailCommand": {
       "post": {
         "tags": [
@@ -3702,6 +3670,38 @@
         }
       }
     },
+    "/api/BulkMailTemplatesQuery": {
+      "post": {
+        "tags": [
+          "BulkMailTemplates"
+        ],
+        "operationId": "BulkMailTemplates_Query",
+        "requestBody": {
+          "x-name": "BulkMailTemplatesQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkMailTemplatesQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BulkMailTemplates"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/CreateBulkMailsCommand": {
       "post": {
         "tags": [
@@ -3715,6 +3715,70 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateBulkMailsCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/CreateBulkMailTemplateCommand": {
+      "post": {
+        "tags": [
+          "CreateBulkMailTemplate"
+        ],
+        "operationId": "CreateBulkMailTemplate_Command",
+        "requestBody": {
+          "x-name": "CreateBulkMailTemplateCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBulkMailTemplateCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DeleteBulkMailTemplateCommand": {
+      "post": {
+        "tags": [
+          "DeleteBulkMailTemplate"
+        ],
+        "operationId": "DeleteBulkMailTemplate_Command",
+        "requestBody": {
+          "x-name": "DeleteBulkMailTemplateCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteBulkMailTemplateCommand"
               }
             }
           },
@@ -8842,20 +8906,6 @@
           }
         }
       },
-      "DeleteMailTemplateCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "mailTemplateId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
       "SetReleaseMailCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -9243,15 +9293,20 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
           "allowDuplicate": {
             "type": "boolean"
           },
           "bulkMailKey": {
-            "type": "string"
-          },
-          "eventId": {
             "type": "string",
-            "format": "guid"
+            "nullable": true
           },
           "mailType": {
             "nullable": true,
@@ -9261,14 +9316,88 @@
               }
             ]
           },
-          "registrationId": {
-            "type": "string",
-            "format": "guid"
-          },
           "withhold": {
             "type": "boolean"
           },
-          "data": {}
+          "data": {
+            "nullable": true
+          }
+        }
+      },
+      "BulkMailTemplates": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "senderMail": {
+            "type": "string",
+            "nullable": true
+          },
+          "senderAlias": {
+            "type": "string",
+            "nullable": true
+          },
+          "keys": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/BulkMailTemplateKey"
+            }
+          },
+          "availableLanguages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "BulkMailTemplateKey": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "templates": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/BulkMailTemplateMetadataLanguage"
+            }
+          }
+        }
+      },
+      "BulkMailTemplateMetadataLanguage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "nullable": true
+          },
+          "subject": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "BulkMailTemplatesQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
         }
       },
       "CreateBulkMailsCommand": {
@@ -9276,9 +9405,38 @@
         "additionalProperties": false,
         "properties": {
           "bulkMailKey": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "CreateBulkMailTemplateCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "key": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "DeleteBulkMailTemplateCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "mailTemplateId": {
             "type": "string",
             "format": "guid"
           }
@@ -9632,6 +9790,9 @@
             "type": "boolean"
           },
           "copyAutoMailTemplates": {
+            "type": "boolean"
+          },
+          "copyBulkMailTemplates": {
             "type": "boolean"
           },
           "copyConfigurations": {

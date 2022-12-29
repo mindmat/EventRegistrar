@@ -99,6 +99,7 @@ import { ProblematicEmailsComponent } from './modules/admin/mailing/problematic-
 import { ChangeEmailComponent } from './modules/admin/registration/change-email/change-email.component';
 import { RemarksOverviewComponent } from './modules/admin/registrations/remarks-overview/remarks-overview.component';
 import { NotesOverviewComponent } from './modules/admin/registrations/notes-overview/notes-overview.component';
+import { BulkMailTemplatesComponent } from './modules/admin/mailing/bulk-mail-templates/bulk-mail-templates.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -144,7 +145,8 @@ const routerConfig: ExtraOptions = {
         ProblematicEmailsComponent,
         ChangeEmailComponent,
         RemarksOverviewComponent,
-        NotesOverviewComponent
+        NotesOverviewComponent,
+        BulkMailTemplatesComponent
     ],
     providers: [
         AuthServiceFuse,
