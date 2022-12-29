@@ -82,6 +82,7 @@ export class RegistrationService
 
   unbindPartnerRegistrations(registrationId: string)
   {
-    return this.api.unbindPartnerRegistration_Command({ eventId: this.eventService.selectedId, registrationId });
+    return this.api.unbindPartnerRegistration_Command({ eventId: this.eventService.selectedId, registrationId })
+      .subscribe();
   }
 }
