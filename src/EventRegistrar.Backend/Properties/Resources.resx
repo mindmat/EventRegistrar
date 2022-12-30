@@ -660,6 +660,9 @@
   <data name="NoUnmatchedRegistrations" xml:space="preserve">
     <value>Alle Partner sind zugeordnet</value>
   </data>
+  <data name="OnlyParticipantsOf" xml:space="preserve">
+    <value>Nur an Teilnehmer:innen von</value>
+  </data>
   <data name="OrDragDrop" xml:space="preserve">
     <value>oder Drag &amp; Drop</value>
   </data>

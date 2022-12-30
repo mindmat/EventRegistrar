@@ -16,13 +16,22 @@
                 <mat-label class="fuse-mat-no-subscript">{{ 'Audiences' | translate }}</mat-label>
                 <!-- <div class="fuse-mat-no-subscript w-full rounded-lg shadow border-b bg-card"> -->
                 <div class="flex flex-col">
-
                     <app-tags-picker [allTags]="possibleAudiences" [selectedTagIds]="selectedAudiences" idProperty="audience" textProperty="name">
                     </app-tags-picker>
                 </div>
             </div>
 
-            <div class="sm:col-span-4 mt-2" *ngIf="options">
+            <!-- registrables -->
+            <mat-form-field class="sm:col-span-4 mt-4" *ngIf="registrablesService.registrables$ | async as tracks">
+                <mat-label class="fuse-mat-no-subscript">{{ 'OnlyParticipantsOf' | translate }}</mat-label>
+                <mat-select [placeholder]="'Mapping' | translate" [(value)]="registrableId">
+                    <mat-option [value]="null">-</mat-option>
+                    <mat-option *ngFor="let track of tracks" [value]="track.id">{{ track.displayName }}</mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <!-- content -->
+            <div class="sm:col-span-4" *ngIf="options">
                 <mat-label>{{ 'MailTemplate' | translate }}</mat-label>
                 <button mat-stroked-button type="button" [color]="'primary'" class="ml-2" (click)="openPreview()">{{ 'Preview' | translate }}</button>
                 <div class="mt-2" [froalaEditor]="options" #editor></div>

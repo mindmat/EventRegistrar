@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, zip } from 'rxjs';
+import { RegistrablesService } from '../../pricing/registrables.service';
 import { BulkMailTemplateService } from './bulk-mail-template.service';
 
 @Injectable({
@@ -8,10 +9,10 @@ import { BulkMailTemplateService } from './bulk-mail-template.service';
 })
 export class BulkMailTemplateResolver implements Resolve<boolean>
 {
-  constructor(private router: Router, private service: BulkMailTemplateService) { }
+  constructor(private router: Router, private service: BulkMailTemplateService, private registrablesService: RegistrablesService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
   {
-    return this.service.fetchTemplate(route.paramMap.get('id'));
+    return zip(this.service.fetchTemplate(route.paramMap.get('id')), this.registrablesService.fetchRegistrables());
   }
 }

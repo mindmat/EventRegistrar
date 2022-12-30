@@ -12,6 +12,7 @@ public class UpdateBulkMailTemplateCommand : IRequest, IEventBoundRequest
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
     public IEnumerable<MailingAudience>? Audiences { get; set; }
+    public Guid? RegistrableId { get; set; }
 }
 
 public class UpdateBulkMailTemplateCommandHandler : IRequestHandler<UpdateBulkMailTemplateCommand>
@@ -39,6 +40,7 @@ public class UpdateBulkMailTemplateCommandHandler : IRequestHandler<UpdateBulkMa
         }
 
         template.MailingAudience = command.Audiences.ConvertToFlags();
+        template.RegistrableId = command.RegistrableId;
         _eventBus.Publish(new QueryChanged
                           {
                               QueryName = nameof(BulkMailPreviewQuery),

@@ -9514,6 +9514,11 @@
             "items": {
               "$ref": "#/components/schemas/MailingAudience"
             }
+          },
+          "registrableId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
           }
         }
       },
@@ -9729,6 +9734,11 @@
             "items": {
               "$ref": "#/components/schemas/MailingAudience"
             }
+          },
+          "registrableId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
           }
         }
       },

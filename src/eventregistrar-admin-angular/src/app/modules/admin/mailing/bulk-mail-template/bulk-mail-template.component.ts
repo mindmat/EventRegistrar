@@ -7,6 +7,7 @@ import { BulkMailTemplateService } from './bulk-mail-template.service';
 
 import Tribute, { TributeItem } from "tributejs";
 import FroalaEditor from "froala-editor";
+import { RegistrablesService } from '../../pricing/registrables.service';
 
 @Component({
   selector: 'app-bulk-mail-template',
@@ -23,6 +24,7 @@ export class BulkMailTemplateComponent implements OnInit
   possibleAudiences: PossibleAudience[];
   private initialHtml: string | null;
   selectedAudiences: MailingAudience[];
+  registrableId: string | null;
 
   templateForm = this.fb.group({
     id: '',
@@ -54,6 +56,7 @@ export class BulkMailTemplateComponent implements OnInit
     private fb: FormBuilder,
     private api: Api,
     private eventService: EventService,
+    public registrablesService: RegistrablesService,
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
@@ -64,6 +67,7 @@ export class BulkMailTemplateComponent implements OnInit
       {
         this.templateForm.patchValue(template);
         this.selectedAudiences = template.audiences;
+        this.registrableId = template.registrableId;
 
         if (this.editorRef)
         {
@@ -128,7 +132,8 @@ export class BulkMailTemplateComponent implements OnInit
       templateId: this.templateForm.value.id,
       subject: this.templateForm.value.subject,
       contentHtml: html,
-      audiences: this.selectedAudiences
+      audiences: this.selectedAudiences,
+      registrableId: this.registrableId
     })
       .subscribe();
   }

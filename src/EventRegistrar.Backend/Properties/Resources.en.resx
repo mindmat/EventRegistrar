@@ -576,6 +576,9 @@
   <data name="NoUnmatchedRegistrations" xml:space="preserve">
     <value>All partners are matched</value>
   </data>
+  <data name="OnlyParticipantsOf" xml:space="preserve">
+    <value>Only to participants of</value>
+  </data>
   <data name="OrDragDrop" xml:space="preserve">
     <value>or drag &amp; drop</value>
   </data>

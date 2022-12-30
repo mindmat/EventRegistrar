@@ -8954,6 +8954,7 @@ export interface BulkMailTemplateDisplayItem {
     subject?: string | null;
     contentHtml?: string | null;
     audiences?: MailingAudience[] | null;
+    registrableId?: string | null;
 }
 
 export enum MailingAudience {
@@ -9027,6 +9028,7 @@ export interface UpdateBulkMailTemplateCommand {
     subject?: string | null;
     contentHtml?: string | null;
     audiences?: MailingAudience[] | null;
+    registrableId?: string | null;
 }
 
 export interface FroalaKeyQuery {
