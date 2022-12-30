@@ -1,4 +1,7 @@
-﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
+﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Mailing.Templates;
 
 namespace EventRegistrar.Backend.Mailing.Bulk;
 
@@ -8,6 +11,7 @@ public class UpdateBulkMailTemplateCommand : IRequest, IEventBoundRequest
     public Guid TemplateId { get; set; }
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
+    public IEnumerable<MailingAudience>? Audiences { get; set; }
 }
 
 public class UpdateBulkMailTemplateCommandHandler : IRequestHandler<UpdateBulkMailTemplateCommand>
@@ -34,12 +38,13 @@ public class UpdateBulkMailTemplateCommandHandler : IRequestHandler<UpdateBulkMa
             template.ContentHtml = command.ContentHtml;
         }
 
-        //_eventBus.Publish(new QueryChanged
-        //                  {
-        //                      QueryName = nameof(BulkMailPreviewQuery),
-        //                      EventId = command.EventId,
-        //                      RowId = template.Id
-        //                  });
+        template.MailingAudience = command.Audiences.ConvertToFlags();
+        _eventBus.Publish(new QueryChanged
+                          {
+                              QueryName = nameof(BulkMailPreviewQuery),
+                              EventId = command.EventId,
+                              RowId = template.Id
+                          });
         return Unit.Value;
     }
 }

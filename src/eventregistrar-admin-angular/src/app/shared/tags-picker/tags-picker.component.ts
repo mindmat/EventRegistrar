@@ -21,7 +21,7 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
   @ViewChild('tagsPanelOrigin') private _tagsPanelOrigin: ElementRef;
 
   @Input() allTags: any[];
-  @Input() selectedTagIds: string[] = [];
+  @Input() selectedTagIds: any[] = [];
   @Input() textProperty: string = 'name';
   @Input() idProperty: string = 'id';
 
@@ -42,7 +42,7 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
     private viewContainerRef: ViewContainerRef
   ) { }
 
-  writeValue(selectedTagIds: string[]): void
+  writeValue(selectedTagIds: any[]): void
   {
     this.selectedTagIds = selectedTagIds ?? [];
     this.updateSelectedTags();

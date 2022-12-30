@@ -8953,6 +8953,15 @@ export interface BulkMailTemplateDisplayItem {
     id?: string;
     subject?: string | null;
     contentHtml?: string | null;
+    audiences?: MailingAudience[] | null;
+}
+
+export enum MailingAudience {
+    Paid = 1,
+    Unpaid = 2,
+    WaitingList = 4,
+    PredecessorEvent = 8,
+    PrePredecessorEvent = 16,
 }
 
 export interface BulkMailTemplateQuery {
@@ -9003,14 +9012,6 @@ export interface PossibleAudience {
     name?: string;
 }
 
-export enum MailingAudience {
-    Paid = 1,
-    Unpaid = 2,
-    WaitingList = 4,
-    PredecessorEvent = 8,
-    PrePredecessorEvent = 16,
-}
-
 export interface PossibleAudiencesQuery {
     eventId?: string;
 }
@@ -9025,6 +9026,7 @@ export interface UpdateBulkMailTemplateCommand {
     templateId?: string;
     subject?: string | null;
     contentHtml?: string | null;
+    audiences?: MailingAudience[] | null;
 }
 
 export interface FroalaKeyQuery {

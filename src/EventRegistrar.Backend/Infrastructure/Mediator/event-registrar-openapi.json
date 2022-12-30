@@ -9507,8 +9507,34 @@
           "contentHtml": {
             "type": "string",
             "nullable": true
+          },
+          "audiences": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/MailingAudience"
+            }
           }
         }
+      },
+      "MailingAudience": {
+        "type": "integer",
+        "description": "",
+        "x-enumFlags": true,
+        "x-enumNames": [
+          "Paid",
+          "Unpaid",
+          "WaitingList",
+          "PredecessorEvent",
+          "PrePredecessorEvent"
+        ],
+        "enum": [
+          1,
+          2,
+          4,
+          8,
+          16
+        ]
       },
       "BulkMailTemplateQuery": {
         "type": "object",
@@ -9654,25 +9680,6 @@
           }
         }
       },
-      "MailingAudience": {
-        "type": "integer",
-        "description": "",
-        "x-enumFlags": true,
-        "x-enumNames": [
-          "Paid",
-          "Unpaid",
-          "WaitingList",
-          "PredecessorEvent",
-          "PrePredecessorEvent"
-        ],
-        "enum": [
-          1,
-          2,
-          4,
-          8,
-          16
-        ]
-      },
       "PossibleAudiencesQuery": {
         "type": "object",
         "additionalProperties": false,
@@ -9715,6 +9722,13 @@
           "contentHtml": {
             "type": "string",
             "nullable": true
+          },
+          "audiences": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/MailingAudience"
+            }
           }
         }
       },

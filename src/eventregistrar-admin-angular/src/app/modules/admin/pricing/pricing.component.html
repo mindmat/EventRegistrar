@@ -94,7 +94,7 @@
 
                             <!-- Registrables -->
                             <ng-container *ngIf="registrables && partForm?.value?.registrableIds">
-                                <app-tags-picker [allTags]="registrables" [formControlName]="'registrableIds'" idProperty="id" textProperty="displayName">
+                                <app-tags-picker [allTags]="registrables" [formControlName]="'registrableIds'" idProperty="id" textProperty="displayName" class="w-full">
                                 </app-tags-picker>
                             </ng-container>
 

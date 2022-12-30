@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, BulkMailTemplateDisplayItem, PlaceholderDescription } from 'app/api/api';
+import { Api, BulkMailTemplateDisplayItem, PlaceholderDescription, PossibleAudience } from 'app/api/api';
 import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { FetchService } from '../../infrastructure/fetchService';
@@ -33,5 +33,10 @@ export class BulkMailTemplateService extends FetchService<BulkMailTemplateDispla
   getAvailablePlaceholders(): Observable<PlaceholderDescription[]>
   {
     return this.api.bulkMailPlaceholder_Query({ eventId: this.eventService.selectedId });
+  }
+
+  getAvailableAudiences(): Observable<PossibleAudience[]>
+  {
+    return this.api.possibleAudiences_Query({ eventId: this.eventService.selectedId });
   }
 }

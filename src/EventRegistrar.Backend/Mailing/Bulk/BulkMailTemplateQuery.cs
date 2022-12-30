@@ -1,4 +1,7 @@
-﻿namespace EventRegistrar.Backend.Mailing.Bulk;
+﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Mailing.Templates;
+
+namespace EventRegistrar.Backend.Mailing.Bulk;
 
 public class BulkMailTemplateQuery : IEventBoundRequest, IRequest<BulkMailTemplateDisplayItem>
 {
@@ -23,7 +26,8 @@ public class BulkMailTemplateQueryHandler : IRequestHandler<BulkMailTemplateQuer
                                                   {
                                                       Id = mtp.Id,
                                                       Subject = mtp.Subject,
-                                                      ContentHtml = mtp.ContentHtml
+                                                      ContentHtml = mtp.ContentHtml,
+                                                      Audiences = mtp.MailingAudience.GetFlags()
                                                   })
                                    .FirstAsync(cancellationToken);
     }
@@ -34,4 +38,5 @@ public class BulkMailTemplateDisplayItem
     public Guid Id { get; set; }
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
+    public IEnumerable<MailingAudience>? Audiences { get; set; }
 }

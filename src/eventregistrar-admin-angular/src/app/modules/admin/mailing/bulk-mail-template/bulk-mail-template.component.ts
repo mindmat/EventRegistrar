@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Api, BulkMailTemplateDisplayItem, PlaceholderDescription } from 'app/api/api';
+import { Api, BulkMailTemplateDisplayItem, MailingAudience, PlaceholderDescription, PossibleAudience } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { EventService } from '../../events/event.service';
+import { BulkMailTemplateService } from './bulk-mail-template.service';
 
 import Tribute, { TributeItem } from "tributejs";
 import FroalaEditor from "froala-editor";
-import { BulkMailTemplateService } from './bulk-mail-template.service';
 
 @Component({
   selector: 'app-bulk-mail-template',
@@ -20,9 +20,11 @@ export class BulkMailTemplateComponent implements OnInit
 
   private unsubscribeAll: Subject<any> = new Subject<any>();
   private placeholders: PlaceholderDescription[];
+  possibleAudiences: PossibleAudience[];
   private initialHtml: string | null;
+  selectedAudiences: MailingAudience[];
 
-  templateForm = this.fb.group<BulkMailTemplateDisplayItem>({
+  templateForm = this.fb.group({
     id: '',
     subject: '',
     contentHtml: ''
@@ -61,6 +63,8 @@ export class BulkMailTemplateComponent implements OnInit
       .subscribe((template: BulkMailTemplateDisplayItem) =>
       {
         this.templateForm.patchValue(template);
+        this.selectedAudiences = template.audiences;
+
         if (this.editorRef)
         {
           this.editorRef.html.set(template?.contentHtml);
@@ -76,6 +80,9 @@ export class BulkMailTemplateComponent implements OnInit
 
     this.service.getAvailablePlaceholders()
       .subscribe(placeholders => this.placeholders = placeholders);
+
+    this.service.getAvailableAudiences()
+      .subscribe(audiences => this.possibleAudiences = audiences);
 
     this.api.froalaKey_Query({}).subscribe(key =>
     {
@@ -120,7 +127,8 @@ export class BulkMailTemplateComponent implements OnInit
       eventId: this.eventService.selectedId,
       templateId: this.templateForm.value.id,
       subject: this.templateForm.value.subject,
-      contentHtml: html
+      contentHtml: html,
+      audiences: this.selectedAudiences
     })
       .subscribe();
   }

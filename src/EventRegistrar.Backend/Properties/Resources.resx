@@ -183,6 +183,9 @@
   <data name="AssignOutgoing" xml:space="preserve">
     <value>Zahlungsausgang zuordnen</value>
   </data>
+  <data name="Audiences" xml:space="preserve">
+    <value>Adressaten</value>
+  </data>
   <data name="AutoMailTemplates" xml:space="preserve">
     <value>Mailvorlagen</value>
   </data>
