@@ -1,5 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
@@ -13,7 +12,7 @@ public class TriggerMoveUpFromWaitingListCommand : IRequest, IEventBoundRequest
     public Guid? RegistrationId { get; set; }
 }
 
-public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<TriggerMoveUpFromWaitingListCommand>
+public class TriggerMoveUpFromWaitingListCommandHandler : AsyncRequestHandler<TriggerMoveUpFromWaitingListCommand>
 {
     private readonly IEventBus _eventBus;
     private readonly ImbalanceManager _imbalanceManager;
@@ -40,7 +39,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
         _readModelUpdater = readModelUpdater;
     }
 
-    public async Task<Unit> Handle(TriggerMoveUpFromWaitingListCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(TriggerMoveUpFromWaitingListCommand command, CancellationToken cancellationToken)
     {
         var registrableToCheck = await _registrables.Where(rbl => rbl.Id == command.RegistrableId
                                                                && rbl.EventId == command.EventId)
@@ -157,8 +156,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : IRequestHandler<Trigge
             }
         }
 
-        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(command.RegistrableId, command.EventId);
-        return Unit.Value;
+        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
     }
 
     private static DateTimeOffset GetAverage(DateTimeOffset dateTime1, DateTimeOffset dateTime2)

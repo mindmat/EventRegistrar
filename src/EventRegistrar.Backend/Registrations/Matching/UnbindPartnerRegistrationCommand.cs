@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Registrations.Matching;
@@ -53,10 +54,11 @@ public class UnbindPartnerRegistrationCommandHandler : AsyncRequestHandler<Unbin
             }
         }
 
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(command.EventId, registration.Id);
+        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, command.EventId);
         if (registrationId_Partner != null)
         {
-            _readModelUpdater.TriggerUpdate<RegistrationCalculator>(command.EventId, registrationId_Partner);
+            _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registrationId_Partner, command.EventId);
         }
     }
 }

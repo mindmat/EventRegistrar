@@ -157,9 +157,9 @@ public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPart
                                          MailType = mailType
                                      });
 
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration1.Id);
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration2.Id);
-        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>();
+        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration1.Id, command.EventId);
+        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration2.Id, command.EventId);
+        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
 
         _eventBus.Publish(new QueryChanged
                           {
