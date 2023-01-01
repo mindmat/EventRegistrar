@@ -8,6 +8,7 @@ import { BulkMailTemplateService } from './bulk-mail-template.service';
 import Tribute, { TributeItem } from "tributejs";
 import FroalaEditor from "froala-editor";
 import { RegistrablesService } from '../../pricing/registrables.service';
+import { GeneratedBulkMailsService } from './generated-bulk-mails.service';
 
 @Component({
   selector: 'app-bulk-mail-template',
@@ -25,6 +26,9 @@ export class BulkMailTemplateComponent implements OnInit
   private initialHtml: string | null;
   selectedAudiences: MailingAudience[];
   registrableId: string | null;
+  private bulkMailKey: string;
+  generatedCount: number;
+  sentCount: number;
 
   templateForm = this.fb.group({
     id: '',
@@ -57,6 +61,7 @@ export class BulkMailTemplateComponent implements OnInit
     private api: Api,
     private eventService: EventService,
     public registrablesService: RegistrablesService,
+    private generatedBulkMailsService: GeneratedBulkMailsService,
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
@@ -68,6 +73,11 @@ export class BulkMailTemplateComponent implements OnInit
         this.templateForm.patchValue(template);
         this.selectedAudiences = template.audiences;
         this.registrableId = template.registrableId;
+        if (this.bulkMailKey !== template.bulkMailKey)
+        {
+          this.bulkMailKey = template.bulkMailKey;
+          this.generatedBulkMailsService.fetchMailCount(this.bulkMailKey).subscribe();
+        }
 
         if (this.editorRef)
         {
@@ -116,6 +126,14 @@ export class BulkMailTemplateComponent implements OnInit
       };
       this.changeDetectorRef.markForCheck();
     });
+
+    this.generatedBulkMailsService.generated$.subscribe(result =>
+    {
+      this.generatedCount = result?.generatedCount ?? 0;
+      this.sentCount = result?.sentCount ?? 0;
+
+      this.changeDetectorRef.markForCheck();
+    });
   }
 
   openPreview()
@@ -136,5 +154,15 @@ export class BulkMailTemplateComponent implements OnInit
       registrableId: this.registrableId
     })
       .subscribe();
+  }
+
+  generateMails()
+  {
+    this.service.generateMails(this.bulkMailKey);
+  }
+
+  releaseMails()
+  {
+    this.service.releaseMails(this.bulkMailKey);
   }
 }

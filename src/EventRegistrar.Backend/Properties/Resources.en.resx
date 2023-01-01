@@ -309,6 +309,15 @@
   <data name="from" xml:space="preserve">
     <value>from</value>
   </data>
+  <data name="Generate" xml:space="preserve">
+    <value>Generate</value>
+  </data>
+  <data name="Generated" xml:space="preserve">
+    <value>Generated</value>
+  </data>
+  <data name="GenerateMails" xml:space="preserve">
+    <value>Generate mails</value>
+  </data>
   <data name="German" xml:space="preserve">
     <value>German</value>
   </data>
@@ -710,6 +719,9 @@
   </data>
   <data name="Release" xml:space="preserve">
     <value>Release</value>
+  </data>
+  <data name="Released" xml:space="preserve">
+    <value>Released</value>
   </data>
   <data name="ReleaseImmediately" xml:space="preserve">
     <value>Release immediately</value>

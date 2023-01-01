@@ -3897,6 +3897,38 @@
         }
       }
     },
+    "/api/GeneratedBulkMailsQuery": {
+      "post": {
+        "tags": [
+          "GeneratedBulkMails"
+        ],
+        "operationId": "GeneratedBulkMails_Query",
+        "requestBody": {
+          "x-name": "GeneratedBulkMailsQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GeneratedBulkMailsQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GeneratedBulkMails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/PossibleAudiencesQuery": {
       "post": {
         "tags": [
@@ -9500,6 +9532,9 @@
             "type": "string",
             "format": "guid"
           },
+          "bulkMailKey": {
+            "type": "string"
+          },
           "subject": {
             "type": "string",
             "nullable": true
@@ -9635,13 +9670,13 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "bulkMailKey": {
-            "type": "string",
-            "nullable": true
-          },
           "eventId": {
             "type": "string",
             "format": "guid"
+          },
+          "bulkMailKey": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -9673,6 +9708,34 @@
           }
         }
       },
+      "GeneratedBulkMails": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "generatedCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sentCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "GeneratedBulkMailsQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "bulkMailKey": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "PossibleAudience": {
         "type": "object",
         "additionalProperties": false,
@@ -9699,12 +9762,12 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "bulkMailKey": {
-            "type": "string"
-          },
           "eventId": {
             "type": "string",
             "format": "guid"
+          },
+          "bulkMailKey": {
+            "type": "string"
           }
         }
       },

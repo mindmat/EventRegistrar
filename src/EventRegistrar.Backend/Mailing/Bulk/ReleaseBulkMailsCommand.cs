@@ -6,8 +6,8 @@ namespace EventRegistrar.Backend.Mailing.Bulk;
 
 public class ReleaseBulkMailsCommand : IRequest, IEventBoundRequest
 {
-    public string BulkMailKey { get; set; } = null!;
     public Guid EventId { get; set; }
+    public string BulkMailKey { get; set; } = null!;
 }
 
 public class ReleaseBulkMailsCommandHandler : IRequestHandler<ReleaseBulkMailsCommand>

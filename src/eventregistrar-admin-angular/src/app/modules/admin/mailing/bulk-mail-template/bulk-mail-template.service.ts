@@ -8,8 +8,8 @@ import { NotificationService } from '../../infrastructure/notification.service';
 @Injectable({
   providedIn: 'root'
 })
-export class BulkMailTemplateService extends FetchService<BulkMailTemplateDisplayItem> {
-
+export class BulkMailTemplateService extends FetchService<BulkMailTemplateDisplayItem>
+{
   private bulkMailTemplateId: string;
 
   constructor(private api: Api,
@@ -38,5 +38,17 @@ export class BulkMailTemplateService extends FetchService<BulkMailTemplateDispla
   getAvailableAudiences(): Observable<PossibleAudience[]>
   {
     return this.api.possibleAudiences_Query({ eventId: this.eventService.selectedId });
+  }
+
+  generateMails(bulkMailKey: string)
+  {
+    return this.api.createBulkMails_Command({ eventId: this.eventService.selectedId, bulkMailKey })
+      .subscribe();
+  }
+
+  releaseMails(bulkMailKey: string)
+  {
+    return this.api.releaseBulkMails_Command({ eventId: this.eventService.selectedId, bulkMailKey })
+      .subscribe();
   }
 }

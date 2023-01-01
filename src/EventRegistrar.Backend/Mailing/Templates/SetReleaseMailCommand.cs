@@ -1,6 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-
-namespace EventRegistrar.Backend.Mailing.Templates;
+﻿namespace EventRegistrar.Backend.Mailing.Templates;
 
 public class SetReleaseMailCommand : IRequest, IEventBoundRequest
 {

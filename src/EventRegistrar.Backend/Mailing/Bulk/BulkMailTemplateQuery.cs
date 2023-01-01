@@ -25,6 +25,7 @@ public class BulkMailTemplateQueryHandler : IRequestHandler<BulkMailTemplateQuer
                                    .Select(mtp => new BulkMailTemplateDisplayItem
                                                   {
                                                       Id = mtp.Id,
+                                                      BulkMailKey = mtp.BulkMailKey,
                                                       Subject = mtp.Subject,
                                                       ContentHtml = mtp.ContentHtml,
                                                       Audiences = mtp.MailingAudience.GetFlags(),
@@ -37,6 +38,7 @@ public class BulkMailTemplateQueryHandler : IRequestHandler<BulkMailTemplateQuer
 public class BulkMailTemplateDisplayItem
 {
     public Guid Id { get; set; }
+    public string BulkMailKey { get; set; } = null!;
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
     public IEnumerable<MailingAudience>? Audiences { get; set; }

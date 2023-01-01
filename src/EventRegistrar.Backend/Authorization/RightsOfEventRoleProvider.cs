@@ -118,6 +118,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(InternalNotesQuery);
             yield return nameof(BulkMailTemplatesQuery);
             yield return nameof(BulkMailTemplateQuery);
+            yield return nameof(GeneratedBulkMailsQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)

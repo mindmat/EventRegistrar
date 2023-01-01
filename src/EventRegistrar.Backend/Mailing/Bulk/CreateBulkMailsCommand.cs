@@ -1,5 +1,8 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
@@ -8,14 +11,16 @@ namespace EventRegistrar.Backend.Mailing.Bulk;
 
 public class CreateBulkMailsCommand : IRequest, IEventBoundRequest
 {
-    public string? BulkMailKey { get; set; }
     public Guid EventId { get; set; }
+    public string? BulkMailKey { get; set; }
 }
 
 public class CreateBulkMailsCommandHandler : AsyncRequestHandler<CreateBulkMailsCommand>
 {
     private readonly MailComposer _mailComposer;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IEventBus _eventBus;
+    private readonly CommandQueue _commandQueue;
     private readonly IRepository<Mail> _mails;
     private readonly IRepository<MailToRegistration> _mailsToRegistrations;
     private readonly MailConfiguration _configuration;
@@ -31,7 +36,9 @@ public class CreateBulkMailsCommandHandler : AsyncRequestHandler<CreateBulkMails
                                          IRepository<MailToRegistration> mailsToRegistrations,
                                          MailConfiguration configuration,
                                          MailComposer mailComposer,
-                                         IDateTimeProvider dateTimeProvider)
+                                         IDateTimeProvider dateTimeProvider,
+                                         IEventBus eventBus,
+                                         CommandQueue commandQueue)
     {
         _mailTemplates = mailTemplates;
         _registrations = registrations;
@@ -41,6 +48,8 @@ public class CreateBulkMailsCommandHandler : AsyncRequestHandler<CreateBulkMails
         _configuration = configuration;
         _mailComposer = mailComposer;
         _dateTimeProvider = dateTimeProvider;
+        _eventBus = eventBus;
+        _commandQueue = commandQueue;
     }
 
     protected override async Task Handle(CreateBulkMailsCommand command, CancellationToken cancellationToken)
@@ -55,8 +64,14 @@ public class CreateBulkMailsCommandHandler : AsyncRequestHandler<CreateBulkMails
                                                        .Include(reg => reg.Seats_AsLeader)
                                                        .Include(reg => reg.Seats_AsFollower)
                                                        .ToListAsync(cancellationToken);
+        var remainingChunkSize = ChunkSize;
         foreach (var mailTemplate in templates)
         {
+            if (remainingChunkSize <= 0)
+            {
+                break;
+            }
+
             var registrationsForTemplate = mailTemplate.RegistrableId == null
                                                ? registrationsOfEvent
                                                : registrationsOfEvent.Where(reg => reg.Seats_AsLeader!.Any(spt => !spt.IsCancelled
@@ -111,10 +126,30 @@ public class CreateBulkMailsCommandHandler : AsyncRequestHandler<CreateBulkMails
                 receivers.AddRange(predecessorReceivers.DistinctBy(reg => reg.RespondentEmail!.ToLower()).Take(ChunkSize));
             }
 
-            foreach (var registration in receivers.DistinctBy(reg => reg.Id))
+            receivers = receivers.DistinctBy(reg => reg.Id)
+                                 .Take(remainingChunkSize)
+                                 .ToList();
+            foreach (var registration in receivers)
             {
                 await CreateMail(mailTemplate, registration, cancellationToken);
             }
+
+            remainingChunkSize -= receivers.Count;
+        }
+
+        _eventBus.Publish(new QueryChanged
+                          {
+                              EventId = command.EventId,
+                              QueryName = nameof(GeneratedBulkMailsQuery)
+                          });
+        if (remainingChunkSize <= 0)
+        {
+            // enqueue next chunk
+            _commandQueue.EnqueueCommand(new CreateBulkMailsCommand
+                                         {
+                                             EventId = command.EventId,
+                                             BulkMailKey = command.BulkMailKey
+                                         });
         }
     }
 
