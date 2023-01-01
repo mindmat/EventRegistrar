@@ -108,7 +108,7 @@ public class SpotManager
                                .ToList();
         if (registrable.MaximumSingleSeats != null)
         {
-            var waitingList = spots.Any(st => st.IsWaitingList);
+            var waitingList = spots.Any(spot => spot.IsWaitingList);
             var spotAvailable = !waitingList && spots.Count < registrable.MaximumSingleSeats.Value;
             _logger.LogInformation($"Registrable {registrable.DisplayName}, Seat count {spots.Count}, MaximumSingleSeats {registrable.MaximumSingleSeats}, seat available {spotAvailable}");
             if (!spotAvailable && !registrable.HasWaitingList)
@@ -126,7 +126,7 @@ public class SpotManager
         }
         else if (registrable.MaximumDoubleSeats != null)
         {
-            if (!role.HasValue)
+            if (role == null)
             {
                 throw new Exception("No role found");
             }
@@ -178,12 +178,13 @@ public class SpotManager
             else
             {
                 // single registration
-                var waitingListForSingleLeaders = waitingList.Any(st =>
-                                                                      string.IsNullOrEmpty(st.PartnerEmail) && st.RegistrationId.HasValue);
-                var waitingListForSingleFollowers = waitingList.Any(st =>
-                                                                        string.IsNullOrEmpty(st.PartnerEmail) && st.RegistrationId_Follower.HasValue);
+                var waitingListForSingleLeaders = waitingList.Any(spot => string.IsNullOrEmpty(spot.PartnerEmail)
+                                                                       && spot.RegistrationId.HasValue);
+                var waitingListForSingleFollowers = waitingList.Any(spot => string.IsNullOrEmpty(spot.PartnerEmail)
+                                                                         && spot.RegistrationId_Follower.HasValue);
 
-                var waitingListForOwnRole = (ownRole == Role.Leader && waitingListForSingleLeaders) || (ownRole == Role.Follower && waitingListForSingleFollowers);
+                var waitingListForOwnRole = (ownRole == Role.Leader && waitingListForSingleLeaders)
+                                         || (ownRole == Role.Follower && waitingListForSingleFollowers);
                 var matchingSingleSeat = FindMatchingSingleSeat(spots, ownRole);
                 var seatAvailable = !waitingListForOwnRole
                                  && (_imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(
@@ -197,7 +198,8 @@ public class SpotManager
                     return null;
                 }
 
-                if ((ownRole == Role.Leader && waitingListForSingleFollowers) || (ownRole == Role.Follower && waitingListForSingleLeaders))
+                if ((ownRole == Role.Leader && waitingListForSingleFollowers)
+                 || (ownRole == Role.Follower && waitingListForSingleLeaders))
                 {
                     // ToDo: check waiting list
                     //registrableId_CheckWaitingList = registrable.Id;
@@ -241,7 +243,7 @@ public class SpotManager
         }
 
         seat.Id = Guid.NewGuid();
-        await _seats.InsertOrUpdateEntity(seat);
+        _seats.InsertObjectTree(seat);
         _eventBus.Publish(new SpotAdded
                           {
                               Id = Guid.NewGuid(),

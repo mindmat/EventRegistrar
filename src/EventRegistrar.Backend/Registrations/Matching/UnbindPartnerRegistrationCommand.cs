@@ -37,6 +37,9 @@ public class UnbindPartnerRegistrationCommandHandler : AsyncRequestHandler<Unbin
             registration.RegistrationId_Partner = null;
         }
 
+        registration.PartnerOriginal = null;
+        registration.PartnerNormalized = null;
+
         // unbind spots
         if (registration.Seats_AsLeader != null)
         {
