@@ -1,8 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Registrations;
-
-using MediatR;
+﻿using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Spots;
 
@@ -13,22 +9,22 @@ public class RemoveSpotCommand : IRequest, IEventBoundRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class RemoveSpotCommandHandler : IRequestHandler<RemoveSpotCommand>
+public class RemoveSpotCommandHandler : AsyncRequestHandler<RemoveSpotCommand>
 {
     private readonly IQueryable<Registration> _registrations;
     private readonly IRepository<Seat> _seats;
-    private readonly SpotRemover _spotRemover;
+    private readonly SpotManager _spotManager;
 
     public RemoveSpotCommandHandler(IQueryable<Registration> registrations,
                                     IRepository<Seat> seats,
-                                    SpotRemover spotRemover)
+                                    SpotManager spotManager)
     {
         _registrations = registrations;
         _seats = seats;
-        _spotRemover = spotRemover;
+        _spotManager = spotManager;
     }
 
-    public async Task<Unit> Handle(RemoveSpotCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(RemoveSpotCommand command, CancellationToken cancellationToken)
     {
         var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId
                                                                && reg.EventId == command.EventId, cancellationToken);
@@ -38,8 +34,6 @@ public class RemoveSpotCommandHandler : IRequestHandler<RemoveSpotCommand>
                                                          || seat.RegistrationId_Follower == registration.Id),
                                                    cancellationToken);
 
-        _spotRemover.RemoveSpot(spotToRemove, registration.Id, RemoveSpotReason.Modification);
-
-        return Unit.Value;
+        _spotManager.RemoveSpot(spotToRemove, registration.Id, RemoveSpotReason.Modification);
     }
 }

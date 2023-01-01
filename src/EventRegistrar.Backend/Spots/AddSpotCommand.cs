@@ -15,7 +15,7 @@ public class AddSpotCommand : IRequest, IEventBoundRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class AddSpotCommandHandler : IRequestHandler<AddSpotCommand>
+public class AddSpotCommandHandler : AsyncRequestHandler<AddSpotCommand>
 {
     private readonly IQueryable<Registrable> _registrables;
     private readonly IQueryable<Registration> _registrations;
@@ -30,7 +30,7 @@ public class AddSpotCommandHandler : IRequestHandler<AddSpotCommand>
         _spotManager = spotManager;
     }
 
-    public async Task<Unit> Handle(AddSpotCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(AddSpotCommand command, CancellationToken cancellationToken)
     {
         var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId
                                                                && reg.EventId == command.EventId,
@@ -57,7 +57,5 @@ public class AddSpotCommandHandler : IRequestHandler<AddSpotCommand>
                                                  registration.Id,
                                                  false);
         }
-
-        return Unit.Value;
     }
 }

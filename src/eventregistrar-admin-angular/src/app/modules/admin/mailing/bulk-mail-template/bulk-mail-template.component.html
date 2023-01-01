@@ -34,12 +34,12 @@
             <div class="flex flex-row items-center space-x-4 sm:col-span-4">
                 <mat-label class="fuse-mat-no-subscript">{{ 'Mails' | translate }}</mat-label>
 
-                <div class="flex flex-col items-center justify-center space-y-2 p-2 rounded-md shadow bg-card w-44">
+                <div class="flex flex-col items-center justify-center space-y-2 p-2 border border-gray-300 rounded-md shadow-sm bg-card w-44">
                     <div class="text-secondary">{{ 'Generated' | translate }}: {{ generatedCount }}</div>
                     <button class="ml-4" mat-stroked-button type="button" [color]="'primary'" (click)="generateMails()">{{ 'Generate' | translate }}</button>
                 </div>
 
-                <div class="flex flex-col items-center justify-center space-y-2 p-2 rounded-md shadow bg-card w-44">
+                <div class="flex flex-col items-center justify-center space-y-2 p-2 border border-gray-300 rounded-md shadow-sm bg-card w-44">
                     <div class="text-secondary">{{ 'Released' | translate }}: {{ sentCount }}</div>
                     <button class="ml-4" mat-stroked-button type="button" [color]="'primary'" (click)="generateMails()">{{ 'Release' | translate }}</button>
                 </div>

@@ -1,10 +1,10 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrables;
-using EventRegistrar.Backend.Spots;
+using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Register;
 
-namespace EventRegistrar.Backend.Registrations.Register;
+namespace EventRegistrar.Backend.Spots;
 
 public class SpotManager
 {
@@ -168,8 +168,8 @@ public class SpotManager
                        {
                            FirstPartnerJoined = _dateTimeProvider.Now,
                            PartnerEmail = partner?.ToLowerInvariant(),
-                           RegistrationId = ownRole == Role.Leader ? registrationId : (Guid?)null,
-                           RegistrationId_Follower = ownRole == Role.Follower ? registrationId : (Guid?)null,
+                           RegistrationId = ownRole == Role.Leader ? registrationId : null,
+                           RegistrationId_Follower = ownRole == Role.Follower ? registrationId : null,
                            RegistrableId = registrable.Id,
                            IsWaitingList = !seatAvailable,
                            IsPartnerSpot = true
@@ -222,8 +222,8 @@ public class SpotManager
                 seat = new Seat
                        {
                            FirstPartnerJoined = _dateTimeProvider.Now,
-                           RegistrationId = ownRole == Role.Leader ? registrationId : (Guid?)null,
-                           RegistrationId_Follower = ownRole == Role.Follower ? registrationId : (Guid?)null,
+                           RegistrationId = ownRole == Role.Leader ? registrationId : null,
+                           RegistrationId_Follower = ownRole == Role.Follower ? registrationId : null,
                            RegistrableId = registrable.Id,
                            IsWaitingList = !seatAvailable
                        };
@@ -306,6 +306,53 @@ public class SpotManager
         return seat;
     }
 
+    public void RemoveSpot(Seat spot, Guid registrationId, RemoveSpotReason reason)
+    {
+        if (spot.RegistrationId == registrationId)
+        {
+            if (spot.RegistrationId_Follower != null)
+            {
+                // double spot, leave the partner in
+                spot.RegistrationId = null;
+                spot.PartnerEmail = null;
+                spot.IsPartnerSpot = false;
+            }
+            else
+            {
+                // single spot, cancel the place
+                spot.IsCancelled = true;
+            }
+        }
+        else if (spot.RegistrationId_Follower == registrationId)
+        {
+            if (spot.RegistrationId != null)
+            {
+                // double spot, leave the partner in
+                spot.RegistrationId_Follower = null;
+                spot.PartnerEmail = null;
+                spot.IsPartnerSpot = false;
+            }
+            else
+            {
+                // single spot, cancel the place
+                spot.IsCancelled = true;
+            }
+        }
+
+        var registration = _registrations.First(reg => reg.Id == registrationId);
+        var registrable = _registrables.First(rbl => rbl.Id == spot.RegistrableId);
+        _eventBus.Publish(new SpotRemoved
+                          {
+                              Id = Guid.NewGuid(),
+                              RegistrableId = spot.RegistrableId,
+                              RegistrationId = registrationId,
+                              Reason = reason,
+                              SpotWasOnWaitingList = spot.IsWaitingList,
+                              Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}",
+                              Registrable = registrable.DisplayName
+                          });
+    }
+
     private static void ComplementExistingSeat(Guid registrationId, Role ownRole, Seat existingSeat)
     {
         if (ownRole == Role.Leader && !existingSeat.RegistrationId.HasValue)
@@ -323,7 +370,7 @@ public class SpotManager
         }
     }
 
-    private static Seat FindMatchingSingleSeat(IEnumerable<Seat> seats, Role ownRole)
+    private static Seat? FindMatchingSingleSeat(IEnumerable<Seat> seats, Role ownRole)
     {
         return seats?.FirstOrDefault(seat => string.IsNullOrEmpty(seat.PartnerEmail)
                                           && !seat.IsWaitingList

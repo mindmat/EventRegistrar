@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Spots;
@@ -23,14 +22,14 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
     private readonly IEventBus _eventBus;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IQueryable<Registration> _registrations;
-    private readonly SpotRemover _spotRemover;
+    private readonly SpotManager _spotManager;
     private readonly IQueryable<Seat> _spots;
 
     public CancelRegistrationCommandHandler(IQueryable<Registration> registrations,
                                             IQueryable<Seat> spots,
                                             IRepository<RegistrationCancellation> cancellations,
                                             IRepository<PayoutRequest> payoutRequests,
-                                            SpotRemover spotRemover,
+                                            SpotManager spotManager,
                                             IEventBus eventBus,
                                             IDateTimeProvider dateTimeProvider)
     {
@@ -38,7 +37,7 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
         _spots = spots;
         _cancellations = cancellations;
         _payoutRequests = payoutRequests;
-        _spotRemover = spotRemover;
+        _spotManager = spotManager;
         _eventBus = eventBus;
         _dateTimeProvider = dateTimeProvider;
     }
@@ -81,7 +80,7 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
                                 .ToListAsync(cancellationToken);
         foreach (var spot in spots)
         {
-            _spotRemover.RemoveSpot(spot, command.RegistrationId, RemoveSpotReason.CancellationOfRegistration);
+            _spotManager.RemoveSpot(spot, command.RegistrationId, RemoveSpotReason.CancellationOfRegistration);
         }
 
         // discard unsent mails
