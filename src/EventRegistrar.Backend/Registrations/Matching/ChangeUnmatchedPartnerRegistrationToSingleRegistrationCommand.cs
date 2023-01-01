@@ -69,6 +69,7 @@ public class ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommandHandle
         }
 
         registration.RegistrationId_Partner = null;
+        registration.PartnerOriginal = null;
         registration.PartnerNormalized = null;
         await _registrations.InsertOrUpdateEntity(registration, cancellationToken);
 
