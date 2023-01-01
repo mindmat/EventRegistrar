@@ -85,4 +85,10 @@ export class RegistrationService
     return this.api.unbindPartnerRegistration_Command({ eventId: this.eventService.selectedId, registrationId })
       .subscribe();
   }
+
+  setWillPayAtCheckin(registrationId: string)
+  {
+    return this.api.willPayAtCheckin_Command({ eventId: this.eventService.selectedId, registrationId })
+      .subscribe();
+  }
 }

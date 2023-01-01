@@ -810,6 +810,9 @@
   <data name="Setup" xml:space="preserve">
     <value>Setup</value>
   </data>
+  <data name="SetWillPayAtCheckin" xml:space="preserve">
+    <value>Pays at check in</value>
+  </data>
   <data name="ShowFinished" xml:space="preserve">
     <value>Show finished events</value>
   </data>

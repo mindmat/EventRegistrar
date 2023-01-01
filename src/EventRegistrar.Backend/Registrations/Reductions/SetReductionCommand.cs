@@ -1,7 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using MediatR;
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Registrations.Reductions;
 

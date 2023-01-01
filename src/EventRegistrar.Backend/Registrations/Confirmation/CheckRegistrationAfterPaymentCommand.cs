@@ -1,7 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
-
-using MediatR;
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Registrations.Confirmation;
 
@@ -40,23 +37,23 @@ public class CheckRegistrationAfterPaymentCommandHandler : IRequestHandler<Check
         {
             // fully paid
             registration.State = RegistrationState.Paid;
-            if (!registration.RegistrationId_Partner.HasValue)
+            if (registration.RegistrationId_Partner == null)
             {
                 _eventBus.Publish(new SingleRegistrationPaid
                                   {
                                       Id = Guid.NewGuid(),
                                       EventId = registration.EventId,
                                       RegistrationId = registration.Id,
-                                      WillPayAtCheckin = difference > 0m && registration.WillPayAtCheckin
+                                      WillPayAtCheckin = difference > 0m
+                                                      && registration.WillPayAtCheckin
                                   });
             }
             else
             {
-                var partnerRegistration = await _registrations
-                                                .Where(reg => reg.Id == registration.RegistrationId_Partner.Value)
-                                                .Include(reg => reg.PaymentAssignments)
-                                                .Include(reg => reg.IndividualReductions)
-                                                .FirstAsync(cancellationToken);
+                var partnerRegistration = await _registrations.Where(reg => reg.Id == registration.RegistrationId_Partner)
+                                                              .Include(reg => reg.PaymentAssignments)
+                                                              .Include(reg => reg.IndividualReductions)
+                                                              .FirstAsync(cancellationToken);
                 var partnerRegistrationAccepted = partnerRegistration.State == RegistrationState.Paid && registration.IsOnWaitingList == false;
                 if (partnerRegistrationAccepted)
                 {
@@ -66,7 +63,8 @@ public class CheckRegistrationAfterPaymentCommandHandler : IRequestHandler<Check
                                           EventId = registration.EventId,
                                           RegistrationId1 = registration.Id,
                                           RegistrationId2 = partnerRegistration.Id,
-                                          WillPayAtCheckin = difference > 0m && registration.WillPayAtCheckin
+                                          WillPayAtCheckin = difference > 0m
+                                                          && registration.WillPayAtCheckin
                                       });
                 }
                 else

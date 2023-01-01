@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { IndividualReductionType, MailState, MailTypeItem, RegistrationDisplayItem, SpotDisplayItem } from 'app/api/api';
+import { IndividualReductionType, MailState, MailTypeItem, RegistrationDisplayItem, RegistrationState, SpotDisplayItem } from 'app/api/api';
 import { BehaviorSubject, debounceTime, filter, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { MailService } from '../mailing/mails/mail-view/mail.service';
@@ -27,6 +27,7 @@ export class RegistrationComponent implements OnInit
   public notesVersion: number;
   IndividualReductionType = IndividualReductionType;
   MailState = MailState;
+  RegistrationState = RegistrationState;
   changeSpotsDialog: MatDialogRef<ChangeSpotsComponent> | null;
   public lastSentNotes: string | null;
   notesToSave$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
@@ -174,5 +175,10 @@ export class RegistrationComponent implements OnInit
   unbindPartnerRegistrations()
   {
     this.registrationService.unbindPartnerRegistrations(this.registration.id);
+  }
+
+  setWillPayAtCheckin()
+  {
+    this.registrationService.setWillPayAtCheckin(this.registration.id);
   }
 }

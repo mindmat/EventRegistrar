@@ -1,8 +1,5 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
-using MediatR;
 
 namespace EventRegistrar.Backend.Payments.PayAtCheckin;
 
@@ -12,7 +9,7 @@ public class WillPayAtCheckinCommand : IRequest, IEventBoundRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class WillPayAtCheckinCommandHandler : IRequestHandler<WillPayAtCheckinCommand>
+public class WillPayAtCheckinCommandHandler : AsyncRequestHandler<WillPayAtCheckinCommand>
 {
     private readonly IEventBus _eventBus;
     private readonly IRepository<Registration> _registrations;
@@ -24,7 +21,7 @@ public class WillPayAtCheckinCommandHandler : IRequestHandler<WillPayAtCheckinCo
         _eventBus = eventBus;
     }
 
-    public async Task<Unit> Handle(WillPayAtCheckinCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(WillPayAtCheckinCommand command, CancellationToken cancellationToken)
     {
         var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId
                                                                && reg.EventId == command.EventId, cancellationToken);
@@ -33,9 +30,10 @@ public class WillPayAtCheckinCommandHandler : IRequestHandler<WillPayAtCheckinCo
         {
             registration.WillPayAtCheckin = true;
             _eventBus.Publish(new WillPayAtCheckinSet
-                              { EventId = registration.EventId, RegistrationId = registration.Id });
+                              {
+                                  EventId = registration.EventId,
+                                  RegistrationId = registration.Id
+                              });
         }
-
-        return Unit.Value;
     }
 }

@@ -901,6 +901,9 @@
   <data name="Setup" xml:space="preserve">
     <value>Event vorbereiten</value>
   </data>
+  <data name="SetWillPayAtCheckin" xml:space="preserve">
+    <value>Bezahlt am Check-In</value>
+  </data>
   <data name="ShowFinished" xml:space="preserve">
     <value>Beendete Events anzeigen</value>
   </data>
