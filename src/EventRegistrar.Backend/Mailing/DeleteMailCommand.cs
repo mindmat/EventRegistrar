@@ -1,9 +1,5 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Registrations.ReadModels;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Mailing;
 
@@ -27,10 +23,15 @@ public class DeleteMailCommandHandler : IRequestHandler<DeleteMailCommand>
 
     public async Task<Unit> Handle(DeleteMailCommand command, CancellationToken cancellationToken)
     {
-        var mailToDelete = await _mails.FirstAsync(mail => mail.Id == command.MailId, cancellationToken);
+        var mailToDelete = await _mails.Where(mail => mail.Id == command.MailId)
+                                       .Include(mail => mail.Registrations)
+                                       .FirstAsync(cancellationToken);
         mailToDelete.Discarded = true;
 
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>();
+        foreach (var registrationId in mailToDelete.Registrations!.Select(reg => reg.RegistrationId))
+        {
+            _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registrationId, command.EventId);
+        }
 
         return Unit.Value;
     }
