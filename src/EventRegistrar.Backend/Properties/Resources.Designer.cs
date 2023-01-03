@@ -259,6 +259,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Adressaten.
+        /// </summary>
+        internal static string Audiences {
+            get {
+                return ResourceManager.GetString("Audiences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mailvorlagen.
         /// </summary>
         internal static string AutoMailTemplates {
@@ -268,11 +277,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zurück zur Anmeldungsübersicht.
+        /// </summary>
+        internal static string BackToRegistrationOverview {
+            get {
+                return ResourceManager.GetString("BackToRegistrationOverview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kontobewegungen.
         /// </summary>
         internal static string BankStatement {
             get {
                 return ResourceManager.GetString("BankStatement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Massenmails.
+        /// </summary>
+        internal static string BulkMailTemplates {
+            get {
+                return ResourceManager.GetString("BulkMailTemplates", resourceCulture);
             }
         }
         
@@ -291,6 +318,33 @@ namespace EventRegistrar.Backend.Properties {
         internal static string CancelRegistration {
             get {
                 return ResourceManager.GetString("CancelRegistration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ändern.
+        /// </summary>
+        internal static string Change {
+            get {
+                return ResourceManager.GetString("Change", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to E-Mail ändern.
+        /// </summary>
+        internal static string ChangeEmail {
+            get {
+                return ResourceManager.GetString("ChangeEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plätze ändern.
+        /// </summary>
+        internal static string ChangeSpots {
+            get {
+                return ResourceManager.GetString("ChangeSpots", resourceCulture);
             }
         }
         
@@ -831,6 +885,33 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erzeugen.
+        /// </summary>
+        internal static string Generate {
+            get {
+                return ResourceManager.GetString("Generate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Erzeugt.
+        /// </summary>
+        internal static string Generated {
+            get {
+                return ResourceManager.GetString("Generated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mails erzeugen.
+        /// </summary>
+        internal static string GenerateMails {
+            get {
+                return ResourceManager.GetString("GenerateMails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deutsch.
         /// </summary>
         internal static string German {
@@ -921,6 +1002,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ignorieren.
+        /// </summary>
+        internal static string Ignore {
+            get {
+                return ResourceManager.GetString("Ignore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignorierte.
         /// </summary>
         internal static string Ignored {
@@ -971,6 +1061,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string IndividualReductionType_Reduction {
             get {
                 return ResourceManager.GetString("IndividualReductionType_Reduction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interne Notizen.
+        /// </summary>
+        internal static string InternalNotes {
+            get {
+                return ResourceManager.GetString("InternalNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schlüssel.
+        /// </summary>
+        internal static string Key {
+            get {
+                return ResourceManager.GetString("Key", resourceCulture);
             }
         }
         
@@ -1029,6 +1137,33 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Letztes Mail angekommen.
+        /// </summary>
+        internal static string MailDeliverySeverity_LastSucceeded {
+            get {
+                return ResourceManager.GetString("MailDeliverySeverity_LastSucceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kein Mail angekommen.
+        /// </summary>
+        internal static string MailDeliverySeverity_NoneSucceeded {
+            get {
+                return ResourceManager.GetString("MailDeliverySeverity_NoneSucceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mails z.T. angekommen.
+        /// </summary>
+        internal static string MailDeliverySeverity_SomeSucceeded {
+            get {
+                return ResourceManager.GetString("MailDeliverySeverity_SomeSucceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to bezahlt.
         /// </summary>
         internal static string MailingAudience_Paid {
@@ -1052,6 +1187,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string MailingAudience_WaitingList {
             get {
                 return ResourceManager.GetString("MailingAudience_WaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mail-Tracking.
+        /// </summary>
+        internal static string MailMonitor {
+            get {
+                return ResourceManager.GetString("MailMonitor", resourceCulture);
             }
         }
         
@@ -1187,6 +1331,69 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Mails {
             get {
                 return ResourceManager.GetString("Mails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bounce.
+        /// </summary>
+        internal static string MailState_Bounce {
+            get {
+                return ResourceManager.GetString("MailState_Bounce", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Angeklickt.
+        /// </summary>
+        internal static string MailState_Click {
+            get {
+                return ResourceManager.GetString("MailState_Click", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zurückgestellt.
+        /// </summary>
+        internal static string MailState_Deferred {
+            get {
+                return ResourceManager.GetString("MailState_Deferred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geliefert.
+        /// </summary>
+        internal static string MailState_Delivered {
+            get {
+                return ResourceManager.GetString("MailState_Delivered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verworfen.
+        /// </summary>
+        internal static string MailState_Dropped {
+            get {
+                return ResourceManager.GetString("MailState_Dropped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Geöffnet.
+        /// </summary>
+        internal static string MailState_Open {
+            get {
+                return ResourceManager.GetString("MailState_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verarbeitet.
+        /// </summary>
+        internal static string MailState_Processed {
+            get {
+                return ResourceManager.GetString("MailState_Processed", resourceCulture);
             }
         }
         
@@ -1497,11 +1704,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nicht freigegeben.
+        /// </summary>
+        internal static string NotReleased {
+            get {
+                return ResourceManager.GetString("NotReleased", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alle Partner sind zugeordnet.
         /// </summary>
         internal static string NoUnmatchedRegistrations {
             get {
                 return ResourceManager.GetString("NoUnmatchedRegistrations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nur an Teilnehmer:innen von.
+        /// </summary>
+        internal static string OnlyParticipantsOf {
+            get {
+                return ResourceManager.GetString("OnlyParticipantsOf", resourceCulture);
             }
         }
         
@@ -1538,6 +1763,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Overviews {
             get {
                 return ResourceManager.GetString("Overviews", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bezahlt.
+        /// </summary>
+        internal static string Paid {
+            get {
+                return ResourceManager.GetString("Paid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teilnehmer.
+        /// </summary>
+        internal static string Participants {
+            get {
+                return ResourceManager.GetString("Participants", resourceCulture);
             }
         }
         
@@ -1691,6 +1934,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Pricing {
             get {
                 return ResourceManager.GetString("Pricing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verarbeitet.
+        /// </summary>
+        internal static string Processed {
+            get {
+                return ResourceManager.GetString("Processed", resourceCulture);
             }
         }
         
@@ -1902,6 +2154,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Freigegeben.
+        /// </summary>
+        internal static string Released {
+            get {
+                return ResourceManager.GetString("Released", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Automatisch versenden.
         /// </summary>
         internal static string ReleaseImmediately {
@@ -1925,6 +2186,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Remarks {
             get {
                 return ResourceManager.GetString("Remarks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bemerkungen verarbeitet.
+        /// </summary>
+        internal static string RemarksProcessed {
+            get {
+                return ResourceManager.GetString("RemarksProcessed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bemerkungen noch nicht verarbeitet.
+        /// </summary>
+        internal static string RemarksUnprocessed {
+            get {
+                return ResourceManager.GetString("RemarksUnprocessed", resourceCulture);
             }
         }
         
@@ -2141,6 +2420,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Setup {
             get {
                 return ResourceManager.GetString("Setup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bezahlt am Check-In.
+        /// </summary>
+        internal static string SetWillPayAtCheckin {
+            get {
+                return ResourceManager.GetString("SetWillPayAtCheckin", resourceCulture);
             }
         }
         

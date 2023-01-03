@@ -600,6 +600,9 @@
   <data name="Overviews" xml:space="preserve">
     <value>Overviews</value>
   </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Paid</value>
+  </data>
   <data name="Participants" xml:space="preserve">
     <value>Participants</value>
   </data>

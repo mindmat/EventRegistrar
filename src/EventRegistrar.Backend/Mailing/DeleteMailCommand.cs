@@ -9,7 +9,7 @@ public class DeleteMailCommand : IRequest, IEventBoundRequest
     public Guid MailId { get; set; }
 }
 
-public class DeleteMailCommandHandler : IRequestHandler<DeleteMailCommand>
+public class DeleteMailCommandHandler : AsyncRequestHandler<DeleteMailCommand>
 {
     private readonly IRepository<Mail> _mails;
     private readonly ReadModelUpdater _readModelUpdater;
@@ -21,7 +21,7 @@ public class DeleteMailCommandHandler : IRequestHandler<DeleteMailCommand>
         _readModelUpdater = readModelUpdater;
     }
 
-    public async Task<Unit> Handle(DeleteMailCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(DeleteMailCommand command, CancellationToken cancellationToken)
     {
         var mailToDelete = await _mails.Where(mail => mail.Id == command.MailId)
                                        .Include(mail => mail.Registrations)
@@ -32,7 +32,5 @@ public class DeleteMailCommandHandler : IRequestHandler<DeleteMailCommand>
         {
             _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registrationId, command.EventId);
         }
-
-        return Unit.Value;
     }
 }

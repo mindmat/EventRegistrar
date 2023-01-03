@@ -116,6 +116,7 @@ public class PriceCalculator
                                             .MinBy(idr => idr.Amount);
         if (overwrite != null)
         {
+            // set new price
             var reducedPrice = Math.Clamp(overwrite.Amount, 0, priceNotReduced);
             return (reducedPrice, new MatchingPackageResult(null,
                                                             $"{Resources.Reduction}: {overwrite.Reason}",
@@ -124,14 +125,17 @@ public class PriceCalculator
                                                             Array.Empty<MatchingPackageSpot>()));
         }
 
+        // adjust price
         var totalReduction = individualReductions.Select(ird => ird.Amount)
                                                  .Sum();
-        var priceAdmittedAndReduced = Math.Clamp(priceNotReduced - totalReduction, 0, priceNotReduced);
+        var clampedReduction = Math.Clamp(totalReduction, 0, priceNotReduced);
+        var priceAdmittedAndReduced = priceNotReduced - clampedReduction;
         return (priceAdmittedAndReduced, new MatchingPackageResult(null,
                                                                    Resources.Reduction,
-                                                                   -totalReduction,
+                                                                   0m,
                                                                    false,
-                                                                   individualReductions.Select(ird => new MatchingPackageSpot(ird.Reason ?? Resources.Reduction, -ird.Amount))));
+                                                                   individualReductions.Select(ird => new MatchingPackageSpot(ird.Reason ?? Resources.Reduction, -ird.Amount)),
+                                                                   true));
     }
 
     private (decimal Price, IReadOnlyCollection<MatchingPackageResult> matchingPackages, bool allSpotsCovered) CalculatePriceOfSpots(Guid registrationId,
@@ -283,7 +287,8 @@ public record struct MatchingPackageResult(Guid? Id,
                                            string Name,
                                            decimal Price,
                                            bool AllowAsFallback,
-                                           IEnumerable<MatchingPackageSpot> Spots);
+                                           IEnumerable<MatchingPackageSpot> Spots,
+                                           bool IsReductionsPackage = false);
 
 public record MatchingPackageSpot(string Name,
                                   decimal? PriceAdjustment = null,

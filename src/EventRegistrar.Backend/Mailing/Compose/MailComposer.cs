@@ -228,6 +228,7 @@ public class MailComposer
         // Label
         result.AppendLine($"<p>{Resources.SpotListLabelAccepted}</p>");
 
+        // Admitted
         if (packagesAdmitted.Any())
         {
             result.AppendLine("<table>");
@@ -238,7 +239,15 @@ public class MailComposer
                 var price = package.Price - package.Spots.Sum(spot => spot.PriceAdjustment ?? 0m);
                 result.AppendLine("<tr>");
                 result.AppendLine($"<td><strong>{package.Name}</strong></td>");
-                result.AppendLine($"<td style=\"text-align: right;\"><strong>{price}</strong></td>");
+                if (package.IsReductionsPackage)
+                {
+                    result.AppendLine($"<td></td>");
+                }
+                else
+                {
+                    result.AppendLine($"<td style=\"text-align: right;\">{price}</td>");
+                }
+
                 result.AppendLine("</tr>");
 
                 // Package content
@@ -254,8 +263,25 @@ public class MailComposer
             // Total
             result.AppendLine("<tr>");
             result.AppendLine($"<td><strong>{Resources.Total}</strong></td>");
-            result.AppendLine($"<td style=\"text-align: right;\">{priceAdmittedAndReduced.ToString("F2")}</td>");
+            result.AppendLine($"<td style=\"text-align: right;\"><strong>{priceAdmittedAndReduced.ToString("F2")}</strong></td>");
             result.AppendLine("</tr>");
+
+            // payments
+            var paid = await _paidAmountSummarizer.GetPaidAmount(registrationId);
+            if (paid > 0 && paid < priceAdmittedAndReduced)
+            {
+                // paid
+                result.AppendLine("<tr>");
+                result.AppendLine($"<td>{Resources.Paid}</td>");
+                result.AppendLine($"<td style=\"text-align: right;\">{paid.ToString("F2")}</td>");
+                result.AppendLine("</tr>");
+
+                // remaining amount
+                result.AppendLine("<tr>");
+                result.AppendLine($"<td>{Resources.MissingAmount}</td>");
+                result.AppendLine($"<td style=\"text-align: right;\">{(priceAdmittedAndReduced - paid).ToString("F2")}</td>");
+                result.AppendLine("</tr>");
+            }
 
             result.AppendLine("</tbody>");
             result.AppendLine("</table>");
@@ -265,6 +291,8 @@ public class MailComposer
             result.AppendLine("<p>-</p>");
         }
 
+
+        // Waiting list
         var packagesOnWaitingList = packagesOriginal.ExceptBy(packagesAdmitted.Select(pkg => pkg.Id), pkg => pkg.Id)
                                                     .ToList();
         if (packagesOnWaitingList.Any())

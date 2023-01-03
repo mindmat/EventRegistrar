@@ -684,6 +684,9 @@
   <data name="Overviews" xml:space="preserve">
     <value>Übersichten</value>
   </data>
+  <data name="Paid" xml:space="preserve">
+    <value>Bezahlt</value>
+  </data>
   <data name="Participants" xml:space="preserve">
     <value>Teilnehmer</value>
   </data>
