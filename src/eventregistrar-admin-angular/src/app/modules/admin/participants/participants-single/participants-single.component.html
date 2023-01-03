@@ -45,7 +45,7 @@
                 [cdkDropListData]="registrable.waitingList" cdkDropListConnectedTo="participants">
                 <!-- Spot -->
                 <ng-container *ngFor="let spot of registrable.waitingList; trackBy: trackByFn">
-                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" cdkDrag></app-participant>
+                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" cdkDrag [cdkDragData]="spot.leader"></app-participant>
                 </ng-container>
             </div>
         </div>
