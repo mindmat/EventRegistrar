@@ -268,7 +268,7 @@ public class MailComposer
 
             // payments
             var paid = await _paidAmountSummarizer.GetPaidAmount(registrationId);
-            if (paid > 0 && paid < priceAdmittedAndReduced)
+            if (paid > 0)
             {
                 // paid
                 result.AppendLine("<tr>");
@@ -276,11 +276,14 @@ public class MailComposer
                 result.AppendLine($"<td style=\"text-align: right;\">{paid.ToString("F2")}</td>");
                 result.AppendLine("</tr>");
 
-                // remaining amount
-                result.AppendLine("<tr>");
-                result.AppendLine($"<td>{Resources.MissingAmount}</td>");
-                result.AppendLine($"<td style=\"text-align: right;\">{(priceAdmittedAndReduced - paid).ToString("F2")}</td>");
-                result.AppendLine("</tr>");
+                if (paid < priceAdmittedAndReduced)
+                {
+                    // remaining amount
+                    result.AppendLine("<tr>");
+                    result.AppendLine($"<td>{Resources.MissingAmount}</td>");
+                    result.AppendLine($"<td style=\"text-align: right;\">{(priceAdmittedAndReduced - paid).ToString("F2")}</td>");
+                    result.AppendLine("</tr>");
+                }
             }
 
             result.AppendLine("</tbody>");
