@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
 
@@ -157,6 +158,12 @@ public class TriggerMoveUpFromWaitingListCommandHandler : AsyncRequestHandler<Tr
         }
 
         _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        _eventBus.Publish(new QueryChanged
+                          {
+                              EventId = command.EventId,
+                              QueryName = nameof(ParticipantsOfRegistrableQuery),
+                              RowId = command.RegistrableId
+                          });
     }
 
     private static DateTimeOffset GetAverage(DateTimeOffset dateTime1, DateTimeOffset dateTime2)

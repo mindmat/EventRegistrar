@@ -167,7 +167,7 @@ public class MailComposer
                     if (unpaidAmount > 0m)
                     {
                         templateFiller[key] =
-                            //    $" Please transfer the remaining {unpaidAmount:F2}{currency} today or pay at the checkin (ignore this message if you already paid)."; // HACK: format hardcoded
+                            //    $" Please transfer the remaining {unpaidAmount:F2}{currency} today or pay at the checkin (ignore this message if you have already paid)."; // HACK: format hardcoded
                             $" Please pay the remaining {unpaidAmount:F2}{currency} at the checkin"; // HACK: format hardcoded
                     }
                 }
