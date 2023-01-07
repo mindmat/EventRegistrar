@@ -50,6 +50,7 @@ export class BulkMailTemplatesComponent implements OnInit
   createNewBulkMail(key: string)
   {
     this.service.createTemplate(key);
+    this.drawerOpened = false;
   }
 
   selectTemplate(template: BulkMailTemplateMetadataLanguage, type: BulkMailTemplateKey)

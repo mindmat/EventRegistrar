@@ -1623,6 +1623,33 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sucht Hosting - Teilen mit Partner OK.
+        /// </summary>
+        internal static string MappingType_HostingRequest_ShareOkWithPartner {
+            get {
+                return ResourceManager.GetString("MappingType_HostingRequest_ShareOkWithPartner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sucht Hosting - Teilen OK.
+        /// </summary>
+        internal static string MappingType_HostingRequest_ShareOkWithRandom {
+            get {
+                return ResourceManager.GetString("MappingType_HostingRequest_ShareOkWithRandom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sucht Hosting - Reist mit Auto.
+        /// </summary>
+        internal static string MappingType_HostingRequest_TravelByCar {
+            get {
+                return ResourceManager.GetString("MappingType_HostingRequest_TravelByCar", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Partner zuordnen.
         /// </summary>
         internal static string MatchPartners {
@@ -1961,6 +1988,78 @@ namespace EventRegistrar.Backend.Properties {
         internal static string QuestionMappingType_FirstName {
             get {
                 return ResourceManager.GetString("QuestionMappingType_FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bietet Hosting.
+        /// </summary>
+        internal static string QuestionMappingType_HostingOffer {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_HostingOffer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bietet Hosting - Kommentar.
+        /// </summary>
+        internal static string QuestionMappingType_HostingOffer_Comment {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_HostingOffer_Comment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bietet Hosting - Anzahl geteilte Plätze.
+        /// </summary>
+        internal static string QuestionMappingType_HostingOffer_CountShared {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_HostingOffer_CountShared", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bietet Hosting - Anzahl Plätze total.
+        /// </summary>
+        internal static string QuestionMappingType_HostingOffer_CountTotal {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_HostingOffer_CountTotal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bietet Hosting - Ort.
+        /// </summary>
+        internal static string QuestionMappingType_HostingOffer_Location {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_HostingOffer_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sucht Hosting.
+        /// </summary>
+        internal static string QuestionMappingType_HostingRequest {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_HostingRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sucht Hosting - Kommentar.
+        /// </summary>
+        internal static string QuestionMappingType_HostingRequest_Comment {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_HostingRequest_Comment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sucht Hosting - Partner.
+        /// </summary>
+        internal static string QuestionMappingType_HostingRequest_Partner {
+            get {
+                return ResourceManager.GetString("QuestionMappingType_HostingRequest_Partner", resourceCulture);
             }
         }
         

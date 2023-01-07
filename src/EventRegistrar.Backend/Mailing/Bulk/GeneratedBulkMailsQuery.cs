@@ -24,13 +24,17 @@ public class GeneratedBulkMailsQueryHandler : IRequestHandler<GeneratedBulkMails
 
         return await _mails.Where(mail => mail.BulkMailKey == query.BulkMailKey)
                            .GroupBy(mail => mail.BulkMailKey)
-                           .Select(grp =>
-                                       new GeneratedBulkMails
-                                       {
-                                           GeneratedCount = grp.Count(),
-                                           SentCount = grp.Count(mail => mail.Sent != null)
-                                       })
-                           .FirstAsync(cancellationToken);
+                           .Select(grp => new GeneratedBulkMails
+                                          {
+                                              GeneratedCount = grp.Count(),
+                                              SentCount = grp.Count(mail => mail.Sent != null)
+                                          })
+                           .FirstOrDefaultAsync(cancellationToken)
+            ?? new GeneratedBulkMails
+               {
+                   GeneratedCount = 0,
+                   SentCount = 0
+               };
     }
 }
 

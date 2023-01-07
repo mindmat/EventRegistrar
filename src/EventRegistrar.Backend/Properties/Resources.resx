@@ -636,6 +636,15 @@
   <data name="Mapping" xml:space="preserve">
     <value>Zuordnung</value>
   </data>
+  <data name="MappingType_HostingRequest_ShareOkWithPartner" xml:space="preserve">
+    <value>Sucht Hosting - Teilen mit Partner OK</value>
+  </data>
+  <data name="MappingType_HostingRequest_ShareOkWithRandom" xml:space="preserve">
+    <value>Sucht Hosting - Teilen OK</value>
+  </data>
+  <data name="MappingType_HostingRequest_TravelByCar" xml:space="preserve">
+    <value>Sucht Hosting - Reist mit Auto</value>
+  </data>
   <data name="MatchPartners" xml:space="preserve">
     <value>Partner zuordnen</value>
   </data>
@@ -749,6 +758,30 @@
   </data>
   <data name="QuestionMappingType_FirstName" xml:space="preserve">
     <value>Vorname</value>
+  </data>
+  <data name="QuestionMappingType_HostingOffer" xml:space="preserve">
+    <value>Bietet Hosting</value>
+  </data>
+  <data name="QuestionMappingType_HostingOffer_Comment" xml:space="preserve">
+    <value>Bietet Hosting - Kommentar</value>
+  </data>
+  <data name="QuestionMappingType_HostingOffer_CountShared" xml:space="preserve">
+    <value>Bietet Hosting - Anzahl geteilte Plätze</value>
+  </data>
+  <data name="QuestionMappingType_HostingOffer_CountTotal" xml:space="preserve">
+    <value>Bietet Hosting - Anzahl Plätze total</value>
+  </data>
+  <data name="QuestionMappingType_HostingOffer_Location" xml:space="preserve">
+    <value>Bietet Hosting - Ort</value>
+  </data>
+  <data name="QuestionMappingType_HostingRequest" xml:space="preserve">
+    <value>Sucht Hosting</value>
+  </data>
+  <data name="QuestionMappingType_HostingRequest_Comment" xml:space="preserve">
+    <value>Sucht Hosting - Kommentar</value>
+  </data>
+  <data name="QuestionMappingType_HostingRequest_Partner" xml:space="preserve">
+    <value>Sucht Hosting - Partner</value>
   </data>
   <data name="QuestionMappingType_Iban" xml:space="preserve">
     <value>IBAN</value>

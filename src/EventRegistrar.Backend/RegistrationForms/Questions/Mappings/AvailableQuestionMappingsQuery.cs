@@ -16,7 +16,7 @@ public class AvailableQuestionMappingsQueryHandler : IRequestHandler<AvailableQu
         _enumTranslator = enumTranslator;
     }
 
-    public Task<IEnumerable<AvailableQuestionMapping>> Handle(AvailableQuestionMappingsQuery request,
+    public Task<IEnumerable<AvailableQuestionMapping>> Handle(AvailableQuestionMappingsQuery query,
                                                               CancellationToken cancellationToken)
     {
         var mappings = _enumTranslator.TranslateAll<QuestionMappingType>()

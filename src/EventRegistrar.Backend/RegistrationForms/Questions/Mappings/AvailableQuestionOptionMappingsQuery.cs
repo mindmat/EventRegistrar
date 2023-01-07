@@ -95,6 +95,24 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
                        Name = $"{Properties.Resources.Role}: {Properties.Resources.Follower}"
                    });
 
+        // Hosting
+        result.Add(new AvailableQuestionOptionMapping
+                   {
+                       Type = MappingType.HostingRequest_ShareOkWithRandom,
+                       Name = Properties.Resources.MappingType_HostingRequest_ShareOkWithRandom
+                   });
+        result.Add(new AvailableQuestionOptionMapping
+                   {
+                       Type = MappingType.HostingRequest_ShareOkWithPartner,
+                       Name = Properties.Resources.MappingType_HostingRequest_ShareOkWithPartner
+                   });
+        result.Add(new AvailableQuestionOptionMapping
+                   {
+                       Type = MappingType.HostingRequest_TravelByCar,
+                       Name = Properties.Resources.MappingType_HostingRequest_TravelByCar
+                   });
+
+
         result.ForEach(aqo => aqo.CombinedId = new CombinedMappingId(aqo.Type, aqo.Id, aqo.Language).ToString());
 
         return result;

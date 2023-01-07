@@ -1,5 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.RegistrationForms.FormPaths;
+﻿using EventRegistrar.Backend.RegistrationForms.FormPaths;
 
 namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
@@ -10,7 +9,7 @@ public class SaveRegistrationFormMappingsCommand : IRequest, IEventBoundRequest
     public IEnumerable<FormSection>? Sections { get; set; }
 }
 
-public class SaveRegistrationFormMappingsCommandHandler : IRequestHandler<SaveRegistrationFormMappingsCommand>
+public class SaveRegistrationFormMappingsCommandHandler : AsyncRequestHandler<SaveRegistrationFormMappingsCommand>
 {
     private readonly IRepository<RegistrationForm> _forms;
     private readonly IRepository<QuestionOptionMapping> _mappings;
@@ -22,12 +21,12 @@ public class SaveRegistrationFormMappingsCommandHandler : IRequestHandler<SaveRe
         _mappings = mappings;
     }
 
-    public async Task<Unit> Handle(SaveRegistrationFormMappingsCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(SaveRegistrationFormMappingsCommand command, CancellationToken cancellationToken)
     {
         var sectionsToSave = command.Sections;
         if (sectionsToSave == null)
         {
-            return Unit.Value;
+            return;
         }
 
         var form = await _forms.Where(frm => frm.EventId == command.EventId
@@ -85,7 +84,5 @@ public class SaveRegistrationFormMappingsCommandHandler : IRequestHandler<SaveRe
                 }
             }
         }
-
-        return Unit.Value;
     }
 }

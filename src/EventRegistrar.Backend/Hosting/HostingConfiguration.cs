@@ -28,8 +28,8 @@ public class HardcodedLL19HostingConfiguration : HostingConfiguration, IDefaultC
 
 public class HostingConfiguration : IConfigurationItem
 {
-    public IDictionary<string, Guid> ColumnsOffers { get; set; }
-    public IDictionary<string, Guid> ColumnsRequests { get; set; }
+    public IDictionary<string, Guid>? ColumnsOffers { get; set; }
+    public IDictionary<string, Guid>? ColumnsRequests { get; set; }
     public Guid RegistrableId_HostingOffer { get; set; }
     public Guid RegistrableId_HostingRequest { get; set; }
 }

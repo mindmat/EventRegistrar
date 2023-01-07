@@ -1,7 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Registrations;
-
-using MediatR;
+﻿using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Hosting;
 
@@ -28,9 +25,9 @@ public class HostingOffersQueryHandler : IRequestHandler<HostingOffersQuery, Hos
                                                            && reg.IsOnWaitingList == false
                                                            && (reg.State == RegistrationState.Received
                                                             || reg.State == RegistrationState.Paid)
-                                                           && reg.Seats_AsLeader.Any(spt => !spt.IsCancelled
-                                                                                         && !spt.IsWaitingList
-                                                                                         && spt.RegistrableId == _configuration.RegistrableId_HostingOffer))
+                                                           && reg.Seats_AsLeader!.Any(spt => !spt.IsCancelled
+                                                                                          && !spt.IsWaitingList
+                                                                                          && spt.RegistrableId == _configuration.RegistrableId_HostingOffer))
                                                 .Include(reg => reg.Responses)
                                                 .ToListAsync(cancellationToken);
         return new HostingOffers
@@ -48,7 +45,7 @@ public class HostingOffersQueryHandler : IRequestHandler<HostingOffersQuery, Hos
                                                State = reg.State.ToString(),
                                                AdmittedAt = reg.AdmittedAt,
                                                Columns = _configuration
-                                                         .ColumnsOffers
+                                                         .ColumnsOffers?
                                                          .ToDictionary(col => col.Key,
                                                                        col => reg.Responses
                                                                                  .FirstOrDefault(rsp =>

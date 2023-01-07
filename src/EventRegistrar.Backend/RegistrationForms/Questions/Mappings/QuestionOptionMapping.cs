@@ -40,5 +40,8 @@ public enum MappingType
     PartnerRegistrableFollower = 4,
     Language = 5,
     RoleLeader = 7,
-    RoleFollower = 8
+    RoleFollower = 8,
+    HostingRequest_ShareOkWithPartner = 32,
+    HostingRequest_ShareOkWithRandom = 33,
+    HostingRequest_TravelByCar = 34
 }
