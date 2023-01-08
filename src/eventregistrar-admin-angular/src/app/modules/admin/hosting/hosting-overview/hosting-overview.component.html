@@ -1,0 +1,80 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-auto">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <!-- Title -->
+        <div class="flex min-w-0 flex-row items-baseline gap-2">
+            <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'Hosting' | translate }}</div>
+            <!-- <div class="mt-1.5 text-lg text-secondary">({{ remarksUnprocessed.length }} / {{ totalRemarkCount }})</div> -->
+        </div>
+
+        <!-- Filters -->
+        <!-- <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query [value]="searchString$.value" autofocus>
+        </mat-form-field> -->
+    </div>
+
+    <!-- Offers -->
+    <div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
+        <div class="text-xl font-bold tracking-tight leading-none">{{ 'HostingOffers' | translate }}</div>
+        <div class="mt-1.5 text-lg text-secondary">({{ offers?.length ?? 0 }})</div>
+    </div>
+
+    <div *ngIf="offers" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-10">
+
+        <ng-container *ngFor="let offer of offers">
+            <!-- Offer -->
+            <div class="flex flex-col min-h-32 shadow rounded-2xl overflow-hidden bg-card">
+                <div class="flex m-4">
+                    <a class="grow flex-col w-full hover:underline" [routerLink]="navigator.getRegistrationUrl(offer.registrationId)">
+
+                        <!-- Registrable title & description -->
+                        <div class="text-lg font-medium">{{ offer.displayName }}</div>
+                        <div class="line-clamp-2 text-secondary">{{ offer.email }}</div>
+                        <div class="w-12 h-1 mt-2 border-t-2"></div>
+
+                    </a>
+                    <!-- <mat-icon class="none icon-size-5 justify-middle" *ngIf="match.isWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon> -->
+
+                </div>
+
+
+                <!-- <div class="max-w-none m-4 prose prose-sm" [innerHTML]="remark.remarks"></div> -->
+            </div>
+        </ng-container>
+
+    </div>
+
+    <!-- Processed -->
+    <div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
+        <div class="text-xl font-bold tracking-tight leading-none">{{ 'HostingRequests' | translate }}</div>
+        <div class="mt-1.5 text-lg text-secondary">({{ requests?.length ?? 0 }})</div>
+    </div>
+
+    <!-- Requests -->
+    <div *ngIf="requests" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-10">
+
+        <ng-container *ngFor="let request of requests">
+            <!-- Request -->
+            <div class="flex flex-col min-h-32 shadow rounded-2xl overflow-hidden bg-card">
+                <div class="flex m-4">
+                    <a class="grow flex-col w-full hover:underline" [routerLink]="navigator.getRegistrationUrl(request.registrationId)">
+
+                        <!-- Registrable title & description -->
+                        <div class="text-lg font-medium">{{ request.displayName }}</div>
+                        <div class="line-clamp-2 text-secondary">{{ request.email }}</div>
+                        <div class="w-12 h-1 mt-2 border-t-2"></div>
+
+                    </a>
+                    <!-- <mat-icon class="none icon-size-5 justify-middle" *ngIf="match.isWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon> -->
+
+                </div>
+
+
+                <!-- <div class="max-w-none m-4 prose prose-sm" [innerHTML]="remark.remarks"></div> -->
+            </div>
+        </ng-container>
+
+    </div>
+</div>

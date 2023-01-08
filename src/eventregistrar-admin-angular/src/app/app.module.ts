@@ -101,6 +101,7 @@ import { RemarksOverviewComponent } from './modules/admin/registrations/remarks-
 import { NotesOverviewComponent } from './modules/admin/registrations/notes-overview/notes-overview.component';
 import { BulkMailTemplatesComponent } from './modules/admin/mailing/bulk-mail-templates/bulk-mail-templates.component';
 import { BulkMailTemplateComponent } from './modules/admin/mailing/bulk-mail-template/bulk-mail-template.component';
+import { HostingOverviewComponent } from './modules/admin/hosting/hosting-overview/hosting-overview.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -148,7 +149,8 @@ const routerConfig: ExtraOptions = {
         RemarksOverviewComponent,
         NotesOverviewComponent,
         BulkMailTemplatesComponent,
-        BulkMailTemplateComponent
+        BulkMailTemplateComponent,
+        HostingOverviewComponent
     ],
     providers: [
         AuthServiceFuse,

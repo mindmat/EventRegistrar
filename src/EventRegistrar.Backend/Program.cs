@@ -6,6 +6,7 @@ using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Events.UsersInEvents;
+using EventRegistrar.Backend.Hosting;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess;
@@ -182,6 +183,7 @@ foreach (var configType in configTypes)
 
 container.Collection.Register(typeof(IDirtySegment), assemblies);
 container.Register<DirtyTagger>();
+container.Register<HostingMappingReader>();
 
 container.RegisterSingleton<SecretReader>();
 container.RegisterSingleton<MessageQueueReceiver>();

@@ -4261,19 +4261,19 @@
         }
       }
     },
-    "/api/HostingOffersQuery": {
+    "/api/HostingQuery": {
       "post": {
         "tags": [
-          "HostingOffers"
+          "Hosting"
         ],
-        "operationId": "HostingOffers_Query",
+        "operationId": "Hosting_Query",
         "requestBody": {
-          "x-name": "HostingOffersQuery",
+          "x-name": "HostingQuery",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/HostingOffersQuery"
+                "$ref": "#/components/schemas/HostingQuery"
               }
             }
           },
@@ -4285,39 +4285,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HostingOffers"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/HostingRequestsQuery": {
-      "post": {
-        "tags": [
-          "HostingRequests"
-        ],
-        "operationId": "HostingRequests_Query",
-        "requestBody": {
-          "x-name": "HostingRequestsQuery",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/HostingRequestsQuery"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HostingRequests"
+                  "$ref": "#/components/schemas/HostingOffersAndRequests"
                 }
               }
             }
@@ -6028,7 +5996,13 @@
           "Town",
           "Remarks",
           "Iban",
-          "Partner"
+          "Partner",
+          "HostingOffer_Location",
+          "HostingOffer_CountTotal",
+          "HostingOffer_CountShared",
+          "HostingOffer_Comment",
+          "HostingRequest_Comment",
+          "HostingRequest_Partner"
         ],
         "enum": [
           1,
@@ -6038,7 +6012,13 @@
           5,
           6,
           7,
-          10
+          10,
+          22,
+          23,
+          24,
+          25,
+          35,
+          36
         ]
       },
       "AvailableQuestionMappingsQuery": {
@@ -6086,7 +6066,12 @@
           "PartnerRegistrableFollower",
           "Language",
           "RoleLeader",
-          "RoleFollower"
+          "RoleFollower",
+          "HostingOffer",
+          "HostingRequest",
+          "HostingRequest_ShareOkWithPartner",
+          "HostingRequest_ShareOkWithRandom",
+          "HostingRequest_TravelByCar"
         ],
         "enum": [
           1,
@@ -6095,7 +6080,12 @@
           4,
           5,
           7,
-          8
+          8,
+          21,
+          31,
+          32,
+          33,
+          34
         ]
       },
       "AvailableQuestionOptionMappingsQuery": {
@@ -9939,81 +9929,14 @@
           }
         }
       },
-      "HostingOffers": {
+      "HostingOffersAndRequests": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "dynamicColumns": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
           "offers": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/HostingOffer"
-            }
-          }
-        }
-      },
-      "HostingOffer": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "admittedAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "columns": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
-          },
-          "email": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "language": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "phone": {
-            "type": "string"
-          },
-          "registrationId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "state": {
-            "type": "string"
-          }
-        }
-      },
-      "HostingOffersQuery": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "HostingRequests": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "dynamicColumns": {
-            "type": "array",
-            "items": {
-              "type": "string"
             }
           },
           "requests": {
@@ -10024,46 +9947,113 @@
           }
         }
       },
-      "HostingRequest": {
+      "HostingOffer": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RegistrationState"
+              }
+            ]
+          },
           "admittedAt": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "columns": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "string"
-            }
+          "location": {
+            "type": "string",
+            "nullable": true
           },
-          "email": {
-            "type": "string"
+          "countTotal": {
+            "type": "string",
+            "nullable": true
           },
-          "firstName": {
-            "type": "string"
+          "countShared": {
+            "type": "string",
+            "nullable": true
           },
-          "language": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "phone": {
-            "type": "string"
-          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "HostingRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
           "registrationId": {
             "type": "string",
             "format": "guid"
           },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "language": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
           "state": {
-            "type": "string"
+            "$ref": "#/components/schemas/RegistrationState"
+          },
+          "admittedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hostingPartner": {
+            "type": "string",
+            "nullable": true
+          },
+          "shareOkWithPartner": {
+            "type": "boolean"
+          },
+          "shareOkWithRandom": {
+            "type": "boolean"
+          },
+          "travelByCar": {
+            "type": "boolean"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
-      "HostingRequestsQuery": {
+      "HostingQuery": {
         "type": "object",
         "additionalProperties": false,
         "properties": {

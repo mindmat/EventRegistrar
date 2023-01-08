@@ -55,6 +55,8 @@ import { BulkMailTemplatesComponent } from './modules/admin/mailing/bulk-mail-te
 import { BulkMailTemplatesResolver } from './modules/admin/mailing/bulk-mail-templates/bulk-mail-templates.resolver';
 import { BulkMailTemplateComponent } from './modules/admin/mailing/bulk-mail-template/bulk-mail-template.component';
 import { BulkMailTemplateResolver } from './modules/admin/mailing/bulk-mail-template/bulk-mail-template.resolver';
+import { HostingOverviewComponent } from './modules/admin/hosting/hosting-overview/hosting-overview.component';
+import { HostingOverviewResolver } from './modules/admin/hosting/hosting-overview/hosting-overview.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -307,6 +309,21 @@ export const appRoutes: Route[] =
                             component: ProblematicEmailsComponent,
                             resolve: { initialData: ProblematicEmailsResolver }
                         }
+                    ]
+                },
+                {
+                    path: 'hosting',
+                    canActivate: [AuthGuard],
+                    canActivateChild: [AuthGuard],
+                    component: LayoutComponent,
+                    resolve: { initialData: InitialDataResolver },
+                    children: [
+                        {
+                            path: '',
+                            canActivate: [AuthGuard],
+                            component: HostingOverviewComponent,
+                            resolve: { initialData: HostingOverviewResolver }
+                        },
                     ]
                 },
                 {

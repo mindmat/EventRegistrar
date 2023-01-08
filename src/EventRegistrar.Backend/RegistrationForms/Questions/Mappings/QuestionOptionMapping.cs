@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using EventRegistrar.Backend.Registrables;
 
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Registrables;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
@@ -41,6 +40,8 @@ public enum MappingType
     Language = 5,
     RoleLeader = 7,
     RoleFollower = 8,
+    HostingOffer = 21,
+    HostingRequest = 31,
     HostingRequest_ShareOkWithPartner = 32,
     HostingRequest_ShareOkWithRandom = 33,
     HostingRequest_TravelByCar = 34

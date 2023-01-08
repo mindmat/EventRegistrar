@@ -98,6 +98,16 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
         // Hosting
         result.Add(new AvailableQuestionOptionMapping
                    {
+                       Type = MappingType.HostingOffer,
+                       Name = Properties.Resources.MappingType_HostingOffer
+                   });
+        result.Add(new AvailableQuestionOptionMapping
+                   {
+                       Type = MappingType.HostingRequest,
+                       Name = Properties.Resources.MappingType_HostingRequest
+                   });
+        result.Add(new AvailableQuestionOptionMapping
+                   {
                        Type = MappingType.HostingRequest_ShareOkWithRandom,
                        Name = Properties.Resources.MappingType_HostingRequest_ShareOkWithRandom
                    });

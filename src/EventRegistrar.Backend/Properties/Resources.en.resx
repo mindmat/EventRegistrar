@@ -345,6 +345,9 @@
   <data name="HoldMailBack" xml:space="preserve">
     <value>Hold back</value>
   </data>
+  <data name="Hosting" xml:space="preserve">
+    <value>Hosting</value>
+  </data>
   <data name="Ignore" xml:space="preserve">
     <value>Ignore</value>
   </data>
@@ -552,6 +555,12 @@
   <data name="Mapping" xml:space="preserve">
     <value>Mapping</value>
   </data>
+  <data name="MappingType_HostingOffer" xml:space="preserve">
+    <value>Hosting Offer</value>
+  </data>
+  <data name="MappingType_HostingRequest" xml:space="preserve">
+    <value>Hosting Request</value>
+  </data>
   <data name="MappingType_HostingRequest_ShareOkWithPartner" xml:space="preserve">
     <value>Hosting Request - Can share with partner</value>
   </data>
@@ -675,9 +684,6 @@
   <data name="QuestionMappingType_FirstName" xml:space="preserve">
     <value>First name</value>
   </data>
-  <data name="QuestionMappingType_HostingOffer" xml:space="preserve">
-    <value>Hosting Offer</value>
-  </data>
   <data name="QuestionMappingType_HostingOffer_Comment" xml:space="preserve">
     <value>Hosting Offer - Comment</value>
   </data>
@@ -689,9 +695,6 @@
   </data>
   <data name="QuestionMappingType_HostingOffer_Location" xml:space="preserve">
     <value>Hosting Offer - Location</value>
-  </data>
-  <data name="QuestionMappingType_HostingRequest" xml:space="preserve">
-    <value>Hosting Request</value>
   </data>
   <data name="QuestionMappingType_HostingRequest_Comment" xml:space="preserve">
     <value>Hosting Request - Comment</value>

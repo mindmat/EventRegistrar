@@ -45,12 +45,10 @@ public enum QuestionMappingType
     Remarks = 6,
     Iban = 7,
     Partner = 10,
-    HostingOffer = 21,
     HostingOffer_Location = 22,
     HostingOffer_CountTotal = 23,
     HostingOffer_CountShared = 24,
     HostingOffer_Comment = 25,
-    HostingRequest = 31,
     HostingRequest_Comment = 35,
     HostingRequest_Partner = 36
 }

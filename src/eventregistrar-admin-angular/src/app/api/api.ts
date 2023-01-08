@@ -6612,11 +6612,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    hostingOffers_Query(hostingOffersQuery: HostingOffersQuery | undefined): Observable<HostingOffers> {
-        let url_ = this.baseUrl + "/api/HostingOffersQuery";
+    hosting_Query(hostingQuery: HostingQuery | undefined): Observable<HostingOffersAndRequests> {
+        let url_ = this.baseUrl + "/api/HostingQuery";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(hostingOffersQuery);
+        const content_ = JSON.stringify(hostingQuery);
 
         let options_ : any = {
             body: content_,
@@ -6629,20 +6629,20 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processHostingOffers_Query(response_);
+            return this.processHosting_Query(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processHostingOffers_Query(response_ as any);
+                    return this.processHosting_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<HostingOffers>;
+                    return _observableThrow(e) as any as Observable<HostingOffersAndRequests>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<HostingOffers>;
+                return _observableThrow(response_) as any as Observable<HostingOffersAndRequests>;
         }));
     }
 
-    protected processHostingOffers_Query(response: HttpResponseBase): Observable<HostingOffers> {
+    protected processHosting_Query(response: HttpResponseBase): Observable<HostingOffersAndRequests> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -6652,58 +6652,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as HostingOffers;
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    hostingRequests_Query(hostingRequestsQuery: HostingRequestsQuery | undefined): Observable<HostingRequests> {
-        let url_ = this.baseUrl + "/api/HostingRequestsQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(hostingRequestsQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processHostingRequests_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processHostingRequests_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<HostingRequests>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<HostingRequests>;
-        }));
-    }
-
-    protected processHostingRequests_Query(response: HttpResponseBase): Observable<HostingRequests> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as HostingRequests;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as HostingOffersAndRequests;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -7883,6 +7832,12 @@ export enum QuestionMappingType {
     Remarks = 6,
     Iban = 7,
     Partner = 10,
+    HostingOffer_Location = 22,
+    HostingOffer_CountTotal = 23,
+    HostingOffer_CountShared = 24,
+    HostingOffer_Comment = 25,
+    HostingRequest_Comment = 35,
+    HostingRequest_Partner = 36,
 }
 
 export interface AvailableQuestionMappingsQuery {
@@ -7905,6 +7860,11 @@ export enum MappingType {
     Language = 5,
     RoleLeader = 7,
     RoleFollower = 8,
+    HostingOffer = 21,
+    HostingRequest = 31,
+    HostingRequest_ShareOkWithPartner = 32,
+    HostingRequest_ShareOkWithRandom = 33,
+    HostingRequest_TravelByCar = 34,
 }
 
 export interface AvailableQuestionOptionMappingsQuery {
@@ -9140,45 +9100,41 @@ export interface UpdateReadModelCommand {
     dirtyMoment?: Date;
 }
 
-export interface HostingOffers {
-    dynamicColumns?: string[];
+export interface HostingOffersAndRequests {
     offers?: HostingOffer[];
-}
-
-export interface HostingOffer {
-    admittedAt?: Date | null;
-    columns?: { [key: string]: string; };
-    email?: string;
-    firstName?: string;
-    language?: string;
-    lastName?: string;
-    phone?: string;
-    registrationId?: string;
-    state?: string;
-}
-
-export interface HostingOffersQuery {
-    eventId?: string;
-}
-
-export interface HostingRequests {
-    dynamicColumns?: string[];
     requests?: HostingRequest[];
 }
 
-export interface HostingRequest {
-    admittedAt?: Date | null;
-    columns?: { [key: string]: string; };
-    email?: string;
-    firstName?: string;
-    language?: string;
-    lastName?: string;
-    phone?: string;
+export interface HostingOffer {
     registrationId?: string;
-    state?: string;
+    displayName?: string | null;
+    email?: string | null;
+    language?: string | null;
+    phone?: string | null;
+    state?: RegistrationState | null;
+    admittedAt?: Date | null;
+    location?: string | null;
+    countTotal?: string | null;
+    countShared?: string | null;
+    comment?: string | null;
 }
 
-export interface HostingRequestsQuery {
+export interface HostingRequest {
+    registrationId?: string;
+    displayName?: string | null;
+    email?: string | null;
+    language?: string | null;
+    phone?: string | null;
+    state?: RegistrationState;
+    admittedAt?: Date | null;
+    hostingPartner?: string | null;
+    shareOkWithPartner?: boolean;
+    shareOkWithRandom?: boolean;
+    travelByCar?: boolean;
+    comment?: string | null;
+}
+
+export interface HostingQuery {
     eventId?: string;
 }
 

@@ -1002,6 +1002,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hosting.
+        /// </summary>
+        internal static string Hosting {
+            get {
+                return ResourceManager.GetString("Hosting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignorieren.
         /// </summary>
         internal static string Ignore {
@@ -1623,6 +1632,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bietet Hosting.
+        /// </summary>
+        internal static string MappingType_HostingOffer {
+            get {
+                return ResourceManager.GetString("MappingType_HostingOffer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sucht Hosting.
+        /// </summary>
+        internal static string MappingType_HostingRequest {
+            get {
+                return ResourceManager.GetString("MappingType_HostingRequest", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Sucht Hosting - Teilen mit Partner OK.
         /// </summary>
         internal static string MappingType_HostingRequest_ShareOkWithPartner {
@@ -1992,15 +2019,6 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bietet Hosting.
-        /// </summary>
-        internal static string QuestionMappingType_HostingOffer {
-            get {
-                return ResourceManager.GetString("QuestionMappingType_HostingOffer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Bietet Hosting - Kommentar.
         /// </summary>
         internal static string QuestionMappingType_HostingOffer_Comment {
@@ -2033,15 +2051,6 @@ namespace EventRegistrar.Backend.Properties {
         internal static string QuestionMappingType_HostingOffer_Location {
             get {
                 return ResourceManager.GetString("QuestionMappingType_HostingOffer_Location", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Sucht Hosting.
-        /// </summary>
-        internal static string QuestionMappingType_HostingRequest {
-            get {
-                return ResourceManager.GetString("QuestionMappingType_HostingRequest", resourceCulture);
             }
         }
         

@@ -96,6 +96,13 @@ export class NavigationService
                                     icon: 'mat_solid:edit_note',
                                     link: `/${e.acronym}/registrations/notes-overview`,
                                 },
+                                {
+                                    id: 'hosting',
+                                    title: translateService.instant('Hosting'),
+                                    type: 'basic',
+                                    icon: 'mat_outline:house',
+                                    link: `/${e.acronym}/hosting`,
+                                },
                             ]
                         },
                         {
