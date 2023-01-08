@@ -1011,6 +1011,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bietet Hosting.
+        /// </summary>
+        internal static string HostingOffers {
+            get {
+                return ResourceManager.GetString("HostingOffers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sucht Hosting.
+        /// </summary>
+        internal static string HostingRequests {
+            get {
+                return ResourceManager.GetString("HostingRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignorieren.
         /// </summary>
         internal static string Ignore {

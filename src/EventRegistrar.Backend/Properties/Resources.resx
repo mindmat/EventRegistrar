@@ -432,6 +432,12 @@
   <data name="Hosting" xml:space="preserve">
     <value>Hosting</value>
   </data>
+  <data name="HostingOffers" xml:space="preserve">
+    <value>Bietet Hosting</value>
+  </data>
+  <data name="HostingRequests" xml:space="preserve">
+    <value>Sucht Hosting</value>
+  </data>
   <data name="Ignore" xml:space="preserve">
     <value>Ignorieren</value>
   </data>
