@@ -9112,6 +9112,7 @@ export interface HostingOffer {
     language?: string | null;
     phone?: string | null;
     state?: RegistrationState | null;
+    isOnWaitingList?: boolean;
     admittedAt?: Date | null;
     location?: string | null;
     countTotal?: string | null;
@@ -9126,6 +9127,7 @@ export interface HostingRequest {
     language?: string | null;
     phone?: string | null;
     state?: RegistrationState;
+    isOnWaitingList?: boolean;
     admittedAt?: Date | null;
     hostingPartner?: string | null;
     shareOkWithPartner?: boolean;

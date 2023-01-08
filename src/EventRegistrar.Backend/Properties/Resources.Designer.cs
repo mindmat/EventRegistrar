@@ -178,6 +178,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zugelassen.
+        /// </summary>
+        internal static string AdmittedAt {
+            get {
+                return ResourceManager.GetString("AdmittedAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Als Fallback möglich.
         /// </summary>
         internal static string AllowAsFallback {
@@ -390,6 +399,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string CopyRegistrables {
             get {
                 return ResourceManager.GetString("CopyRegistrables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plätze total / geteilt.
+        /// </summary>
+        internal static string CountTotalShared {
+            get {
+                return ResourceManager.GetString("CountTotalShared", resourceCulture);
             }
         }
         

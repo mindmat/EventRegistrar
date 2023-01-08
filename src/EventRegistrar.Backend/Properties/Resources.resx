@@ -156,6 +156,9 @@
   <data name="AddPricePart" xml:space="preserve">
     <value>Neue Auswahl erstellen</value>
   </data>
+  <data name="AdmittedAt" xml:space="preserve">
+    <value>Zugelassen</value>
+  </data>
   <data name="AllowAsFallback" xml:space="preserve">
     <value>Als Fallback möglich</value>
   </data>
@@ -227,6 +230,9 @@
   </data>
   <data name="CopyRegistrables" xml:space="preserve">
     <value>Aktivitäten kopieren</value>
+  </data>
+  <data name="CountTotalShared" xml:space="preserve">
+    <value>Plätze total / geteilt</value>
   </data>
   <data name="Create" xml:space="preserve">
     <value>Erstellen</value>

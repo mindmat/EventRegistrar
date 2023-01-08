@@ -25,22 +25,38 @@
 
         <ng-container *ngFor="let offer of filteredOffers">
             <!-- Offer -->
-            <div class="flex flex-col min-h-32 shadow rounded-2xl overflow-hidden bg-card">
-                <div class="flex m-4">
-                    <a class="grow flex-col w-full hover:underline" [routerLink]="navigator.getRegistrationUrl(offer.registrationId)">
+            <div class="flex flex-col min-h-32 shadow rounded-2xl overflow-hidden bg-card p-6 space-y-2" [ngClass]="{'bg-gray-200': !!offer.isOnWaitingList}">
+                <div class="flex">
+                    <a class="grow flex-col w-full hover:underline space-y-1" [routerLink]="navigator.getRegistrationUrl(offer.registrationId)">
 
                         <!-- Registrable title & description -->
                         <div class="text-lg font-medium">{{ offer.displayName }}</div>
                         <div class="line-clamp-2 text-secondary">{{ offer.email }}</div>
+                        <div class="line-clamp-2 text-secondary">{{ offer.phone }}</div>
                         <div class="w-12 h-1 mt-2 border-t-2"></div>
-
                     </a>
-                    <!-- <mat-icon class="none icon-size-5 justify-middle" *ngIf="match.isWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon> -->
-
+                    <mat-icon class="none icon-size-5 justify-middle" *ngIf="offer.isOnWaitingList" [svgIcon]="'heroicons_solid:clock'" [matTooltip]="'WaitingList' | translate"></mat-icon>
                 </div>
 
+                <div class="flex items-center mt-6">
+                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_solid:location_on'"></mat-icon>
+                    <span class="max-w-none prose prose-sm whitespace-pre-line">{{ offer.location }}</span>
+                </div>
 
-                <div class="max-w-none m-4 prose prose-sm whitespace-pre-line">{{offer.comment}}</div>
+                <div class="flex items-center">
+                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'" [matTooltip]="'CountTotalShared' | translate"></mat-icon>
+                    <span class="leading-none">{{ offer.countTotal }} / {{ offer.countShared ?? 0 }}</span>
+                </div>
+
+                <div *ngIf="!!offer.comment" class="flex items-center">
+                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:chat-alt'"></mat-icon>
+                    <div class="max-w-none prose prose-sm whitespace-pre-line">{{offer.comment}}</div>
+                </div>
+
+                <div *ngIf="!offer.isOnWaitingList" class="flex items-center">
+                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:clipboard-list'" [matTooltip]="'AdmittedAt' | translate"></mat-icon>
+                    <span class="leading-none">{{ offer.admittedAt | date: 'dd.MM.yy HH:mm' }}</span>
+                </div>
             </div>
         </ng-container>
 
@@ -57,21 +73,25 @@
 
         <ng-container *ngFor="let request of filteredRequests">
             <!-- Request -->
-            <div class="flex flex-col min-h-32 shadow rounded-2xl overflow-hidden bg-card">
-                <div class="flex m-4">
-                    <a class="grow flex-col w-full hover:underline" [routerLink]="navigator.getRegistrationUrl(request.registrationId)">
+            <div class="flex flex-col min-h-32 shadow rounded-2xl overflow-hidden bg-card p-6" [ngClass]="{'bg-gray-200': !!request.isOnWaitingList}">
+                <div class="flex">
+                    <a class="grow flex-col w-full hover:underline space-y-1" [routerLink]="navigator.getRegistrationUrl(request.registrationId)">
 
                         <!-- Registrable title & description -->
                         <div class="text-lg font-medium">{{ request.displayName }}</div>
                         <div class="line-clamp-2 text-secondary">{{ request.email }}</div>
+                        <div class="line-clamp-2 text-secondary">{{ request.phone }}</div>
                         <div class="w-12 h-1 mt-2 border-t-2"></div>
 
                     </a>
-                    <!-- <mat-icon class="none icon-size-5 justify-middle" *ngIf="match.isWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon> -->
-
+                    <mat-icon class="none icon-size-5 justify-middle" *ngIf="request.isOnWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon>
+                </div>
+                <div *ngIf="!request.isOnWaitingList" class="flex items-center mt-4">
+                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:clipboard-list'"></mat-icon>
+                    <span class="leading-none">{{ request.admittedAt | date: 'dd.MM.yy HH:mm:ss' }}</span>
                 </div>
 
-                <div class="max-w-none m-4 prose prose-sm whitespace-pre-line">{{ request.comment }}</div>
+                <div class="max-w-none prose prose-sm whitespace-pre-line">{{ request.comment }}</div>
 
             </div>
         </ng-container>

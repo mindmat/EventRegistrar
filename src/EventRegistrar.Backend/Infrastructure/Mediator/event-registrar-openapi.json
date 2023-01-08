@@ -9979,6 +9979,9 @@
               }
             ]
           },
+          "isOnWaitingList": {
+            "type": "boolean"
+          },
           "admittedAt": {
             "type": "string",
             "format": "date-time",
@@ -10028,6 +10031,9 @@
           },
           "state": {
             "$ref": "#/components/schemas/RegistrationState"
+          },
+          "isOnWaitingList": {
+            "type": "boolean"
           },
           "admittedAt": {
             "type": "string",

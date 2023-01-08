@@ -36,6 +36,8 @@ public class HostingOffersQueryHandler : IRequestHandler<HostingQuery, HostingOf
                                                                   rsp => (hostingMappings.QuestionOptionId_Offer != null && rsp.QuestionOptionId == hostingMappings.QuestionOptionId_Offer)
                                                                       || (hostingMappings.QuestionOptionId_Request != null && rsp.QuestionOptionId == hostingMappings.QuestionOptionId_Request)))
                                                 .Include(reg => reg.Responses)
+                                                .OrderBy(reg => reg.IsOnWaitingList)
+                                                .ThenByDescending(reg => reg.AdmittedAt)
                                                 .ToListAsync(cancellationToken);
         if (hostingMappings.QuestionOptionId_Offer != null)
         {
@@ -48,6 +50,7 @@ public class HostingOffersQueryHandler : IRequestHandler<HostingQuery, HostingOf
                                                             Phone = reg.Phone,
                                                             Language = reg.Language,
                                                             State = reg.State,
+                                                            IsOnWaitingList = reg.IsOnWaitingList ?? false,
                                                             AdmittedAt = reg.AdmittedAt,
                                                             Location = GetResponseString(reg.Responses!, hostingMappings.QuestionId_Offer_Location),
                                                             CountTotal = GetResponseString(reg.Responses!, hostingMappings.QuestionId_Offer_CountTotal),
@@ -68,6 +71,7 @@ public class HostingOffersQueryHandler : IRequestHandler<HostingQuery, HostingOf
                                                               Phone = reg.Phone,
                                                               Language = reg.Language,
                                                               State = reg.State,
+                                                              IsOnWaitingList = reg.IsOnWaitingList ?? false,
                                                               AdmittedAt = reg.AdmittedAt,
                                                               HostingPartner = GetResponseString(reg.Responses!, hostingMappings.QuestionId_Request_Partner),
                                                               ShareOkWithPartner = IsOptionTicked(reg.Responses!, hostingMappings.QuestionOptionId_Request_ShareOkWithPartner),
@@ -108,6 +112,7 @@ public class HostingOffer
     public string? Language { get; set; }
     public string? Phone { get; set; }
     public RegistrationState? State { get; set; }
+    public bool IsOnWaitingList { get; set; }
     public DateTimeOffset? AdmittedAt { get; set; }
     public string? Location { get; set; }
     public string? CountTotal { get; set; }
@@ -123,6 +128,7 @@ public class HostingRequest
     public string? Language { get; set; }
     public string? Phone { get; set; }
     public RegistrationState State { get; set; }
+    public bool IsOnWaitingList { get; set; }
     public DateTimeOffset? AdmittedAt { get; set; }
     public string? HostingPartner { get; set; }
     public bool ShareOkWithPartner { get; set; }
