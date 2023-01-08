@@ -955,6 +955,12 @@
   <data name="SetWillPayAtCheckin" xml:space="preserve">
     <value>Bezahlt am Check-In</value>
   </data>
+  <data name="ShareOkWithPartner" xml:space="preserve">
+    <value>Teilen mit Partner OK</value>
+  </data>
+  <data name="ShareOkWithRandom" xml:space="preserve">
+    <value>Teilen mit Fremden OK (gleiches Geschlecht)</value>
+  </data>
   <data name="ShowFinished" xml:space="preserve">
     <value>Beendete Events anzeigen</value>
   </data>
@@ -996,6 +1002,9 @@
   </data>
   <data name="TransformToSingle" xml:space="preserve">
     <value>Zu Einzelanmeldung umwandeln</value>
+  </data>
+  <data name="TravelByCar" xml:space="preserve">
+    <value>Reist mit Auto</value>
   </data>
   <data name="TriggerMoveUp" xml:space="preserve">
     <value>Nachrücken auslösen</value>

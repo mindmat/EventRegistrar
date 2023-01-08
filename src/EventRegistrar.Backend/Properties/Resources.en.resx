@@ -864,6 +864,12 @@
   <data name="SetWillPayAtCheckin" xml:space="preserve">
     <value>Pays at check in</value>
   </data>
+  <data name="ShareOkWithPartner" xml:space="preserve">
+    <value>Can share with partner</value>
+  </data>
+  <data name="ShareOkWithRandom" xml:space="preserve">
+    <value>Can share with stranger (same gender)</value>
+  </data>
   <data name="ShowFinished" xml:space="preserve">
     <value>Show finished events</value>
   </data>
@@ -905,6 +911,9 @@
   </data>
   <data name="TransformToSingle" xml:space="preserve">
     <value>Transform to single registration</value>
+  </data>
+  <data name="TravelByCar" xml:space="preserve">
+    <value>Travels by car</value>
   </data>
   <data name="TriggerMoveUp" xml:space="preserve">
     <value>Trigger move up</value>

@@ -89,11 +89,17 @@
                 <div *ngIf="!!request.hostingPartner" class="flex items-center mt-6">
                     <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:user'"></mat-icon>
                     <span class="leading-none">{{ request.hostingPartner }}</span>
+                    <mat-icon *ngIf="request.shareOkWithPartner" class="none icon-size-5 justify-middle ml-2" [svgIcon]="'mat_solid:bed'" [matTooltip]="'ShareOkWithPartner' | translate"></mat-icon>
                 </div>
 
                 <div *ngIf="!!request.comment" class="flex items-center">
                     <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:chat-alt'"></mat-icon>
                     <div class="max-w-none prose prose-sm whitespace-pre-line">{{ request.comment }}</div>
+                </div>
+
+                <div class="flex items-center">
+                    <mat-icon *ngIf="request.travelByCar" class="icon-size-5 mr-3" [svgIcon]="'mat_solid:directions_car_filled'" [matTooltip]="'TravelByCar' | translate"></mat-icon>
+                    <mat-icon *ngIf="request.shareOkWithRandom" class="icon-size-5 mr-3" [svgIcon]="'mat_solid:bed'" [matTooltip]="'ShareOkWithRandom' | translate"></mat-icon>
                 </div>
             </div>
         </ng-container>

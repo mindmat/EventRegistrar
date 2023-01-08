@@ -2577,6 +2577,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Teilen mit Partner OK.
+        /// </summary>
+        internal static string ShareOkWithPartner {
+            get {
+                return ResourceManager.GetString("ShareOkWithPartner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teilen mit Fremden OK (gleiches Geschlecht).
+        /// </summary>
+        internal static string ShareOkWithRandom {
+            get {
+                return ResourceManager.GetString("ShareOkWithRandom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Beendete Events anzeigen.
         /// </summary>
         internal static string ShowFinished {
@@ -2699,6 +2717,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string TransformToSingle {
             get {
                 return ResourceManager.GetString("TransformToSingle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reist mit Auto.
+        /// </summary>
+        internal static string TravelByCar {
+            get {
+                return ResourceManager.GetString("TravelByCar", resourceCulture);
             }
         }
         

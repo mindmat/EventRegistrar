@@ -76,7 +76,7 @@ public class HostingOffersQueryHandler : IRequestHandler<HostingQuery, HostingOf
                                                               HostingPartner = GetResponseString(reg.Responses!, hostingMappings.QuestionId_Request_Partner),
                                                               ShareOkWithPartner = IsOptionTicked(reg.Responses!, hostingMappings.QuestionOptionId_Request_ShareOkWithPartner),
                                                               ShareOkWithRandom = IsOptionTicked(reg.Responses!, hostingMappings.QuestionOptionId_Request_ShareOkWithRandom),
-                                                              TravelByCar = IsOptionTicked(reg.Responses!, hostingMappings.QuestionOptionId_Request_ShareOkWithRandom),
+                                                              TravelByCar = IsOptionTicked(reg.Responses!, hostingMappings.QuestionOptionId_Request_TravelByCar),
                                                               Comment = GetResponseString(reg.Responses!, hostingMappings.QuestionId_Request_Comment)
                                                           })
                                            .ToList();
