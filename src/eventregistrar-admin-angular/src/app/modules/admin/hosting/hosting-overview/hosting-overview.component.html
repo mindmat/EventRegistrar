@@ -9,21 +9,21 @@
         </div>
 
         <!-- Filters -->
-        <!-- <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
             <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-            <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query [value]="searchString$.value" autofocus>
-        </mat-form-field> -->
+            <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query autofocus>
+        </mat-form-field>
     </div>
 
     <!-- Offers -->
     <div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
         <div class="text-xl font-bold tracking-tight leading-none">{{ 'HostingOffers' | translate }}</div>
-        <div class="mt-1.5 text-lg text-secondary">({{ offers?.length ?? 0 }})</div>
+        <div class="mt-1.5 text-lg text-secondary">({{ filteredOffers?.length ?? 0 }})</div>
     </div>
 
-    <div *ngIf="offers" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-10">
+    <div *ngIf="filteredOffers" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-10">
 
-        <ng-container *ngFor="let offer of offers">
+        <ng-container *ngFor="let offer of filteredOffers">
             <!-- Offer -->
             <div class="flex flex-col min-h-32 shadow rounded-2xl overflow-hidden bg-card">
                 <div class="flex m-4">
@@ -49,13 +49,13 @@
     <!-- Processed -->
     <div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
         <div class="text-xl font-bold tracking-tight leading-none">{{ 'HostingRequests' | translate }}</div>
-        <div class="mt-1.5 text-lg text-secondary">({{ requests?.length ?? 0 }})</div>
+        <div class="mt-1.5 text-lg text-secondary">({{ filteredRequests?.length ?? 0 }})</div>
     </div>
 
     <!-- Requests -->
-    <div *ngIf="requests" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-10">
+    <div *ngIf="filteredRequests" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-10">
 
-        <ng-container *ngFor="let request of requests">
+        <ng-container *ngFor="let request of filteredRequests">
             <!-- Request -->
             <div class="flex flex-col min-h-32 shadow rounded-2xl overflow-hidden bg-card">
                 <div class="flex m-4">
@@ -71,7 +71,7 @@
 
                 </div>
 
-                <div class="max-w-none m-4 prose prose-sm whitespace-pre-line">{{request.comment}}</div>
+                <div class="max-w-none m-4 prose prose-sm whitespace-pre-line">{{ request.comment }}</div>
 
             </div>
         </ng-container>

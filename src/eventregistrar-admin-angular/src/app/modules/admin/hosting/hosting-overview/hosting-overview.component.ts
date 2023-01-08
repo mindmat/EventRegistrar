@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HostingOffer, HostingOffersAndRequests, HostingRequest } from 'app/api/api';
-import { Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { HostingOverviewService } from './hosting-overview.service';
 
@@ -12,8 +12,9 @@ import { HostingOverviewService } from './hosting-overview.service';
 export class HostingOverviewComponent implements OnInit
 {
   private unsubscribeAll: Subject<any> = new Subject<any>();
-  offers: HostingOffer[];
-  requests: HostingRequest[];
+  filteredOffers: HostingOffer[];
+  filteredRequests: HostingRequest[];
+  query$: BehaviorSubject<string | null> = new BehaviorSubject(null);
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private hostingService: HostingOverviewService,
@@ -21,14 +22,29 @@ export class HostingOverviewComponent implements OnInit
 
   ngOnInit(): void
   {
-    this.hostingService.hosting$
+    combineLatest([this.hostingService.hosting$, this.query$])
       .pipe(takeUntil(this.unsubscribeAll))
-      .subscribe((hosting: HostingOffersAndRequests) =>
+      .subscribe(([hosting, query]) =>
       {
-        this.offers = hosting.offers;
-        this.requests = hosting.requests;
+        this.filteredOffers = hosting.offers;
+        this.filteredRequests = hosting.requests;
+
+        if (query != null && query !== '')
+        {
+          this.filteredOffers = hosting.offers.filter(reg => reg.displayName?.toLowerCase().includes(query.toLowerCase())
+            || reg.email?.toLowerCase().includes(query.toLowerCase())
+            || reg.phone?.toLowerCase().includes(query.toLowerCase()));
+          this.filteredRequests = hosting.requests.filter(reg => reg.displayName?.toLowerCase().includes(query.toLowerCase())
+            || reg.email?.toLowerCase().includes(query.toLowerCase())
+            || reg.phone?.toLowerCase().includes(query.toLowerCase()));
+        }
 
         this.changeDetectorRef.markForCheck();
       });
-  };
+  }
+
+  filterByQuery(query: string)
+  {
+    this.query$.next(query);
+  }
 }
