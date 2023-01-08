@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Payments;
