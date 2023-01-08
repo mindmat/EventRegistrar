@@ -41,18 +41,20 @@
                 </div>
 
                 <div class="flex items-center mt-6">
+                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'" [matTooltip]="'CountTotalShared' | translate"></mat-icon>
+                    <span class="leading-none">{{ offer.countTotal }}&nbsp;</span>
+                    <span *ngIf="offer.countTotal != '1'" class="leading-none"> / {{ offer.countShared }}</span>
+                </div>
+
+                <div class="flex items-center">
                     <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_solid:location_on'"></mat-icon>
                     <span class="max-w-none prose prose-sm whitespace-pre-line">{{ offer.location }}</span>
                 </div>
 
-                <div class="flex items-center">
-                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'" [matTooltip]="'CountTotalShared' | translate"></mat-icon>
-                    <span class="leading-none">{{ offer.countTotal }} / {{ offer.countShared ?? 0 }}</span>
-                </div>
 
                 <div *ngIf="!!offer.comment" class="flex items-center">
                     <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:chat-alt'"></mat-icon>
-                    <div class="max-w-none prose prose-sm whitespace-pre-line">{{offer.comment}}</div>
+                    <div class="max-w-none prose prose-sm whitespace-pre-line">{{ offer.comment }}</div>
                 </div>
             </div>
         </ng-container>
