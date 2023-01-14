@@ -1045,6 +1045,9 @@
   <data name="WaitingList" xml:space="preserve">
     <value>Warteliste</value>
   </data>
+  <data name="WillPayAtCheckin" xml:space="preserve">
+    <value>Bezahlt am Checkin</value>
+  </data>
   <data name="Zugriffsanfragen" xml:space="preserve">
     <value>Zugriffsanfragen</value>
   </data>

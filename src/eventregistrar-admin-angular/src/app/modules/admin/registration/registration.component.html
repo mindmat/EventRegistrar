@@ -101,6 +101,9 @@
                         <span *ngIf="registration.price != registration.paid">&nbsp;/&nbsp;{{ registration.price | number : '1.2-2' }}</span>
                         <mat-icon *ngIf="registration.price == registration.paid" class="icon-size-5 ml-1 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
                     </div>
+                    <div class="flex items-center mt-1" *ngIf="!registration.isWaitingList && registration.willPayAtCheckin">
+                        <span class="leading-none ml-8">{{ 'WillPayAtCheckin' | translate }}</span>
+                    </div>
                     <div class="flex flex-col mt-3 ml-8" *ngIf="registration.reductions?.length > 0">
                         <span class="leading-none">{{ 'Reductions' | translate }}:</span>
                         <div class="flex items-center mt-2" *ngFor="let reduction of registration.reductions">

@@ -2841,6 +2841,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bezahlt am Checkin.
+        /// </summary>
+        internal static string WillPayAtCheckin {
+            get {
+                return ResourceManager.GetString("WillPayAtCheckin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zugriffsanfragen.
         /// </summary>
         internal static string Zugriffsanfragen {

@@ -942,6 +942,9 @@
   <data name="WaitingList" xml:space="preserve">
     <value>Waiting list</value>
   </data>
+  <data name="WillPayAtCheckin" xml:space="preserve">
+    <value>Pays at check in</value>
+  </data>
   <data name="Zugriffsanfragen" xml:space="preserve">
     <value>Access requests</value>
   </data>
