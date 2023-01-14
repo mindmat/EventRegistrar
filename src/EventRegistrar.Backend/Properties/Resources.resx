@@ -267,6 +267,9 @@
   <data name="Discard" xml:space="preserve">
     <value>Verwerfen</value>
   </data>
+  <data name="Download" xml:space="preserve">
+    <value>Herunterladen</value>
+  </data>
   <data name="DuePayments" xml:space="preserve">
     <value>Ausstehende Zahlungen</value>
   </data>

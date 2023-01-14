@@ -264,6 +264,9 @@
   <data name="Discard" xml:space="preserve">
     <value>Discard</value>
   </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
   <data name="DuePayments" xml:space="preserve">
     <value>Due payments</value>
   </data>

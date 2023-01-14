@@ -1,5 +1,9 @@
-﻿using System.Reflection;
+﻿using System.Collections;
+using System.Data;
+using System.Reflection;
 using System.Text.Json;
+
+using ClosedXML.Excel;
 
 using SimpleInjector;
 
@@ -82,16 +86,21 @@ public static class EndpointRouteBuilderExtensions
 
         var mediator = container.GetInstance<IMediator>();
         var response = await mediator.Send(request, context.RequestAborted);
-        //var dbContext = container.GetInstance<DbContext>();
-        //if (dbContext.ChangeTracker.HasChanges())
-        //{
-        //    await dbContext.SaveChangesAsync(context.RequestAborted);
-        //}
 
-        //// "transaction": only release messages to event bus if db commit succeeds
-        //await container.GetInstance<CommandQueue>().Release();
+        if (context.Request.Headers.Accept == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        {
+            await SerializeAsXlsx(context, response);
+        }
+        else
+        {
+            await SerializeAsJson(context, response, requestType);
+        }
 
+        await context.Response.Body.FlushAsync(context.RequestAborted);
+    }
 
+    private static async Task SerializeAsJson(HttpContext context, object? response, Type requestType)
+    {
         context.Response.Headers.Add("content-type", "application/json");
         if (response is ISerializedJson serializedJson)
         {
@@ -102,8 +111,82 @@ public static class EndpointRouteBuilderExtensions
             var objectType = response?.GetType() ?? requestType;
             await JsonSerializer.SerializeAsync(context.Response.Body, response, objectType, _jsonSettings, context.RequestAborted);
         }
+    }
 
-        await context.Response.Body.FlushAsync(context.RequestAborted);
+    private static async Task SerializeAsXlsx(HttpContext context, object? response)
+    {
+        // try to serialize as xlsx
+        context.Response.Headers.Add("content-type", "application/octet-stream");
+        var workbook = new XLWorkbook();
+        foreach (var (propertyInfo, rowType) in GetEnumerableProperties(response))
+        {
+            var mappings = GetExportableProperties(rowType)
+                           .Select(prp => (prp.Name, (Func<object, object?>)prp.GetValue))
+                           .ToList();
+
+            var dataTable = new DataTable(propertyInfo.Name);
+
+            foreach (var (title, _) in mappings)
+            {
+                dataTable.Columns.Add(title);
+            }
+
+            if (propertyInfo.GetValue(response) is not IEnumerable dataRows)
+            {
+                continue;
+            }
+
+            foreach (var dataRow in dataRows)
+            {
+                var tableRow = dataTable.NewRow();
+                foreach (var (title, getValue) in mappings)
+                {
+                    tableRow[title] = FormatValue(getValue(dataRow));
+                }
+
+                dataTable.Rows.Add(tableRow);
+            }
+
+            var worksheet = workbook.AddWorksheet(dataTable, propertyInfo.Name);
+            worksheet.Columns().AdjustToContents();
+            //worksheet.Sort(1);
+        }
+
+        var stream = new MemoryStream();
+        workbook.SaveAs(stream);
+        stream.Position = 0;
+        await context.Response.BodyWriter.WriteAsync(stream.ToArray());
+    }
+
+    private static object? FormatValue(object? value)
+    {
+        if (value is bool valueBool)
+        {
+            return valueBool
+                       ? "x"
+                       : string.Empty;
+        }
+
+        return value;
+    }
+
+    private static IEnumerable<PropertyInfo> GetExportableProperties(Type type)
+    {
+        return type.GetProperties()
+                   .Where(prp => prp.PropertyType == typeof(string)
+                              || prp.PropertyType == typeof(int)
+                              || prp.PropertyType == typeof(bool));
+    }
+
+    private static IEnumerable<(PropertyInfo, Type)> GetEnumerableProperties(object? data)
+    {
+        return data?.GetType()
+                   .GetProperties()
+                   .Where(prp => prp.PropertyType.IsGenericType
+                              && prp.PropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>)))
+                   .Select(prp => (prp, prp.PropertyType.GetGenericArguments()[0]))
+                   .ToList()
+            ?? Enumerable.Empty<(PropertyInfo, Type)>();
     }
 
 

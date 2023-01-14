@@ -1,8 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { HostingOffer, HostingOffersAndRequests, HostingRequest } from 'app/api/api';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit, Optional } from '@angular/core';
+import { API_BASE_URL, HostingOffer, HostingOffersAndRequests, HostingRequest } from 'app/api/api';
 import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { HostingOverviewService } from './hosting-overview.service';
+import { HttpClient } from '@angular/common/http';
+import { EventService } from '../../events/event.service';
 
 @Component({
   selector: 'app-hosting-overview',
@@ -18,7 +20,9 @@ export class HostingOverviewComponent implements OnInit
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     private hostingService: HostingOverviewService,
-    public navigator: NavigatorService) { }
+    public navigator: NavigatorService)
+  {
+  }
 
   ngOnInit(): void
   {
@@ -46,5 +50,14 @@ export class HostingOverviewComponent implements OnInit
   filterByQuery(query: string)
   {
     this.query$.next(query);
+  }
+
+  downloadHosting()
+  {
+    this.hostingService.downloadHostingXlsx();
+    // var link = document.createElement('a');
+    // link.href = this.baseUrl + "/api/HostingQuery?format=xlsx";
+    // link.download = "Hosting.xlsx";
+    // link.click();
   }
 }
