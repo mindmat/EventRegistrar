@@ -1,7 +1,5 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
-using MediatR;
 
 namespace EventRegistrar.Backend.Mailing.Import;
 
@@ -32,7 +30,7 @@ public class TryAssignImportedMailCommandHandler : IRequestHandler<TryAssignImpo
     {
         var mail = await _importedMails.Include(ml => ml.Registrations)
                                        .FirstAsync(ml => ml.Id == command.ImportedMailId, cancellationToken);
-        var existingRegistrationMappings = mail.Registrations.Select(reg => reg.RegistrationId).ToList();
+        var existingRegistrationMappings = mail.Registrations!.Select(reg => reg.RegistrationId).ToList();
         var emailAddresses = new List<string>(mail.Recipients?.Split(";")) { mail.SenderMail };
         foreach (var emailAddress in emailAddresses)
         {

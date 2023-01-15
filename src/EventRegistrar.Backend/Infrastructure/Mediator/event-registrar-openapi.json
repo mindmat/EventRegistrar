@@ -5034,6 +5034,12 @@
             "items": {
               "$ref": "#/components/schemas/IndividualReductionDisplayItem"
             }
+          },
+          "importedMails": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MailDisplayItem"
+            }
           }
         }
       },
@@ -5077,6 +5083,9 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "type": {
+            "$ref": "#/components/schemas/MailDisplayType"
+          },
           "mailId": {
             "type": "string",
             "format": "guid"
@@ -5106,6 +5115,20 @@
             "nullable": true
           }
         }
+      },
+      "MailDisplayType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Auto",
+          "Bulk",
+          "Imported"
+        ],
+        "enum": [
+          1,
+          2,
+          3
+        ]
       },
       "MailState": {
         "type": "integer",

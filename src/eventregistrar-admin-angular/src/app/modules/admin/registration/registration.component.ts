@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { IndividualReductionType, MailState, MailTypeItem, RegistrationDisplayItem, RegistrationState, SpotDisplayItem } from 'app/api/api';
+import { IndividualReductionType, MailDisplayItem, MailState, MailTypeItem, RegistrationDisplayItem, RegistrationState, SpotDisplayItem } from 'app/api/api';
 import { BehaviorSubject, debounceTime, filter, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { MailService } from '../mailing/mails/mail-view/mail.service';
@@ -22,6 +22,7 @@ export class RegistrationComponent implements OnInit
   public registration: RegistrationDisplayItem;
   private unsubscribeAll: Subject<any> = new Subject<any>();
   public possibleMailTypes: MailTypeItem[];
+  public mails: MailDisplayItem[];
   public notes: string | null = null;
   public notesDirty: boolean;
   public notesVersion: number;
@@ -59,6 +60,12 @@ export class RegistrationComponent implements OnInit
         {
           this.notes = registration.internalNotes;
         }
+        this.mails = this.registration.mails;
+        if (!!this.registration.importedMails)
+        {
+          this.mails = this.mails.concat(this.registration.importedMails);
+        }
+        this.mails = this.mails.sort(mail => (mail.sentAt ?? mail.created).valueOf());
 
         this.possibleMailTypes = null;
 

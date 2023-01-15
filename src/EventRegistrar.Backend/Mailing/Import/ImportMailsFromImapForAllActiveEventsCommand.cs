@@ -2,8 +2,6 @@
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.RegistrationForms;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Mailing.Import;
 
 public class ImportMailsFromImapForAllActiveEventsCommand : IRequest { }

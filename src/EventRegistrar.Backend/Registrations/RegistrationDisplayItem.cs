@@ -35,17 +35,26 @@ public class RegistrationDisplayItem
     public IEnumerable<SpotDisplayItem>? Spots { get; set; }
     public IEnumerable<AssignedPaymentDisplayItem>? Payments { get; set; }
     public IEnumerable<MailDisplayItem>? Mails { get; set; }
+    public IEnumerable<MailDisplayItem>? ImportedMails { get; set; }
     public IEnumerable<IndividualReductionDisplayItem>? Reductions { get; set; }
 }
 
 public class MailDisplayItem
 {
+    public MailDisplayType Type { get; set; }
     public Guid MailId { get; set; }
     public string? Subject { get; set; }
     public MailState? State { get; set; }
     public DateTimeOffset Created { get; set; }
     public bool Withhold { get; set; }
     public DateTimeOffset? SentAt { get; set; }
+}
+
+public enum MailDisplayType
+{
+    Auto = 1,
+    Bulk = 2,
+    Imported = 3
 }
 
 public class IndividualReductionDisplayItem

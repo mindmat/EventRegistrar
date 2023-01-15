@@ -7499,6 +7499,7 @@ export interface RegistrationDisplayItem {
     payments?: AssignedPaymentDisplayItem[] | null;
     mails?: MailDisplayItem[] | null;
     reductions?: IndividualReductionDisplayItem[] | null;
+    importedMails?: MailDisplayItem[];
 }
 
 export enum RegistrationState {
@@ -7515,12 +7516,19 @@ export interface AssignedPaymentDisplayItem {
 }
 
 export interface MailDisplayItem {
+    type?: MailDisplayType;
     mailId?: string;
     subject?: string | null;
     state?: MailState | null;
     created?: Date;
     withhold?: boolean;
     sentAt?: Date | null;
+}
+
+export enum MailDisplayType {
+    Auto = 1,
+    Bulk = 2,
+    Imported = 3,
 }
 
 export enum MailState {

@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Registrables;
@@ -80,13 +81,25 @@ public class RegistrationCalculator : ReadModelCalculator<RegistrationDisplayIte
                                                                         .OrderByDescending(mir => mir.Mail!.Created)
                                                                         .Select(mir => new MailDisplayItem
                                                                                        {
+                                                                                           Type = mir.Mail!.BulkMailKey == null
+                                                                                                      ? MailDisplayType.Auto
+                                                                                                      : MailDisplayType.Bulk,
                                                                                            MailId = mir.MailId,
-                                                                                           Subject = mir.Mail!.Subject,
+                                                                                           Subject = mir.Mail.Subject,
                                                                                            Created = mir.Mail.Created,
                                                                                            Withhold = mir.Mail.Withhold,
                                                                                            SentAt = mir.Mail.Sent,
                                                                                            State = mir.State
-                                                                                       })
+                                                                                       }),
+                                                             ImportedMails = reg.ImportedMails!
+                                                                                .OrderByDescending(mir => mir.Mail!.Date)
+                                                                                .Select(mir => new MailDisplayItem
+                                                                                               {
+                                                                                                   Type = MailDisplayType.Imported,
+                                                                                                   MailId = mir.ImportedMailId,
+                                                                                                   Subject = mir.Mail!.Subject,
+                                                                                                   Created = mir.Mail.Date
+                                                                                               })
                                                          })
                                           .FirstAsync(cancellationToken);
 
@@ -170,7 +183,8 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
                                                              IEventToCommandTranslation<OutgoingPaymentUnassigned>,
                                                              IEventToCommandTranslation<IncomingPaymentUnassigned>,
                                                              IEventToCommandTranslation<IncomingPaymentAssigned>,
-                                                             IEventToCommandTranslation<PriceChanged>
+                                                             IEventToCommandTranslation<PriceChanged>,
+                                                             IEventToCommandTranslation<ImportedMailAssigned>
 {
     private readonly IDateTimeProvider _dateTimeProvider;
 
@@ -240,6 +254,14 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned : IEventToCommandTran
         if (e.EventId != null && e.RegistrationId != null)
         {
             yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId!.Value);
+        }
+    }
+
+    public IEnumerable<IRequest> Translate(ImportedMailAssigned e)
+    {
+        if (e.EventId != null)
+        {
+            yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId);
         }
     }
 

@@ -1,12 +1,10 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 using MailKit;
 using MailKit.Net.Imap;
 
-using MediatR;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using MimeKit;
 
@@ -17,7 +15,7 @@ public class ImportMailsFromImapCommand : IRequest, IEventBoundRequest
     public Guid EventId { get; set; }
 }
 
-public class ImportMailsFromImapCommandHandler : IRequestHandler<ImportMailsFromImapCommand>
+public class ImportMailsFromImapCommandHandler : AsyncRequestHandler<ImportMailsFromImapCommand>
 {
     private readonly ExternalMailConfigurations _configurations;
     private readonly IEventBus _eventBus;
@@ -38,30 +36,36 @@ public class ImportMailsFromImapCommandHandler : IRequestHandler<ImportMailsFrom
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Unit> Handle(ImportMailsFromImapCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(ImportMailsFromImapCommand command, CancellationToken cancellationToken)
     {
         if (_configurations.MailConfigurations == null)
         {
-            return Unit.Value;
+            return;
         }
 
+        var minDate = _dateTimeProvider.Now.AddMonths(-2);
         foreach (var mailConfiguration in _configurations.MailConfigurations)
         {
             using var client = new ImapClient();
+            client.ServerCertificateValidationCallback = (sender,
+                                                          certificate,
+                                                          chain,
+                                                          errors) => true;
             await client.ConnectAsync(mailConfiguration.ImapHost, mailConfiguration.ImapPort, true, cancellationToken);
             await client.AuthenticateAsync(mailConfiguration.Username, mailConfiguration.Password, cancellationToken);
 
             // The Inbox folder is always available on all IMAP servers...
             var inbox = client.Inbox;
-            inbox.Open(FolderAccess.ReadOnly);
+            await inbox.OpenAsync(FolderAccess.ReadOnly, cancellationToken);
 
             _log.LogInformation("Total messages: {0}", inbox.Count);
             _log.LogInformation("Recent messages: {0}", inbox.Recent);
 
             for (var i = 0; i < inbox.Count; i++)
             {
-                var message = inbox.GetMessage(i);
-                if (_importedMails.Any(iml => iml.EventId == command.EventId
+                var message = await inbox.GetMessageAsync(i, cancellationToken);
+                if (message.Date < minDate
+                 && _importedMails.Any(iml => iml.EventId == command.EventId
                                            && iml.MessageIdentifier == message.MessageId))
                     // mail has been imported earlier
                 {
@@ -87,7 +91,7 @@ public class ImportMailsFromImapCommandHandler : IRequestHandler<ImportMailsFrom
                                    message.References.FirstOrDefault(rfr => rfr.EndsWith("sendgrid.net"))
                            };
 
-                await _importedMails.InsertOrUpdateEntity(mail, cancellationToken);
+                _importedMails.InsertObjectTree(mail);
 
                 _eventBus.Publish(new ExternalMailImported
                                   {
@@ -102,7 +106,5 @@ public class ImportMailsFromImapCommandHandler : IRequestHandler<ImportMailsFrom
 
             await client.DisconnectAsync(true, cancellationToken);
         }
-
-        return Unit.Value;
     }
 }

@@ -6,8 +6,8 @@ public class ExternalMailImported : DomainEvent
 {
     public DateTimeOffset ExternalDate { get; set; }
     public Guid ImportedMailId { get; set; }
-    public string Subject { get; set; }
-    public string From { get; set; }
+    public string? Subject { get; set; }
+    public string? From { get; set; }
 }
 
 public class ExternalMailImportedUserTranslation : IEventToUserTranslation<ExternalMailImported>
