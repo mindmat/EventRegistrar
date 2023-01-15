@@ -122,8 +122,12 @@ public class DuePaymentsCalculator : ReadModelCalculator<IEnumerable<DuePaymentI
                                             Reminder1Mail = reg.Reminder1Mail,
                                             Reminder2Mail = reg.Reminder2Mail,
                                             ReminderLevel = reg.ReminderLevel,
-                                            Reminder1Due = reg.Reminder1Mail == null && reg.AcceptedMail != null && reg.AcceptedMail.Sent < reminderDueFrom,
-                                            Reminder2Due = reg.Reminder2Mail == null && reg.Reminder1Mail != null && reg.Reminder1Mail.Sent < reminderDueFrom,
+                                            Reminder1Due = reg.Reminder1Mail == null
+                                                        && reg.AcceptedMail != null
+                                                        && reg.AcceptedMail.Sent < reminderDueFrom,
+                                            Reminder2Due = reg.Reminder2Mail == null
+                                                        && reg.Reminder1Mail != null
+                                                        && reg.Reminder1Mail.Sent < reminderDueFrom,
                                             ReminderSmsSent = reg.ReminderSms?.Sent,
                                             PhoneNormalized = reg.PhoneNormalized,
                                             ReminderMailPossible = reg.Reminder2Mail == null
@@ -146,6 +150,7 @@ public class DuePaymentsCalculator : ReadModelCalculator<IEnumerable<DuePaymentI
             {
                 dpi.DaysSinceLastNotification = (int)Math.Floor((now - lastNotification.Value.Date).TotalDays);
                 dpi.LastNotificationType = lastNotification.Value.Type;
+                dpi.ReminderMailPossible = dpi.Reminder1Due || dpi.Reminder2Due;
             }
         });
 
