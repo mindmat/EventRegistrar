@@ -66,6 +66,8 @@ builder.Services.AddSimpleInjector(container, options =>
 });
 builder.Services.AddSignalR();
 builder.Services.AddSingleton(container);
+builder.Services.AddLogging(loggingBuilder => loggingBuilder.AddApplicationInsights()
+                                                            .SetMinimumLevel(LogLevel.Information));
 //builder.Services.AddDbContext<EventRegistratorDbContext>(SetDbOptions);
 
 builder.Services.AddAuthentication(options =>

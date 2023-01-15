@@ -32,7 +32,7 @@ export class HostingOverviewService extends FetchService<HostingOffersAndRequest
 
   downloadHostingXlsx()
   {
-    const url = this.baseUrl + "/api/HostingQuery?format=xlsx";
+    const url = this.baseUrl + "/api/HostingQuery";
     const formatXlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
     this.http.post(url, { eventId: this.eventService.selectedId }, { responseType: "blob", headers: { 'Accept': formatXlsx } }).subscribe((file: Blob) =>
     {
