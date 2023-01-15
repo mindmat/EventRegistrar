@@ -89,7 +89,7 @@ public static class EndpointRouteBuilderExtensions
 
         if (context.Request.Headers.Accept == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
         {
-            await SerializeAsXlsx(context, response);
+            await SerializeAsXlsx(context, response, container.GetInstance<ILogger>());
         }
         else
         {
@@ -113,7 +113,7 @@ public static class EndpointRouteBuilderExtensions
         }
     }
 
-    private static async Task SerializeAsXlsx(HttpContext context, object? response)
+    private static async Task SerializeAsXlsx(HttpContext context, object? response, ILogger logger)
     {
         // try to serialize as xlsx
         context.Response.Headers.Add("content-type", "application/octet-stream");
@@ -155,6 +155,10 @@ public static class EndpointRouteBuilderExtensions
             catch
             {
                 // sandbox
+                foreach (var fontFamily in SixLabors.Fonts.SystemFonts.Collection.Families)
+                {
+                    logger.LogInformation("Font available: {name}", fontFamily.Name);
+                }
             }
             //worksheet.Sort(1);
         }
