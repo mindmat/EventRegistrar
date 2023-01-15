@@ -16,8 +16,8 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mt-8 sm:mt-10">
 
                 <ng-container *ngFor="let duePayment of filteredDuePayments; trackBy: trackByFn">
-                    <!-- Double Registrable -->
-                    <div class="flex flex-col h-72 shadow rounded-2xl overflow-hidden bg-card">
+                    <!-- Due payment -->
+                    <div class="flex flex-col h-72 shadow rounded-2xl overflow-hidden bg-card" [ngClass]="{'bg-gray-200': duePayment.willPayAtCheckin}">
                         <div class="flex flex-col p-6">
 
                             <!-- Participant -->

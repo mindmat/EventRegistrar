@@ -8165,6 +8165,9 @@
           "lastNotificationType": {
             "type": "string",
             "nullable": true
+          },
+          "willPayAtCheckin": {
+            "type": "boolean"
           }
         }
       },

@@ -8510,6 +8510,7 @@ export interface DuePaymentItem {
     reminderSmsSent?: Date | null;
     daysSinceLastNotification?: number | null;
     lastNotificationType?: string | null;
+    willPayAtCheckin?: boolean;
 }
 
 export interface SentMailDto {

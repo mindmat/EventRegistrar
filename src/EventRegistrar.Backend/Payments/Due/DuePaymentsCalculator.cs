@@ -62,7 +62,8 @@ public class DuePaymentsCalculator : ReadModelCalculator<IEnumerable<DuePaymentI
                                                                                                rml.Mail.Withhold,
                                                                                                rml.Mail.Discarded
                                                                                            }),
-                                                          ReminderSms = reg.Sms!.Where(sms => sms.Type == SmsType.Reminder)
+                                                          ReminderSms = reg.Sms!.Where(sms => sms.Type == SmsType.Reminder),
+                                                          reg.WillPayAtCheckin
                                                       })
                                        .ToListAsync(cancellationToken);
 
@@ -77,6 +78,7 @@ public class DuePaymentsCalculator : ReadModelCalculator<IEnumerable<DuePaymentI
                                             tmp.PhoneNormalized,
                                             tmp.ReminderLevel,
                                             tmp.Paid,
+                                            tmp.WillPayAtCheckin,
                                             AcceptedMail = tmp.Mails.Where(mail => !mail.Withhold
                                                                                 && !mail.Discarded
                                                                                 && MailTypes_Accepted.Contains(mail.Type))
@@ -132,7 +134,8 @@ public class DuePaymentsCalculator : ReadModelCalculator<IEnumerable<DuePaymentI
                                                                && reg.Reminder2Mail != null
                                                                && reg.AcceptedMail != null
                                                                && reg.AcceptedMail.Sent < reminderDueFrom
-                                                               && reg.PhoneNormalized != null
+                                                               && reg.PhoneNormalized != null,
+                                            WillPayAtCheckin = reg.WillPayAtCheckin
                                         })
                          .ToList();
 
@@ -146,7 +149,8 @@ public class DuePaymentsCalculator : ReadModelCalculator<IEnumerable<DuePaymentI
             }
         });
 
-        return result.OrderByDescending(dpi => dpi.DaysSinceLastNotification ?? 0);
+        return result.OrderByDescending(dpi => dpi.WillPayAtCheckin)
+                     .ThenByDescending(dpi => dpi.DaysSinceLastNotification ?? 0);
     }
 
     private static (DateTimeOffset Date, string Type)? GetLastNotification(DuePaymentItem dpi)
@@ -185,6 +189,7 @@ public class DuePaymentItem
     public DateTimeOffset? ReminderSmsSent { get; set; }
     public int? DaysSinceLastNotification { get; set; }
     public string? LastNotificationType { get; set; }
+    public bool WillPayAtCheckin { get; internal set; }
 }
 
 public class SentMailDto
