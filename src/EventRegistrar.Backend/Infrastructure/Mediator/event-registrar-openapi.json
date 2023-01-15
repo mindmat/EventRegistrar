@@ -5028,17 +5028,18 @@
               "$ref": "#/components/schemas/MailDisplayItem"
             }
           },
+          "importedMails": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/MailDisplayItem"
+            }
+          },
           "reductions": {
             "type": "array",
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/IndividualReductionDisplayItem"
-            }
-          },
-          "importedMails": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MailDisplayItem"
             }
           }
         }

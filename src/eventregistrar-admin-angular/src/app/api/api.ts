@@ -7498,8 +7498,8 @@ export interface RegistrationDisplayItem {
     spots?: SpotDisplayItem[] | null;
     payments?: AssignedPaymentDisplayItem[] | null;
     mails?: MailDisplayItem[] | null;
+    importedMails?: MailDisplayItem[] | null;
     reductions?: IndividualReductionDisplayItem[] | null;
-    importedMails?: MailDisplayItem[];
 }
 
 export enum RegistrationState {

@@ -258,7 +258,8 @@
                                     <button mat-icon-button (click)="viewMail(mail.mailId)" class="ml-auto">
                                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:eye'"></mat-icon>
                                     </button>
-                                    <button *ngIf="!mail.sentAt" mat-icon-button [matMenuTriggerFor]="mailMenu" class="-ml-2" (click)="fetchPossibleMailTypes()">
+                                    <button *ngIf="!mail.sentAt && mail.type!==MailDisplayType.Imported" mat-icon-button [matMenuTriggerFor]="mailMenu" class="-ml-2"
+                                        (click)="fetchPossibleMailTypes()">
                                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                                     </button>
                                     <mat-menu #mailMenu="matMenu">

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, MailView } from 'app/api/api';
+import { Api, MailDisplayItem, MailDisplayType, MailView } from 'app/api/api';
 import { EventService } from 'app/modules/admin/events/event.service';
 import { FetchService } from 'app/modules/admin/infrastructure/fetchService';
 import { Observable } from 'rxjs';
