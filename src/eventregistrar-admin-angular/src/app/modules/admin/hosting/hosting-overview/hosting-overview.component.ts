@@ -55,9 +55,5 @@ export class HostingOverviewComponent implements OnInit
   downloadHosting()
   {
     this.hostingService.downloadHostingXlsx();
-    // var link = document.createElement('a');
-    // link.href = this.baseUrl + "/api/HostingQuery?format=xlsx";
-    // link.download = "Hosting.xlsx";
-    // link.click();
   }
 }

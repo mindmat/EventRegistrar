@@ -148,7 +148,14 @@ public static class EndpointRouteBuilderExtensions
             }
 
             var worksheet = workbook.AddWorksheet(dataTable, propertyInfo.Name);
-            worksheet.Columns().AdjustToContents();
+            try
+            {
+                worksheet.Columns().AdjustToContents();
+            }
+            catch
+            {
+                // sandbox
+            }
             //worksheet.Sort(1);
         }
 
