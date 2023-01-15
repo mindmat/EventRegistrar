@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Text.Json;
 
 using ClosedXML.Excel;
+using ClosedXML.Graphics;
 
 using SimpleInjector;
 
@@ -117,6 +118,7 @@ public static class EndpointRouteBuilderExtensions
     {
         // try to serialize as xlsx
         context.Response.Headers.Add("content-type", "application/octet-stream");
+        LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine("DejaVu Sans");
         var workbook = new XLWorkbook();
         foreach (var (propertyInfo, rowType) in GetEnumerableProperties(response))
         {
