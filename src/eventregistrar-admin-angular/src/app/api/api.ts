@@ -8237,15 +8237,15 @@ export interface PaymentOverview {
     balance?: BalanceDto | null;
     notFullyPaidRegistrations?: number;
     outstandingAmount?: number;
-    paidRegistrations?: number;
+    paidRegistrationsCount?: number;
     potentialOfOpenSpots?: OpenSpotsPotential[];
-    receivedMoney?: number;
+    paidAmount?: number;
 }
 
 export interface BalanceDto {
-    accountIban?: string;
+    accountIban?: string | null;
     balance?: number | null;
-    currency?: string;
+    currency?: string | null;
     date?: Date | null;
 }
 

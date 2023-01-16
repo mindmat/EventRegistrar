@@ -81,8 +81,8 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
                                        AccountIban = balance.AccountIban,
                                        Date = balance.Date?.Date
                                    },
-                   ReceivedMoney = activeRegistrations.Sum(reg => reg.Paid ?? 0m),
-                   PaidRegistrations = activeRegistrations.Count(reg => reg.State == RegistrationState.Paid),
+                   PaidAmount = activeRegistrations.Sum(reg => reg.Paid ?? 0m),
+                   PaidRegistrationsCount = activeRegistrations.Count(reg => reg.State == RegistrationState.Paid),
                    OutstandingAmount = activeRegistrations.Where(reg => reg.State == RegistrationState.Received)
                                                           .Sum(reg => reg.Price_AdmittedAndReduced - (reg.Paid ?? 0m)),
                    NotFullyPaidRegistrations = activeRegistrations.Count(reg => reg.State == RegistrationState.Received),

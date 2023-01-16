@@ -7254,7 +7254,7 @@
             "type": "number",
             "format": "decimal"
           },
-          "paidRegistrations": {
+          "paidRegistrationsCount": {
             "type": "integer",
             "format": "int32"
           },
@@ -7264,7 +7264,7 @@
               "$ref": "#/components/schemas/OpenSpotsPotential"
             }
           },
-          "receivedMoney": {
+          "paidAmount": {
             "type": "number",
             "format": "decimal"
           }
@@ -7275,7 +7275,8 @@
         "additionalProperties": false,
         "properties": {
           "accountIban": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "balance": {
             "type": "number",
@@ -7283,7 +7284,8 @@
             "nullable": true
           },
           "currency": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "date": {
             "type": "string",

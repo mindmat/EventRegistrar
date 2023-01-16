@@ -627,6 +627,9 @@
   <data name="OtherEvents" xml:space="preserve">
     <value>Other Events</value>
   </data>
+  <data name="OutstandingPayments" xml:space="preserve">
+    <value>Outstanding payments</value>
+  </data>
   <data name="Overview" xml:space="preserve">
     <value>Overview</value>
   </data>
@@ -647,6 +650,9 @@
   </data>
   <data name="PartnerPossible" xml:space="preserve">
     <value>Partner registration possible</value>
+  </data>
+  <data name="PaymentOverview" xml:space="preserve">
+    <value>Payment overview</value>
   </data>
   <data name="PaymentProgressTS" xml:space="preserve">
     <value>{{ paid }} paid of total {{ total }}</value>
@@ -908,6 +914,9 @@
   </data>
   <data name="Total" xml:space="preserve">
     <value>Total</value>
+  </data>
+  <data name="TotalReceived" xml:space="preserve">
+    <value>Total paid</value>
   </data>
   <data name="Town" xml:space="preserve">
     <value>Town</value>

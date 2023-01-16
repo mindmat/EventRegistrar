@@ -4,8 +4,6 @@ using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using MailKit;
 using MailKit.Net.Imap;
 
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
 using MimeKit;
 
 namespace EventRegistrar.Backend.Mailing.Import;

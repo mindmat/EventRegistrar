@@ -2,12 +2,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { OverviewService } from './overview.service';
 import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDisplayItem';
-import { DoubleRegistrableDisplayItem, RegistrablesOverview, SingleRegistrableDisplayItem } from 'app/api/api';
+import { DoubleRegistrableDisplayItem, PaymentOverview, RegistrablesOverview, SingleRegistrableDisplayItem } from 'app/api/api';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
 import { RegistrableDetailComponent } from './registrable-detail/registrable-detail.component';
 import { RegistrablesService } from '../pricing/registrables.service';
+import { PaymentOverviewService } from './payment-overview.service';
 
 @Component({
     selector: 'app-overview',
@@ -22,6 +23,7 @@ export class OverviewComponent implements OnInit, OnDestroy
     doubleRegistrables: DoubleRegistrableDisplayItem[];
     filteredSingleRegistrables: SingleRegistrableDisplayItem[];
     filteredDoubleRegistrables: DoubleRegistrableDisplayItem[];
+    paymentOverview: PaymentOverview;
 
     filters: {
         categoryTag$: BehaviorSubject<string>;
@@ -37,6 +39,7 @@ export class OverviewComponent implements OnInit, OnDestroy
 
     constructor(private changeDetectorRef: ChangeDetectorRef,
         private overviewService: OverviewService,
+        private paymentOverviewService: PaymentOverviewService,
         private registrableService: RegistrablesService,
         private matDialog: MatDialog) { }
 
@@ -60,6 +63,16 @@ export class OverviewComponent implements OnInit, OnDestroy
             {
                 this.singleRegistrables = this.filteredSingleRegistrables = registrables.singleRegistrables;
                 this.doubleRegistrables = this.filteredDoubleRegistrables = registrables.doubleRegistrables;
+
+                // Mark for check
+                this.changeDetectorRef.markForCheck();
+            });
+
+        this.paymentOverviewService.paymentOverview$
+            .pipe(takeUntil(this.unsubscribeAll))
+            .subscribe((paymentOverview: PaymentOverview) =>
+            {
+                this.paymentOverview = paymentOverview;
 
                 // Mark for check
                 this.changeDetectorRef.markForCheck();

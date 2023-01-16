@@ -1848,6 +1848,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ausstehende Zahlungen.
+        /// </summary>
+        internal static string OutstandingPayments {
+            get {
+                return ResourceManager.GetString("OutstandingPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Übersicht.
         /// </summary>
         internal static string Overview {
@@ -1907,6 +1916,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string PartnerPossible {
             get {
                 return ResourceManager.GetString("PartnerPossible", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Übersicht Einnahmen.
+        /// </summary>
+        internal static string PaymentOverview {
+            get {
+                return ResourceManager.GetString("PaymentOverview", resourceCulture);
             }
         }
         
@@ -2708,6 +2726,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Total {
             get {
                 return ResourceManager.GetString("Total", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total bezahlt.
+        /// </summary>
+        internal static string TotalReceived {
+            get {
+                return ResourceManager.GetString("TotalReceived", resourceCulture);
             }
         }
         

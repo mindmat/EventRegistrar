@@ -5,7 +5,7 @@
 
         <div class="flex flex-col flex-auto w-full max-w-xs sm:max-w-7xl mx-auto">
             <!-- Filters -->
-            <div class="flex flex-col sm:flex-row items-center justify-between w-full max-w-xs sm:max-w-none">
+            <div class="flex flex-col sm:flex-row items-start justify-between w-full max-w-xs sm:max-w-none">
                 <mat-form-field class="fuse-mat-no-subscript w-full sm:w-36">
                     <mat-select [value]="'all'" (selectionChange)="filterByCategory($event)">
                         <mat-option [value]="'all'">All</mat-option>
@@ -14,6 +14,43 @@
                         </ng-container>
                     </mat-select>
                 </mat-form-field>
+
+                <!-- Account balance -->
+                <div class="flex flex-col ml-6 flex-auto bg-card shadow rounded-2xl overflow-hidden max-w-lg">
+                    <div class="flex flex-col p-6 pb-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex flex-col">
+                                <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">{{ 'PaymentOverview' | translate }}</div>
+                                <!-- <div class="text-secondary font-medium">Monthly balance growth and avg. monthly income</div> -->
+                            </div>
+                            <!-- <div class="ml-2">
+                                <button class="h-6 min-h-6 px-2 rounded-full bg-hover" mat-button [matMenuTriggerFor]="accountBalanceMenu">
+                                    <span class="font-medium text-sm text-secondary">12 months</span>
+                                </button>
+                                <mat-menu #accountBalanceMenu="matMenu">
+                                    <button mat-menu-item>3 months</button>
+                                    <button mat-menu-item>6 months</button>
+                                    <button mat-menu-item>9 months</button>
+                                    <button mat-menu-item>12 months</button>
+                                </mat-menu>
+                            </div> -->
+                        </div>
+                        <div class="flex items-start mt-6 mr-2">
+                            <div class="flex flex-col">
+                                <div class="font-semibold text-3xl md:text-5xl tracking-tighter">{{ paymentOverview.paidAmount | number: '1.2-2' }}</div>
+                                <div class="font-medium text-sm text-secondary leading-none">{{ 'TotalReceived' | translate }}</div>
+                            </div>
+                            <div class="flex flex-col ml-8 md:ml-16">
+                                <div class="font-semibold text-3xl md:text-5xl tracking-tighter">{{ paymentOverview.outstandingAmount | number: '1.2-2' }}</div>
+                                <div class="font-medium text-sm text-secondary leading-none">{{ 'OutstandingPayments' | translate }}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col flex-auto">
+                        <!-- <apx-chart class="flex-auto w-full h-full" [chart]="accountBalanceOptions.chart" [colors]="accountBalanceOptions.colors" [fill]="accountBalanceOptions.fill"
+                            [series]="accountBalanceOptions.series" [stroke]="accountBalanceOptions.stroke" [tooltip]="accountBalanceOptions.tooltip" [xaxis]="accountBalanceOptions.xaxis"></apx-chart> -->
+                    </div>
+                </div>
 
                 <button class="ml-auto self-start mt-1" mat-icon-button (click)="addRegistrable()">
                     <mat-icon class="icon-size-8" [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
