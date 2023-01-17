@@ -715,7 +715,7 @@
     <value>Weitere Events</value>
   </data>
   <data name="OutstandingPayments" xml:space="preserve">
-    <value>Ausstehende Zahlungen</value>
+    <value>Ausstehend aus {{dueRegistrationCount}} Anmeldungen</value>
   </data>
   <data name="Overview" xml:space="preserve">
     <value>Übersicht</value>

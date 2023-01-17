@@ -631,7 +631,7 @@
     <value>Other Events</value>
   </data>
   <data name="OutstandingPayments" xml:space="preserve">
-    <value>Outstanding payments</value>
+    <value>Due from {dueRegistrationCount} registrations</value>
   </data>
   <data name="Overview" xml:space="preserve">
     <value>Overview</value>

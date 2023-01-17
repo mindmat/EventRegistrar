@@ -1857,7 +1857,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Ausstehende Zahlungen.
+        ///   Looks up a localized string similar to Ausstehend aus {{dueRegistrationCount}} Anmeldungen.
         /// </summary>
         internal static string OutstandingPayments {
             get {

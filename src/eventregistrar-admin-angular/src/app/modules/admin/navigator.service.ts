@@ -30,4 +30,9 @@ export class NavigatorService
   {
     this.router.navigate(['/', this.eventService.selected.acronym, 'overview', registrableId, type == RegistrableType.Single ? 'single' : 'double', 'participants']);
   }
+
+  getDuePaymentUrl(): string
+  {
+    return `/${this.eventService.selected.acronym}/accounting/due-payments`;
+  }
 }

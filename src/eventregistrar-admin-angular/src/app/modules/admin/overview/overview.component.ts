@@ -12,6 +12,7 @@ import { PaymentOverviewService } from './payment-overview.service';
 import { ApexOptions } from 'ng-apexcharts';
 import { DateTime } from 'luxon';
 import { TranslateService } from '@ngx-translate/core';
+import { NavigatorService } from '../navigator.service';
 
 @Component({
     selector: 'app-overview',
@@ -46,7 +47,8 @@ export class OverviewComponent implements OnInit, OnDestroy
         private paymentOverviewService: PaymentOverviewService,
         private registrableService: RegistrablesService,
         private matDialog: MatDialog,
-        private translateService: TranslateService) { }
+        private translateService: TranslateService,
+        public navigator: NavigatorService) { }
 
     ngOnInit(): void
     {

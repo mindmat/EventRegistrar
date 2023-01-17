@@ -42,12 +42,14 @@
                             </div>
                             <div class="flex flex-col ml-8 md:ml-16">
                                 <div class="font-semibold text-3xl md:text-5xl tracking-tighter">{{ paymentOverview.outstandingAmount | number: '1.2-2' }}</div>
-                                <div class="font-medium text-sm text-secondary leading-none">{{ 'OutstandingPayments' | translate }}</div>
+                                <a class="font-medium text-sm text-secondary leading-none hover:underline" [routerLink]="navigator.getDuePaymentUrl()">{{ 'OutstandingPayments' | translate: {
+                                    dueRegistrationCount: paymentOverview.notFullyPaidRegistrations } }}
+                                </a>
                             </div>
                         </div>
                     </div>
                     <div class="flex flex-col flex-auto">
-                        <apx-chart class="flex-auto w-full max-h-16" [chart]="accountBalanceOptions.chart" [colors]="accountBalanceOptions.colors" [fill]="accountBalanceOptions.fill"
+                        <apx-chart class="flex-auto w-full max-h-24" [chart]="accountBalanceOptions.chart" [colors]="accountBalanceOptions.colors" [fill]="accountBalanceOptions.fill"
                             [series]="accountBalanceOptions.series" [stroke]="accountBalanceOptions.stroke" [tooltip]="accountBalanceOptions.tooltip" [xaxis]="accountBalanceOptions.xaxis"></apx-chart>
                     </div>
                 </div>
