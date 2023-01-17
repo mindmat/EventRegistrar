@@ -8,13 +8,13 @@ public class HostingQuery : IRequest<HostingOffersAndRequests>, IEventBoundReque
     public Guid EventId { get; set; }
 }
 
-public class HostingOffersQueryHandler : IRequestHandler<HostingQuery, HostingOffersAndRequests>
+public class HostingQueryHandler : IRequestHandler<HostingQuery, HostingOffersAndRequests>
 {
     private readonly HostingMappingReader _hostingMappingReader;
     private readonly IQueryable<Registration> _registrations;
 
-    public HostingOffersQueryHandler(HostingMappingReader hostingMappingReader,
-                                     IQueryable<Registration> registrations)
+    public HostingQueryHandler(HostingMappingReader hostingMappingReader,
+                               IQueryable<Registration> registrations)
     {
         _hostingMappingReader = hostingMappingReader;
         _registrations = registrations;
