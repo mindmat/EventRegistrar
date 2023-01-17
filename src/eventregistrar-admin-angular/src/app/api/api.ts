@@ -8238,8 +8238,9 @@ export interface PaymentOverview {
     notFullyPaidRegistrations?: number;
     outstandingAmount?: number;
     paidRegistrationsCount?: number;
-    potentialOfOpenSpots?: OpenSpotsPotential[];
     paidAmount?: number;
+    potentialOfOpenSpots?: OpenSpotsPotential[];
+    balanceHistory?: BalanceDto[];
 }
 
 export interface BalanceDto {

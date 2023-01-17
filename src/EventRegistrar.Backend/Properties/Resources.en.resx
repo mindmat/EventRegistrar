@@ -192,6 +192,9 @@
   <data name="BackToRegistrationOverview" xml:space="preserve">
     <value>Back to registration overview</value>
   </data>
+  <data name="Balance" xml:space="preserve">
+    <value>Balance</value>
+  </data>
   <data name="BankStatement" xml:space="preserve">
     <value>Bank statements</value>
   </data>

@@ -9,6 +9,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { RegistrableDetailComponent } from './registrable-detail/registrable-detail.component';
 import { RegistrablesService } from '../pricing/registrables.service';
 import { PaymentOverviewService } from './payment-overview.service';
+import { ApexOptions } from 'ng-apexcharts';
+import { DateTime } from 'luxon';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-overview',
@@ -24,6 +27,7 @@ export class OverviewComponent implements OnInit, OnDestroy
     filteredSingleRegistrables: SingleRegistrableDisplayItem[];
     filteredDoubleRegistrables: DoubleRegistrableDisplayItem[];
     paymentOverview: PaymentOverview;
+    accountBalanceOptions: ApexOptions;
 
     filters: {
         categoryTag$: BehaviorSubject<string>;
@@ -41,10 +45,13 @@ export class OverviewComponent implements OnInit, OnDestroy
         private overviewService: OverviewService,
         private paymentOverviewService: PaymentOverviewService,
         private registrableService: RegistrablesService,
-        private matDialog: MatDialog) { }
+        private matDialog: MatDialog,
+        private translateService: TranslateService) { }
 
     ngOnInit(): void
     {
+        this.prepareChartData();
+
         // Get the tags
         this.overviewService.registrableTags$
             .pipe(takeUntil(this.unsubscribeAll))
@@ -73,9 +80,17 @@ export class OverviewComponent implements OnInit, OnDestroy
             .subscribe((paymentOverview: PaymentOverview) =>
             {
                 this.paymentOverview = paymentOverview;
+                this.accountBalanceOptions.series = [{
+                    name: this.translateService.instant('Balance'),
+                    data: paymentOverview.balanceHistory.map(blc =>
+                    ({
+                        x: blc.date,
+                        y: blc.balance
+                    }))
+                }],
 
-                // Mark for check
-                this.changeDetectorRef.markForCheck();
+                    // Mark for check
+                    this.changeDetectorRef.markForCheck();
             });
 
         // Filter the courses
@@ -162,5 +177,53 @@ export class OverviewComponent implements OnInit, OnDestroy
     trackByFn(index: number, item: any): any
     {
         return item.id || index;
+    }
+
+    private prepareChartData(): void
+    {
+        const now = DateTime.now();
+
+        // Account balance
+        this.accountBalanceOptions = {
+            chart: {
+                animations: {
+                    speed: 400,
+                    animateGradually: {
+                        enabled: false
+                    }
+                },
+                fontFamily: 'inherit',
+                foreColor: 'inherit',
+                width: '100%',
+                height: '100%',
+                type: 'area',
+                sparkline: {
+                    enabled: true
+                }
+            },
+            colors: ['#A3BFFA', '#667EEA'],
+            fill: {
+                colors: ['#CED9FB', '#AECDFD'],
+                opacity: 0.5,
+                type: 'solid'
+            },
+            stroke: {
+                curve: 'straight',
+                width: 2
+            },
+            tooltip: {
+                followCursor: true,
+                theme: 'dark',
+                x: {
+                    format: 'dd.MM.yyyy'
+                },
+                y: {
+                    formatter: (value): string => value.toString()
+                }
+            },
+            xaxis: {
+                type: 'datetime'
+            }
+        };
     }
 }

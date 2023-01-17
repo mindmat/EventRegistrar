@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Payments.Files;
+﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 
@@ -13,29 +14,35 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
 {
     private readonly IQueryable<PaymentsFile> _paymentFiles;
     private readonly IQueryable<Registrable> _registrables;
+    private readonly IDateTimeProvider _dateTimeProvider;
     private readonly IQueryable<Registration> _registrations;
+    private const int BalanceHistoryMonthsBack = 3;
 
     public PaymentOverviewQueryHandler(IQueryable<PaymentsFile> paymentFiles,
                                        IQueryable<Registration> registrations,
-                                       IQueryable<Registrable> registrables)
+                                       IQueryable<Registrable> registrables,
+                                       IDateTimeProvider dateTimeProvider)
     {
         _paymentFiles = paymentFiles;
         _registrations = registrations;
         _registrables = registrables;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<PaymentOverview> Handle(PaymentOverviewQuery query, CancellationToken cancellationToken)
     {
-        var balance = await _paymentFiles.Where(pmf => pmf.EventId == query.EventId)
-                                         .OrderByDescending(pmf => pmf.BookingsTo ?? DateTime.MinValue)
-                                         .Select(pmf => new
-                                                        {
-                                                            pmf.AccountIban,
-                                                            pmf.Balance,
-                                                            pmf.Currency,
-                                                            Date = pmf.BookingsTo
-                                                        })
-                                         .FirstOrDefaultAsync(cancellationToken);
+        var balances = await _paymentFiles.Where(pmf => pmf.EventId == query.EventId
+                                                     && pmf.BookingsTo >= _dateTimeProvider.Now.AddMonths(-BalanceHistoryMonthsBack))
+                                          .OrderByDescending(pmf => pmf.BookingsTo ?? DateTime.MinValue)
+                                          .Select(pmf => new
+                                                         {
+                                                             pmf.AccountIban,
+                                                             pmf.Balance,
+                                                             pmf.Currency,
+                                                             Date = pmf.BookingsTo
+                                                         })
+                                          .ToListAsync(cancellationToken);
+        var latestBalance = balances.FirstOrDefault();
 
         var activeRegistrations = await _registrations.Where(reg => reg.EventId == query.EventId
                                                                  && reg.IsOnWaitingList != true
@@ -72,19 +79,26 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
 
         return new PaymentOverview
                {
-                   Balance = balance == null
+                   Balance = latestBalance == null
                                  ? null
                                  : new BalanceDto
                                    {
-                                       Balance = balance.Balance,
-                                       Currency = balance.Currency,
-                                       AccountIban = balance.AccountIban,
-                                       Date = balance.Date?.Date
+                                       Balance = latestBalance.Balance,
+                                       Currency = latestBalance.Currency,
+                                       AccountIban = latestBalance.AccountIban,
+                                       Date = latestBalance.Date?.Date
                                    },
                    PaidAmount = activeRegistrations.Sum(reg => reg.Paid ?? 0m),
                    PaidRegistrationsCount = activeRegistrations.Count(reg => reg.State == RegistrationState.Paid),
                    OutstandingAmount = activeRegistrations.Where(reg => reg.State == RegistrationState.Received)
                                                           .Sum(reg => reg.Price_AdmittedAndReduced - (reg.Paid ?? 0m)),
+                   BalanceHistory = balances.Select(blc => new BalanceDto
+                                                           {
+                                                               Balance = blc.Balance,
+                                                               Currency = blc.Currency,
+                                                               AccountIban = blc.AccountIban,
+                                                               Date = blc.Date?.Date
+                                                           }),
                    NotFullyPaidRegistrations = activeRegistrations.Count(reg => reg.State == RegistrationState.Received),
                    PotentialOfOpenSpots = registrables.Select(rbl => new OpenSpotsPotential
                                                                      {
@@ -96,4 +110,15 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
                                                                      })
                };
     }
+}
+
+public class PaymentOverview
+{
+    public BalanceDto? Balance { get; set; }
+    public int NotFullyPaidRegistrations { get; set; }
+    public decimal OutstandingAmount { get; set; }
+    public int PaidRegistrationsCount { get; set; }
+    public decimal PaidAmount { get; set; }
+    public IEnumerable<OpenSpotsPotential> PotentialOfOpenSpots { get; set; } = null!;
+    public IEnumerable<BalanceDto> BalanceHistory { get; set; } = null!;
 }

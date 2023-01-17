@@ -7258,15 +7258,21 @@
             "type": "integer",
             "format": "int32"
           },
+          "paidAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
           "potentialOfOpenSpots": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/OpenSpotsPotential"
             }
           },
-          "paidAmount": {
-            "type": "number",
-            "format": "decimal"
+          "balanceHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BalanceDto"
+            }
           }
         }
       },
