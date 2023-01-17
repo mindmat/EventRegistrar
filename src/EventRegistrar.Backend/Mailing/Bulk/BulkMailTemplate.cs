@@ -36,10 +36,23 @@ public class BulkMailTemplateMap : EntityMap<BulkMailTemplate>
                .WithMany()
                .HasForeignKey(mtp => mtp.RegistrableId);
 
+        builder.Property(mtp => mtp.BulkMailKey)
+               .HasMaxLength(200);
+
         builder.Property(mtp => mtp.Language)
                .HasMaxLength(10);
 
         builder.Property(mtp => mtp.Subject)
                .HasMaxLength(1000);
+
+        builder.HasIndex(mtp => mtp.EventId);
+
+        builder.HasIndex(mtp => new
+                                {
+                                    mtp.EventId,
+                                    mtp.BulkMailKey,
+                                    mtp.Language
+                                })
+               .IsUnique();
     }
 }
