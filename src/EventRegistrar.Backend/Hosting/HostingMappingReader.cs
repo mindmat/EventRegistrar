@@ -49,19 +49,22 @@ public class HostingMappingReader
                                                            .Select(qop => new QuestionOptionMapping
                                                                    (
                                                                        qop.Id,
-                                                                       qop.Mappings!.First(qom => _hostingOptionMappings.Contains(qom.Type!.Value)).Type!.Value
+                                                                       qop.Mappings!.FirstOrDefault(qom => _hostingOptionMappings.Contains(qom.Type!.Value))!.Type!.Value,
+                                                                       qop.Mappings!.Where(qom => qom.RegistrableId != null).Select(qom => qom.RegistrableId!.Value)
                                                                    ))
                                                            .ToListAsync(cancellationToken);
 
         return new HostingQuestionMappings
                {
                    QuestionOptionId_Offer = questionOptionMappings.FirstOrDefault(qst => qst.Mapping == MappingType.HostingOffer)?.QuestionOptionId,
+                   RegistrableId_Offer = questionOptionMappings.FirstOrDefault(qst => qst.Mapping == MappingType.HostingOffer)?.RegistrableIds.FirstOrDefault(),
                    QuestionId_Offer_Location = questionMappings.FirstOrDefault(qst => qst.Mapping == QuestionMappingType.HostingOffer_Location)?.QuestionId,
                    QuestionId_Offer_CountTotal = questionMappings.FirstOrDefault(qst => qst.Mapping == QuestionMappingType.HostingOffer_CountTotal)?.QuestionId,
                    QuestionId_Offer_CountShared = questionMappings.FirstOrDefault(qst => qst.Mapping == QuestionMappingType.HostingOffer_CountShared)?.QuestionId,
                    QuestionId_Offer_Comment = questionMappings.FirstOrDefault(qst => qst.Mapping == QuestionMappingType.HostingOffer_Comment)?.QuestionId,
 
                    QuestionOptionId_Request = questionOptionMappings.FirstOrDefault(qst => qst.Mapping == MappingType.HostingRequest)?.QuestionOptionId,
+                   RegistrableId_Request = questionOptionMappings.FirstOrDefault(qst => qst.Mapping == MappingType.HostingRequest)?.RegistrableIds.FirstOrDefault(),
                    QuestionId_Request_Partner = questionMappings.FirstOrDefault(qst => qst.Mapping == QuestionMappingType.HostingRequest_Partner)?.QuestionId,
                    QuestionId_Request_Comment = questionMappings.FirstOrDefault(qst => qst.Mapping == QuestionMappingType.HostingRequest_Comment)?.QuestionId,
                    QuestionOptionId_Request_ShareOkWithPartner = questionOptionMappings.FirstOrDefault(qst => qst.Mapping == MappingType.HostingRequest_ShareOkWithPartner)?.QuestionOptionId,
@@ -73,17 +76,19 @@ public class HostingMappingReader
 
 public record QuestionMapping(Guid QuestionId, QuestionMappingType Mapping);
 
-public record QuestionOptionMapping(Guid QuestionOptionId, MappingType Mapping);
+public record QuestionOptionMapping(Guid QuestionOptionId, MappingType? Mapping, IEnumerable<Guid> RegistrableIds);
 
 public class HostingQuestionMappings
 {
     public Guid? QuestionOptionId_Offer { get; set; }
+    public Guid? RegistrableId_Offer { get; set; }
     public Guid? QuestionId_Offer_Location { get; set; }
     public Guid? QuestionId_Offer_CountTotal { get; set; }
     public Guid? QuestionId_Offer_CountShared { get; set; }
     public Guid? QuestionId_Offer_Comment { get; set; }
 
     public Guid? QuestionOptionId_Request { get; set; }
+    public Guid? RegistrableId_Request { get; set; }
     public Guid? QuestionId_Request_Partner { get; set; }
     public Guid? QuestionId_Request_Comment { get; set; }
 

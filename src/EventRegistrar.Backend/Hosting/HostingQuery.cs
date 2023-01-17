@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Responses;
+using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Hosting;
 
@@ -32,16 +33,18 @@ public class HostingQueryHandler : IRequestHandler<HostingQuery, HostingOffersAn
 
         var registrations = await _registrations.Where(reg => reg.EventId == query.EventId
                                                            && reg.State != RegistrationState.Cancelled
-                                                           && reg.Responses!.Any(
-                                                                  rsp => (hostingMappings.QuestionOptionId_Offer != null && rsp.QuestionOptionId == hostingMappings.QuestionOptionId_Offer)
-                                                                      || (hostingMappings.QuestionOptionId_Request != null && rsp.QuestionOptionId == hostingMappings.QuestionOptionId_Request)))
+                                                           && reg.Seats_AsLeader!.Any(
+                                                                  spt => !spt.IsCancelled
+                                                                      && (hostingMappings.RegistrableId_Offer != null && spt.RegistrableId == hostingMappings.RegistrableId_Offer)
+                                                                      || (hostingMappings.RegistrableId_Request != null && spt.RegistrableId == hostingMappings.RegistrableId_Request)))
                                                 .Include(reg => reg.Responses)
+                                                .Include(reg => reg.Seats_AsLeader)
                                                 .OrderBy(reg => reg.IsOnWaitingList)
                                                 .ThenByDescending(reg => reg.AdmittedAt)
                                                 .ToListAsync(cancellationToken);
-        if (hostingMappings.QuestionOptionId_Offer != null)
+        if (hostingMappings.RegistrableId_Offer != null)
         {
-            result.Offers = registrations.Where(reg => IsOptionTicked(reg.Responses!, hostingMappings.QuestionOptionId_Offer))
+            result.Offers = registrations.Where(reg => HasSpot(reg.Seats_AsLeader!, hostingMappings.RegistrableId_Offer))
                                          .Select(reg => new HostingOffer
                                                         {
                                                             RegistrationId = reg.Id,
@@ -60,9 +63,9 @@ public class HostingQueryHandler : IRequestHandler<HostingQuery, HostingOffersAn
                                          .ToList();
         }
 
-        if (hostingMappings.QuestionOptionId_Request != null)
+        if (hostingMappings.RegistrableId_Request != null)
         {
-            result.Requests = registrations.Where(reg => IsOptionTicked(reg.Responses!, hostingMappings.QuestionOptionId_Request))
+            result.Requests = registrations.Where(reg => HasSpot(reg.Seats_AsLeader!, hostingMappings.RegistrableId_Request))
                                            .Select(reg => new HostingRequest
                                                           {
                                                               RegistrationId = reg.Id,
@@ -83,6 +86,11 @@ public class HostingQueryHandler : IRequestHandler<HostingQuery, HostingOffersAn
         }
 
         return result;
+    }
+
+    private static bool HasSpot(IEnumerable<Seat> spots, Guid? registrableId)
+    {
+        return registrableId != null && spots.Any(spt => spt.RegistrableId == registrableId);
     }
 
     private static bool IsOptionTicked(IEnumerable<Response> responses, Guid? questionOptionId)
