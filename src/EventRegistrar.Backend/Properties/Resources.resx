@@ -715,7 +715,7 @@
     <value>Weitere Events</value>
   </data>
   <data name="OutstandingPayments" xml:space="preserve">
-    <value>Ausstehend aus {{dueRegistrationCount}} Anmeldungen</value>
+    <value>ausstehend aus {{dueRegistrationCount}} Anmeldungen</value>
   </data>
   <data name="Overview" xml:space="preserve">
     <value>Übersicht</value>
@@ -1010,7 +1010,7 @@
     <value>Total</value>
   </data>
   <data name="TotalReceived" xml:space="preserve">
-    <value>Total bezahlt</value>
+    <value>von {{paidRegistrationCount}} Anmeldungen bezahlt</value>
   </data>
   <data name="Town" xml:space="preserve">
     <value>Wohnort</value>
