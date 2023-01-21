@@ -8118,7 +8118,7 @@ export interface PricePackageDto {
     id?: string;
     name?: string | null;
     price?: number;
-    allowAsFallback?: boolean;
+    allowAsAutomaticFallback?: boolean;
     parts?: PricePackagePartDto[] | null;
 }
 

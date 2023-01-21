@@ -21,7 +21,8 @@ public class PricingQueryHandler : IRequestHandler<PricingQuery, IEnumerable<Pri
                                              {
                                                  Id = ppg.Id,
                                                  Name = ppg.Name, Price = ppg.Price,
-                                                 AllowAsFallback = ppg.AllowAsFallback,
+                                                 AllowAsAutomaticFallback = ppg.AllowAsAutomaticFallback,
+                                                 AllowAsManualFallback = ppg.AllowAsManualFallback,
                                                  Parts = ppg.Parts!.Select(ppp => new PricePackagePartDto
                                                                                   {
                                                                                       Id = ppp.Id,
@@ -40,7 +41,8 @@ public record PricePackageDto
     public Guid Id { get; set; }
     public string? Name { get; set; }
     public decimal Price { get; set; }
-    public bool AllowAsFallback { get; set; }
+    public bool AllowAsAutomaticFallback { get; set; }
+    public bool AllowAsManualFallback { get; set; }
     public IEnumerable<PricePackagePartDto>? Parts { get; set; }
 }
 

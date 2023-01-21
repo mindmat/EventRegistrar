@@ -223,7 +223,7 @@ public class MailComposer
 
     private async Task<string> GetSpotList(Guid registrationId)
     {
-        var (_, _, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, _) = await _priceCalculator.CalculatePrice(registrationId);
+        var (_, _, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, _, _) = await _priceCalculator.CalculatePrice(registrationId);
         var result = new StringBuilder();
 
         // Label

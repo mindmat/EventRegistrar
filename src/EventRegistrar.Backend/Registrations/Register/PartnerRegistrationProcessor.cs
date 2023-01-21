@@ -168,7 +168,7 @@ public class PartnerRegistrationProcessor
             followerRegistration.AdmittedAt = _dateTimeProvider.Now;
         }
 
-        var (totalFollower, admittedFollower, admittedAndReducedFollower, _, _, _) = await _priceCalculator.CalculatePrice(followerRegistration, spots);
+        var (totalFollower, admittedFollower, admittedAndReducedFollower, _, _, _, _) = await _priceCalculator.CalculatePrice(followerRegistration, spots);
         followerRegistration.Price_Original = totalFollower;
         followerRegistration.Price_Admitted = admittedFollower;
         followerRegistration.Price_AdmittedAndReduced = admittedAndReducedFollower;
@@ -182,7 +182,7 @@ public class PartnerRegistrationProcessor
             registration.AdmittedAt = _dateTimeProvider.Now;
         }
 
-        var (total, admitted, admittedAndReduced, _, _, _) = await _priceCalculator.CalculatePrice(registration, spots);
+        var (total, admitted, admittedAndReduced, _, _, _, _) = await _priceCalculator.CalculatePrice(registration, spots);
         registration.Price_Original = total;
         registration.Price_Admitted = admitted;
         registration.Price_AdmittedAndReduced = admittedAndReduced;

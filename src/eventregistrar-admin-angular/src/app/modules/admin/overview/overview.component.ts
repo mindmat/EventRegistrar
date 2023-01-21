@@ -220,7 +220,7 @@ export class OverviewComponent implements OnInit, OnDestroy
                     format: 'dd.MM.yyyy'
                 },
                 y: {
-                    formatter: (value): string => value.toString()
+                    formatter: (value): string => value.toLocaleString()
                 }
             },
             xaxis: {

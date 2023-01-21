@@ -29,7 +29,7 @@ public class PriceCalculator
     }
 
     public async Task<(decimal priceOriginal, decimal priceAdmitted, decimal priceAdmittedAndReduced, IReadOnlyCollection<MatchingPackageResult> packagesOriginal,
-            IReadOnlyCollection<MatchingPackageResult> packagesAdmitted, bool isOnWaitingList)>
+            IReadOnlyCollection<MatchingPackageResult> packagesAdmitted, bool isOnWaitingList, IReadOnlyCollection<MatchingPackageResult> possibleFallbackPackages)>
         CalculatePrice(Guid registrationId, CancellationToken cancellationToken = default)
     {
         var registration = await _registrations.Where(reg => reg.Id == registrationId)
@@ -45,7 +45,7 @@ public class PriceCalculator
     }
 
     public async Task<(decimal priceOriginal, decimal priceAdmitted, decimal priceAdmittedAndReduced, IReadOnlyCollection<MatchingPackageResult> packagesOriginal,
-            IReadOnlyCollection<MatchingPackageResult> packagesAdmitted, bool isOnWaitingList)>
+            IReadOnlyCollection<MatchingPackageResult> packagesAdmitted, bool isOnWaitingList, IReadOnlyCollection<MatchingPackageResult> possibleFallbackPackages)>
         CalculatePrice(Registration registration,
                        IEnumerable<Seat> spots)
     {
@@ -75,13 +75,14 @@ public class PriceCalculator
             var admittedSpots = notCancelledSpots.Where(spot => !spot.IsWaitingList)
                                                  .ToList();
             (priceAdmitted, packagesAdmitted, var allCoveredAdmitted) = CalculatePriceOfSpots(registration.Id, admittedSpots, packages, coreTracks);
+            var admittedPackagesId = packagesAdmitted.Select(pkg => pkg.Id).ToList();
 
-            var samePackages = packagesAdmitted.Select(pkg => pkg.Id).All(pid => originalPackageIds.Contains(pid));
+            var samePackages = admittedPackagesId.All(originalPackageIds.Contains);
             if (!samePackages)
             {
-                var fallbackPackages = packagesAdmitted.Where(adm => !packagesOriginal.Select(ori => ori.Id).Contains(adm.Id))
+                var fallbackPackages = packagesAdmitted.Where(adm => !originalPackageIds.Contains(adm.Id))
                                                        .ToList();
-                if (fallbackPackages.All(ppk => ppk.AllowAsFallback))
+                if (fallbackPackages.All(ppk => ppk.AllowAsAutomaticFallback))
                 {
                     // allow fallback
                     isOnWaitingList = !allCoveredAdmitted;
@@ -102,7 +103,7 @@ public class PriceCalculator
             packagesAdmitted = packagesAdmitted.Append(reductionPackage.Value).ToList();
         }
 
-        return (priceOriginal, priceAdmitted, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, isOnWaitingList);
+        return (priceOriginal, priceAdmitted, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, isOnWaitingList, null);
     }
 
     private static (decimal Price, MatchingPackageResult? ReductionPackage) GetReducedPrice(decimal priceNotReduced, ICollection<IndividualReduction>? individualReductions)
@@ -122,6 +123,7 @@ public class PriceCalculator
                                                             $"{Resources.Reduction}: {overwrite.Reason}",
                                                             reducedPrice - priceNotReduced,
                                                             false,
+                                                            false,
                                                             Array.Empty<MatchingPackageSpot>()));
         }
 
@@ -134,14 +136,15 @@ public class PriceCalculator
                                                                    Resources.Reduction,
                                                                    0m,
                                                                    false,
+                                                                   false,
                                                                    individualReductions.Select(ird => new MatchingPackageSpot(ird.Reason ?? Resources.Reduction, -ird.Amount)),
                                                                    true));
     }
 
-    private (decimal Price, IReadOnlyCollection<MatchingPackageResult> matchingPackages, bool allSpotsCovered) CalculatePriceOfSpots(Guid registrationId,
-        IReadOnlyCollection<Seat> spots,
-        IReadOnlyCollection<PricePackage> packages,
-        IReadOnlyCollection<Registrable> coreTracks)
+    public (decimal Price, IReadOnlyCollection<MatchingPackageResult> matchingPackages, bool allSpotsCovered) CalculatePriceOfSpots(Guid registrationId,
+                                                                                                                                    IReadOnlyCollection<Seat> spots,
+                                                                                                                                    IEnumerable<PricePackage> packages,
+                                                                                                                                    IReadOnlyCollection<Registrable> coreTracks)
     {
         var bookedRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId));
         var bookedCoreRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId).Where(rid => coreTracks.Select(trk => trk.Id).Contains(rid)));
@@ -204,12 +207,12 @@ public class PriceCalculator
         if (overlappingRegistrableIds.Any())
         {
             var coveredRegistrableIds = new HashSet<Guid>();
-            foreach (var matchingPackage in matchingPackages.OrderByDescending(ppk => ppk.MatchingRequiredRegistrableId.Count
-                                                                                    + ppk.MatchingOptionalRegistrableId.Count)
+            foreach (var matchingPackage in matchingPackages.OrderBy(ppk => ppk.Package.FallbackPriority)
                                                             .ToList())
             {
                 if (matchingPackage.MatchingRequiredRegistrableId.All(coveredRegistrableIds.Contains))
                 {
+                    // all tracks are covered by other packages
                     matchingPackages.Remove(matchingPackage);
                 }
                 else
@@ -228,7 +231,8 @@ public class PriceCalculator
                                                pkg.Package.Id,
                                                pkg.Package.Name,
                                                pkg.Price,
-                                               pkg.Package.AllowAsFallback,
+                                               pkg.Package.AllowAsAutomaticFallback,
+                                               pkg.Package.AllowAsManualFallback,
                                                pkg.Spots
                                            ))
                                    .ToList(),
@@ -238,7 +242,7 @@ public class PriceCalculator
     private (string Name, int? SortKey) GetRegistrable(Guid registrationId,
                                                        Guid registrableId,
                                                        IEnumerable<RegistrableInPricePackagePart> registrableInPricePackageParts,
-                                                       IReadOnlyCollection<Seat> spots)
+                                                       IEnumerable<Seat> spots)
     {
         var registrable = registrableInPricePackageParts.First(rip => rip.RegistrableId == registrableId);
         if (registrable.Registrable!.Type == RegistrableType.Double)
@@ -286,7 +290,8 @@ public record struct MatchingPackage(PricePackage Package,
 public record struct MatchingPackageResult(Guid? Id,
                                            string Name,
                                            decimal Price,
-                                           bool AllowAsFallback,
+                                           bool AllowAsAutomaticFallback,
+                                           bool AllowAsManualFallback,
                                            IEnumerable<MatchingPackageSpot> Spots,
                                            bool IsReductionsPackage = false);
 

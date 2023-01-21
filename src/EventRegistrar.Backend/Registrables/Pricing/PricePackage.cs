@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,7 +13,12 @@ public class PricePackage : Entity
     public decimal Price { get; set; }
     public ICollection<PricePackagePart>? Parts { get; set; }
 
+    [Obsolete("Use AllowAsAutomaticFallback")]
     public bool AllowAsFallback { get; set; }
+
+    public bool AllowAsAutomaticFallback { get; set; }
+    public bool AllowAsManualFallback { get; set; }
+    public int FallbackPriority { get; set; }
 }
 
 public class PricePackageMap : EntityMap<PricePackage>

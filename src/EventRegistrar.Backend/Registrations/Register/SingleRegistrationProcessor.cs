@@ -288,7 +288,7 @@ public class SingleRegistrationProcessor
             }
         }
 
-        var (original, admitted, admittedAndReduced, _, _, isOnWaitingList) = await _priceCalculator.CalculatePrice(registration, spots);
+        var (original, admitted, admittedAndReduced, _, _, isOnWaitingList, _) = await _priceCalculator.CalculatePrice(registration, spots);
         registration.Price_Original = original;
         registration.Price_Admitted = admitted;
         registration.Price_AdmittedAndReduced = admittedAndReduced;

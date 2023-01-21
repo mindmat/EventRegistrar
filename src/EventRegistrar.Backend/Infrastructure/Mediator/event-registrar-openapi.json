@@ -6865,7 +6865,7 @@
             "type": "number",
             "format": "decimal"
           },
-          "allowAsFallback": {
+          "allowAsAutomaticFallback": {
             "type": "boolean"
           },
           "parts": {

@@ -159,7 +159,7 @@
   <data name="AdmittedAt" xml:space="preserve">
     <value>Admitted</value>
   </data>
-  <data name="AllowAsFallback" xml:space="preserve">
+  <data name="AllowAsAutomaticFallback" xml:space="preserve">
     <value>Allow as fallback</value>
   </data>
   <data name="Amount" xml:space="preserve">

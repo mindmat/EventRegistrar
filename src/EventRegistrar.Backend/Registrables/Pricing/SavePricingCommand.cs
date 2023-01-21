@@ -1,6 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-
-namespace EventRegistrar.Backend.Registrables.Pricing;
+﻿namespace EventRegistrar.Backend.Registrables.Pricing;
 
 public class SavePricingCommand : IRequest, IEventBoundRequest
 {
@@ -8,7 +6,7 @@ public class SavePricingCommand : IRequest, IEventBoundRequest
     public IEnumerable<PricePackageDto>? Packages { get; set; }
 }
 
-public class SavePricingCommandHandler : IRequestHandler<SavePricingCommand>
+public class SavePricingCommandHandler : AsyncRequestHandler<SavePricingCommand>
 {
     private readonly IRepository<PricePackage> _packages;
     private readonly IRepository<PricePackagePart> _parts;
@@ -23,12 +21,12 @@ public class SavePricingCommandHandler : IRequestHandler<SavePricingCommand>
         _registrableInParts = registrableInParts;
     }
 
-    public async Task<Unit> Handle(SavePricingCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(SavePricingCommand command, CancellationToken cancellationToken)
     {
         var packagesToSave = command.Packages;
         if (packagesToSave == null)
         {
-            return Unit.Value;
+            return;
         }
 
         var packages = await _packages.Where(frm => frm.EventId == command.EventId)
@@ -48,7 +46,8 @@ public class SavePricingCommandHandler : IRequestHandler<SavePricingCommand>
 
             package.Name = packageToSave.Name ?? string.Empty;
             package.Price = packageToSave.Price;
-            package.AllowAsFallback = packageToSave.AllowAsFallback;
+            package.AllowAsAutomaticFallback = packageToSave.AllowAsAutomaticFallback;
+            package.AllowAsManualFallback = packageToSave.AllowAsManualFallback;
 
             foreach (var partToSave in packageToSave.Parts ?? Enumerable.Empty<PricePackagePartDto>())
             {
@@ -89,7 +88,5 @@ public class SavePricingCommandHandler : IRequestHandler<SavePricingCommand>
                 }
             }
         }
-
-        return Unit.Value;
     }
 }

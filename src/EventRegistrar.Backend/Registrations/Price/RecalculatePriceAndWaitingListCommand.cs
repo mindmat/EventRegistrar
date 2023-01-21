@@ -56,7 +56,7 @@ public class RecalculatePriceAndWaitingListCommandHandler : IRequestHandler<Reca
         var oldAdmitted = registration.Price_Admitted;
         var oldAdmittedAndReduced = registration.Price_AdmittedAndReduced;
 
-        var (newOriginal, newAdmitted, newAdmittedAndReduced, _, _, isOnWaitingList) = await _priceCalculator.CalculatePrice(registration.Id, cancellationToken);
+        var (newOriginal, newAdmitted, newAdmittedAndReduced, _, _, isOnWaitingList, _) = await _priceCalculator.CalculatePrice(registration.Id, cancellationToken);
 
         // update price
         if (oldOriginal != newOriginal
