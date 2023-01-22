@@ -37,6 +37,7 @@ public class SetManualFallbackToPricePackageCommandHandler : AsyncRequestHandler
         if (registration.PricePackageId_ManualFallback != command.PricePackageId)
         {
             registration.PricePackageId_ManualFallback = command.PricePackageId;
+            _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
             _eventBus.Publish(new ManualFallbackToPricePackageSet { RegistrationId = registration.Id, EventId = command.EventId });
         }
     }
