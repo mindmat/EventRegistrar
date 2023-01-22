@@ -196,7 +196,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Damit kann dieses Paket für eine:n Teilnehmer:in verwendet werden, wenn ein geplantes Paket (noch) nicht verfügbar ist.
+        ///   Looks up a localized string similar to Damit wird dieses Paket automatisch für eine:n Teilnehmer:in verwendet, wenn ein geplantes Paket (noch) nicht verfügbar ist und dieses Paket einen Teil der Anmeldung abdeckt..
         /// </summary>
         internal static string AllowAsAutomaticFallbackExplanation {
             get {
@@ -214,7 +214,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Damit kann dieses Paket für eine:n Teilnehmer:in verwendet werden, wenn ein geplantes Paket (noch) nicht verfügbar ist.
+        ///   Looks up a localized string similar to Damit kann dieses Paket manuell einem:r Teilnehmer:in zugeordnet werden, wenn ein geplantes Paket (noch) nicht verfügbar ist und dieses Paket einen Teil der Anmeldung abdeckt..
         /// </summary>
         internal static string AllowAsManualFallbackExplanation {
             get {
@@ -2420,6 +2420,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string ReminderMail2 {
             get {
                 return ResourceManager.GetString("ReminderMail2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Entfernen.
+        /// </summary>
+        internal static string Remove {
+            get {
+                return ResourceManager.GetString("Remove", resourceCulture);
             }
         }
         

@@ -41,13 +41,24 @@
                 </div>
 
                 <div class="flex flex-row items-start justify-start">
-                    <div class="flex-auto cursor-pointer" (click)="allowAsFallbackToggle.toggle()">
-                        <div class="leading-6 font-medium">{{ 'AllowAsFallback' | translate }}</div>
+                    <div class="flex-auto cursor-pointer" (click)="allowAsAutomaticFallbackToggle.toggle()">
+                        <div class="leading-6 font-medium">{{ 'AllowAsAutomaticFallback' | translate }}</div>
                         <div class="text-md text-secondary">
-                            {{ 'AllowAsFallbackExplanation' | translate }}
+                            {{ 'AllowAsAutomaticFallbackExplanation' | translate }}
                         </div>
                     </div>
-                    <mat-slide-toggle class="ml-2" [color]="'primary'" #allowAsFallbackToggle formControlName="allowAsAutomaticFallback">
+                    <mat-slide-toggle class="ml-2" [color]="'primary'" #allowAsAutomaticFallbackToggle formControlName="allowAsAutomaticFallback">
+                    </mat-slide-toggle>
+                </div>
+
+                <div class="flex flex-row items-start justify-start">
+                    <div class="flex-auto cursor-pointer" (click)="allowAsManualFallbackToggle.toggle()">
+                        <div class="leading-6 font-medium">{{ 'AllowAsManualFallback' | translate }}</div>
+                        <div class="text-md text-secondary">
+                            {{ 'AllowAsManualFallbackExplanation' | translate }}
+                        </div>
+                    </div>
+                    <mat-slide-toggle class="ml-2" [color]="'primary'" #allowAsManualFallbackToggle formControlName="allowAsManualFallback">
                     </mat-slide-toggle>
                 </div>
 

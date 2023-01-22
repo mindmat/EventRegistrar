@@ -7,7 +7,7 @@ public class SetManualFallbackToPricePackageCommand : IRequest, IEventBoundReque
 {
     public Guid EventId { get; set; }
     public Guid RegistrationId { get; set; }
-    public Guid PricePackageId { get; set; }
+    public Guid? PricePackageId { get; set; }
 }
 
 public class SetManualFallbackToPricePackageCommandHandler : AsyncRequestHandler<SetManualFallbackToPricePackageCommand>

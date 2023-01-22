@@ -163,13 +163,13 @@
     <value>Automatischer Fallback möglich</value>
   </data>
   <data name="AllowAsAutomaticFallbackExplanation" xml:space="preserve">
-    <value>Damit kann dieses Paket für eine:n Teilnehmer:in verwendet werden, wenn ein geplantes Paket (noch) nicht verfügbar ist</value>
+    <value>Damit wird dieses Paket automatisch für eine:n Teilnehmer:in verwendet, wenn ein geplantes Paket (noch) nicht verfügbar ist und dieses Paket einen Teil der Anmeldung abdeckt.</value>
   </data>
   <data name="AllowAsManualFallback" xml:space="preserve">
     <value>Manueller Fallback möglich</value>
   </data>
   <data name="AllowAsManualFallbackExplanation" xml:space="preserve">
-    <value>Damit kann dieses Paket für eine:n Teilnehmer:in verwendet werden, wenn ein geplantes Paket (noch) nicht verfügbar ist</value>
+    <value>Damit kann dieses Paket manuell einem:r Teilnehmer:in zugeordnet werden, wenn ein geplantes Paket (noch) nicht verfügbar ist und dieses Paket einen Teil der Anmeldung abdeckt.</value>
   </data>
   <data name="Amount" xml:space="preserve">
     <value>Betrag</value>
@@ -903,6 +903,9 @@
   </data>
   <data name="ReminderMail2" xml:space="preserve">
     <value>Mail Zahlungserinnerung 2</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Entfernen</value>
   </data>
   <data name="RemoveLink" xml:space="preserve">
     <value>Zuordnung aufheben</value>

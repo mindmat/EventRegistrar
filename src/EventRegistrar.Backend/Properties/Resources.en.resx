@@ -807,6 +807,9 @@
   <data name="ReminderMail2" xml:space="preserve">
     <value>Reminder mail 2</value>
   </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
   <data name="RemoveLink" xml:space="preserve">
     <value>Remove link</value>
   </data>

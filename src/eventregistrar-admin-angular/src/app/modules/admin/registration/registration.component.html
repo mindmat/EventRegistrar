@@ -203,6 +203,9 @@
                                 <mat-icon *ngIf="package.id===registration.pricePackageId_ManualFallback" [svgIcon]="'heroicons_outline:check'"></mat-icon>
                                 {{ package.name }}
                             </button>
+                            <button *ngIf="!!registration.pricePackageId_ManualFallback" mat-menu-item (click)="removeFallbackPackage()">
+                                {{ 'Remove' | translate }}
+                            </button>
                         </mat-menu>
                     </div>
                 </div>

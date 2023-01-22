@@ -206,6 +206,9 @@ export class RegistrationComponent implements OnInit
   setFallbackPackage(pricePackageId: string)
   {
     this.registrationService.setFallbackPackage(this.registration.id, pricePackageId);
-
+  }
+  removeFallbackPackage()
+  {
+    this.registrationService.setFallbackPackage(this.registration.id, null);
   }
 }

@@ -92,7 +92,7 @@ export class RegistrationService
       .subscribe();
   }
 
-  setFallbackPackage(registrationId: string, pricePackageId: string)
+  setFallbackPackage(registrationId: string, pricePackageId?: string)
   {
     return this.api.setManualFallbackToPricePackage_Command({ eventId: this.eventService.selectedId, registrationId, pricePackageId })
       .subscribe();
