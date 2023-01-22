@@ -964,6 +964,9 @@
   <data name="SendReminderSms" xml:space="preserve">
     <value>Erinnerungs-SMS senden</value>
   </data>
+  <data name="SetFallbackPackage" xml:space="preserve">
+    <value>Anderes Paket aktivieren</value>
+  </data>
   <data name="Settled" xml:space="preserve">
     <value>Ausgeglichene</value>
   </data>

@@ -91,4 +91,10 @@ export class RegistrationService
     return this.api.willPayAtCheckin_Command({ eventId: this.eventService.selectedId, registrationId })
       .subscribe();
   }
+
+  setFallbackPackage(registrationId: string, pricePackageId: string)
+  {
+    return this.api.setManualFallbackToPricePackage_Command({ eventId: this.eventService.selectedId, registrationId, pricePackageId })
+      .subscribe();
+  }
 }

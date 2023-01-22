@@ -40,6 +40,7 @@ using EventRegistrar.Backend.Registrations.IndividualReductions;
 using EventRegistrar.Backend.Registrations.InternalNotes;
 using EventRegistrar.Backend.Registrations.Matching;
 using EventRegistrar.Backend.Registrations.Overview;
+using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Reductions;
 using EventRegistrar.Backend.Registrations.Register;
@@ -118,6 +119,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(BulkMailTemplatesQuery);
             yield return nameof(BulkMailTemplateQuery);
             yield return nameof(GeneratedBulkMailsQuery);
+            yield return nameof(PossibleManualFallbackPricePackagesQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
@@ -173,6 +175,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(UpdateInternalNotesCommand);
             yield return nameof(CreateBulkMailTemplateCommand);
             yield return nameof(UpdateBulkMailTemplateCommand);
+            yield return nameof(SetManualFallbackToPricePackageCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

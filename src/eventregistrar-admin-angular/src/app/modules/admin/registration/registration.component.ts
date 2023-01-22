@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { IndividualReductionType, MailDisplayItem, MailDisplayType, MailState, MailTypeItem, RegistrationDisplayItem, RegistrationState, SpotDisplayItem } from 'app/api/api';
+import { FallbackPricePackage, IndividualReductionType, MailDisplayItem, MailDisplayType, MailState, MailTypeItem, RegistrationDisplayItem, RegistrationState, SpotDisplayItem } from 'app/api/api';
 import { BehaviorSubject, debounceTime, filter, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { MailService } from '../mailing/mails/mail-view/mail.service';
@@ -12,6 +12,7 @@ import { ChangeSpotsComponent } from './change-spots/change-spots.component';
 import { CreateIndividualReductionComponent } from './create-individual-reduction/create-individual-reduction.component';
 import { IndividualReductionService } from './create-individual-reduction/individual-reduction.service';
 import { RegistrationService } from './registration.service';
+import { FallbackPackagesService } from '../pricing/fallback-packages.service';
 
 @Component({
   selector: 'app-registration',
@@ -34,6 +35,7 @@ export class RegistrationComponent implements OnInit
   MailState = MailState;
   RegistrationState = RegistrationState;
   MailDisplayType = MailDisplayType;
+  possibleFallbackPricePackages: FallbackPricePackage[];
 
   constructor(
     private registrationService: RegistrationService,
@@ -43,7 +45,8 @@ export class RegistrationComponent implements OnInit
     private matDialog: MatDialog,
     private mailService: MailService,
     private reductionService: IndividualReductionService,
-    private remarksService: RemarksOverviewService) { }
+    private remarksService: RemarksOverviewService,
+    private fallbackPackagesService: FallbackPackagesService) { }
 
   ngOnInit(): void
   {
@@ -101,6 +104,15 @@ export class RegistrationComponent implements OnInit
     {
       this.registrationService.getPossibleMailTypes(this.registration.id)
         .subscribe(types => this.possibleMailTypes = types);
+    }
+  }
+
+  fetchPossibleFalbackPackages()
+  {
+    if (!this.possibleFallbackPricePackages)
+    {
+      this.fallbackPackagesService.getPossiblePackages(this.registration.id)
+        .subscribe(types => this.possibleFallbackPricePackages = types);
     }
   }
 
@@ -189,5 +201,11 @@ export class RegistrationComponent implements OnInit
   setWillPayAtCheckin()
   {
     this.registrationService.setWillPayAtCheckin(this.registration.id);
+  }
+
+  setFallbackPackage(pricePackageId: string)
+  {
+    this.registrationService.setFallbackPackage(this.registration.id, pricePackageId);
+
   }
 }

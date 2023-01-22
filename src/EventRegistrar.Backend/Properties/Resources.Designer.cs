@@ -2604,6 +2604,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anderes Paket aktivieren.
+        /// </summary>
+        internal static string SetFallbackPackage {
+            get {
+                return ResourceManager.GetString("SetFallbackPackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ausgeglichene.
         /// </summary>
         internal static string Settled {

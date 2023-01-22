@@ -691,6 +691,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    possibleManualFallbackPricePackages_Query(possibleManualFallbackPricePackagesQuery: PossibleManualFallbackPricePackagesQuery | undefined): Observable<FallbackPricePackage[]> {
+        let url_ = this.baseUrl + "/api/PossibleManualFallbackPricePackagesQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(possibleManualFallbackPricePackagesQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPossibleManualFallbackPricePackages_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPossibleManualFallbackPricePackages_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FallbackPricePackage[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FallbackPricePackage[]>;
+        }));
+    }
+
+    protected processPossibleManualFallbackPricePackages_Query(response: HttpResponseBase): Observable<FallbackPricePackage[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as FallbackPricePackage[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     pricePackagePartSelectionType_Query(pricePackagePartSelectionTypeQuery: PricePackagePartSelectionTypeQuery | undefined): Observable<PricePackagePartSelectionTypeOption[]> {
         let url_ = this.baseUrl + "/api/PricePackagePartSelectionTypeQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -773,6 +824,57 @@ export class Api {
     }
 
     protected processRecalculatePriceAndWaitingList_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    setManualFallbackToPricePackage_Command(setManualFallbackToPricePackageCommand: SetManualFallbackToPricePackageCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/SetManualFallbackToPricePackageCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(setManualFallbackToPricePackageCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSetManualFallbackToPricePackage_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSetManualFallbackToPricePackage_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processSetManualFallbackToPricePackage_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -7495,6 +7597,7 @@ export interface RegistrationDisplayItem {
     willPayAtCheckin?: boolean;
     fallbackToPartyPass?: boolean | null;
     internalNotes?: string | null;
+    pricePackageId_ManualFallback?: string | null;
     spots?: SpotDisplayItem[] | null;
     payments?: AssignedPaymentDisplayItem[] | null;
     mails?: MailDisplayItem[] | null;
@@ -7644,6 +7747,16 @@ export interface AllExternalRegistrationIdentifiersQuery {
     registrationFormExternalIdentifier?: string;
 }
 
+export interface FallbackPricePackage {
+    id?: string;
+    name?: string;
+}
+
+export interface PossibleManualFallbackPricePackagesQuery {
+    eventId?: string;
+    registrationId?: string;
+}
+
 export interface PricePackagePartSelectionTypeOption {
     type?: PricePackagePartSelectionType;
     text?: string;
@@ -7663,6 +7776,12 @@ export interface PricePackagePartSelectionTypeQuery {
 
 export interface RecalculatePriceAndWaitingListCommand {
     registrationId?: string;
+}
+
+export interface SetManualFallbackToPricePackageCommand {
+    eventId?: string;
+    registrationId?: string;
+    pricePackageId?: string;
 }
 
 export interface CheckinView {
@@ -8119,6 +8238,7 @@ export interface PricePackageDto {
     name?: string | null;
     price?: number;
     allowAsAutomaticFallback?: boolean;
+    allowAsManualFallback?: boolean;
     parts?: PricePackagePartDto[] | null;
 }
 

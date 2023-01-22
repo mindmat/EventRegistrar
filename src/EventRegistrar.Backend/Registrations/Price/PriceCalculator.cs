@@ -28,8 +28,13 @@ public class PriceCalculator
         _enumTranslator = enumTranslator;
     }
 
-    public async Task<(decimal priceOriginal, decimal priceAdmitted, decimal priceAdmittedAndReduced, IReadOnlyCollection<MatchingPackageResult> packagesOriginal,
-            IReadOnlyCollection<MatchingPackageResult> packagesAdmitted, bool isOnWaitingList, IReadOnlyCollection<MatchingPackageResult> possibleFallbackPackages)>
+    public async Task<(decimal priceOriginal,
+            decimal priceAdmitted,
+            decimal priceAdmittedAndReduced,
+            IReadOnlyCollection<MatchingPackageResult> packagesOriginal,
+            IReadOnlyCollection<MatchingPackageResult> packagesAdmitted,
+            bool isOnWaitingList,
+            IEnumerable<MatchingPackageResult> possibleFallbackPackages)>
         CalculatePrice(Guid registrationId, CancellationToken cancellationToken = default)
     {
         var registration = await _registrations.Where(reg => reg.Id == registrationId)
@@ -44,8 +49,13 @@ public class PriceCalculator
         return await CalculatePrice(registration, spots);
     }
 
-    public async Task<(decimal priceOriginal, decimal priceAdmitted, decimal priceAdmittedAndReduced, IReadOnlyCollection<MatchingPackageResult> packagesOriginal,
-            IReadOnlyCollection<MatchingPackageResult> packagesAdmitted, bool isOnWaitingList, IReadOnlyCollection<MatchingPackageResult> possibleFallbackPackages)>
+    public async Task<(decimal priceOriginal,
+            decimal priceAdmitted,
+            decimal priceAdmittedAndReduced,
+            IReadOnlyCollection<MatchingPackageResult> packagesOriginal,
+            IReadOnlyCollection<MatchingPackageResult> packagesAdmitted,
+            bool isOnWaitingList,
+            IEnumerable<MatchingPackageResult> possibleFallbackPackages)>
         CalculatePrice(Registration registration,
                        IEnumerable<Seat> spots)
     {
@@ -68,6 +78,7 @@ public class PriceCalculator
         var priceAdmitted = priceOriginal;
         var packagesAdmitted = packagesOriginal;
         var originalPackageIds = packagesOriginal.Select(pkg => pkg.Id).ToList();
+        var possibleFallbackPackages = Enumerable.Empty<MatchingPackageResult>();
 
         if (hasSpotsOnWaitingList || !allCoveredOriginal)
         {
@@ -82,7 +93,8 @@ public class PriceCalculator
             {
                 var fallbackPackages = packagesAdmitted.Where(adm => !originalPackageIds.Contains(adm.Id))
                                                        .ToList();
-                if (fallbackPackages.All(ppk => ppk.AllowAsAutomaticFallback))
+                if (fallbackPackages.All(ppk => ppk.AllowAsAutomaticFallback
+                                             || (ppk.AllowAsManualFallback && ppk.Id == registration.PricePackageId_ManualFallback)))
                 {
                     // allow fallback
                     isOnWaitingList = !allCoveredAdmitted;
@@ -94,6 +106,8 @@ public class PriceCalculator
                     packagesAdmitted = new List<MatchingPackageResult>(0);
                     isOnWaitingList = true;
                 }
+
+                possibleFallbackPackages = fallbackPackages.Where(ppk => ppk.AllowAsManualFallback);
             }
         }
 
@@ -103,7 +117,7 @@ public class PriceCalculator
             packagesAdmitted = packagesAdmitted.Append(reductionPackage.Value).ToList();
         }
 
-        return (priceOriginal, priceAdmitted, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, isOnWaitingList, null);
+        return (priceOriginal, priceAdmitted, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, isOnWaitingList, possibleFallbackPackages);
     }
 
     private static (decimal Price, MatchingPackageResult? ReductionPackage) GetReducedPrice(decimal priceNotReduced, ICollection<IndividualReduction>? individualReductions)

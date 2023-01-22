@@ -867,6 +867,9 @@
   <data name="SendReminderSms" xml:space="preserve">
     <value>Send reminder SMS</value>
   </data>
+  <data name="SetFallbackPackage" xml:space="preserve">
+    <value>Activate different package</value>
+  </data>
   <data name="Settled" xml:space="preserve">
     <value>Settled</value>
   </data>

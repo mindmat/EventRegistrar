@@ -191,11 +191,18 @@
                 <div class="flex items-center justify-between">
                     <div class="text-2xl font-semibold leading-tight">{{ 'Spots' | translate }}</div>
                     <div class="-mr-3">
-                        <button mat-icon-button [matMenuTriggerFor]="spotsMenu">
+                        <button mat-icon-button [matMenuTriggerFor]="spotsMenu" (click)="fetchPossibleFalbackPackages()">
                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                         </button>
                         <mat-menu #spotsMenu="matMenu">
                             <button mat-menu-item (click)="changeSpots()">{{ 'Change' | translate }}</button>
+                            <button mat-menu-item [matMenuTriggerFor]="fallbackPackagesMenu">{{ 'SetFallbackPackage' | translate }}</button>
+                        </mat-menu>
+                        <mat-menu #fallbackPackagesMenu>
+                            <button *ngFor="let package of possibleFallbackPricePackages" mat-menu-item (click)="setFallbackPackage(package.id)">
+                                <mat-icon *ngIf="package.id===registration.pricePackageId_ManualFallback" [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                                {{ package.name }}
+                            </button>
                         </mat-menu>
                     </div>
                 </div>

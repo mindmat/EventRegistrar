@@ -439,6 +439,41 @@
         }
       }
     },
+    "/api/PossibleManualFallbackPricePackagesQuery": {
+      "post": {
+        "tags": [
+          "PossibleManualFallbackPricePackages"
+        ],
+        "operationId": "PossibleManualFallbackPricePackages_Query",
+        "requestBody": {
+          "x-name": "PossibleManualFallbackPricePackagesQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PossibleManualFallbackPricePackagesQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FallbackPricePackage"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/PricePackagePartSelectionTypeQuery": {
       "post": {
         "tags": [
@@ -487,6 +522,38 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/RecalculatePriceAndWaitingListCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SetManualFallbackToPricePackageCommand": {
+      "post": {
+        "tags": [
+          "SetManualFallbackToPricePackage"
+        ],
+        "operationId": "SetManualFallbackToPricePackage_Command",
+        "requestBody": {
+          "x-name": "SetManualFallbackToPricePackageCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetManualFallbackToPricePackageCommand"
               }
             }
           },
@@ -5007,6 +5074,11 @@
             "type": "string",
             "nullable": true
           },
+          "pricePackageId_ManualFallback": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
           "spots": {
             "type": "array",
             "nullable": true,
@@ -5456,6 +5528,33 @@
           }
         }
       },
+      "FallbackPricePackage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "PossibleManualFallbackPricePackagesQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "PricePackagePartSelectionTypeOption": {
         "type": "object",
         "additionalProperties": false,
@@ -5501,6 +5600,24 @@
         "additionalProperties": false,
         "properties": {
           "registrationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "SetManualFallbackToPricePackageCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "pricePackageId": {
             "type": "string",
             "format": "guid"
           }
@@ -6866,6 +6983,9 @@
             "format": "decimal"
           },
           "allowAsAutomaticFallback": {
+            "type": "boolean"
+          },
+          "allowAsManualFallback": {
             "type": "boolean"
           },
           "parts": {

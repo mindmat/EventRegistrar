@@ -3,6 +3,7 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.PhoneMessages;
+using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
@@ -62,6 +63,9 @@ public class Registration : Entity
     public RegistrationState State { get; set; }
     public bool WillPayAtCheckin { get; set; }
     public string? InternalNotes { get; set; }
+
+    public PricePackage? PricePackage_ManualFallback { get; set; }
+    public Guid? PricePackageId_ManualFallback { get; set; }
 }
 
 public class RegistrationMap : EntityMap<Registration>
@@ -83,6 +87,10 @@ public class RegistrationMap : EntityMap<Registration>
         builder.HasOne(reg => reg.Registration_Partner)
                .WithMany()
                .HasForeignKey(reg => reg.RegistrationId_Partner);
+
+        builder.HasOne(reg => reg.PricePackage_ManualFallback)
+               .WithMany()
+               .HasForeignKey(reg => reg.PricePackageId_ManualFallback);
 
 
         builder.Property(reg => reg.PartnerNormalized)
