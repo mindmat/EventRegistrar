@@ -22,6 +22,8 @@
                 <!-- <div class="text-secondary">London, UK</div> -->
             </div>
 
+            <mat-icon class="icon-size-5 ml-2" *ngIf="registration.isWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon>
+
             <!-- Separator -->
             <div class="hidden lg:flex h-8 mx-8 border-l-2"></div>
 
