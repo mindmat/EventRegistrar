@@ -7781,7 +7781,7 @@ export interface RecalculatePriceAndWaitingListCommand {
 export interface SetManualFallbackToPricePackageCommand {
     eventId?: string;
     registrationId?: string;
-    pricePackageId?: string;
+    pricePackageId?: string | null;
 }
 
 export interface CheckinView {

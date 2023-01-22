@@ -1,4 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Registrations.Price;
@@ -14,12 +16,15 @@ public class SetManualFallbackToPricePackageCommandHandler : AsyncRequestHandler
 {
     private readonly IRepository<Registration> _registrations;
     private readonly ReadModelUpdater _readModelUpdater;
+    private readonly IEventBus _eventBus;
 
     public SetManualFallbackToPricePackageCommandHandler(IRepository<Registration> registrations,
-                                                         ReadModelUpdater readModelUpdater)
+                                                         ReadModelUpdater readModelUpdater,
+                                                         IEventBus eventBus)
     {
         _registrations = registrations;
         _readModelUpdater = readModelUpdater;
+        _eventBus = eventBus;
     }
 
     protected override async Task Handle(SetManualFallbackToPricePackageCommand command, CancellationToken cancellationToken)
@@ -32,7 +37,7 @@ public class SetManualFallbackToPricePackageCommandHandler : AsyncRequestHandler
         if (registration.PricePackageId_ManualFallback != command.PricePackageId)
         {
             registration.PricePackageId_ManualFallback = command.PricePackageId;
-            _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+            _eventBus.Publish(new ManualFallbackToPricePackageSet { RegistrationId = registration.Id, EventId = command.EventId });
         }
     }
 }

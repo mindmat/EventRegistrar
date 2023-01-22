@@ -25,27 +25,6 @@ public class RegistrationController : Controller
         return _mediator.Send(new AllExternalRegistrationIdentifiersQuery { RegistrationFormExternalIdentifier = formExternalIdentifier });
     }
 
-    [HttpPut("api/events/{eventAcronym}/registrations/{registrationId:guid}/setReducedPrice")]
-    public async Task SetReducedPrice(string eventAcronym, Guid registrationId)
-    {
-        await _mediator.Send(new SetReductionCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 RegistrationId = registrationId,
-                                 IsReduced = true
-                             });
-    }
-
-    [HttpPut("api/events/{eventAcronym}/registrations/{registrationId:guid}/setWaitingListFallback")]
-    public async Task SetWaitingListFallback(string eventAcronym, Guid registrationId)
-    {
-        await _mediator.Send(new SetFallbackToPartyPassCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 RegistrationId = registrationId
-                             });
-    }
-
     [HttpPost("api/events/{eventAcronym}/registrations/{registrationId:guid}/swapFirstLastName")]
     public async Task SwapFirstLastName(string eventAcronym, Guid registrationId)
     {
