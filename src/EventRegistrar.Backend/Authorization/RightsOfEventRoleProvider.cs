@@ -30,7 +30,6 @@ using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.Registrables.Tags;
-using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrables.WaitingList.MoveUp;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
@@ -149,7 +148,6 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(RemoveIndividualReductionCommand);
             yield return nameof(ImportMailsFromImapCommand);
             yield return nameof(UnbindPartnerRegistrationCommand);
-            yield return nameof(SetFallbackToPartyPassCommand);
             yield return nameof(SetReductionCommand);
             yield return nameof(WillPayAtCheckinCommand);
             yield return nameof(DeleteRegistrableCommand);
