@@ -135,7 +135,7 @@ export class NavigationService
                                     id: 'payment-differences',
                                     title: translateService.instant('PaymentDifferences'),
                                     type: 'basic',
-                                    icon: 'mat_outline:hourglass_bottom',
+                                    icon: 'heroicons_outline:switch-vertical',
                                     link: `/${e.acronym}/accounting/payment-differences`,
                                 }]
                         },

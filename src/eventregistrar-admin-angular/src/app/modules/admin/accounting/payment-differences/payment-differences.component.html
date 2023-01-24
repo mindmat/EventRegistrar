@@ -42,7 +42,7 @@
                             <div *ngIf="!!difference.internalNotes" class="flex items-center mt-2 leading-5 text-md">
                                 <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'mat_solid:edit_note'">
                                 </mat-icon>
-                                <div>{{ difference.internalNotes }}</div>
+                                <div class="max-w-none mt-2 prose prose-sm whitespace-pre-line">{{ difference.internalNotes }}</div>
                             </div>
                             <!-- <div *ngIf="duePayment.reminder1Mail" class="flex items-center mt-2 leading-5 text-md text-secondary">
                                 <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:exclamation'" matTooltip="{{ 'ReminderMail1' | translate }}" [matTooltipPosition]="'above'"
