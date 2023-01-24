@@ -57,6 +57,8 @@ import { BulkMailTemplateComponent } from './modules/admin/mailing/bulk-mail-tem
 import { BulkMailTemplateResolver } from './modules/admin/mailing/bulk-mail-template/bulk-mail-template.resolver';
 import { HostingOverviewComponent } from './modules/admin/hosting/hosting-overview/hosting-overview.component';
 import { HostingOverviewResolver } from './modules/admin/hosting/hosting-overview/hosting-overview.resolver';
+import { PaymentDifferencesComponent } from './modules/admin/accounting/payment-differences/payment-differences.component';
+import { PaymentDifferencesResolver } from './modules/admin/accounting/payment-differences/payment-differences.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -209,6 +211,12 @@ export const appRoutes: Route[] =
                             canActivate: [AuthGuard],
                             component: DuePaymentsComponent,
                             resolve: { initialData: DuePaymentsResolver }
+                        },
+                        {
+                            path: 'payment-differences',
+                            canActivate: [AuthGuard],
+                            component: PaymentDifferencesComponent,
+                            resolve: { initialData: PaymentDifferencesResolver }
                         },
                     ]
                 },

@@ -1435,38 +1435,6 @@
         }
       }
     },
-    "/api/SetFallbackToPartyPassCommand": {
-      "post": {
-        "tags": [
-          "SetFallbackToPartyPass"
-        ],
-        "operationId": "SetFallbackToPartyPass_Command",
-        "requestBody": {
-          "x-name": "SetFallbackToPartyPassCommand",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SetFallbackToPartyPassCommand"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Unit"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/ActivateAutomaticPromotionCommand": {
       "post": {
         "tags": [
@@ -5524,7 +5492,8 @@
         "additionalProperties": false,
         "properties": {
           "registrationFormExternalIdentifier": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -6820,20 +6789,6 @@
           "tag": {
             "type": "string",
             "nullable": true
-          }
-        }
-      },
-      "SetFallbackToPartyPassCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "registrationId": {
-            "type": "string",
-            "format": "guid"
           }
         }
       },
@@ -8386,10 +8341,12 @@
             "format": "decimal"
           },
           "firstName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "lastName": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "state": {
             "$ref": "#/components/schemas/RegistrationState"
@@ -8402,6 +8359,10 @@
           "tooMuchPaidMailSent": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "internalNotes": {
+            "type": "string",
             "nullable": true
           }
         }

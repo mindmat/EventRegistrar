@@ -26,66 +26,46 @@ public class DifferencesQueryHandler : IRequestHandler<DifferencesQuery, IEnumer
         var differences = await _registrations.Where(reg => reg.EventId == query.EventId
                                                          && (reg.State == RegistrationState.Received || reg.State == RegistrationState.Paid)
                                                          && reg.IsOnWaitingList == false
-                                                         && reg.Price_AdmittedAndReduced > 0m)
+                                                         && reg.Price_AdmittedAndReduced > 0m
+                                                         && !reg.WillPayAtCheckin)
                                               .Select(reg => new
                                                              {
                                                                  Registration = reg,
                                                                  PaymentsTotal = reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null
                                                                                                                         ? asn.Amount
                                                                                                                         : -asn.Amount),
-                                                                 Difference = reg.Price_AdmittedAndReduced
-                                                                            - reg.PaymentAssignments.Sum(asn => asn.PayoutRequestId == null
-                                                                                                                    ? asn.Amount
-                                                                                                                    : -asn.Amount)
+                                                                 Mails = reg.Mails!.Select(mtr => mtr.Mail!)
+                                                                            .Where(mail => !mail.Discarded
+                                                                                        && (mail.Type == MailType.MoneyOwed
+                                                                                         || mail.Type == MailType.TooMuchPaid))
+                                                                            .Select(mail => new
+                                                                                            {
+                                                                                                mail.Type,
+                                                                                                mail.Created,
+                                                                                                mail.Sent
+                                                                                            })
                                                              })
-                                              .Where(reg => reg.Difference != 0m
+                                              .Where(reg => reg.Registration.Price_AdmittedAndReduced - reg.PaymentsTotal != 0m
                                                          && reg.PaymentsTotal > 0m)
                                               .OrderBy(reg => reg.Registration.AdmittedAt)
-                                              .Select(reg => new DifferencesDisplayItem
-                                                             {
-                                                                 RegistrationId = reg.Registration.Id,
-                                                                 Price = reg.Registration.Price_AdmittedAndReduced,
-                                                                 AmountPaid = reg.PaymentsTotal,
-                                                                 Difference = reg.Difference,
-                                                                 FirstName = reg.Registration.RespondentFirstName,
-                                                                 LastName = reg.Registration.RespondentLastName,
-                                                                 State = reg.Registration.State
-                                                             })
                                               .ToListAsync(cancellationToken);
-
-        var registrationIds = differences.Select(dif => dif.RegistrationId).ToList();
-        var sentMails = await _mails.Where(mail => mail.EventId == query.EventId
-                                                && mail.Registrations.Any(reg =>
-                                                                              registrationIds.Contains(reg.RegistrationId))
-                                                && (mail.Type == MailType.MoneyOwed || mail.Type == MailType.TooMuchPaid)
-                                                && !mail.Discarded)
-                                    .SelectMany(mail => mail.Registrations
-                                                            .Where(map => registrationIds.Contains(map.RegistrationId))
-                                                            .Select(map => new
-                                                                           {
-                                                                               map.RegistrationId,
-                                                                               MailType = mail.Type.Value,
-                                                                               mail.Created,
-                                                                               mail.Sent,
-                                                                               mail.DataJson
-                                                                           }))
-                                    .ToListAsync(cancellationToken);
-        foreach (var registration in sentMails.GroupBy(mail => mail.RegistrationId)
-                                              .Select(grp => new
-                                                             {
-                                                                 RegistrationId = grp.Key,
-                                                                 Difference = differences.First(dif => dif.RegistrationId == grp.Key),
-                                                                 LastPaymentDueMail = grp.Where(mail => mail.MailType == MailType.MoneyOwed)
-                                                                                         .MaxBy(mail => mail.Sent ?? mail.Created),
-                                                                 LastTooMuchPaidMail = grp.Where(mail => mail.MailType == MailType.TooMuchPaid)
-                                                                                          .MaxBy(mail => mail.Sent ?? mail.Created)
-                                                             }))
-        {
-            registration.Difference.PaymentDueMailSent = registration.LastPaymentDueMail?.Sent;
-            registration.Difference.TooMuchPaidMailSent = registration.LastTooMuchPaidMail?.Sent;
-        }
-
-        return differences;
+        return differences.Select(reg => new DifferencesDisplayItem
+                                         {
+                                             RegistrationId = reg.Registration.Id,
+                                             Price = reg.Registration.Price_AdmittedAndReduced,
+                                             AmountPaid = reg.PaymentsTotal,
+                                             Difference = reg.Registration.Price_AdmittedAndReduced - reg.PaymentsTotal,
+                                             FirstName = reg.Registration.RespondentFirstName,
+                                             LastName = reg.Registration.RespondentLastName,
+                                             State = reg.Registration.State,
+                                             InternalNotes = reg.Registration.InternalNotes,
+                                             PaymentDueMailSent = reg.Mails.Where(mail => mail.Type == MailType.MoneyOwed)
+                                                                     .MaxBy(mail => mail.Sent ?? mail.Created)
+                                                                     ?.Sent,
+                                             TooMuchPaidMailSent = reg.Mails.Where(mail => mail.Type == MailType.TooMuchPaid)
+                                                                      .MaxBy(mail => mail.Sent ?? mail.Created)
+                                                                      ?.Sent
+                                         });
     }
 }
 
@@ -95,9 +75,10 @@ public class DifferencesDisplayItem
     public decimal Price { get; set; }
     public decimal AmountPaid { get; set; }
     public decimal Difference { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
     public RegistrationState State { get; set; }
     public DateTimeOffset? PaymentDueMailSent { get; set; }
     public DateTimeOffset? TooMuchPaidMailSent { get; set; }
+    public string? InternalNotes { get; set; }
 }

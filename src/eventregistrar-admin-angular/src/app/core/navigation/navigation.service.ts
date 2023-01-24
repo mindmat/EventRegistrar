@@ -130,6 +130,13 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'mat_outline:hourglass_bottom',
                                     link: `/${e.acronym}/accounting/due-payments`,
+                                },
+                                {
+                                    id: 'payment-differences',
+                                    title: translateService.instant('PaymentDifferences'),
+                                    type: 'basic',
+                                    icon: 'mat_outline:hourglass_bottom',
+                                    link: `/${e.acronym}/accounting/payment-differences`,
                                 }]
                         },
                         {

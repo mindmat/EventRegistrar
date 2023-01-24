@@ -1947,6 +1947,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zahlungsdifferenzen.
+        /// </summary>
+        internal static string PaymentDifferences {
+            get {
+                return ResourceManager.GetString("PaymentDifferences", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Übersicht Einnahmen.
         /// </summary>
         internal static string PaymentOverview {

@@ -28,15 +28,10 @@ internal class AuthenticatedUserProvider : IAuthenticatedUserProvider
         var identifier = _identityProvider.GetIdentifier(_httpContextAccessor);
         if (identifier != null)
         {
-            var user = await _users.FirstOrDefaultAsync(usr => usr.IdentityProvider == identifier.Value.Provider
-                                                            && usr.IdentityProviderUserIdentifier == identifier.Value.Identifier);
-            if (user == null)
-            {
-                //return new Guid("73B167CE-61CC-46AC-BC7D-F72A1EA5D7C9");
-                return null;
-            }
-
-            return user.Id;
+            return await _users.Where(usr => usr.IdentityProvider == identifier.Value.Provider
+                                          && usr.IdentityProviderUserIdentifier == identifier.Value.Identifier)
+                               .Select(usr => (Guid?)usr.Id)
+                               .FirstOrDefaultAsync();
         }
 
         return null;

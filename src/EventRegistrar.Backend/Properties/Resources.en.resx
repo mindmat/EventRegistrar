@@ -654,6 +654,9 @@
   <data name="PartnerPossible" xml:space="preserve">
     <value>Partner registration possible</value>
   </data>
+  <data name="PaymentDifferences" xml:space="preserve">
+    <value>Payment differences</value>
+  </data>
   <data name="PaymentOverview" xml:space="preserve">
     <value>Payment overview</value>
   </data>
