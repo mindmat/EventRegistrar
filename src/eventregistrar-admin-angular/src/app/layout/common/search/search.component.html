@@ -80,9 +80,8 @@
             <img *ngIf="result.avatar" [src]="result.avatar">
             <mat-icon class="m-0 icon-size-5 text-primary dark:text-primary-400" *ngIf="!result.avatar" [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
         </div>
-        <div class="ml-3 truncate">
-            <span [innerHTML]="result.name"></span>
-            <!-- {{result.name}} -->
+        <div class="ml-3 truncate" [ngClass]="{'line-through': result.strikethrough}">
+            <span>{{ result.name }}</span>
         </div>
     </div>
 </ng-template>

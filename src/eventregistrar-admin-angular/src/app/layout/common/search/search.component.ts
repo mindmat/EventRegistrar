@@ -6,6 +6,7 @@ import { Api, RegistrationMatch, RegistrationState } from 'app/api/api';
 import { EventService } from 'app/modules/admin/events/event.service';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { NavigatorService } from 'app/modules/admin/navigator.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'search',
@@ -36,6 +37,7 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
         private api: Api,
         private eventService: EventService,
         private changeDetector: ChangeDetectorRef,
+        private translateService: TranslateService,
         public navigator: NavigatorService) { }
 
     // -----------------------------------------------------------------------------------------------------
@@ -143,13 +145,14 @@ export class SearchComponent implements OnChanges, OnInit, OnDestroy
                         // Store the result sets
                         this.resultSets = [{
                             id: 'registrations',
-                            label: 'Anmeldungen',
+                            label: this.translateService.instant('Registrations'),
                             results: resultSets.map(match =>
                             ({
                                 avatar: null,
                                 name: `${match.firstName} ${match.lastName}`,
                                 link: null,
-                                value: match.registrationId
+                                value: match.registrationId,
+                                strikethrough: match.state === RegistrationState.Cancelled
                             } as SearchResult))
                         }];
 
@@ -273,4 +276,5 @@ export class SearchResult
     name: string;
     link: string | null;
     value: string | null;
+    strikethrough: boolean;
 }
