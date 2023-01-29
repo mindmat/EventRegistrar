@@ -213,6 +213,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Abbrechen</value>
   </data>
+  <data name="CancellationMoment" xml:space="preserve">
+    <value>Abmeldungszeitpunkt</value>
+  </data>
   <data name="CancelRegistration" xml:space="preserve">
     <value>Anmeldung stornieren</value>
   </data>
@@ -272,6 +275,9 @@
   </data>
   <data name="Deposits" xml:space="preserve">
     <value>Einzahlungen</value>
+  </data>
+  <data name="DespitePayments" xml:space="preserve">
+    <value>Trotz Zahlungen</value>
   </data>
   <data name="Discard" xml:space="preserve">
     <value>Verwerfen</value>
@@ -479,6 +485,9 @@
   </data>
   <data name="InternalNotes" xml:space="preserve">
     <value>Interne Notizen</value>
+  </data>
+  <data name="InvalidRefundAmount" xml:space="preserve">
+	  <value>Rückzahlbetrag {0:F2} muss zwischen 0.00 und {1:F2}l liegen.</value>
   </data>
   <data name="Key" xml:space="preserve">
     <value>Schlüssel</value>
@@ -705,6 +714,9 @@
   <data name="NoSearchResults" xml:space="preserve">
     <value>Keine Treffer gefunden</value>
   </data>
+  <data name="NotCancellableRegistrationHasPayments" xml:space="preserve">
+	  <value>Es gibt bereits Zahlungen für {0} {1} ({2})</value>
+  </data>
   <data name="NotReleased" xml:space="preserve">
     <value>Nicht freigegeben</value>
   </data>
@@ -731,6 +743,9 @@
   </data>
   <data name="Paid" xml:space="preserve">
     <value>Bezahlt</value>
+  </data>
+  <data name="PaidOf" xml:space="preserve">
+    <value>von {{amount}}</value>
   </data>
   <data name="Participants" xml:space="preserve">
     <value>Teilnehmer</value>
@@ -846,6 +861,9 @@
   <data name="Reductions" xml:space="preserve">
     <value>Reduktionen</value>
   </data>
+  <data name="RefundAmount" xml:space="preserve">
+    <value>Rückerstattung</value>
+  </data>
   <data name="Registrable" xml:space="preserve">
     <value>Track</value>
   </data>
@@ -861,6 +879,9 @@
   </data>
   <data name="RegistrableType_Single" xml:space="preserve">
     <value>Einzel</value>
+  </data>
+  <data name="RegistrationAlreadyCancelled" xml:space="preserve">
+	  <value>Die Registrierung von {0} {1} ({2}) ist bereits storniert</value>
   </data>
   <data name="RegistrationCandidatesForIncomingPayment" xml:space="preserve">
     <value>Zahlungseingang für:</value>

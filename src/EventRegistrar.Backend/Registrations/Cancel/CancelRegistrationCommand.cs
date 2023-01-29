@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Refunds;
+using EventRegistrar.Backend.Properties;
 using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations.Cancel;
@@ -8,14 +9,14 @@ namespace EventRegistrar.Backend.Registrations.Cancel;
 public class CancelRegistrationCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
-    public bool IgnorePayments { get; set; }
-    public string? Reason { get; set; }
-    public decimal RefundPercentage { get; set; }
     public Guid RegistrationId { get; set; }
+    public bool DespitePayments { get; set; }
+    public string? Reason { get; set; }
+    public decimal? RefundAmount { get; set; }
     public DateTimeOffset? Received { get; set; }
 }
 
-public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrationCommand>
+public class CancelRegistrationCommandHandler : AsyncRequestHandler<CancelRegistrationCommand>
 {
     private readonly IRepository<RegistrationCancellation> _cancellations;
     private readonly IRepository<PayoutRequest> _payoutRequests;
@@ -42,33 +43,30 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Unit> Handle(CancelRegistrationCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(CancelRegistrationCommand command, CancellationToken cancellationToken)
     {
-        var refundPercentage = command.RefundPercentage > 1m
-                                   ? command.RefundPercentage / 100m
-                                   : command.RefundPercentage;
-        refundPercentage = Math.Clamp(refundPercentage, 0m, 1m);
-
         var registration = await _registrations.AsTracking()
                                                .Include(reg => reg.PaymentAssignments)
                                                .Include(reg => reg.RegistrationForm)
                                                .Include(reg => reg.Mails!)
                                                .ThenInclude(mtr => mtr.Mail)
-                                               .FirstAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
+                                               .FirstAsync(reg => reg.Id == command.RegistrationId
+                                                               && reg.EventId == command.EventId, cancellationToken);
 
-        if (registration.PaymentAssignments!.Any() && !command.IgnorePayments)
+        var paidAmount = registration.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
+        if ((paidAmount > 0 || registration is { Price_AdmittedAndReduced: > 0, State: RegistrationState.Paid }) && !command.DespitePayments)
         {
-            throw new ApplicationException($"There are already payments for registration {command.RegistrationId}");
+            throw new ApplicationException(string.Format(Resources.NotCancellableRegistrationHasPayments, registration.RespondentFirstName, registration.RespondentLastName, command.RegistrationId));
         }
 
         if (registration.State == RegistrationState.Cancelled)
         {
-            throw new ApplicationException($"Registration {command.RegistrationId} is already cancelled");
+            throw new ApplicationException(string.Format(Resources.RegistrationAlreadyCancelled, registration.RespondentFirstName, registration.RespondentLastName, command.RegistrationId));
         }
 
-        if (registration.State == RegistrationState.Paid && !command.IgnorePayments)
+        if (paidAmount > 0 && (command.RefundAmount is null or < 0 || command.RefundAmount > paidAmount))
         {
-            throw new ApplicationException($"Registration {command.RegistrationId} is already paid and cannot be cancelled anymore");
+            throw new ApplicationException(string.Format(Resources.InvalidRefundAmount, command.RefundAmount, paidAmount));
         }
 
         registration.State = RegistrationState.Cancelled;
@@ -97,9 +95,10 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
                                RegistrationId = command.RegistrationId,
                                Reason = command.Reason,
                                Created = _dateTimeProvider.Now,
-                               RefundPercentage = refundPercentage,
-                               Refund = refundPercentage
-                                      * registration.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
+                               RefundPercentage = paidAmount > 0 && command.RefundAmount != null
+                                                      ? command.RefundAmount.Value / paidAmount
+                                                      : 0,
+                               Refund = command.RefundAmount ?? 0,
                                Received = command.Received
                            };
         _cancellations.InsertObjectTree(cancellation);
@@ -128,7 +127,5 @@ public class CancelRegistrationCommandHandler : IRequestHandler<CancelRegistrati
                               Received = command.Received ?? _dateTimeProvider.Now,
                               Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}"
                           });
-
-        return Unit.Value;
     }
 }

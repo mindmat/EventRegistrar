@@ -6034,20 +6034,21 @@
             "type": "string",
             "format": "guid"
           },
-          "ignorePayments": {
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "despitePayments": {
             "type": "boolean"
           },
           "reason": {
             "type": "string",
             "nullable": true
           },
-          "refundPercentage": {
+          "refundAmount": {
             "type": "number",
-            "format": "decimal"
-          },
-          "registrationId": {
-            "type": "string",
-            "format": "guid"
+            "format": "decimal",
+            "nullable": true
           },
           "received": {
             "type": "string",
@@ -8501,6 +8502,13 @@
             "items": {
               "$ref": "#/components/schemas/ExistingAssignment"
             }
+          },
+          "repaymentCandidates": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/RepaymentCandidate"
+            }
           }
         }
       },
@@ -8606,6 +8614,51 @@
           }
         }
       },
+      "RepaymentCandidate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "amountUnsettled": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "bookingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "creditorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "info": {
+            "type": "string",
+            "nullable": true
+          },
+          "matchScore": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "paymentId_Counter": {
+            "type": "string",
+            "format": "guid"
+          },
+          "paymentId_OpenPosition": {
+            "type": "string",
+            "format": "guid"
+          },
+          "settled": {
+            "type": "boolean"
+          }
+        }
+      },
       "PaymentAssignmentsQuery": {
         "type": "object",
         "additionalProperties": false,
@@ -8640,7 +8693,7 @@
             "type": "string",
             "nullable": true
           },
-          "debitorName": {
+          "creditorName": {
             "type": "string",
             "nullable": true
           },

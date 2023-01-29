@@ -204,6 +204,9 @@
   <data name="Cancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="CancellationMoment" xml:space="preserve">
+    <value>Cancelled at</value>
+  </data>
   <data name="CancelRegistration" xml:space="preserve">
     <value>Cancel registration</value>
   </data>
@@ -263,6 +266,9 @@
   </data>
   <data name="Deposits" xml:space="preserve">
     <value>Deposits</value>
+  </data>
+  <data name="DespitePayments" xml:space="preserve">
+    <value>Despite payments</value>
   </data>
   <data name="Discard" xml:space="preserve">
     <value>Discard</value>
@@ -642,6 +648,9 @@
   <data name="Paid" xml:space="preserve">
     <value>Paid</value>
   </data>
+  <data name="PaidOf" xml:space="preserve">
+    <value>of {{amount}}</value>
+  </data>
   <data name="Participants" xml:space="preserve">
     <value>Participants</value>
   </data>
@@ -755,6 +764,9 @@
   </data>
   <data name="Reductions" xml:space="preserve">
     <value>Reductions</value>
+  </data>
+  <data name="RefundAmount" xml:space="preserve">
+    <value>Refund</value>
   </data>
   <data name="Registrable" xml:space="preserve">
     <value>Track</value>

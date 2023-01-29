@@ -7874,10 +7874,10 @@ export interface CheckRegistrationAfterPaymentCommand {
 
 export interface CancelRegistrationCommand {
     eventId?: string;
-    ignorePayments?: boolean;
-    reason?: string | null;
-    refundPercentage?: number;
     registrationId?: string;
+    despitePayments?: boolean;
+    reason?: string | null;
+    refundAmount?: number | null;
     received?: Date | null;
 }
 
@@ -8656,6 +8656,7 @@ export interface PaymentAssignments {
     ignored?: boolean;
     registrationCandidates?: AssignmentCandidateRegistration[] | null;
     existingAssignments?: ExistingAssignment[] | null;
+    repaymentCandidates?: RepaymentCandidate[] | null;
 }
 
 export enum PaymentType {
@@ -8689,6 +8690,19 @@ export interface ExistingAssignment {
     paymentId?: string;
 }
 
+export interface RepaymentCandidate {
+    amount?: number;
+    amountUnsettled?: number;
+    bookingDate?: Date;
+    currency?: string | null;
+    creditorName?: string | null;
+    info?: string | null;
+    matchScore?: number;
+    paymentId_Counter?: string;
+    paymentId_OpenPosition?: string;
+    settled?: boolean;
+}
+
 export interface PaymentAssignmentsQuery {
     eventId?: string;
     paymentId?: string;
@@ -8699,7 +8713,7 @@ export interface PossibleRepaymentAssignment {
     amountUnsettled?: number;
     bookingDate?: Date;
     currency?: string | null;
-    debitorName?: string | null;
+    creditorName?: string | null;
     info?: string | null;
     matchScore?: number;
     paymentId_Counter?: string;

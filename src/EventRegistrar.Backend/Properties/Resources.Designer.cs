@@ -349,6 +349,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Abmeldungszeitpunkt.
+        /// </summary>
+        internal static string CancellationMoment {
+            get {
+                return ResourceManager.GetString("CancellationMoment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Anmeldung stornieren.
         /// </summary>
         internal static string CancelRegistration {
@@ -525,6 +534,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Deposits {
             get {
                 return ResourceManager.GetString("Deposits", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trotz Zahlungen.
+        /// </summary>
+        internal static string DespitePayments {
+            get {
+                return ResourceManager.GetString("DespitePayments", resourceCulture);
             }
         }
         
@@ -1151,6 +1169,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string InternalNotes {
             get {
                 return ResourceManager.GetString("InternalNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rückzahlbetrag {0:F2} muss zwischen 0.00 und {1:F2}l liegen..
+        /// </summary>
+        internal static string InvalidRefundAmount {
+            get {
+                return ResourceManager.GetString("InvalidRefundAmount", resourceCulture);
             }
         }
         
@@ -1830,6 +1857,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Es gibt bereits Zahlungen für {0} {1} ({2}).
+        /// </summary>
+        internal static string NotCancellableRegistrationHasPayments {
+            get {
+                return ResourceManager.GetString("NotCancellableRegistrationHasPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nicht freigegeben.
         /// </summary>
         internal static string NotReleased {
@@ -1907,6 +1943,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Paid {
             get {
                 return ResourceManager.GetString("Paid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to von {{amount}}.
+        /// </summary>
+        internal static string PaidOf {
+            get {
+                return ResourceManager.GetString("PaidOf", resourceCulture);
             }
         }
         
@@ -2253,6 +2298,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rückerstattung.
+        /// </summary>
+        internal static string RefundAmount {
+            get {
+                return ResourceManager.GetString("RefundAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Track.
         /// </summary>
         internal static string Registrable {
@@ -2294,6 +2348,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string RegistrableType_Single {
             get {
                 return ResourceManager.GetString("RegistrableType_Single", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Registrierung von {0} {1} ({2}) ist bereits storniert.
+        /// </summary>
+        internal static string RegistrationAlreadyCancelled {
+            get {
+                return ResourceManager.GetString("RegistrationAlreadyCancelled", resourceCulture);
             }
         }
         

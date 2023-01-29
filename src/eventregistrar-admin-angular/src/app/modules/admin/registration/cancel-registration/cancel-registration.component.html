@@ -12,6 +12,34 @@
     <form [formGroup]="cancellationForm" (ngSubmit)="onSubmit()" class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto">
 
         <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Received at -->
+            <div>
+                <div class="font-medium">{{ 'CancellationMoment' | translate }}</div>
+                <div class="relative flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700"
+                    (click)="receivedAtDatePicker.open()">
+                    <mat-icon class="icon-size-5 text-current" [svgIcon]="'heroicons_solid:calendar'"></mat-icon>
+                    <span class="ml-2 text-md font-medium">
+                        <ng-container>{{ cancellationForm.value.received | date:'dd.MM.yyyy' }}</ng-container>
+                        <!-- <ng-container *ngIf="card.dueDate">{{card.dueDate | date:'longDate'}}</ng-container>
+                        <ng-container *ngIf="!card.dueDate">Not set</ng-container> -->
+                    </span>
+                    <mat-form-field class="fuse-mat-dense invisible absolute inset-0 -mt-2.5 opacity-0 pointer-events-none" [subscriptSizing]="'dynamic'">
+                        <input matInput [formControlName]="'received'" [matDatepicker]="receivedAtDatePicker">
+                        <mat-datepicker #receivedAtDatePicker>
+                            <mat-datepicker-actions>
+                                <button mat-button (click)="cancellationForm.get('received').setValue(null)" matDatepickerCancel>
+                                    Clear
+                                </button>
+                                <button mat-flat-button [color]="'primary'" matDatepickerApply>
+                                    Select
+                                </button>
+                            </mat-datepicker-actions>
+                        </mat-datepicker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
             <!-- Reason -->
             <div class="sm:col-span-4">
                 <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
@@ -20,15 +48,24 @@
                 </mat-form-field>
             </div>
 
-            <!-- Amount -->
-            <!-- <div class="col-span-1">
+            <!-- Refund Amount -->
+            <div class="col-span-2 items-center flex flex-row" *ngIf="data.paid > 0">
+                <div class="cursor-pointer" (click)="despitePayments.toggle()">
+                    <div class="leading-6 font-medium">{{ 'DespitePayments' | translate }}</div>
+                    <!-- <div class="text-md text-secondary">{{ 'HasSingleMaxSecondary' | translate }}</div> -->
+                </div>
+                <mat-slide-toggle class="ml-auto" [color]="'primary'" [formControlName]="'despitePayments'" #despitePayments>
+                </mat-slide-toggle>
+            </div>
+            <div *ngIf="data.paid > 0 && !!cancellationForm.value.despitePayments" class="col-span-2">
                 <div class="w-full ml-1 -mr-1">
                     <mat-form-field [subscriptSizing]="'dynamic'">
-                        <mat-label>{{ 'Amount' | translate }}</mat-label>
-                        <input [formControlName]="'amount'" type="number" matInput>
+                        <mat-label>{{ 'RefundAmount' | translate }}</mat-label>
+                        <input [formControlName]="'refundAmount'" type="number" matInput>
                     </mat-form-field>
                 </div>
-            </div> -->
+                <span class="w-full content-center">{{ 'PaidOf' | translate:{amount:data.paid} }}</span>
+            </div>
 
         </div>
 

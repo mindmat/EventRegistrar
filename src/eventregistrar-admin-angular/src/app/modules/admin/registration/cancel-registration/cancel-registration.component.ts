@@ -16,7 +16,7 @@ export class CancelRegistrationComponent
   cancellationForm: FormGroup;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) private data: { registrationId: string; paid?: number; },
+    @Inject(MAT_DIALOG_DATA) public data: { registrationId: string; paid?: number; },
     private cancelService: CancelRegistrationService,
     public matDialogRef: MatDialogRef<RegistrableDetailComponent>,
     private fb: FormBuilder,
@@ -29,9 +29,9 @@ export class CancelRegistrationComponent
       registrationId: this.data.registrationId,
 
       reason: '',
-      ignorePayments: false,
       received: new Date(),
-      refundPercentage: 0
+      despitePayments: false,
+      refundAmount: this.data.paid > 0 ? this.data.paid : null
     });
 
     this.changeDetectorRef.markForCheck();
