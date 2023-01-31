@@ -88,7 +88,6 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(AssignedPaymentsOfRegistrationQuery);
             yield return nameof(PaymentSlipImageQuery);
             yield return nameof(HostingQuery);
-            yield return nameof(PossibleRepaymentAssignmentQuery);
             yield return nameof(InvalidAddressesQuery);
             yield return nameof(PartyOverviewQuery);
             yield return nameof(PossibleMailTypesQuery);
@@ -174,6 +173,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(CreateBulkMailTemplateCommand);
             yield return nameof(UpdateBulkMailTemplateCommand);
             yield return nameof(SetManualFallbackToPricePackageCommand);
+            yield return nameof(AssignRepaymentCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

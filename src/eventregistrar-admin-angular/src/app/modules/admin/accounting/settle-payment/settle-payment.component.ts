@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType, RegistrationMatch, RegistrationState } from 'app/api/api';
+import { AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType, RegistrationMatch, RegistrationState, RepaymentCandidate } from 'app/api/api';
 import { BehaviorSubject, debounceTime, filter, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { AssignmentRequest, Payment, SettlementCandidate } from './assignment-candidate-registration/assignment-candidate-registration.component';
@@ -20,6 +20,7 @@ export class SettlePaymentComponent implements OnInit
 
   existingAssignments: ExistingAssignment[];
   candidates: AssignmentCandidateRegistrationEditItem[];
+  repaymentCandidates: RepaymentCandidate[];
   searchMatches: (RegistrationMatch & { locked: boolean; amountMatch: boolean; })[];
   payment?: Payment | null = null;
   PaymentType = PaymentType;
@@ -48,6 +49,12 @@ export class SettlePaymentComponent implements OnInit
           {
             ...candidate,
             amountToAssign: candidate.price - candidate.amountPaid,
+          } as AssignmentCandidateRegistrationEditItem));
+
+        this.repaymentCandidates = assignments.repaymentCandidates?.map(candidate => (
+          {
+            ...candidate,
+            amountToAssign: Math.min(this.payment.openAmount, candidate.amountUnsettled),
           } as AssignmentCandidateRegistrationEditItem));
 
         // Mark for check
@@ -97,6 +104,11 @@ export class SettlePaymentComponent implements OnInit
   unassign(paymentAssignmentId: string)
   {
     this.service.unassign(paymentAssignmentId);
+  }
+
+  assignRepayment(paymentId_Repayment: string, amountToAssign: number)
+  {
+    this.service.assignRepayment(this.payment.id, paymentId_Repayment, amountToAssign);
   }
 
   amountChanged(candidate: AssignmentCandidateRegistrationEditItem, amountToAssign: number): void

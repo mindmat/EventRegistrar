@@ -65,6 +65,54 @@
             </div>
         </div>
 
+        <!-- Possible repayment candidates -->
+        <div *ngIf="repaymentCandidates?.length > 0 && payment.type === PaymentType.Incoming" class="p-2 rounded-xl bg-default">
+
+            <div class="flex flex-row items-baseline gap-x-2 ml-6">
+                <div class="font-medium">{{ 'RepaymentCandidates' | translate }}</div>
+                <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
+            </div>
+
+            <div *ngIf="!query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+                <ng-container *ngFor="let repaymentCandidate of repaymentCandidates">
+                    <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
+                        <div>
+                            <div class="flex flex-row items-baseline gap-x-2">
+                                <div class="text-xl font-semibold leading-tight">{{ repaymentCandidate.amountUnsettled | number:'1.2-2' }}</div>
+                                <a class="hover:underline text-secondary leading-tight">{{ repaymentCandidate.creditorName }}</a>
+                            </div>
+
+                            <div class="flex flex-row items-baseline gap-x-2">
+                                <mat-form-field class="fuse-mat-no-subscript w-24">
+                                    <input type="number" class="font-large" formControlName="amountAssigned" [placeholder]="'Zuordnen'" matInput #amountToAssign>
+                                </mat-form-field>
+
+                                <button class="ml-auto" mat-icon-button (click)="assignRepayment(repaymentCandidate.paymentId_Counter, +amountToAssign.value )">
+                                    <mat-icon [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                    </fuse-card>
+                </ng-container>
+            </div>
+
+            <div *ngIf="query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+                <ng-container *ngFor="let searchMatch of searchMatches">
+                    <!-- available -->
+                    <app-assignment-candidate-registration *ngIf="searchMatch.state===RegistrationState.Received" [payment]="payment" [candidate]="searchMatch" (assign)="assign($event)">
+                    </app-assignment-candidate-registration>
+
+                    <!-- unavailable -->
+                    <fuse-card class="min-w-10 rounded-xl bg-gray-300 cursor-pointer" *ngIf="searchMatch.state!==RegistrationState.Received"
+                        [routerLink]="navigator.getRegistrationUrl(searchMatch.registrationId)">
+                        <div class="flex m-auto text-xl uppercase p-4">
+                            ({{ searchMatch.firstName?.charAt(0) }}{{ searchMatch.lastName?.charAt(0) }})
+                        </div>
+                    </fuse-card>
+                </ng-container>
+            </div>
+        </div>
+
         <!-- Possible registration candidates -->
         <div *ngIf="candidates?.length > 0 || searchMatches?.length > 0" class="p-2 rounded-xl bg-default">
 
@@ -73,7 +121,7 @@
                 <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
             </div>
 
-            <!-- Bookings -->
+            <!-- registrations -->
             <div *ngIf="!query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <ng-container *ngFor="let candidate of candidates">
                     <!-- available -->

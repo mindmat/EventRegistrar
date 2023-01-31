@@ -1,10 +1,8 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Files;
-
-using MediatR;
+using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
 
@@ -16,7 +14,7 @@ public class AssignRepaymentCommand : IRequest, IEventBoundRequest
     public Guid OutgoingPaymentId { get; set; }
 }
 
-public class AssignRepaymentCommandHandler : IRequestHandler<AssignRepaymentCommand>
+public class AssignRepaymentCommandHandler : AsyncRequestHandler<AssignRepaymentCommand>
 {
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IEventBus _eventBus;
@@ -37,14 +35,16 @@ public class AssignRepaymentCommandHandler : IRequestHandler<AssignRepaymentComm
         _outgoingPayments = outgoingPayments;
     }
 
-    public async Task<Unit> Handle(AssignRepaymentCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(AssignRepaymentCommand command, CancellationToken cancellationToken)
     {
-        var incomingPayment = await _incomingPayments.FirstAsync(pmt => pmt.Id == command.IncomingPaymentId
-                                                                     && pmt.Payment!.PaymentsFile!.EventId == command.EventId,
-                                                                 cancellationToken);
-        var outgoingPayment = await _outgoingPayments.FirstAsync(pmt => pmt.Id == command.OutgoingPaymentId
-                                                                     && pmt.Payment!.PaymentsFile!.EventId == command.EventId,
-                                                                 cancellationToken);
+        var incomingPayment = await _incomingPayments.Where(pmt => pmt.Id == command.IncomingPaymentId
+                                                                && pmt.Payment!.PaymentsFile!.EventId == command.EventId)
+                                                     .Include(pmt => pmt.Payment)
+                                                     .FirstAsync(cancellationToken);
+        var outgoingPayment = await _outgoingPayments.Where(pmt => pmt.Id == command.OutgoingPaymentId
+                                                                && pmt.Payment!.PaymentsFile!.EventId == command.EventId)
+                                                     .Include(pmt => pmt.Payment)
+                                                     .FirstAsync(cancellationToken);
 
         var assignment = new PaymentAssignment
                          {
@@ -54,7 +54,7 @@ public class AssignRepaymentCommandHandler : IRequestHandler<AssignRepaymentComm
                              Amount = command.Amount,
                              Created = _dateTimeProvider.Now
                          };
-        await _assignments.InsertOrUpdateEntity(assignment, cancellationToken);
+        _assignments.InsertObjectTree(assignment);
 
         _eventBus.Publish(new RepaymentAssigned
                           {
@@ -64,7 +64,5 @@ public class AssignRepaymentCommandHandler : IRequestHandler<AssignRepaymentComm
                               IncomingPaymentId = incomingPayment.Id,
                               OutgoingPaymentId = outgoingPayment.Id
                           });
-
-        return Unit.Value;
     }
 }

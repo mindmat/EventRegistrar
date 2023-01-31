@@ -23,15 +23,16 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
         _payments = payments;
     }
 
-    public override async Task<PaymentAssignments> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
+    public override async Task<PaymentAssignments> CalculateTyped(Guid eventId, Guid? paymentId, CancellationToken cancellationToken)
     {
-        var payment = await _payments.Where(pmt => pmt.Id == rowId
+        var payment = await _payments.Where(pmt => pmt.Id == paymentId
                                                 && pmt.PaymentsFile!.EventId == eventId)
                                      .Include(pmt => pmt.Incoming!.Assignments!)
                                      .ThenInclude(pas => pas.Registration)
                                      .Include(pmt => pmt.Outgoing!.Assignments!)
                                      .ThenInclude(pas => pas.Registration)
                                      .FirstAsync(cancellationToken);
+
         var message = payment.Message;
         if (string.IsNullOrWhiteSpace(message))
         {
@@ -42,6 +43,7 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
         var result = new PaymentAssignments { Ignored = payment.Ignore };
         if (payment.Incoming != null)
         {
+            // Incoming payment -> find registrations
             otherParty = payment.Incoming.DebitorName;
             result.Type = PaymentType.Incoming;
             result.OpenAmount = payment.Amount
@@ -66,10 +68,37 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
                                                                    AssignedAmount = pas.Amount
                                                                })
                                                 .ToList();
+            // find repayment candidates
+            var payments = await _payments.Where(pmt => pmt.PaymentsFile!.EventId == eventId
+                                                     && !pmt.Settled
+                                                     && pmt.Type == PaymentType.Outgoing)
+                                          .Select(pmt => new RepaymentCandidate
+                                                         {
+                                                             PaymentId_OpenPosition = payment.Id,
+                                                             PaymentId_Counter = pmt.Id,
+                                                             BookingDate = pmt.BookingDate,
+                                                             Amount = pmt.Amount,
+                                                             AmountUnsettled = pmt.Amount
+                                                                             - pmt.Outgoing!.Assignments!
+                                                                                  .Select(asn => asn.PayoutRequestId == null
+                                                                                                     ? asn.Amount
+                                                                                                     : -asn.Amount)
+                                                                                  .Sum(),
+                                                             Settled = pmt.Settled,
+                                                             Currency = pmt.Currency,
+                                                             Info = pmt.Info,
+                                                             CreditorName = pmt.Outgoing.CreditorName
+                                                         })
+                                          .ToListAsync(cancellationToken);
+
+            payments.ForEach(pmt => pmt.MatchScore = CalculateMatchScore(pmt, payment.Incoming));
+            result.RepaymentCandidates = payments.Where(mat => mat.MatchScore > 1)
+                                                 .OrderByDescending(mtc => mtc.MatchScore);
         }
 
         if (payment.Outgoing != null)
         {
+            // Outgoing payment -> find 
             otherParty = payment.Outgoing.CreditorName;
             result.Type = PaymentType.Outgoing;
             result.OpenAmount = payment.Amount
@@ -168,6 +197,31 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
 
         return score;
     }
+
+    private static int CalculateMatchScore(RepaymentCandidate paymentCandidate, IncomingPayment openPayment)
+    {
+        var creditorParts = paymentCandidate.CreditorName?.Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)
+                                            ?.Select(wrd => wrd.ToLowerInvariant())
+                         ?? new List<string>();
+
+        var wordsInCandidate = paymentCandidate.Info?.Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)
+                                               ?.Select(wrd => wrd.ToLowerInvariant())
+                                               ?.ToList()
+                            ?? new List<string>();
+
+        var unsettledAmountInOpenPayment = openPayment.Payment!.Amount
+                                         - openPayment.Assignments!.Sum(asn => asn.PayoutRequestId == null
+                                                                                   ? asn.Amount
+                                                                                   : -asn.Amount);
+        var wordsInOpenPayment = openPayment.Payment!.Info!
+                                            .Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)
+                                            .Select(wrd => wrd.ToLowerInvariant())
+                                            .ToHashSet();
+
+        return wordsInOpenPayment.Sum(opw => wordsInCandidate.Count(cdw => cdw == opw))
+             + (wordsInOpenPayment.Sum(opw => creditorParts.Count(cdw => cdw == opw)) * 10)
+             + (paymentCandidate.AmountUnsettled == unsettledAmountInOpenPayment ? 5 : 0);
+    }
 }
 
 public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTranslation<OutgoingPaymentAssigned>,
@@ -245,6 +299,7 @@ public class PaymentAssignments
 
     public IEnumerable<AssignmentCandidateRegistration>? RegistrationCandidates { get; set; }
     public IEnumerable<ExistingAssignment>? ExistingAssignments { get; set; }
+    public IEnumerable<RepaymentCandidate>? RepaymentCandidates { get; set; }
 }
 
 public class AssignmentCandidateRegistration
@@ -276,4 +331,18 @@ public class ExistingAssignment
     public bool IsWaitingList { get; set; }
 
     public Guid PaymentId { get; set; }
+}
+
+public class RepaymentCandidate
+{
+    public decimal Amount { get; set; }
+    public decimal AmountUnsettled { get; set; }
+    public DateTime BookingDate { get; set; }
+    public string? Currency { get; set; }
+    public string? CreditorName { get; set; }
+    public string? Info { get; set; }
+    public int MatchScore { get; set; }
+    public Guid PaymentId_Counter { get; set; }
+    public Guid PaymentId_OpenPosition { get; set; }
+    public bool Settled { get; set; }
 }

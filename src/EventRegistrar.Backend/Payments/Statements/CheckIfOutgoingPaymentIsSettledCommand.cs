@@ -1,7 +1,6 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Payments.Files;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Statements;
 
@@ -10,7 +9,7 @@ public class CheckIfOutgoingPaymentIsSettledCommand : IRequest
     public Guid OutgoingPaymentId { get; set; }
 }
 
-public class CheckIfOutgoingPaymentIsSettledCommandHandler : IRequestHandler<CheckIfOutgoingPaymentIsSettledCommand>
+public class CheckIfOutgoingPaymentIsSettledCommandHandler : AsyncRequestHandler<CheckIfOutgoingPaymentIsSettledCommand>
 {
     private readonly IRepository<OutgoingPayment> _outgoingPayments;
 
@@ -19,7 +18,7 @@ public class CheckIfOutgoingPaymentIsSettledCommandHandler : IRequestHandler<Che
         _outgoingPayments = outgoingPayments;
     }
 
-    public async Task<Unit> Handle(CheckIfOutgoingPaymentIsSettledCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(CheckIfOutgoingPaymentIsSettledCommand command, CancellationToken cancellationToken)
     {
         var outgoingPayment = await _outgoingPayments.AsTracking()
                                                      .Where(pmt => pmt.Id == command.OutgoingPaymentId)
@@ -30,6 +29,13 @@ public class CheckIfOutgoingPaymentIsSettledCommandHandler : IRequestHandler<Che
                     - outgoingPayment.Assignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
         //+ outgoingPayment.RepaymentAssignments!.Sum(asn => asn.Amount);
         outgoingPayment.Payment.Settled = balance == 0m;
-        return Unit.Value;
+    }
+}
+
+public class CheckIfOutgoingPaymentIsSettledAfterRepaymentAssignment : IEventToCommandTranslation<RepaymentAssigned>
+{
+    public IEnumerable<IRequest> Translate(RepaymentAssigned e)
+    {
+        yield return new CheckIfOutgoingPaymentIsSettledCommand { OutgoingPaymentId = e.OutgoingPaymentId };
     }
 }
