@@ -828,6 +828,9 @@
   <data name="RemoveLink" xml:space="preserve">
     <value>Remove link</value>
   </data>
+  <data name="RepaymentCandidates" xml:space="preserve">
+    <value>Repayments</value>
+  </data>
   <data name="RequestAccess" xml:space="preserve">
     <value>Request access</value>
   </data>

@@ -934,6 +934,9 @@
   <data name="RemoveLink" xml:space="preserve">
     <value>Zuordnung aufheben</value>
   </data>
+  <data name="RepaymentCandidates" xml:space="preserve">
+    <value>Rückzahlungen</value>
+  </data>
   <data name="RequestAccess" xml:space="preserve">
     <value>Zugriff beantragen</value>
   </data>
