@@ -4317,57 +4317,6 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    possibleRepaymentAssignment_Query(possibleRepaymentAssignmentQuery: PossibleRepaymentAssignmentQuery | undefined): Observable<PossibleRepaymentAssignment[]> {
-        let url_ = this.baseUrl + "/api/PossibleRepaymentAssignmentQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(possibleRepaymentAssignmentQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processPossibleRepaymentAssignment_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processPossibleRepaymentAssignment_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<PossibleRepaymentAssignment[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<PossibleRepaymentAssignment[]>;
-        }));
-    }
-
-    protected processPossibleRepaymentAssignment_Query(response: HttpResponseBase): Observable<PossibleRepaymentAssignment[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PossibleRepaymentAssignment[];
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     unassignPayment_Command(unassignPaymentCommand: UnassignPaymentCommand | undefined): Observable<Unit> {
         let url_ = this.baseUrl + "/api/UnassignPaymentCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -8657,6 +8606,7 @@ export interface PaymentAssignments {
     registrationCandidates?: AssignmentCandidateRegistration[] | null;
     existingAssignments?: ExistingAssignment[] | null;
     repaymentCandidates?: RepaymentCandidate[] | null;
+    assignedRepayments?: AssignedRepayment[] | null;
 }
 
 export enum PaymentType {
@@ -8680,13 +8630,13 @@ export interface AssignmentCandidateRegistration {
 
 export interface ExistingAssignment {
     registrationId?: string;
-    paymentAssignmentId_Existing?: string | null;
-    assignedAmount?: number | null;
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;
     price?: number;
     isWaitingList?: boolean;
+    paymentAssignmentId_Existing?: string;
+    assignedAmount?: number | null;
     paymentId?: string;
 }
 
@@ -8698,30 +8648,20 @@ export interface RepaymentCandidate {
     creditorName?: string | null;
     info?: string | null;
     matchScore?: number;
-    paymentId_Counter?: string;
-    paymentId_OpenPosition?: string;
+    paymentId_Outgoing?: string;
+    paymentId_Incoming?: string;
     settled?: boolean;
+}
+
+export interface AssignedRepayment {
+    paymentAssignmentId?: string;
+    paymentDate?: Date | null;
+    creditorName?: string | null;
+    creditorIban?: string | null;
+    assignedAmount?: number | null;
 }
 
 export interface PaymentAssignmentsQuery {
-    eventId?: string;
-    paymentId?: string;
-}
-
-export interface PossibleRepaymentAssignment {
-    amount?: number;
-    amountUnsettled?: number;
-    bookingDate?: Date;
-    currency?: string | null;
-    creditorName?: string | null;
-    info?: string | null;
-    matchScore?: number;
-    paymentId_Counter?: string;
-    paymentId_OpenPosition?: string;
-    settled?: boolean;
-}
-
-export interface PossibleRepaymentAssignmentQuery {
     eventId?: string;
     paymentId?: string;
 }

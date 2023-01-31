@@ -2001,6 +2001,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to von {{debitor}}.
+        /// </summary>
+        internal static string PaymentFrom {
+            get {
+                return ResourceManager.GetString("PaymentFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Übersicht Einnahmen.
         /// </summary>
         internal static string PaymentOverview {
@@ -2024,6 +2033,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Payments {
             get {
                 return ResourceManager.GetString("Payments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to an {{creditor}}.
+        /// </summary>
+        internal static string PaymentTo {
+            get {
+                return ResourceManager.GetString("PaymentTo", resourceCulture);
             }
         }
         

@@ -29,6 +29,8 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
                                                 && pmt.PaymentsFile!.EventId == eventId)
                                      .Include(pmt => pmt.Incoming!.Assignments!)
                                      .ThenInclude(pas => pas.Registration)
+                                     .Include(pmt => pmt.Incoming!.Assignments!)
+                                     .ThenInclude(pas => pas.OutgoingPayment!.Payment)
                                      .Include(pmt => pmt.Outgoing!.Assignments!)
                                      .ThenInclude(pas => pas.Registration)
                                      .FirstAsync(cancellationToken);
@@ -53,7 +55,7 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
 
             result.ExistingAssignments = payment.Incoming
                                                 .Assignments!
-                                                .Where(pas => pas.Registration != null
+                                                .Where(pas => pas.RegistrationId != null
                                                            && pas.PaymentAssignmentId_Counter == null)
                                                 .Select(pas => new ExistingAssignment
                                                                {
@@ -68,14 +70,28 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
                                                                    AssignedAmount = pas.Amount
                                                                })
                                                 .ToList();
+
+            result.AssignedRepayments = payment.Incoming
+                                               .Assignments!
+                                               .Where(pas => pas.RegistrationId == null
+                                                          && pas.OutgoingPaymentId != null)
+                                               .Select(pas => new AssignedRepayment
+                                                              {
+                                                                  PaymentAssignmentId = pas.Id,
+                                                                  CreditorName = pas.OutgoingPayment!.CreditorName,
+                                                                  CreditorIban = pas.OutgoingPayment!.CreditorIban,
+                                                                  AssignedAmount = pas.Amount,
+                                                                  PaymentDate = pas.OutgoingPayment.Payment!.BookingDate
+                                                              })
+                                               .ToList();
             // find repayment candidates
             var payments = await _payments.Where(pmt => pmt.PaymentsFile!.EventId == eventId
                                                      && !pmt.Settled
                                                      && pmt.Type == PaymentType.Outgoing)
                                           .Select(pmt => new RepaymentCandidate
                                                          {
-                                                             PaymentId_OpenPosition = payment.Id,
-                                                             PaymentId_Counter = pmt.Id,
+                                                             PaymentId_Incoming = payment.Id,
+                                                             PaymentId_Outgoing = pmt.Id,
                                                              BookingDate = pmt.BookingDate,
                                                              Amount = pmt.Amount,
                                                              AmountUnsettled = pmt.Amount
@@ -300,6 +316,7 @@ public class PaymentAssignments
     public IEnumerable<AssignmentCandidateRegistration>? RegistrationCandidates { get; set; }
     public IEnumerable<ExistingAssignment>? ExistingAssignments { get; set; }
     public IEnumerable<RepaymentCandidate>? RepaymentCandidates { get; set; }
+    public IEnumerable<AssignedRepayment>? AssignedRepayments { get; set; }
 }
 
 public class AssignmentCandidateRegistration
@@ -321,14 +338,15 @@ public class AssignmentCandidateRegistration
 public class ExistingAssignment
 {
     public Guid RegistrationId { get; set; }
-    public Guid? PaymentAssignmentId_Existing { get; set; }
-    public decimal? AssignedAmount { get; set; }
-
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
     public decimal Price { get; set; }
     public bool IsWaitingList { get; set; }
+
+    public Guid PaymentAssignmentId_Existing { get; set; }
+    public decimal? AssignedAmount { get; set; }
+
 
     public Guid PaymentId { get; set; }
 }
@@ -342,7 +360,16 @@ public class RepaymentCandidate
     public string? CreditorName { get; set; }
     public string? Info { get; set; }
     public int MatchScore { get; set; }
-    public Guid PaymentId_Counter { get; set; }
-    public Guid PaymentId_OpenPosition { get; set; }
+    public Guid PaymentId_Outgoing { get; set; }
+    public Guid PaymentId_Incoming { get; set; }
     public bool Settled { get; set; }
+}
+
+public class AssignedRepayment
+{
+    public Guid PaymentAssignmentId { get; set; }
+    public DateTime? PaymentDate { get; set; }
+    public string? CreditorName { get; set; }
+    public string? CreditorIban { get; set; }
+    public decimal? AssignedAmount { get; set; }
 }

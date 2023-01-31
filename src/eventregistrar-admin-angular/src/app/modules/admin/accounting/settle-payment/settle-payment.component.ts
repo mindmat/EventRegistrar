@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType, RegistrationMatch, RegistrationState, RepaymentCandidate } from 'app/api/api';
+import { AssignRepaymentCommand, AssignedRepayment, AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType, RegistrationMatch, RegistrationState, RepaymentCandidate } from 'app/api/api';
 import { BehaviorSubject, debounceTime, filter, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { AssignmentRequest, Payment, SettlementCandidate } from './assignment-candidate-registration/assignment-candidate-registration.component';
@@ -20,6 +20,7 @@ export class SettlePaymentComponent implements OnInit
 
   existingAssignments: ExistingAssignment[];
   candidates: AssignmentCandidateRegistrationEditItem[];
+  assignedRepayments: AssignedRepayment[];
   repaymentCandidates: RepaymentCandidate[];
   searchMatches: (RegistrationMatch & { locked: boolean; amountMatch: boolean; })[];
   payment?: Payment | null = null;
@@ -51,6 +52,8 @@ export class SettlePaymentComponent implements OnInit
             amountToAssign: candidate.price - candidate.amountPaid,
           } as AssignmentCandidateRegistrationEditItem));
 
+        // repayments
+        this.assignedRepayments = assignments.assignedRepayments;
         this.repaymentCandidates = assignments.repaymentCandidates?.map(candidate => (
           {
             ...candidate,

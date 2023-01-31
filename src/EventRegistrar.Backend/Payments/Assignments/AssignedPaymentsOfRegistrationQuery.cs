@@ -1,8 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-
-using MediatR;
-
-namespace EventRegistrar.Backend.Payments.Assignments;
+﻿namespace EventRegistrar.Backend.Payments.Assignments;
 
 public class AssignedPaymentsOfRegistrationQuery : IRequest<IEnumerable<AssignedPaymentDisplayItem>>, IEventBoundRequest
 {

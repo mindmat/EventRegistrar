@@ -762,6 +762,9 @@
   <data name="PaymentDifferences" xml:space="preserve">
     <value>Zahlungsdifferenzen</value>
   </data>
+  <data name="PaymentFrom" xml:space="preserve">
+    <value>von {{debitor}}</value>
+  </data>
   <data name="PaymentOverview" xml:space="preserve">
     <value>Übersicht Einnahmen</value>
   </data>
@@ -770,6 +773,9 @@
   </data>
   <data name="Payments" xml:space="preserve">
     <value>Zahlungen</value>
+  </data>
+  <data name="PaymentTo" xml:space="preserve">
+    <value>an {{creditor}}</value>
   </data>
   <data name="Payouts" xml:space="preserve">
     <value>Auszahlungen</value>
