@@ -2388,6 +2388,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {{ amount }} zurückbezahlen.
+        /// </summary>
+        internal static string RefundButtonText {
+            get {
+                return ResourceManager.GetString("RefundButtonText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Angemeldet.
         /// </summary>
         internal static string RegisteredAt {

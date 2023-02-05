@@ -1,5 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Payments.Differences;
 using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Properties;
 using EventRegistrar.Backend.Spots;
@@ -126,6 +128,16 @@ public class CancelRegistrationCommandHandler : AsyncRequestHandler<CancelRegist
                               Refund = cancellation.Refund,
                               Received = command.Received ?? _dateTimeProvider.Now,
                               Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}"
+                          });
+        _eventBus.Publish(new QueryChanged
+                          {
+                              EventId = command.EventId,
+                              QueryName = nameof(DifferencesQuery)
+                          });
+        _eventBus.Publish(new QueryChanged
+                          {
+                              EventId = command.EventId,
+                              QueryName = nameof(CancellationsQuery)
                           });
     }
 }

@@ -27,9 +27,9 @@ export class PaymentDifferencesService extends FetchService<DifferencesDisplayIt
     return this.fetchItems(this.api.differences_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
 
-  // sendReminderMail(registrationId: string)
-  // {
-  //   return this.api.sendReminderMail_Command({ eventId: this.eventService.selectedId, registrationId })
-  //     .subscribe();
-  // }
+  refundDifference(registrationId: string, reason: string | null = null)
+  {
+    return this.api.refundDifference_Command({ eventId: this.eventService.selectedId, registrationId, reason })
+      .subscribe();
+  }
 }

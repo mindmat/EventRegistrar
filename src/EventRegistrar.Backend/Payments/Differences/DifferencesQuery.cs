@@ -49,6 +49,7 @@ public class DifferencesQueryHandler : IRequestHandler<DifferencesQuery, IEnumer
                                                          && reg.PaymentsTotal > 0m)
                                               .OrderBy(reg => reg.Registration.AdmittedAt)
                                               .ToListAsync(cancellationToken);
+
         return differences.Select(reg => new DifferencesDisplayItem
                                          {
                                              RegistrationId = reg.Registration.Id,

@@ -1,12 +1,12 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Registrations;
-
-using MediatR;
+using EventRegistrar.Backend.Registrations.Remarks;
 
 namespace EventRegistrar.Backend.Payments.Differences;
 
@@ -17,22 +17,28 @@ public class RefundDifferenceCommand : IRequest, IEventBoundRequest
     public string? Reason { get; set; }
 }
 
-public class RefundDifferenceCommandHandler : IRequestHandler<RefundDifferenceCommand>
+public class RefundDifferenceCommandHandler : AsyncRequestHandler<RefundDifferenceCommand>
 {
     private readonly CommandQueue _commandQueue;
     private readonly IQueryable<Registration> _registrations;
     private readonly IRepository<PayoutRequest> _payoutRequests;
+    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IEventBus _eventBus;
 
     public RefundDifferenceCommandHandler(CommandQueue commandQueue,
                                           IQueryable<Registration> registrations,
-                                          IRepository<PayoutRequest> payoutRequests)
+                                          IRepository<PayoutRequest> payoutRequests,
+                                          IDateTimeProvider dateTimeProvider,
+                                          IEventBus eventBus)
     {
         _commandQueue = commandQueue;
         _registrations = registrations;
         _payoutRequests = payoutRequests;
+        _dateTimeProvider = dateTimeProvider;
+        _eventBus = eventBus;
     }
 
-    public async Task<Unit> Handle(RefundDifferenceCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(RefundDifferenceCommand command, CancellationToken cancellationToken)
     {
         var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
                                                .Include(reg => reg.PaymentAssignments)
@@ -54,7 +60,7 @@ public class RefundDifferenceCommandHandler : IRequestHandler<RefundDifferenceCo
                                 Amount = data.RefundAmount,
                                 Reason = command.Reason ?? "Refund of difference",
                                 State = PayoutState.Requested,
-                                Created = DateTimeOffset.Now
+                                Created = _dateTimeProvider.Now
                             };
         await _payoutRequests.InsertOrUpdateEntity(payoutRequest, cancellationToken);
 
@@ -67,7 +73,11 @@ public class RefundDifferenceCommandHandler : IRequestHandler<RefundDifferenceCo
                               };
         _commandQueue.EnqueueCommand(sendMailCommand);
 
-        return Unit.Value;
+        _eventBus.Publish(new QueryChanged
+                          {
+                              EventId = command.EventId,
+                              QueryName = nameof(DifferencesQuery)
+                          });
     }
 }
 

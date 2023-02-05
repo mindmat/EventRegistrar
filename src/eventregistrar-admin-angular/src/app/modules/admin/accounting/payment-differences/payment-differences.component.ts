@@ -56,6 +56,11 @@ export class PaymentDifferencesComponent implements OnInit
     this.query$.next(query);
   }
 
+  refundDifference(registrationId: string)
+  {
+    this.paymentDifferencesService.refundDifference(registrationId);
+  }
+
   trackByFn(index: number, item: any): any
   {
     return item.id || index;

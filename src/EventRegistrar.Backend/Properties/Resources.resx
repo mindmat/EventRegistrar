@@ -891,6 +891,9 @@
   <data name="RefundAmount" xml:space="preserve">
     <value>Rückerstattung</value>
   </data>
+  <data name="RefundButtonText" xml:space="preserve">
+    <value>{{ amount }} zurückbezahlen</value>
+  </data>
   <data name="RegisteredAt" xml:space="preserve">
     <value>Angemeldet</value>
   </data>
