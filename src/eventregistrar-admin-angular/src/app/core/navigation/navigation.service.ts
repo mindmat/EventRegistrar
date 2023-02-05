@@ -144,6 +144,13 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'heroicons_outline:switch-vertical',
                                     link: `/${e.acronym}/accounting/payment-differences`,
+                                },
+                                {
+                                    id: 'payouts',
+                                    title: translateService.instant('Payouts'),
+                                    type: 'basic',
+                                    icon: 'heroicons_outline:arrow-right',
+                                    link: `/${e.acronym}/accounting/payouts`,
                                 }]
                         },
                         {

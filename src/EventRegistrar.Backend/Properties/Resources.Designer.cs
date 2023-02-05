@@ -1173,6 +1173,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zahlungseingänge.
+        /// </summary>
+        internal static string IncomingPayments {
+            get {
+                return ResourceManager.GetString("IncomingPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reduktionsart.
         /// </summary>
         internal static string IndividualReductionType {
@@ -1992,6 +2001,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ausbezahlte Rückzahlungen.
+        /// </summary>
+        internal static string PaidPayouts {
+            get {
+                return ResourceManager.GetString("PaidPayouts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Teilnehmer.
         /// </summary>
         internal static string Participants {
@@ -2096,6 +2114,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string PendingMails {
             get {
                 return ResourceManager.GetString("PendingMails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ausstehende Rückzahlungen.
+        /// </summary>
+        internal static string PendingPayouts {
+            get {
+                return ResourceManager.GetString("PendingPayouts", resourceCulture);
             }
         }
         
@@ -2573,6 +2600,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string RemoveLink {
             get {
                 return ResourceManager.GetString("RemoveLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zurückbezahlt.
+        /// </summary>
+        internal static string Repaid {
+            get {
+                return ResourceManager.GetString("Repaid", resourceCulture);
             }
         }
         

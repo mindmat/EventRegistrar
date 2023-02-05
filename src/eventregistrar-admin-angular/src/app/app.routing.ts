@@ -61,6 +61,8 @@ import { PaymentDifferencesComponent } from './modules/admin/accounting/payment-
 import { PaymentDifferencesResolver } from './modules/admin/accounting/payment-differences/payment-differences.resolver';
 import { CancellationsComponent } from './modules/admin/registration/cancellations/cancellations.component';
 import { CancellationsResolver } from './modules/admin/registration/cancellations/cancellations.resolver';
+import { PayoutsComponent } from './modules/admin/accounting/payouts/payouts.component';
+import { PayoutsResolver } from './modules/admin/accounting/payouts/payouts.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -219,6 +221,12 @@ export const appRoutes: Route[] =
                             canActivate: [AuthGuard],
                             component: PaymentDifferencesComponent,
                             resolve: { initialData: PaymentDifferencesResolver }
+                        },
+                        {
+                            path: 'payouts',
+                            canActivate: [AuthGuard],
+                            component: PayoutsComponent,
+                            resolve: { initialData: PayoutsResolver }
                         },
                     ]
                 },

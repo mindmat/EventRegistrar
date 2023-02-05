@@ -12,28 +12,48 @@
                 </mat-form-field>
             </div>
 
-            <!-- Cancellations with payments -->
+            <!-- pending payouts -->
             <div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
-                <div class="text-xl font-bold tracking-tight leading-none">{{ 'CancellationsWithPayments' | translate }}</div>
-                <div class="mt-1.5 text-lg text-secondary">({{ filteredCancellationsWithPayments?.length ?? 0 }})</div>
+                <div class="text-xl font-bold tracking-tight leading-none">{{ 'PendingPayouts' | translate }}</div>
+                <div class="mt-1.5 text-lg text-secondary">({{ filteredPendingPayouts?.length ?? 0 }})</div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
 
-                <ng-container *ngFor="let cancellation of filteredCancellationsWithPayments; trackBy: trackByFn">
-                    <!-- Due payment -->
-                    <div class="flex flex-col h-72 shadow rounded-2xl overflow-hidden bg-card">
+                <ng-container *ngFor="let pendingPayout of filteredPendingPayouts; trackBy: trackByFn">
+                    <!-- pending payout -->
+                    <div class="flex flex-col min-h-72 shadow rounded-2xl overflow-hidden bg-card">
                         <div class="flex flex-col p-6 gap-y-2">
 
-                            <!-- Participant -->
                             <div class="flex flex-row items-baseline gap-x-2">
-                                <a class="hover:underline text-lg leading-tight" [routerLink]="navigator.getRegistrationUrl(cancellation.registrationId)">
-                                    {{ cancellation.firstName }} {{ cancellation.lastName }}</a>
-                                <div *ngIf="cancellation.paid !== cancellation.repaid" class="text-xl font-semibold leading-tight">
-                                    {{ cancellation.paid - cancellation.repaid | number: '1.2-2' }}</div>
+                                <a class="hover:underline text-lg leading-tight" [routerLink]="navigator.getRegistrationUrl(pendingPayout.registrationId)">
+                                    {{ pendingPayout.firstName }} {{ pendingPayout.lastName }}</a>
+                                <div class="text-xl font-semibold leading-tight"> {{ pendingPayout.amount | number: '1.2-2' }}</div>
                             </div>
+                            <div class="line-clamp-2 text-secondary">{{ pendingPayout.created | date : 'dd.MM.yy' }}</div>
+
                             <div class="w-12 h-1 border-t-2"></div>
 
+                            <div class="flex items-center">
+                                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:clipboard-list'" matTooltip="{{ 'Price' | translate }}" [matTooltipPosition]="'above'"
+                                    [matTooltipClass]="'mb-1'"></mat-icon>
+                                <span>{{ pendingPayout.price | number: '1.2-2' }}</span>
+                            </div>
+
+                            <div class="flex items-center">
+                                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:currency-dollar'" matTooltip="{{ 'Paid' | translate }}" [matTooltipPosition]="'above'"
+                                    [matTooltipClass]="'mb-1'"></mat-icon>
+                                <span>{{ pendingPayout.paid | number: '1.2-2' }}</span>
+                            </div>
+
+                            <div class="line-clamp-2 text-secondary mt-2 mb-0">{{ 'IncomingPayments' | translate }}</div>
+                            <div *ngFor="let incomingPayment of pendingPayout.payments" class="flex flex-col p-2 gap-y-2 border-2 rounded-lg bg-gray-100">
+                                <span class="leading-none">{{ 'PaymentFrom' | translate : {debitor: incomingPayment.paymentDebitorName} }}</span>
+                                <span class="leading-none text-secondary text-sm">{{ incomingPayment.assigned | number: '1.2-2' }}, {{ incomingPayment.paymentBookingDate | date: 'dd.MM.yy' }}</span>
+                                <span class="leading-none text-secondary text-sm">{{ incomingPayment.paymentDebitorIban }}</span>
+                                <span class="leading-none italic mt-2">{{ incomingPayment.paymentMessage }}</span>
+                            </div>
+                            <!-- 
                             <div class="flex items-center">
                                 <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:clipboard-list'" matTooltip="{{ 'RegisteredAt' | translate }}" [matTooltipPosition]="'above'"
                                     [matTooltipClass]="'mb-1'"></mat-icon>
@@ -63,7 +83,7 @@
 
                             <div *ngIf="cancellation.cancellationReason" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
                                 <span class="leading-none">{{ cancellation.cancellationReason }}</span>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </ng-container>
@@ -72,41 +92,24 @@
 
             <!-- Cancellations without payments -->
             <div class="flex min-w-0 flex-row items-baseline gap-2 m-4 mt-8">
-                <div class="text-xl font-bold tracking-tight leading-none">{{ 'CancellationsWithoutPayments' | translate }}</div>
-                <div class="mt-1.5 text-lg text-secondary">({{ filteredCancellationsWithoutPayments?.length ?? 0 }})</div>
+                <div class="text-xl font-bold tracking-tight leading-none">{{ 'PaidPayouts' | translate }}</div>
+                <div class="mt-1.5 text-lg text-secondary">({{ filteredPaidPayouts?.length ?? 0 }})</div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
 
-                <ng-container *ngFor="let cancellation of filteredCancellationsWithoutPayments; trackBy: trackByFn">
+                <ng-container *ngFor="let paidPayout of filteredPaidPayouts; trackBy: trackByFn">
                     <!-- Due payment -->
                     <div class="flex flex-col min-h-28 shadow rounded-2xl overflow-hidden bg-card">
                         <div class="flex flex-col p-6 gap-y-2">
 
                             <!-- Participant -->
                             <div class="flex flex-row items-baseline gap-x-2">
-                                <a class="hover:underline leading-tight" [routerLink]="navigator.getRegistrationUrl(cancellation.registrationId)">
-                                    {{ cancellation.firstName }} {{ cancellation.lastName }}</a>
+                                <a class="hover:underline leading-tight" [routerLink]="navigator.getRegistrationUrl(paidPayout.registrationId)">
+                                    {{ paidPayout.firstName }} {{ paidPayout.lastName }}</a>
                             </div>
                             <div class="w-12 h-1 border-t-2"></div>
 
-                            <div class="flex items-center">
-                                <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:clipboard-list'" matTooltip="{{ 'RegisteredAt' | translate }}" [matTooltipPosition]="'above'"
-                                    [matTooltipClass]="'mb-1'"></mat-icon>
-                                <span matTooltip="{{ cancellation.receivedAt | date: 'dd.MM.yy HH:mm' }}" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
-                                    {{ cancellation.receivedAt | ago }}</span>
-                            </div>
-
-                            <div class="flex items-center">
-                                <mat-icon class="icon-size-5 mr-3 fill-red-800" [svgIcon]="'mat_solid:cancel'" matTooltip="{{ 'CancelledAt' | translate }}" [matTooltipPosition]="'above'"
-                                    [matTooltipClass]="'mb-1'"></mat-icon>
-                                <span matTooltip="{{ cancellation.cancelledAt | date: 'dd.MM.yy HH:mm' }}" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
-                                    {{ cancellation.cancelledAt | ago }}</span>
-                            </div>
-
-                            <div *ngIf="cancellation.cancellationReason" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
-                                <span class="leading-none">{{ cancellation.cancellationReason }}</span>
-                            </div>
                         </div>
                     </div>
                 </ng-container>
@@ -114,7 +117,7 @@
             </div>
 
             <!-- No courses -->
-            <ng-container *ngIf="!filteredCancellationsWithPayments?.length && !filteredCancellationsWithoutPayments?.length">
+            <ng-container *ngIf="!filteredPendingPayouts?.length && !filteredPaidPayouts?.length">
                 <div class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent">
                     <mat-icon class="icon-size-20" svgIcon="heroicons_solid:search"></mat-icon>
                     <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">No Items found!</div>

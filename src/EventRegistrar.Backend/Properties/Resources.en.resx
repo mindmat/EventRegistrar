@@ -396,6 +396,9 @@
   <data name="ImportNewVersion" xml:space="preserve">
     <value>Import new version</value>
   </data>
+  <data name="IncomingPayments" xml:space="preserve">
+    <value>Incoming payments</value>
+  </data>
   <data name="IndividualReductionType" xml:space="preserve">
     <value>Reduction type</value>
   </data>
@@ -663,6 +666,9 @@
   <data name="PaidOf" xml:space="preserve">
     <value>of {{amount}}</value>
   </data>
+  <data name="PaidPayouts" xml:space="preserve">
+    <value>Paid repayments</value>
+  </data>
   <data name="Participants" xml:space="preserve">
     <value>Participants</value>
   </data>
@@ -698,6 +704,9 @@
   </data>
   <data name="PendingMails" xml:space="preserve">
     <value>Pending mails</value>
+  </data>
+  <data name="PendingPayouts" xml:space="preserve">
+    <value>Pending repayments</value>
   </data>
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
@@ -848,6 +857,9 @@
   </data>
   <data name="RemoveLink" xml:space="preserve">
     <value>Remove link</value>
+  </data>
+  <data name="Repaid" xml:space="preserve">
+    <value>Repaid</value>
   </data>
   <data name="RepaymentCandidates" xml:space="preserve">
     <value>Repayments</value>

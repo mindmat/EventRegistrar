@@ -7,6 +7,7 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.WaitingList;
+using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Registrations.Price;
@@ -16,7 +17,7 @@ public class RecalculatePriceAndWaitingListCommand : IRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class RecalculatePriceAndWaitingListCommandHandler : IRequestHandler<RecalculatePriceAndWaitingListCommand>
+public class RecalculatePriceAndWaitingListCommandHandler : AsyncRequestHandler<RecalculatePriceAndWaitingListCommand>
 {
     private readonly IRepository<Registration> _registrations;
     private readonly IEventBus _eventBus;
@@ -43,7 +44,7 @@ public class RecalculatePriceAndWaitingListCommandHandler : IRequestHandler<Reca
         _commandQueue = commandQueue;
     }
 
-    public async Task<Unit> Handle(RecalculatePriceAndWaitingListCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(RecalculatePriceAndWaitingListCommand command, CancellationToken cancellationToken)
     {
         var dirtyTags = await _dirtyTagger.IsDirty<RegistrationPriceAndWaitingListSegment>(command.RegistrationId);
         var registration = await _registrations.AsTracking()
@@ -100,6 +101,13 @@ public class RecalculatePriceAndWaitingListCommandHandler : IRequestHandler<Reca
         }
 
         _dirtyTagger.RemoveDirtyTags(dirtyTags);
-        return Unit.Value;
+    }
+}
+
+public class RecalculatePriceAndWaitingList : IEventToCommandTranslation<RegistrationCancelled>
+{
+    public IEnumerable<IRequest> Translate(RegistrationCancelled e)
+    {
+        yield return new RecalculatePriceAndWaitingListCommand { RegistrationId = e.RegistrationId };
     }
 }

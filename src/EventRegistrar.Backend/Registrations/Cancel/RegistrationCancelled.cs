@@ -8,7 +8,7 @@ public class RegistrationCancelled : DomainEvent
     public string? Reason { get; set; }
     public decimal Refund { get; set; }
     public DateTimeOffset Received { get; set; }
-    public string Participant { get; set; }
+    public string? Participant { get; set; }
 }
 
 public class RegistrationCancelledUserTranslation : IEventToUserTranslation<RegistrationCancelled>
