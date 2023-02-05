@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Mailing;
@@ -13,12 +14,15 @@ public class DeleteMailCommandHandler : AsyncRequestHandler<DeleteMailCommand>
 {
     private readonly IRepository<Mail> _mails;
     private readonly ReadModelUpdater _readModelUpdater;
+    private readonly IEventBus _eventBus;
 
     public DeleteMailCommandHandler(IRepository<Mail> mails,
-                                    ReadModelUpdater readModelUpdater)
+                                    ReadModelUpdater readModelUpdater,
+                                    IEventBus eventBus)
     {
         _mails = mails;
         _readModelUpdater = readModelUpdater;
+        _eventBus = eventBus;
     }
 
     protected override async Task Handle(DeleteMailCommand command, CancellationToken cancellationToken)
@@ -32,5 +36,11 @@ public class DeleteMailCommandHandler : AsyncRequestHandler<DeleteMailCommand>
         {
             _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registrationId, command.EventId);
         }
+
+        _eventBus.Publish(new QueryChanged
+                          {
+                              EventId = mailToDelete.EventId,
+                              QueryName = nameof(PendingMailsQuery)
+                          });
     }
 }
