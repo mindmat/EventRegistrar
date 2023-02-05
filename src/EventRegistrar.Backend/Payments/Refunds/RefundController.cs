@@ -1,5 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
-using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Payments.Refunds;
@@ -14,15 +14,6 @@ public class RefundController : Controller
     {
         _mediator = mediator;
         _eventAcronymResolver = eventAcronymResolver;
-    }
-
-    [HttpGet("api/events/{eventAcronym}/refunds")]
-    public async Task<IEnumerable<RefundDisplayItem>> GetRefunds(string eventAcronym)
-    {
-        return await _mediator.Send(new RefundsQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
     }
 
     [HttpGet("api/events/{eventAcronym}/payouts")]

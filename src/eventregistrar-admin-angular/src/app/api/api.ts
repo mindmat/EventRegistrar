@@ -3343,6 +3343,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    cancellations_Query(cancellationsQuery: CancellationsQuery | undefined): Observable<CancellationDisplayItem[]> {
+        let url_ = this.baseUrl + "/api/CancellationsQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(cancellationsQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCancellations_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCancellations_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<CancellationDisplayItem[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<CancellationDisplayItem[]>;
+        }));
+    }
+
+    protected processCancellations_Query(response: HttpResponseBase): Observable<CancellationDisplayItem[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as CancellationDisplayItem[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     checkIfPayoutIsConfirmed_Command(checkIfPayoutIsConfirmedCommand: CheckIfPayoutIsConfirmedCommand | undefined): Observable<Unit> {
         let url_ = this.baseUrl + "/api/CheckIfPayoutIsConfirmedCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -3486,57 +3537,6 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PossiblePayoutAssignment[];
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    refunds_Query(refundsQuery: RefundsQuery | undefined): Observable<RefundDisplayItem[]> {
-        let url_ = this.baseUrl + "/api/RefundsQuery";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(refundsQuery);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRefunds_Query(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRefunds_Query(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<RefundDisplayItem[]>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<RefundDisplayItem[]>;
-        }));
-    }
-
-    protected processRefunds_Query(response: HttpResponseBase): Observable<RefundDisplayItem[]> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as RefundDisplayItem[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -8387,6 +8387,24 @@ export interface AssignOutgoingPaymentCommand {
     acceptDifferenceReason?: string | null;
 }
 
+export interface CancellationDisplayItem {
+    registrationId?: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    receivedAt?: Date | null;
+    paid?: number;
+    repaid?: number;
+    refundPercentage?: number;
+    refund?: number;
+    cancelledPer?: Date | null;
+    cancelledAt?: Date;
+    cancellationReason?: string | null;
+}
+
+export interface CancellationsQuery {
+    eventId?: string;
+}
+
 export interface CheckIfPayoutIsConfirmedCommand {
     payoutRequestId?: string;
 }
@@ -8444,22 +8462,6 @@ export interface PossiblePayoutAssignment {
 export interface PossiblePayoutAssignmentQuery {
     eventId?: string;
     paymentId?: string;
-}
-
-export interface RefundDisplayItem {
-    registrationId?: string;
-    firstName?: string;
-    lastName?: string;
-    price?: number | null;
-    paid?: number;
-    refundPercentage?: number;
-    refund?: number;
-    cancellationDate?: Date;
-    cancellationReason?: string;
-}
-
-export interface RefundsQuery {
-    eventId?: string;
 }
 
 export interface WillPayAtCheckinCommand {

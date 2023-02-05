@@ -1,5 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 
 namespace EventRegistrar.Backend.Registrations.Search;
 

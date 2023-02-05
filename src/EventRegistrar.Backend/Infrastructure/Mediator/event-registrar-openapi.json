@@ -2160,6 +2160,41 @@
         }
       }
     },
+    "/api/CancellationsQuery": {
+      "post": {
+        "tags": [
+          "Cancellations"
+        ],
+        "operationId": "Cancellations_Query",
+        "requestBody": {
+          "x-name": "CancellationsQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancellationsQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CancellationDisplayItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/CheckIfPayoutIsConfirmedCommand": {
       "post": {
         "tags": [
@@ -2254,41 +2289,6 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/PossiblePayoutAssignment"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/RefundsQuery": {
-      "post": {
-        "tags": [
-          "Refunds"
-        ],
-        "operationId": "Refunds_Query",
-        "requestBody": {
-          "x-name": "RefundsQuery",
-          "description": "",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/RefundsQuery"
-              }
-            }
-          },
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RefundDisplayItem"
                   }
                 }
               }
@@ -7758,6 +7758,68 @@
           }
         }
       },
+      "CancellationDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "receivedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "paid": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "repaid": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "refundPercentage": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "refund": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "cancelledPer": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancelledAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "cancellationReason": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CancellationsQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "CheckIfPayoutIsConfirmedCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -7941,56 +8003,6 @@
             "format": "guid"
           },
           "paymentId": {
-            "type": "string",
-            "format": "guid"
-          }
-        }
-      },
-      "RefundDisplayItem": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "registrationId": {
-            "type": "string",
-            "format": "guid"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "price": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
-          "paid": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "refundPercentage": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "refund": {
-            "type": "number",
-            "format": "decimal"
-          },
-          "cancellationDate": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "cancellationReason": {
-            "type": "string"
-          }
-        }
-      },
-      "RefundsQuery": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "eventId": {
             "type": "string",
             "format": "guid"
           }

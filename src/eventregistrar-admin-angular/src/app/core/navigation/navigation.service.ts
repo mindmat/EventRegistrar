@@ -97,6 +97,13 @@ export class NavigationService
                                     link: `/${e.acronym}/registrations/notes-overview`,
                                 },
                                 {
+                                    id: 'cancellations',
+                                    title: translateService.instant('Cancellations'),
+                                    type: 'basic',
+                                    icon: 'mat_outline:cancel',
+                                    link: `/${e.acronym}/registrations/cancellations`,
+                                },
+                                {
                                     id: 'hosting',
                                     title: translateService.instant('Hosting'),
                                     type: 'basic',

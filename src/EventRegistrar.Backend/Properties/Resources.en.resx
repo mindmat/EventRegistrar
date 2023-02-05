@@ -207,6 +207,18 @@
   <data name="CancellationMoment" xml:space="preserve">
     <value>Cancelled at</value>
   </data>
+  <data name="Cancellations" xml:space="preserve">
+    <value>Cancellations</value>
+  </data>
+  <data name="CancellationsWithoutPayments" xml:space="preserve">
+    <value>Cancellations without payments</value>
+  </data>
+  <data name="CancellationsWithPayments" xml:space="preserve">
+    <value>Cancellations with payments</value>
+  </data>
+  <data name="CancelledAt" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
   <data name="CancelRegistration" xml:space="preserve">
     <value>Cancel registration</value>
   </data>
@@ -773,6 +785,9 @@
   </data>
   <data name="RefundAmount" xml:space="preserve">
     <value>Refund</value>
+  </data>
+  <data name="RegisteredAt" xml:space="preserve">
+    <value>Registered</value>
   </data>
   <data name="Registrable" xml:space="preserve">
     <value>Track</value>

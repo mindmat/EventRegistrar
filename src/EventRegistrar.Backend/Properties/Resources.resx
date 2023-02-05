@@ -216,6 +216,18 @@
   <data name="CancellationMoment" xml:space="preserve">
     <value>Abmeldungszeitpunkt</value>
   </data>
+  <data name="Cancellations" xml:space="preserve">
+    <value>Stornierungen</value>
+  </data>
+  <data name="CancellationsWithoutPayments" xml:space="preserve">
+    <value>Stornierungen ohne Zahlungen</value>
+  </data>
+  <data name="CancellationsWithPayments" xml:space="preserve">
+    <value>Stornierungen mit Zahlungen</value>
+  </data>
+  <data name="CancelledAt" xml:space="preserve">
+    <value>Storniert</value>
+  </data>
   <data name="CancelRegistration" xml:space="preserve">
     <value>Anmeldung stornieren</value>
   </data>
@@ -869,6 +881,9 @@
   </data>
   <data name="RefundAmount" xml:space="preserve">
     <value>Rückerstattung</value>
+  </data>
+  <data name="RegisteredAt" xml:space="preserve">
+    <value>Angemeldet</value>
   </data>
   <data name="Registrable" xml:space="preserve">
     <value>Track</value>

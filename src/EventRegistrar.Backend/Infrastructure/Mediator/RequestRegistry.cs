@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace EventRegistrar.Backend.Infrastructure.Mediator;
+﻿namespace EventRegistrar.Backend.Infrastructure.Mediator;
 
 public class RequestRegistry
 {

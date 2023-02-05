@@ -96,7 +96,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(PricingQuery);
             yield return nameof(EventQuery);
             yield return nameof(PossibleAudiencesQuery);
-            yield return nameof(RefundsQuery);
+            yield return nameof(CancellationsQuery);
             yield return nameof(DifferencesQuery);
             yield return nameof(PayoutQuery);
             yield return nameof(UnassignedPayoutsQuery);

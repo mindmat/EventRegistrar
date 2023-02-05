@@ -55,7 +55,6 @@ public class AssignIncomingPaymentCommandHandler : IRequestHandler<AssignIncomin
     {
         var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
                                                .Include(reg => reg.PaymentAssignments)
-                                               .Include(reg => reg.IndividualReductions)
                                                .FirstAsync(cancellationToken);
         var incomingPayment = await _incomingPayments.FirstAsync(pmt => pmt.Id == command.PaymentIncomingId, cancellationToken);
 

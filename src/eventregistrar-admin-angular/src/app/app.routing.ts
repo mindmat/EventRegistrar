@@ -59,6 +59,8 @@ import { HostingOverviewComponent } from './modules/admin/hosting/hosting-overvi
 import { HostingOverviewResolver } from './modules/admin/hosting/hosting-overview/hosting-overview.resolver';
 import { PaymentDifferencesComponent } from './modules/admin/accounting/payment-differences/payment-differences.component';
 import { PaymentDifferencesResolver } from './modules/admin/accounting/payment-differences/payment-differences.resolver';
+import { CancellationsComponent } from './modules/admin/registration/cancellations/cancellations.component';
+import { CancellationsResolver } from './modules/admin/registration/cancellations/cancellations.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -257,6 +259,12 @@ export const appRoutes: Route[] =
                             canActivate: [AuthGuard],
                             component: NotesOverviewComponent,
                             resolve: { initialData: NotesOverviewResolver }
+                        },
+                        {
+                            path: 'cancellations',
+                            canActivate: [AuthGuard],
+                            component: CancellationsComponent,
+                            resolve: { initialData: CancellationsResolver }
                         },
                         {
                             path: ':id',

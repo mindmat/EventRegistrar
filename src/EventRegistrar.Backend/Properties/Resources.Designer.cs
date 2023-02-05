@@ -358,6 +358,42 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Stornierungen.
+        /// </summary>
+        internal static string Cancellations {
+            get {
+                return ResourceManager.GetString("Cancellations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stornierungen ohne Zahlungen.
+        /// </summary>
+        internal static string CancellationsWithoutPayments {
+            get {
+                return ResourceManager.GetString("CancellationsWithoutPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stornierungen mit Zahlungen.
+        /// </summary>
+        internal static string CancellationsWithPayments {
+            get {
+                return ResourceManager.GetString("CancellationsWithPayments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Storniert.
+        /// </summary>
+        internal static string CancelledAt {
+            get {
+                return ResourceManager.GetString("CancelledAt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Anmeldung stornieren.
         /// </summary>
         internal static string CancelRegistration {
@@ -2321,6 +2357,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string RefundAmount {
             get {
                 return ResourceManager.GetString("RefundAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Angemeldet.
+        /// </summary>
+        internal static string RegisteredAt {
+            get {
+                return ResourceManager.GetString("RegisteredAt", resourceCulture);
             }
         }
         

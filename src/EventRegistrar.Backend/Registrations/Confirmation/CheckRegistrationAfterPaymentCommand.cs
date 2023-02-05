@@ -7,27 +7,26 @@ public class CheckRegistrationAfterPaymentCommand : IRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class CheckRegistrationAfterPaymentCommandHandler : IRequestHandler<CheckRegistrationAfterPaymentCommand>
+public class CheckRegistrationAfterPaymentCommandHandler : AsyncRequestHandler<CheckRegistrationAfterPaymentCommand>
 {
     private readonly IEventBus _eventBus;
     private readonly IQueryable<Registration> _registrations;
 
-    public CheckRegistrationAfterPaymentCommandHandler(IRepository<Registration> registrations,
+    public CheckRegistrationAfterPaymentCommandHandler(IQueryable<Registration> registrations,
                                                        IEventBus eventBus)
     {
         _registrations = registrations;
         _eventBus = eventBus;
     }
 
-    public async Task<Unit> Handle(CheckRegistrationAfterPaymentCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(CheckRegistrationAfterPaymentCommand command, CancellationToken cancellationToken)
     {
         var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
                                                .Include(reg => reg.PaymentAssignments)
-                                               .Include(reg => reg.IndividualReductions)
                                                .FirstAsync(reg => reg.Id == command.RegistrationId, cancellationToken);
         if (registration.IsOnWaitingList == true)
         {
-            return Unit.Value;
+            return;
         }
 
         var difference = registration.Price_AdmittedAndReduced
@@ -52,7 +51,6 @@ public class CheckRegistrationAfterPaymentCommandHandler : IRequestHandler<Check
             {
                 var partnerRegistration = await _registrations.Where(reg => reg.Id == registration.RegistrationId_Partner)
                                                               .Include(reg => reg.PaymentAssignments)
-                                                              .Include(reg => reg.IndividualReductions)
                                                               .FirstAsync(cancellationToken);
                 var partnerRegistrationAccepted = partnerRegistration.State == RegistrationState.Paid && registration.IsOnWaitingList == false;
                 if (partnerRegistrationAccepted)
@@ -86,7 +84,5 @@ public class CheckRegistrationAfterPaymentCommandHandler : IRequestHandler<Check
             // payment has been revoked
             registration.State = RegistrationState.Received;
         }
-
-        return Unit.Value;
     }
 }

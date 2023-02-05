@@ -104,6 +104,7 @@ import { BulkMailTemplateComponent } from './modules/admin/mailing/bulk-mail-tem
 import { HostingOverviewComponent } from './modules/admin/hosting/hosting-overview/hosting-overview.component';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { PaymentDifferencesComponent } from './modules/admin/accounting/payment-differences/payment-differences.component';
+import { CancellationsComponent } from './modules/admin/registration/cancellations/cancellations.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -153,7 +154,8 @@ const routerConfig: ExtraOptions = {
         BulkMailTemplatesComponent,
         BulkMailTemplateComponent,
         HostingOverviewComponent,
-        PaymentDifferencesComponent
+        PaymentDifferencesComponent,
+        CancellationsComponent
     ],
     providers: [
         AuthServiceFuse,
