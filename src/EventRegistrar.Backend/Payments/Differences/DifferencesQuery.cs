@@ -34,6 +34,7 @@ public class DifferencesQueryHandler : IRequestHandler<DifferencesQuery, IEnumer
                                                                  PaymentsTotal = reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null
                                                                                                                         ? asn.Amount
                                                                                                                         : -asn.Amount),
+                                                                 AmountRepaid = reg.PayoutRequests!.Sum(rpy => rpy.Amount),
                                                                  Mails = reg.Mails!.Select(mtr => mtr.Mail!)
                                                                             .Where(mail => !mail.Discarded
                                                                                         && (mail.Type == MailType.MoneyOwed
@@ -45,8 +46,7 @@ public class DifferencesQueryHandler : IRequestHandler<DifferencesQuery, IEnumer
                                                                                                 mail.Sent
                                                                                             })
                                                              })
-                                              .Where(reg => reg.Registration.Price_AdmittedAndReduced - reg.PaymentsTotal != 0m
-                                                         && reg.PaymentsTotal > 0m)
+                                              .Where(reg => reg.PaymentsTotal > 0m)
                                               .OrderBy(reg => reg.Registration.AdmittedAt)
                                               .ToListAsync(cancellationToken);
 
@@ -55,7 +55,8 @@ public class DifferencesQueryHandler : IRequestHandler<DifferencesQuery, IEnumer
                                              RegistrationId = reg.Registration.Id,
                                              Price = reg.Registration.Price_AdmittedAndReduced,
                                              AmountPaid = reg.PaymentsTotal,
-                                             Difference = reg.Registration.Price_AdmittedAndReduced - reg.PaymentsTotal,
+                                             AmountRepaid = reg.AmountRepaid,
+                                             Difference = reg.Registration.Price_AdmittedAndReduced - reg.PaymentsTotal + reg.AmountRepaid,
                                              FirstName = reg.Registration.RespondentFirstName,
                                              LastName = reg.Registration.RespondentLastName,
                                              State = reg.Registration.State,
@@ -66,7 +67,8 @@ public class DifferencesQueryHandler : IRequestHandler<DifferencesQuery, IEnumer
                                              TooMuchPaidMailSent = reg.Mails.Where(mail => mail.Type == MailType.TooMuchPaid)
                                                                       .MaxBy(mail => mail.Sent ?? mail.Created)
                                                                       ?.Sent
-                                         });
+                                         })
+                          .Where(reg => reg.Difference != 0);
     }
 }
 
@@ -75,6 +77,7 @@ public class DifferencesDisplayItem
     public Guid RegistrationId { get; set; }
     public decimal Price { get; set; }
     public decimal AmountPaid { get; set; }
+    public decimal AmountRepaid { get; set; }
     public decimal Difference { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }

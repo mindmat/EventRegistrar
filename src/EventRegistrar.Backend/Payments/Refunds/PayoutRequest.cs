@@ -31,7 +31,7 @@ public class PayoutRequestMap : EntityMap<PayoutRequest>
         builder.ToTable("PayoutRequests");
 
         builder.HasOne(pas => pas.Registration)
-               .WithMany()
+               .WithMany(reg => reg.PayoutRequests)
                .HasForeignKey(pas => pas.RegistrationId);
     }
 }

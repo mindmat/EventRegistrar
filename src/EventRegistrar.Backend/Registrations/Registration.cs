@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Payments;
+using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.RegistrationForms;
@@ -30,6 +31,7 @@ public class Registration : Entity
     public ICollection<ImportedMailToRegistration>? ImportedMails { get; set; }
     public ICollection<IndividualReduction>? IndividualReductions { get; set; }
     public ICollection<PaymentAssignment>? PaymentAssignments { get; set; }
+    public ICollection<PayoutRequest>? PayoutRequests { get; set; }
     public ICollection<Response>? Responses { get; set; }
     public ICollection<Seat>? Seats_AsFollower { get; set; }
     public ICollection<Seat>? Seats_AsLeader { get; set; }
