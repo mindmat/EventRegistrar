@@ -11,13 +11,10 @@ public class DifferencesQuery : IRequest<IEnumerable<DifferencesDisplayItem>>, I
 public class DifferencesQueryHandler : IRequestHandler<DifferencesQuery, IEnumerable<DifferencesDisplayItem>>
 {
     private readonly IQueryable<Registration> _registrations;
-    private readonly IQueryable<Mail> _mails;
 
-    public DifferencesQueryHandler(IQueryable<Registration> registrations,
-                                   IQueryable<Mail> mails)
+    public DifferencesQueryHandler(IQueryable<Registration> registrations)
     {
         _registrations = registrations;
-        _mails = mails;
     }
 
     public async Task<IEnumerable<DifferencesDisplayItem>> Handle(DifferencesQuery query,

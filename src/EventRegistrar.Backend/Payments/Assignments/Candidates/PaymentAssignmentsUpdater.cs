@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Files;
+using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Cancel;
 
@@ -14,13 +15,16 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
 
 
     private readonly IQueryable<Payment> _payments;
+    private readonly IQueryable<PayoutRequest> _payoutRequests;
     private readonly IQueryable<Registration> _registrations;
 
     public PaymentAssignmentsCalculator(IQueryable<Registration> registrations,
-                                        IQueryable<Payment> payments)
+                                        IQueryable<Payment> payments,
+                                        IQueryable<PayoutRequest> payoutRequests)
     {
         _registrations = registrations;
         _payments = payments;
+        _payoutRequests = payoutRequests;
     }
 
     public override async Task<PaymentAssignments> CalculateTyped(Guid eventId, Guid? paymentId, CancellationToken cancellationToken)
@@ -33,6 +37,8 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
                                      .ThenInclude(pas => pas.OutgoingPayment!.Payment)
                                      .Include(pmt => pmt.Outgoing!.Assignments!)
                                      .ThenInclude(pas => pas.Registration)
+                                     .Include(pmt => pmt.Outgoing!.Assignments!)
+                                     .ThenInclude(pas => pas.PayoutRequest)
                                      .FirstAsync(cancellationToken);
 
         var message = payment.Message;
@@ -136,6 +142,34 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
                                                                    AssignedAmount = pas.Amount
                                                                })
                                                 .ToList();
+
+            var payoutRequestCandidates = await _payoutRequests.Where(prq => prq.Registration!.EventId == eventId
+                                                                          && prq.State != PayoutState.Confirmed)
+                                                               .Select(prq => new PayoutRequestCandidate
+                                                                              {
+                                                                                  PayoutRequestId = prq.Id,
+                                                                                  Participant = $"{prq.Registration!.RespondentFirstName} {prq.Registration.RespondentLastName}",
+                                                                                  Amount = prq.Amount,
+                                                                                  AmountUnsettled = prq.Amount - prq.Assignments!.Sum(pas => pas.Amount),
+                                                                                  Info = prq.Reason
+                                                                              })
+                                                               .ToListAsync(cancellationToken);
+            payoutRequestCandidates.ForEach(pmt => pmt.MatchScore = CalculateMatchScore(pmt, payment.Outgoing));
+            result.PayoutRequestCandidates = payoutRequestCandidates.Where(mat => mat.MatchScore > 1)
+                                                                    .OrderByDescending(mtc => mtc.MatchScore);
+
+            result.AssignedPayoutRequests = payment.Outgoing.Assignments!
+                                                   .Where(pas => pas.Registration != null
+                                                              && pas.PayoutRequestId != null)
+                                                   .Select(pas => new AssignedPayoutRequest
+                                                                  {
+                                                                      PaymentAssignmentId = pas.Id,
+                                                                      PayoutRequestId = pas.PayoutRequestId!.Value,
+                                                                      Participant = $"{pas.Registration!.RespondentFirstName} {pas.Registration.RespondentLastName}",
+                                                                      Amount = pas.Amount,
+                                                                      Info = pas.PayoutRequest?.Reason
+                                                                  })
+                                                   .ToList();
         }
 
         if (result.OpenAmount != 0
@@ -238,6 +272,25 @@ public class PaymentAssignmentsCalculator : ReadModelCalculator<PaymentAssignmen
              + (wordsInOpenPayment.Sum(opw => creditorParts.Count(cdw => cdw == opw)) * 10)
              + (paymentCandidate.AmountUnsettled == unsettledAmountInOpenPayment ? 5 : 0);
     }
+
+    private static int CalculateMatchScore(PayoutRequestCandidate payoutRequestCandidate, OutgoingPayment openPayment)
+    {
+        var creditorParts = payoutRequestCandidate.Participant?.Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)
+                                                  ?.Select(wrd => wrd.ToLowerInvariant())
+                         ?? new List<string>();
+
+        var unsettledAmountInOpenPayment = openPayment.Payment!.Amount
+                                         - openPayment.Assignments!.Sum(asn => asn.PayoutRequestId == null
+                                                                                   ? asn.Amount
+                                                                                   : -asn.Amount);
+        var wordsInOpenPayment = openPayment.Payment!.Info!
+                                            .Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)
+                                            .Select(wrd => wrd.ToLowerInvariant())
+                                            .ToHashSet();
+
+        return (wordsInOpenPayment.Sum(opw => creditorParts.Count(cdw => cdw == opw)) * 10)
+             + (payoutRequestCandidate.AmountUnsettled == unsettledAmountInOpenPayment ? 5 : 0);
+    }
 }
 
 public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTranslation<OutgoingPaymentAssigned>,
@@ -299,7 +352,7 @@ public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTransl
     {
         return new UpdateReadModelCommand
                {
-                   QueryName = nameof(RegistrationQuery),
+                   QueryName = nameof(PaymentAssignmentsQuery),
                    EventId = eventId,
                    RowId = paymentId,
                    DirtyMoment = _dateTimeProvider.Now
@@ -315,8 +368,12 @@ public class PaymentAssignments
 
     public IEnumerable<AssignmentCandidateRegistration>? RegistrationCandidates { get; set; }
     public IEnumerable<ExistingAssignment>? ExistingAssignments { get; set; }
+
     public IEnumerable<RepaymentCandidate>? RepaymentCandidates { get; set; }
     public IEnumerable<AssignedRepayment>? AssignedRepayments { get; set; }
+
+    public IEnumerable<PayoutRequestCandidate>? PayoutRequestCandidates { get; set; }
+    public IEnumerable<AssignedPayoutRequest>? AssignedPayoutRequests { get; set; }
 }
 
 public class AssignmentCandidateRegistration
@@ -372,4 +429,23 @@ public class AssignedRepayment
     public string? CreditorName { get; set; }
     public string? CreditorIban { get; set; }
     public decimal? AssignedAmount { get; set; }
+}
+
+public class PayoutRequestCandidate
+{
+    public Guid PayoutRequestId { get; set; }
+    public decimal Amount { get; set; }
+    public decimal AmountUnsettled { get; set; }
+    public string? Participant { get; set; }
+    public string? Info { get; set; }
+    public int MatchScore { get; set; }
+}
+
+public class AssignedPayoutRequest
+{
+    public Guid PaymentAssignmentId { get; set; }
+    public Guid PayoutRequestId { get; set; }
+    public decimal Amount { get; set; }
+    public string? Participant { get; set; }
+    public string? Info { get; set; }
 }

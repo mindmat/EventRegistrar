@@ -970,7 +970,7 @@
   <data name="Repaid" xml:space="preserve">
     <value>Zurückbezahlt</value>
   </data>
-  <data name="RepaymentCandidates" xml:space="preserve">
+  <data name="Repayments" xml:space="preserve">
     <value>Rückzahlungen</value>
   </data>
   <data name="RequestAccess" xml:space="preserve">

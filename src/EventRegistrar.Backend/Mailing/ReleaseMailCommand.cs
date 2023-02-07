@@ -56,7 +56,7 @@ public class ReleaseMailCommandHandler : IRequestHandler<ReleaseMailCommand>
                                                Email = withheldMail.SenderMail,
                                                Name = withheldMail.SenderName
                                            },
-                                  To = withheldMail.Registrations
+                                  To = withheldMail.Registrations!
                                                    .GroupBy(reg => reg.Registration.RespondentEmail?.ToLowerInvariant())
                                                    .Select(grp => new EmailAddress
                                                                   {

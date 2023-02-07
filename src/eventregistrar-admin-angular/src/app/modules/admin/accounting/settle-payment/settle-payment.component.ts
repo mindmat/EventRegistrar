@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AssignRepaymentCommand, AssignedRepayment, AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType, RegistrationMatch, RegistrationState, RepaymentCandidate } from 'app/api/api';
+import { AssignRepaymentCommand, AssignedPayoutRequest, AssignedRepayment, AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType, PayoutRequestCandidate, RegistrationMatch, RegistrationState, RepaymentCandidate } from 'app/api/api';
 import { BehaviorSubject, debounceTime, filter, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { AssignmentRequest, Payment, SettlementCandidate } from './assignment-candidate-registration/assignment-candidate-registration.component';
@@ -22,8 +22,12 @@ export class SettlePaymentComponent implements OnInit
   candidates: AssignmentCandidateRegistrationEditItem[];
   assignedRepayments: AssignedRepayment[];
   repaymentCandidates: RepaymentCandidate[];
+  assignedPayoutRequests: AssignedPayoutRequest[];
+  payoutRequestCandidates: PayoutRequestCandidateEditItem[];
+
   searchMatches: (RegistrationMatch & { locked: boolean; amountMatch: boolean; })[];
   payment?: Payment | null = null;
+
   PaymentType = PaymentType;
   RegistrationState = RegistrationState;
 
@@ -59,6 +63,14 @@ export class SettlePaymentComponent implements OnInit
             ...candidate,
             amountToAssign: Math.min(this.payment.openAmount, candidate.amountUnsettled),
           } as AssignmentCandidateRegistrationEditItem));
+
+        // payouts
+        this.assignedPayoutRequests = assignments.assignedPayoutRequests;
+        this.payoutRequestCandidates = assignments.payoutRequestCandidates?.map(candidate => (
+          {
+            ...candidate,
+            amountToAssign: Math.min(this.payment.openAmount, candidate.amount),
+          } as PayoutRequestCandidateEditItem));
 
         // Mark for check
         this.changeDetectorRef.markForCheck();
@@ -120,6 +132,11 @@ export class SettlePaymentComponent implements OnInit
     candidate.difference = candidate.price - candidate.amountPaid - candidate.amountToAssign;
   }
 
+  assignPayoutRequest(payoutRequestId: string, amountToAssign: number)
+  {
+    this.service.assignPayoutRequest(this.payment.id, payoutRequestId, amountToAssign);
+  }
+
   searchCandidates(query: string)
   {
     this.searchQuery$.next(query);
@@ -142,4 +159,9 @@ export interface AssignmentCandidateRegistrationEditItem extends AssignmentCandi
   amountToAssign: number;
   difference: number;
   amountMatch: boolean;
+}
+
+export interface PayoutRequestCandidateEditItem extends PayoutRequestCandidate, SettlementCandidate
+{
+  amountToAssign: number;
 }

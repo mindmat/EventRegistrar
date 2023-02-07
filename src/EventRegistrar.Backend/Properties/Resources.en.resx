@@ -864,7 +864,7 @@
   <data name="Repaid" xml:space="preserve">
     <value>Repaid</value>
   </data>
-  <data name="RepaymentCandidates" xml:space="preserve">
+  <data name="Repayments" xml:space="preserve">
     <value>Repayments</value>
   </data>
   <data name="RequestAccess" xml:space="preserve">

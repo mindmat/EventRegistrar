@@ -63,17 +63,19 @@
                     </fuse-card>
                 </ng-container>
             </div>
+
         </div>
 
-        <!-- Possible repayment candidates -->
+        <!-- repayments -->
         <div *ngIf="(repaymentCandidates?.length > 0 || assignedRepayments?.length > 0) && payment.type === PaymentType.Incoming" class="p-2 rounded-xl bg-default">
 
             <div class="flex flex-row items-baseline gap-x-2 ml-6">
-                <div class="font-medium">{{ 'RepaymentCandidates' | translate }}</div>
+                <div class="font-medium">{{ 'Repayments' | translate }}</div>
                 <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
             </div>
 
             <div *ngIf="!query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+                <!-- existing -->
                 <ng-container *ngFor="let assignedRepayment of assignedRepayments">
                     <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
                         <div class="flex flex-row items-center gap-x-2">
@@ -94,8 +96,10 @@
                         <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
                                                     <span class="leading-none">{{ candidate.message }}</span>
                                                 </div> -->
-                    </fuse-card> </ng-container>
+                    </fuse-card>
+                </ng-container>
 
+                <!-- possible -->
                 <ng-container *ngFor="let repaymentCandidate of repaymentCandidates">
                     <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
                         <div>
@@ -117,18 +121,70 @@
                     </fuse-card>
                 </ng-container>
             </div>
+        </div>
 
-            <div *ngIf="query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
-                <ng-container *ngFor="let searchMatch of searchMatches">
-                    <!-- available -->
-                    <app-assignment-candidate-registration *ngIf="searchMatch.state===RegistrationState.Received" [payment]="payment" [candidate]="searchMatch" (assign)="assign($event)">
-                    </app-assignment-candidate-registration>
+        <!-- payout requests -->
+        <div *ngIf="assignedPayoutRequests?.length > 0 && payment.type === PaymentType.Outgoing" class="p-2 rounded-xl bg-default">
 
-                    <!-- unavailable -->
-                    <fuse-card class="min-w-10 rounded-xl bg-gray-300 cursor-pointer" *ngIf="searchMatch.state!==RegistrationState.Received"
-                        [routerLink]="navigator.getRegistrationUrl(searchMatch.registrationId)">
-                        <div class="flex m-auto text-xl uppercase p-4">
-                            ({{ searchMatch.firstName?.charAt(0) }}{{ searchMatch.lastName?.charAt(0) }})
+            <div class="flex flex-row items-baseline gap-x-2 ml-6">
+                <div class="font-medium">{{ 'Repayments' | translate }}</div>
+                <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
+            </div>
+
+            <div *ngIf="!query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+                <!-- existing -->
+                <ng-container *ngFor="let assignedPayoutRequest of assignedPayoutRequests">
+                    <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
+                        <div class="flex flex-row items-center gap-x-2">
+                            <div class="text-xl font-semibold leading-tight">{{ assignedPayoutRequest.amount | number: '1.2-2' }}</div>
+                            <div class="flex flex-col">
+                                <div class="text-secondary leading-tight">
+                                    {{ 'PaymentTo' | translate : {creditor: assignedPayoutRequest.participant} }}</div>
+                                <!-- <div class="text-secondary leading-tight">{{assignedRepayment.creditorIban}}</div> -->
+                            </div>
+                            <!-- <button *ngIf="assignedRepayment.paymentAssignmentId" class="ml-auto" mat-icon-button (click)="unassign(assignedRepayment.paymentAssignmentId)">
+                                <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                            </button> -->
+                        </div>
+                        <!-- <div *ngIf="booking.charges" class="flex flex-row items-baseline gap-x-2">
+                                                    <div class="text-xl font-semibold leading-tight">{{ booking.charges | number: '1.2-2' }}</div>
+                                                    <div class="text-secondary leading-tight">Fremdspesen</div>
+                                                </div> -->
+                        <!-- <div *ngIf="booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
+                                                    <span class="leading-none">{{ candidate.message }}</span>
+                                                </div> -->
+                    </fuse-card>
+                </ng-container>
+            </div>
+        </div>
+
+        <div *ngIf="payoutRequestCandidates?.length > 0 && payment.type === PaymentType.Outgoing" class="p-2 rounded-xl bg-default">
+
+            <div class="flex flex-row items-baseline gap-x-2 ml-6">
+                <div class="font-medium">{{ 'PendingPayouts' | translate }}</div>
+                <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
+            </div>
+
+            <div *ngIf="!query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+
+                <!-- possible -->
+                <ng-container *ngFor="let payoutRequestCandidate of payoutRequestCandidates">
+                    <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
+                        <div>
+                            <div class="flex flex-row items-baseline gap-x-2">
+                                <div class="text-xl font-semibold leading-tight">{{ payoutRequestCandidate.amount | number:'1.2-2' }}</div>
+                                <a class="hover:underline text-secondary leading-tight">{{ payoutRequestCandidate.participant }}</a>
+                            </div>
+
+                            <div class="flex flex-row items-baseline gap-x-2">
+                                <mat-form-field class="fuse-mat-no-subscript w-32">
+                                    <input type="number" class="font-large" [placeholder]="'Zuordnen'" matInput #amountToAssign>
+                                </mat-form-field>
+
+                                <button class="ml-auto" mat-icon-button (click)="assignPayoutRequest(payoutRequestCandidate.payoutRequestId, +amountToAssign.value )">
+                                    <mat-icon [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                                </button>
+                            </div>
                         </div>
                     </fuse-card>
                 </ng-container>

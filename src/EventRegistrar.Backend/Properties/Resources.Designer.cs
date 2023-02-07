@@ -2624,9 +2624,9 @@ namespace EventRegistrar.Backend.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Rückzahlungen.
         /// </summary>
-        internal static string RepaymentCandidates {
+        internal static string Repayments {
             get {
-                return ResourceManager.GetString("RepaymentCandidates", resourceCulture);
+                return ResourceManager.GetString("Repayments", resourceCulture);
             }
         }
         

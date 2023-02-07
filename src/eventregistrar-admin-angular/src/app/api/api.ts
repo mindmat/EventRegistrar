@@ -8556,6 +8556,7 @@ export interface DifferencesDisplayItem {
     registrationId?: string;
     price?: number;
     amountPaid?: number;
+    amountRepaid?: number;
     difference?: number;
     firstName?: string | null;
     lastName?: string | null;
@@ -8609,6 +8610,8 @@ export interface PaymentAssignments {
     existingAssignments?: ExistingAssignment[] | null;
     repaymentCandidates?: RepaymentCandidate[] | null;
     assignedRepayments?: AssignedRepayment[] | null;
+    payoutRequestCandidates?: PayoutRequestCandidate[] | null;
+    assignedPayoutRequests?: AssignedPayoutRequest[] | null;
 }
 
 export enum PaymentType {
@@ -8661,6 +8664,23 @@ export interface AssignedRepayment {
     creditorName?: string | null;
     creditorIban?: string | null;
     assignedAmount?: number | null;
+}
+
+export interface PayoutRequestCandidate {
+    payoutRequestId?: string;
+    amount?: number;
+    amountUnsettled?: number;
+    participant?: string | null;
+    info?: string | null;
+    matchScore?: number;
+}
+
+export interface AssignedPayoutRequest {
+    paymentAssignmentId?: string;
+    payoutRequestId?: string;
+    amount?: number;
+    participant?: string | null;
+    info?: string | null;
 }
 
 export interface PaymentAssignmentsQuery {

@@ -8314,6 +8314,10 @@
             "type": "number",
             "format": "decimal"
           },
+          "amountRepaid": {
+            "type": "number",
+            "format": "decimal"
+          },
           "difference": {
             "type": "number",
             "format": "decimal"
@@ -8493,6 +8497,20 @@
             "items": {
               "$ref": "#/components/schemas/AssignedRepayment"
             }
+          },
+          "payoutRequestCandidates": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/PayoutRequestCandidate"
+            }
+          },
+          "assignedPayoutRequests": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/AssignedPayoutRequest"
+            }
           }
         }
       },
@@ -8666,6 +8684,62 @@
           "assignedAmount": {
             "type": "number",
             "format": "decimal",
+            "nullable": true
+          }
+        }
+      },
+      "PayoutRequestCandidate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "payoutRequestId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "amountUnsettled": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "participant": {
+            "type": "string",
+            "nullable": true
+          },
+          "info": {
+            "type": "string",
+            "nullable": true
+          },
+          "matchScore": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "AssignedPayoutRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "paymentAssignmentId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "payoutRequestId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "participant": {
+            "type": "string",
+            "nullable": true
+          },
+          "info": {
+            "type": "string",
             "nullable": true
           }
         }

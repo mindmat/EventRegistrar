@@ -1,12 +1,8 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrations;
-
-using MediatR;
 
 
 namespace EventRegistrar.Backend.Payments.Refunds;
@@ -23,7 +19,7 @@ public class AssignOutgoingPaymentCommand : IRequest, IEventBoundRequest
     public string? AcceptDifferenceReason { get; set; }
 }
 
-public class AssignOutgoingPaymentCommandHandler : IRequestHandler<AssignOutgoingPaymentCommand>
+public class AssignOutgoingPaymentCommandHandler : AsyncRequestHandler<AssignOutgoingPaymentCommand>
 {
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IEventBus _eventBus;
@@ -47,7 +43,7 @@ public class AssignOutgoingPaymentCommandHandler : IRequestHandler<AssignOutgoin
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Unit> Handle(AssignOutgoingPaymentCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(AssignOutgoingPaymentCommand command, CancellationToken cancellationToken)
     {
         Guid registrationId;
         if (command.PayoutRequestId != null)
@@ -60,7 +56,8 @@ public class AssignOutgoingPaymentCommandHandler : IRequestHandler<AssignOutgoin
         else if (command.RegistrationId != null)
         {
             // only to validate registration id vs event id
-            registrationId = await _registrations.Where(reg => reg.Id == command.RegistrationId)
+            registrationId = await _registrations.Where(reg => reg.Id == command.RegistrationId
+                                                            && reg.EventId == command.EventId)
                                                  .Select(reg => reg.Id)
                                                  .FirstAsync(cancellationToken);
         }
@@ -90,7 +87,5 @@ public class AssignOutgoingPaymentCommandHandler : IRequestHandler<AssignOutgoin
                               OutgoingPaymentId = outgoingPayment.Id,
                               Amount = assignment.Amount
                           });
-
-        return Unit.Value;
     }
 }
