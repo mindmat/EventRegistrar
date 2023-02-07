@@ -26,7 +26,7 @@
         <!-- Filters -->
         <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
             <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-            <input (input)="searchCandidates(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query>
+            <input (input)="searchCandidates(query.value)" [placeholder]="'SearchByName' | translate" matInput #query>
         </mat-form-field>
     </div>
 
@@ -74,7 +74,7 @@
                 <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
             </div>
 
-            <div *ngIf="!query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <!-- existing -->
                 <ng-container *ngFor="let assignedRepayment of assignedRepayments">
                     <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
@@ -131,7 +131,7 @@
                 <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
             </div>
 
-            <div *ngIf="!query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <!-- existing -->
                 <ng-container *ngFor="let assignedPayoutRequest of assignedPayoutRequests">
                     <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
@@ -165,7 +165,7 @@
                 <!-- <div class="text-secondary leading-tight">{{ bookingDay.balanceAfter | number: '1.2-2' }}</div> -->
             </div>
 
-            <div *ngIf="!query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
 
                 <!-- possible -->
                 <ng-container *ngFor="let payoutRequestCandidate of payoutRequestCandidates">
@@ -192,7 +192,7 @@
         </div>
 
         <!-- Possible registration candidates -->
-        <div *ngIf="candidates?.length > 0 || searchMatches?.length > 0" class="p-2 rounded-xl bg-default">
+        <div *ngIf="candidates?.length > 0" class="p-2 rounded-xl bg-default">
 
             <div class="flex flex-row items-baseline gap-x-2 ml-6">
                 <div class="font-medium">{{ (payment.type === PaymentType.Incoming ? 'RegistrationCandidatesForIncomingPayment' : 'RegistrationCandidatesForOutgoingPayment') | translate }}</div>
@@ -200,7 +200,7 @@
             </div>
 
             <!-- registrations -->
-            <div *ngIf="!query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
+            <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <ng-container *ngFor="let candidate of candidates">
                     <!-- available -->
                     <app-assignment-candidate-registration *ngIf="candidate.state===RegistrationState.Received" [payment]="payment" [candidate]="candidate" (assign)="assign($event)">
@@ -211,22 +211,6 @@
                         [routerLink]="navigator.getRegistrationUrl(candidate.registrationId)">
                         <div class="flex m-auto text-xl uppercase p-4">
                             ({{ candidate.firstName?.charAt(0) }}{{ candidate.lastName?.charAt(0) }})
-                        </div>
-                    </fuse-card>
-                </ng-container>
-            </div>
-
-            <div *ngIf="query.value" class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
-                <ng-container *ngFor="let searchMatch of searchMatches">
-                    <!-- available -->
-                    <app-assignment-candidate-registration *ngIf="searchMatch.state===RegistrationState.Received" [payment]="payment" [candidate]="searchMatch" (assign)="assign($event)">
-                    </app-assignment-candidate-registration>
-
-                    <!-- unavailable -->
-                    <fuse-card class="min-w-10 rounded-xl bg-gray-300 cursor-pointer" *ngIf="searchMatch.state!==RegistrationState.Received"
-                        [routerLink]="navigator.getRegistrationUrl(searchMatch.registrationId)">
-                        <div class="flex m-auto text-xl uppercase p-4">
-                            ({{ searchMatch.firstName?.charAt(0) }}{{ searchMatch.lastName?.charAt(0) }})
                         </div>
                     </fuse-card>
                 </ng-container>

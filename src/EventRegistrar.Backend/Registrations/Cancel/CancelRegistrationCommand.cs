@@ -48,7 +48,8 @@ public class CancelRegistrationCommandHandler : AsyncRequestHandler<CancelRegist
     protected override async Task Handle(CancelRegistrationCommand command, CancellationToken cancellationToken)
     {
         var registration = await _registrations.AsTracking()
-                                               .Include(reg => reg.PaymentAssignments)
+                                               .Include(reg => reg.PaymentAssignments!)
+                                               .ThenInclude(pas => pas.IncomingPayment)
                                                .Include(reg => reg.RegistrationForm)
                                                .Include(reg => reg.Mails!)
                                                .ThenInclude(mtr => mtr.Mail)
@@ -114,7 +115,10 @@ public class CancelRegistrationCommandHandler : AsyncRequestHandler<CancelRegist
                                     Amount = cancellation.Refund,
                                     Reason = command.Reason,
                                     State = PayoutState.Requested,
-                                    Created = _dateTimeProvider.Now
+                                    Created = _dateTimeProvider.Now,
+                                    IbanProposed = registration.PaymentAssignments!
+                                                               .Select(pas => pas.IncomingPayment?.DebitorIban)
+                                                               .FirstOrDefault(iban => iban != null)
                                 };
             _payoutRequests.InsertObjectTree(payoutRequest);
         }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Api, PaymentAssignments, PaymentType } from 'app/api/api';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, filter, tap } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { FetchService } from '../../infrastructure/fetchService';
 import { NotificationService } from '../../infrastructure/notification.service';
@@ -8,9 +8,11 @@ import { NotificationService } from '../../infrastructure/notification.service';
 @Injectable({
   providedIn: 'root'
 })
-export class SettlePaymentService extends FetchService<PaymentAssignments>
+export class SettlePaymentService
 {
   private _paymentId: string;
+  private searchString: string;
+  private eventId: string;
   public get paymentId(): string
   {
     return this._paymentId;
@@ -19,23 +21,34 @@ export class SettlePaymentService extends FetchService<PaymentAssignments>
   {
     this._paymentId = value;
   }
+  private list: BehaviorSubject<PaymentAssignments | null> = new BehaviorSubject(null);
 
   constructor(private api: Api,
     private eventService: EventService,
     notificationService: NotificationService)
   {
-    super('PaymentAssignmentsQuery', notificationService);
+    notificationService.subscribe('PaymentAssignmentsQuery')
+      .pipe(
+        filter(e => (e.rowId === this._paymentId || e.rowId?.toLowerCase() === this._paymentId?.toLowerCase())
+          && (e.eventId === this.eventId || e.eventId?.toLowerCase() === this.eventId?.toLowerCase())
+        ))
+      .subscribe(_ => this.fetchCandidates(this._paymentId, this.searchString));
   }
 
   get candidates$(): Observable<PaymentAssignments>
   {
-    return this.result$;
+    return this.list.asObservable();
   }
 
-  fetchCandidates(paymentId: string)
+  fetchCandidates(paymentId: string, searchString: string | null = null): Observable<PaymentAssignments>
   {
     this.paymentId = paymentId;
-    return this.fetchItems(this.api.paymentAssignments_Query({ eventId: this.eventService.selectedId, paymentId }), this.paymentId, this.eventService.selectedId);
+    this.searchString = searchString;
+    this.eventId = this.eventService.selectedId;
+    return this.api.paymentAssignments_Query({ eventId: this.eventService.selectedId, paymentId, searchString })
+      .pipe(
+        tap(newItems => this.list.next(newItems))
+      );
   }
 
   unassign(paymentAssignmentId: string)

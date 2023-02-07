@@ -1,10 +1,9 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AssignRepaymentCommand, AssignedPayoutRequest, AssignedRepayment, AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType, PayoutRequestCandidate, RegistrationMatch, RegistrationState, RepaymentCandidate } from 'app/api/api';
+import { AssignedPayoutRequest, AssignedRepayment, AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType, PayoutRequestCandidate, RegistrationState, RepaymentCandidate } from 'app/api/api';
 import { BehaviorSubject, debounceTime, filter, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { AssignmentRequest, Payment, SettlementCandidate } from './assignment-candidate-registration/assignment-candidate-registration.component';
-import { SearchRegistrationsForSettlementService } from './search-registrations-for-settlement.service';
 import { SettlePaymentService } from './settle-payment.service';
 
 @Component({
@@ -17,6 +16,7 @@ export class SettlePaymentComponent implements OnInit
   private paymentId$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   private searchQuery$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   private assignmentRequests: BehaviorSubject<AssignmentRequest | null> = new BehaviorSubject(null);
+  @ViewChild('query', { static: true }) searchElement: ElementRef;
 
   existingAssignments: ExistingAssignment[];
   candidates: AssignmentCandidateRegistrationEditItem[];
@@ -25,7 +25,6 @@ export class SettlePaymentComponent implements OnInit
   assignedPayoutRequests: AssignedPayoutRequest[];
   payoutRequestCandidates: PayoutRequestCandidateEditItem[];
 
-  searchMatches: (RegistrationMatch & { locked: boolean; amountMatch: boolean; })[];
   payment?: Payment | null = null;
 
   PaymentType = PaymentType;
@@ -34,8 +33,7 @@ export class SettlePaymentComponent implements OnInit
   constructor(private service: SettlePaymentService,
     public navigator: NavigatorService,
     private changeDetectorRef: ChangeDetectorRef,
-    private route: ActivatedRoute,
-    private searchRegistrationsService: SearchRegistrationsForSettlementService) { }
+    private route: ActivatedRoute) { }
 
   ngOnInit(): void
   {
@@ -76,6 +74,13 @@ export class SettlePaymentComponent implements OnInit
         this.changeDetectorRef.markForCheck();
       });
 
+    this.route.params.subscribe(params => 
+    {
+      this.searchQuery$.next(null);
+      this.searchElement.nativeElement.value = null;
+      this.changeDetectorRef.markForCheck();
+    });
+
     this.route.queryParams.subscribe(params => 
     {
       this.paymentId$.next(params.search ?? '');
@@ -95,20 +100,8 @@ export class SettlePaymentComponent implements OnInit
 
     this.searchQuery$.pipe(
       debounceTime(300),
-    ).subscribe(query => this.searchRegistrationsService.fetchItemsOf(query));
-
-    this.searchRegistrationsService.matches$.subscribe(matches =>
-    {
-      this.searchMatches = matches?.map(match =>
-      {
-        return {
-          ...match,
-          locked: false,
-          amountMatch: this.payment.openAmount == (match.price - match.amountPaid)
-        };
-      });
-      this.changeDetectorRef.markForCheck();
-    });
+      filter(_ => !!this.payment?.id),
+    ).subscribe(query => this.service.fetchCandidates(this.payment.id, query).subscribe());
   }
 
   assign(request: AssignmentRequest): void

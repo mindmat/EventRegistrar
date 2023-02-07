@@ -41,7 +41,8 @@ public class RefundDifferenceCommandHandler : AsyncRequestHandler<RefundDifferen
     protected override async Task Handle(RefundDifferenceCommand command, CancellationToken cancellationToken)
     {
         var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
-                                               .Include(reg => reg.PaymentAssignments)
+                                               .Include(reg => reg.PaymentAssignments!)
+                                               .ThenInclude(pas => pas.IncomingPayment)
                                                .FirstAsync(cancellationToken);
         var data = new TooMuchPaidMailData
                    {
@@ -60,7 +61,10 @@ public class RefundDifferenceCommandHandler : AsyncRequestHandler<RefundDifferen
                                 Amount = data.RefundAmount,
                                 Reason = command.Reason ?? "Refund of difference",
                                 State = PayoutState.Requested,
-                                Created = _dateTimeProvider.Now
+                                Created = _dateTimeProvider.Now,
+                                IbanProposed = registration.PaymentAssignments!
+                                                           .Select(pas => pas.IncomingPayment?.DebitorIban)
+                                                           .FirstOrDefault(iban => iban != null)
                             };
         await _payoutRequests.InsertOrUpdateEntity(payoutRequest, cancellationToken);
 

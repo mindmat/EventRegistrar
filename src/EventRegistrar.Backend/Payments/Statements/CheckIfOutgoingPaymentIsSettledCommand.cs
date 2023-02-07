@@ -34,9 +34,15 @@ public class CheckIfOutgoingPaymentIsSettledCommandHandler : AsyncRequestHandler
     }
 }
 
-public class CheckIfOutgoingPaymentIsSettledAfterRepaymentAssignment : IEventToCommandTranslation<RepaymentAssigned>
+public class CheckIfOutgoingPaymentIsSettled : IEventToCommandTranslation<RepaymentAssigned>,
+                                               IEventToCommandTranslation<OutgoingPaymentAssigned>
 {
     public IEnumerable<IRequest> Translate(RepaymentAssigned e)
+    {
+        yield return new CheckIfOutgoingPaymentIsSettledCommand { OutgoingPaymentId = e.OutgoingPaymentId };
+    }
+
+    public IEnumerable<IRequest> Translate(OutgoingPaymentAssigned e)
     {
         yield return new CheckIfOutgoingPaymentIsSettledCommand { OutgoingPaymentId = e.OutgoingPaymentId };
     }

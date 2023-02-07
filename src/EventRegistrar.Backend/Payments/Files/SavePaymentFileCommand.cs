@@ -4,10 +4,8 @@ using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using EventRegistrar.Backend.Payments.Assignments.Candidates;
 using EventRegistrar.Backend.Payments.Files.Camt;
 using EventRegistrar.Backend.Payments.Files.Slips;
 using EventRegistrar.Backend.Payments.Settlements;
@@ -190,8 +188,6 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                                    };
             _payments.InsertObjectTree(newPayment);
             newPayments.Add(newPayment);
-
-            _readModelUpdater.TriggerUpdate<PaymentAssignmentsCalculator>(newPayment.Id, eventId);
         }
 
         if (@event != null)

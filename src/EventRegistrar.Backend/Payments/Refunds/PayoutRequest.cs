@@ -12,6 +12,7 @@ public class PayoutRequest : Entity
     public IList<PaymentAssignment>? Assignments { get; set; }
 
     public decimal Amount { get; set; }
+    public string? IbanProposed { get; set; }
     public string? Reason { get; set; }
     public DateTimeOffset Created { get; set; }
     public PayoutState State { get; set; }
@@ -33,5 +34,8 @@ public class PayoutRequestMap : EntityMap<PayoutRequest>
         builder.HasOne(pas => pas.Registration)
                .WithMany(reg => reg.PayoutRequests)
                .HasForeignKey(pas => pas.RegistrationId);
+
+        builder.Property(prq => prq.IbanProposed)
+               .HasMaxLength(100);
     }
 }

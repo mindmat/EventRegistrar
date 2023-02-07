@@ -8673,6 +8673,7 @@ export interface PayoutRequestCandidate {
     participant?: string | null;
     info?: string | null;
     matchScore?: number;
+    ibanProposed?: string | null;
 }
 
 export interface AssignedPayoutRequest {
@@ -8686,6 +8687,7 @@ export interface AssignedPayoutRequest {
 export interface PaymentAssignmentsQuery {
     eventId?: string;
     paymentId?: string;
+    searchString?: string | null;
 }
 
 export interface UnassignPaymentCommand {

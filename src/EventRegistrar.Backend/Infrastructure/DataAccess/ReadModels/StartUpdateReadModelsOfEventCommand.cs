@@ -1,8 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Payments.Assignments;
-using EventRegistrar.Backend.Payments.Assignments.Candidates;
 using EventRegistrar.Backend.Payments.Due;
-using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.ReadModels;
@@ -15,25 +12,22 @@ public class StartUpdateReadModelsOfEventCommand : IRequest
     public IEnumerable<string>? QueryNames { get; set; }
 }
 
-public class StartUpdateReadModelsOfEventCommandHandler : IRequestHandler<StartUpdateReadModelsOfEventCommand>
+public class StartUpdateReadModelsOfEventCommandHandler : AsyncRequestHandler<StartUpdateReadModelsOfEventCommand>
 {
     private readonly IQueryable<Event> _events;
     private readonly IQueryable<Registration> _registrations;
-    private readonly IQueryable<Payment> _payments;
     private readonly ReadModelUpdater _readModelUpdater;
 
     public StartUpdateReadModelsOfEventCommandHandler(IQueryable<Event> events,
                                                       IQueryable<Registration> registrations,
-                                                      IQueryable<Payment> payments,
                                                       ReadModelUpdater readModelUpdater)
     {
         _events = events;
         _registrations = registrations;
-        _payments = payments;
         _readModelUpdater = readModelUpdater;
     }
 
-    public async Task<Unit> Handle(StartUpdateReadModelsOfEventCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(StartUpdateReadModelsOfEventCommand command, CancellationToken cancellationToken)
     {
         var eventIds = await _events.WhereIf(command.EventId != null, evt => evt.Id == command.EventId)
                                     .Select(evt => evt.Id)
@@ -61,20 +55,6 @@ public class StartUpdateReadModelsOfEventCommandHandler : IRequestHandler<StartU
                     _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registrationId, eventId);
                 }
             }
-
-            if (command.QueryNames?.Contains(nameof(PaymentAssignmentsQuery)) != false)
-            {
-                var paymentIds = await _payments.Where(pmt => pmt.PaymentsFile!.EventId == eventId)
-                                                .Select(pmt => pmt.Id)
-                                                .ToListAsync(cancellationToken);
-
-                foreach (var paymentId in paymentIds)
-                {
-                    _readModelUpdater.TriggerUpdate<PaymentAssignmentsCalculator>(paymentId, eventId);
-                }
-            }
         }
-
-        return Unit.Value;
     }
 }

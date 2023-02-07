@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PotentialPartnerMatch, PotentialPartners } from 'app/api/api';
-import { BehaviorSubject, combineLatest, debounce, debounceTime, distinct, interval, of, Subject, takeUntil, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounce, interval, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { MatchPartnerService } from './match-partner.service';
 

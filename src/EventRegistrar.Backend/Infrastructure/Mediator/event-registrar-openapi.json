@@ -8715,6 +8715,10 @@
           "matchScore": {
             "type": "integer",
             "format": "int32"
+          },
+          "ibanProposed": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -8755,6 +8759,10 @@
           "paymentId": {
             "type": "string",
             "format": "guid"
+          },
+          "searchString": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
