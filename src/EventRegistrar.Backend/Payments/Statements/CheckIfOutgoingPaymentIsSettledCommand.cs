@@ -26,9 +26,7 @@ public class CheckIfOutgoingPaymentIsSettledCommandHandler : AsyncRequestHandler
                                                      .Include(pmt => pmt.Assignments)
                                                      .FirstAsync(cancellationToken);
         var balance = outgoingPayment.Payment!.Amount
-                    - outgoingPayment.Assignments!.Sum(asn => asn.PayoutRequestId == null
-                                                                  ? asn.Amount
-                                                                  : -asn.Amount);
+                    - outgoingPayment.Assignments!.Sum(asn => asn.Amount);
         //+ outgoingPayment.RepaymentAssignments!.Sum(asn => asn.Amount);
         outgoingPayment.Payment.Settled = balance == 0m;
     }
