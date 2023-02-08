@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Mailing;
+using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Payments.Differences;
@@ -28,10 +29,15 @@ public class DifferencesQueryHandler : IRequestHandler<DifferencesQuery, IEnumer
                                               .Select(reg => new
                                                              {
                                                                  Registration = reg,
-                                                                 PaymentsTotal = reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null
-                                                                                                                        ? asn.Amount
-                                                                                                                        : -asn.Amount),
-                                                                 AmountRepaid = reg.PayoutRequests!.Sum(rpy => rpy.Amount),
+                                                                 PaymentsTotal = reg.PaymentAssignments!
+                                                                                    .Where(asn => asn.IncomingPaymentId != null)
+                                                                                    .Sum(asn => asn.Amount),
+                                                                 AmountRepaid = reg.PaymentAssignments!
+                                                                                   .Where(asn => asn.OutgoingPaymentId != null)
+                                                                                   .Sum(asn => asn.Amount),
+                                                                 AmountPayoutRequests = reg.PayoutRequests!
+                                                                                           .Where(rpy => rpy.State != PayoutState.Confirmed)
+                                                                                           .Sum(rpy => rpy.Amount),
                                                                  Mails = reg.Mails!.Select(mtr => mtr.Mail!)
                                                                             .Where(mail => !mail.Discarded
                                                                                         && (mail.Type == MailType.MoneyOwed
@@ -52,8 +58,8 @@ public class DifferencesQueryHandler : IRequestHandler<DifferencesQuery, IEnumer
                                              RegistrationId = reg.Registration.Id,
                                              Price = reg.Registration.Price_AdmittedAndReduced,
                                              AmountPaid = reg.PaymentsTotal,
-                                             AmountRepaid = reg.AmountRepaid,
-                                             Difference = reg.Registration.Price_AdmittedAndReduced - reg.PaymentsTotal + reg.AmountRepaid,
+                                             AmountRepaid = reg.AmountRepaid + reg.AmountPayoutRequests,
+                                             Difference = reg.Registration.Price_AdmittedAndReduced - reg.PaymentsTotal + reg.AmountRepaid + reg.AmountPayoutRequests,
                                              FirstName = reg.Registration.RespondentFirstName,
                                              LastName = reg.Registration.RespondentLastName,
                                              State = reg.Registration.State,
