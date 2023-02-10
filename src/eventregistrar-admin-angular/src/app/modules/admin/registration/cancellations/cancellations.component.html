@@ -58,7 +58,9 @@
                                 <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_solid:logout'" matTooltip="{{ 'Repaid' | translate }}" [matTooltipPosition]="'above'"
                                     [matTooltipClass]="'mb-1'"></mat-icon>
                                 <span *ngIf="!cancellation.repaid" class="text-secondary">{{ cancellation.refund | number: '1.2-2' }} ({{ cancellation.refundPercentage * 100 }}%)</span>
-                                <span *ngId="!!cancellation.repaid">{{ cancellation.repaid | number: '1.2-2' }}</span>
+                                <span *ngIf="!!cancellation.repaid">{{ cancellation.repaid | number: '1.2-2' }}</span>
+                                <mat-icon *ngIf="!!cancellation.repaid && cancellation.repaid === cancellation.refund" class="icon-size-5 ml-1 text-green-600"
+                                    [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
                             </div>
 
                             <div *ngIf="cancellation.cancellationReason" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
