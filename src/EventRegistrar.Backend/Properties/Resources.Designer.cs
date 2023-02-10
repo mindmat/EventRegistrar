@@ -1173,7 +1173,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Zahlungseingänge.
+        ///   Looks up a localized string similar to Einzahlungen.
         /// </summary>
         internal static string IncomingPayments {
             get {
@@ -1952,6 +1952,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string OtherEvents {
             get {
                 return ResourceManager.GetString("OtherEvents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Auszahlungen.
+        /// </summary>
+        internal static string OutgoingPayments {
+            get {
+                return ResourceManager.GetString("OutgoingPayments", resourceCulture);
             }
         }
         

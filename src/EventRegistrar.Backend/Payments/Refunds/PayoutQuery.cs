@@ -27,19 +27,32 @@ public class PayoutQueryHandler : IRequestHandler<PayoutQuery, IEnumerable<Payou
                                                               Paid = por.Registration.PaymentAssignments!.Sum(ass => ass.PayoutRequestId == null
                                                                                                                          ? ass.Amount
                                                                                                                          : -ass.Amount),
-                                                              Payments = por.Registration
-                                                                            .PaymentAssignments!
-                                                                            .Where(ass => ass.IncomingPayment != null)
-                                                                            .Select(pmt => new PaymentDisplayItem
-                                                                                           {
-                                                                                               Assigned = pmt.Amount,
-                                                                                               PaymentAmount = pmt.IncomingPayment!.Payment!.Amount,
-                                                                                               PaymentBookingDate = pmt.IncomingPayment.Payment.BookingDate,
-                                                                                               PaymentDebitorIban = pmt.IncomingPayment.DebitorIban,
-                                                                                               PaymentDebitorName = pmt.IncomingPayment.DebitorName,
-                                                                                               PaymentMessage = pmt.IncomingPayment.Payment.Message,
-                                                                                               PaymentInfo = pmt.IncomingPayment.Payment.Info
-                                                                                           }),
+                                                              IncomingPayments = por.Registration
+                                                                                    .PaymentAssignments!
+                                                                                    .Where(ass => ass.IncomingPayment != null)
+                                                                                    .Select(pmt => new IncomingPaymentDisplayItem
+                                                                                                   {
+                                                                                                       Assigned = pmt.Amount,
+                                                                                                       PaymentAmount = pmt.IncomingPayment!.Payment!.Amount,
+                                                                                                       PaymentBookingDate = pmt.IncomingPayment.Payment.BookingDate,
+                                                                                                       PaymentDebitorIban = pmt.IncomingPayment.DebitorIban,
+                                                                                                       PaymentDebitorName = pmt.IncomingPayment.DebitorName,
+                                                                                                       PaymentMessage = pmt.IncomingPayment.Payment.Message,
+                                                                                                       PaymentInfo = pmt.IncomingPayment.Payment.Info
+                                                                                                   }),
+                                                              OutgoingPayments = por.Registration
+                                                                                    .PaymentAssignments!
+                                                                                    .Where(ass => ass.OutgoingPayment != null)
+                                                                                    .Select(pmt => new OutgoingPaymentDisplayItem
+                                                                                                   {
+                                                                                                       Assigned = pmt.Amount,
+                                                                                                       PaymentAmount = pmt.OutgoingPayment!.Payment!.Amount,
+                                                                                                       PaymentBookingDate = pmt.OutgoingPayment.Payment.BookingDate,
+                                                                                                       PaymentCreditorIban = pmt.OutgoingPayment.CreditorIban,
+                                                                                                       PaymentCreditorName = pmt.OutgoingPayment.CreditorName,
+                                                                                                       PaymentMessage = pmt.OutgoingPayment.Payment.Message,
+                                                                                                       PaymentInfo = pmt.OutgoingPayment.Payment.Info
+                                                                                                   }),
                                                               Reason = por.Reason,
                                                               StateText = por.State.ToString(),
                                                               State = por.State,
@@ -60,19 +73,31 @@ public class PayoutDisplayItem
     public decimal Paid { get; set; }
     public string? Reason { get; set; }
     public DateTimeOffset Created { get; set; }
-    public IEnumerable<PaymentDisplayItem> Payments { get; set; }
+    public IEnumerable<IncomingPaymentDisplayItem>? IncomingPayments { get; set; }
+    public IEnumerable<OutgoingPaymentDisplayItem>? OutgoingPayments { get; set; }
     public decimal Amount { get; set; }
-    public string StateText { get; set; }
+    public string? StateText { get; set; }
     public PayoutState State { get; set; }
 }
 
-public class PaymentDisplayItem
+public class IncomingPaymentDisplayItem
 {
     public decimal Assigned { get; set; }
     public decimal PaymentAmount { get; set; }
     public DateTime PaymentBookingDate { get; set; }
     public string? PaymentDebitorIban { get; set; }
     public string? PaymentDebitorName { get; set; }
+    public string? PaymentMessage { get; set; }
+    public string? PaymentInfo { get; set; }
+}
+
+public class OutgoingPaymentDisplayItem
+{
+    public decimal Assigned { get; set; }
+    public decimal PaymentAmount { get; set; }
+    public DateTime PaymentBookingDate { get; set; }
+    public string? PaymentCreditorIban { get; set; }
+    public string? PaymentCreditorName { get; set; }
     public string? PaymentMessage { get; set; }
     public string? PaymentInfo { get; set; }
 }

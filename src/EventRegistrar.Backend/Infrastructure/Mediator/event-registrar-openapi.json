@@ -7862,10 +7862,18 @@
             "type": "string",
             "format": "date-time"
           },
-          "payments": {
+          "incomingPayments": {
             "type": "array",
+            "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/PaymentDisplayItem4"
+              "$ref": "#/components/schemas/IncomingPaymentDisplayItem"
+            }
+          },
+          "outgoingPayments": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/OutgoingPaymentDisplayItem"
             }
           },
           "amount": {
@@ -7873,14 +7881,15 @@
             "format": "decimal"
           },
           "stateText": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "state": {
             "$ref": "#/components/schemas/PayoutState"
           }
         }
       },
-      "PaymentDisplayItem4": {
+      "IncomingPaymentDisplayItem": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -7901,6 +7910,40 @@
             "nullable": true
           },
           "paymentDebitorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentInfo": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "OutgoingPaymentDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "assigned": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "paymentAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "paymentBookingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paymentCreditorIban": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentCreditorName": {
             "type": "string",
             "nullable": true
           },

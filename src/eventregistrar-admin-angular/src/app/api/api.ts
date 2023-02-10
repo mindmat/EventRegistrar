@@ -8417,18 +8417,29 @@ export interface PayoutDisplayItem {
     paid?: number;
     reason?: string | null;
     created?: Date;
-    payments?: PaymentDisplayItem4[];
+    incomingPayments?: IncomingPaymentDisplayItem[] | null;
+    outgoingPayments?: OutgoingPaymentDisplayItem[] | null;
     amount?: number;
-    stateText?: string;
+    stateText?: string | null;
     state?: PayoutState;
 }
 
-export interface PaymentDisplayItem4 {
+export interface IncomingPaymentDisplayItem {
     assigned?: number;
     paymentAmount?: number;
     paymentBookingDate?: Date;
     paymentDebitorIban?: string | null;
     paymentDebitorName?: string | null;
+    paymentMessage?: string | null;
+    paymentInfo?: string | null;
+}
+
+export interface OutgoingPaymentDisplayItem {
+    assigned?: number;
+    paymentAmount?: number;
+    paymentBookingDate?: Date;
+    paymentCreditorIban?: string | null;
+    paymentCreditorName?: string | null;
     paymentMessage?: string | null;
     paymentInfo?: string | null;
 }

@@ -487,7 +487,7 @@
     <value>Neue Version importieren</value>
   </data>
   <data name="IncomingPayments" xml:space="preserve">
-    <value>Zahlungseingänge</value>
+    <value>Einzahlungen</value>
   </data>
   <data name="IndividualReductionType" xml:space="preserve">
     <value>Reduktionsart</value>
@@ -746,6 +746,9 @@
   </data>
   <data name="OtherEvents" xml:space="preserve">
     <value>Weitere Events</value>
+  </data>
+  <data name="OutgoingPayments" xml:space="preserve">
+    <value>Auszahlungen</value>
   </data>
   <data name="OutstandingPayments" xml:space="preserve">
     <value>ausstehend aus {{dueRegistrationCount}} Anmeldungen</value>
