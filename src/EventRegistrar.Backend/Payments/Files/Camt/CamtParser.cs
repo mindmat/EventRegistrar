@@ -17,88 +17,75 @@ public class CamtParser
     public CamtFile Parse(XDocument xml)
     {
         XNamespace ns = "urn:iso:std:iso:20022:tech:xsd:camt.053.001.04";
-        if (xml.NodeType != XmlNodeType.Document ||
-            ((XElement)xml.FirstNode).GetDefaultNamespace().NamespaceName != ns)
+        if (xml.NodeType != XmlNodeType.Document || ((XElement)xml.FirstNode).GetDefaultNamespace().NamespaceName != ns)
         {
             throw new Exception("invalid xml");
         }
 
         var statement = xml.Descendants(ns + "Stmt").ToList();
         var entries = statement.Descendants(ns + "Ntry")
-                               .Select(ntry => new CamtEntry
-                                               {
-                                                   Amount = decimal.Parse(ntry.Descendants(ns + "Amt").First().Value,
-                                                       CultureInfo.InvariantCulture),
-                                                   Currency = ntry.Descendants(ns + "Amt")
-                                                                  .First()
-                                                                  .Attribute("Ccy")
-                                                                  ?.Value,
-                                                   Info = ntry.Descendants(ns + "AddtlNtryInf").FirstOrDefault()?.Value,
-                                                   Message = ntry.Descendants(ns + "NtryDtls")
-                                                                 .Descendants(ns + "TxDtls")
-                                                                 .Descendants(ns + "RmtInf")
-                                                                 ?.Descendants(ns + "Ustrd")
-                                                                 ?.Select(nod => nod.Value)
-                                                                 ?.StringJoin(Environment.NewLine),
-                                                   Type = (CreditDebit)Enum.Parse(typeof(CreditDebit),
-                                                       ntry.Descendants(ns + "CdtDbtInd").First().Value),
-                                                   BookingDate =
-                                                       DateTime.Parse(ntry.Descendants(ns + "BookgDt")
-                                                                          .Descendants(ns + "Dt")
-                                                                          .First()
-                                                                          .Value),
-                                                   Reference = ntry.Descendants(ns + "AcctSvcrRef")
-                                                                   .FirstOrDefault()
-                                                                   ?.Value,
-                                                   Charges = ntry.Descendants(ns + "Chrgs")
-                                                                 .Descendants(ns + "TtlChrgsAndTaxAmt")
-                                                                 .FirstOrDefault()
-                                                                 ?.Value.TryToDecimal()
-                                                          ?? ntry.Descendants(ns + "NtryDtls")
-                                                                 .Descendants(ns + "TxDtls")
-                                                                 .Descendants(ns + "Chrgs")
-                                                                 .Descendants(ns + "Rcrd")
-                                                                 .Descendants(ns + "Amt")
-                                                                 .FirstOrDefault()
-                                                                 ?.Value.TryToDecimal(),
-                                                   InstructionIdentification = ntry.Descendants(ns + "NtryDtls")
-                                                                                   .Descendants(ns + "TxDtls")
-                                                                                   .Descendants(ns + "Refs")
-                                                                                   .Descendants(ns + "InstrId")
+                               .SelectMany(ntry =>
+                               {
+                                   var bookingDate = DateTime.Parse(ntry.Descendants(ns + "BookgDt")
+                                                                        .Descendants(ns + "Dt")
+                                                                        .First()
+                                                                        .Value);
+                                   return ntry.Descendants(ns + "TxDtls")
+                                              .Select(tx =>
+                                              {
+                                                  var amount = tx.Descendants(ns + "Amt").First();
+                                                  var parties = tx.Descendants(ns + "RltdPties")
+                                                                  .FirstOrDefault();
+                                                  return new CamtEntry
+                                                         {
+                                                             Amount = decimal.Parse(amount.Value, CultureInfo.InvariantCulture),
+                                                             Currency = amount.Attribute("Ccy")?.Value,
+                                                             Info = tx.Descendants(ns + "AddtlNtryInf").FirstOrDefault()?.Value,
+                                                             Message = tx.Descendants(ns + "RmtInf")
+                                                                         ?.Descendants(ns + "Ustrd")
+                                                                         ?.Select(nod => nod.Value)
+                                                                         ?.StringJoin(Environment.NewLine),
+                                                             Type = (CreditDebit)Enum.Parse(typeof(CreditDebit),
+                                                                                            tx.Descendants(ns + "CdtDbtInd").First().Value),
+                                                             BookingDate = bookingDate,
+                                                             Reference = tx.Descendants(ns + "AcctSvcrRef")
+                                                                           .FirstOrDefault()
+                                                                           ?.Value,
+                                                             Charges = ntry.Descendants(ns + "Chrgs")
+                                                                           .Descendants(ns + "TtlChrgsAndTaxAmt")
+                                                                           .FirstOrDefault()
+                                                                           ?.Value.TryToDecimal()
+                                                                    ?? tx.Descendants(ns + "Chrgs")
+                                                                         .Descendants(ns + "Rcrd")
+                                                                         .Descendants(ns + "Amt")
+                                                                         .FirstOrDefault()
+                                                                         ?.Value.TryToDecimal(),
+                                                             InstructionIdentification = tx.Descendants(ns + "Refs")
+                                                                                           .Descendants(ns + "InstrId")
+                                                                                           .FirstOrDefault()
+                                                                                           ?.Value,
+                                                             DebitorName = parties?.Descendants(ns + "Dbtr")
+                                                                                  .Descendants(ns + "Nm")
+                                                                                  .FirstOrDefault()
+                                                                                  ?.Value,
+                                                             DebitorIban = parties?.Descendants(ns + "DbtrAcct")
+                                                                                  .Descendants(ns + "Id")
+                                                                                  .Descendants(ns + "IBAN")
+                                                                                  .FirstOrDefault()
+                                                                                  ?.Value,
+                                                             CreditorName = parties?.Descendants(ns + "Cdtr")
+                                                                                   .Descendants(ns + "Nm")
                                                                                    .FirstOrDefault()
                                                                                    ?.Value,
-                                                   DebitorName = ntry.Descendants(ns + "NtryDtls")
-                                                                     .Descendants(ns + "TxDtls")
-                                                                     .Descendants(ns + "RltdPties")
-                                                                     .Descendants(ns + "Dbtr")
-                                                                     .Descendants(ns + "Nm")
-                                                                     .FirstOrDefault()
-                                                                     ?.Value,
-                                                   DebitorIban = ntry.Descendants(ns + "NtryDtls")
-                                                                     .Descendants(ns + "TxDtls")
-                                                                     .Descendants(ns + "RltdPties")
-                                                                     .Descendants(ns + "DbtrAcct")
-                                                                     .Descendants(ns + "Id")
-                                                                     .Descendants(ns + "IBAN")
-                                                                     .FirstOrDefault()
-                                                                     ?.Value,
-                                                   CreditorName = ntry.Descendants(ns + "NtryDtls")
-                                                                      .Descendants(ns + "TxDtls")
-                                                                      .Descendants(ns + "RltdPties")
-                                                                      .Descendants(ns + "Cdtr")
-                                                                      .Descendants(ns + "Nm")
-                                                                      .FirstOrDefault()
-                                                                      ?.Value,
-                                                   CreditorIban = ntry.Descendants(ns + "NtryDtls")
-                                                                      .Descendants(ns + "TxDtls")
-                                                                      .Descendants(ns + "RltdPties")
-                                                                      .Descendants(ns + "CdtrAcct")
-                                                                      .Descendants(ns + "Id")
-                                                                      .Descendants(ns + "IBAN")
-                                                                      .FirstOrDefault()
-                                                                      ?.Value,
-                                                   Xml = ntry.ToString()
-                                               });
+                                                             CreditorIban = parties?.Descendants(ns + "CdtrAcct")
+                                                                                   .Descendants(ns + "Id")
+                                                                                   .Descendants(ns + "IBAN")
+                                                                                   .FirstOrDefault()
+                                                                                   ?.Value,
+                                                             Xml = tx.ToString()
+                                                         };
+                                              });
+                               });
 
         var camt = new CamtFile
                    {
