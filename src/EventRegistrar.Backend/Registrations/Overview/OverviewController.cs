@@ -1,7 +1,11 @@
 ﻿using System.Data;
+
 using ClosedXML.Excel;
+
 using EventRegistrar.Backend.Events;
+
 using MediatR;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Registrations.Overview;
@@ -19,9 +23,9 @@ public class OverviewController : Controller
     }
 
     [HttpGet("api/events/{eventAcronym}/checkinView")]
-    public async Task<CheckinView> GetCheckinView(string eventAcronym)
+    public async Task<CheckInView> GetCheckinView(string eventAcronym)
     {
-        return await _mediator.Send(new CheckinQuery
+        return await _mediator.Send(new CheckInQuery
                                     {
                                         EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
                                     });
@@ -30,28 +34,38 @@ public class OverviewController : Controller
     [HttpGet("api/events/{eventAcronym}/checkinView.xlsx")]
     public async Task<IActionResult> GetCheckinViewXlsx(string eventAcronym)
     {
-        var data = await _mediator.Send(new CheckinQuery
+        var data = await _mediator.Send(new CheckInQuery
                                         {
                                             EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
                                         });
 
-        var mappings = new List<(string Title, Func<CheckinViewItem, object> GetValue)>
+        var mappings = new List<(string Title, Func<CheckInViewItem, object> GetValue)>
                        {
                            ("Vorname", itm => itm.FirstName),
                            ("Nachname", itm => itm.LastName)
                        };
-        foreach (var header in data.DynamicHeaders) mappings.Add((header, itm => itm.Columns[header]));
+        foreach (var header in data.DynamicHeaders)
+        {
+            mappings.Add((header, itm => itm.Columns[header]));
+        }
+
         mappings.Add(("Status", itm => itm.Status));
         mappings.Add(("Ausstehend", itm => itm.UnsettledAmount));
 
         var dataTable = new DataTable("Checkin");
 
-        foreach (var (title, _) in mappings) dataTable.Columns.Add(title);
+        foreach (var (title, _) in mappings)
+        {
+            dataTable.Columns.Add(title);
+        }
 
         foreach (var registration in data.Items)
         {
             var row = dataTable.NewRow();
-            foreach (var (title, getValue) in mappings) row[title] = getValue(registration);
+            foreach (var (title, getValue) in mappings)
+            {
+                row[title] = getValue(registration);
+            }
 
             dataTable.Rows.Add(row);
         }

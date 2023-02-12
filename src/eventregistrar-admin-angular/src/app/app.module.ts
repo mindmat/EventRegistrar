@@ -106,6 +106,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { PaymentDifferencesComponent } from './modules/admin/accounting/payment-differences/payment-differences.component';
 import { CancellationsComponent } from './modules/admin/registration/cancellations/cancellations.component';
 import { PayoutsComponent } from './modules/admin/accounting/payouts/payouts.component';
+import { AllParticipantsComponent } from './modules/admin/registrations/all-participants/all-participants.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -157,7 +158,8 @@ const routerConfig: ExtraOptions = {
         HostingOverviewComponent,
         PaymentDifferencesComponent,
         CancellationsComponent,
-        PayoutsComponent
+        PayoutsComponent,
+        AllParticipantsComponent
     ],
     providers: [
         AuthServiceFuse,

@@ -1,0 +1,64 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-auto">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+        <!-- Title -->
+        <div class="flex min-w-0 flex-row items-baseline gap-2">
+            <div class="text-4xl font-extrabold tracking-tight leading-none">Teilnehmer</div>
+            <div class="mt-1.5 text-lg text-secondary">({{matches.length}})</div>
+        </div>
+
+        <!-- Filters -->
+        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query [value]="searchString$.value" autofocus>
+        </mat-form-field>
+    </div>
+
+    <!-- Matches -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 m-4 sm:mt-4">
+
+        <ng-container *ngFor="let match of matches">
+            <!-- Match -->
+            <a class="flex flex-col min-h-18 shadow rounded-2xl overflow-hidden bg-card p-4" [routerLink]="navigator.getRegistrationUrl(match.registrationId)">
+                <div class="flex">
+                    <div class="grow flex-col w-full">
+                        <!-- <div class="flex items-center justify-between">
+                        
+                        <ng-container *ngIf="(doubleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
+                            <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
+                                                                            'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.sortKey === 2,
+                                                                            'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.sortKey === 3,
+                                                                            'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.sortKey === 4}">
+                                {{category.text}}
+                            </div>
+                        </ng-container>
+                    </div> -->
+
+                        <!-- Registrable title & description -->
+                        <div class="text-lg font-medium">{{ match.firstName }} {{ match.lastName }}</div>
+                        <!-- <div class="line-clamp-2 text-secondary">{{ match.email }}</div> -->
+                        <!-- <div class="w-12 h-1 my-6 border-t-2"></div> -->
+
+                    </div>
+                    <mat-icon class="none icon-size-5 justify-middle" *ngIf="match.isOnWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon>
+                </div>
+                <div class="w-12 h-1 mt-2 border-t-2"></div>
+
+                <!-- Spots -->
+                <div class="flex items-center mt-2">
+                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_outline:list'" [matTooltip]="'Tracks' | translate"></mat-icon>
+                    <span class="leading-none">{{ match.coreSpots }}</span>
+                </div>
+
+                <!-- Outstanding amount -->
+                <div *ngIf="match.amountOutstanding != 0" class="flex items-center mt-2 ">
+                    <mat-icon class="icon-size-5 mr-3 text-red-800" [svgIcon]="'heroicons_outline:cash'" [matTooltip]="'OutstandingAmount' | translate"></mat-icon>
+                    <span class="leading-none text-red-800 font-bold">{{ match.amountOutstanding | number: '1.2-2' }}</span>
+                </div>
+            </a>
+
+        </ng-container>
+
+    </div>
+</div>

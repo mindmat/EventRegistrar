@@ -63,6 +63,8 @@ import { CancellationsComponent } from './modules/admin/registration/cancellatio
 import { CancellationsResolver } from './modules/admin/registration/cancellations/cancellations.resolver';
 import { PayoutsComponent } from './modules/admin/accounting/payouts/payouts.component';
 import { PayoutsResolver } from './modules/admin/accounting/payouts/payouts.resolver';
+import { AllParticipantsComponent } from './modules/admin/registrations/all-participants/all-participants.component';
+import { AllParticipantsResolver } from './modules/admin/registrations/all-participants/all-participants.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -273,6 +275,12 @@ export const appRoutes: Route[] =
                             canActivate: [AuthGuard],
                             component: CancellationsComponent,
                             resolve: { initialData: CancellationsResolver }
+                        },
+                        {
+                            path: 'all-participants',
+                            canActivate: [AuthGuard],
+                            component: AllParticipantsComponent,
+                            resolve: { initialData: AllParticipantsResolver }
                         },
                         {
                             path: ':id',

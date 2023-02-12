@@ -750,6 +750,9 @@
   <data name="OutgoingPayments" xml:space="preserve">
     <value>Auszahlungen</value>
   </data>
+  <data name="OutstandingAmount" xml:space="preserve">
+    <value>Ausstehender Betrag</value>
+  </data>
   <data name="OutstandingPayments" xml:space="preserve">
     <value>ausstehend aus {{dueRegistrationCount}} Anmeldungen</value>
   </data>
@@ -1092,6 +1095,9 @@
   </data>
   <data name="Town" xml:space="preserve">
     <value>Wohnort</value>
+  </data>
+  <data name="Tracks" xml:space="preserve">
+    <value>Tracks</value>
   </data>
   <data name="TransformToSingle" xml:space="preserve">
     <value>Zu Einzelanmeldung umwandeln</value>

@@ -110,6 +110,13 @@ export class NavigationService
                                     icon: 'mat_outline:house',
                                     link: `/${e.acronym}/hosting`,
                                 },
+                                {
+                                    id: 'all-participants',
+                                    title: translateService.instant('Participants'),
+                                    type: 'basic',
+                                    icon: 'mat_outline:list',
+                                    link: `/${e.acronym}/registrations/all-participants`,
+                                },
                             ]
                         },
                         {

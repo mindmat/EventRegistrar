@@ -1965,6 +1965,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ausstehender Betrag.
+        /// </summary>
+        internal static string OutstandingAmount {
+            get {
+                return ResourceManager.GetString("OutstandingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ausstehend aus {{dueRegistrationCount}} Anmeldungen.
         /// </summary>
         internal static string OutstandingPayments {
@@ -2987,6 +2996,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Town {
             get {
                 return ResourceManager.GetString("Town", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tracks.
+        /// </summary>
+        internal static string Tracks {
+            get {
+                return ResourceManager.GetString("Tracks", resourceCulture);
             }
         }
         

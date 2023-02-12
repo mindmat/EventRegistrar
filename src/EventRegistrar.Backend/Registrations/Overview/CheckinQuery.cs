@@ -1,29 +1,26 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure;
+﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrables;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Overview;
 
-public class CheckinQuery : IRequest<CheckinView>, IEventBoundRequest
+public class CheckInQuery : IRequest<CheckInView>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
 }
 
-public class CheckinQueryHandler : IRequestHandler<CheckinQuery, CheckinView>
+public class CheckInQueryHandler : IRequestHandler<CheckInQuery, CheckInView>
 {
     private readonly IQueryable<Registrable> _registrables;
     private readonly IQueryable<Registration> _registrations;
 
-    public CheckinQueryHandler(IQueryable<Registration> registrations,
+    public CheckInQueryHandler(IQueryable<Registration> registrations,
                                IQueryable<Registrable> registrables)
     {
         _registrations = registrations;
         _registrables = registrables;
     }
 
-    public async Task<CheckinView> Handle(CheckinQuery query, CancellationToken cancellationToken)
+    public async Task<CheckInView> Handle(CheckInQuery query, CancellationToken cancellationToken)
     {
         var columns = (await _registrables.Where(rbl => rbl.EventId == query.EventId
                                                      && rbl.CheckinListColumn != null)
@@ -58,7 +55,7 @@ public class CheckinQueryHandler : IRequestHandler<CheckinQuery, CheckinView>
                                                                })
                                                 .ToListAsync(cancellationToken);
 
-        var items = registrations.Select(reg => new CheckinViewItem
+        var items = registrations.Select(reg => new CheckInViewItem
                                                 {
                                                     RegistrationId = reg.RegistrationId,
                                                     Email = reg.Email,
@@ -80,10 +77,28 @@ public class CheckinQueryHandler : IRequestHandler<CheckinQuery, CheckinView>
                                  .ThenBy(reg => reg.FirstName)
                                  .ToList();
 
-        return new CheckinView
+        return new CheckInView
                {
                    DynamicHeaders = columns.Keys,
                    Items = items
                };
     }
+}
+
+public class CheckInView
+{
+    public IEnumerable<string> DynamicHeaders { get; set; }
+    public IEnumerable<CheckInViewItem> Items { get; set; }
+}
+
+public class CheckInViewItem
+{
+    public DateTimeOffset? AdmittedAt { get; set; }
+    public IDictionary<string, string> Columns { get; set; }
+    public string Email { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public Guid RegistrationId { get; set; }
+    public string Status { get; set; }
+    public decimal UnsettledAmount { get; set; }
 }

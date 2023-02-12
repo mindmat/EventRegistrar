@@ -82,7 +82,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(PaymentsByDayQuery);
             yield return nameof(PaymentAssignmentsQuery);
             yield return nameof(SmsConversationQuery);
-            yield return nameof(CheckinQuery);
+            yield return nameof(CheckInQuery);
             yield return nameof(RegistrationsWithUnmatchedPartnerQuery);
             yield return nameof(PotentialPartnersQuery);
             yield return nameof(AssignedPaymentsOfRegistrationQuery);
@@ -118,6 +118,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(BulkMailTemplateQuery);
             yield return nameof(GeneratedBulkMailsQuery);
             yield return nameof(PossibleManualFallbackPricePackagesQuery);
+            yield return nameof(ParticipantsOfEventQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)

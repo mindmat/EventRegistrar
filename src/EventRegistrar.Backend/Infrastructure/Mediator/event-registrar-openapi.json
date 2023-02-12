@@ -573,19 +573,19 @@
         }
       }
     },
-    "/api/CheckinQuery": {
+    "/api/CheckInQuery": {
       "post": {
         "tags": [
-          "Checkin"
+          "CheckIn"
         ],
-        "operationId": "Checkin_Query",
+        "operationId": "CheckIn_Query",
         "requestBody": {
-          "x-name": "CheckinQuery",
+          "x-name": "CheckInQuery",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CheckinQuery"
+                "$ref": "#/components/schemas/CheckInQuery"
               }
             }
           },
@@ -597,7 +597,42 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CheckinView"
+                  "$ref": "#/components/schemas/CheckInView"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ParticipantsOfEventQuery": {
+      "post": {
+        "tags": [
+          "ParticipantsOfEvent"
+        ],
+        "operationId": "ParticipantsOfEvent_Query",
+        "requestBody": {
+          "x-name": "ParticipantsOfEventQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParticipantsOfEventQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Participant"
+                  }
                 }
               }
             }
@@ -5558,7 +5593,7 @@
           }
         }
       },
-      "CheckinView": {
+      "CheckInView": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -5571,12 +5606,12 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/CheckinViewItem"
+              "$ref": "#/components/schemas/CheckInViewItem"
             }
           }
         }
       },
-      "CheckinViewItem": {
+      "CheckInViewItem": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -5613,13 +5648,83 @@
           }
         }
       },
-      "CheckinQuery": {
+      "CheckInQuery": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "eventId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "Participant": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "isOnWaitingList": {
+            "type": "boolean"
+          },
+          "state": {
+            "$ref": "#/components/schemas/RegistrationState"
+          },
+          "coreSpots": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "stateText": {
+            "type": "string"
+          },
+          "amountOutstanding": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "ParticipantsOfEventQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "searchString": {
+            "type": "string",
+            "nullable": true
+          },
+          "tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "includeWaitingList": {
+            "type": "boolean"
+          },
+          "states": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/RegistrationState"
+            }
           }
         }
       },

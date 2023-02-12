@@ -651,6 +651,9 @@
   <data name="OtherEvents" xml:space="preserve">
     <value>Other Events</value>
   </data>
+  <data name="OutstandingAmount" xml:space="preserve">
+    <value>Outstanding amount</value>
+  </data>
   <data name="OutstandingPayments" xml:space="preserve">
     <value>due from {{dueRegistrationCount}} registrations</value>
   </data>
@@ -983,6 +986,9 @@
   </data>
   <data name="Town" xml:space="preserve">
     <value>Town</value>
+  </data>
+  <data name="Tracks" xml:space="preserve">
+    <value>Tracks</value>
   </data>
   <data name="TransformToSingle" xml:space="preserve">
     <value>Transform to single registration</value>

@@ -895,11 +895,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    checkin_Query(checkinQuery: CheckinQuery | undefined): Observable<CheckinView> {
-        let url_ = this.baseUrl + "/api/CheckinQuery";
+    checkIn_Query(checkInQuery: CheckInQuery | undefined): Observable<CheckInView> {
+        let url_ = this.baseUrl + "/api/CheckInQuery";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(checkinQuery);
+        const content_ = JSON.stringify(checkInQuery);
 
         let options_ : any = {
             body: content_,
@@ -912,20 +912,20 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processCheckin_Query(response_);
+            return this.processCheckIn_Query(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processCheckin_Query(response_ as any);
+                    return this.processCheckIn_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<CheckinView>;
+                    return _observableThrow(e) as any as Observable<CheckInView>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<CheckinView>;
+                return _observableThrow(response_) as any as Observable<CheckInView>;
         }));
     }
 
-    protected processCheckin_Query(response: HttpResponseBase): Observable<CheckinView> {
+    protected processCheckIn_Query(response: HttpResponseBase): Observable<CheckInView> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -935,7 +935,58 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as CheckinView;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as CheckInView;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    participantsOfEvent_Query(participantsOfEventQuery: ParticipantsOfEventQuery | undefined): Observable<Participant[]> {
+        let url_ = this.baseUrl + "/api/ParticipantsOfEventQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(participantsOfEventQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processParticipantsOfEvent_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processParticipantsOfEvent_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Participant[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Participant[]>;
+        }));
+    }
+
+    protected processParticipantsOfEvent_Query(response: HttpResponseBase): Observable<Participant[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Participant[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -7682,12 +7733,12 @@ export interface SetManualFallbackToPricePackageCommand {
     pricePackageId?: string | null;
 }
 
-export interface CheckinView {
+export interface CheckInView {
     dynamicHeaders?: string[];
-    items?: CheckinViewItem[];
+    items?: CheckInViewItem[];
 }
 
-export interface CheckinViewItem {
+export interface CheckInViewItem {
     admittedAt?: Date | null;
     columns?: { [key: string]: string; };
     email?: string;
@@ -7698,8 +7749,29 @@ export interface CheckinViewItem {
     unsettledAmount?: number;
 }
 
-export interface CheckinQuery {
+export interface CheckInQuery {
     eventId?: string;
+}
+
+export interface Participant {
+    registrationId?: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    email?: string | null;
+    isOnWaitingList?: boolean;
+    state?: RegistrationState;
+    coreSpots?: string;
+    price?: number;
+    stateText?: string;
+    amountOutstanding?: number;
+}
+
+export interface ParticipantsOfEventQuery {
+    eventId?: string;
+    searchString?: string | null;
+    tag?: string | null;
+    includeWaitingList?: boolean;
+    states?: RegistrationState[] | null;
 }
 
 export interface PartyItem {
