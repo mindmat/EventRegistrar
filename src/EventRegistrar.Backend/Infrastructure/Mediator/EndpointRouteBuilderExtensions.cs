@@ -120,25 +120,25 @@ public static class EndpointRouteBuilderExtensions
         context.Response.Headers.Add("content-type", "application/octet-stream");
         LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine("DejaVu Sans");
         var workbook = new XLWorkbook();
-        foreach (var (propertyInfo, rowType) in GetEnumerableProperties(response))
+        foreach (var (name, values, rowType) in GetEnumerableProperties(response))
         {
             var mappings = GetExportableProperties(rowType)
                            .Select(prp => (prp.Name, (Func<object, object?>)prp.GetValue))
                            .ToList();
 
-            var dataTable = new DataTable(propertyInfo.Name);
+            var dataTable = new DataTable(name);
 
             foreach (var (title, _) in mappings)
             {
                 dataTable.Columns.Add(title);
             }
 
-            if (propertyInfo.GetValue(response) is not IEnumerable dataRows)
+            if (values is null)
             {
                 continue;
             }
 
-            foreach (var dataRow in dataRows)
+            foreach (var dataRow in values)
             {
                 var tableRow = dataTable.NewRow();
                 foreach (var (title, getValue) in mappings)
@@ -149,7 +149,7 @@ public static class EndpointRouteBuilderExtensions
                 dataTable.Rows.Add(tableRow);
             }
 
-            var worksheet = workbook.AddWorksheet(dataTable, propertyInfo.Name);
+            var worksheet = workbook.AddWorksheet(dataTable, name);
             try
             {
                 worksheet.Columns().AdjustToContents();
@@ -188,18 +188,24 @@ public static class EndpointRouteBuilderExtensions
         return type.GetProperties()
                    .Where(prp => prp.PropertyType == typeof(string)
                               || prp.PropertyType == typeof(int)
-                              || prp.PropertyType == typeof(bool));
+                              || prp.PropertyType == typeof(bool)
+                              || prp.PropertyType == typeof(decimal));
     }
 
-    private static IEnumerable<(PropertyInfo, Type)> GetEnumerableProperties(object? data)
+    private static IEnumerable<(string Name, IEnumerable? Values, Type)> GetEnumerableProperties(object? data)
     {
+        if (data is IEnumerable enumerable)
+        {
+            return new[] { ("List", (IEnumerable?)enumerable, data.GetType().GetGenericArguments()[0]) };
+        }
+
         return data?.GetType()
                    .GetProperties()
                    .Where(prp => prp.PropertyType.IsGenericType
                               && prp.PropertyType.GetGenericTypeDefinition().IsAssignableFrom(typeof(IEnumerable<>)))
-                   .Select(prp => (prp, prp.PropertyType.GetGenericArguments()[0]))
+                   .Select(prp => (prp.Name, prp.GetValue(data) as IEnumerable, prp.PropertyType.GetGenericArguments()[0]))
                    .ToList()
-            ?? Enumerable.Empty<(PropertyInfo, Type)>();
+            ?? Enumerable.Empty<(string, IEnumerable?, Type)>();
     }
 
 

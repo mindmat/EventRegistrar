@@ -52,6 +52,11 @@ export class AllParticipantsComponent implements OnInit
       });
   }
 
+  download()
+  {
+    this.service.downloadXlsx();
+  }
+
   filterByQuery(searchString: string): void
   {
     // this.filters.searchString$.next(searchString);

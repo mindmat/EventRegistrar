@@ -8,8 +8,13 @@
             <div class="mt-1.5 text-lg text-secondary">({{matches.length}})</div>
         </div>
 
+        <!-- download -->
+        <button class="ml-2" mat-icon-button (click)="download()" [matTooltip]="'Download' | translate">
+            <mat-icon [svgIcon]="'mat_outline:file_download'"></mat-icon>
+        </button>
+
         <!-- Filters -->
-        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 ml-auto" [floatLabel]="'always'">
             <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
             <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query [value]="searchString$.value" autofocus>
         </mat-form-field>

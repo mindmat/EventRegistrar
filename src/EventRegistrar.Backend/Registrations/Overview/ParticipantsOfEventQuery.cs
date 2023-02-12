@@ -22,7 +22,6 @@ public class Participant
     public bool IsOnWaitingList { get; set; }
     public RegistrationState State { get; set; }
     public string CoreSpots { get; set; } = null!;
-    public decimal Price { get; set; }
     public string StateText { get; set; } = null!;
     public decimal AmountOutstanding { get; set; }
 }
