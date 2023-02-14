@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { OverviewService } from './overview.service';
 import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDisplayItem';
-import { DoubleRegistrableDisplayItem, PaymentOverview, RegistrablesOverview, SingleRegistrableDisplayItem } from 'app/api/api';
+import { DoubleRegistrableDisplayItem, PaymentOverview, PricePackageOverview, RegistrablesOverview, SingleRegistrableDisplayItem } from 'app/api/api';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -13,6 +13,7 @@ import { ApexOptions } from 'ng-apexcharts';
 import { DateTime } from 'luxon';
 import { TranslateService } from '@ngx-translate/core';
 import { NavigatorService } from '../navigator.service';
+import { PricePackagesOverviewService } from './price-packages-overview.service';
 
 @Component({
     selector: 'app-overview',
@@ -29,6 +30,7 @@ export class OverviewComponent implements OnInit, OnDestroy
     filteredDoubleRegistrables: DoubleRegistrableDisplayItem[];
     paymentOverview: PaymentOverview;
     accountBalanceOptions: ApexOptions;
+    pricePackageOverview: PricePackageOverview;
 
     filters: {
         categoryTag$: BehaviorSubject<string>;
@@ -45,6 +47,7 @@ export class OverviewComponent implements OnInit, OnDestroy
     constructor(private changeDetectorRef: ChangeDetectorRef,
         private overviewService: OverviewService,
         private paymentOverviewService: PaymentOverviewService,
+        private pricePackagesOverviewService: PricePackagesOverviewService,
         private registrableService: RegistrablesService,
         private matDialog: MatDialog,
         private translateService: TranslateService,
@@ -93,6 +96,14 @@ export class OverviewComponent implements OnInit, OnDestroy
 
                     // Mark for check
                     this.changeDetectorRef.markForCheck();
+            });
+
+        this.pricePackagesOverviewService.pricePackageOverview$
+            .pipe(takeUntil(this.unsubscribeAll))
+            .subscribe((pricePackageOverview: PricePackageOverview) =>
+            {
+                this.pricePackageOverview = pricePackageOverview;
+                this.changeDetectorRef.markForCheck();
             });
 
         // Filter the courses

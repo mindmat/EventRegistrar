@@ -66,13 +66,11 @@ public class RecalculatePriceAndWaitingListCommandHandler : AsyncRequestHandler<
         // update price
         if (oldOriginal != newOriginal
          || oldAdmitted != newAdmitted
-         || oldAdmittedAndReduced != newAdmittedAndReduced
-         || registration.PricePackageIds_Admitted != packageIds_admitted)
+         || oldAdmittedAndReduced != newAdmittedAndReduced)
         {
             registration.Price_Original = newOriginal;
             registration.Price_Admitted = newAdmitted;
             registration.Price_AdmittedAndReduced = newAdmittedAndReduced;
-            registration.PricePackageIds_Admitted = packageIds_admitted;
 
             _eventBus.Publish(new PriceChanged
                               {
@@ -80,6 +78,18 @@ public class RecalculatePriceAndWaitingListCommandHandler : AsyncRequestHandler<
                                   RegistrationId = registration.Id,
                                   OldPrice = oldAdmittedAndReduced,
                                   NewPrice = newAdmittedAndReduced
+                              });
+        }
+
+        // update admitted package(s)
+        if (registration.PricePackageIds_Admitted != packageIds_admitted)
+        {
+            registration.PricePackageIds_Admitted = packageIds_admitted;
+
+            _eventBus.Publish(new QueryChanged
+                              {
+                                  EventId = registration.EventId,
+                                  QueryName = nameof(PricePackageOverview)
                               });
         }
 

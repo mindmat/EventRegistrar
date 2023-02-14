@@ -187,6 +187,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alle.
+        /// </summary>
+        internal static string All {
+            get {
+                return ResourceManager.GetString("All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Automatischer Fallback möglich.
         /// </summary>
         internal static string AllowAsAutomaticFallback {
@@ -588,6 +597,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Discard {
             get {
                 return ResourceManager.GetString("Discard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verteilung auf Preispakete.
+        /// </summary>
+        internal static string DistributionByPricePackage {
+            get {
+                return ResourceManager.GetString("DistributionByPricePackage", resourceCulture);
             }
         }
         

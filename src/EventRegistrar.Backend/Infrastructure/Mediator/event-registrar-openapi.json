@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v13.17.0.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "My Title",
@@ -474,6 +474,38 @@
         }
       }
     },
+    "/api/PricePackageOverviewQuery": {
+      "post": {
+        "tags": [
+          "PricePackageOverview"
+        ],
+        "operationId": "PricePackageOverview_Query",
+        "requestBody": {
+          "x-name": "PricePackageOverviewQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PricePackageOverviewQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PricePackageOverview"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/PricePackagePartSelectionTypeQuery": {
       "post": {
         "tags": [
@@ -502,6 +534,38 @@
                   "items": {
                     "$ref": "#/components/schemas/PricePackagePartSelectionTypeOption"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/RecalculateAllPriceAndWaitingListCommand": {
+      "post": {
+        "tags": [
+          "RecalculateAllPriceAndWaitingList"
+        ],
+        "operationId": "RecalculateAllPriceAndWaitingList_Command",
+        "requestBody": {
+          "x-name": "RecalculateAllPriceAndWaitingListCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecalculateAllPriceAndWaitingListCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
                 }
               }
             }
@@ -5524,6 +5588,45 @@
           }
         }
       },
+      "PricePackageOverview": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "packages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PricePackageCount"
+            }
+          }
+        }
+      },
+      "PricePackageCount": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "pricePackageId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PricePackageOverviewQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "PricePackagePartSelectionTypeOption": {
         "type": "object",
         "additionalProperties": false,
@@ -5555,6 +5658,16 @@
         ]
       },
       "PricePackagePartSelectionTypeQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "RecalculateAllPriceAndWaitingListCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -5686,10 +5799,6 @@
           },
           "coreSpots": {
             "type": "string"
-          },
-          "price": {
-            "type": "number",
-            "format": "decimal"
           },
           "stateText": {
             "type": "string"

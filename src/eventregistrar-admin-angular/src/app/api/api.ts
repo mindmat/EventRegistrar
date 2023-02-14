@@ -742,6 +742,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    pricePackageOverview_Query(pricePackageOverviewQuery: PricePackageOverviewQuery | undefined): Observable<PricePackageOverview> {
+        let url_ = this.baseUrl + "/api/PricePackageOverviewQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(pricePackageOverviewQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processPricePackageOverview_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processPricePackageOverview_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PricePackageOverview>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PricePackageOverview>;
+        }));
+    }
+
+    protected processPricePackageOverview_Query(response: HttpResponseBase): Observable<PricePackageOverview> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PricePackageOverview;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     pricePackagePartSelectionType_Query(pricePackagePartSelectionTypeQuery: PricePackagePartSelectionTypeQuery | undefined): Observable<PricePackagePartSelectionTypeOption[]> {
         let url_ = this.baseUrl + "/api/PricePackagePartSelectionTypeQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -783,6 +834,57 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as PricePackagePartSelectionTypeOption[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    recalculateAllPriceAndWaitingList_Command(recalculateAllPriceAndWaitingListCommand: RecalculateAllPriceAndWaitingListCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/RecalculateAllPriceAndWaitingListCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(recalculateAllPriceAndWaitingListCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRecalculateAllPriceAndWaitingList_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRecalculateAllPriceAndWaitingList_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<Unit>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<Unit>;
+        }));
+    }
+
+    protected processRecalculateAllPriceAndWaitingList_Command(response: HttpResponseBase): Observable<Unit> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as Unit;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -7706,6 +7808,20 @@ export interface PossibleManualFallbackPricePackagesQuery {
     registrationId?: string;
 }
 
+export interface PricePackageOverview {
+    packages?: PricePackageCount[];
+}
+
+export interface PricePackageCount {
+    pricePackageId?: string;
+    name?: string;
+    count?: number;
+}
+
+export interface PricePackageOverviewQuery {
+    eventId?: string;
+}
+
 export interface PricePackagePartSelectionTypeOption {
     type?: PricePackagePartSelectionType;
     text?: string;
@@ -7720,6 +7836,10 @@ export enum PricePackagePartSelectionType {
 }
 
 export interface PricePackagePartSelectionTypeQuery {
+    eventId?: string;
+}
+
+export interface RecalculateAllPriceAndWaitingListCommand {
     eventId?: string;
 }
 
@@ -7761,7 +7881,6 @@ export interface Participant {
     isOnWaitingList?: boolean;
     state?: RegistrationState;
     coreSpots?: string;
-    price?: number;
     stateText?: string;
     amountOutstanding?: number;
 }

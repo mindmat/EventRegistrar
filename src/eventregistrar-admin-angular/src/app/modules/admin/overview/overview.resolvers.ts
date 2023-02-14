@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/r
 import { Observable, zip } from 'rxjs';
 import { OverviewService } from './overview.service';
 import { PaymentOverviewService } from './payment-overview.service';
+import { PricePackagesOverviewService } from './price-packages-overview.service';
 
 @Injectable({
     providedIn: 'root'
@@ -10,14 +11,16 @@ import { PaymentOverviewService } from './payment-overview.service';
 export class OverviewResolver implements Resolve<any>
 {
     constructor(private overviewService: OverviewService,
-        private paymentOverviewService: PaymentOverviewService) { }
+        private paymentOverviewService: PaymentOverviewService,
+        private pricePackagesOverviewService: PricePackagesOverviewService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {
         return zip(
             this.overviewService.fetchRegistrableTags(),
             this.overviewService.fetchRegistrables(),
-            this.paymentOverviewService.fetchData()
+            this.paymentOverviewService.fetchData(),
+            this.pricePackagesOverviewService.fetchData()
         );
     }
 }

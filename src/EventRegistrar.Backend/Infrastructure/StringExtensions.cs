@@ -51,6 +51,13 @@ public static class StringExtensions
     /// <returns></returns>
     public static IEnumerable<string> SplitKeys(this string? mergedKeys)
     {
-        return mergedKeys?.Split(KeySeparator, StringSplitOptions.RemoveEmptyEntries) ?? Enumerable.Empty<string>();
+        return mergedKeys?.Split(KeySeparator, StringSplitOptions.RemoveEmptyEntries)
+            ?? Enumerable.Empty<string>();
+    }
+
+    public static IEnumerable<Guid> SplitGuidKeys(this string? mergedKeys)
+    {
+        return mergedKeys?.Split(KeySeparator, StringSplitOptions.RemoveEmptyEntries).Select(Guid.Parse)
+            ?? Enumerable.Empty<Guid>();
     }
 }

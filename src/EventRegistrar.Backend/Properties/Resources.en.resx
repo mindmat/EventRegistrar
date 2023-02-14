@@ -159,6 +159,9 @@
   <data name="AdmittedAt" xml:space="preserve">
     <value>Admitted</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
   <data name="AllowAsAutomaticFallback" xml:space="preserve">
     <value>Allow as fallback</value>
   </data>
@@ -284,6 +287,9 @@
   </data>
   <data name="Discard" xml:space="preserve">
     <value>Discard</value>
+  </data>
+  <data name="DistributionByPricePackage" xml:space="preserve">
+    <value>Distribution by price package</value>
   </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>
