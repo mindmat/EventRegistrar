@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Import;
 
 using Microsoft.AspNetCore.Mvc;
@@ -26,14 +25,5 @@ public class MailsController : Controller
                              {
                                  EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
                              });
-    }
-
-    [HttpGet("api/events/{eventAcronym}/mails/possibleAudiences")]
-    public async Task<IEnumerable<PossibleAudience>> GetPossibleAudiences(string eventAcronym)
-    {
-        return await _mediator.Send(new PossibleAudiencesQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
     }
 }

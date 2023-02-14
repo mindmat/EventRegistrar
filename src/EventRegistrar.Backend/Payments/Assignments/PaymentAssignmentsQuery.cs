@@ -293,10 +293,11 @@ public class PaymentAssignmentsQueryHandler : IRequestHandler<PaymentAssignments
                                          - openPayment.Assignments!.Sum(asn => asn.PayoutRequestId == null
                                                                                    ? asn.Amount
                                                                                    : -asn.Amount);
-        var wordsInOpenPayment = openPayment.Payment!.Info!
+        var wordsInOpenPayment = openPayment.Payment!.Message?
                                             .Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)
                                             .Select(wrd => wrd.ToLowerInvariant())
-                                            .ToHashSet();
+                                            .ToHashSet()
+                              ?? new HashSet<string>(0);
 
         return wordsInOpenPayment.Sum(opw => wordsInCandidate.Count(cdw => cdw == opw))
              + (wordsInOpenPayment.Sum(opw => creditorParts.Count(cdw => cdw == opw)) * 10)
@@ -313,10 +314,12 @@ public class PaymentAssignmentsQueryHandler : IRequestHandler<PaymentAssignments
                                          - openPayment.Assignments!.Sum(asn => asn.PayoutRequestId == null
                                                                                    ? asn.Amount
                                                                                    : -asn.Amount);
-        var wordsInOpenPayment = openPayment.Payment!.Info!
+        var wordsInOpenPayment = openPayment.Payment!.Message?
                                             .Split(new[] { ' ', '-' }, StringSplitOptions.RemoveEmptyEntries)
                                             .Select(wrd => wrd.ToLowerInvariant())
-                                            .ToHashSet();
+                                            .ToHashSet()
+                              ?? new HashSet<string>(0);
+        ;
 
         return (wordsInOpenPayment.Sum(opw => creditorParts.Count(cdw => cdw == opw)) * 10)
              + (payoutRequestCandidate.AmountUnsettled == unsettledAmountInOpenPayment ? 5 : 0)
