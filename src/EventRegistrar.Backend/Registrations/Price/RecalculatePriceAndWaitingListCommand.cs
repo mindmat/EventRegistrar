@@ -57,16 +57,23 @@ public class RecalculatePriceAndWaitingListCommandHandler : AsyncRequestHandler<
         var oldAdmitted = registration.Price_Admitted;
         var oldAdmittedAndReduced = registration.Price_AdmittedAndReduced;
 
-        var (newOriginal, newAdmitted, newAdmittedAndReduced, _, _, isOnWaitingList, _) = await _priceCalculator.CalculatePrice(registration.Id, cancellationToken);
-
+        var (newOriginal, newAdmitted, newAdmittedAndReduced, _, packagesAdmitted, isOnWaitingList, _) = await _priceCalculator.CalculatePrice(registration.Id, cancellationToken);
+        var packageIds_admitted = packagesAdmitted.Select(pkg => pkg.Id)
+                                                  .Where(id => id != null)
+                                                  .Select(id => id!.Value)
+                                                  .OrderBy(id => id)
+                                                  .MergeKeys();
         // update price
         if (oldOriginal != newOriginal
          || oldAdmitted != newAdmitted
-         || oldAdmittedAndReduced != newAdmittedAndReduced)
+         || oldAdmittedAndReduced != newAdmittedAndReduced
+         || registration.PricePackageIds_Admitted != packageIds_admitted)
         {
             registration.Price_Original = newOriginal;
             registration.Price_Admitted = newAdmitted;
             registration.Price_AdmittedAndReduced = newAdmittedAndReduced;
+            registration.PricePackageIds_Admitted = packageIds_admitted;
+
             _eventBus.Publish(new PriceChanged
                               {
                                   EventId = registration.EventId,
@@ -80,7 +87,6 @@ public class RecalculatePriceAndWaitingListCommandHandler : AsyncRequestHandler<
         if (registration.IsOnWaitingList != isOnWaitingList)
         {
             registration.IsOnWaitingList = isOnWaitingList;
-
             registration.AdmittedAt ??= _dateTimeProvider.Now;
 
             _eventBus.Publish(new RegistrationMovedUpFromWaitingList { RegistrationId = registration.Id });

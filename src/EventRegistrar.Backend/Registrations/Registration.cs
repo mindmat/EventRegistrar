@@ -68,6 +68,8 @@ public class Registration : Entity
 
     public PricePackage? PricePackage_ManualFallback { get; set; }
     public Guid? PricePackageId_ManualFallback { get; set; }
+
+    public string? PricePackageIds_Admitted { get; set; }
 }
 
 public class RegistrationMap : EntityMap<Registration>
@@ -93,7 +95,6 @@ public class RegistrationMap : EntityMap<Registration>
         builder.HasOne(reg => reg.PricePackage_ManualFallback)
                .WithMany()
                .HasForeignKey(reg => reg.PricePackageId_ManualFallback);
-
 
         builder.Property(reg => reg.PartnerNormalized)
                .HasMaxLength(200);
