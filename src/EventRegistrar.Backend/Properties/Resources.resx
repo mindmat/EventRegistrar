@@ -828,6 +828,9 @@
   <data name="PriceAdjustment" xml:space="preserve">
     <value>Anpassung des Preises</value>
   </data>
+  <data name="PricePackage" xml:space="preserve">
+    <value>Preispaket</value>
+  </data>
   <data name="PricePackagePartSelectionType_All" xml:space="preserve">
     <value>Alle</value>
   </data>

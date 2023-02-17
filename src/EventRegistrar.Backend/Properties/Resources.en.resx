@@ -729,6 +729,9 @@
   <data name="PriceAdjustment" xml:space="preserve">
     <value>Price adjustment</value>
   </data>
+  <data name="PricePackage" xml:space="preserve">
+    <value>Price package</value>
+  </data>
   <data name="PricePackagePartSelectionType_All" xml:space="preserve">
     <value>All</value>
   </data>

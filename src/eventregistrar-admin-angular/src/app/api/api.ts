@@ -7878,6 +7878,7 @@ export interface Participant {
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;
+    pricePackageAdmitted?: string | null;
     isOnWaitingList?: boolean;
     state?: RegistrationState;
     coreSpots?: string;

@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrables.Pricing;
 
 namespace EventRegistrar.Backend.Registrations.Overview;
 
@@ -19,6 +20,7 @@ public class Participant
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
+    public string? PricePackageAdmitted { get; set; }
     public bool IsOnWaitingList { get; set; }
     public RegistrationState State { get; set; }
     public string CoreSpots { get; set; } = null!;
@@ -29,16 +31,19 @@ public class Participant
 public class ParticipantsOfEventQueryHandler : IRequestHandler<ParticipantsOfEventQuery, IEnumerable<Participant>>
 {
     private readonly IQueryable<Registration> _registrations;
+    private readonly IQueryable<PricePackage> _pricePackages;
     private readonly EnumTranslator _enumTranslator;
     private readonly ReadModelReader _readModelReader;
     private readonly IQueryable<Registrable> _tracks;
 
     public ParticipantsOfEventQueryHandler(IQueryable<Registration> registrations,
+                                           IQueryable<PricePackage> pricePackages,
                                            EnumTranslator enumTranslator,
                                            ReadModelReader readModelReader,
                                            IQueryable<Registrable> tracks)
     {
         _registrations = registrations;
+        _pricePackages = pricePackages;
         _enumTranslator = enumTranslator;
         _readModelReader = readModelReader;
         _tracks = tracks;
@@ -50,6 +55,8 @@ public class ParticipantsOfEventQueryHandler : IRequestHandler<ParticipantsOfEve
                                 ? query.States
                                 : new[] { RegistrationState.Received, RegistrationState.Paid };
         var searchParts = query.SearchString?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+        var packages = await _pricePackages.Where(pkg => pkg.EventId == query.EventId)
+                                           .ToDictionaryAsync(pkg => pkg.Id, pkg => pkg.Name, cancellationToken);
 
         var queryable = _registrations.Where(reg => reg.EventId == query.EventId);
         if (searchParts != null)
@@ -67,10 +74,10 @@ public class ParticipantsOfEventQueryHandler : IRequestHandler<ParticipantsOfEve
                                                         && reg.IsOnWaitingList == query.IncludeWaitingList)
                                              .OrderBy(reg => reg.RespondentFirstName)
                                              .ThenBy(reg => reg.RespondentLastName)
-                                             .Select(reg => reg.Id)
+                                             .Select(reg => new { reg.Id, PricePackageIds_Admitted = reg.PricePackageIds_Admitted.SplitGuidKeys() })
                                              .ToListAsync(cancellationToken);
 
-        var registrations = await _readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery), query.EventId, registrationIds, cancellationToken);
+        var registrations = await _readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery), query.EventId, registrationIds.Select(reg => reg.Id), cancellationToken);
         var registrableIds = await _tracks.Where(trk => trk.IsCore && trk.CheckinListColumn == "Tracks")
                                           //.WhereIf(!string.IsNullOrWhiteSpace(query.Tag), trk => trk.Tag == query.Tag)
                                           .Select(trk => trk.Id)
@@ -88,10 +95,19 @@ public class ParticipantsOfEventQueryHandler : IRequestHandler<ParticipantsOfEve
                                                CoreSpots = reg.Spots!
                                                               .Where(spt => !spt.IsWaitingList && registrableIds.Contains(spt.RegistrableId))
                                                               .Select(spt => $"{spt.RegistrableName} {spt.RegistrableNameSecondary}")
-                                                              .StringJoin()
+                                                              .StringJoin(),
+                                               PricePackageAdmitted = GetPricePackageText(registrationIds.First(r => r.Id == reg.Id).PricePackageIds_Admitted, packages)
                                            })
                             .OrderBy(reg => reg.FirstName)
                             .ThenBy(reg => reg.LastName)
                             .ToList();
+    }
+
+    private static string? GetPricePackageText(IEnumerable<Guid> pricePackageIds, IReadOnlyDictionary<Guid, string> packages)
+    {
+        var pricePackageId = pricePackageIds.FirstOrDefault();
+        return pricePackageId != default && packages.TryGetValue(pricePackageId, out var packageText)
+                   ? packageText
+                   : null;
     }
 }

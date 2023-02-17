@@ -5791,6 +5791,10 @@
             "type": "string",
             "nullable": true
           },
+          "pricePackageAdmitted": {
+            "type": "string",
+            "nullable": true
+          },
           "isOnWaitingList": {
             "type": "boolean"
           },

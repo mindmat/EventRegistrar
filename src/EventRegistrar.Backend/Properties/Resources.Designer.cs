@@ -2199,6 +2199,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Preispaket.
+        /// </summary>
+        internal static string PricePackage {
+            get {
+                return ResourceManager.GetString("PricePackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Alle.
         /// </summary>
         internal static string PricePackagePartSelectionType_All {
