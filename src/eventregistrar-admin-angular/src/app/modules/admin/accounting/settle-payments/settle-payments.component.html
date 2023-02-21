@@ -84,7 +84,10 @@
                                     </div> -->
 
                                         <div class="min-w-0">
-                                            <div class="font-medium leading-5 truncate">{{ booking.amount | number: '1.2-2' }}</div>
+                                            <div class="flex flex-row">
+                                                <div class="font-medium leading-5 truncate">{{ booking.amount | number: '1.2-2' }}</div>
+                                                <div *ngIf="!!booking.charges" class="text-secondary leading-5 truncate ml-2">+{{ booking.charges | number: '1.2-2' }}</div>
+                                            </div>
                                             <div class="leading-5 truncate text-secondary" [class.text-primary]="!booking.settled" [class.dark:text-primary-500]="booking.settled">
                                                 <div *ngIf="booking.typ === CreditDebit.CRDT">{{ 'PaymentFrom' | translate : {debitor: booking.debitorName} }}</div>
                                                 <div *ngIf="booking.typ === CreditDebit.DBIT">{{ 'PaymentTo' | translate : {creditor: booking.creditorName} }}</div>
