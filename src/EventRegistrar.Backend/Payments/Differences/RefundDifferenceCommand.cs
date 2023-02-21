@@ -6,7 +6,6 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Registrations;
-using EventRegistrar.Backend.Registrations.Remarks;
 
 namespace EventRegistrar.Backend.Payments.Differences;
 

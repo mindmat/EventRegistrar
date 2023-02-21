@@ -2829,6 +2829,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mail senden.
+        /// </summary>
+        internal static string SendPleasePayDifferenceMail {
+            get {
+                return ResourceManager.GetString("SendPleasePayDifferenceMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Erinnerungsmail senden.
         /// </summary>
         internal static string SendReminderMail {

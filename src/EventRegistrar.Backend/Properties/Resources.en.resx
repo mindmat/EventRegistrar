@@ -930,8 +930,11 @@
   <data name="SenderMail" xml:space="preserve">
     <value>Sender E-mail</value>
   </data>
+  <data name="SendPleasePayDifferenceMail" xml:space="preserve">
+    <value>Send E-mail</value>
+  </data>
   <data name="SendReminderMail" xml:space="preserve">
-    <value>Send reminder mail</value>
+    <value>Send reminder E-mail</value>
   </data>
   <data name="SendReminderSms" xml:space="preserve">
     <value>Send reminder SMS</value>

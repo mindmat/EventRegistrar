@@ -1039,6 +1039,9 @@
   <data name="SenderMail" xml:space="preserve">
     <value>Absender Mail</value>
   </data>
+  <data name="SendPleasePayDifferenceMail" xml:space="preserve">
+    <value>Mail senden</value>
+  </data>
   <data name="SendReminderMail" xml:space="preserve">
     <value>Erinnerungsmail senden</value>
   </data>

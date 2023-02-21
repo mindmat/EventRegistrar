@@ -11,7 +11,7 @@ public class SendPaymentDueMailCommand : IRequest, IEventBoundRequest
     public Guid EventId { get; set; }
 }
 
-public class SendPaymentDueMailCommandHandler : IRequestHandler<SendPaymentDueMailCommand>
+public class SendPaymentDueMailCommandHandler : AsyncRequestHandler<SendPaymentDueMailCommand>
 {
     private readonly CommandQueue _commandQueue;
     private readonly IQueryable<Registration> _registrations;
@@ -23,7 +23,7 @@ public class SendPaymentDueMailCommandHandler : IRequestHandler<SendPaymentDueMa
         _registrations = registrations;
     }
 
-    public async Task<Unit> Handle(SendPaymentDueMailCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(SendPaymentDueMailCommand command, CancellationToken cancellationToken)
     {
         var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
                                                .Include(reg => reg.PaymentAssignments)
@@ -46,8 +46,6 @@ public class SendPaymentDueMailCommandHandler : IRequestHandler<SendPaymentDueMa
                                   Data = data
                               };
         _commandQueue.EnqueueCommand(sendMailCommand);
-
-        return Unit.Value;
     }
 }
 

@@ -66,11 +66,19 @@
 
                         <!-- Footer -->
                         <div class="flex flex-col w-full mt-auto">
-                            <!-- Send reminder button -->
+                            <!-- button: refund difference -->
                             <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
                                 <ng-container *appUserHasRight="'RefundDifferenceCommand'">
                                     <button *ngIf="difference.difference < 0" mat-flat-button [color]="'primary'" (click)="refundDifference(difference.registrationId)">
                                         {{ 'RefundButtonText' | translate:{ amount: -difference.difference | number:'1.2-2' } }}
+                                    </button>
+                                </ng-container>
+                            </div>
+                            <!-- button: please pay difference -->
+                            <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
+                                <ng-container *appUserHasRight="'SendPaymentDueMailCommand'">
+                                    <button *ngIf="difference.difference > 0" mat-flat-button [color]="'primary'" (click)="sendPleasePayDifferenceMail(difference.registrationId)">
+                                        {{ 'SendPleasePayDifferenceMail' | translate }}
                                     </button>
                                 </ng-container>
                             </div>

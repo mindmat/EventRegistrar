@@ -32,4 +32,10 @@ export class PaymentDifferencesService extends FetchService<DifferencesDisplayIt
     return this.api.refundDifference_Command({ eventId: this.eventService.selectedId, registrationId, reason })
       .subscribe();
   }
+
+  sendPleasePayDifferenceMail(registrationId: string)
+  {
+    return this.api.sendPaymentDueMail_Command({ eventId: this.eventService.selectedId, registrationId })
+      .subscribe();
+  }
 }

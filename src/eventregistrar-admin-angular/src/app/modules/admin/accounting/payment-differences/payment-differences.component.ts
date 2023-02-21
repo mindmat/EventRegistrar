@@ -61,6 +61,11 @@ export class PaymentDifferencesComponent implements OnInit
     this.paymentDifferencesService.refundDifference(registrationId);
   }
 
+  sendPleasePayDifferenceMail(registrationId: string)
+  {
+    this.paymentDifferencesService.sendPleasePayDifferenceMail(registrationId);
+  }
+
   trackByFn(index: number, item: any): any
   {
     return item.id || index;
