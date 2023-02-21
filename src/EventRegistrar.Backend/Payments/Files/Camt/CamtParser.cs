@@ -33,13 +33,30 @@ public class CamtParser
                                    return ntry.Descendants(ns + "TxDtls")
                                               .Select(tx =>
                                               {
-                                                  var amount = tx.Descendants(ns + "Amt").First();
+                                                  var amountNode = tx.Descendants(ns + "Amt").First();
+                                                  var instructedAmountNode = tx.Descendants(ns + "AmtDtls")
+                                                                               ?.Descendants("InstdAmt")
+                                                                               ?.Descendants("Amt")
+                                                                               .FirstOrDefault();
+                                                  var amount = decimal.Parse(instructedAmountNode?.Value
+                                                                          ?? amountNode.Value, CultureInfo.InvariantCulture);
+                                                  var charges = instructedAmountNode == null
+                                                                    ? ntry.Descendants(ns + "Chrgs")
+                                                                          .Descendants(ns + "TtlChrgsAndTaxAmt")
+                                                                          .FirstOrDefault()
+                                                                          ?.Value.TryToDecimal()
+                                                                   ?? tx.Descendants(ns + "Chrgs")
+                                                                        .Descendants(ns + "Rcrd")
+                                                                        .Descendants(ns + "Amt")
+                                                                        .FirstOrDefault()
+                                                                        ?.Value.TryToDecimal()
+                                                                    : amount - (instructedAmountNode.Value.TryToDecimal() ?? 0);
                                                   var parties = tx.Descendants(ns + "RltdPties")
                                                                   .FirstOrDefault();
                                                   return new CamtEntry
                                                          {
-                                                             Amount = decimal.Parse(amount.Value, CultureInfo.InvariantCulture),
-                                                             Currency = amount.Attribute("Ccy")?.Value,
+                                                             Amount = amount,
+                                                             Currency = amountNode.Attribute("Ccy")?.Value,
                                                              Info = tx.Descendants(ns + "AddtlNtryInf").FirstOrDefault()?.Value,
                                                              Message = tx.Descendants(ns + "RmtInf")
                                                                          ?.Descendants(ns + "Ustrd")
@@ -51,15 +68,7 @@ public class CamtParser
                                                              Reference = tx.Descendants(ns + "AcctSvcrRef")
                                                                            .FirstOrDefault()
                                                                            ?.Value,
-                                                             Charges = ntry.Descendants(ns + "Chrgs")
-                                                                           .Descendants(ns + "TtlChrgsAndTaxAmt")
-                                                                           .FirstOrDefault()
-                                                                           ?.Value.TryToDecimal()
-                                                                    ?? tx.Descendants(ns + "Chrgs")
-                                                                         .Descendants(ns + "Rcrd")
-                                                                         .Descendants(ns + "Amt")
-                                                                         .FirstOrDefault()
-                                                                         ?.Value.TryToDecimal(),
+                                                             Charges = charges,
                                                              InstructionIdentification = tx.Descendants(ns + "Refs")
                                                                                            .Descendants(ns + "InstrId")
                                                                                            .FirstOrDefault()
@@ -82,7 +91,7 @@ public class CamtParser
                                                                                    .Descendants(ns + "IBAN")
                                                                                    .FirstOrDefault()
                                                                                    ?.Value,
-                                                             Xml = tx.ToString()
+                                                             Xml = ntry.ToString()
                                                          };
                                               });
                                });
