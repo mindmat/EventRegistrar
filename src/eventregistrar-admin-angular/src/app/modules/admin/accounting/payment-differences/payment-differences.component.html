@@ -31,10 +31,10 @@
                             <!-- Payment completion -->
                             <div class="relative h-0.5 -mx-6 py-3" *ngIf="difference.price">
                                 <div class="z-10 absolute inset-x-0 h-6 -mt-3"
-                                    matTooltip="{{ 'PaymentProgressTS' | translate:{'paid': difference.amountPaid | number: '1.2-2' , 'total': difference.price | number: '1.2-2' } }}"
+                                    matTooltip="{{ 'PaymentProgressTS' | translate:{'paid': (difference.amountPaid - difference.amountRepaid) | number: '1.2-2' , 'total': difference.price | number: '1.2-2' } }}"
                                     [matTooltipPosition]="'above'" [matTooltipClass]="'-mb-0.5'">
                                 </div>
-                                <mat-progress-bar class="h-0.5" [value]="100 * difference.amountPaid / difference.price">
+                                <mat-progress-bar class="h-0.5" [value]="100 * (difference.amountPaid - difference.amountRepaid) / difference.price">
                                 </mat-progress-bar>
                             </div>
 
