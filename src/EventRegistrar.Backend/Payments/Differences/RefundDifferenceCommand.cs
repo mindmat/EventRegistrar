@@ -46,7 +46,9 @@ public class RefundDifferenceCommandHandler : AsyncRequestHandler<RefundDifferen
         var data = new TooMuchPaidMailData
                    {
                        Price = registration.Price_AdmittedAndReduced,
-                       AmountPaid = registration.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount)
+                       AmountPaid = registration.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null
+                                                                                    ? asn.Amount
+                                                                                    : -asn.Amount)
                    };
         data.RefundAmount = data.AmountPaid - data.Price;
         if (data.RefundAmount <= 0m)

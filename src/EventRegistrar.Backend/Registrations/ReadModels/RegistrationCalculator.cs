@@ -43,7 +43,7 @@ public class RegistrationCalculator : ReadModelCalculator<RegistrationDisplayIte
                                                              IsWaitingList = reg.IsOnWaitingList,
                                                              Price = reg.Price_AdmittedAndReduced,
                                                              Status = reg.State,
-                                                             Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null
+                                                             Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null
                                                                                                                      ? asn.Amount
                                                                                                                      : -asn.Amount)
                                                                  ?? 0m,

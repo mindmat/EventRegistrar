@@ -24,7 +24,7 @@ public class PayoutQueryHandler : IRequestHandler<PayoutQuery, IEnumerable<Payou
                                                               FirstName = por.Registration!.RespondentFirstName,
                                                               LastName = por.Registration.RespondentLastName,
                                                               Price = por.Registration.Price_AdmittedAndReduced,
-                                                              Paid = por.Registration.PaymentAssignments!.Sum(ass => ass.PayoutRequestId == null
+                                                              Paid = por.Registration.PaymentAssignments!.Sum(ass => ass.OutgoingPayment == null
                                                                                                                          ? ass.Amount
                                                                                                                          : -ass.Amount),
                                                               IncomingPayments = por.Registration

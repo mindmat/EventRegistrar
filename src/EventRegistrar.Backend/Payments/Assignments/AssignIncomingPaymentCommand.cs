@@ -71,7 +71,9 @@ public class AssignIncomingPaymentCommandHandler : IRequestHandler<AssignIncomin
         if (command.AcceptDifference)
         {
             var difference = registration.Price_AdmittedAndReduced
-                           - registration.PaymentAssignments!.Sum(pmt => pmt.PayoutRequestId == null ? pmt.Amount : -pmt.Amount);
+                           - registration.PaymentAssignments!.Sum(pmt => pmt.OutgoingPayment == null
+                                                                             ? pmt.Amount
+                                                                             : -pmt.Amount);
             await _individualReductions.InsertOrUpdateEntity(new IndividualReduction
                                                              {
                                                                  Id = Guid.NewGuid(),

@@ -52,7 +52,7 @@ public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery,
                                                                          reg.Id,
                                                                          reg.State,
                                                                          reg.Price_AdmittedAndReduced,
-                                                                         Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null
+                                                                         Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null
                                                                                                                                  ? asn.Amount
                                                                                                                                  : -asn.Amount)
                                                                      })

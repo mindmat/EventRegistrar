@@ -56,7 +56,9 @@ public class CancelRegistrationCommandHandler : AsyncRequestHandler<CancelRegist
                                                .FirstAsync(reg => reg.Id == command.RegistrationId
                                                                && reg.EventId == command.EventId, cancellationToken);
 
-        var paidAmount = registration.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
+        var paidAmount = registration.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null
+                                                                         ? asn.Amount
+                                                                         : -asn.Amount);
         if ((paidAmount > 0 || registration is { Price_AdmittedAndReduced: > 0, State: RegistrationState.Paid }) && !command.DespitePayments)
         {
             throw new ApplicationException(string.Format(Resources.NotCancellableRegistrationHasPayments, registration.RespondentFirstName, registration.RespondentLastName, command.RegistrationId));

@@ -53,7 +53,9 @@ public class DuePaymentsCalculator : ReadModelCalculator<IEnumerable<DuePaymentI
                                                           reg.ReceivedAt,
                                                           reg.PhoneNormalized,
                                                           reg.ReminderLevel,
-                                                          Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount),
+                                                          Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null
+                                                                                                                  ? asn.Amount
+                                                                                                                  : -asn.Amount),
                                                           Mails = reg.Mails!.Select(rml => new
                                                                                            {
                                                                                                rml.Mail!.Id,

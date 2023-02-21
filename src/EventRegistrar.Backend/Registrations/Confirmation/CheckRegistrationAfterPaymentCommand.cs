@@ -30,7 +30,9 @@ public class CheckRegistrationAfterPaymentCommandHandler : AsyncRequestHandler<C
         }
 
         var difference = registration.Price_AdmittedAndReduced
-                       - registration.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null ? asn.Amount : -asn.Amount);
+                       - registration.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null
+                                                                         ? asn.Amount
+                                                                         : -asn.Amount);
         if (registration.State == RegistrationState.Received
          && (difference <= 0m || registration.WillPayAtCheckin))
         {

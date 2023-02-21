@@ -215,7 +215,7 @@ public class PaymentAssignmentsQueryHandler : IRequestHandler<PaymentAssignments
                                                                        LastName = reg.RespondentLastName,
                                                                        Email = reg.RespondentEmail,
                                                                        Price = reg.Price_AdmittedAndReduced,
-                                                                       AmountPaid = reg.PaymentAssignments!.Sum(asn => asn.PayoutRequestId == null && asn.OutgoingPaymentId == null
+                                                                       AmountPaid = reg.PaymentAssignments!.Sum(asn => asn.OutgoingPaymentId == null
                                                                                                                            ? asn.Amount
                                                                                                                            : -asn.Amount),
                                                                        IsWaitingList = reg.IsOnWaitingList == true,
