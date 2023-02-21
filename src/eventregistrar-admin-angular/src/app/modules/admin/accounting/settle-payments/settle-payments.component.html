@@ -89,8 +89,8 @@
                                                 <div *ngIf="!!booking.charges" class="text-secondary leading-5 truncate ml-2">+{{ booking.charges | number: '1.2-2' }}</div>
                                             </div>
                                             <div class="leading-5 truncate text-secondary" [class.text-primary]="!booking.settled" [class.dark:text-primary-500]="booking.settled">
-                                                <div *ngIf="booking.typ === CreditDebit.CRDT">{{ 'PaymentFrom' | translate : {debitor: booking.debitorName} }}</div>
-                                                <div *ngIf="booking.typ === CreditDebit.DBIT">{{ 'PaymentTo' | translate : {creditor: booking.creditorName} }}</div>
+                                                <div *ngIf="booking.typ === CreditDebit.CRDT">{{ 'PaymentFrom' | translate : {debitor: booking.debitorName ?? '?'} }}</div>
+                                                <div *ngIf="booking.typ === CreditDebit.DBIT">{{ 'PaymentTo' | translate : {creditor: booking.creditorName ?? '?'} }}</div>
                                             </div>
                                         </div>
                                         <div *ngIf="selectedBooking && selectedBooking.id === booking.id && booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
