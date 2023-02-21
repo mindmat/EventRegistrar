@@ -203,11 +203,12 @@
             <div class="flex flex-wrap mt-2 p-3 gap-4 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
                 <ng-container *ngFor="let candidate of candidates">
                     <!-- available -->
-                    <app-assignment-candidate-registration *ngIf="candidate.state===RegistrationState.Received" [payment]="payment" [candidate]="candidate" (assign)="assign($event)">
+                    <app-assignment-candidate-registration *ngIf="candidate.state===RegistrationState.Received || payment.type == PaymentType.Outgoing" [payment]="payment" [candidate]="candidate"
+                        (assign)="assign($event)">
                     </app-assignment-candidate-registration>
 
                     <!-- unavailable -->
-                    <fuse-card class="min-w-10 rounded-xl bg-gray-300 cursor-pointer" *ngIf="candidate.state!==RegistrationState.Received"
+                    <fuse-card class="min-w-10 rounded-xl bg-gray-300 cursor-pointer" *ngIf="candidate.state!==RegistrationState.Received && payment.type != PaymentType.Outgoing"
                         [routerLink]="navigator.getRegistrationUrl(candidate.registrationId)">
                         <div class="flex m-auto text-xl uppercase p-4">
                             ({{ candidate.firstName?.charAt(0) }}{{ candidate.lastName?.charAt(0) }})

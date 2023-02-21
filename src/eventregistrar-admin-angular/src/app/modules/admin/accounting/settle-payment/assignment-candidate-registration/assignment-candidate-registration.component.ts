@@ -35,9 +35,7 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
       this.openRegistrationAmount = this.payment.type == PaymentType.Incoming
         ? Math.max(0, this.candidate.price - this.candidate.amountPaid)
         : Math.max(0, this.candidate.amountPaid);
-      this.maxAmountToAssign = this.payment.type == PaymentType.Incoming
-        ? Math.min(Math.max(0, this.payment.openAmount), Math.max(0, this.candidate.price - this.candidate.amountPaid))
-        : Math.max(0, this.candidate.amountPaid);
+      this.maxAmountToAssign = Math.min(Math.max(0, this.payment.openAmount), this.openRegistrationAmount);
       this.candidateForm = this.fb.group({
         amountAssigned: [this.maxAmountToAssign, [Validators.required, Validators.min(0.01), Validators.max(this.maxAmountToAssign)]],
         acceptDifference: [false, Validators.required],
