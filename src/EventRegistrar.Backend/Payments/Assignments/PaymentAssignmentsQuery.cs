@@ -168,6 +168,7 @@ public class PaymentAssignmentsQueryHandler : IRequestHandler<PaymentAssignments
                                                                                   Info = prq.Reason,
                                                                                   IbanProposed = prq.IbanProposed
                                                                               })
+                                                               .Where(prq => prq.AmountUnsettled > 0)
                                                                .ToListAsync(cancellationToken);
             if (!search)
             {
@@ -180,18 +181,18 @@ public class PaymentAssignmentsQueryHandler : IRequestHandler<PaymentAssignments
                 result.PayoutRequestCandidates = payoutRequestCandidates.OrderByDescending(mtc => mtc.MatchScore);
             }
 
-            result.AssignedPayoutRequests = payment.Outgoing.Assignments!
-                                                   .Where(pas => pas.Registration != null
-                                                              && pas.PayoutRequestId != null)
-                                                   .Select(pas => new AssignedPayoutRequest
-                                                                  {
-                                                                      PaymentAssignmentId = pas.Id,
-                                                                      PayoutRequestId = pas.PayoutRequestId!.Value,
-                                                                      Participant = $"{pas.Registration!.RespondentFirstName} {pas.Registration.RespondentLastName}",
-                                                                      Amount = pas.Amount,
-                                                                      Info = pas.PayoutRequest?.Reason
-                                                                  })
-                                                   .ToList();
+            //result.AssignedPayoutRequests = payment.Outgoing.Assignments!
+            //                                       .Where(pas => pas.Registration != null
+            //                                                  && pas.PayoutRequestId != null)
+            //                                       .Select(pas => new AssignedPayoutRequest
+            //                                                      {
+            //                                                          PaymentAssignmentId = pas.Id,
+            //                                                          PayoutRequestId = pas.PayoutRequestId!.Value,
+            //                                                          Participant = $"{pas.Registration!.RespondentFirstName} {pas.Registration.RespondentLastName}",
+            //                                                          Amount = pas.Amount,
+            //                                                          Info = pas.PayoutRequest?.Reason
+            //                                                      })
+            //                                       .ToList();
         }
 
         if (result.OpenAmount != 0

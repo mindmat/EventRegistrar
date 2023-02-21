@@ -89,7 +89,7 @@ export class SettlePaymentComponent implements OnInit
     this.assignmentRequests.asObservable()
       .pipe(
         takeUntil(this.unsubscribeAll),
-        filter(request => !!request))
+        filter(request => !!request && request.amount > 0))
       .subscribe((request) => this.service.assign(
         this.payment.type,
         request.paymentId,
@@ -116,7 +116,10 @@ export class SettlePaymentComponent implements OnInit
 
   assignRepayment(paymentId_Repayment: string, amountToAssign: number)
   {
-    this.service.assignRepayment(this.payment.id, paymentId_Repayment, amountToAssign);
+    if (amountToAssign > 0)
+    {
+      this.service.assignRepayment(this.payment.id, paymentId_Repayment, amountToAssign);
+    }
   }
 
   amountChanged(candidate: AssignmentCandidateRegistrationEditItem, amountToAssign: number): void
@@ -127,7 +130,10 @@ export class SettlePaymentComponent implements OnInit
 
   assignPayoutRequest(payoutRequestId: string, amountToAssign: number)
   {
-    this.service.assignPayoutRequest(this.payment.id, payoutRequestId, amountToAssign);
+    if (amountToAssign > 0)
+    {
+      this.service.assignPayoutRequest(this.payment.id, payoutRequestId, amountToAssign);
+    }
   }
 
   searchCandidates(query: string)
