@@ -103,7 +103,7 @@ public class PaymentsByDayQueryHandler : IRequestHandler<PaymentsByDayQuery, IEn
                                                                            BookingDate = pmt.BookingDate,
                                                                            Typ = pmt.Typ,
                                                                            Currency = pmt.Currency,
-                                                                           Amount = pmt.Amount - (pmt.Charges ?? 0m),
+                                                                           Amount = pmt.Amount,
                                                                            Charges = pmt.Charges,
                                                                            Message = pmt.Message,
                                                                            DebitorName = pmt.DebitorName,
