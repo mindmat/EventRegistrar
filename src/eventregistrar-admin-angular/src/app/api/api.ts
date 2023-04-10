@@ -8092,6 +8092,7 @@ export interface SaveRegistrationFormMappingsCommand {
     eventId?: string;
     formId?: string;
     sections?: FormSection[] | null;
+    multiMappings?: MultiMapping[] | null;
 }
 
 export interface FormSection {
@@ -8134,6 +8135,13 @@ export interface QuestionOptionMappingDisplayItem {
     mappedRegistrableCombinedIds?: string[] | null;
 }
 
+export interface MultiMapping {
+    id?: string;
+    questionOptionIds?: string[];
+    registrableIds?: string[];
+    sortKey?: number;
+}
+
 export interface DeleteRegistrationFormCommand {
     eventId?: string;
     registrationFormId?: string;
@@ -8154,6 +8162,7 @@ export interface RegistrationFormItem {
     pendingRawFormCreated?: Date | null;
     pendingRawFormId?: string | null;
     deletable?: boolean;
+    multiMappings?: MultiMapping[];
 }
 
 export enum EventState {

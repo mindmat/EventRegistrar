@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.RegistrationForms.FormPaths;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
 namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
@@ -75,7 +74,8 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
                                                                                                                                         map.Language
                                                                                                                                     })
                                                                                                                      })
-                                                                                     })
+                                                                                     }),
+                                                       frm.MultiMappings
                                                    })
                                     .ToListAsync(cancellationToken);
 
@@ -128,7 +128,16 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
                                                                                             .OrderBy(qst => qst.SortKey)
                                                                          })
                                                           .Where(sec => sec.Questions.Any())
-                                                          .OrderBy(sec => sec.SortKey)
+                                                          .OrderBy(sec => sec.SortKey),
+                                   MultiMappings = existingForm.MultiMappings!
+                                                               .OrderBy(mqm => mqm.SortKey)
+                                                               .Select(mqm => new MultiMapping
+                                                                              {
+                                                                                  Id = mqm.Id,
+                                                                                  QuestionOptionIds = mqm.QuestionOptionIds,
+                                                                                  RegistrableIds = mqm.RegistrableIds,
+                                                                                  SortKey = mqm.SortKey
+                                                                              })
                                };
                 forms.Add(formItem);
             }
@@ -145,4 +154,12 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
 
         return forms;
     }
+}
+
+public record MultiMapping
+{
+    public Guid Id { get; set; }
+    public IEnumerable<Guid> QuestionOptionIds { get; set; } = null!;
+    public IEnumerable<Guid> RegistrableIds { get; set; } = null!;
+    public int SortKey { get; set; }
 }

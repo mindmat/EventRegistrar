@@ -993,6 +993,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Form-Optionen.
+        /// </summary>
+        internal static string FormQuestionOptions {
+            get {
+                return ResourceManager.GetString("FormQuestionOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Formulare.
         /// </summary>
         internal static string Forms {
@@ -1794,6 +1803,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Form -&gt; Tracks.
+        /// </summary>
+        internal static string MappingDirection_FormToTrack {
+            get {
+                return ResourceManager.GetString("MappingDirection_FormToTrack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tracks -&gt; Form.
+        /// </summary>
+        internal static string MappingDirection_TrackToForm {
+            get {
+                return ResourceManager.GetString("MappingDirection_TrackToForm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bietet Hosting.
         /// </summary>
         internal static string MappingType_HostingOffer {
@@ -1871,6 +1898,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string MissingAmount {
             get {
                 return ResourceManager.GetString("MissingAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mehrfach-Zuordnungen.
+        /// </summary>
+        internal static string MultiMappings {
+            get {
+                return ResourceManager.GetString("MultiMappings", resourceCulture);
             }
         }
         

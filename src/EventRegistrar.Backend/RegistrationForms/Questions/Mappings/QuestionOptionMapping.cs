@@ -10,7 +10,6 @@ public class QuestionOptionMapping : Entity
     public QuestionOption? QuestionOption { get; set; }
     public Guid? RegistrableId { get; set; }
     public Registrable? Registrable { get; set; }
-
     public MappingType? Type { get; set; }
     public string? Language { get; set; }
 }

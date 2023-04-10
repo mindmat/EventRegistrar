@@ -1,7 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using EventRegistrar.Backend.Registrations.Responses;
 
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Registrations.Responses;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.RegistrationForms.Questions;
 

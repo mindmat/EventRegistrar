@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, FormSection, RegistrationFormItem } from 'app/api/api';
+import { Api, FormSection, MultiMapping, RegistrationFormItem } from 'app/api/api';
 import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { FetchService } from '../../infrastructure/fetchService';
@@ -33,9 +33,9 @@ export class FormsService extends FetchService<RegistrationFormItem[]>
       .subscribe();
   }
 
-  saveMappings(formId: string, sections: FormSection[])
+  saveMappings(formId: string, sections: FormSection[], multiMappings: MultiMapping[])
   {
-    this.api.saveRegistrationFormMappings_Command({ eventId: this.eventService.selectedId, formId, sections })
+    this.api.saveRegistrationFormMappings_Command({ eventId: this.eventService.selectedId, formId, sections, multiMappings })
       .subscribe();
   }
 }

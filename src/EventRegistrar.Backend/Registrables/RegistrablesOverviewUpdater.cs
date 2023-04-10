@@ -76,6 +76,7 @@ public class RegistrablesOverviewCalculator : ReadModelCalculator<RegistrablesOv
                                                                                         .ToList()
                                                                    }),
                    DoubleRegistrables = registrables.Where(rbl => rbl.MaximumDoubleSeats != null)
+                                                    .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
                                                     .Select(rbl => new DoubleRegistrableDisplayItem
                                                                    {
                                                                        Id = rbl.Id,

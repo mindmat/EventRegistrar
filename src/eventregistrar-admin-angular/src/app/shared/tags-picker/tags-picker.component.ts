@@ -24,6 +24,7 @@ export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAcces
   @Input() selectedTagIds: any[] = [];
   @Input() textProperty: string = 'name';
   @Input() idProperty: string = 'id';
+  @Input() showBorder: boolean = true;
 
   onChange = (_) => { };
   onTouched = () => { };

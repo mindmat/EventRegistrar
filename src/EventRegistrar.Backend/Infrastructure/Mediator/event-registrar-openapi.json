@@ -6411,6 +6411,13 @@
             "items": {
               "$ref": "#/components/schemas/FormSection"
             }
+          },
+          "multiMappings": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/MultiMapping"
+            }
           }
         }
       },
@@ -6532,6 +6539,34 @@
           }
         }
       },
+      "MultiMapping": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "questionOptionIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
+          },
+          "registrableIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
+          },
+          "sortKey": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "DeleteRegistrationFormCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -6601,6 +6636,12 @@
           },
           "deletable": {
             "type": "boolean"
+          },
+          "multiMappings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MultiMapping"
+            }
           }
         }
       },
@@ -6652,6 +6693,8 @@
       },
       "FormPathsQuery": {
         "type": "object",
+        "deprecated": true,
+        "x-deprecatedMessage": "Use RegistrationFormsQuery",
         "additionalProperties": false,
         "properties": {
           "eventId": {

@@ -693,6 +693,12 @@
   <data name="Mapping" xml:space="preserve">
     <value>Zuordnung</value>
   </data>
+  <data name="MappingDirection_FormToTrack" xml:space="preserve">
+    <value>Form -&gt; Tracks</value>
+  </data>
+  <data name="MappingDirection_TrackToForm" xml:space="preserve">
+    <value>Tracks -&gt; Form</value>
+  </data>
   <data name="MappingType_HostingOffer" xml:space="preserve">
     <value>Bietet Hosting</value>
   </data>
@@ -719,6 +725,9 @@
   </data>
   <data name="MissingAmount" xml:space="preserve">
     <value>Fehlbetrag</value>
+  </data>
+  <data name="MultiMappings" xml:space="preserve">
+    <value>Mehrfach-Zuordnungen</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
@@ -893,6 +902,9 @@
   </data>
   <data name="QuestionMappingType_Town" xml:space="preserve">
     <value>Wohnort</value>
+  </data>
+  <data name="FormQuestionOptions" xml:space="preserve">
+    <value>Form-Optionen</value>
   </data>
   <data name="Reason" xml:space="preserve">
     <value>Begründung</value>

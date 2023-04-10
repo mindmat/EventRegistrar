@@ -2,9 +2,6 @@
 using EventRegistrar.Backend.Registrations.Register;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
-using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.RegistrationForms.FormPaths;
 
@@ -35,22 +32,5 @@ public class FormPathMap : EntityMap<FormPath>
 
         builder.Property(ral => ral.PartnerConfiguration)
                .HasConversion(StorageConverters.JsonConverter<PartnerRegistrationProcessConfiguration>());
-    }
-}
-
-public static class StorageConverters
-{
-    private static readonly JsonSerializerSettings Settings = new()
-                                                              {
-                                                                  DefaultValueHandling = DefaultValueHandling.Ignore,
-                                                                  TypeNameHandling = TypeNameHandling.Auto
-                                                              };
-
-    public static ValueConverter<T?, string?> JsonConverter<T>()
-        where T : class
-    {
-        return new ValueConverter<T?, string?>(
-            value => value == null ? null : JsonConvert.SerializeObject(value, Settings),
-            json => json == null ? null : JsonConvert.DeserializeObject<T>(json, Settings));
     }
 }

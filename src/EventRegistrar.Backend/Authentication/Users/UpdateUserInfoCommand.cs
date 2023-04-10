@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 
 namespace EventRegistrar.Backend.Authentication.Users;
 
@@ -10,7 +9,7 @@ public class UpdateUserInfoCommand : IRequest
     public string? Identifier { get; set; } = null!;
 }
 
-public class UpdateUserInfoCommandHandler : IRequestHandler<UpdateUserInfoCommand>
+public class UpdateUserInfoCommandHandler : AsyncRequestHandler<UpdateUserInfoCommand>
 {
     private readonly IIdentityProvider _identityProvider;
     private readonly IRepository<AccessToEventRequest> _accessRequests;
@@ -25,7 +24,7 @@ public class UpdateUserInfoCommandHandler : IRequestHandler<UpdateUserInfoComman
         _users = users;
     }
 
-    public async Task<Unit> Handle(UpdateUserInfoCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(UpdateUserInfoCommand command, CancellationToken cancellationToken)
     {
         var requests = await _accessRequests.Where(arq => arq.IdentityProvider == command.Provider
                                                        && (arq.FirstName == null || arq.LastName == null || arq.Email == null || arq.AvatarUrl == null))
@@ -39,7 +38,7 @@ public class UpdateUserInfoCommandHandler : IRequestHandler<UpdateUserInfoComman
                                 .ToListAsync(cancellationToken);
         if (!requests.Any() && !users.Any())
         {
-            return Unit.Value;
+            return;
         }
 
         var identifiers = requests.Select(arq => arq.Identifier)
@@ -68,7 +67,5 @@ public class UpdateUserInfoCommandHandler : IRequestHandler<UpdateUserInfoComman
                      });
             }
         }
-
-        return Unit.Value;
     }
 }

@@ -1,7 +1,9 @@
 ﻿using EventRegistrar.Backend.RegistrationForms.Questions;
+using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
 namespace EventRegistrar.Backend.RegistrationForms.FormPaths;
 
+[Obsolete("Use RegistrationFormsQuery")]
 public class FormPathsQuery : IRequest<IEnumerable<RegistrationFormGroup>>
 {
     public Guid EventId { get; set; }
@@ -93,29 +95,4 @@ public class FormPathsQueryHandler : IRequestHandler<FormPathsQuery, IEnumerable
                                                      .OrderBy(sec => sec.SortKey)
                                    });
     }
-}
-
-public class QuestionOptionMappingDisplayItem
-{
-    public Guid Id { get; set; }
-    public string? Answer { get; set; }
-    public IEnumerable<string>? MappedRegistrableCombinedIds { get; set; }
-}
-
-public class QuestionMappingDisplayItem
-{
-    public Guid Id { get; set; }
-    public string? Question { get; set; }
-    public QuestionType Type { get; set; }
-    public IEnumerable<QuestionOptionMappingDisplayItem>? Options { get; set; }
-    public int SortKey { get; set; }
-    public bool Mappable { get; set; }
-    public QuestionMappingType? Mapping { get; set; }
-}
-
-public class FormSection
-{
-    public string? Name { get; set; }
-    public int SortKey { get; set; }
-    public IEnumerable<QuestionMappingDisplayItem> Questions { get; set; }
 }

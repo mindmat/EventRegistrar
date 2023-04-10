@@ -1,6 +1,6 @@
 <ng-container *ngIf="allTags?.length > 0">
     <!-- <div class="flex flex-wrap items-center -m-1.5"> -->
-    <div class="flex flex-wrap items-center shadow-sm rounded-md border border-gray-300 overflow-hidden bg-card p-1">
+    <div class="flex flex-wrap items-center rounded-md border-gray-300 overflow-hidden bg-card p-1" [ngClass]="{'border shadow-sm':showBorder}">
         <!-- Tags -->
         <ng-container *ngIf="selectedTagIds.length">
             <ng-container *ngFor="let tag of selectedTags">
