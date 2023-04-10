@@ -9,7 +9,7 @@ public class MultiQuestionOptionMapping : Entity
     public Guid RegistrationFormId { get; set; }
     public RegistrationForm? RegistrationForm { get; set; }
     public ICollection<Guid> QuestionOptionIds { get; set; } = null!;
-    public ICollection<Guid> RegistrableIds { get; set; } = null!;
+    public ICollection<string> RegistrableCombinedIds { get; set; } = null!;
     public int SortKey { get; set; }
 }
 
@@ -25,7 +25,7 @@ public class MultiQuestionOptionMappingMap : EntityMap<MultiQuestionOptionMappin
 
         builder.Property(qop => qop.QuestionOptionIds)
                .IsCsvColumn();
-        builder.Property(qop => qop.RegistrableIds)
-               .IsCsvColumn();
+        builder.Property(qop => qop.RegistrableCombinedIds)!
+               .IsJsonColumn();
     }
 }

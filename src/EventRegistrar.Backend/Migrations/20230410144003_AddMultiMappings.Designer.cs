@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventRegistrar.Backend.Migrations
 {
     [DbContext(typeof(EventRegistratorDbContext))]
-    [Migration("20230410125320_AddMultiMappings")]
+    [Migration("20230410144003_AddMultiMappings")]
     partial class AddMultiMappings
     {
         /// <inheritdoc />
@@ -1910,9 +1910,10 @@ namespace EventRegistrar.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RegistrableIds")
+                    b.Property<string>("RegistrableCombinedIds")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("RegistrableCombinedIdsJson");
 
                     b.Property<Guid>("RegistrationFormId")
                         .HasColumnType("uniqueidentifier");

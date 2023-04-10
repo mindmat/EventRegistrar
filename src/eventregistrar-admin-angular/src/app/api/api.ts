@@ -8138,7 +8138,7 @@ export interface QuestionOptionMappingDisplayItem {
 export interface MultiMapping {
     id?: string;
     questionOptionIds?: string[];
-    registrableIds?: string[];
+    registrableCombinedIds?: string[];
     sortKey?: number;
 }
 

@@ -6554,11 +6554,10 @@
               "format": "guid"
             }
           },
-          "registrableIds": {
+          "registrableCombinedIds": {
             "type": "array",
             "items": {
-              "type": "string",
-              "format": "guid"
+              "type": "string"
             }
           },
           "sortKey": {

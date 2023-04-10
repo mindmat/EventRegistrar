@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
@@ -48,6 +47,7 @@ public class SingleRegistrationProcessor
                                .Include(frm => frm.Questions!)
                                .ThenInclude(qst => qst.QuestionOptions!)
                                .ThenInclude(qop => qop.Mappings!)
+                               .Include(frm => frm.MultiMappings)
                                .FirstOrDefaultAsync();
         if (form?.Questions == null)
         {
@@ -140,91 +140,35 @@ public class SingleRegistrationProcessor
 
                 foreach (var questionOptionMapping in questionOption.Mappings)
                 {
-                    switch (questionOptionMapping.Type)
-                    {
-                        case MappingType.SingleRegistrable:
-                            {
-                                if (questionOptionMapping.RegistrableId != null)
-                                {
-                                    var spot = await _spotManager.ReserveSingleSpot(registration.EventId,
-                                                                                    questionOptionMapping.RegistrableId.Value, registration.Id, true);
-                                    if (spot == null)
-                                    {
-                                        soldOutRegistrableIds.Add(questionOptionMapping.RegistrableId.Value);
-                                    }
-                                    else
-                                    {
-                                        spots.Add(spot);
-                                    }
-                                }
-
-                                break;
-                            }
-                        case MappingType.PartnerRegistrableLeader:
-                            {
-                                if (questionOptionMapping.RegistrableId != null)
-                                {
-                                    partnerRegistrableRequests.Add(new PartnerRegistrableRequest
-                                                                   {
-                                                                       RegistrableId = questionOptionMapping.RegistrableId
-                                                                                                            .Value,
-                                                                       Role = Role.Leader
-                                                                   });
-                                }
-
-                                break;
-                            }
-
-                        case MappingType.PartnerRegistrableFollower:
-                            {
-                                if (questionOptionMapping.RegistrableId != null)
-                                {
-                                    partnerRegistrableRequests.Add(new PartnerRegistrableRequest
-                                                                   {
-                                                                       RegistrableId = questionOptionMapping.RegistrableId
-                                                                                                            .Value,
-                                                                       Role = Role.Follower
-                                                                   });
-                                }
-
-                                break;
-                            }
-
-                        case MappingType.PartnerRegistrable:
-                            {
-                                if (questionOptionMapping.RegistrableId != null)
-                                {
-                                    partnerRegistrableRequests.Add(new PartnerRegistrableRequest
-                                                                   {
-                                                                       RegistrableId = questionOptionMapping.RegistrableId
-                                                                                                            .Value
-                                                                   });
-                                }
-
-                                break;
-                            }
-
-                        case MappingType.Language:
-                            {
-                                registration.Language = questionOptionMapping.Language;
-                                break;
-                            }
-
-                        case MappingType.RoleLeader:
-                            {
-                                defaultRole = Role.Leader;
-                                break;
-                            }
-
-                        case MappingType.RoleFollower:
-                            {
-                                defaultRole = Role.Follower;
-                                break;
-                            }
-                    }
+                    defaultRole = await ProcessCombinedRegistrableId(registration,
+                                                                     questionOptionMapping.Type,
+                                                                     questionOptionMapping.RegistrableId,
+                                                                     questionOptionMapping.Language,
+                                                                     soldOutRegistrableIds,
+                                                                     spots,
+                                                                     partnerRegistrableRequests);
                 }
             }
         }
+
+        var selectedQuestionOptionIds = registration.Responses!
+                                                    .Select(rsp => rsp.QuestionOptionId)
+                                                    .ToHashSet();
+        foreach (var activatedMultiMapping in form.MultiMappings!.Where(mqm => mqm.QuestionOptionIds.All(qop => selectedQuestionOptionIds.Contains(qop))))
+        {
+            foreach (var registrableCombinedId in activatedMultiMapping.RegistrableCombinedIds)
+            {
+                var parsed = new CombinedMappingId(registrableCombinedId);
+                defaultRole = await ProcessCombinedRegistrableId(registration,
+                                                                 parsed.Type,
+                                                                 parsed.Id,
+                                                                 parsed.Language,
+                                                                 soldOutRegistrableIds,
+                                                                 spots,
+                                                                 partnerRegistrableRequests);
+            }
+        }
+
 
         // use default role
         var requestsWithoutRole = partnerRegistrableRequests.Where(prr => prr.Role == null).ToList();
@@ -343,6 +287,100 @@ public class SingleRegistrationProcessor
                                      });
 
         return spots;
+    }
+
+    private async Task<Role?> ProcessCombinedRegistrableId(Registration registration,
+                                                           MappingType? mappingType,
+                                                           Guid? registrableId,
+                                                           string? language,
+                                                           ICollection<Guid> soldOutRegistrableIds,
+                                                           ICollection<Seat> spots,
+                                                           ICollection<PartnerRegistrableRequest> partnerRegistrableRequests)
+    {
+        Role? defaultRole = null;
+        switch (mappingType)
+        {
+            case MappingType.SingleRegistrable:
+                {
+                    if (registrableId != null)
+                    {
+                        var spot = await _spotManager.ReserveSingleSpot(registration.EventId,
+                                                                        registrableId.Value,
+                                                                        registration.Id,
+                                                                        true);
+                        if (spot == null)
+                        {
+                            soldOutRegistrableIds.Add(registrableId.Value);
+                        }
+                        else
+                        {
+                            spots.Add(spot);
+                        }
+                    }
+
+                    break;
+                }
+            case MappingType.PartnerRegistrableLeader:
+                {
+                    if (registrableId != null)
+                    {
+                        partnerRegistrableRequests.Add(new PartnerRegistrableRequest
+                                                       {
+                                                           RegistrableId = registrableId.Value,
+                                                           Role = Role.Leader
+                                                       });
+                    }
+
+                    break;
+                }
+
+            case MappingType.PartnerRegistrableFollower:
+                {
+                    if (registrableId != null)
+                    {
+                        partnerRegistrableRequests.Add(new PartnerRegistrableRequest
+                                                       {
+                                                           RegistrableId = registrableId.Value,
+                                                           Role = Role.Follower
+                                                       });
+                    }
+
+                    break;
+                }
+
+            case MappingType.PartnerRegistrable:
+                {
+                    if (registrableId != null)
+                    {
+                        partnerRegistrableRequests.Add(new PartnerRegistrableRequest
+                                                       {
+                                                           RegistrableId = registrableId.Value
+                                                       });
+                    }
+
+                    break;
+                }
+
+            case MappingType.Language:
+                {
+                    registration.Language = language;
+                    break;
+                }
+
+            case MappingType.RoleLeader:
+                {
+                    defaultRole = Role.Leader;
+                    break;
+                }
+
+            case MappingType.RoleFollower:
+                {
+                    defaultRole = Role.Follower;
+                    break;
+                }
+        }
+
+        return defaultRole;
     }
 }
 

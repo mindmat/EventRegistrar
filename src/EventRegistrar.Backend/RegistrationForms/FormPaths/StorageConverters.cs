@@ -24,6 +24,24 @@ public static class StorageConverters
             json => json == null ? null : JsonConvert.DeserializeObject<T>(json, Settings));
     }
 
+    public static PropertyBuilder IsJsonColumn<T>(this PropertyBuilder<T?> builder)
+        where T : class
+    {
+        const string jsonColumnSuffix = "Json";
+        var converter = new ValueConverter<T?, string?>(
+            items => items == null ? null : JsonConvert.SerializeObject(items),
+            json => json == null ? null : JsonConvert.DeserializeObject<T?>(json));
+
+        builder = builder.HasConversion(converter);
+        var columnName = builder.Metadata.Name;
+        if (!columnName.EndsWith(jsonColumnSuffix))
+        {
+            builder = builder.HasColumnName($"{columnName}{jsonColumnSuffix}");
+        }
+
+        return builder;
+    }
+
     private const string CommaSeparator = ",";
 
     public static PropertyBuilder IsCsvColumn(this PropertyBuilder<ICollection<Guid>> config)

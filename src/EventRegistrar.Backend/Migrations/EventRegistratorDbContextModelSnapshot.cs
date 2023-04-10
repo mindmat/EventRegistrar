@@ -1907,9 +1907,10 @@ namespace EventRegistrar.Backend.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RegistrableIds")
+                    b.Property<string>("RegistrableCombinedIds")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("RegistrableCombinedIdsJson");
 
                     b.Property<Guid>("RegistrationFormId")
                         .HasColumnType("uniqueidentifier");

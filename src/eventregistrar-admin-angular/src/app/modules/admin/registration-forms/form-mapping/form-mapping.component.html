@@ -96,7 +96,7 @@
                             <div class="ml-1.5 leading-5">
                                 {{ 'Tracks' | translate }}
                             </div>
-                            <app-tags-picker class="ml-auto" [allTags]="availableTracks" [selectedTagIds]="multiMapping.registrableIds" idProperty="id" [showBorder]="false">
+                            <app-tags-picker class="ml-auto" [allTags]="availableTracks" [selectedTagIds]="multiMapping.registrableCombinedIds" idProperty="combinedId" [showBorder]="false">
                             </app-tags-picker>
                         </div>
 

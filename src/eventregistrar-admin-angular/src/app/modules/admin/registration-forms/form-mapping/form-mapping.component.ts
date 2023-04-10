@@ -74,11 +74,15 @@ export class FormMappingComponent implements OnInit
 
   addMultiMapping(form: RegistrationFormItem)
   {
+    let sortKey = form.multiMappings.length === 0
+      ? 1
+      : Math.max(...form.multiMappings.map(mqm => mqm.sortKey)) + 1;
+    console.log(sortKey);
     form.multiMappings.push({
       id: createUuid(),
       questionOptionIds: [],
-      registrableIds: [],
-      sortKey: Math.max(...form.multiMappings.map(mqm => mqm.sortKey)) + 1
+      registrableCombinedIds: [],
+      sortKey: sortKey ?? 1
     });
   }
 

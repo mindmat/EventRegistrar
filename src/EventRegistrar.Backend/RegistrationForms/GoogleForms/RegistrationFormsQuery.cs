@@ -135,7 +135,7 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
                                                                               {
                                                                                   Id = mqm.Id,
                                                                                   QuestionOptionIds = mqm.QuestionOptionIds,
-                                                                                  RegistrableIds = mqm.RegistrableIds,
+                                                                                  RegistrableCombinedIds = mqm.RegistrableCombinedIds,
                                                                                   SortKey = mqm.SortKey
                                                                               })
                                };
@@ -160,6 +160,6 @@ public record MultiMapping
 {
     public Guid Id { get; set; }
     public IEnumerable<Guid> QuestionOptionIds { get; set; } = null!;
-    public IEnumerable<Guid> RegistrableIds { get; set; } = null!;
+    public IEnumerable<string> RegistrableCombinedIds { get; set; } = null!;
     public int SortKey { get; set; }
 }

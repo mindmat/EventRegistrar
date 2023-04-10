@@ -18,7 +18,7 @@ namespace EventRegistrar.Backend.Migrations
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     RegistrationFormId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     QuestionOptionIds = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    RegistrableIds = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RegistrableCombinedIdsJson = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SortKey = table.Column<int>(type: "int", nullable: false),
                     Sequence = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),

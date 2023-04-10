@@ -109,7 +109,7 @@ public class SaveRegistrationFormMappingsCommandHandler : AsyncRequestHandler<Sa
                                                                    RegistrationFormId = form.Id
                                                                });
             multiMapping.QuestionOptionIds = multiMappingToSave.QuestionOptionIds.ToList();
-            multiMapping.RegistrableIds = multiMappingToSave.RegistrableIds.ToList();
+            multiMapping.RegistrableCombinedIds = multiMappingToSave.RegistrableCombinedIds.ToList();
             multiMapping.SortKey = multiMappingToSave.SortKey;
         }
     }
