@@ -23,21 +23,29 @@ public class SavePricingCommandHandler : AsyncRequestHandler<SavePricingCommand>
 
     protected override async Task Handle(SavePricingCommand command, CancellationToken cancellationToken)
     {
-        var packagesToSave = command.Packages;
+        var packagesToSave = command.Packages?.ToList();
         if (packagesToSave == null)
         {
             return;
         }
 
-        var packages = await _packages.Where(frm => frm.EventId == command.EventId)
-                                      .Include(ppg => ppg.Parts!)
-                                      .ThenInclude(ppp => ppp.Registrables)
-                                      .AsTracking()
-                                      .ToListAsync(cancellationToken);
+        var existingPackages = await _packages.Where(frm => frm.EventId == command.EventId)
+                                              .Include(ppg => ppg.Parts!)
+                                              .ThenInclude(ppp => ppp.Registrables)
+                                              .AsTracking()
+                                              .ToListAsync(cancellationToken);
+
+        // remove deleted multi mappings
+        var packagesToDelete = existingPackages.ExceptBy(packagesToSave.Select(ppk => ppk.Id), ppk => ppk.Id)
+                                               .ToList();
+        foreach (var packageToDelete in packagesToDelete)
+        {
+            _packages.Remove(packageToDelete);
+        }
 
         foreach (var packageToSave in packagesToSave)
         {
-            var package = packages.FirstOrDefault(qst => qst.Id == packageToSave.Id)
+            var package = existingPackages.FirstOrDefault(qst => qst.Id == packageToSave.Id)
                        ?? _packages.InsertObjectTree(new PricePackage
                                                      {
                                                          Id = packageToSave.Id,
