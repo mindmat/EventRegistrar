@@ -1,7 +1,6 @@
 ﻿using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Infrastructure.Configuration;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrables;

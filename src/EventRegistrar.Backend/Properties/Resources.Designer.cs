@@ -1425,6 +1425,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anmeldedatum.
+        /// </summary>
+        internal static string MailPlaceholder_FormsTimestamp {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_FormsTimestamp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nachname.
         /// </summary>
         internal static string MailPlaceholder_LastName {
@@ -1475,6 +1484,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string MailPlaceholder_Price {
             get {
                 return ResourceManager.GetString("MailPlaceholder_Price", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Eingangsdatum.
+        /// </summary>
+        internal static string MailPlaceholder_ReceivedAt {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_ReceivedAt", resourceCulture);
             }
         }
         

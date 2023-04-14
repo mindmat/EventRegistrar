@@ -339,6 +339,9 @@
   <data name="Follower" xml:space="preserve">
     <value>Follower</value>
   </data>
+  <data name="FormQuestionOptions" xml:space="preserve">
+    <value>Form options</value>
+  </data>
   <data name="Forms" xml:space="preserve">
     <value>Forms</value>
   </data>
@@ -474,6 +477,9 @@
   <data name="MailPlaceholder_FirstName" xml:space="preserve">
     <value>First Name</value>
   </data>
+  <data name="MailPlaceholder_FormsTimestamp" xml:space="preserve">
+    <value>Registration date</value>
+  </data>
   <data name="MailPlaceholder_LastName" xml:space="preserve">
     <value>Last Name</value>
   </data>
@@ -491,6 +497,9 @@
   </data>
   <data name="MailPlaceholder_Price" xml:space="preserve">
     <value>Price</value>
+  </data>
+  <data name="MailPlaceholder_ReceivedAt" xml:space="preserve">
+    <value>Received date</value>
   </data>
   <data name="MailPlaceholder_Reminder1Date" xml:space="preserve">
     <value>Date of First Reminder</value>
@@ -803,9 +812,6 @@
   </data>
   <data name="QuestionMappingType_Town" xml:space="preserve">
     <value>Place of living</value>
-  </data>
-  <data name="FormQuestionOptions" xml:space="preserve">
-    <value>Form options</value>
   </data>
   <data name="Reason" xml:space="preserve">
     <value>Reason</value>

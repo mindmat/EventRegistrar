@@ -53,7 +53,10 @@ public enum MailPlaceholder
     Reminder1Date = 13,
 
     [PartnerPlaceholder]
-    Comments = 14
+    Comments = 14,
+
+    FormsTimestamp = 15,
+    ReceivedAt = 16
 }
 
 public class AutoMailPlaceholderQueryHandler : IRequestHandler<AutoMailPlaceholderQuery, IEnumerable<PlaceholderDescription>>

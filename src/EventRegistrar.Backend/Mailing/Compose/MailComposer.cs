@@ -180,6 +180,14 @@ public class MailComposer
                         templateFiller[key] = cancellation.Reason;
                     }
                 }
+                else if (placeholderKey == MailPlaceholder.FormsTimestamp)
+                {
+                    templateFiller[key] = registration.ExternalTimestamp.ToString(DateFormat);
+                }
+                else if (placeholderKey == MailPlaceholder.ReceivedAt)
+                {
+                    templateFiller[key] = registration.ReceivedAt.ToString(DateFormat);
+                }
                 else if (placeholderKey == MailPlaceholder.AcceptedDate && registration.AdmittedAt != null)
                 {
                     templateFiller[key] = registration.AdmittedAt.Value.ToString(DateFormat);
