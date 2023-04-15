@@ -1,7 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Payments.Files;
-
-using MediatR;
+﻿using EventRegistrar.Backend.Payments.Files;
 
 namespace EventRegistrar.Backend.Payments.Unassigned;
 
@@ -23,7 +20,7 @@ public class UnassignedIncomingPaymentsQueryHandler : IRequestHandler<Unassigned
     public async Task<IEnumerable<PaymentDisplayItem>> Handle(UnassignedIncomingPaymentsQuery query,
                                                               CancellationToken cancellationToken)
     {
-        var payments = await _payments.Where(rpy => rpy.Payment!.PaymentsFile!.EventId == query.EventId
+        var payments = await _payments.Where(rpy => rpy.Payment!.EventId == query.EventId
                                                  && !rpy.Payment.Settled
                                                  && !rpy.Payment.Ignore)
                                       .Select(rpy => new PaymentDisplayItem

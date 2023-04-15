@@ -21,7 +21,7 @@ public class AssignIncomingPaymentCommand : IRequest, IEventBoundRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class AssignIncomingPaymentCommandHandler : IRequestHandler<AssignIncomingPaymentCommand>
+public class AssignIncomingPaymentCommandHandler : AsyncRequestHandler<AssignIncomingPaymentCommand>
 {
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IEventBus _eventBus;
@@ -51,9 +51,10 @@ public class AssignIncomingPaymentCommandHandler : IRequestHandler<AssignIncomin
         _readModelUpdater = readModelUpdater;
     }
 
-    public async Task<Unit> Handle(AssignIncomingPaymentCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(AssignIncomingPaymentCommand command, CancellationToken cancellationToken)
     {
-        var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
+        var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId
+                                                          && reg.EventId == command.EventId)
                                                .Include(reg => reg.PaymentAssignments)
                                                .FirstAsync(cancellationToken);
         var incomingPayment = await _incomingPayments.FirstAsync(pmt => pmt.Id == command.PaymentIncomingId, cancellationToken);
@@ -101,7 +102,5 @@ public class AssignIncomingPaymentCommandHandler : IRequestHandler<AssignIncomin
 
         _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
         _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
-
-        return Unit.Value;
     }
 }

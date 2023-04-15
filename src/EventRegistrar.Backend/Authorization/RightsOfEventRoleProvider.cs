@@ -176,6 +176,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(UpdateBulkMailTemplateCommand);
             yield return nameof(SetManualFallbackToPricePackageCommand);
             yield return nameof(AssignRepaymentCommand);
+            yield return nameof(CreateAndAssignIncomingPaymentCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

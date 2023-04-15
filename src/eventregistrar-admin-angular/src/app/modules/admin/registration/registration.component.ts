@@ -13,6 +13,7 @@ import { CreateIndividualReductionComponent } from './create-individual-reductio
 import { IndividualReductionService } from './create-individual-reduction/individual-reduction.service';
 import { RegistrationService } from './registration.service';
 import { FallbackPackagesService } from '../pricing/fallback-packages.service';
+import { CreateAssignPaymentComponent } from './create-assign-payment/create-assign-payment.component';
 
 @Component({
   selector: 'app-registration',
@@ -165,6 +166,14 @@ export class RegistrationComponent implements OnInit
     });
   }
 
+  addManualPayment()
+  {
+    this.matDialog.open(CreateAssignPaymentComponent, {
+      autoFocus: true,
+      data: { registrationId: this.registration.id, price: this.registration.price }
+    });
+  }
+
   changeSpots()
   {
     this.changeSpotsDialog = this.matDialog.open(ChangeSpotsComponent, {
@@ -207,6 +216,7 @@ export class RegistrationComponent implements OnInit
   {
     this.registrationService.setFallbackPackage(this.registration.id, pricePackageId);
   }
+
   removeFallbackPackage()
   {
     this.registrationService.setFallbackPackage(this.registration.id, null);

@@ -139,7 +139,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
         {
             // dedup
             if (await _payments.AnyAsync(pmt => pmt.Reference == camtEntry.Reference
-                                             && pmt.PaymentsFile!.EventId == eventId, cancellationToken))
+                                             && pmt.EventId == eventId, cancellationToken))
             {
                 continue;
             }

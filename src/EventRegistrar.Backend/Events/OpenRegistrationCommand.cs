@@ -104,11 +104,11 @@ public class OpenRegistrationCommandHandler : IRequestHandler<OpenRegistrationCo
                 _sms.Remove(sms => sms.Registration!.EventId == command.EventId);
                 _mailEvents.Remove(mev => mev.Mail!.EventId == command.EventId);
                 _paymentAssignments.Remove(pas => pas.Registration!.EventId == command.EventId
-                                               || pas.IncomingPayment!.Payment!.PaymentsFile!.EventId == command.EventId
-                                               || pas.OutgoingPayment!.Payment!.PaymentsFile!.EventId == command.EventId);
-                _incomingPayments.Remove(pmt => pmt.Payment!.PaymentsFile!.EventId == command.EventId);
-                _outgoingPayments.Remove(pmt => pmt.Payment!.PaymentsFile!.EventId == command.EventId);
-                _payments.Remove(pmt => pmt.PaymentsFile!.EventId == command.EventId);
+                                               || pas.IncomingPayment!.Payment!.EventId == command.EventId
+                                               || pas.OutgoingPayment!.Payment!.EventId == command.EventId);
+                _incomingPayments.Remove(pmt => pmt.Payment!.EventId == command.EventId);
+                _outgoingPayments.Remove(pmt => pmt.Payment!.EventId == command.EventId);
+                _payments.Remove(pmt => pmt.EventId == command.EventId);
                 _paymentFiles.Remove(pmf => pmf.EventId == command.EventId);
                 if (!string.IsNullOrWhiteSpace(eventToOpen.Acronym))
                 {

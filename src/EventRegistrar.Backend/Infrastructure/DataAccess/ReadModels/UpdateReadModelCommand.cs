@@ -54,7 +54,7 @@ public class UpdateReadModelCommand : IRequest
     public DateTimeOffset DirtyMoment { get; set; }
 }
 
-public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelCommand>
+public class UpdateReadModelCommandHandler : AsyncRequestHandler<UpdateReadModelCommand>
 {
     private readonly IEnumerable<IReadModelCalculator> _calculators;
     private readonly DbContext _dbContext;
@@ -73,7 +73,7 @@ public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelComm
         _dateTimeProvider = dateTimeProvider;
     }
 
-    public async Task<Unit> Handle(UpdateReadModelCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(UpdateReadModelCommand command, CancellationToken cancellationToken)
     {
         var now = _dateTimeProvider.Now;
         var updater = _calculators.First(rmu => rmu.QueryName == command.QueryName);
@@ -88,7 +88,7 @@ public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelComm
         if (readModel?.LastUpdate >= command.DirtyMoment)
         {
             // Not perfect (time vs row version)
-            return Unit.Value;
+            return;
         }
 
         var result = await updater.Calculate(command.EventId, command.RowId, cancellationToken);
@@ -127,8 +127,6 @@ public class UpdateReadModelCommandHandler : IRequestHandler<UpdateReadModelComm
                                   });
             }
         }
-
-        return Unit.Value;
     }
 }
 
@@ -149,7 +147,6 @@ public abstract class ReadModelCalculator<T> : IReadModelCalculator
     {
         return await CalculateTyped(eventId, rowId, cancellationToken);
     }
-
 
     public abstract Task<T> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
 }

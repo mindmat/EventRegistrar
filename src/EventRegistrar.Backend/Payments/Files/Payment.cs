@@ -1,4 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Payments.Files.Slips;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -7,8 +7,10 @@ namespace EventRegistrar.Backend.Payments.Files;
 
 public class Payment : Entity
 {
-    public Guid PaymentsFileId { get; set; }
+    public Guid? PaymentsFileId { get; set; }
     public PaymentsFile? PaymentsFile { get; set; }
+    public Guid? EventId { get; set; }
+    public Event? Event { get; set; }
 
     public string? Currency { get; set; }
     public decimal Amount { get; set; }
@@ -43,6 +45,10 @@ public class PaymentMap : EntityMap<Payment>
     protected override void ConfigureEntity(EntityTypeBuilder<Payment> builder)
     {
         builder.ToTable("Payments");
+
+        builder.HasOne(pmt => pmt.Event)
+               .WithMany()
+               .HasForeignKey(pmt => pmt.EventId);
 
         builder.HasOne(pmt => pmt.PaymentsFile)
                .WithMany()

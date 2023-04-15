@@ -63,7 +63,7 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
 
         try
         {
-            var googleRegistration = JsonConvert.DeserializeObject<RegistrationForms.GoogleForms.Registration>(rawRegistration.ReceivedMessage);
+            var googleRegistration = JsonConvert.DeserializeObject<GoogleRegistration>(rawRegistration.ReceivedMessage);
 
             var form = await _forms.Where(frm => frm.ExternalIdentifier == rawRegistration.FormExternalIdentifier)
                                    .Include(frm => frm.Questions!)

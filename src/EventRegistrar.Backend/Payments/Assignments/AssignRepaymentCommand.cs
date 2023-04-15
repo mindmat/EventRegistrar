@@ -36,11 +36,11 @@ public class AssignRepaymentCommandHandler : AsyncRequestHandler<AssignRepayment
     protected override async Task Handle(AssignRepaymentCommand command, CancellationToken cancellationToken)
     {
         var incomingPayment = await _incomingPayments.Where(pmt => pmt.Id == command.IncomingPaymentId
-                                                                && pmt.Payment!.PaymentsFile!.EventId == command.EventId)
+                                                                && pmt.Payment!.EventId == command.EventId)
                                                      .Include(pmt => pmt.Payment)
                                                      .FirstAsync(cancellationToken);
         var outgoingPayment = await _outgoingPayments.Where(pmt => pmt.Id == command.OutgoingPaymentId
-                                                                && pmt.Payment!.PaymentsFile!.EventId == command.EventId)
+                                                                && pmt.Payment!.EventId == command.EventId)
                                                      .Include(pmt => pmt.Payment)
                                                      .FirstAsync(cancellationToken);
 

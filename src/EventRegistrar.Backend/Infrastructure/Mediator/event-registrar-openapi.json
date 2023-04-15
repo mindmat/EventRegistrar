@@ -2854,6 +2854,38 @@
         }
       }
     },
+    "/api/CreateAndAssignIncomingPaymentCommand": {
+      "post": {
+        "tags": [
+          "CreateAndAssignIncomingPayment"
+        ],
+        "operationId": "CreateAndAssignIncomingPayment_Command",
+        "requestBody": {
+          "x-name": "CreateAndAssignIncomingPaymentCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAndAssignIncomingPaymentCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/PaymentAssignmentsQuery": {
       "post": {
         "tags": [
@@ -8435,7 +8467,8 @@
             "format": "guid"
           },
           "reference": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -8756,6 +8789,45 @@
           "outgoingPaymentId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "CreateAndAssignIncomingPaymentCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "paymentId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "debitorName": {
+            "type": "string",
+            "nullable": true
+          },
+          "debitorIban": {
+            "type": "string",
+            "nullable": true
+          },
+          "bookingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

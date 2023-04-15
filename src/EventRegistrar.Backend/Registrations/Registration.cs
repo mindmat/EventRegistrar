@@ -40,6 +40,7 @@ public class Registration : Entity
     public DateTimeOffset? AdmittedAt { get; set; }
     public string ExternalIdentifier { get; set; } = null!;
     public DateTimeOffset ExternalTimestamp { get; set; }
+    public string? ReadableIdentifier { get; set; }
     public bool? FallbackToPartyPass { get; set; }
 
     [Obsolete("Use pricing for reductions")]
@@ -122,5 +123,8 @@ public class RegistrationMap : EntityMap<Registration>
 
         builder.Property(reg => reg.Language)
                .HasMaxLength(2);
+
+        builder.Property(reg => reg.ReadableIdentifier)
+               .HasMaxLength(50);
     }
 }

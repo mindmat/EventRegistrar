@@ -34,7 +34,7 @@ public class PaymentAssignmentsQueryHandler : IRequestHandler<PaymentAssignments
                                                  CancellationToken cancellationToken)
     {
         var payment = await _payments.Where(pmt => pmt.Id == query.PaymentId
-                                                && pmt.PaymentsFile!.EventId == query.EventId)
+                                                && pmt.EventId == query.EventId)
                                      .Include(pmt => pmt.Incoming!.Assignments!)
                                      .ThenInclude(pas => pas.Registration)
                                      .Include(pmt => pmt.Incoming!.Assignments!)
@@ -96,7 +96,7 @@ public class PaymentAssignmentsQueryHandler : IRequestHandler<PaymentAssignments
                                                               })
                                                .ToList();
             // find repayment candidates
-            var payments = await _payments.Where(pmt => pmt.PaymentsFile!.EventId == query.EventId
+            var payments = await _payments.Where(pmt => pmt.EventId == query.EventId
                                                      && !pmt.Settled
                                                      && pmt.Type == PaymentType.Outgoing)
                                           .WhereIf(search, pmt => EF.Functions.Like(pmt.Outgoing!.CreditorName!, $"%{query.SearchString}%"))

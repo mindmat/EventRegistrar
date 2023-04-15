@@ -138,6 +138,7 @@
                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                         </button>
                         <mat-menu #paymentsMenu="matMenu">
+                            <button mat-menu-item (click)="addManualPayment()">{{ 'CreateAndAddIncomingPayment' | translate }}</button>
                             <!-- <button mat-menu-item>Clear activities</button> -->
                         </mat-menu>
                     </div>

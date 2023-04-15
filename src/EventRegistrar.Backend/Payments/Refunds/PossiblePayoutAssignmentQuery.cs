@@ -27,7 +27,7 @@ public class PossiblePayoutAssignmentQueryHandler : IRequestHandler<PossiblePayo
                                                                     CancellationToken cancellationToken)
     {
         var payment = await _payments.Where(pmt => pmt.Id == query.PaymentId
-                                                && pmt.Payment!.PaymentsFile!.EventId == query.EventId)
+                                                && pmt.Payment!.EventId == query.EventId)
                                      .Include(pmt => pmt.Payment)
                                      .Include(por => por.Assignments!)
                                      .ThenInclude(asn => asn.IncomingPayment)

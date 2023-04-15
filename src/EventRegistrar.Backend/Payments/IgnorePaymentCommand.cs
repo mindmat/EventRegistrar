@@ -28,7 +28,7 @@ internal class IgnorePaymentCommandHandler : AsyncRequestHandler<IgnorePaymentCo
     {
         var payment = await _payments.AsTracking()
                                      .FirstAsync(pmt => pmt.Id == command.PaymentId
-                                                     && pmt.PaymentsFile!.EventId == command.EventId,
+                                                     && pmt.EventId == command.EventId,
                                                  cancellationToken);
         payment.Ignore = true;
 

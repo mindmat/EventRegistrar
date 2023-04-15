@@ -1,14 +1,10 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-
-using MediatR;
-
-namespace EventRegistrar.Backend.Payments.Files.Slips;
+﻿namespace EventRegistrar.Backend.Payments.Files.Slips;
 
 public class TryAssignPaymentSlipCommand : IRequest
 {
     public Guid EventId { get; set; }
     public Guid PaymentSlipId { get; set; }
-    public string Reference { get; set; }
+    public string? Reference { get; set; }
 }
 
 public class TryAssignPaymentSlipCommandHandler : IRequestHandler<TryAssignPaymentSlipCommand>
@@ -22,7 +18,7 @@ public class TryAssignPaymentSlipCommandHandler : IRequestHandler<TryAssignPayme
 
     public async Task<Unit> Handle(TryAssignPaymentSlipCommand command, CancellationToken cancellationToken)
     {
-        var payment = await _payments.Where(pmt => pmt.Payment!.PaymentsFile!.EventId == command.EventId
+        var payment = await _payments.Where(pmt => pmt.Payment!.EventId == command.EventId
                                                 && pmt.Payment.InstructionIdentification == command.Reference)
                                      .ToListAsync(cancellationToken);
 

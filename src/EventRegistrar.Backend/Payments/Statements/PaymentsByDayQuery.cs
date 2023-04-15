@@ -32,7 +32,7 @@ public class PaymentsByDayQueryHandler : IRequestHandler<PaymentsByDayQuery, IEn
         var payments = Enumerable.Empty<PaymentDisplayItem>();
         if (!query.HideIncoming)
         {
-            payments = payments.Concat(await _incomingBookings.Where(bbk => bbk.Payment!.PaymentsFile!.EventId == query.EventId)
+            payments = payments.Concat(await _incomingBookings.Where(bbk => bbk.Payment!.EventId == query.EventId)
                                                               .WhereIf(query.HideIgnored, bbk => !bbk.Payment!.Ignore)
                                                               .WhereIf(query.HideSettled, bbk => !bbk.Payment!.Settled)
                                                               .WhereIf(!string.IsNullOrWhiteSpace(query.SearchString), bbk => EF.Functions.Like(bbk.Payment!.Message!, $"%{query.SearchString}%")
@@ -63,7 +63,7 @@ public class PaymentsByDayQueryHandler : IRequestHandler<PaymentsByDayQuery, IEn
 
         if (!query.HideOutgoing)
         {
-            payments = payments.Concat(await _outgoingBookings.Where(bbk => bbk.Payment!.PaymentsFile!.EventId == query.EventId)
+            payments = payments.Concat(await _outgoingBookings.Where(bbk => bbk.Payment!.EventId == query.EventId)
                                                               .WhereIf(query.HideIgnored, bbk => !bbk.Payment!.Ignore)
                                                               .WhereIf(query.HideSettled, bbk => !bbk.Payment!.Settled)
                                                               .WhereIf(!string.IsNullOrWhiteSpace(query.SearchString), bbk => EF.Functions.Like(bbk.Payment!.Message!, $"%{query.SearchString}%")
