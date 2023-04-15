@@ -255,6 +255,9 @@
   <data name="Create" xml:space="preserve">
     <value>Create</value>
   </data>
+  <data name="CreateAndAddIncomingPayment" xml:space="preserve">
+    <value>Create manual payment...</value>
+  </data>
   <data name="CreateIndividualReduction" xml:space="preserve">
     <value>Create individual reduction</value>
   </data>
@@ -269,6 +272,12 @@
   </data>
   <data name="date" xml:space="preserve">
     <value>date</value>
+  </data>
+  <data name="DebitorIban" xml:space="preserve">
+    <value>Debitor IBAN</value>
+  </data>
+  <data name="DebitorName" xml:space="preserve">
+    <value>Debitor</value>
   </data>
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
@@ -638,6 +647,9 @@
   </data>
   <data name="MaxAllowedImbalanceSecondary" xml:space="preserve">
     <value>between leaders and followers</value>
+  </data>
+  <data name="Message" xml:space="preserve">
+    <value>Message</value>
   </data>
   <data name="MissingAmount" xml:space="preserve">
     <value>Missing amount</value>
@@ -1049,6 +1061,9 @@
   </data>
   <data name="UserInEventRole_Writer" xml:space="preserve">
     <value>Write</value>
+  </data>
+  <data name="Valuta" xml:space="preserve">
+    <value>Valuta</value>
   </data>
   <data name="WaitingList" xml:space="preserve">
     <value>Waiting list</value>

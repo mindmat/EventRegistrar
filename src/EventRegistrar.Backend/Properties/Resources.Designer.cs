@@ -502,6 +502,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manuelle Zahlung erfassen....
+        /// </summary>
+        internal static string CreateAndAddIncomingPayment {
+            get {
+                return ResourceManager.GetString("CreateAndAddIncomingPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Individuelle Reduktion erstellen.
         /// </summary>
         internal static string CreateIndividualReduction {
@@ -543,6 +552,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string date {
             get {
                 return ResourceManager.GetString("date", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debitor IBAN.
+        /// </summary>
+        internal static string DebitorIban {
+            get {
+                return ResourceManager.GetString("DebitorIban", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Debitor.
+        /// </summary>
+        internal static string DebitorName {
+            get {
+                return ResourceManager.GetString("DebitorName", resourceCulture);
             }
         }
         
@@ -1911,6 +1938,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mitteilung.
+        /// </summary>
+        internal static string Message {
+            get {
+                return ResourceManager.GetString("Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Fehlbetrag.
         /// </summary>
         internal static string MissingAmount {
@@ -3215,6 +3251,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string UserInEventRole_Writer_Description {
             get {
                 return ResourceManager.GetString("UserInEventRole_Writer_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Valuta.
+        /// </summary>
+        internal static string Valuta {
+            get {
+                return ResourceManager.GetString("Valuta", resourceCulture);
             }
         }
         
