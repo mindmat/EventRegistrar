@@ -328,72 +328,71 @@ public class PaymentAssignmentsQueryHandler : IRequestHandler<PaymentAssignments
     }
 }
 
-public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTranslation<OutgoingPaymentAssigned>,
-                                                           IEventToCommandTranslation<OutgoingPaymentUnassigned>,
-                                                           IEventToCommandTranslation<IncomingPaymentUnassigned>,
-                                                           IEventToCommandTranslation<IncomingPaymentAssigned>,
-                                                           IEventToCommandTranslation<RegistrationCancelled>
+//public class UpdatePaymentAssignmentsCommandWhenAssigned : IEventToCommandTranslation<OutgoingPaymentAssigned>,
+//                                                           IEventToCommandTranslation<OutgoingPaymentUnassigned>,
+//                                                           IEventToCommandTranslation<IncomingPaymentUnassigned>,
+//                                                           IEventToCommandTranslation<IncomingPaymentAssigned>,
+//                                                           IEventToCommandTranslation<RegistrationCancelled>
 
+//{
+//    private readonly IDateTimeProvider _dateTimeProvider;
 
-{
-    private readonly IDateTimeProvider _dateTimeProvider;
+//    public UpdatePaymentAssignmentsCommandWhenAssigned(IDateTimeProvider dateTimeProvider)
+//    {
+//        _dateTimeProvider = dateTimeProvider;
+//    }
 
-    public UpdatePaymentAssignmentsCommandWhenAssigned(IDateTimeProvider dateTimeProvider)
-    {
-        _dateTimeProvider = dateTimeProvider;
-    }
+//    public IEnumerable<IRequest> Translate(OutgoingPaymentAssigned e)
+//    {
+//        if (e.EventId != null)
+//        {
+//            yield return CreateUpdateCommand(e.EventId!.Value, e.OutgoingPaymentId);
+//        }
+//    }
 
-    public IEnumerable<IRequest> Translate(OutgoingPaymentAssigned e)
-    {
-        if (e.EventId != null)
-        {
-            yield return CreateUpdateCommand(e.EventId!.Value, e.OutgoingPaymentId);
-        }
-    }
+//    public IEnumerable<IRequest> Translate(OutgoingPaymentUnassigned e)
+//    {
+//        if (e.EventId != null)
+//        {
+//            yield return CreateUpdateCommand(e.EventId!.Value, e.OutgoingPaymentId);
+//        }
+//    }
 
-    public IEnumerable<IRequest> Translate(OutgoingPaymentUnassigned e)
-    {
-        if (e.EventId != null)
-        {
-            yield return CreateUpdateCommand(e.EventId!.Value, e.OutgoingPaymentId);
-        }
-    }
+//    public IEnumerable<IRequest> Translate(IncomingPaymentUnassigned e)
+//    {
+//        if (e.EventId != null)
+//        {
+//            yield return CreateUpdateCommand(e.EventId!.Value, e.IncomingPaymentId);
+//        }
+//    }
 
-    public IEnumerable<IRequest> Translate(IncomingPaymentUnassigned e)
-    {
-        if (e.EventId != null)
-        {
-            yield return CreateUpdateCommand(e.EventId!.Value, e.IncomingPaymentId);
-        }
-    }
+//    public IEnumerable<IRequest> Translate(IncomingPaymentAssigned e)
+//    {
+//        if (e.EventId != null)
+//        {
+//            yield return CreateUpdateCommand(e.EventId!.Value, e.IncomingPaymentId);
+//        }
+//    }
 
-    public IEnumerable<IRequest> Translate(IncomingPaymentAssigned e)
-    {
-        if (e.EventId != null)
-        {
-            yield return CreateUpdateCommand(e.EventId!.Value, e.IncomingPaymentId);
-        }
-    }
+//    public IEnumerable<IRequest> Translate(RegistrationCancelled e)
+//    {
+//        if (e.EventId != null)
+//        {
+//            yield return CreateUpdateCommand(e.EventId!.Value, null);
+//        }
+//    }
 
-    public IEnumerable<IRequest> Translate(RegistrationCancelled e)
-    {
-        if (e.EventId != null)
-        {
-            yield return CreateUpdateCommand(e.EventId!.Value, null);
-        }
-    }
-
-    private UpdateReadModelCommand CreateUpdateCommand(Guid eventId, Guid? paymentId)
-    {
-        return new UpdateReadModelCommand
-               {
-                   QueryName = nameof(PaymentAssignmentsQuery),
-                   EventId = eventId,
-                   RowId = paymentId,
-                   DirtyMoment = _dateTimeProvider.Now
-               };
-    }
-}
+//    private UpdateReadModelCommand CreateUpdateCommand(Guid eventId, Guid? paymentId)
+//    {
+//        return new UpdateReadModelCommand
+//               {
+//                   QueryName = nameof(PaymentAssignmentsQuery),
+//                   EventId = eventId,
+//                   RowId = paymentId,
+//                   DirtyMoment = _dateTimeProvider.Now
+//               };
+//    }
+//}
 
 public class PaymentAssignments
 {

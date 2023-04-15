@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Due;
@@ -13,7 +12,7 @@ public class UnassignPaymentCommand : IRequest, IEventBoundRequest
     public Guid PaymentAssignmentId { get; set; }
 }
 
-public class UnassignPaymentCommandHandler : IRequestHandler<UnassignPaymentCommand>
+public class UnassignPaymentCommandHandler : AsyncRequestHandler<UnassignPaymentCommand>
 {
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IEventBus _eventBus;
@@ -31,7 +30,7 @@ public class UnassignPaymentCommandHandler : IRequestHandler<UnassignPaymentComm
         _readModelUpdater = readModelUpdater;
     }
 
-    public async Task<Unit> Handle(UnassignPaymentCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(UnassignPaymentCommand command, CancellationToken cancellationToken)
     {
         var existingAssignment = await _assignments.FirstAsync(ass => ass.Id == command.PaymentAssignmentId
                                                                    && ass.Registration!.EventId == command.EventId
@@ -79,7 +78,5 @@ public class UnassignPaymentCommandHandler : IRequestHandler<UnassignPaymentComm
 
         _readModelUpdater.TriggerUpdate<RegistrationCalculator>(existingAssignment.RegistrationId, command.EventId);
         _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
-
-        return Unit.Value;
     }
 }

@@ -152,6 +152,12 @@
                                     <div>{{ payment.amount | number : '1.2-2' }}</div>
                                     <div class="text-sm text-secondary ml-1">{{ payment.bookingDate | date: 'dd.MM.yy' }}</div>
                                 </div>
+                                <button mat-icon-button [matMenuTriggerFor]="paymentMenu" class="ml-auto">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                                </button>
+                                <mat-menu #paymentMenu="matMenu">
+                                    <button mat-menu-item (click)="unassignPayment(payment.paymentAssignmentId)">{{ 'Delete' | translate }}</button>
+                                </mat-menu>
                             </div>
                         </div>
                     </ng-container>

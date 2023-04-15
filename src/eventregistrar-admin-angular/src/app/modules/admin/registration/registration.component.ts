@@ -174,6 +174,11 @@ export class RegistrationComponent implements OnInit
     });
   }
 
+  unassignPayment(paymentAssignmentId: string)
+  {
+    this.registrationService.unassignPayment(paymentAssignmentId);
+  }
+
   changeSpots()
   {
     this.changeSpotsDialog = this.matDialog.open(ChangeSpotsComponent, {

@@ -75,6 +75,12 @@ export class RegistrationService
       });
   }
 
+  unassignPayment(paymentAssignmentId: string)
+  {
+    return this.api.unassignPayment_Command({ eventId: this.eventService.selectedId, paymentAssignmentId })
+      .subscribe();
+  }
+
   updateNotes(registrationId: string, notes: string | null): Observable<any>
   {
     return this.api.updateInternalNotes_Command({ eventId: this.eventService.selectedId, registrationId, notes });
