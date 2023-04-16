@@ -40,6 +40,7 @@ public class RegistrationCalculator : ReadModelCalculator<RegistrationDisplayIte
                                           .Select(reg => new RegistrationDisplayItem
                                                          {
                                                              Id = reg.Id,
+                                                             ReadableId = reg.ReadableIdentifier,
                                                              IsWaitingList = reg.IsOnWaitingList,
                                                              Price = reg.Price_AdmittedAndReduced,
                                                              Status = reg.State,

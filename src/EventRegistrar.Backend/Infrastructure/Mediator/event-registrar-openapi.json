@@ -5048,6 +5048,10 @@
             "type": "string",
             "format": "guid"
           },
+          "readableId": {
+            "type": "string",
+            "nullable": true
+          },
           "firstName": {
             "type": "string",
             "nullable": true

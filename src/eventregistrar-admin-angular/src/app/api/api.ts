@@ -7676,6 +7676,7 @@ export interface SpotsOfRegistrationQuery {
 
 export interface RegistrationDisplayItem {
     id?: string;
+    readableId?: string | null;
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;

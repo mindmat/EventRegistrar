@@ -87,14 +87,18 @@
                 <hr class="w-full border-t my-6">
                 <div class="flex flex-col">
                     <div class="flex items-center">
-                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:clipboard-list'"></mat-icon>
-                        <span class="leading-none">{{ registration.receivedAt | date: 'dd.MM.yy HH:mm:ss' }}</span>
+                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_solid:more_time'"></mat-icon>
+                        <span class="leading-none" [matTooltip]="registration.receivedAt | date: 'HH:mm:ss'">{{ registration.receivedAt | date: 'dd.MM.yy' }}</span>
+                    </div>
+                    <div *ngIf="!!registration.readableId" class="flex items-center mt-4">
+                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:identification'"></mat-icon>
+                        <span class="leading-none">{{ registration.readableId }}</span>
                     </div>
                     <div class="flex items-center mt-4">
                         <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:mail'"></mat-icon>
                         <span class="leading-none">{{ registration.email }}</span>
                     </div>
-                    <div class="flex items-center mt-4">
+                    <div *ngIf="registration.phoneNormalized" class="flex items-center mt-4">
                         <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:phone'"></mat-icon>
                         <span class="leading-none">{{ registration.phoneNormalized }}</span>
                     </div>
