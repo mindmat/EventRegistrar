@@ -675,6 +675,9 @@
   <data name="MailType_MoneyOwed" xml:space="preserve">
     <value>Zu wenig bezahlt</value>
   </data>
+  <data name="MailType_OptionsForRegistrationsOnWaitingList" xml:space="preserve">
+    <value>Optionen für Warteliste</value>
+  </data>
   <data name="MailType_PartnerRegistrationFirstPaid" xml:space="preserve">
     <value>Paaranmeldung: Erste Zahlung erhalten</value>
   </data>
@@ -698,6 +701,9 @@
   </data>
   <data name="MailType_PartnerRegistrationSecondReminder" xml:space="preserve">
     <value>Paaranmeldung: Reminder 2</value>
+  </data>
+  <data name="MailType_RegistrationCancelled" xml:space="preserve">
+    <value>Registrierung storniert</value>
   </data>
   <data name="MailType_RegistrationReceived" xml:space="preserve">
     <value>Anmeldung erhalten</value>

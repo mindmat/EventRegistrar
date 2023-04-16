@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Mailing.Bulk;
+using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Mailing.ManualTrigger;
@@ -14,15 +15,18 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
 {
     private readonly IQueryable<BulkMailTemplate> _mailTemplates;
     private readonly EnumTranslator _enumTranslator;
+    private readonly MailConfiguration _mailConfiguration;
     private readonly IQueryable<Registration> _registrations;
 
     public PossibleMailTypesQueryHandler(IQueryable<Registration> registrations,
                                          IQueryable<BulkMailTemplate> mailTemplates,
-                                         EnumTranslator enumTranslator)
+                                         EnumTranslator enumTranslator,
+                                         MailConfiguration mailConfiguration)
     {
         _registrations = registrations;
         _mailTemplates = mailTemplates;
         _enumTranslator = enumTranslator;
+        _mailConfiguration = mailConfiguration;
     }
 
     public async Task<IEnumerable<MailTypeItem>> Handle(PossibleMailTypesQuery query,
@@ -30,6 +34,7 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
     {
         var registration = await _registrations.Where(reg => reg.Id == query.RegistrationId
                                                           && reg.EventId == query.EventId)
+                                               .Include(reg => reg.Event)
                                                .FirstAsync(cancellationToken);
         var partnerRegistration = registration.RegistrationId_Partner == null
                                       ? null
@@ -37,7 +42,7 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
                                                                        && reg.EventId == query.EventId)
                                                             .FirstAsync(cancellationToken);
 
-        var possibleMailTypes = GetPossibleMailTypes(registration, partnerRegistration);
+        var possibleMailTypes = GetPossibleMailTypes(registration, partnerRegistration, registration.Event!.State == EventState.Setup);
 
         var activeBulkMails = await _mailTemplates.Where(tpl => tpl.EventId == query.EventId
                                                              && tpl.Mails!.Any())
@@ -56,20 +61,21 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
                                 .Union(activeBulkMails);
     }
 
-    private static IEnumerable<MailType> GetPossibleMailTypes(Registration registration,
-                                                              Registration? partnerRegistration)
+    private IEnumerable<MailType> GetPossibleMailTypes(Registration registration,
+                                                       Registration? partnerRegistration,
+                                                       bool isInSetupPhase)
     {
-        if (registration.State == RegistrationState.Cancelled)
+        if (registration.State == RegistrationState.Cancelled || isInSetupPhase)
         {
             yield return MailType.RegistrationCancelled;
         }
 
-        if (registration.Price_Admitted == 0m && !string.IsNullOrEmpty(registration.SoldOutMessage))
+        if ((registration.Price_Admitted == 0m && !string.IsNullOrEmpty(registration.SoldOutMessage)) || isInSetupPhase)
         {
             yield return MailType.SoldOut;
         }
 
-        if (registration.IsParterRegistration())
+        if (_mailConfiguration.PartnerRegistrationPossible && (registration.IsParterRegistration() || isInSetupPhase))
         {
             if (registration.RegistrationId_Partner == null)
             {
@@ -97,21 +103,36 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
             {
                 yield return MailType.PartnerRegistrationFullyPaid;
             }
+
+            if (isInSetupPhase)
+            {
+                yield return MailType.PartnerRegistrationFirstReminder;
+                yield return MailType.PartnerRegistrationSecondReminder;
+            }
         }
-        else
+        else if (_mailConfiguration.SingleRegistrationPossible)
         {
-            if (registration.IsOnWaitingList == true)
+            if (registration.IsOnWaitingList == true || isInSetupPhase)
             {
                 yield return MailType.SingleRegistrationOnWaitingList;
                 yield return MailType.OptionsForRegistrationsOnWaitingList;
             }
 
-            if (registration.State == RegistrationState.Paid)
+            if (registration.State == RegistrationState.Paid || isInSetupPhase)
             {
                 yield return MailType.SingleRegistrationFullyPaid;
             }
 
             yield return MailType.SingleRegistrationAccepted;
+
+            if (isInSetupPhase)
+            {
+                yield return MailType.RegistrationReceived;
+                yield return MailType.SingleRegistrationFirstReminder;
+                yield return MailType.SingleRegistrationSecondReminder;
+                yield return MailType.MoneyOwed;
+                yield return MailType.TooMuchPaid;
+            }
         }
     }
 }

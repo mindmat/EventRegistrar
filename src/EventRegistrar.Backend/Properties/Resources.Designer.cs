@@ -1695,6 +1695,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Optionen für Warteliste.
+        /// </summary>
+        internal static string MailType_OptionsForRegistrationsOnWaitingList {
+            get {
+                return ResourceManager.GetString("MailType_OptionsForRegistrationsOnWaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Paaranmeldung: Erste Zahlung erhalten.
         /// </summary>
         internal static string MailType_PartnerRegistrationFirstPaid {
@@ -1763,6 +1772,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string MailType_PartnerRegistrationSecondReminder {
             get {
                 return ResourceManager.GetString("MailType_PartnerRegistrationSecondReminder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registrierung storniert.
+        /// </summary>
+        internal static string MailType_RegistrationCancelled {
+            get {
+                return ResourceManager.GetString("MailType_RegistrationCancelled", resourceCulture);
             }
         }
         
