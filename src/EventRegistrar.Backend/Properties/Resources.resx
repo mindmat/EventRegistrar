@@ -240,6 +240,9 @@
   <data name="ChangeEmail" xml:space="preserve">
     <value>E-Mail ändern</value>
   </data>
+  <data name="ChangeName" xml:space="preserve">
+    <value>Name ändern</value>
+  </data>
   <data name="ChangeSpots" xml:space="preserve">
     <value>Plätze ändern</value>
   </data>
@@ -602,6 +605,9 @@
   </data>
   <data name="MailPlaceholder_Price" xml:space="preserve">
     <value>Preis</value>
+  </data>
+  <data name="MailPlaceholder_ReadableId" xml:space="preserve">
+    <value>ID</value>
   </data>
   <data name="MailPlaceholder_ReceivedAt" xml:space="preserve">
     <value>Eingangsdatum</value>
@@ -1131,9 +1137,6 @@
   </data>
   <data name="TeamMembers" xml:space="preserve">
     <value>Teammitglieder</value>
-  </data>
-  <data name="MailPlaceholder_ReadableId" xml:space="preserve">
-    <value>ID</value>
   </data>
   <data name="to" xml:space="preserve">
     <value>an</value>

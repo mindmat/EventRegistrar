@@ -430,6 +430,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Name ändern.
+        /// </summary>
+        internal static string ChangeName {
+            get {
+                return ResourceManager.GetString("ChangeName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plätze ändern.
         /// </summary>
         internal static string ChangeSpots {

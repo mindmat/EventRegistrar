@@ -14,6 +14,7 @@ import { IndividualReductionService } from './create-individual-reduction/indivi
 import { RegistrationService } from './registration.service';
 import { FallbackPackagesService } from '../pricing/fallback-packages.service';
 import { CreateAssignPaymentComponent } from './create-assign-payment/create-assign-payment.component';
+import { ChangeNameComponent } from './change-name/change-name.component';
 
 @Component({
   selector: 'app-registration',
@@ -155,6 +156,14 @@ export class RegistrationComponent implements OnInit
     this.matDialog.open(CancelRegistrationComponent, {
       autoFocus: true,
       data: { registrationId: this.registration.id, paid: this.registration.paid }
+    });
+  }
+
+  changeName()
+  {
+    this.matDialog.open(ChangeNameComponent, {
+      autoFocus: true,
+      data: { registrationId: this.registration.id, oldFirstName: this.registration.firstName, oldLastName: this.registration.lastName }
     });
   }
 

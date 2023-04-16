@@ -1,6 +1,5 @@
 ﻿using System.Text.RegularExpressions;
 
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
@@ -16,7 +15,7 @@ public class FixInvalidAddressCommand : IRequest, IEventBoundRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class FixInvalidAddressCommandHandler : IRequestHandler<FixInvalidAddressCommand>
+public class FixInvalidAddressCommandHandler : AsyncRequestHandler<FixInvalidAddressCommand>
 {
     private readonly IEventBus _eventBus;
     private readonly IRepository<Registration> _registrations;
@@ -31,7 +30,7 @@ public class FixInvalidAddressCommandHandler : IRequestHandler<FixInvalidAddress
         _eventBus = eventBus;
     }
 
-    public async Task<Unit> Handle(FixInvalidAddressCommand command, CancellationToken cancellationToken)
+    protected override async Task Handle(FixInvalidAddressCommand command, CancellationToken cancellationToken)
     {
         var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
                                                .FirstAsync(cancellationToken);
@@ -61,7 +60,5 @@ public class FixInvalidAddressCommandHandler : IRequestHandler<FixInvalidAddress
                           });
 
         _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
-
-        return Unit.Value;
     }
 }

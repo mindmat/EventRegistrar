@@ -109,6 +109,7 @@ import { CancellationsComponent } from './modules/admin/registration/cancellatio
 import { PayoutsComponent } from './modules/admin/accounting/payouts/payouts.component';
 import { AllParticipantsComponent } from './modules/admin/registrations/all-participants/all-participants.component';
 import { CreateAssignPaymentComponent } from './modules/admin/registration/create-assign-payment/create-assign-payment.component';
+import { ChangeNameComponent } from './modules/admin/registration/change-name/change-name.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -162,7 +163,8 @@ const routerConfig: ExtraOptions = {
         CancellationsComponent,
         PayoutsComponent,
         AllParticipantsComponent,
-        CreateAssignPaymentComponent
+        CreateAssignPaymentComponent,
+        ChangeNameComponent
     ],
     providers: [
         AuthServiceFuse,

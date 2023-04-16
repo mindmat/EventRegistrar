@@ -110,6 +110,38 @@
         }
       }
     },
+    "/api/ChangeParticipantNameCommand": {
+      "post": {
+        "tags": [
+          "ChangeParticipantName"
+        ],
+        "operationId": "ChangeParticipantName_Command",
+        "requestBody": {
+          "x-name": "ChangeParticipantNameCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangeParticipantNameCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/RegistrationQuery": {
       "post": {
         "tags": [
@@ -5037,6 +5069,28 @@
           "registrationId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "ChangeParticipantNameCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
