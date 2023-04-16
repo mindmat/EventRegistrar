@@ -90,7 +90,7 @@ public class TestDataDeleter
             throw new ArgumentException($"Event {eventId} is in state {@event.State}, therefore test data cannot be deleted");
         }
 
-        await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
+        //await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
         try
         {
             _individualReductions.Remove(ird => ird.Registration!.EventId == eventId);
@@ -101,6 +101,32 @@ public class TestDataDeleter
             _spots.Remove(spot => spot.Registrable!.EventId == eventId);
             _sms.Remove(sms => sms.Registration!.EventId == eventId);
             _mailEvents.Remove(mev => mev.Mail!.EventId == eventId);
+            if (!string.IsNullOrWhiteSpace(eventAcronym))
+            {
+                _rawRegistrations.Remove(rrg => rrg.EventAcronym == eventAcronym);
+            }
+
+            var registrations = await _registrations.AsTracking()
+                                                    .Where(reg => reg.EventId == eventId)
+                                                    .ToListAsync(cancellationToken);
+            registrations.ForEach(reg =>
+            {
+                reg.RegistrationId_Partner = null;
+                reg.Registration_Partner = null;
+            });
+            var assignments = await _paymentAssignments.AsTracking()
+                                                       .Where(pas => pas.Registration!.EventId == eventId
+                                                                  || pas.IncomingPayment!.Payment!.EventId == eventId
+                                                                  || pas.OutgoingPayment!.Payment!.EventId == eventId)
+                                                       .Where(pas => pas.PaymentAssignmentId_Counter != null)
+                                                       .ToListAsync(cancellationToken);
+            assignments.ForEach(pas =>
+            {
+                pas.PaymentAssignmentId_Counter = null;
+            });
+            await _dbContext.SaveChangesAsync(cancellationToken);
+
+            registrations.ForEach(reg => { _registrations.Remove(reg); });
             _paymentAssignments.Remove(pas => pas.Registration!.EventId == eventId
                                            || pas.IncomingPayment!.Payment!.EventId == eventId
                                            || pas.OutgoingPayment!.Payment!.EventId == eventId);
@@ -108,28 +134,20 @@ public class TestDataDeleter
             _outgoingPayments.Remove(pmt => pmt.Payment!.EventId == eventId);
             _payments.Remove(pmt => pmt.EventId == eventId);
             _paymentFiles.Remove(pmf => pmf.EventId == eventId);
-            if (!string.IsNullOrWhiteSpace(eventAcronym))
-            {
-                _rawRegistrations.Remove(rrg => rrg.EventAcronym == eventAcronym);
-            }
 
-            var registrations = await _registrations.Where(reg => reg.EventId == eventId).ToListAsync(cancellationToken);
-            registrations.ForEach(reg =>
-            {
-                reg.RegistrationId_Partner = null;
-                reg.Registration_Partner = null;
-            });
+            var readModelsSet = _dbContext.Set<ReadModel>();
+            var readModels = await readModelsSet.Where(rmd => rmd.EventId == eventId)
+                                                .ToListAsync(cancellationToken);
+            readModelsSet.RemoveRange(readModels);
+
             await _dbContext.SaveChangesAsync(cancellationToken);
 
-            registrations.ForEach(reg => { _registrations.Remove(reg); });
-            await _dbContext.SaveChangesAsync(cancellationToken);
-
-            await transaction.CommitAsync(cancellationToken);
+            //await transaction.CommitAsync(cancellationToken);
         }
         catch
         {
-            await transaction.RollbackAsync(cancellationToken);
-            return;
+            //await transaction.RollbackAsync(cancellationToken);
+            throw;
         }
 
         _commandQueue.EnqueueCommand(new StartUpdateReadModelsOfEventCommand { EventId = eventId });
