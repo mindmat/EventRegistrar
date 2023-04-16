@@ -1524,6 +1524,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ID.
+        /// </summary>
+        internal static string MailPlaceholder_ReadableId {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_ReadableId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Eingangsdatum.
         /// </summary>
         internal static string MailPlaceholder_ReceivedAt {

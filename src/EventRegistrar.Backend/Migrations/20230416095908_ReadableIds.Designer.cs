@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventRegistrar.Backend.Migrations
 {
     [DbContext(typeof(EventRegistratorDbContext))]
-    partial class EventRegistratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230416095908_ReadableIds")]
+    partial class ReadableIds
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1429,7 +1432,7 @@ namespace EventRegistrar.Backend.Migrations
 
                     SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
 
-                    b.ToTable("Sms", (string)null);
+                    b.ToTable("Sms");
                 });
 
             modelBuilder.Entity("EventRegistrar.Backend.Registrables.Compositions.RegistrableComposition", b =>

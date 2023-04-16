@@ -510,6 +510,9 @@
   <data name="MailPlaceholder_Price" xml:space="preserve">
     <value>Price</value>
   </data>
+  <data name="MailPlaceholder_ReadableId" xml:space="preserve">
+    <value>ID</value>
+  </data>
   <data name="MailPlaceholder_ReceivedAt" xml:space="preserve">
     <value>Received date</value>
   </data>

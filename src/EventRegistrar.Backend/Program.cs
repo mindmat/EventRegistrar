@@ -15,6 +15,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ErrorHandling;
 using EventRegistrar.Backend.Infrastructure.Mediator;
+using EventRegistrar.Backend.Infrastructure.ReadableIds;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Payments.Files;
 
@@ -192,6 +193,7 @@ container.RegisterSingleton<MessageQueueReceiver>();
 container.Register<CommandQueue>();
 container.Register<IEventBus, EventBus>();
 container.Register<SourceQueueProvider>();
+container.Register<ReadableIdProvider>();
 container.Register(typeof(IEventToUserTranslation<>), assemblies);
 container.Verify();
 

@@ -192,6 +192,10 @@ public class MailComposer
                 {
                     templateFiller[key] = registration.AdmittedAt.Value.ToString(DateFormat);
                 }
+                else if (placeholderKey == MailPlaceholder.ReadableId)
+                {
+                    templateFiller[key] = registration.ReadableIdentifier;
+                }
                 else if (placeholderKey == MailPlaceholder.Reminder1Date)
                 {
                     var reminder1Date = registration.Mails!

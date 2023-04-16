@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.ReadableIds;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
@@ -21,6 +22,7 @@ public class SingleRegistrationProcessor
     private readonly IQueryable<RegistrationForm> _forms;
     private readonly IQueryable<Registrable> _registrables;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly ReadableIdProvider _readableIdProvider;
 
     public SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                        SpotManager spotManager,
@@ -29,7 +31,8 @@ public class SingleRegistrationProcessor
                                        CommandQueue commandQueue,
                                        IQueryable<RegistrationForm> forms,
                                        IQueryable<Registrable> registrables,
-                                       IDateTimeProvider dateTimeProvider)
+                                       IDateTimeProvider dateTimeProvider,
+                                       ReadableIdProvider readableIdProvider)
     {
         _phoneNormalizer = phoneNormalizer;
         _spotManager = spotManager;
@@ -39,6 +42,7 @@ public class SingleRegistrationProcessor
         _forms = forms;
         _registrables = registrables;
         _dateTimeProvider = dateTimeProvider;
+        _readableIdProvider = readableIdProvider;
     }
 
     public async Task<IEnumerable<Seat>> Process(Registration registration)
@@ -244,6 +248,7 @@ public class SingleRegistrationProcessor
             registration.AdmittedAt = _dateTimeProvider.Now;
         }
 
+        registration.ReadableIdentifier = await _readableIdProvider.GetNextId(registration.EventId, GetInitials(registration));
         await _registrations.InsertOrUpdateEntity(registration);
 
         // send mail
@@ -287,6 +292,14 @@ public class SingleRegistrationProcessor
                                      });
 
         return spots;
+    }
+
+    private static string? GetInitials(Registration registration)
+    {
+        var initials = $"{registration.RespondentFirstName?.First()}{registration.RespondentLastName?.First()}";
+        return string.IsNullOrWhiteSpace(initials)
+                   ? null
+                   : initials;
     }
 
     private async Task<Role?> ProcessCombinedRegistrableId(Registration registration,

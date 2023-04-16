@@ -1132,6 +1132,9 @@
   <data name="TeamMembers" xml:space="preserve">
     <value>Teammitglieder</value>
   </data>
+  <data name="MailPlaceholder_ReadableId" xml:space="preserve">
+    <value>ID</value>
+  </data>
   <data name="to" xml:space="preserve">
     <value>an</value>
   </data>
