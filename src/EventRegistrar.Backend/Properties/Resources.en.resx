@@ -876,6 +876,9 @@
   <data name="Release" xml:space="preserve">
     <value>Release</value>
   </data>
+  <data name="ReleaseAll" xml:space="preserve">
+    <value>Release all</value>
+  </data>
   <data name="Released" xml:space="preserve">
     <value>Released</value>
   </data>

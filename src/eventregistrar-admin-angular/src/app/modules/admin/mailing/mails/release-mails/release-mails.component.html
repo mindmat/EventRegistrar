@@ -31,9 +31,13 @@
                                     <button class="ml-auto -mr-4" mat-icon-button [matMenuTriggerFor]="mailsHeaderMenu">
                                         <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
                                         <mat-menu #mailsHeaderMenu>
-                                            <button mat-menu-item>
+                                            <button mat-menu-item (click)="releaseAll()">
+                                                <mat-icon [svgIcon]="'mat_solid:send'"></mat-icon>
+                                                {{ 'ReleaseAll' | translate }} ({{filteredPendingMails.length}})
+                                            </button>
+                                            <button mat-menu-item (click)="deleteAll()">
                                                 <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                                                {{ 'DeleteAll' | translate }}
+                                                {{ 'DeleteAll' | translate }} ({{filteredPendingMails.length}})
                                             </button>
                                         </mat-menu>
                                     </button>

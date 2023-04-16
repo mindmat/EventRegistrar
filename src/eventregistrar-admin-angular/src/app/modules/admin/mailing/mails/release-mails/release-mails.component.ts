@@ -52,6 +52,16 @@ export class ReleaseMailsComponent implements OnInit
     this.selectedMail = mail;
   }
 
+  releaseAll()
+  {
+    this.service.releaseMails(this.filteredPendingMails.map(mail => mail.id));
+  }
+
+  deleteAll()
+  {
+    this.service.deleteMails(this.filteredPendingMails.map(mail => mail.id));
+  }
+
   trackByFn(index: number, item: any): any
   {
     return item.id || index;

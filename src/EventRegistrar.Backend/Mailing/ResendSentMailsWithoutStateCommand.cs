@@ -39,9 +39,10 @@ public class ResendSentMailsWithoutStateCommandHandler : AsyncRequestHandler<Res
                                         .Select(mail => mail.Id)
                                         .ToListAsync(cancellationToken);
 
-        foreach (var failedMailId in failedMailIds)
-        {
-            _commandQueue.EnqueueCommand(new ReleaseMailCommand { EventId = command.EventId, MailId = failedMailId });
-        }
+        _commandQueue.EnqueueCommand(new ReleaseMailsCommand
+                                     {
+                                         EventId = command.EventId,
+                                         MailIds = failedMailIds
+                                     });
     }
 }

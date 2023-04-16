@@ -26,4 +26,16 @@ export class ReleaseMailsService extends FetchService<PendingMailListItem[]>
   {
     return this.fetchItems(this.api.pendingMails_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
+
+  releaseMails(mailIds: string[])
+  {
+    this.api.releaseMails_Command({ eventId: this.eventService.selectedId, mailIds })
+      .subscribe();
+  }
+
+  deleteMails(mailIds: string[])
+  {
+    this.api.deleteMails_Command({ eventId: this.eventService.selectedId, mailIds })
+      .subscribe();
+  }
 }

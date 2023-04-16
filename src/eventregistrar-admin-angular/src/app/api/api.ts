@@ -4572,11 +4572,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    deleteMail_Command(deleteMailCommand: DeleteMailCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/DeleteMailCommand";
+    deleteMails_Command(deleteMailsCommand: DeleteMailsCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/DeleteMailsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(deleteMailCommand);
+        const content_ = JSON.stringify(deleteMailsCommand);
 
         let options_ : any = {
             body: content_,
@@ -4589,11 +4589,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDeleteMail_Command(response_);
+            return this.processDeleteMails_Command(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processDeleteMail_Command(response_ as any);
+                    return this.processDeleteMails_Command(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<Unit>;
                 }
@@ -4602,7 +4602,7 @@ export class Api {
         }));
     }
 
-    protected processDeleteMail_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processDeleteMails_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -4827,11 +4827,11 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    releaseMail_Command(releaseMailCommand: ReleaseMailCommand | undefined): Observable<Unit> {
-        let url_ = this.baseUrl + "/api/ReleaseMailCommand";
+    releaseMails_Command(releaseMailsCommand: ReleaseMailsCommand | undefined): Observable<Unit> {
+        let url_ = this.baseUrl + "/api/ReleaseMailsCommand";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(releaseMailCommand);
+        const content_ = JSON.stringify(releaseMailsCommand);
 
         let options_ : any = {
             body: content_,
@@ -4844,11 +4844,11 @@ export class Api {
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processReleaseMail_Command(response_);
+            return this.processReleaseMails_Command(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processReleaseMail_Command(response_ as any);
+                    return this.processReleaseMails_Command(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<Unit>;
                 }
@@ -4857,7 +4857,7 @@ export class Api {
         }));
     }
 
-    protected processReleaseMail_Command(response: HttpResponseBase): Observable<Unit> {
+    protected processReleaseMails_Command(response: HttpResponseBase): Observable<Unit> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -8969,9 +8969,9 @@ export interface UnassignPaymentCommand {
     paymentAssignmentId?: string;
 }
 
-export interface DeleteMailCommand {
+export interface DeleteMailsCommand {
     eventId?: string;
-    mailId?: string;
+    mailIds?: string[];
 }
 
 export interface MailDisplayItem2 {
@@ -9042,9 +9042,9 @@ export interface ReleaseAllPendingMailsCommand {
     eventId?: string;
 }
 
-export interface ReleaseMailCommand {
+export interface ReleaseMailsCommand {
     eventId?: string;
-    mailId?: string;
+    mailIds?: string[];
 }
 
 export interface ResendSentMailsWithoutStateCommand {

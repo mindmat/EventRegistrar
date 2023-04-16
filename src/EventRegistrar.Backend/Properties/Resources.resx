@@ -985,6 +985,9 @@
   <data name="Release" xml:space="preserve">
     <value>Freigeben</value>
   </data>
+  <data name="ReleaseAll" xml:space="preserve">
+    <value>Alle freigeben</value>
+  </data>
   <data name="Released" xml:space="preserve">
     <value>Freigegeben</value>
   </data>

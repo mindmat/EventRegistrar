@@ -2950,19 +2950,19 @@
         }
       }
     },
-    "/api/DeleteMailCommand": {
+    "/api/DeleteMailsCommand": {
       "post": {
         "tags": [
-          "DeleteMail"
+          "DeleteMails"
         ],
-        "operationId": "DeleteMail_Command",
+        "operationId": "DeleteMails_Command",
         "requestBody": {
-          "x-name": "DeleteMailCommand",
+          "x-name": "DeleteMailsCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeleteMailCommand"
+                "$ref": "#/components/schemas/DeleteMailsCommand"
               }
             }
           },
@@ -3116,19 +3116,19 @@
         }
       }
     },
-    "/api/ReleaseMailCommand": {
+    "/api/ReleaseMailsCommand": {
       "post": {
         "tags": [
-          "ReleaseMail"
+          "ReleaseMails"
         ],
-        "operationId": "ReleaseMail_Command",
+        "operationId": "ReleaseMails_Command",
         "requestBody": {
-          "x-name": "ReleaseMailCommand",
+          "x-name": "ReleaseMailsCommand",
           "description": "",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReleaseMailCommand"
+                "$ref": "#/components/schemas/ReleaseMailsCommand"
               }
             }
           },
@@ -9155,7 +9155,7 @@
           }
         }
       },
-      "DeleteMailCommand": {
+      "DeleteMailsCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -9163,9 +9163,12 @@
             "type": "string",
             "format": "guid"
           },
-          "mailId": {
-            "type": "string",
-            "format": "guid"
+          "mailIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
           }
         }
       },
@@ -9377,7 +9380,7 @@
           }
         }
       },
-      "ReleaseMailCommand": {
+      "ReleaseMailsCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -9385,9 +9388,12 @@
             "type": "string",
             "format": "guid"
           },
-          "mailId": {
-            "type": "string",
-            "format": "guid"
+          "mailIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
           }
         }
       },

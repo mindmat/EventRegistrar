@@ -2667,6 +2667,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alle freigeben.
+        /// </summary>
+        internal static string ReleaseAll {
+            get {
+                return ResourceManager.GetString("ReleaseAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Freigegeben.
         /// </summary>
         internal static string Released {

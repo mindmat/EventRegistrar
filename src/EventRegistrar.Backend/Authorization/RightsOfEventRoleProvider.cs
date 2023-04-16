@@ -125,8 +125,8 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
          || usersRolesInEvent.Contains(UserInEventRole.Admin))
         {
-            yield return nameof(ReleaseMailCommand);
-            yield return nameof(DeleteMailCommand);
+            yield return nameof(ReleaseMailsCommand);
+            yield return nameof(DeleteMailsCommand);
             yield return nameof(SendReminderMailCommand);
             yield return nameof(AddSpotCommand);
             yield return nameof(RemoveSpotCommand);
