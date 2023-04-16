@@ -8,6 +8,7 @@ import { TributeItem } from 'tributejs';
 
 import Tribute from "tributejs";
 import FroalaEditor from "froala-editor";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-auto-mail-template',
@@ -53,7 +54,8 @@ export class AutoMailTemplateComponent implements OnInit
     private fb: FormBuilder,
     private api: Api,
     private eventService: EventService,
-    private changeDetectorRef: ChangeDetectorRef) { }
+    private changeDetectorRef: ChangeDetectorRef,
+    private translateService: TranslateService) { }
 
   ngOnInit(): void
   {
@@ -77,15 +79,52 @@ export class AutoMailTemplateComponent implements OnInit
         this.changeDetectorRef.markForCheck();
       });
 
+    FroalaEditor.DefineIcon('insertTag', { NAME: 'mention', SVG_KEY: 'mention' });
+    FroalaEditor.RegisterCommand('insertTag', {
+      title: this.translateService.instant('InsertPlaceholder'),
+      focus: true,
+      undo: true,
+      refreshAfterCallback: true,
+      callback: function ()
+      {
+        const froalaEditor = this;
+        froalaEditor.tribute.showMenuForCollection(froalaEditor.editor.nativeElement);
+      }
+    });
+
     this.api.froalaKey_Query({}).subscribe(key =>
     {
       this.options = {
+        language: this.translateService.currentLang,
         htmlRemoveTags: [],
         key: key,
+        toolbarButtons: {
+
+          'moreText': {
+            'buttons': ['bold', 'italic', 'underline', 'strikeThrough', 'subscript', 'superscript', 'fontFamily', 'fontSize', 'textColor', 'backgroundColor', 'inlineClass', 'inlineStyle', 'clearFormatting']
+          },
+
+          'moreParagraph': {
+            'buttons': ['alignLeft', 'alignCenter', 'formatOLSimple', 'alignRight', 'alignJustify', 'formatOL', 'formatUL', 'paragraphFormat', 'paragraphStyle', 'lineHeight', 'outdent', 'indent', 'quote']
+          },
+
+          'moreRich': {
+            'buttons': ['insertTag', 'insertLink', 'insertImage', 'insertTable', 'insertHR'],
+            'buttonsVisible': 1
+          },
+
+          'moreMisc': {
+            'buttons': ['undo', 'redo', 'fullscreen', 'selectAll', 'html', 'help'],
+            'align': 'right',
+            'buttonsVisible': 2
+          }
+        },
         events: {
           initialized: e =>
           {
             this.editorRef = e.getEditor();
+            this.editorRef.tribute = this.tribute;
+            this.editorRef.editor = this.editor;
             this.tribute.attach(this.editor.nativeElement);
             if (this.initialHtml)
             {

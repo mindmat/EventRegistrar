@@ -16,6 +16,7 @@ import 'froala-editor/js/plugins/align.min.js';
 import 'froala-editor/js/plugins/code_view.min.js';
 import 'froala-editor/js/plugins/code_beautifier.min.js';
 import 'froala-editor/js/plugins/help.min.js';
+import 'froala-editor/js/languages/de.js';
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';

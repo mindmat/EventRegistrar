@@ -426,6 +426,9 @@
   <data name="IndividualReductionType_Reduction" xml:space="preserve">
     <value>Reduction</value>
   </data>
+  <data name="InsertPlaceholder" xml:space="preserve">
+    <value>Insert placeholder</value>
+  </data>
   <data name="InternalNotes" xml:space="preserve">
     <value>Internal notes</value>
   </data>

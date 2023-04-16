@@ -516,6 +516,9 @@
   <data name="IndividualReductionType_Reduction" xml:space="preserve">
     <value>Reduktion</value>
   </data>
+  <data name="InsertPlaceholder" xml:space="preserve">
+    <value>Platzhalter hinzufügen</value>
+  </data>
   <data name="InternalNotes" xml:space="preserve">
     <value>Interne Notizen</value>
   </data>

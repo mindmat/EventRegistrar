@@ -1263,6 +1263,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Platzhalter hinzufügen.
+        /// </summary>
+        internal static string InsertPlaceholder {
+            get {
+                return ResourceManager.GetString("InsertPlaceholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Interne Notizen.
         /// </summary>
         internal static string InternalNotes {

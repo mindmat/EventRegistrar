@@ -1,10 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Payments.Refunds;
 using EventRegistrar.Backend.Registrations;
-using EventRegistrar.Backend.Registrations.Cancel;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
 
