@@ -2,11 +2,13 @@
 using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations.Matching;
+using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Responses;
 
@@ -24,6 +26,7 @@ public class ProcessRawRegistrationCommand : IRequest
 public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessRawRegistrationCommand>
 {
     private readonly IEventBus _eventBus;
+    private readonly CommandQueue _commandQueue;
     private readonly IQueryable<RegistrationForm> _forms;
     private readonly ILogger _logger;
     private readonly IRepository<RawRegistration> _rawRegistrations;
@@ -39,7 +42,8 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
                                                 IQueryable<RegistrationForm> forms,
                                                 RegistrationProcessorDelegator registrationProcessorDelegator,
                                                 IDateTimeProvider dateTimeProvider,
-                                                IEventBus eventBus)
+                                                IEventBus eventBus,
+                                                CommandQueue commandQueue)
     {
         _logger = logger;
         _rawRegistrations = rawRegistrations;
@@ -49,6 +53,7 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
         _registrationProcessorDelegator = registrationProcessorDelegator;
         _dateTimeProvider = dateTimeProvider;
         _eventBus = eventBus;
+        _commandQueue = commandQueue;
     }
 
     protected override async Task Handle(ProcessRawRegistrationCommand command, CancellationToken cancellationToken)
@@ -197,7 +202,7 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
                                   });
             }
 
-
+            _commandQueue.EnqueueCommand(new RecalculatePriceAndWaitingListCommand { RegistrationId = registration.Id });
             rawRegistration.Processed = _dateTimeProvider.Now;
         }
         catch (Exception ex)
