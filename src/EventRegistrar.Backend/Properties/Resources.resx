@@ -156,6 +156,9 @@
   <data name="AddPricePart" xml:space="preserve">
     <value>Neue Auswahl erstellen</value>
   </data>
+  <data name="AddTrack" xml:space="preserve">
+    <value>Neuen Track erstellen</value>
+  </data>
   <data name="AdmittedAt" xml:space="preserve">
     <value>Zugelassen</value>
   </data>

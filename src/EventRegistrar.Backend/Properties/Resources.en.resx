@@ -156,6 +156,9 @@
   <data name="AddPricePart" xml:space="preserve">
     <value>Create new selection</value>
   </data>
+  <data name="AddTrack" xml:space="preserve">
+    <value>Create new track</value>
+  </data>
   <data name="AdmittedAt" xml:space="preserve">
     <value>Admitted</value>
   </data>

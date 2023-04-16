@@ -178,6 +178,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Neuen Track erstellen.
+        /// </summary>
+        internal static string AddTrack {
+            get {
+                return ResourceManager.GetString("AddTrack", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zugelassen.
         /// </summary>
         internal static string AdmittedAt {
