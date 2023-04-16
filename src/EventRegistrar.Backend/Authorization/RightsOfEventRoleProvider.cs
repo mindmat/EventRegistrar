@@ -192,6 +192,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SaveRegistrationFormMappingsCommand);
             yield return nameof(SavePricingCommand);
             yield return nameof(RecalculateAllPriceAndWaitingListCommand);
+            yield return nameof(DeleteTestDataCommand);
         }
     }
 }

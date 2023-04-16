@@ -1,8 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-
-using MediatR;
-
-namespace EventRegistrar.Backend.Registrables.Tags;
+﻿namespace EventRegistrar.Backend.Registrables.Tags;
 
 public class RegistrableTagsQuery : IRequest<IEnumerable<RegistrableTagDisplayItem>>, IEventBoundRequest
 {

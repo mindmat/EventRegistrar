@@ -4488,6 +4488,38 @@
         }
       }
     },
+    "/api/DeleteTestDataCommand": {
+      "post": {
+        "tags": [
+          "DeleteTestData"
+        ],
+        "operationId": "DeleteTestData_Command",
+        "requestBody": {
+          "x-name": "DeleteTestDataCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteTestDataCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/EventByAcronymQuery": {
       "post": {
         "tags": [
@@ -10745,6 +10777,16 @@
           },
           "copyConfigurations": {
             "type": "boolean"
+          }
+        }
+      },
+      "DeleteTestDataCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
           }
         }
       },

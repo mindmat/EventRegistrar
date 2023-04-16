@@ -291,6 +291,9 @@
   <data name="DeleteRegistrable" xml:space="preserve">
     <value>Delete track</value>
   </data>
+  <data name="DeleteTestData" xml:space="preserve">
+    <value>Delete test data</value>
+  </data>
   <data name="Deposits" xml:space="preserve">
     <value>Deposits</value>
   </data>
@@ -689,6 +692,9 @@
   </data>
   <data name="OnlyParticipantsOf" xml:space="preserve">
     <value>Only to participants of</value>
+  </data>
+  <data name="OpenRegistrationDeleteTestData" xml:space="preserve">
+    <value>Open registration (incl. delete test data)</value>
   </data>
   <data name="OrDragDrop" xml:space="preserve">
     <value>or drag &amp; drop</value>

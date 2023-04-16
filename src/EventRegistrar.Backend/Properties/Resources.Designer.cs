@@ -610,6 +610,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Testdaten löschen.
+        /// </summary>
+        internal static string DeleteTestData {
+            get {
+                return ResourceManager.GetString("DeleteTestData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einzahlungen.
         /// </summary>
         internal static string Deposits {
@@ -2069,6 +2078,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string OnlyParticipantsOf {
             get {
                 return ResourceManager.GetString("OnlyParticipantsOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Registrierung öffnen (inkl. Testdaten löschen).
+        /// </summary>
+        internal static string OpenRegistrationDeleteTestData {
+            get {
+                return ResourceManager.GetString("OpenRegistrationDeleteTestData", resourceCulture);
             }
         }
         

@@ -300,6 +300,9 @@
   <data name="DeleteRegistrable" xml:space="preserve">
     <value>Track löschen</value>
   </data>
+  <data name="DeleteTestData" xml:space="preserve">
+    <value>Testdaten löschen</value>
+  </data>
   <data name="Deposits" xml:space="preserve">
     <value>Einzahlungen</value>
   </data>
@@ -785,6 +788,9 @@
   </data>
   <data name="OnlyParticipantsOf" xml:space="preserve">
     <value>Nur an Teilnehmer:innen von</value>
+  </data>
+  <data name="OpenRegistrationDeleteTestData" xml:space="preserve">
+    <value>Registrierung öffnen (inkl. Testdaten löschen)</value>
   </data>
   <data name="OrDragDrop" xml:space="preserve">
     <value>oder Drag &amp; Drop</value>

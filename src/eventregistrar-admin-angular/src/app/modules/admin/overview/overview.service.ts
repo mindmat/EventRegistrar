@@ -42,4 +42,17 @@ export class OverviewService extends FetchService<RegistrablesOverview | null>
   {
     return this.fetchItems(this.api.registrablesOverview_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
+
+  deleteTestData()
+  {
+    this.api.deleteTestData_Command({ eventId: this.eventService.selectedId })
+      .subscribe();
+  }
+
+  openRegistration(deleteTestData: boolean)
+  {
+    this.api.openRegistration_Command({ eventId: this.eventService.selectedId, deleteTestData })
+      .subscribe();
+  }
+
 }

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { OverviewService } from './overview.service';
 import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDisplayItem';
-import { DoubleRegistrableDisplayItem, PaymentOverview, PricePackageOverview, RegistrablesOverview, SingleRegistrableDisplayItem } from 'app/api/api';
+import { DoubleRegistrableDisplayItem, EventState, PaymentOverview, PricePackageOverview, RegistrablesOverview, SingleRegistrableDisplayItem } from 'app/api/api';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -14,6 +14,7 @@ import { DateTime } from 'luxon';
 import { TranslateService } from '@ngx-translate/core';
 import { NavigatorService } from '../navigator.service';
 import { PricePackagesOverviewService } from './price-packages-overview.service';
+import { EventService } from '../events/event.service';
 
 @Component({
     selector: 'app-overview',
@@ -23,6 +24,7 @@ import { PricePackagesOverviewService } from './price-packages-overview.service'
 })
 export class OverviewComponent implements OnInit, OnDestroy
 {
+    EventState = EventState;
     tags: RegistrableTagDisplayItem[];
     singleRegistrables: SingleRegistrableDisplayItem[];
     doubleRegistrables: DoubleRegistrableDisplayItem[];
@@ -51,7 +53,8 @@ export class OverviewComponent implements OnInit, OnDestroy
         private registrableService: RegistrablesService,
         private matDialog: MatDialog,
         private translateService: TranslateService,
-        public navigator: NavigatorService) { }
+        public navigator: NavigatorService,
+        public eventService: EventService) { }
 
     ngOnInit(): void
     {
@@ -180,6 +183,16 @@ export class OverviewComponent implements OnInit, OnDestroy
             autoFocus: true,
             data: { singleRegistrable, doubleRegistrable: null }
         });
+    }
+
+    openRegistration()
+    {
+        this.overviewService.openRegistration(true);
+    }
+
+    deleteTestData()
+    {
+        this.overviewService.deleteTestData();
     }
 
     deleteRegistrable(registrableId: string)

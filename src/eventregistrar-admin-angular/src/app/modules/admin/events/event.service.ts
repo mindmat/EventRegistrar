@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Api, EventDetails } from 'app/api/api';
-import { BehaviorSubject, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, filter, of, tap } from 'rxjs';
 import { NotificationService } from '../infrastructure/notification.service';
 
 @Injectable({
@@ -10,19 +10,15 @@ export class EventService
 {
   private selectedEventIdSubject: BehaviorSubject<string | null> = new BehaviorSubject(null);
   private selectedEventSubject: BehaviorSubject<EventDetails | null> = new BehaviorSubject(null);
-  // private selectedEventAcronymSubject: BehaviorSubject<string | null> = new BehaviorSubject('ll22');
-  // private selectedEventIdSubject: BehaviorSubject<string | null> = new BehaviorSubject('40EB7B32-696E-41D5-9A57-AE9A45344E2B');
-  // private selectedEventAcronymSubject: BehaviorSubject<string | null> = new BehaviorSubject('bsw2209');
-  // private selectedEventIdSubject: BehaviorSubject<string | null> = new BehaviorSubject('0CF31A7C-6CFF-4DD1-AC37-3EE98E713791');
-  // private selectedEventAcronymSubject: BehaviorSubject<string | null> = new BehaviorSubject('sb21');
-  // private selectedEventIdSubject: BehaviorSubject<string | null> = new BehaviorSubject('BF1D1E9F-259F-404A-A4B3-3FAE03B5942B');
-
   private cache = new Map<string, EventDetails>();
 
   constructor(private notificationService: NotificationService, private api: Api)
   {
     this.notificationService.switchToEvent(this.selectedEventIdSubject.value);
     this.selectedId$.subscribe(eventId => this.notificationService.switchToEvent(eventId));
+    this.notificationService.subscribe('EventByAcronymQuery').pipe(
+      filter(e => e.eventId === this.selectedId || e.eventId?.toLowerCase() === this.selectedId?.toLowerCase())
+    ).subscribe(_ => this.refresh());
   }
 
   get selected$(): Observable<EventDetails>
@@ -69,6 +65,23 @@ export class EventService
             this.setEvent(e);
           })
         );
+    }
+  }
+
+  refresh(): void
+  {
+    var eventAcronym = this.selected.acronym;
+    if (!!eventAcronym)
+    {
+      this.api.eventByAcronym_Query({ eventAcronym })
+        .subscribe(result =>
+        {
+          if (result !== null)
+          {
+            this.cache.set(eventAcronym, result);
+          }
+          this.setEvent(result);
+        });
     }
   }
 
