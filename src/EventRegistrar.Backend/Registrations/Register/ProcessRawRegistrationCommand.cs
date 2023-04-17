@@ -1,20 +1,19 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations.Matching;
+using EventRegistrar.Backend.Registrations.Overview;
 using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Responses;
 
 using Newtonsoft.Json;
-
-using QuestionType = EventRegistrar.Backend.RegistrationForms.Questions.QuestionType;
 
 namespace EventRegistrar.Backend.Registrations.Register;
 
@@ -203,6 +202,9 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
             }
 
             _commandQueue.EnqueueCommand(new RecalculatePriceAndWaitingListCommand { RegistrationId = registration.Id });
+            _eventBus.Publish(new QueryChanged { EventId = form.EventId, QueryName = nameof(PaymentOverviewQuery) });
+            _eventBus.Publish(new QueryChanged { EventId = form.EventId, QueryName = nameof(PricePackageOverviewQuery) });
+            _eventBus.Publish(new QueryChanged { EventId = form.EventId, QueryName = nameof(ParticipantsOfEventQuery) });
             rawRegistration.Processed = _dateTimeProvider.Now;
         }
         catch (Exception ex)
