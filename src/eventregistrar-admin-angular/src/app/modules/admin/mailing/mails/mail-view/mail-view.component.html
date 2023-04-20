@@ -102,7 +102,7 @@
                     </div>
 
                     <!-- Content -->
-                    <div class="flex mt-8 whitespace-pre-line leading-relaxed" [innerHTML]="mail.content">
+                    <div class="flex mt-8 whitespace-pre-line leading-relaxed" *ngIf="mail?.content" [froalaView]="mail.content">
                     </div>
 
                 </div>
