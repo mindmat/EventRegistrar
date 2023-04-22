@@ -48,7 +48,7 @@
 
                             <div class="line-clamp-2 text-secondary mt-2 mb-0">{{ 'IncomingPayments' | translate }}</div>
                             <div *ngFor="let incomingPayment of pendingPayout.incomingPayments" class="flex flex-col p-2 gap-y-2 border-2 rounded-lg bg-gray-100">
-                                <span class="leading-none">{{ 'PaymentFrom' | translate : {debitor: incomingPayment.paymentDebitorName} }}</span>
+                                <span class="leading-none">{{ 'PaymentFrom' | translate : {debitor: incomingPayment.paymentDebitorName??'?'} }}</span>
                                 <span class="leading-none text-secondary text-sm">{{ incomingPayment.assigned | number: '1.2-2' }}, {{ incomingPayment.paymentBookingDate | date: 'dd.MM.yy' }}</span>
                                 <span class="leading-none text-secondary text-sm">{{ incomingPayment.paymentDebitorIban }}</span>
                                 <span class="leading-none italic mt-2">{{ incomingPayment.paymentMessage }}</span>
@@ -128,7 +128,7 @@
                             <!-- Payments -->
                             <div class="line-clamp-2 text-secondary mt-2 mb-0">{{ 'IncomingPayments' | translate }}</div>
                             <div *ngFor="let incomingPayment of paidPayout.incomingPayments" class="flex flex-col p-2 gap-y-2 border-2 rounded-lg bg-gray-100">
-                                <span class="leading-none">{{ 'PaymentFrom' | translate : {debitor: incomingPayment.paymentDebitorName} }}</span>
+                                <span class="leading-none">{{ 'PaymentFrom' | translate : {debitor: incomingPayment.paymentDebitorName??'?'} }}</span>
                                 <span class="leading-none text-secondary text-sm">{{ incomingPayment.assigned | number: '1.2-2' }}, {{ incomingPayment.paymentBookingDate | date: 'dd.MM.yy' }}</span>
                                 <span class="leading-none text-secondary text-sm">{{ incomingPayment.paymentDebitorIban }}</span>
                                 <span class="leading-none italic mt-2">{{ incomingPayment.paymentMessage }}</span>
@@ -136,7 +136,7 @@
 
                             <div class="line-clamp-2 text-secondary mt-2 mb-0">{{ 'OutgoingPayments' | translate }}</div>
                             <div *ngFor="let incomingPayment of paidPayout.outgoingPayments" class="flex flex-col p-2 gap-y-2 border-2 rounded-lg bg-gray-100">
-                                <span class="leading-none">{{ 'PaymentTo' | translate : {creditor: incomingPayment.paymentCreditorName} }}</span>
+                                <span class="leading-none">{{ 'PaymentTo' | translate : {creditor: incomingPayment.paymentCreditorName??'?'} }}</span>
                                 <span class="leading-none text-secondary text-sm">{{ incomingPayment.assigned | number: '1.2-2' }}, {{ incomingPayment.paymentBookingDate | date: 'dd.MM.yy' }}</span>
                                 <span class="leading-none text-secondary text-sm">{{ incomingPayment.paymentCreditorIban }}</span>
                                 <span class="leading-none italic mt-2">{{ incomingPayment.paymentMessage }}</span>

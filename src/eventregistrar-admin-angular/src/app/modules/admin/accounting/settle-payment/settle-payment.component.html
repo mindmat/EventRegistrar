@@ -82,7 +82,7 @@
                             <div class="text-xl font-semibold leading-tight">{{ assignedRepayment.assignedAmount | number: '1.2-2' }}</div>
                             <div class="flex flex-col">
                                 <div class="text-secondary leading-tight">
-                                    {{ 'PaymentTo' | translate : {creditor: assignedRepayment.creditorName} }} ({{assignedRepayment.paymentDate | date:'dd.MM.yyyy'}})</div>
+                                    {{ 'PaymentTo' | translate : {creditor: assignedRepayment.creditorName??'?'} }} ({{assignedRepayment.paymentDate | date:'dd.MM.yyyy'}})</div>
                                 <div class="text-secondary leading-tight">{{assignedRepayment.creditorIban}}</div>
                             </div>
                             <button *ngIf="assignedRepayment.paymentAssignmentId" class="ml-auto" mat-icon-button (click)="unassign(assignedRepayment.paymentAssignmentId)">
@@ -139,7 +139,7 @@
                             <div class="text-xl font-semibold leading-tight">{{ assignedPayoutRequest.amount | number: '1.2-2' }}</div>
                             <div class="flex flex-col">
                                 <div class="text-secondary leading-tight">
-                                    {{ 'PaymentTo' | translate : {creditor: assignedPayoutRequest.participant} }}</div>
+                                    {{ 'PaymentTo' | translate : {creditor: assignedPayoutRequest.participant??'?'} }}</div>
                                 <!-- <div class="text-secondary leading-tight">{{assignedRepayment.creditorIban}}</div> -->
                             </div>
                             <!-- <button *ngIf="assignedRepayment.paymentAssignmentId" class="ml-auto" mat-icon-button (click)="unassign(assignedRepayment.paymentAssignmentId)">

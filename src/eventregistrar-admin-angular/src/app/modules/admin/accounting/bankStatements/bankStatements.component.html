@@ -39,11 +39,11 @@
                         <fuse-card class="flex flex-col w-80 p-4 rounded-xl">
                             <div *ngIf="booking.typ === CreditDebit.CRDT" class="flex flex-row items-baseline gap-x-2">
                                 <div class="text-xl font-semibold leading-tight">{{ booking.amount | number: '1.2-2' }}</div>
-                                <div class="text-secondary leading-tight">{{ 'PaymentFrom' | translate : {debitor: booking.debitorName} }}</div>
+                                <div class="text-secondary leading-tight">{{ 'PaymentFrom' | translate : {debitor: booking.debitorName??'?'} }}</div>
                             </div>
                             <div *ngIf="booking.typ === CreditDebit.DBIT" class="flex flex-row items-baseline gap-x-2">
                                 <div class="text-xl font-semibold leading-tight">{{ booking.amount | number: '1.2-2' }}</div>
-                                <div class="text-secondary leading-tight">{{ 'PaymentTo' | translate : {creditor: booking.creditorName} }}</div>
+                                <div class="text-secondary leading-tight">{{ 'PaymentTo' | translate : {creditor: booking.creditorName??'?'} }}</div>
                             </div>
                             <div *ngIf="booking.charges" class="flex flex-row items-baseline gap-x-2">
                                 <div class="text-xl font-semibold leading-tight">{{ booking.charges | number: '1.2-2' }}</div>
