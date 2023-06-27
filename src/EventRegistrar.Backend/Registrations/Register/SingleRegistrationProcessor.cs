@@ -144,13 +144,14 @@ public class SingleRegistrationProcessor
 
                 foreach (var questionOptionMapping in questionOption.Mappings)
                 {
-                    defaultRole = await ProcessCombinedRegistrableId(registration,
-                                                                     questionOptionMapping.Type,
-                                                                     questionOptionMapping.RegistrableId,
-                                                                     questionOptionMapping.Language,
-                                                                     soldOutRegistrableIds,
-                                                                     spots,
-                                                                     partnerRegistrableRequests);
+                    var role = await ProcessCombinedRegistrableId(registration,
+                                                                  questionOptionMapping.Type,
+                                                                  questionOptionMapping.RegistrableId,
+                                                                  questionOptionMapping.Language,
+                                                                  soldOutRegistrableIds,
+                                                                  spots,
+                                                                  partnerRegistrableRequests);
+                    defaultRole ??= role;
                 }
             }
         }
