@@ -161,6 +161,7 @@ public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSe
 
         var sendMailCommand = new SendMailCommand
                               {
+                                  EventId = mail.EventId!.Value,
                                   MailId = mail.Id,
                                   ContentHtml = mail.ContentHtml,
                                   ContentPlainText = mail.ContentPlainText,

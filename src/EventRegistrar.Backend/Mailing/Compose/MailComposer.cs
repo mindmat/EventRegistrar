@@ -254,7 +254,7 @@ public class MailComposer
                 result.AppendLine($"<td><strong>{package.Name}</strong></td>");
                 if (package.IsReductionsPackage)
                 {
-                    result.AppendLine($"<td></td>");
+                    result.AppendLine("<td></td>");
                 }
                 else
                 {

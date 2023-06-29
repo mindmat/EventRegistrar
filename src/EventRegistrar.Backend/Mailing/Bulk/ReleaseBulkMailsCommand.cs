@@ -46,6 +46,7 @@ public class ReleaseBulkMailsCommandHandler : AsyncRequestHandler<ReleaseBulkMai
         {
             var sendMailCommand = new SendMailCommand
                                   {
+                                      EventId = withheldMail.EventId!.Value,
                                       MailId = withheldMail.Id,
                                       ContentHtml = withheldMail.ContentHtml,
                                       ContentPlainText = withheldMail.ContentPlainText,

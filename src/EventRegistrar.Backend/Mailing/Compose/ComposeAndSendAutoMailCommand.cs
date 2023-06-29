@@ -168,6 +168,7 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
             mail.Sent = _dateTimeProvider.Now;
             var sendMailCommand = new SendMailCommand
                                   {
+                                      EventId = mail.EventId!.Value,
                                       MailId = mail.Id,
                                       ContentHtml = mail.ContentHtml,
                                       ContentPlainText = mail.ContentPlainText,
