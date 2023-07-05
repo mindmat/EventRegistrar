@@ -148,6 +148,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                                  ? new Payment
                                    {
                                        Id = Guid.NewGuid(),
+                                       EventId = eventId,
                                        Type = PaymentType.Outgoing,
                                        PaymentsFileId = paymentFile.Id,
                                        Info = camtEntry.Info,
@@ -169,6 +170,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                                  : new Payment
                                    {
                                        Id = Guid.NewGuid(),
+                                       EventId = eventId,
                                        Type = PaymentType.Incoming,
                                        PaymentsFileId = paymentFile.Id,
                                        Info = camtEntry.Info,
