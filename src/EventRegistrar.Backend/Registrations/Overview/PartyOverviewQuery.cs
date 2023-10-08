@@ -1,8 +1,5 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Registrables;
+﻿using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Compositions;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.Registrations.Overview;
 
@@ -23,7 +20,7 @@ public class PartyItem
     public int PartyPassFallbacksOnWaitingList { get; set; }
     public int Potential { get; set; }
     public int PotentialOnWaitingList { get; set; }
-    public int? SortyKey { get; set; }
+    public int? SortKey { get; set; }
     public int Total { get; set; }
 }
 
@@ -92,7 +89,7 @@ public class PartyOverviewQueryHandler : IRequestHandler<PartyOverviewQuery, IEn
                                               {
                                                   Id = map.PartyId,
                                                   Name = participants[map.PartyId].DisplayName,
-                                                  SortyKey = participants[map.PartyId].ShowInMailListOrder,
+                                                  SortKey = participants[map.PartyId].ShowInMailListOrder,
                                                   Direct = participants[map.PartyId].Participants,
                                                   Total = participants[map.PartyId].Participants
                                                         + participants.Values.Where(rbl =>
@@ -117,7 +114,7 @@ public class PartyOverviewQueryHandler : IRequestHandler<PartyOverviewQuery, IEn
                                                                                Potential = rbl.Potential - rbl.Participants
                                                                            })
                                               })
-                               .OrderBy(map => map.SortyKey);
+                               .OrderBy(map => map.SortKey);
 
         return overview;
     }

@@ -1,9 +1,12 @@
-﻿using EventRegistrar.Backend.Events;
+﻿using System.Diagnostics;
+
+using EventRegistrar.Backend.Events;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Registrables.Pricing;
 
+[DebuggerDisplay("{Name,nq}")]
 public class PricePackage : Entity
 {
     public Guid EventId { get; set; }
@@ -19,6 +22,7 @@ public class PricePackage : Entity
     public bool AllowAsAutomaticFallback { get; set; }
     public bool AllowAsManualFallback { get; set; }
     public int FallbackPriority { get; set; }
+    public int SortKey { get; set; }
 }
 
 public class PricePackageMap : EntityMap<PricePackage>
@@ -43,6 +47,7 @@ public class PricePackagePart : Entity
     public ICollection<RegistrableInPricePackagePart>? Registrables { get; set; }
     public PricePackagePartSelectionType SelectionType { get; set; }
     public decimal? PriceAdjustment { get; set; }
+    public int SortKey { get; set; }
 }
 
 public enum PricePackagePartSelectionType

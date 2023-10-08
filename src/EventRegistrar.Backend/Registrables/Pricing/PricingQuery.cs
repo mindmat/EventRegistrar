@@ -17,21 +17,24 @@ public class PricingQueryHandler : IRequestHandler<PricingQuery, IEnumerable<Pri
     public async Task<IEnumerable<PricePackageDto>> Handle(PricingQuery query, CancellationToken cancellationToken)
     {
         return await _packages.Where(ppg => ppg.EventId == query.EventId)
+                              .OrderBy(ppg => ppg.SortKey)
+                              .ThenBy(ppg => ppg.Name)
                               .Select(ppg => new PricePackageDto
                                              {
                                                  Id = ppg.Id,
                                                  Name = ppg.Name, Price = ppg.Price,
                                                  AllowAsAutomaticFallback = ppg.AllowAsAutomaticFallback,
                                                  AllowAsManualFallback = ppg.AllowAsManualFallback,
-                                                 Parts = ppg.Parts!.Select(ppp => new PricePackagePartDto
-                                                                                  {
-                                                                                      Id = ppp.Id,
-                                                                                      SelectionType = ppp.SelectionType,
-                                                                                      PriceAdjustment = ppp.PriceAdjustment,
-                                                                                      RegistrableIds = ppp.Registrables!.Select(rip => rip.RegistrableId)
-                                                                                  })
+                                                 Parts = ppg.Parts!
+                                                            .OrderBy(ppp => ppg.SortKey)
+                                                            .Select(ppp => new PricePackagePartDto
+                                                                           {
+                                                                               Id = ppp.Id,
+                                                                               SelectionType = ppp.SelectionType,
+                                                                               PriceAdjustment = ppp.PriceAdjustment,
+                                                                               RegistrableIds = ppp.Registrables!.Select(rip => rip.RegistrableId)
+                                                                           })
                                              })
-                              .OrderBy(ppg => ppg.Name)
                               .ToListAsync(cancellationToken);
     }
 }
