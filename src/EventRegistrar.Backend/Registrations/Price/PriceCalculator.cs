@@ -31,7 +31,7 @@ public class PriceCalculator
     public async Task<(decimal priceOriginal,
             decimal priceAdmitted,
             decimal priceAdmittedAndReduced,
-            IReadOnlyCollection<MatchingPackageResult> packagesOriginal,
+            IReadOnlyCollection<MatchingPackageResult> packagesRequested,
             IReadOnlyCollection<MatchingPackageResult> packagesAdmitted,
             bool isOnWaitingList,
             IEnumerable<MatchingPackageResult> possibleFallbackPackages)>
@@ -52,7 +52,7 @@ public class PriceCalculator
     public async Task<(decimal priceOriginal,
             decimal priceAdmitted,
             decimal priceAdmittedAndReduced,
-            IReadOnlyCollection<MatchingPackageResult> packagesOriginal,
+            IReadOnlyCollection<MatchingPackageResult> packagesRequested,
             IReadOnlyCollection<MatchingPackageResult> packagesAdmitted,
             bool isOnWaitingList,
             IEnumerable<MatchingPackageResult> possibleFallbackPackages)>
@@ -68,9 +68,10 @@ public class PriceCalculator
                                      .ToList();
 
         var packages = await _pricePackages.Where(ppg => ppg.EventId == registration.EventId)
-                                           .Include(ppg => ppg.Parts!)
+                                           .Include(ppg => ppg.Parts!.OrderBy(ppp => ppp.SortKey))
                                            .ThenInclude(ppp => ppp.Registrables!)
                                            .ThenInclude(rip => rip.Registrable)
+                                           .OrderBy(ppg => ppg.SortKey)
                                            .ToListAsync();
         var (priceOriginal, packagesOriginal, allCoveredOriginal) = CalculatePriceOfSpots(registration.Id, notCancelledSpots, packages, coreTracks);
 
