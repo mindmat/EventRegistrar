@@ -73,6 +73,7 @@ public class AutoMailTemplatesQueryHandler : IRequestHandler<AutoMailTemplatesQu
                                                       .AppendIf(_config.SingleRegistrationPossible, () => CreateType(MailType.SingleRegistrationSecondReminder, existingTemplates))
                                                       .AppendIf(_config.PartnerRegistrationPossible, () => CreateType(MailType.PartnerRegistrationFirstReminder, existingTemplates))
                                                       .AppendIf(_config.PartnerRegistrationPossible, () => CreateType(MailType.PartnerRegistrationSecondReminder, existingTemplates))
+                                                      .Append(CreateType(MailType.RegistrationCancelled, existingTemplates))
                                 },
                                 new AutoMailTemplateGroup
                                 {

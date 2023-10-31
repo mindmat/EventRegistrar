@@ -13,7 +13,6 @@ import { v4 as createUuid } from 'uuid';
 })
 export class FormMappingComponent implements OnInit
 {
-  private unsubscribeAll: Subject<any> = new Subject<any>();
   forms: RegistrationFormItem[];
   allOptionMappings: AvailableQuestionOptionMapping[];
   allQuestionMappings: AvailableQuestionMapping[];
@@ -21,6 +20,7 @@ export class FormMappingComponent implements OnInit
   MappingDirection = MappingDirection;
   availableTracks: AvailableQuestionOptionMapping[];
   allQuestionOptions: QuestionOption[];
+  private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(private formsService: FormsService,
     private questionMappingService: QuestionMappingService,
@@ -55,7 +55,7 @@ export class FormMappingComponent implements OnInit
       .subscribe((mappings: AvailableQuestionOptionMapping[]) =>
       {
         this.allOptionMappings = mappings;
-        this.availableTracks = mappings.filter(map => map.type == MappingType.SingleRegistrable || map.type == MappingType.PartnerRegistrable);
+        this.availableTracks = mappings.filter(map => map.type === MappingType.SingleRegistrable || map.type === MappingType.PartnerRegistrable);
 
         // Mark for check
         this.changeDetectorRef.markForCheck();
