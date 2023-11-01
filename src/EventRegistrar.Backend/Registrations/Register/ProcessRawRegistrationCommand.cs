@@ -227,6 +227,6 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
         }
 
         var optionId = question?.QuestionOptions?.Where(qop => qop.Answer == response.Response).FirstOrDefault()?.Id;
-        return (question?.Id, optionId.HasValue ? new[] { optionId.Value } : new Guid[] { });
+        return (question?.Id, optionId.HasValue ? new[] { optionId.Value } : Array.Empty<Guid>());
     }
 }

@@ -64,94 +64,92 @@ public class SingleRegistrationProcessor
         var spots = new List<Seat>();
         foreach (var question in form.Questions)
         {
-            var response = registration.Responses!.FirstOrDefault(rsp => rsp.QuestionId == question.Id);
-            if (response == null)
+            var responses = registration.Responses!.Where(rsp => rsp.QuestionId == question.Id);
+            foreach (var response in responses)
             {
-                continue;
-            }
-
-            if (question.Mapping != null)
-            {
-                switch (question.Mapping)
+                if (question.Mapping != null)
                 {
-                    case QuestionMappingType.FirstName:
-                        {
-                            registration.RespondentFirstName = response.ResponseString;
-                            break;
-                        }
-                    case QuestionMappingType.LastName:
-                        {
-                            registration.RespondentLastName = response.ResponseString;
-                            break;
-                        }
-                    case QuestionMappingType.EMail:
-                        {
-                            registration.RespondentEmail = response.ResponseString;
-                            break;
-                        }
-                    case QuestionMappingType.Phone:
-                        {
-                            registration.Phone = response.ResponseString;
-                            registration.PhoneNormalized = _phoneNormalizer.NormalizePhone(registration.Phone);
-                            break;
-                        }
-                    //case QuestionMappingType.Town:
-                    //    {
-                    //        registration.RespondentEmail = response.ResponseString;
-                    //        break;
-                    //    }
-                    case QuestionMappingType.Remarks:
-                        {
-                            if (string.IsNullOrWhiteSpace(response.ResponseString))
+                    switch (question.Mapping)
+                    {
+                        case QuestionMappingType.FirstName:
                             {
+                                registration.RespondentFirstName = response.ResponseString;
                                 break;
                             }
-
-                            var text = $"{question.Section}: {response.ResponseString}";
-                            if (string.IsNullOrEmpty(registration.Remarks))
+                        case QuestionMappingType.LastName:
                             {
-                                registration.Remarks = text;
+                                registration.RespondentLastName = response.ResponseString;
+                                break;
                             }
-                            else
+                        case QuestionMappingType.EMail:
                             {
-                                registration.Remarks += "\r\n" + text;
+                                registration.RespondentEmail = response.ResponseString;
+                                break;
                             }
+                        case QuestionMappingType.Phone:
+                            {
+                                registration.Phone = response.ResponseString;
+                                registration.PhoneNormalized = _phoneNormalizer.NormalizePhone(registration.Phone);
+                                break;
+                            }
+                        //case QuestionMappingType.Town:
+                        //    {
+                        //        registration.RespondentEmail = response.ResponseString;
+                        //        break;
+                        //    }
+                        case QuestionMappingType.Remarks:
+                            {
+                                if (string.IsNullOrWhiteSpace(response.ResponseString))
+                                {
+                                    break;
+                                }
 
+                                var text = $"{question.Section}: {response.ResponseString}";
+                                if (string.IsNullOrEmpty(registration.Remarks))
+                                {
+                                    registration.Remarks = text;
+                                }
+                                else
+                                {
+                                    registration.Remarks += "\r\n" + text;
+                                }
+
+                                break;
+                            }
+                        case QuestionMappingType.Partner:
+                            {
+                                registration.PartnerOriginal = response.ResponseString;
+                                if (string.IsNullOrWhiteSpace(registration.PartnerOriginal))
+                                {
+                                    registration.PartnerOriginal = null;
+                                }
+
+                                registration.PartnerNormalized = registration.PartnerOriginal?.ToLowerInvariant();
+                                break;
+                            }
+                        case null:
                             break;
-                        }
-                    case QuestionMappingType.Partner:
-                        {
-                            registration.PartnerOriginal = response.ResponseString;
-                            if (string.IsNullOrWhiteSpace(registration.PartnerOriginal))
-                            {
-                                registration.PartnerOriginal = null;
-                            }
-
-                            registration.PartnerNormalized = registration.PartnerOriginal?.ToLowerInvariant();
-                            break;
-                        }
-                    case null:
-                        break;
+                    }
                 }
-            }
-            else if (response.QuestionOptionId != null)
-            {
-                var questionOption = question.QuestionOptions!.FirstOrDefault(qop => qop.Id == response.QuestionOptionId);
-                if (questionOption?.Mappings == null)
+                else if (response.QuestionOptionId != null)
                 {
-                    continue;
-                }
+                    var questionOption = question.QuestionOptions!.FirstOrDefault(qop => qop.Id == response.QuestionOptionId);
+                    if (questionOption?.Mappings == null)
+                    {
+                        continue;
+                    }
 
-                foreach (var questionOptionMapping in questionOption.Mappings)
-                {
-                    var role = await ProcessCombinedRegistrableId(registration,
-                                                                  questionOptionMapping.Type,
-                                                                  questionOptionMapping.RegistrableId,
-                                                                  questionOptionMapping.Language,
-                                                                  soldOutRegistrableIds,
-                                                                  spots,
-                                                                  partnerRegistrableRequests);
-                    defaultRole ??= role;
+                    foreach (var questionOptionMapping in questionOption.Mappings)
+                    {
+                        var role = await ProcessCombinedRegistrableId(registration,
+                                                                      questionOptionMapping.Type,
+                                                                      questionOptionMapping.RegistrableId,
+                                                                      questionOptionMapping.Language,
+                                                                      soldOutRegistrableIds,
+                                                                      spots,
+                                                                      partnerRegistrableRequests);
+                        defaultRole ??= role;
+                    }
                 }
             }
         }
