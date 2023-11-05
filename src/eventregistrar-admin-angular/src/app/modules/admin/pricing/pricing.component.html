@@ -62,6 +62,17 @@
                     </mat-slide-toggle>
                 </div>
 
+                <div class="flex flex-row items-start justify-start">
+                    <div class="flex-auto cursor-pointer" (click)="showInOverviewToggle.toggle()">
+                        <div class="leading-6 font-medium">{{ 'ShowInOverview' | translate }}</div>
+                        <div class="text-md text-secondary">
+                            {{ 'ShowInOverviewExplanation' | translate }}
+                        </div>
+                    </div>
+                    <mat-slide-toggle class="ml-2" [color]="'primary'" #showInOverviewToggle formControlName="showInOverview">
+                    </mat-slide-toggle>
+                </div>
+
 
                 <!-- Parts -->
                 <div formArrayName="parts">
@@ -80,7 +91,7 @@
                                 </mat-form-field>
 
                                 <!-- Price adjustment -->
-                                <div class="sm:col-span-4 basis-1/4" *ngIf="partForm?.value?.selectionType == 11">
+                                <div class="sm:col-span-4 basis-1/4" *ngIf="partForm?.value?.selectionType === 11">
                                     <mat-form-field class="fuse-mat-no-subscript w-full">
                                         <mat-label>{{ 'PriceAdjustment' | translate }}</mat-label>
                                         <input type="number" formControlName="priceAdjustment" matInput>

@@ -5996,7 +5996,7 @@
             "type": "integer",
             "format": "int32"
           },
-          "sortyKey": {
+          "sortKey": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -7290,6 +7290,9 @@
             "type": "boolean"
           },
           "allowAsManualFallback": {
+            "type": "boolean"
+          },
+          "showInOverview": {
             "type": "boolean"
           },
           "parts": {
@@ -9831,6 +9834,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
           "contentHtml": {
             "type": "string"
           },

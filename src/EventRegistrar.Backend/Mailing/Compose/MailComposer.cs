@@ -116,11 +116,14 @@ public class MailComposer
                 {
                     templateFiller[key] = registrationForPrefix?.Phone;
                 }
-                else if ((placeholderKey == MailPlaceholder.SpotList || parts.key.ToUpperInvariant() == "SEATLIST") && registrationForPrefix != null)
+                else if ((placeholderKey == MailPlaceholder.SpotList
+                       || parts.key.ToUpperInvariant() == "SEATLIST")
+                      && registrationForPrefix != null)
                 {
-                    templateFiller[key] = await GetSpotList(registrationForPrefix.Id);
+                    templateFiller[key] = await GetSpotList(registrationForPrefix.Id, registrationForPrefix.SoldOutMessage);
                 }
-                else if (placeholderKey == MailPlaceholder.PartnerName || parts.key?.ToUpperInvariant() == "PARTNER")
+                else if (placeholderKey == MailPlaceholder.PartnerName
+                      || parts.key?.ToUpperInvariant() == "PARTNER")
                 {
                     templateFiller[key] = registrationForPrefix?.PartnerOriginal;
                 }
@@ -233,7 +236,7 @@ public class MailComposer
                    : (null, key);
     }
 
-    private async Task<string> GetSpotList(Guid registrationId)
+    private async Task<string> GetSpotList(Guid registrationId, string? soldOutMessage)
     {
         var (_, _, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, _, _) = await _priceCalculator.CalculatePrice(registrationId);
         var result = new StringBuilder();
@@ -343,12 +346,16 @@ public class MailComposer
             result.AppendLine("</table>");
         }
 
+        if (soldOutMessage != null)
+        {
+            result.AppendLine();
+            result.AppendLine();
+            foreach (var line in soldOutMessage.Split("\r\n").SelectMany(split => split.Split('\n', '\r', StringSplitOptions.RemoveEmptyEntries)))
+            {
+                result.AppendLine(line);
+            }
+        }
+
         return result.ToString();
-
-
-        //if (registration.SoldOutMessage != null)
-        //{
-        //    seatList += $"<br /><br />{registration.SoldOutMessage.Replace(Environment.NewLine, "<br />")}";
-        //}
     }
 }

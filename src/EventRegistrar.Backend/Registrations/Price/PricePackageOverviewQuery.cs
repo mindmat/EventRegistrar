@@ -47,14 +47,16 @@ public class PricePackageOverviewQueryHandler : IRequestHandler<PricePackageOver
                                           .ToDictionary(grp => grp.Key, grp => grp.Count());
 
         var packages = await _pricePackages.Where(pkg => pkg.EventId == query.EventId
-                                                      && packagesCounts.Keys.Contains(pkg.Id))
+                                                      && packagesCounts.Keys.Contains(pkg.Id)
+                                                      && pkg.ShowInOverview)
                                            .ToDictionaryAsync(pkg => pkg.Id,
                                                               pkg => new { pkg.Name, pkg.SortKey },
                                                               cancellationToken);
 
         return new PricePackageOverview
                {
-                   Packages = packagesCounts.OrderBy(pkg => packages[pkg.Key].SortKey)
+                   Packages = packagesCounts.Where(pkg => packages.ContainsKey(pkg.Key))
+                                            .OrderBy(pkg => packages[pkg.Key].SortKey)
                                             .Select(pkg => new PricePackageCount
                                                            {
                                                                PricePackageId = pkg.Key,

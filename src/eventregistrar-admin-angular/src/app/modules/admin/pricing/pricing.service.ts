@@ -22,15 +22,14 @@ export class PricingService extends FetchService<PricePackageDto[]> {
     return this.result$;
   }
 
-  fetchPricing()
+  fetchPricing(): Observable<PricePackageDto[]>
   {
     return this.fetchItems(this.api.pricing_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
 
-  save(packages: PricePackageDto[])
+  save(packages: PricePackageDto[]): void
   {
-    throw this.api.savePricing_Command({ eventId: this.eventService.selectedId, packages })
+    this.api.savePricing_Command({ eventId: this.eventService.selectedId, packages })
       .subscribe();
   }
-
 }

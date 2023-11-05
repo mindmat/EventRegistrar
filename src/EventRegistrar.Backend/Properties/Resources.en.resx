@@ -1017,6 +1017,12 @@
   <data name="ShowFinished" xml:space="preserve">
     <value>Show finished events</value>
   </data>
+  <data name="ShowInOverview" xml:space="preserve">
+    <value>Show in overview</value>
+  </data>
+  <data name="ShowInOverviewExplanation" xml:space="preserve">
+    <value>Shows this price package in the event overview and the number of participants.</value>
+  </data>
   <data name="SingleNotPossible" xml:space="preserve">
     <value>Single registration not possible</value>
   </data>

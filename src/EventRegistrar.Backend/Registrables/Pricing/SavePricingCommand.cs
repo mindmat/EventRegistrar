@@ -56,6 +56,7 @@ public class SavePricingCommandHandler : AsyncRequestHandler<SavePricingCommand>
             package.Price = packageToSave.Price;
             package.AllowAsAutomaticFallback = packageToSave.AllowAsAutomaticFallback;
             package.AllowAsManualFallback = packageToSave.AllowAsManualFallback;
+            package.ShowInOverview = packageToSave.ShowInOverview;
 
             foreach (var partToSave in packageToSave.Parts ?? Enumerable.Empty<PricePackagePartDto>())
             {

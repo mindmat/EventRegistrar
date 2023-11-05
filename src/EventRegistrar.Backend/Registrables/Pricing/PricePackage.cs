@@ -23,6 +23,7 @@ public class PricePackage : Entity
     public bool AllowAsManualFallback { get; set; }
     public int FallbackPriority { get; set; }
     public int SortKey { get; set; }
+    public bool ShowInOverview { get; set; }
 }
 
 public class PricePackageMap : EntityMap<PricePackage>

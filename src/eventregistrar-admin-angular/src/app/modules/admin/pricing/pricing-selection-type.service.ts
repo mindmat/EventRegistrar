@@ -22,7 +22,7 @@ export class PricePackagePartSelectionTypeService extends FetchService<PricePack
     return this.result$;
   }
 
-  fetchSelectionTypes()
+  fetchSelectionTypes(): Observable<PricePackagePartSelectionTypeOption[]>
   {
     return this.fetchItems(this.api.pricePackagePartSelectionType_Query({}), null, this.eventService.selectedId);
   }

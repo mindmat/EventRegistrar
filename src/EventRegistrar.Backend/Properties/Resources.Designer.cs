@@ -3090,6 +3090,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to In Übersicht anzeigen.
+        /// </summary>
+        internal static string ShowInOverview {
+            get {
+                return ResourceManager.GetString("ShowInOverview", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zeigt das Preispaket mit der Anzahl der Teilnehmer in der Event-Übersicht an..
+        /// </summary>
+        internal static string ShowInOverviewExplanation {
+            get {
+                return ResourceManager.GetString("ShowInOverviewExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einzelanmeldung nicht möglich.
         /// </summary>
         internal static string SingleNotPossible {

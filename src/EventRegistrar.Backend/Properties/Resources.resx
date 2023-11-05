@@ -1126,6 +1126,12 @@
   <data name="ShowFinished" xml:space="preserve">
     <value>Beendete Events anzeigen</value>
   </data>
+  <data name="ShowInOverview" xml:space="preserve">
+    <value>In Übersicht anzeigen</value>
+  </data>
+  <data name="ShowInOverviewExplanation" xml:space="preserve">
+    <value>Zeigt das Preispaket mit der Anzahl der Teilnehmer in der Event-Übersicht an.</value>
+  </data>
   <data name="SingleNotPossible" xml:space="preserve">
     <value>Einzelanmeldung nicht möglich</value>
   </data>

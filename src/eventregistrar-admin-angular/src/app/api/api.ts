@@ -8063,7 +8063,7 @@ export interface PartyItem {
     partyPassFallbacksOnWaitingList?: number;
     potential?: number;
     potentialOnWaitingList?: number;
-    sortyKey?: number | null;
+    sortKey?: number | null;
     total?: number;
 }
 
@@ -8494,6 +8494,7 @@ export interface PricePackageDto {
     price?: number;
     allowAsAutomaticFallback?: boolean;
     allowAsManualFallback?: boolean;
+    showInOverview?: boolean;
     parts?: PricePackagePartDto[] | null;
 }
 
@@ -9277,6 +9278,7 @@ export interface UpdateAutoMailTemplateCommand {
 }
 
 export interface SendMailCommand {
+    eventId?: string;
     contentHtml?: string;
     contentPlainText?: string;
     mailId?: string;

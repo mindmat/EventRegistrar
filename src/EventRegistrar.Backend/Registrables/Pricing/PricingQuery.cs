@@ -25,6 +25,7 @@ public class PricingQueryHandler : IRequestHandler<PricingQuery, IEnumerable<Pri
                                                  Name = ppg.Name, Price = ppg.Price,
                                                  AllowAsAutomaticFallback = ppg.AllowAsAutomaticFallback,
                                                  AllowAsManualFallback = ppg.AllowAsManualFallback,
+                                                 ShowInOverview = ppg.ShowInOverview,
                                                  Parts = ppg.Parts!
                                                             .OrderBy(ppp => ppg.SortKey)
                                                             .Select(ppp => new PricePackagePartDto
@@ -46,6 +47,7 @@ public record PricePackageDto
     public decimal Price { get; set; }
     public bool AllowAsAutomaticFallback { get; set; }
     public bool AllowAsManualFallback { get; set; }
+    public bool ShowInOverview { get; set; }
     public IEnumerable<PricePackagePartDto>? Parts { get; set; }
 }
 
