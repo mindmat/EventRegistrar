@@ -13,15 +13,15 @@ public class DeleteMailsCommand : IRequest, IEventBoundRequest
 public class DeleteMailsCommandHandler : AsyncRequestHandler<DeleteMailsCommand>
 {
     private readonly IRepository<Mail> _mails;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly IEventBus _eventBus;
 
     public DeleteMailsCommandHandler(IRepository<Mail> mails,
-                                     ReadModelUpdater readModelUpdater,
+                                     ChangeTrigger changeTrigger,
                                      IEventBus eventBus)
     {
         _mails = mails;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
         _eventBus = eventBus;
     }
 
@@ -36,7 +36,7 @@ public class DeleteMailsCommandHandler : AsyncRequestHandler<DeleteMailsCommand>
             mailToDelete.Discarded = true;
             foreach (var registrationId in mailToDelete.Registrations!.Select(reg => reg.RegistrationId))
             {
-                _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registrationId, command.EventId);
+                _changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId, command.EventId);
             }
         }
 

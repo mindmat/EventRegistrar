@@ -30,19 +30,19 @@ public class SendMailCommandHandler : AsyncRequestHandler<SendMailCommand>
     private const string MessageIdHeader = "X-Message-Id";
     private readonly ILogger _logger;
     private readonly IRepository<Mail> _mails;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly MailConfiguration _mailConfiguration;
     private readonly ExternalMailConfigurations _externalMailConfiguration;
 
     public SendMailCommandHandler(ILogger logger,
                                   IRepository<Mail> mails,
-                                  ReadModelUpdater readModelUpdater,
+                                  ChangeTrigger changeTrigger,
                                   MailConfiguration mailConfiguration,
                                   ExternalMailConfigurations externalMailConfiguration)
     {
         _logger = logger;
         _mails = mails;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
         _mailConfiguration = mailConfiguration;
         _externalMailConfiguration = externalMailConfiguration;
     }
@@ -115,7 +115,7 @@ public class SendMailCommandHandler : AsyncRequestHandler<SendMailCommand>
 
         if (mail.EventId != null)
         {
-            _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, mail.EventId);
+            _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, mail.EventId);
         }
     }
 }

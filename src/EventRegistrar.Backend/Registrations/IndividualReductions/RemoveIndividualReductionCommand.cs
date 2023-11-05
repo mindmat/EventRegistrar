@@ -15,16 +15,16 @@ public class RemoveIndividualReductionCommand : IRequest, IEventBoundRequest
 public class RemoveIndividualReductionCommandHandler : IRequestHandler<RemoveIndividualReductionCommand>
 {
     private readonly IEventBus _eventBus;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly IRepository<IndividualReduction> _reductions;
 
     public RemoveIndividualReductionCommandHandler(IRepository<IndividualReduction> reductions,
                                                    IEventBus eventBus,
-                                                   ReadModelUpdater readModelUpdater)
+                                                   ChangeTrigger changeTrigger)
     {
         _reductions = reductions;
         _eventBus = eventBus;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     public async Task<Unit> Handle(RemoveIndividualReductionCommand command, CancellationToken cancellationToken)
@@ -40,8 +40,8 @@ public class RemoveIndividualReductionCommandHandler : IRequestHandler<RemoveInd
                               Amount = reduction.Amount
                           });
 
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(reduction.RegistrationId, command.EventId);
-        _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
+        _changeTrigger.TriggerUpdate<RegistrationCalculator>(reduction.RegistrationId, command.EventId);
+        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
 
         return Unit.Value;
     }

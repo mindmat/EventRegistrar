@@ -28,7 +28,7 @@ public class CreateEventCommand : IRequest
 public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
 {
     private readonly AuthenticatedUserId _authenticatedUserId;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly IRepository<Event> _events;
     private readonly IRepository<RegistrableComposition> _registrableCompositions;
     private readonly IEventBus _eventBus;
@@ -36,13 +36,13 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
     public CreateEventCommandHandler(IRepository<Event> events,
                                      IRepository<RegistrableComposition> registrableCompositions,
                                      AuthenticatedUserId authenticatedUserId,
-                                     ReadModelUpdater readModelUpdater,
+                                     ChangeTrigger changeTrigger,
                                      IEventBus eventBus)
     {
         _events = events;
         _registrableCompositions = registrableCompositions;
         _authenticatedUserId = authenticatedUserId;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
         _eventBus = eventBus;
     }
 
@@ -214,8 +214,8 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
 
         _events.InsertObjectTree(newEvent);
 
-        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, newEventId);
-        _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, newEventId);
+        _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, newEventId);
+        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, newEventId);
 
         _eventBus.Publish(new QueryChanged { QueryName = nameof(EventsOfUserQuery) });
         _eventBus.Publish(new QueryChanged { QueryName = nameof(SearchEventQuery) });

@@ -19,14 +19,14 @@ public class FixInvalidAddressCommandHandler : AsyncRequestHandler<FixInvalidAdd
 {
     private readonly IEventBus _eventBus;
     private readonly IRepository<Registration> _registrations;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
 
     public FixInvalidAddressCommandHandler(IRepository<Registration> registrations,
-                                           ReadModelUpdater readModelUpdater,
+                                           ChangeTrigger changeTrigger,
                                            IEventBus eventBus)
     {
         _registrations = registrations;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
         _eventBus = eventBus;
     }
 
@@ -59,6 +59,6 @@ public class FixInvalidAddressCommandHandler : AsyncRequestHandler<FixInvalidAdd
                               NewEmailAddress = command.NewEmailAddress
                           });
 
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
     }
 }

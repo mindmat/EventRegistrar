@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Registrables.Tags;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.Register;
@@ -12,14 +13,17 @@ public class RegistrablesOverviewCalculator : ReadModelCalculator<RegistrablesOv
 {
     private readonly IQueryable<Registration> _registrations;
     private readonly IQueryable<Registrable> _registrables;
+    private readonly IQueryable<RegistrableTag> _tags;
     private readonly IAuthorizationChecker _authorizationChecker;
 
     public RegistrablesOverviewCalculator(IQueryable<Registration> registrations,
                                           IQueryable<Registrable> registrables,
+                                          IQueryable<RegistrableTag> tags,
                                           IAuthorizationChecker authorizationChecker)
     {
         _registrations = registrations;
         _registrables = registrables;
+        _tags = tags;
         _authorizationChecker = authorizationChecker;
     }
 
@@ -42,11 +46,15 @@ public class RegistrablesOverviewCalculator : ReadModelCalculator<RegistrablesOv
                                                                          .Select(reg => reg.Id));
 
         var userCanDeleteRegistrable = await _authorizationChecker.UserHasRight(eventId, nameof(DeleteRegistrableCommand));
-
+        var tags = await _tags.Where(tag => tag.EventId == eventId)
+                              .ToDictionaryAsync(tag => tag.Tag,
+                                                 tag => tag.SortKey,
+                                                 cancellationToken);
         return new RegistrablesOverview
                {
                    SingleRegistrables = registrables.Where(rbl => rbl.MaximumDoubleSeats == null)
-                                                    .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
+                                                    .OrderBy(rbl => rbl.Tag != null && tags.TryGetValue(rbl.Tag, out var sortKey) ? sortKey : int.MaxValue)
+                                                    .ThenBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
                                                     .Select(rbl => new SingleRegistrableDisplayItem
                                                                    {
                                                                        Id = rbl.Id,
@@ -56,8 +64,7 @@ public class RegistrablesOverviewCalculator : ReadModelCalculator<RegistrablesOv
                                                                        SpotsAvailable = rbl.MaximumSingleSeats,
                                                                        HasWaitingList = rbl.HasWaitingList,
                                                                        AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,
-                                                                       Accepted = rbl.Spots!.Count(spt => !spt.IsCancelled
-                                                                                                       && !spt.IsWaitingList
+                                                                       Accepted = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: false }
                                                                                                        && !registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty)),
                                                                        OnWaitingList = rbl.Spots!.Count(spt => !spt.IsCancelled
                                                                                                             && (spt.IsWaitingList
@@ -65,13 +72,11 @@ public class RegistrablesOverviewCalculator : ReadModelCalculator<RegistrablesOv
                                                                        IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
                                                                                   && userCanDeleteRegistrable
                                                                                   && rbl.Event!.State == RegistrationForms.EventState.Setup,
-                                                                       Class = rbl.Spots!.Where(spt => !spt.IsCancelled
-                                                                                                    && !spt.IsWaitingList)
+                                                                       Class = rbl.Spots!.Where(spt => spt is { IsCancelled: false, IsWaitingList: false })
                                                                                   .Select(GetSpotState)
                                                                                   .FillUpIf(rbl.MaximumSingleSeats, () => SpotState.Available)
                                                                                   .ToList(),
-                                                                       WaitingList = rbl.Spots!.Where(spt => !spt.IsCancelled
-                                                                                                          && spt.IsWaitingList)
+                                                                       WaitingList = rbl.Spots!.Where(spt => spt is { IsCancelled: false, IsWaitingList: true })
                                                                                         .Select(GetSpotState)
                                                                                         .ToList()
                                                                    }),
@@ -87,33 +92,25 @@ public class RegistrablesOverviewCalculator : ReadModelCalculator<RegistrablesOv
                                                                        HasWaitingList = rbl.HasWaitingList,
                                                                        AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,
                                                                        MaximumAllowedImbalance = rbl.MaximumAllowedImbalance,
-                                                                       LeadersAccepted = rbl.Spots!.Count(spt => !spt.IsCancelled
-                                                                                                              && !spt.IsWaitingList
-                                                                                                              && spt.RegistrationId != null),
-                                                                       FollowersAccepted = rbl.Spots!.Count(spt => !spt.IsCancelled
-                                                                                                                && !spt.IsWaitingList
-                                                                                                                && spt.RegistrationId_Follower != null),
-                                                                       LeadersOnWaitingList = rbl.Spots!.Count(spt => !spt.IsCancelled
-                                                                                                                   && spt.IsWaitingList
+                                                                       LeadersAccepted = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: false, RegistrationId: not null }),
+                                                                       FollowersAccepted = rbl.Spots!.Count(
+                                                                           spt => spt is { IsCancelled: false, IsWaitingList: false, RegistrationId_Follower: not null }),
+                                                                       LeadersOnWaitingList = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: true }
                                                                                                                    && spt.IsSingleLeaderSpot()),
-                                                                       FollowersOnWaitingList = rbl.Spots!.Count(spt => !spt.IsCancelled
-                                                                                                                     && spt.IsWaitingList
+                                                                       FollowersOnWaitingList = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: true }
                                                                                                                      && spt.IsSingleFollowerSpot()),
-                                                                       CouplesOnWaitingList = rbl.Spots!.Count(spt => !spt.IsCancelled
-                                                                                                                   && spt.IsWaitingList
+                                                                       CouplesOnWaitingList = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: true }
                                                                                                                    && (spt.IsUnmatchedPartnerSpot() || spt.IsMatchedPartnerSpot())),
                                                                        IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
                                                                                   && userCanDeleteRegistrable
                                                                                   && rbl.Event!.State == RegistrationForms.EventState.Setup,
-                                                                       Class = rbl.Spots!.Where(spt => !spt.IsCancelled
-                                                                                                    && !spt.IsWaitingList)
+                                                                       Class = rbl.Spots!.Where(spt => spt is { IsCancelled: false, IsWaitingList: false })
                                                                                   .OrderBy(spt => spt.FirstPartnerJoined)
                                                                                   .Select(GetDoubleSpotState)
                                                                                   .FillUpIf(rbl.MaximumDoubleSeats,
                                                                                             () => new DoubleSpotState { Leader = SpotState.Available, Follower = SpotState.Available })
                                                                                   .ToList(),
-                                                                       WaitingList = rbl.Spots!.Where(spt => !spt.IsCancelled
-                                                                                                          && spt.IsWaitingList)
+                                                                       WaitingList = rbl.Spots!.Where(spt => spt is { IsCancelled: false, IsWaitingList: true })
                                                                                         .OrderBy(spt => spt.FirstPartnerJoined)
                                                                                         .Select(GetDoubleSpotState)
                                                                                         .ToList()

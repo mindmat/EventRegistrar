@@ -16,15 +16,15 @@ public class StartUpdateReadModelsOfEventCommandHandler : AsyncRequestHandler<St
 {
     private readonly IQueryable<Event> _events;
     private readonly IQueryable<Registration> _registrations;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
 
     public StartUpdateReadModelsOfEventCommandHandler(IQueryable<Event> events,
                                                       IQueryable<Registration> registrations,
-                                                      ReadModelUpdater readModelUpdater)
+                                                      ChangeTrigger changeTrigger)
     {
         _events = events;
         _registrations = registrations;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     protected override async Task Handle(StartUpdateReadModelsOfEventCommand command, CancellationToken cancellationToken)
@@ -36,12 +36,12 @@ public class StartUpdateReadModelsOfEventCommandHandler : AsyncRequestHandler<St
         {
             if (command.QueryNames?.Contains(nameof(RegistrablesOverviewQuery)) != false)
             {
-                _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, eventId);
+                _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, eventId);
             }
 
             if (command.QueryNames?.Contains(nameof(DuePaymentsQuery)) != false)
             {
-                _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, eventId);
+                _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, eventId);
             }
 
             if (command.QueryNames?.Contains(nameof(RegistrationQuery)) != false)
@@ -52,7 +52,7 @@ public class StartUpdateReadModelsOfEventCommandHandler : AsyncRequestHandler<St
 
                 foreach (var registrationId in registrationIds)
                 {
-                    _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registrationId, eventId);
+                    _changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId, eventId);
                 }
             }
         }

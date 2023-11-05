@@ -29,7 +29,7 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
     public const string FallbackLanguage = Language.English;
 
     private readonly ILogger _log;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly DirtyTagger _dirtyTagger;
     private readonly IEventBus _eventBus;
     private readonly MailComposer _mailComposer;
@@ -50,7 +50,7 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
                                                 CommandQueue commandQueue,
                                                 IDateTimeProvider dateTimeProvider,
                                                 ILogger log,
-                                                ReadModelUpdater readModelUpdater,
+                                                ChangeTrigger changeTrigger,
                                                 DirtyTagger dirtyTagger,
                                                 IEventBus eventBus)
     {
@@ -63,7 +63,7 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
         _commandQueue = commandQueue;
         _dateTimeProvider = dateTimeProvider;
         _log = log;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
         _dirtyTagger = dirtyTagger;
         _eventBus = eventBus;
     }
@@ -189,8 +189,8 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
             _commandQueue.EnqueueCommand(sendMailCommand);
         }
 
-        registrations_Recipients.ForEach(reg => _readModelUpdater.TriggerUpdate<RegistrationCalculator>(reg.Id, reg.EventId));
-        _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
+        registrations_Recipients.ForEach(reg => _changeTrigger.TriggerUpdate<RegistrationCalculator>(reg.Id, reg.EventId));
+        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
         _eventBus.Publish(new QueryChanged
                           {
                               EventId = command.EventId,

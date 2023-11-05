@@ -14,12 +14,12 @@ public class ChangeParticipantNameCommand : IRequest, IEventBoundRequest
 public class ChangeParticipantNameCommandHandler : AsyncRequestHandler<ChangeParticipantNameCommand>
 {
     private readonly IRepository<Registration> _registrations;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
 
-    public ChangeParticipantNameCommandHandler(IRepository<Registration> registrations, ReadModelUpdater readModelUpdater)
+    public ChangeParticipantNameCommandHandler(IRepository<Registration> registrations, ChangeTrigger changeTrigger)
     {
         _registrations = registrations;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     protected override async Task Handle(ChangeParticipantNameCommand command, CancellationToken cancellationToken)
@@ -30,6 +30,6 @@ public class ChangeParticipantNameCommandHandler : AsyncRequestHandler<ChangePar
         registration.RespondentFirstName = command.FirstName;
         registration.RespondentLastName = command.LastName;
 
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
     }
 }

@@ -16,7 +16,7 @@ public class ProcessMailEventsCommandHandler : AsyncRequestHandler<ProcessMailEv
 {
     private readonly ILogger _log;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly IRepository<MailEvent> _mailEvents;
     private readonly IRepository<Mail> _mails;
     private readonly IRepository<RawMailEvent> _rawMailEvents;
@@ -26,14 +26,14 @@ public class ProcessMailEventsCommandHandler : AsyncRequestHandler<ProcessMailEv
                                            IRepository<MailEvent> mailEvents,
                                            ILogger log,
                                            IDateTimeProvider dateTimeProvider,
-                                           ReadModelUpdater readModelUpdater)
+                                           ChangeTrigger changeTrigger)
     {
         _rawMailEvents = rawMailEvents;
         _mails = mails;
         _mailEvents = mailEvents;
         _log = log;
         _dateTimeProvider = dateTimeProvider;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     protected override async Task Handle(ProcessMailEventsCommand command, CancellationToken cancellationToken)
@@ -77,8 +77,8 @@ public class ProcessMailEventsCommandHandler : AsyncRequestHandler<ProcessMailEv
                 foreach (var mailToRegistration in mail.Registrations!.Where(mil => mil.Email?.ToLowerInvariant() == sendGridEvent.Email?.ToLowerInvariant()))
                 {
                     mailToRegistration.State = state;
-                    _readModelUpdater.TriggerUpdate<RegistrationCalculator>(mailToRegistration.RegistrationId,
-                                                                            mailToRegistration.Registration!.EventId);
+                    _changeTrigger.TriggerUpdate<RegistrationCalculator>(mailToRegistration.RegistrationId,
+                                                                         mailToRegistration.Registration!.EventId);
                 }
             }
 

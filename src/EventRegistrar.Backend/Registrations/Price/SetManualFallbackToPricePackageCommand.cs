@@ -15,15 +15,15 @@ public class SetManualFallbackToPricePackageCommand : IRequest, IEventBoundReque
 public class SetManualFallbackToPricePackageCommandHandler : AsyncRequestHandler<SetManualFallbackToPricePackageCommand>
 {
     private readonly IRepository<Registration> _registrations;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly IEventBus _eventBus;
 
     public SetManualFallbackToPricePackageCommandHandler(IRepository<Registration> registrations,
-                                                         ReadModelUpdater readModelUpdater,
+                                                         ChangeTrigger changeTrigger,
                                                          IEventBus eventBus)
     {
         _registrations = registrations;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
         _eventBus = eventBus;
     }
 
@@ -37,7 +37,7 @@ public class SetManualFallbackToPricePackageCommandHandler : AsyncRequestHandler
         if (registration.PricePackageId_ManualFallback != command.PricePackageId)
         {
             registration.PricePackageId_ManualFallback = command.PricePackageId;
-            _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+            _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
             _eventBus.Publish(new ManualFallbackToPricePackageSet { RegistrationId = registration.Id, EventId = command.EventId });
         }
     }

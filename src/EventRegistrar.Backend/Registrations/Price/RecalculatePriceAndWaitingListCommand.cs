@@ -24,7 +24,7 @@ public class RecalculatePriceAndWaitingListCommandHandler : AsyncRequestHandler<
     private readonly PriceCalculator _priceCalculator;
     private readonly DirtyTagger _dirtyTagger;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly CommandQueue _commandQueue;
 
     public RecalculatePriceAndWaitingListCommandHandler(IRepository<Registration> registrations,
@@ -32,7 +32,7 @@ public class RecalculatePriceAndWaitingListCommandHandler : AsyncRequestHandler<
                                                         PriceCalculator priceCalculator,
                                                         DirtyTagger dirtyTagger,
                                                         IDateTimeProvider dateTimeProvider,
-                                                        ReadModelUpdater readModelUpdater,
+                                                        ChangeTrigger changeTrigger,
                                                         CommandQueue commandQueue)
     {
         _registrations = registrations;
@@ -40,7 +40,7 @@ public class RecalculatePriceAndWaitingListCommandHandler : AsyncRequestHandler<
         _priceCalculator = priceCalculator;
         _dirtyTagger = dirtyTagger;
         _dateTimeProvider = dateTimeProvider;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
         _commandQueue = commandQueue;
     }
 
@@ -112,8 +112,8 @@ public class RecalculatePriceAndWaitingListCommandHandler : AsyncRequestHandler<
                                   };
             _commandQueue.EnqueueCommand(sendMailCommand);
 
-            _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, registration.EventId);
-            _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+            _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, registration.EventId);
+            _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
         }
 
         _dirtyTagger.RemoveDirtyTags(dirtyTags);

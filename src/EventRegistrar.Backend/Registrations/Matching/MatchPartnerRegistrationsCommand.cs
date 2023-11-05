@@ -24,21 +24,21 @@ public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPart
     private readonly IRepository<Registration> _registrations;
     private readonly IRepository<Seat> _seats;
     private readonly CommandQueue _commandQueue;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly DirtyTagger _dirtyTagger;
     private readonly IEventBus _eventBus;
 
     public MatchPartnerRegistrationsCommandHandler(IRepository<Registration> registrations,
                                                    IRepository<Seat> seats,
                                                    CommandQueue commandQueue,
-                                                   ReadModelUpdater readModelUpdater,
+                                                   ChangeTrigger changeTrigger,
                                                    DirtyTagger dirtyTagger,
                                                    IEventBus eventBus)
     {
         _registrations = registrations;
         _seats = seats;
         _commandQueue = commandQueue;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
         _dirtyTagger = dirtyTagger;
         _eventBus = eventBus;
     }
@@ -157,9 +157,9 @@ public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPart
                                          MailType = mailType
                                      });
 
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration1.Id, command.EventId);
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration2.Id, command.EventId);
-        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration1.Id, command.EventId);
+        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration2.Id, command.EventId);
+        _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
 
         _eventBus.Publish(new QueryChanged
                           {

@@ -30,7 +30,7 @@ public class AssignIncomingPaymentCommandHandler : AsyncRequestHandler<AssignInc
     private readonly IQueryable<Registration> _registrations;
     private readonly AuthenticatedUserId _userId;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
 
     public AssignIncomingPaymentCommandHandler(IQueryable<Registration> registrations,
                                                IQueryable<IncomingPayment> incomingPayments,
@@ -39,7 +39,7 @@ public class AssignIncomingPaymentCommandHandler : AsyncRequestHandler<AssignInc
                                                IEventBus eventBus,
                                                AuthenticatedUserId userId,
                                                IDateTimeProvider dateTimeProvider,
-                                               ReadModelUpdater readModelUpdater)
+                                               ChangeTrigger changeTrigger)
     {
         _registrations = registrations;
         _incomingPayments = incomingPayments;
@@ -48,7 +48,7 @@ public class AssignIncomingPaymentCommandHandler : AsyncRequestHandler<AssignInc
         _eventBus = eventBus;
         _userId = userId;
         _dateTimeProvider = dateTimeProvider;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     protected override async Task Handle(AssignIncomingPaymentCommand command, CancellationToken cancellationToken)
@@ -100,7 +100,7 @@ public class AssignIncomingPaymentCommandHandler : AsyncRequestHandler<AssignInc
                               IncomingPaymentId = incomingPayment.Id
                           });
 
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
-        _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
+        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
     }
 }

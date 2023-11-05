@@ -16,15 +16,15 @@ public class SetRemarksProcessedStateCommandHandler : AsyncRequestHandler<SetRem
 {
     private readonly IRepository<Registration> _registrations;
     private readonly IEventBus _eventBus;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
 
     public SetRemarksProcessedStateCommandHandler(IRepository<Registration> registrations,
                                                   IEventBus eventBus,
-                                                  ReadModelUpdater readModelUpdater)
+                                                  ChangeTrigger changeTrigger)
     {
         _registrations = registrations;
         _eventBus = eventBus;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     protected override async Task Handle(SetRemarksProcessedStateCommand command, CancellationToken cancellationToken)
@@ -34,11 +34,7 @@ public class SetRemarksProcessedStateCommandHandler : AsyncRequestHandler<SetRem
                                                                && reg.EventId == command.EventId, cancellationToken);
         registration.RemarksProcessed = command.NewProcessedState;
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(RemarksOverviewQuery)
-                          });
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+        _changeTrigger.QueryChanged<RemarksOverviewQuery>(command.EventId);
+        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
     }
 }

@@ -13,13 +13,13 @@ public class UnbindPartnerRegistrationCommand : IRequest, IEventBoundRequest
 public class UnbindPartnerRegistrationCommandHandler : AsyncRequestHandler<UnbindPartnerRegistrationCommand>
 {
     private readonly IRepository<Registration> _registrations;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
 
     public UnbindPartnerRegistrationCommandHandler(IRepository<Registration> registrations,
-                                                   ReadModelUpdater readModelUpdater)
+                                                   ChangeTrigger changeTrigger)
     {
         _registrations = registrations;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     protected override async Task Handle(UnbindPartnerRegistrationCommand command, CancellationToken cancellationToken)
@@ -57,11 +57,11 @@ public class UnbindPartnerRegistrationCommandHandler : AsyncRequestHandler<Unbin
             }
         }
 
-        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, command.EventId);
+        _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, command.EventId);
         if (registrationId_Partner != null)
         {
-            _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registrationId_Partner, command.EventId);
+            _changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId_Partner, command.EventId);
         }
     }
 }

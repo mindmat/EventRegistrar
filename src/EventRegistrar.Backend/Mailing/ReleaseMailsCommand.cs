@@ -19,19 +19,19 @@ public class ReleaseMailsCommandHandler : AsyncRequestHandler<ReleaseMailsComman
     private readonly CommandQueue _commandQueue;
     private readonly IEventBus _eventBus;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
 
     public ReleaseMailsCommandHandler(IRepository<Mail> mails,
                                       CommandQueue commandQueue,
                                       IEventBus eventBus,
                                       IDateTimeProvider dateTimeProvider,
-                                      ReadModelUpdater readModelUpdater)
+                                      ChangeTrigger changeTrigger)
     {
         _mails = mails;
         _commandQueue = commandQueue;
         _eventBus = eventBus;
         _dateTimeProvider = dateTimeProvider;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     protected override async Task Handle(ReleaseMailsCommand command, CancellationToken cancellationToken)
@@ -78,7 +78,7 @@ public class ReleaseMailsCommandHandler : AsyncRequestHandler<ReleaseMailsComman
                                   Subject = sendMailCommand.Subject
                               });
 
-            withheldMail.Registrations!.ForEach(reg => _readModelUpdater.TriggerUpdate<RegistrationCalculator>(reg.RegistrationId, command.EventId));
+            withheldMail.Registrations!.ForEach(reg => _changeTrigger.TriggerUpdate<RegistrationCalculator>(reg.RegistrationId, command.EventId));
         }
 
         _eventBus.Publish(new QueryChanged

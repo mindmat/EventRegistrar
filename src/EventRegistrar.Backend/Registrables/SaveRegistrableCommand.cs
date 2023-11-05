@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Registrables.Tags;
 
 namespace EventRegistrar.Backend.Registrables;
 
@@ -21,18 +22,21 @@ public class SaveRegistrableCommand : IRequest, IEventBoundRequest
 public class SaveRegistrableCommandHandler : AsyncRequestHandler<SaveRegistrableCommand>
 {
     private readonly IRepository<Registrable> _registrables;
+    private readonly IRepository<RegistrableTag> _tags;
     private readonly IQueryable<Event> _events;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly EnumTranslator _enumTranslator;
 
     public SaveRegistrableCommandHandler(IRepository<Registrable> registrables,
+                                         IRepository<RegistrableTag> tags,
                                          IQueryable<Event> events,
-                                         ReadModelUpdater readModelUpdater,
+                                         ChangeTrigger changeTrigger,
                                          EnumTranslator enumTranslator)
     {
         _registrables = registrables;
+        _tags = tags;
         _events = events;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
         _enumTranslator = enumTranslator;
     }
 
@@ -93,7 +97,12 @@ public class SaveRegistrableCommandHandler : AsyncRequestHandler<SaveRegistrable
                                             .Append(registrable.Name)
                                             .Append(registrable.NameSecondary)
                                             .StringJoinNullable(" - ");
-        registrable.Tag = command.Tag;
+        if (registrable.Tag != command.Tag)
+        {
+            registrable.Tag = command.Tag;
+            await CreateTagIfNecessary(@event.Id, command.Tag);
+            _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        }
 
         switch (registrable.Type)
         {
@@ -101,17 +110,45 @@ public class SaveRegistrableCommandHandler : AsyncRequestHandler<SaveRegistrable
                 registrable.MaximumSingleSeats = command.MaximumSingleSpots;
                 registrable.MaximumDoubleSeats = null;
                 registrable.MaximumAllowedImbalance = null;
-                registrable.HasWaitingList = command is { HasWaitingList: true, MaximumSingleSpots: { } };
+                registrable.HasWaitingList = command is { HasWaitingList: true, MaximumSingleSpots: not null };
                 break;
 
             case RegistrableType.Double:
                 registrable.MaximumSingleSeats = null;
                 registrable.MaximumDoubleSeats = command.MaximumDoubleSpots;
                 registrable.MaximumAllowedImbalance = command.MaximumAllowedImbalance;
-                registrable.HasWaitingList = command is { HasWaitingList: true, MaximumDoubleSpots: { } };
+                registrable.HasWaitingList = command is { HasWaitingList: true, MaximumDoubleSpots: not null };
                 break;
         }
 
-        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+    }
+
+    private async Task CreateTagIfNecessary(Guid eventId, string? tag)
+    {
+        if (tag == null)
+        {
+            return;
+        }
+
+        if (!await _tags.AnyAsync(tg => tg.EventId == eventId
+                                     && tg.Tag == tag))
+        {
+            var maxSortKey = await _tags.Where(tg => tg.EventId == eventId)
+                                        .Select(tg => tg.SortKey)
+                                        .DefaultIfEmpty()
+                                        .MaxAsync();
+
+            _tags.InsertObjectTree(new RegistrableTag
+                                   {
+                                       Id = Guid.NewGuid(),
+                                       EventId = eventId,
+                                       Tag = tag,
+                                       FallbackText = tag,
+                                       SortKey = maxSortKey + 1
+                                   });
+
+            _changeTrigger.QueryChanged<RegistrableTagsQuery>(eventId);
+        }
     }
 }

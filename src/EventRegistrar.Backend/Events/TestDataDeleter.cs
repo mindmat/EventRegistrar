@@ -38,7 +38,7 @@ public class TestDataDeleter
     private readonly IRepository<Seat> _spots;
     private readonly IRepository<Sms> _sms;
     private readonly IEventBus _eventBus;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
 
     public TestDataDeleter(IRepository<IndividualReduction> individualReductions,
                            IRepository<MailEvent> mailEvents,
@@ -58,7 +58,7 @@ public class TestDataDeleter
                            IRepository<Seat> spots,
                            IRepository<Sms> sms,
                            IEventBus eventBus,
-                           ReadModelUpdater readModelUpdater)
+                           ChangeTrigger changeTrigger)
     {
         _individualReductions = individualReductions;
         _mailEvents = mailEvents;
@@ -78,7 +78,7 @@ public class TestDataDeleter
         _spots = spots;
         _sms = sms;
         _eventBus = eventBus;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     public async Task DeleteTestData(Event @event, CancellationToken cancellationToken)

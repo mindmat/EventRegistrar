@@ -30,7 +30,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
 
     private readonly CamtParser _camtParser;
     private readonly IEventBus _eventBus;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly IQueryable<Event> _events;
     private readonly ILogger _log;
     private readonly IRepository<PaymentsFile> _paymentFiles;
@@ -44,7 +44,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                                          CamtParser camtParser,
                                          ILogger log,
                                          IEventBus eventBus,
-                                         ReadModelUpdater readModelUpdater)
+                                         ChangeTrigger changeTrigger)
     {
         _paymentFiles = paymentFiles;
         _payments = payments;
@@ -53,7 +53,7 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
         _camtParser = camtParser;
         _log = log;
         _eventBus = eventBus;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     public async Task<Unit> Handle(SavePaymentFileCommand command, CancellationToken cancellationToken)

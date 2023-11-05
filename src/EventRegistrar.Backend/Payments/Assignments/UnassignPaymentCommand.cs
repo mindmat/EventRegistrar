@@ -17,17 +17,17 @@ public class UnassignPaymentCommandHandler : AsyncRequestHandler<UnassignPayment
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IEventBus _eventBus;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
 
     public UnassignPaymentCommandHandler(IRepository<PaymentAssignment> assignments,
                                          IEventBus eventBus,
                                          IDateTimeProvider dateTimeProvider,
-                                         ReadModelUpdater readModelUpdater)
+                                         ChangeTrigger changeTrigger)
     {
         _assignments = assignments;
         _eventBus = eventBus;
         _dateTimeProvider = dateTimeProvider;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     protected override async Task Handle(UnassignPaymentCommand command, CancellationToken cancellationToken)
@@ -76,7 +76,7 @@ public class UnassignPaymentCommandHandler : AsyncRequestHandler<UnassignPayment
                               });
         }
 
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(existingAssignment.RegistrationId, command.EventId);
-        _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
+        _changeTrigger.TriggerUpdate<RegistrationCalculator>(existingAssignment.RegistrationId, command.EventId);
+        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
     }
 }

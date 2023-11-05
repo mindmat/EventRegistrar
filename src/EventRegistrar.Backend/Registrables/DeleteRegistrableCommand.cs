@@ -14,15 +14,15 @@ public class DeleteRegistrableCommandHandler : IRequestHandler<DeleteRegistrable
 {
     private readonly IQueryable<Event> _events;
     private readonly IRepository<Registrable> _registrables;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
 
     public DeleteRegistrableCommandHandler(IQueryable<Event> events,
                                            IRepository<Registrable> registrables,
-                                           ReadModelUpdater readModelUpdater)
+                                           ChangeTrigger changeTrigger)
     {
         _events = events;
         _registrables = registrables;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     public async Task<Unit> Handle(DeleteRegistrableCommand command, CancellationToken cancellationToken)
@@ -44,7 +44,7 @@ public class DeleteRegistrableCommandHandler : IRequestHandler<DeleteRegistrable
 
         _registrables.Remove(registrable);
 
-        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
 
         return Unit.Value;
     }

@@ -25,21 +25,21 @@ public class SendSmsCommandHandler : IRequestHandler<SendSmsCommand>
     private readonly TwilioConfiguration _twilioConfiguration;
     private readonly IEventBus _eventBus;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
 
     public SendSmsCommandHandler(IQueryable<Registration> registrations,
                                  IRepository<Sms> sms,
                                  TwilioConfiguration twilioConfiguration,
                                  IEventBus eventBus,
                                  IDateTimeProvider dateTimeProvider,
-                                 ReadModelUpdater readModelUpdater)
+                                 ChangeTrigger changeTrigger)
     {
         _registrations = registrations;
         _sms = sms;
         _twilioConfiguration = twilioConfiguration;
         _eventBus = eventBus;
         _dateTimeProvider = dateTimeProvider;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     public async Task<Unit> Handle(SendSmsCommand command, CancellationToken cancellationToken)
@@ -95,7 +95,7 @@ public class SendSmsCommandHandler : IRequestHandler<SendSmsCommand>
                               Text = command.Message,
                               Sent = _dateTimeProvider.Now
                           });
-        _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
+        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
 
 
         return Unit.Value;

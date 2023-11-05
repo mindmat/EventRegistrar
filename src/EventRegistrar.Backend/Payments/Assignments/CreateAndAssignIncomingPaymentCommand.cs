@@ -25,19 +25,19 @@ public class AddAndAssignManualIncomingPaymentCommandHandler : AsyncRequestHandl
     private readonly IRepository<PaymentAssignment> _assignments;
     private readonly IQueryable<Registration> _registrations;
     private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly IEventBus _eventBus;
 
     public AddAndAssignManualIncomingPaymentCommandHandler(IRepository<PaymentAssignment> assignments,
                                                            IQueryable<Registration> registrations,
                                                            IDateTimeProvider dateTimeProvider,
-                                                           ReadModelUpdater readModelUpdater,
+                                                           ChangeTrigger changeTrigger,
                                                            IEventBus eventBus)
     {
         _assignments = assignments;
         _registrations = registrations;
         _dateTimeProvider = dateTimeProvider;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
         _eventBus = eventBus;
     }
 
@@ -80,7 +80,7 @@ public class AddAndAssignManualIncomingPaymentCommandHandler : AsyncRequestHandl
                               IncomingPaymentId = assignment.IncomingPayment.Id
                           });
 
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
-        _readModelUpdater.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
+        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
     }
 }

@@ -18,7 +18,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : AsyncRequestHandler<Tr
     private readonly IEventBus _eventBus;
     private readonly ImbalanceManager _imbalanceManager;
     private readonly ILogger _log;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
     private readonly IQueryable<Registrable> _registrables;
     private readonly IQueryable<Registration> _registrations;
     private readonly IRepository<Seat> _spots;
@@ -29,7 +29,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : AsyncRequestHandler<Tr
                                                       ImbalanceManager imbalanceManager,
                                                       IEventBus eventBus,
                                                       ILogger log,
-                                                      ReadModelUpdater readModelUpdater)
+                                                      ChangeTrigger changeTrigger)
     {
         _registrables = registrables;
         _registrations = registrations;
@@ -37,7 +37,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : AsyncRequestHandler<Tr
         _imbalanceManager = imbalanceManager;
         _eventBus = eventBus;
         _log = log;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     protected override async Task Handle(TriggerMoveUpFromWaitingListCommand command, CancellationToken cancellationToken)
@@ -157,7 +157,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : AsyncRequestHandler<Tr
             }
         }
 
-        _readModelUpdater.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
         _eventBus.Publish(new QueryChanged
                           {
                               EventId = command.EventId,

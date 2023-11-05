@@ -16,13 +16,13 @@ public class UpdateInternalNotesCommandHandler : IRequestHandler<UpdateInternalN
 {
     private readonly IRepository<Registration> _registrations;
     private readonly IEventBus _eventBus;
-    private readonly ReadModelUpdater _readModelUpdater;
+    private readonly ChangeTrigger _changeTrigger;
 
-    public UpdateInternalNotesCommandHandler(IRepository<Registration> registrations, IEventBus eventBus, ReadModelUpdater readModelUpdater)
+    public UpdateInternalNotesCommandHandler(IRepository<Registration> registrations, IEventBus eventBus, ChangeTrigger changeTrigger)
     {
         _registrations = registrations;
         _eventBus = eventBus;
-        _readModelUpdater = readModelUpdater;
+        _changeTrigger = changeTrigger;
     }
 
     public async Task<string?> Handle(UpdateInternalNotesCommand command, CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ public class UpdateInternalNotesCommandHandler : IRequestHandler<UpdateInternalN
                               EventId = command.EventId,
                               QueryName = nameof(InternalNotesQuery)
                           });
-        _readModelUpdater.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
 
         return command.Notes;
     }
