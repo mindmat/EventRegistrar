@@ -52,6 +52,7 @@ public class SaveRegistrationFormMappingsCommandHandler : AsyncRequestHandler<Sa
             }
 
             question.Mapping = questionToSave.Mapping;
+            question.TemplateKey = questionToSave.MailTemplateKey;
             foreach (var optionToSave in questionToSave.Options ?? Enumerable.Empty<QuestionOptionMappingDisplayItem>())
             {
                 var option = question?.QuestionOptions!.FirstOrDefault(qop => qop.Id == optionToSave.Id);

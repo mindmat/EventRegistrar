@@ -45,7 +45,7 @@
             </div>
 
             <!-- single spot limit -->
-            <div class="col-span-3 items-center flex flex-row" *ngIf="registrableForm.value.type==registrableType.Single">
+            <div class="col-span-3 items-center flex flex-row" *ngIf="registrableForm.value.type===registrableType.Single">
                 <div class="cursor-pointer" (click)="singleMax.toggle()">
                     <div class="leading-6 font-medium">{{ 'HasSingleMax' | translate }}</div>
                     <div class="text-md text-secondary">{{ 'HasSingleMaxSecondary' | translate }}</div>
@@ -53,7 +53,7 @@
                 <mat-slide-toggle class="ml-auto" [color]="'primary'" [formControlName]="'hasSingleMax'" #singleMax>
                 </mat-slide-toggle>
             </div>
-            <div class="col-span-1" *ngIf="registrableForm.value.type==registrableType.Single">
+            <div class="col-span-1" *ngIf="registrableForm.value.type===registrableType.Single">
                 <div class=" w-full">
                     <mat-form-field [subscriptSizing]="'dynamic'" *ngIf="registrableForm.value.hasSingleMax">
                         <input [formControlName]="'maximumSingleSpots'" type="number" matInput>
@@ -62,7 +62,7 @@
             </div>
 
             <!-- double spot limit -->
-            <div class="col-span-3 items-center flex flex-row" *ngIf="registrableForm.value.type==registrableType.Double">
+            <div class="col-span-3 items-center flex flex-row" *ngIf="registrableForm.value.type===registrableType.Double">
                 <div class="cursor-pointer" (click)="doubleMax.toggle()">
                     <div class="leading-6 font-medium">{{ 'HasDoubleMax' | translate }}</div>
                     <div class="text-md text-secondary">{{ 'HasDoubleMaxSecondary' | translate }}</div>
@@ -70,7 +70,7 @@
                 <mat-slide-toggle class="ml-auto" [color]="'primary'" [formControlName]="'hasDoubleMax'" #doubleMax>
                 </mat-slide-toggle>
             </div>
-            <div class="col-span-1" *ngIf="registrableForm.value.type==registrableType.Double">
+            <div class="col-span-1" *ngIf="registrableForm.value.type===registrableType.Double">
                 <div class="w-full ml-1 -mr-1">
                     <mat-form-field [subscriptSizing]="'dynamic'" *ngIf="registrableForm.value.hasDoubleMax">
                         <input [formControlName]="'maximumDoubleSpots'" type="number" matInput>
@@ -78,7 +78,7 @@
                 </div>
             </div>
             <!-- imbalance limit -->
-            <div class="col-span-4 items-center flex flex-row" *ngIf="registrableForm.value.type==registrableType.Double">
+            <div class="col-span-4 items-center flex flex-row" *ngIf="registrableForm.value.type===registrableType.Double">
                 <div class="cursor-pointer">
                     <div class="leading-6 font-medium">{{ 'MaxAllowedImbalance' | translate }}</div>
                     <div class="text-md text-secondary">{{ 'MaxAllowedImbalanceSecondary' | translate }}</div>

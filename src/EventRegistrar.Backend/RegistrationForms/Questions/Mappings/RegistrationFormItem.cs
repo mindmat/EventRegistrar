@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.RegistrationForms.GoogleForms;
-using EventRegistrar.Backend.RegistrationForms.Questions;
 
 namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
@@ -32,6 +31,9 @@ public class QuestionMappingDisplayItem
     public string? Question { get; set; }
     public QuestionType Type { get; set; }
     public IEnumerable<QuestionOptionMappingDisplayItem>? Options { get; set; }
+    public bool AllowMailTemplateKey { get; set; }
+    public bool ShowMailTemplateKey { get; set; }
+    public string? MailTemplateKey { get; set; }
     public int SortKey { get; set; }
     public bool Mappable { get; set; }
     public QuestionMappingType? Mapping { get; set; }

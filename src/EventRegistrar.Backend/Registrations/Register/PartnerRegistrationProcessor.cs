@@ -122,7 +122,7 @@ public class PartnerRegistrationProcessor
                 if (seat == null)
                 {
                     registration.SoldOutMessage = (registration.SoldOutMessage == null
-                                                       ? string.Empty
+                                                       ? null
                                                        : registration.SoldOutMessage + Environment.NewLine)
                                                 + string.Format(Properties.Resources.RegistrableSoldOut,
                                                                 registrable.Registrable.DisplayName);
@@ -147,7 +147,7 @@ public class PartnerRegistrationProcessor
                 if (seat == null)
                 {
                     registration.SoldOutMessage = (registration.SoldOutMessage == null
-                                                       ? string.Empty
+                                                       ? null
                                                        : registration.SoldOutMessage + Environment.NewLine)
                                                 + string.Format(Properties.Resources.RegistrableSoldOut,
                                                                 registrable.Registrable.DisplayName);

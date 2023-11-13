@@ -346,7 +346,7 @@ public class MailComposer
             result.AppendLine("</table>");
         }
 
-        if (soldOutMessage != null)
+        if (!string.IsNullOrWhiteSpace(soldOutMessage))
         {
             result.AppendLine();
             result.AppendLine();

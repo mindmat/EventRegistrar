@@ -6410,7 +6410,6 @@
           "LastName",
           "EMail",
           "Phone",
-          "Town",
           "Remarks",
           "Iban",
           "Partner",
@@ -6426,7 +6425,6 @@
           2,
           3,
           4,
-          5,
           6,
           7,
           10,
@@ -6584,6 +6582,16 @@
             "items": {
               "$ref": "#/components/schemas/QuestionOptionMappingDisplayItem"
             }
+          },
+          "allowMailTemplateKey": {
+            "type": "boolean"
+          },
+          "showMailTemplateKey": {
+            "type": "boolean"
+          },
+          "mailTemplateKey": {
+            "type": "string",
+            "nullable": true
           },
           "sortKey": {
             "type": "integer",

@@ -8206,7 +8206,6 @@ export enum QuestionMappingType {
     LastName = 2,
     EMail = 3,
     Phone = 4,
-    Town = 5,
     Remarks = 6,
     Iban = 7,
     Partner = 10,
@@ -8267,6 +8266,9 @@ export interface QuestionMappingDisplayItem {
     question?: string | null;
     type?: QuestionType;
     options?: QuestionOptionMappingDisplayItem[] | null;
+    allowMailTemplateKey?: boolean;
+    showMailTemplateKey?: boolean;
+    mailTemplateKey?: string | null;
     sortKey?: number;
     mappable?: boolean;
     mapping?: QuestionMappingType | null;

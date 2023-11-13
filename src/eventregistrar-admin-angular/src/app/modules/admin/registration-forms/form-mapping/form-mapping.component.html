@@ -65,11 +65,27 @@
                         <ng-container *ngIf="question.mappable">
                             <mat-form-field class="flex-auto gt-xs:pl-3">
                                 <mat-select [placeholder]="'Mapping' | translate" [(value)]="question.mapping">
+                                    <mat-option [value]="null"> - </mat-option>
                                     <mat-option *ngFor="let mapping of allQuestionMappings" [value]="mapping.type">{{ mapping.text }}</mat-option>
                                 </mat-select>
                                 <mat-icon class="icon-size-5" matPrefix [svgIcon]="'mat_outline:link'"></mat-icon>
                             </mat-form-field>
                         </ng-container>
+
+                        <!-- Use as placeholder in mail template -->
+                        <div class="flex flex-col mt-2 space-y-2" *ngIf="question.allowMailTemplateKey">
+                            <div class="flex items-center justify-center mt-3 max-w-32">
+                                <div class="flex-auto border-b border-dashed"></div>
+                            </div>
+                            <div class="flex flex-row space-x-2 items-baseline">
+                                <mat-label>{{ 'MailPlaceholder' | translate }}</mat-label>
+                                <mat-slide-toggle class="ml-auto" [color]="'primary'" [(ngModel)]="question.showMailTemplateKey" #placeholder>
+                                </mat-slide-toggle>
+                                <mat-form-field *ngIf="placeholder.checked" class="fuse-mat-no-subscript w-60">
+                                    <input [(ngModel)]="question.mailTemplateKey" matInput>
+                                </mat-form-field>
+                            </div>
+                        </div>
 
                         <!-- Line -->
                         <div *ngIf="!lastQuestion" class="flex items-center justify-center mt-3 -mx-6">

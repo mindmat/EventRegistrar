@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
 namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
@@ -60,6 +61,7 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
                                                                                          qst.Title,
                                                                                          qst.Type,
                                                                                          qst.Mapping,
+                                                                                         qst.TemplateKey,
                                                                                          Options = qst.QuestionOptions!
                                                                                                       .Select(qop => new
                                                                                                                      {
@@ -68,11 +70,11 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
                                                                                                                          MappedRegistrables =
                                                                                                                              qop.Mappings!
                                                                                                                                 .Select(map => new
-                                                                                                                                    {
-                                                                                                                                        map.RegistrableId,
-                                                                                                                                        map.Type,
-                                                                                                                                        map.Language
-                                                                                                                                    })
+                                                                                                                                        {
+                                                                                                                                            map.RegistrableId,
+                                                                                                                                            map.Type,
+                                                                                                                                            map.Language
+                                                                                                                                        })
                                                                                                                      })
                                                                                      }),
                                                        frm.MultiMappings
@@ -102,28 +104,34 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
                                                                          {
                                                                              Name = grp.Key,
                                                                              SortKey = grp.Min(qst => qst.Index),
-                                                                             Questions = grp.Where(qst => qst.Type != Questions.QuestionType.SectionHeader
-                                                                                                       && qst.Type != Questions.QuestionType.PageBreak)
+                                                                             Questions = grp.Where(qst => qst.Type != QuestionType.SectionHeader
+                                                                                                       && qst.Type != QuestionType.PageBreak)
                                                                                             .Select(qst => new QuestionMappingDisplayItem
                                                                                                            {
                                                                                                                Id = qst.Id,
                                                                                                                Question = qst.Title,
                                                                                                                Type = qst.Type,
                                                                                                                SortKey = qst.Index,
-                                                                                                               Mappable = qst.Type is Questions.QuestionType.Text
-                                                                                                                              or Questions.QuestionType.ParagraphText,
+                                                                                                               Mappable = qst.Type is QuestionType.Text
+                                                                                                                              or QuestionType.ParagraphText,
                                                                                                                Mapping = qst.Mapping,
+                                                                                                               AllowMailTemplateKey = qst.Type is QuestionType.Checkbox
+                                                                                                                       or QuestionType.MultipleChoice
+                                                                                                                       or QuestionType.Text
+                                                                                                                && qst.Mapping == null,
+                                                                                                               ShowMailTemplateKey = qst.TemplateKey != null,
+                                                                                                               MailTemplateKey = qst.TemplateKey,
                                                                                                                Options = qst.Options.Select(qop =>
-                                                                                                                   new QuestionOptionMappingDisplayItem
-                                                                                                                   {
-                                                                                                                       Id = qop.Id,
-                                                                                                                       Answer = qop.Answer,
-                                                                                                                       MappedRegistrableCombinedIds = qop.MappedRegistrables
-                                                                                                                           .Select(map => new CombinedMappingId(
+                                                                                                                       new QuestionOptionMappingDisplayItem
+                                                                                                                       {
+                                                                                                                           Id = qop.Id,
+                                                                                                                           Answer = qop.Answer,
+                                                                                                                           MappedRegistrableCombinedIds = qop.MappedRegistrables
+                                                                                                                               .Select(map => new CombinedMappingId(
                                                                                                                                        map.Type,
                                                                                                                                        map.RegistrableId,
                                                                                                                                        map.Language).ToString())
-                                                                                                                   })
+                                                                                                                       })
                                                                                                            })
                                                                                             .OrderBy(qst => qst.SortKey)
                                                                          })

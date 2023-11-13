@@ -41,7 +41,6 @@ public enum QuestionMappingType
     LastName = 2,
     EMail = 3,
     Phone = 4,
-    Town = 5,
     Remarks = 6,
     Iban = 7,
     Partner = 10,
