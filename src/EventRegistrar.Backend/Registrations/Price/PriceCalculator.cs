@@ -192,7 +192,7 @@ public class PriceCalculator
                                                              return new MatchingPackageSpot(name, null, sortKey);
                                                          }))
                                                          .ToList();
-                    if (part.PriceAdjustment != null)
+                    if (part is { PriceAdjustment: not null, SelectionType: PricePackagePartSelectionType.Optional })
                     {
                         packagePrice += part.PriceAdjustment.Value;
                         matchingSpotsOfPart.First().PriceAdjustment = part.PriceAdjustment.Value;
