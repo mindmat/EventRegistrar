@@ -10215,6 +10215,14 @@
           "bulkMailKey": {
             "type": "string"
           },
+          "senderMail": {
+            "type": "string",
+            "nullable": true
+          },
+          "senderName": {
+            "type": "string",
+            "nullable": true
+          },
           "subject": {
             "type": "string",
             "nullable": true
@@ -10462,6 +10470,14 @@
           "templateId": {
             "type": "string",
             "format": "guid"
+          },
+          "senderMail": {
+            "type": "string",
+            "nullable": true
+          },
+          "senderName": {
+            "type": "string",
+            "nullable": true
           },
           "subject": {
             "type": "string",

@@ -20,21 +20,25 @@ export class BulkMailTemplateComponent implements OnInit
   editorRef: FroalaEditor;
   @ViewChild('editor', { static: false }) editor: ElementRef<HTMLElement>;
 
-  private unsubscribeAll: Subject<any> = new Subject<any>();
-  private placeholders: PlaceholderDescription[];
   possibleAudiences: PossibleAudience[];
-  private initialHtml: string | null;
   selectedAudiences: MailingAudience[];
   registrableId: string | null;
-  private bulkMailKey: string;
   generatedCount: number;
   sentCount: number;
 
   templateForm = this.fb.group({
     id: '',
+    senderName: '',
+    senderMail: '',
     subject: '',
     contentHtml: ''
   });
+  public options = null;
+
+  private unsubscribeAll: Subject<any> = new Subject<any>();
+  private placeholders: PlaceholderDescription[];
+  private initialHtml: string | null;
+  private bulkMailKey: string;
 
   private tribute = new Tribute(
     {
@@ -53,8 +57,6 @@ export class BulkMailTemplateComponent implements OnInit
         return item.original.description;
       },
     });
-
-  public options = null;
 
   constructor(private service: BulkMailTemplateService,
     private fb: FormBuilder,
@@ -98,13 +100,13 @@ export class BulkMailTemplateComponent implements OnInit
     this.service.getAvailableAudiences()
       .subscribe(audiences => this.possibleAudiences = audiences);
 
-    this.api.froalaKey_Query({}).subscribe(key =>
+    this.api.froalaKey_Query({}).subscribe((key) =>
     {
       this.options = {
         htmlRemoveTags: [],
         key: key,
         events: {
-          initialized: e =>
+          initialized: (e) =>
           {
             this.editorRef = e.getEditor();
             this.tribute.attach(this.editor.nativeElement);
@@ -116,7 +118,7 @@ export class BulkMailTemplateComponent implements OnInit
             // pick mention with Enter, don't propagate to the html editor 
             this.editor.nativeElement.addEventListener('keydown', e =>
             {
-              if (e.key == FroalaEditor.KEYCODE.ENTER && this.tribute.isActive)
+              if (e.key === FroalaEditor.KEYCODE.ENTER && this.tribute.isActive)
               {
                 return false;
               }
@@ -127,7 +129,7 @@ export class BulkMailTemplateComponent implements OnInit
       this.changeDetectorRef.markForCheck();
     });
 
-    this.generatedBulkMailsService.generated$.subscribe(result =>
+    this.generatedBulkMailsService.generated$.subscribe((result) =>
     {
       this.generatedCount = result?.generatedCount ?? 0;
       this.sentCount = result?.sentCount ?? 0;
@@ -136,18 +138,20 @@ export class BulkMailTemplateComponent implements OnInit
     });
   }
 
-  openPreview()
+  openPreview(): void
   {
-    var url = `${this.eventService.selected.acronym}/mail-template-preview/${this.templateForm.value.id}`;
+    const url = `${this.eventService.selected.acronym}/mail-template-preview/${this.templateForm.value.id}`;
     window.open(url, '_blank', 'location=yes,height=900,width=700,scrollbars=yes,status=yes'); // Open new window
   }
 
-  save()
+  save(): void
   {
-    let html = this.editorRef.html.get(true);
+    const html = this.editorRef.html.get(true);
     this.api.updateBulkMailTemplate_Command({
       eventId: this.eventService.selectedId,
       templateId: this.templateForm.value.id,
+      senderName: this.templateForm.value.senderName,
+      senderMail: this.templateForm.value.senderMail,
       subject: this.templateForm.value.subject,
       contentHtml: html,
       audiences: this.selectedAudiences,
@@ -156,12 +160,12 @@ export class BulkMailTemplateComponent implements OnInit
       .subscribe();
   }
 
-  generateMails()
+  generateMails(): void
   {
     this.service.generateMails(this.bulkMailKey);
   }
 
-  releaseMails()
+  releaseMails(): void
   {
     this.service.releaseMails(this.bulkMailKey);
   }

@@ -16,6 +16,8 @@ public class BulkMailTemplate : Entity
     public string BulkMailKey { get; set; } = null!;
     public string? Language { get; set; }
     public MailingAudience? MailingAudience { get; set; }
+    public string? SenderName { get; set; }
+    public string? SenderMail { get; set; }
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
 
@@ -41,6 +43,12 @@ public class BulkMailTemplateMap : EntityMap<BulkMailTemplate>
 
         builder.Property(mtp => mtp.Language)
                .HasMaxLength(10);
+
+        builder.Property(mtp => mtp.SenderName)
+               .HasMaxLength(500);
+
+        builder.Property(mtp => mtp.SenderMail)
+               .HasMaxLength(500);
 
         builder.Property(mtp => mtp.Subject)
                .HasMaxLength(1000);

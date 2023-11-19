@@ -9,6 +9,8 @@ public class UpdateBulkMailTemplateCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
     public Guid TemplateId { get; set; }
+    public string? SenderMail { get; set; }
+    public string? SenderName { get; set; }
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
     public IEnumerable<MailingAudience>? Audiences { get; set; }
@@ -33,6 +35,8 @@ public class UpdateBulkMailTemplateCommandHandler : IRequestHandler<UpdateBulkMa
                                                .FirstAsync(mtp => mtp.EventId == command.EventId
                                                                && mtp.Id == command.TemplateId,
                                                            cancellationToken);
+        template.SenderMail = command.SenderMail;
+        template.SenderName = command.SenderName;
         template.Subject = command.Subject;
         if (!string.IsNullOrWhiteSpace(command.ContentHtml))
         {

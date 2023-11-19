@@ -3,7 +3,6 @@ using System.Text;
 
 using Codecrete.SwissQRBill.Generator;
 
-using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Due;
@@ -22,13 +21,11 @@ public class MailComposer
     private readonly DuePaymentConfiguration _duePaymentConfiguration;
     private readonly PriceCalculator _priceCalculator;
     private readonly QrBillConfiguration _qrBillConfiguration;
-    private readonly IQueryable<Event> _events;
     private readonly ILogger _log;
     private readonly PaidAmountSummarizer _paidAmountSummarizer;
     private readonly IQueryable<Registration> _registrations;
 
     public MailComposer(IQueryable<Registration> registrations,
-                        IQueryable<Event> events,
                         ILogger log,
                         PaidAmountSummarizer paidAmountSummarizer,
                         DuePaymentConfiguration duePaymentConfiguration,
@@ -36,7 +33,6 @@ public class MailComposer
                         QrBillConfiguration qrBillConfiguration)
     {
         _registrations = registrations;
-        _events = events;
         _log = log;
         _paidAmountSummarizer = paidAmountSummarizer;
         _duePaymentConfiguration = duePaymentConfiguration;

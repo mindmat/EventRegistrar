@@ -9404,6 +9404,8 @@ export interface BulkMailPreviewQuery {
 export interface BulkMailTemplateDisplayItem {
     id?: string;
     bulkMailKey?: string;
+    senderMail?: string | null;
+    senderName?: string | null;
     subject?: string | null;
     contentHtml?: string | null;
     audiences?: MailingAudience[] | null;
@@ -9488,6 +9490,8 @@ export interface ReleaseBulkMailsCommand {
 export interface UpdateBulkMailTemplateCommand {
     eventId?: string;
     templateId?: string;
+    senderMail?: string | null;
+    senderName?: string | null;
     subject?: string | null;
     contentHtml?: string | null;
     audiences?: MailingAudience[] | null;

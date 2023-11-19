@@ -128,8 +128,8 @@ public class ComposeAndSendBulkMailCommandHandler : IRequestHandler<ComposeAndSe
                        //BulkMailTemplateId = template.Id, // ToDo
                        Type = command.MailType,
                        BulkMailKey = command.BulkMailKey,
-                       SenderMail = _configuration.SenderMail,
-                       SenderName = _configuration.SenderName,
+                       SenderMail = template.SenderMail ?? _configuration.SenderMail,
+                       SenderName = template.SenderName ?? _configuration.SenderName,
                        Subject = template.Subject,
                        Recipients = mappings.Select(reg => reg.RespondentEmail?.ToLowerInvariant())
                                             .Distinct()

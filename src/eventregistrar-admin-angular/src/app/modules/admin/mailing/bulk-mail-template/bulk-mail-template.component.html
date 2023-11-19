@@ -3,6 +3,22 @@
     <form [formGroup]="templateForm">
 
         <div class="grid sm:grid-cols-4 gap-1 w-full mt-2">
+            <!-- Sender email -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>{{ 'SenderMail' | translate }}</mat-label>
+                    <input [formControlName]="'senderMail'" matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- Sender name -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full">
+                    <mat-label>{{ 'SenderAlias' | translate }}</mat-label>
+                    <input [formControlName]="'senderName'" matInput>
+                </mat-form-field>
+            </div>
+
             <!-- Name -->
             <div class="sm:col-span-4">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
