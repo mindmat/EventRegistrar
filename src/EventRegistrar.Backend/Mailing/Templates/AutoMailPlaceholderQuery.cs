@@ -62,7 +62,10 @@ public enum MailPlaceholder
     ReceivedAt = 16,
 
     [PartnerPlaceholder]
-    ReadableId = 17
+    ReadableId = 17,
+
+    [PartnerPlaceholder]
+    QrCode = 18
 }
 
 public class AutoMailPlaceholderQueryHandler : IRequestHandler<AutoMailPlaceholderQuery, IEnumerable<PlaceholderDescription>>

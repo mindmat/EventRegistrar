@@ -519,6 +519,9 @@
   <data name="MailPlaceholder_Price" xml:space="preserve">
     <value>Price</value>
   </data>
+  <data name="MailPlaceholder_QrCode" xml:space="preserve">
+    <value>QR-Code</value>
+  </data>
   <data name="MailPlaceholder_ReadableId" xml:space="preserve">
     <value>ID</value>
   </data>

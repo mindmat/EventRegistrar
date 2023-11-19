@@ -1,12 +1,16 @@
 ﻿using System.Globalization;
 using System.Text;
 
+using Codecrete.SwissQRBill.Generator;
+
 using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing.Templates;
+using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Properties;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Price;
+
 
 namespace EventRegistrar.Backend.Mailing.Compose;
 
@@ -17,6 +21,7 @@ public class MailComposer
     private const string PrefixLeader = "LEADER";
     private readonly DuePaymentConfiguration _duePaymentConfiguration;
     private readonly PriceCalculator _priceCalculator;
+    private readonly QrBillConfiguration _qrBillConfiguration;
     private readonly IQueryable<Event> _events;
     private readonly ILogger _log;
     private readonly PaidAmountSummarizer _paidAmountSummarizer;
@@ -27,7 +32,8 @@ public class MailComposer
                         ILogger log,
                         PaidAmountSummarizer paidAmountSummarizer,
                         DuePaymentConfiguration duePaymentConfiguration,
-                        PriceCalculator priceCalculator)
+                        PriceCalculator priceCalculator,
+                        QrBillConfiguration qrBillConfiguration)
     {
         _registrations = registrations;
         _events = events;
@@ -35,6 +41,7 @@ public class MailComposer
         _paidAmountSummarizer = paidAmountSummarizer;
         _duePaymentConfiguration = duePaymentConfiguration;
         _priceCalculator = priceCalculator;
+        _qrBillConfiguration = qrBillConfiguration;
     }
 
     public async Task<string> Compose(Guid registrationId,
@@ -54,6 +61,7 @@ public class MailComposer
                                                .Include(reg => reg.Cancellations)
                                                .Include(reg => reg.Mails!)
                                                .ThenInclude(map => map.Mail)
+                                               .Include(reg => reg.Event)
                                                .FirstAsync(cancellationToken);
 
         var mainRegistrationRole = registration.Seats_AsFollower!.Any(spt => !spt.IsCancelled)
@@ -63,6 +71,8 @@ public class MailComposer
         Registration? followerRegistration = null;
         var templateFiller = new TemplateFiller(template);
         Registration? partnerRegistration = null;
+        var @event = registration.Event!;
+
         if (templateFiller.Prefixes.Any())
         {
             _log.LogInformation($"Prefixes {string.Join(",", templateFiller.Prefixes)}");
@@ -160,13 +170,8 @@ public class MailComposer
                 }
                 else if (placeholderKey == MailPlaceholder.UnpaidAmount)
                 {
-                    var currency = (await _events.FirstAsync(evt => evt.Id == registration.EventId, cancellationToken))
-                        ?.Currency;
-                    var unpaidAmount = registration.Price_AdmittedAndReduced
-                                     - await _paidAmountSummarizer.GetPaidAmount(registration.Id)
-                                     + (partnerRegistration == null
-                                            ? 0m
-                                            : partnerRegistration.Price_AdmittedAndReduced - await _paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
+                    var currency = @event.Currency;
+                    var unpaidAmount = await GetUnpaidAmount(registration, partnerRegistration);
                     if (unpaidAmount > 0m)
                     {
                         templateFiller[key] =
@@ -213,6 +218,10 @@ public class MailComposer
                         templateFiller[key] = reminder1Date.Value.ToString(DateFormat);
                     }
                 }
+                else if (placeholderKey == MailPlaceholder.QrCode)
+                {
+                    templateFiller[key] = await GenerateQrCode(registration);
+                }
             }
             else if (parts.key != null && key != null && registrationForPrefix?.Responses != null)
             {
@@ -226,6 +235,66 @@ public class MailComposer
         var content = templateFiller.Fill();
         CultureInfo.CurrentUICulture = cultureInfoBefore;
         return content;
+    }
+
+    private async Task<decimal> GetUnpaidAmount(Registration registration, Registration? partnerRegistration)
+    {
+        return registration.Price_AdmittedAndReduced
+             - await _paidAmountSummarizer.GetPaidAmount(registration.Id)
+             + (partnerRegistration == null
+                    ? 0m
+                    : partnerRegistration.Price_AdmittedAndReduced - await _paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
+    }
+
+    private async Task<string?> GenerateQrCode(Registration registration)
+    {
+        var unpaidAmount = await GetUnpaidAmount(registration, null);
+        var bill = new Bill
+                   {
+                       // creditor data
+                       Account = _qrBillConfiguration.Iban,
+                       Creditor = new Address
+                                  {
+                                      Name = _qrBillConfiguration.AccountHolderName,
+                                      Street = _qrBillConfiguration.AccountHolderStreet,
+                                      HouseNo = _qrBillConfiguration.AccountHolderHouseNo,
+                                      PostalCode = _qrBillConfiguration.AccountHolderPostalCode,
+                                      Town = _qrBillConfiguration.AccountHolderTown,
+                                      CountryCode = _qrBillConfiguration.AccountHolderCountryCode
+                                  },
+
+                       // payment data
+                       Amount = unpaidAmount,
+                       Currency = "CHF",
+
+                       // debtor data
+                       Debtor = new Address
+                                {
+                                    Name = $"{registration.RespondentFirstName} {registration.RespondentLastName}",
+                                    PostalCode = "3000",
+                                    Town = "Bern",
+                                    CountryCode = "CH"
+                                },
+
+                       // more payment data
+                       UnstructuredMessage = registration.ReadableIdentifier,
+                       //Reference = "RF19 2320 QF02 T323 4UI2 34",
+
+                       // output format
+                       Format = new BillFormat
+                                {
+                                    Language = Language.DE,
+                                    GraphicsFormat = GraphicsFormat.PNG,
+                                    OutputSize = OutputSize.QrCodeOnly
+                                }
+                   };
+
+        // Generate QR bill
+        var png = QRBill.Generate(bill);
+
+        // Convert byte[] to Base64 String
+        var pngBase64 = Convert.ToBase64String(png);
+        return $"""<img alt="QR-Code" style="width: 200px; height: 200px" src="data:image/png;base64,{pngBase64}" />""";
     }
 
     private static (string? prefix, string? key) GetPrefix(string key)

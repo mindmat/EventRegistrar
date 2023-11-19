@@ -1551,6 +1551,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to QR-Code.
+        /// </summary>
+        internal static string MailPlaceholder_QrCode {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_QrCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ID.
         /// </summary>
         internal static string MailPlaceholder_ReadableId {

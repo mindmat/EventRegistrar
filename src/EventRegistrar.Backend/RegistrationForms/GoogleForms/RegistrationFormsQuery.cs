@@ -27,8 +27,8 @@ public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQu
     public async Task<IEnumerable<RegistrationFormItem>> Handle(RegistrationFormsQuery query,
                                                                 CancellationToken cancellationToken)
     {
-        var acronym = await _events.FirstAsync(evt => evt.Id == query.EventId, cancellationToken);
-        var rawFormsData = await _rawForms.Where(frm => frm.EventAcronym == acronym.Acronym)
+        var @event = await _events.FirstAsync(evt => evt.Id == query.EventId, cancellationToken);
+        var rawFormsData = await _rawForms.Where(frm => frm.EventAcronym == @event.Acronym)
                                           .Select(frm => new { frm.FormExternalIdentifier, frm.Processed, frm.Created, frm.Id })
                                           .ToListAsync(cancellationToken);
 

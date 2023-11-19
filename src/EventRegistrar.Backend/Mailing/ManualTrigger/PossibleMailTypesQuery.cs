@@ -75,7 +75,8 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
             yield return MailType.SoldOut;
         }
 
-        if (_mailConfiguration.PartnerRegistrationPossible && (registration.IsParterRegistration() || isInSetupPhase))
+        var isPartnerRegistration = registration.IsPartnerRegistration();
+        if (_mailConfiguration.PartnerRegistrationPossible && (isPartnerRegistration || isInSetupPhase))
         {
             if (registration.RegistrationId_Partner == null)
             {
@@ -110,7 +111,8 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
                 yield return MailType.PartnerRegistrationSecondReminder;
             }
         }
-        else if (_mailConfiguration.SingleRegistrationPossible)
+
+        if (_mailConfiguration.SingleRegistrationPossible && (!isPartnerRegistration || isInSetupPhase))
         {
             if (registration.IsOnWaitingList == true || isInSetupPhase)
             {

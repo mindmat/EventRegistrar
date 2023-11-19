@@ -2,7 +2,7 @@
 
 public static class RegistrationExtensionMethods
 {
-    public static bool IsParterRegistration(this Registration registration)
+    public static bool IsPartnerRegistration(this Registration registration)
     {
         return registration.RegistrationId_Partner != null || registration.PartnerNormalized != null;
     }
