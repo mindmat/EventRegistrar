@@ -5,39 +5,30 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Payments.Files;
 
-public class PaymentFileController : Controller
+public class PaymentFileController(IMediator mediator,
+                                   IEventAcronymResolver eventAcronymResolver) : Controller
 {
-    private readonly IEventAcronymResolver _eventAcronymResolver;
-    private readonly IMediator _mediator;
-
-    public PaymentFileController(IMediator mediator,
-                                 IEventAcronymResolver eventAcronymResolver)
-    {
-        _mediator = mediator;
-        _eventAcronymResolver = eventAcronymResolver;
-    }
-
     [HttpPost("api/events/{eventAcronym}/paymentfiles/upload")]
     public async Task UploadFile(string eventAcronym, IFormFile file)
     {
         var stream = new MemoryStream((int)file.Length);
         await file.CopyToAsync(stream);
-        await _mediator.Send(new SavePaymentFileCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 FileStream = stream,
-                                 Filename = file.FileName,
-                                 ContentType = file.ContentType
-                             });
+        await mediator.Send(new SavePaymentFileCommand
+                            {
+                                EventId = await eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                                FileStream = stream,
+                                Filename = file.FileName,
+                                ContentType = file.ContentType
+                            });
     }
 
 
     [HttpPost("api/events/{eventAcronym}/fetchBankStatementFiles")]
     public async Task FetchBankStatementFiles(string eventAcronym)
     {
-        await _mediator.Send(new FetchBankStatementsFileCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                             });
+        await mediator.Send(new FetchBankStatementsFileCommand
+                            {
+                                EventId = await eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+                            });
     }
 }

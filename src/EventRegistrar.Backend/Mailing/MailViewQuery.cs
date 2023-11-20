@@ -10,66 +10,57 @@ public class MailViewQuery : IRequest<MailView>, IEventBoundRequest
     public Guid MailId { get; set; }
 }
 
-public class MailViewQueryHandler : IRequestHandler<MailViewQuery, MailView>
+public class MailViewQueryHandler(IQueryable<Mail> mails,
+                                  IQueryable<ImportedMail> importedMails) : IRequestHandler<MailViewQuery, MailView>
 {
-    private readonly IQueryable<Mail> _mails;
-    private readonly IQueryable<ImportedMail> _importedMails;
-
-    public MailViewQueryHandler(IQueryable<Mail> mails,
-                                IQueryable<ImportedMail> importedMails)
-    {
-        _mails = mails;
-        _importedMails = importedMails;
-    }
-
     public async Task<MailView> Handle(MailViewQuery query, CancellationToken cancellationToken)
     {
-        return await _mails.Where(mail => mail.EventId == query.EventId
-                                       && mail.Id == query.MailId)
-                           .Select(mail => new MailView
-                                           {
-                                               Id = mail.Id,
-                                               From = new EmailAddress
-                                                      {
-                                                          Email = mail.SenderMail ?? "??",
-                                                          Name = mail.SenderName ?? "??"
-                                                      },
-                                               RecipientsEmails = mail.Recipients,
-                                               RecipientsNames = mail.Registrations!.Select(reg => $"{reg.Registration!.RespondentFirstName} {reg.Registration.RespondentLastName}")
-                                                                     .StringJoin(", "),
-                                               Recipients = mail.Registrations!.Select(reg => new MailRecipient
-                                                                                              {
-                                                                                                  RegistrationId = reg.RegistrationId,
-                                                                                                  Name = $"{reg.Registration!.RespondentFirstName} {reg.Registration.RespondentLastName}"
-                                                                                              }),
-                                               Subject = mail.Subject,
-                                               Content = mail.ContentHtml,
-                                               Created = mail.Created
-                                           })
-                           .FirstOrDefaultAsync(cancellationToken)
-            ?? await _importedMails.Where(mail => mail.EventId == query.EventId
-                                               && mail.Id == query.MailId)
-                                   .Select(mail => new MailView
-                                                   {
-                                                       Id = mail.Id,
-                                                       From = new EmailAddress
-                                                              {
-                                                                  Email = mail.SenderMail ?? "??",
-                                                                  Name = mail.SenderName ?? "??"
-                                                              },
-                                                       RecipientsEmails = mail.Recipients,
-                                                       RecipientsNames = mail.Registrations!.Select(reg => $"{reg.Registration!.RespondentFirstName} {reg.Registration.RespondentLastName}")
-                                                                             .StringJoin(", "),
-                                                       Recipients = mail.Registrations!.Select(reg => new MailRecipient
-                                                                                                      {
-                                                                                                          RegistrationId = reg.RegistrationId,
-                                                                                                          Name = $"{reg.Registration!.RespondentFirstName} {reg.Registration.RespondentLastName}"
-                                                                                                      }),
-                                                       Subject = mail.Subject,
-                                                       Content = mail.ContentHtml ?? mail.ContentPlainText,
-                                                       Created = mail.Date
-                                                   })
-                                   .FirstAsync(cancellationToken);
+        return await mails.Where(mail => mail.EventId == query.EventId
+                                      && mail.Id == query.MailId)
+                          .Select(mail => new MailView
+                                          {
+                                              Id = mail.Id,
+                                              From = new EmailAddress
+                                                     {
+                                                         Email = mail.SenderMail ?? "??",
+                                                         Name = mail.SenderName ?? "??"
+                                                     },
+                                              RecipientsEmails = mail.Recipients,
+                                              RecipientsNames = mail.Registrations!.Select(reg => $"{reg.Registration!.RespondentFirstName} {reg.Registration.RespondentLastName}")
+                                                                    .StringJoin(", "),
+                                              Recipients = mail.Registrations!.Select(reg => new MailRecipient
+                                                                                             {
+                                                                                                 RegistrationId = reg.RegistrationId,
+                                                                                                 Name = $"{reg.Registration!.RespondentFirstName} {reg.Registration.RespondentLastName}"
+                                                                                             }),
+                                              Subject = mail.Subject,
+                                              Content = mail.ContentHtml,
+                                              Created = mail.Created
+                                          })
+                          .FirstOrDefaultAsync(cancellationToken)
+            ?? await importedMails.Where(mail => mail.EventId == query.EventId
+                                              && mail.Id == query.MailId)
+                                  .Select(mail => new MailView
+                                                  {
+                                                      Id = mail.Id,
+                                                      From = new EmailAddress
+                                                             {
+                                                                 Email = mail.SenderMail ?? "??",
+                                                                 Name = mail.SenderName ?? "??"
+                                                             },
+                                                      RecipientsEmails = mail.Recipients,
+                                                      RecipientsNames = mail.Registrations!.Select(reg => $"{reg.Registration!.RespondentFirstName} {reg.Registration.RespondentLastName}")
+                                                                            .StringJoin(", "),
+                                                      Recipients = mail.Registrations!.Select(reg => new MailRecipient
+                                                                                                     {
+                                                                                                         RegistrationId = reg.RegistrationId,
+                                                                                                         Name = $"{reg.Registration!.RespondentFirstName} {reg.Registration.RespondentLastName}"
+                                                                                                     }),
+                                                      Subject = mail.Subject,
+                                                      Content = mail.ContentHtml ?? mail.ContentPlainText,
+                                                      Created = mail.Date
+                                                  })
+                                  .FirstAsync(cancellationToken);
     }
 }
 

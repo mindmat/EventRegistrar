@@ -6,31 +6,17 @@ namespace EventRegistrar.Backend.Events.UsersInEvents;
 
 public class EventsOfUserQuery : IRequest<EventsOfUser> { }
 
-public class EventsOfUserQueryHandler : IRequestHandler<EventsOfUserQuery, EventsOfUser>
+public class EventsOfUserQueryHandler(IQueryable<UserInEvent> usersInEvents,
+                                      AuthenticatedUserId authenticatedUserId,
+                                      AuthenticatedUser authenticatedUser,
+                                      IQueryable<AccessToEventRequest> accessRequests,
+                                      EnumTranslator enumTranslator)
+    : IRequestHandler<EventsOfUserQuery, EventsOfUser>
 {
-    private readonly IQueryable<AccessToEventRequest> _accessRequests;
-    private readonly EnumTranslator _enumTranslator;
-    private readonly AuthenticatedUser _authenticatedUser;
-    private readonly AuthenticatedUserId _authenticatedUserId;
-    private readonly IQueryable<UserInEvent> _usersInEvents;
-
-    public EventsOfUserQueryHandler(IQueryable<UserInEvent> usersInEvents,
-                                    AuthenticatedUserId authenticatedUserId,
-                                    AuthenticatedUser authenticatedUser,
-                                    IQueryable<AccessToEventRequest> accessRequests,
-                                    EnumTranslator enumTranslator)
-    {
-        _usersInEvents = usersInEvents;
-        _authenticatedUserId = authenticatedUserId;
-        _authenticatedUser = authenticatedUser;
-        _accessRequests = accessRequests;
-        _enumTranslator = enumTranslator;
-    }
-
     public async Task<EventsOfUser> Handle(EventsOfUserQuery request,
                                            CancellationToken cancellationToken)
     {
-        if (_authenticatedUserId.UserId == null && _authenticatedUser == AuthenticatedUser.None)
+        if (authenticatedUserId.UserId == null && authenticatedUser == AuthenticatedUser.None)
         {
             return new EventsOfUser
                    {
@@ -41,36 +27,36 @@ public class EventsOfUserQueryHandler : IRequestHandler<EventsOfUserQuery, Event
 
         return new EventsOfUser
                {
-                   AuthorizedEvents = await _usersInEvents.Where(uie => uie.UserId == _authenticatedUserId.UserId)
-                                                          .OrderBy(uie => uie.Event!.State)
-                                                          .ThenBy(uie => uie.Event!.Name)
-                                                          .Select(uie => new EventOfUser
-                                                                         {
-                                                                             EventId = uie.EventId,
-                                                                             EventName = uie.Event!.Name,
-                                                                             EventAcronym = uie.Event.Acronym,
-                                                                             EventState = uie.Event.State,
-                                                                             EventStateText = _enumTranslator.Translate(uie.Event.State),
-                                                                             Role = uie.Role,
-                                                                             RoleText = _enumTranslator.Translate(uie.Role)
-                                                                         })
-                                                          .ToListAsync(cancellationToken),
+                   AuthorizedEvents = await usersInEvents.Where(uie => uie.UserId == authenticatedUserId.UserId)
+                                                         .OrderBy(uie => uie.Event!.State)
+                                                         .ThenBy(uie => uie.Event!.Name)
+                                                         .Select(uie => new EventOfUser
+                                                                        {
+                                                                            EventId = uie.EventId,
+                                                                            EventName = uie.Event!.Name,
+                                                                            EventAcronym = uie.Event.Acronym,
+                                                                            EventState = uie.Event.State,
+                                                                            EventStateText = enumTranslator.Translate(uie.Event.State),
+                                                                            Role = uie.Role,
+                                                                            RoleText = enumTranslator.Translate(uie.Role)
+                                                                        })
+                                                         .ToListAsync(cancellationToken),
 
-                   Requests = await _accessRequests.WhereIf(_authenticatedUserId.UserId != null,
-                                                            req => req.UserId_Requestor == _authenticatedUserId.UserId)
-                                                   .WhereIf(_authenticatedUserId.UserId == null && _authenticatedUser != AuthenticatedUser.None,
-                                                            req => req.IdentityProvider == _authenticatedUser.IdentityProvider
-                                                                && req.Identifier == _authenticatedUser.IdentityProviderUserIdentifier)
-                                                   .Select(req => new AccessRequest
-                                                                  {
-                                                                      EventId = req.EventId,
-                                                                      EventName = req.Event!.Name,
-                                                                      EventAcronym = req.Event.Acronym,
-                                                                      EventState = req.Event.State,
-                                                                      EventStateText = _enumTranslator.Translate(req.Event.State),
-                                                                      RequestSent = req.RequestReceived
-                                                                  })
-                                                   .ToListAsync(cancellationToken)
+                   Requests = await accessRequests.WhereIf(authenticatedUserId.UserId != null,
+                                                           req => req.UserId_Requestor == authenticatedUserId.UserId)
+                                                  .WhereIf(authenticatedUserId.UserId == null && authenticatedUser != AuthenticatedUser.None,
+                                                           req => req.IdentityProvider == authenticatedUser.IdentityProvider
+                                                               && req.Identifier == authenticatedUser.IdentityProviderUserIdentifier)
+                                                  .Select(req => new AccessRequest
+                                                                 {
+                                                                     EventId = req.EventId,
+                                                                     EventName = req.Event!.Name,
+                                                                     EventAcronym = req.Event.Acronym,
+                                                                     EventState = req.Event.State,
+                                                                     EventStateText = enumTranslator.Translate(req.Event.State),
+                                                                     RequestSent = req.RequestReceived
+                                                                 })
+                                                  .ToListAsync(cancellationToken)
                };
     }
 }

@@ -68,15 +68,8 @@ public enum MailPlaceholder
     QrCode = 18
 }
 
-public class AutoMailPlaceholderQueryHandler : IRequestHandler<AutoMailPlaceholderQuery, IEnumerable<PlaceholderDescription>>
+public class AutoMailPlaceholderQueryHandler(EnumTranslator enumTranslator) : IRequestHandler<AutoMailPlaceholderQuery, IEnumerable<PlaceholderDescription>>
 {
-    private readonly EnumTranslator _enumTranslator;
-
-    public AutoMailPlaceholderQueryHandler(EnumTranslator enumTranslator)
-    {
-        _enumTranslator = enumTranslator;
-    }
-
     public Task<IEnumerable<PlaceholderDescription>> Handle(AutoMailPlaceholderQuery query, CancellationToken cancellationToken)
     {
         var values = Enum.GetValues<MailPlaceholder>()
@@ -90,7 +83,7 @@ public class AutoMailPlaceholderQueryHandler : IRequestHandler<AutoMailPlacehold
                      {
                          Key = placeholder.ToString(),
                          Placeholder = $"{{{{{placeholder}}}}}",
-                         Description = _enumTranslator.Translate(placeholder)
+                         Description = enumTranslator.Translate(placeholder)
                      };
 
         if (mailType.HasAttribute<PartnerMailTypeAttribute>()
@@ -101,14 +94,14 @@ public class AutoMailPlaceholderQueryHandler : IRequestHandler<AutoMailPlacehold
                          {
                              Key = keyLeader,
                              Placeholder = $"{{{{{keyLeader}}}}}",
-                             Description = $"{_enumTranslator.Translate(Role.Leader)}: {_enumTranslator.Translate(placeholder)}"
+                             Description = $"{enumTranslator.Translate(Role.Leader)}: {enumTranslator.Translate(placeholder)}"
                          };
             var keyFollower = $"{Role.Follower}.{placeholder}";
             yield return new PlaceholderDescription
                          {
                              Key = keyFollower,
                              Placeholder = $"{{{{{keyFollower}}}}}",
-                             Description = $"{_enumTranslator.Translate(Role.Follower)}: {_enumTranslator.Translate(placeholder)}"
+                             Description = $"{enumTranslator.Translate(Role.Follower)}: {enumTranslator.Translate(placeholder)}"
                          };
         }
     }

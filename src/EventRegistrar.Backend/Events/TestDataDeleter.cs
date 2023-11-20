@@ -18,68 +18,27 @@ using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Events;
 
-public class TestDataDeleter
+public class TestDataDeleter(IRepository<IndividualReduction> individualReductions,
+                             IRepository<MailEvent> mailEvents,
+                             IRepository<Payment> payments,
+                             IRepository<PaymentAssignment> paymentAssignments,
+                             IRepository<IncomingPayment> incomingPayments,
+                             IRepository<OutgoingPayment> outgoingPayments,
+                             IRepository<PaymentsFile> paymentFiles,
+                             IRepository<RawRegistration> rawRegistrations,
+                             CommandQueue commandQueue,
+                             DbContext dbContext,
+                             IRepository<Mail> mails,
+                             IRepository<MailToRegistration> mailsOfRegistrations,
+                             IRepository<RegistrationCancellation> registrationCancellations,
+                             IRepository<Registration> _registrations,
+                             IRepository<Response> responses,
+                             IRepository<Seat> spots,
+                             IRepository<Sms> sms,
+                             IEventBus eventBus,
+                             ChangeTrigger changeTrigger)
 {
-    private readonly IRepository<IndividualReduction> _individualReductions;
-    private readonly IRepository<MailEvent> _mailEvents;
-    private readonly IRepository<Payment> _payments;
-    private readonly IRepository<PaymentAssignment> _paymentAssignments;
-    private readonly IRepository<IncomingPayment> _incomingPayments;
-    private readonly IRepository<OutgoingPayment> _outgoingPayments;
-    private readonly IRepository<PaymentsFile> _paymentFiles;
-    private readonly IRepository<RawRegistration> _rawRegistrations;
-    private readonly CommandQueue _commandQueue;
-    private readonly DbContext _dbContext;
-    private readonly IRepository<Mail> _mails;
-    private readonly IRepository<MailToRegistration> _mailsOfRegistrations;
-    private readonly IRepository<RegistrationCancellation> _registrationCancellations;
-    private readonly IRepository<Registration> _registrations;
-    private readonly IRepository<Response> _responses;
-    private readonly IRepository<Seat> _spots;
-    private readonly IRepository<Sms> _sms;
-    private readonly IEventBus _eventBus;
-    private readonly ChangeTrigger _changeTrigger;
-
-    public TestDataDeleter(IRepository<IndividualReduction> individualReductions,
-                           IRepository<MailEvent> mailEvents,
-                           IRepository<Payment> payments,
-                           IRepository<PaymentAssignment> paymentAssignments,
-                           IRepository<IncomingPayment> incomingPayments,
-                           IRepository<OutgoingPayment> outgoingPayments,
-                           IRepository<PaymentsFile> paymentFiles,
-                           IRepository<RawRegistration> rawRegistrations,
-                           CommandQueue commandQueue,
-                           DbContext dbContext,
-                           IRepository<Mail> mails,
-                           IRepository<MailToRegistration> mailsOfRegistrations,
-                           IRepository<RegistrationCancellation> registrationCancellations,
-                           IRepository<Registration> registrations,
-                           IRepository<Response> responses,
-                           IRepository<Seat> spots,
-                           IRepository<Sms> sms,
-                           IEventBus eventBus,
-                           ChangeTrigger changeTrigger)
-    {
-        _individualReductions = individualReductions;
-        _mailEvents = mailEvents;
-        _payments = payments;
-        _paymentAssignments = paymentAssignments;
-        _incomingPayments = incomingPayments;
-        _outgoingPayments = outgoingPayments;
-        _paymentFiles = paymentFiles;
-        _rawRegistrations = rawRegistrations;
-        _commandQueue = commandQueue;
-        _dbContext = dbContext;
-        _mails = mails;
-        _mailsOfRegistrations = mailsOfRegistrations;
-        _registrationCancellations = registrationCancellations;
-        _registrations = registrations;
-        _responses = responses;
-        _spots = spots;
-        _sms = sms;
-        _eventBus = eventBus;
-        _changeTrigger = changeTrigger;
-    }
+    private readonly ChangeTrigger _changeTrigger = changeTrigger;
 
     public async Task DeleteTestData(Event @event, CancellationToken cancellationToken)
     {
@@ -93,17 +52,17 @@ public class TestDataDeleter
         //await using var transaction = await _dbContext.Database.BeginTransactionAsync(cancellationToken);
         try
         {
-            _individualReductions.Remove(ird => ird.Registration!.EventId == eventId);
-            _mails.Remove(mev => mev.EventId == eventId);
-            _mailsOfRegistrations.Remove(mev => mev.Registration!.EventId == eventId);
-            _registrationCancellations.Remove(cnc => cnc.Registration!.EventId == eventId);
-            _responses.Remove(rsp => rsp.Registration!.EventId == eventId);
-            _spots.Remove(spot => spot.Registrable!.EventId == eventId);
-            _sms.Remove(sms => sms.Registration!.EventId == eventId);
-            _mailEvents.Remove(mev => mev.Mail!.EventId == eventId);
+            individualReductions.Remove(ird => ird.Registration!.EventId == eventId);
+            mails.Remove(mev => mev.EventId == eventId);
+            mailsOfRegistrations.Remove(mev => mev.Registration!.EventId == eventId);
+            registrationCancellations.Remove(cnc => cnc.Registration!.EventId == eventId);
+            responses.Remove(rsp => rsp.Registration!.EventId == eventId);
+            spots.Remove(spot => spot.Registrable!.EventId == eventId);
+            sms.Remove(sms => sms.Registration!.EventId == eventId);
+            mailEvents.Remove(mev => mev.Mail!.EventId == eventId);
             if (!string.IsNullOrWhiteSpace(eventAcronym))
             {
-                _rawRegistrations.Remove(rrg => rrg.EventAcronym == eventAcronym);
+                rawRegistrations.Remove(rrg => rrg.EventAcronym == eventAcronym);
             }
 
             var registrations = await _registrations.AsTracking()
@@ -114,33 +73,33 @@ public class TestDataDeleter
                 reg.RegistrationId_Partner = null;
                 reg.Registration_Partner = null;
             });
-            var assignments = await _paymentAssignments.AsTracking()
-                                                       .Where(pas => pas.Registration!.EventId == eventId
-                                                                  || pas.IncomingPayment!.Payment!.EventId == eventId
-                                                                  || pas.OutgoingPayment!.Payment!.EventId == eventId)
-                                                       .Where(pas => pas.PaymentAssignmentId_Counter != null)
-                                                       .ToListAsync(cancellationToken);
+            var assignments = await paymentAssignments.AsTracking()
+                                                      .Where(pas => pas.Registration!.EventId == eventId
+                                                                 || pas.IncomingPayment!.Payment!.EventId == eventId
+                                                                 || pas.OutgoingPayment!.Payment!.EventId == eventId)
+                                                      .Where(pas => pas.PaymentAssignmentId_Counter != null)
+                                                      .ToListAsync(cancellationToken);
             assignments.ForEach(pas =>
             {
                 pas.PaymentAssignmentId_Counter = null;
             });
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             registrations.ForEach(reg => { _registrations.Remove(reg); });
-            _paymentAssignments.Remove(pas => pas.Registration!.EventId == eventId
-                                           || pas.IncomingPayment!.Payment!.EventId == eventId
-                                           || pas.OutgoingPayment!.Payment!.EventId == eventId);
-            _incomingPayments.Remove(pmt => pmt.Payment!.EventId == eventId);
-            _outgoingPayments.Remove(pmt => pmt.Payment!.EventId == eventId);
-            _payments.Remove(pmt => pmt.EventId == eventId);
-            _paymentFiles.Remove(pmf => pmf.EventId == eventId);
+            paymentAssignments.Remove(pas => pas.Registration!.EventId == eventId
+                                          || pas.IncomingPayment!.Payment!.EventId == eventId
+                                          || pas.OutgoingPayment!.Payment!.EventId == eventId);
+            incomingPayments.Remove(pmt => pmt.Payment!.EventId == eventId);
+            outgoingPayments.Remove(pmt => pmt.Payment!.EventId == eventId);
+            payments.Remove(pmt => pmt.EventId == eventId);
+            paymentFiles.Remove(pmf => pmf.EventId == eventId);
 
-            var readModelsSet = _dbContext.Set<ReadModel>();
+            var readModelsSet = dbContext.Set<ReadModel>();
             var readModels = await readModelsSet.Where(rmd => rmd.EventId == eventId)
                                                 .ToListAsync(cancellationToken);
             readModelsSet.RemoveRange(readModels);
 
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            await dbContext.SaveChangesAsync(cancellationToken);
 
             //await transaction.CommitAsync(cancellationToken);
         }
@@ -150,22 +109,22 @@ public class TestDataDeleter
             throw;
         }
 
-        _commandQueue.EnqueueCommand(new StartUpdateReadModelsOfEventCommand { EventId = eventId });
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = eventId,
-                              QueryName = nameof(RegistrablesOverviewQuery)
-                          });
+        commandQueue.EnqueueCommand(new StartUpdateReadModelsOfEventCommand { EventId = eventId });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = eventId,
+                             QueryName = nameof(RegistrablesOverviewQuery)
+                         });
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = eventId,
-                              QueryName = nameof(PricePackageOverviewQuery)
-                          });
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = eventId,
-                              QueryName = nameof(PaymentOverviewQuery)
-                          });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = eventId,
+                             QueryName = nameof(PricePackageOverviewQuery)
+                         });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = eventId,
+                             QueryName = nameof(PaymentOverviewQuery)
+                         });
     }
 }

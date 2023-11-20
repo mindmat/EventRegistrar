@@ -5,19 +5,15 @@ public interface IEventAcronymResolver
     Task<Guid> GetEventIdFromAcronym(string eventAcronym);
 }
 
-internal class EventAcronymResolver : IEventAcronymResolver
+internal class EventAcronymResolver(IQueryable<Event> events) : IEventAcronymResolver
 {
-    private readonly IQueryable<Event> _events;
-
-    public EventAcronymResolver(IQueryable<Event> events)
-    {
-        _events = events;
-    }
-
     public async Task<Guid> GetEventIdFromAcronym(string eventAcronym)
     {
-        var @event = await _events.FirstOrDefaultAsync(evt => evt.Acronym == eventAcronym);
-        if (@event == null) throw new ArgumentOutOfRangeException($"There is no event {eventAcronym}");
+        var @event = await events.FirstOrDefaultAsync(evt => evt.Acronym == eventAcronym);
+        if (@event == null)
+        {
+            throw new ArgumentOutOfRangeException($"There is no event {eventAcronym}");
+        }
 
         return @event.Id;
     }

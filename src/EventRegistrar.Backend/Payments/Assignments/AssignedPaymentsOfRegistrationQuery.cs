@@ -6,33 +6,26 @@ public class AssignedPaymentsOfRegistrationQuery : IRequest<IEnumerable<Assigned
     public Guid RegistrationId { get; set; }
 }
 
-public class AssignedPaymentsOfRegistrationQueryHandler : IRequestHandler<AssignedPaymentsOfRegistrationQuery, IEnumerable<AssignedPaymentDisplayItem>>
+public class AssignedPaymentsOfRegistrationQueryHandler(IQueryable<PaymentAssignment> assignments) : IRequestHandler<AssignedPaymentsOfRegistrationQuery, IEnumerable<AssignedPaymentDisplayItem>>
 {
-    private readonly IQueryable<PaymentAssignment> _assignments;
-
-    public AssignedPaymentsOfRegistrationQueryHandler(IQueryable<PaymentAssignment> assignments)
-    {
-        _assignments = assignments;
-    }
-
     public async Task<IEnumerable<AssignedPaymentDisplayItem>> Handle(AssignedPaymentsOfRegistrationQuery query,
                                                                       CancellationToken cancellationToken)
     {
-        var data = await _assignments.Where(ass => ass.RegistrationId == query.RegistrationId
-                                                && ass.Registration!.EventId == query.EventId
-                                                && ass.PaymentAssignmentId_Counter == null)
-                                     .Select(ass => new
-                                                    {
-                                                        ass.Id,
-                                                        ass.Amount,
-                                                        ass.IncomingPaymentId,
-                                                        ass.OutgoingPaymentId,
-                                                        Currency_Incoming = (string?)ass.IncomingPayment!.Payment!.Currency,
-                                                        BookingDate_Incoming = (DateTime?)ass.IncomingPayment.Payment.BookingDate,
-                                                        Currency_Outgoing = (string?)ass.OutgoingPayment!.Payment!.Currency,
-                                                        BookingDate_Outgoing = (DateTime?)ass.OutgoingPayment.Payment.BookingDate
-                                                    })
-                                     .ToListAsync(cancellationToken);
+        var data = await assignments.Where(ass => ass.RegistrationId == query.RegistrationId
+                                               && ass.Registration!.EventId == query.EventId
+                                               && ass.PaymentAssignmentId_Counter == null)
+                                    .Select(ass => new
+                                                   {
+                                                       ass.Id,
+                                                       ass.Amount,
+                                                       ass.IncomingPaymentId,
+                                                       ass.OutgoingPaymentId,
+                                                       Currency_Incoming = (string?)ass.IncomingPayment!.Payment!.Currency,
+                                                       BookingDate_Incoming = (DateTime?)ass.IncomingPayment.Payment.BookingDate,
+                                                       Currency_Outgoing = (string?)ass.OutgoingPayment!.Payment!.Currency,
+                                                       BookingDate_Outgoing = (DateTime?)ass.OutgoingPayment.Payment.BookingDate
+                                                   })
+                                    .ToListAsync(cancellationToken);
         return data.Where(ass => ass.IncomingPaymentId != null)
                    .Select(ass => new AssignedPaymentDisplayItem
                                   {

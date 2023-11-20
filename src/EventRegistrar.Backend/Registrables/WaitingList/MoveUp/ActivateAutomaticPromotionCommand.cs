@@ -1,5 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
+﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Registrables.WaitingList.MoveUp;
 
@@ -10,33 +9,24 @@ public class ActivateAutomaticPromotionCommand : IRequest, IEventBoundRequest
     public Guid RegistrableId { get; set; }
 }
 
-public class ActivateAutomaticPromotionCommandHandler : IRequestHandler<ActivateAutomaticPromotionCommand>
+public class ActivateAutomaticPromotionCommandHandler(IRepository<Registrable> registrables,
+                                                      IEventBus eventBus)
+    : IRequestHandler<ActivateAutomaticPromotionCommand>
 {
-    private readonly IRepository<Registrable> _registrables;
-    private readonly IEventBus _eventBus;
-
-    public ActivateAutomaticPromotionCommandHandler(IRepository<Registrable> registrables,
-                                                    IEventBus eventBus)
+    public async Task Handle(ActivateAutomaticPromotionCommand command, CancellationToken cancellationToken)
     {
-        _registrables = registrables;
-        _eventBus = eventBus;
-    }
-
-    public async Task<Unit> Handle(ActivateAutomaticPromotionCommand command, CancellationToken cancellationToken)
-    {
-        var registrable = await _registrables.FirstAsync(rbl => rbl.Id == command.RegistrableId);
+        var registrable = await registrables.FirstAsync(rbl => rbl.Id == command.RegistrableId,
+                                                        cancellationToken);
         if (registrable.AutomaticPromotionFromWaitingList)
-            // already activated
         {
-            return Unit.Value;
+            // already activated
+            return;
         }
 
         registrable.AutomaticPromotionFromWaitingList = true;
         if (command.TryPromoteImmediately)
         {
-            _eventBus.Publish(new AutomaticPromotionActivated { RegistrableId = command.RegistrableId });
+            eventBus.Publish(new AutomaticPromotionActivated { RegistrableId = command.RegistrableId });
         }
-
-        return Unit.Value;
     }
 }

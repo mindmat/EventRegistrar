@@ -7,16 +7,9 @@ public class SetReleaseMailCommand : IRequest, IEventBoundRequest
     public bool ReleaseImmediately { get; set; }
 }
 
-public class SetReleaseMailCommandHandler : IRequestHandler<SetReleaseMailCommand>
+public class SetReleaseMailCommandHandler(IRepository<AutoMailTemplate> _templates) : IRequestHandler<SetReleaseMailCommand>
 {
-    private readonly IRepository<AutoMailTemplate> _templates;
-
-    public SetReleaseMailCommandHandler(IRepository<AutoMailTemplate> templates)
-    {
-        _templates = templates;
-    }
-
-    public async Task<Unit> Handle(SetReleaseMailCommand command, CancellationToken cancellationToken)
+    public async Task Handle(SetReleaseMailCommand command, CancellationToken cancellationToken)
     {
         var templates = await _templates.Where(amt => amt.EventId == command.EventId
                                                    && amt.Type == command.Type)
@@ -25,7 +18,5 @@ public class SetReleaseMailCommandHandler : IRequestHandler<SetReleaseMailComman
         {
             template.ReleaseImmediately = command.ReleaseImmediately;
         }
-
-        return Unit.Value;
     }
 }

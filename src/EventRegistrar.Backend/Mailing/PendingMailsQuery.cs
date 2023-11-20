@@ -12,15 +12,9 @@ public class PendingMailsQuery : IRequest<IEnumerable<PendingMailListItem>>, IEv
     public Guid EventId { get; set; }
 }
 
-public class PendingMailsQueryHandler : IRequestHandler<PendingMailsQuery, IEnumerable<PendingMailListItem>>
+public class PendingMailsQueryHandler(IQueryable<Mail> _mails) : IRequestHandler<PendingMailsQuery, IEnumerable<PendingMailListItem>>
 {
-    private readonly IQueryable<Mail> _mails;
     private const int _startLength = 200;
-
-    public PendingMailsQueryHandler(IQueryable<Mail> mails)
-    {
-        _mails = mails;
-    }
 
     public async Task<IEnumerable<PendingMailListItem>> Handle(PendingMailsQuery query, CancellationToken cancellationToken)
     {

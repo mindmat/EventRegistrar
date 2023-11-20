@@ -12,31 +12,20 @@ public class UpdateReadModelCommand : IRequest
     public DateTimeOffset DirtyMoment { get; set; }
 }
 
-public class UpdateReadModelCommandHandler : AsyncRequestHandler<UpdateReadModelCommand>
+public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> calculators,
+                                           DbContext dbContext,
+                                           IEventBus eventBus,
+                                           IDateTimeProvider dateTimeProvider)
+    : IRequestHandler<UpdateReadModelCommand>
 {
-    private readonly IEnumerable<IReadModelCalculator> _calculators;
-    private readonly DbContext _dbContext;
-    private readonly IEventBus _eventBus;
-    private readonly IDateTimeProvider _dateTimeProvider;
     private static readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerDefaults.Web);
 
-    public UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> calculators,
-                                         DbContext dbContext,
-                                         IEventBus eventBus,
-                                         IDateTimeProvider dateTimeProvider)
+    public async Task Handle(UpdateReadModelCommand command, CancellationToken cancellationToken)
     {
-        _calculators = calculators;
-        _dbContext = dbContext;
-        _eventBus = eventBus;
-        _dateTimeProvider = dateTimeProvider;
-    }
+        var now = dateTimeProvider.Now;
+        var updater = calculators.First(rmu => rmu.QueryName == command.QueryName);
 
-    protected override async Task Handle(UpdateReadModelCommand command, CancellationToken cancellationToken)
-    {
-        var now = _dateTimeProvider.Now;
-        var updater = _calculators.First(rmu => rmu.QueryName == command.QueryName);
-
-        var readModels = _dbContext.Set<ReadModel>();
+        var readModels = dbContext.Set<ReadModel>();
 
         var readModel = await readModels.AsTracking()
                                         .Where(rdm => rdm.QueryName == command.QueryName
@@ -65,24 +54,24 @@ public class UpdateReadModelCommandHandler : AsyncRequestHandler<UpdateReadModel
                         };
             var entry = readModels.Attach(readModel);
             entry.State = EntityState.Added;
-            _eventBus.Publish(new QueryChanged
-                              {
-                                  QueryName = command.QueryName,
-                                  EventId = command.EventId,
-                                  RowId = command.RowId
-                              });
+            eventBus.Publish(new QueryChanged
+                             {
+                                 QueryName = command.QueryName,
+                                 EventId = command.EventId,
+                                 RowId = command.RowId
+                             });
         }
         else
         {
             readModel.ContentJson = contentJson;
-            if (_dbContext.Entry(readModel).State == EntityState.Modified)
+            if (dbContext.Entry(readModel).State == EntityState.Modified)
             {
-                _eventBus.Publish(new QueryChanged
-                                  {
-                                      QueryName = command.QueryName,
-                                      EventId = command.EventId,
-                                      RowId = command.RowId
-                                  });
+                eventBus.Publish(new QueryChanged
+                                 {
+                                     QueryName = command.QueryName,
+                                     EventId = command.EventId,
+                                     RowId = command.RowId
+                                 });
             }
         }
     }

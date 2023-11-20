@@ -3,19 +3,11 @@ using EventRegistrar.Backend.Infrastructure.Configuration;
 
 namespace EventRegistrar.Backend.Authentication;
 
-public class Auth0TokenProvider
+public class Auth0TokenProvider(SingletonConfigurationFeature<Auth0Configuration> configuration,
+                                SecretReader secretReader)
 {
-    private readonly SingletonConfigurationFeature<Auth0Configuration> _configuration;
-    private readonly SecretReader _secretReader;
     private string? _token;
     private DateTimeOffset? _expires;
-
-    public Auth0TokenProvider(SingletonConfigurationFeature<Auth0Configuration> configuration,
-                              SecretReader secretReader)
-    {
-        _configuration = configuration;
-        _secretReader = secretReader;
-    }
 
     public async Task<string?> GetToken()
     {
@@ -24,9 +16,9 @@ public class Auth0TokenProvider
             return _token;
         }
 
-        var config = _configuration.Configuration;
-        var clientId = await _secretReader.GetSecret(config.ClientIdKey);
-        var clientSecret = await _secretReader.GetSecret(config.ClientSecretKey);
+        var config = configuration.Configuration;
+        var clientId = await secretReader.GetSecret(config.ClientIdKey);
+        var clientSecret = await secretReader.GetSecret(config.ClientSecretKey);
         if (clientId == null || clientSecret == null)
         {
             throw new Exception("Could not retrieve client id or client secret");

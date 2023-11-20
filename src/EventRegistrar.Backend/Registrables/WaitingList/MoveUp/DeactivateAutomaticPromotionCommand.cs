@@ -1,6 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-
-namespace EventRegistrar.Backend.Registrables.WaitingList.MoveUp;
+﻿namespace EventRegistrar.Backend.Registrables.WaitingList.MoveUp;
 
 public class DeactivateAutomaticPromotionCommand : IRequest, IEventBoundRequest
 {
@@ -8,25 +6,18 @@ public class DeactivateAutomaticPromotionCommand : IRequest, IEventBoundRequest
     public Guid RegistrableId { get; set; }
 }
 
-public class DeactivateAutomaticPromotionCommandHandler : IRequestHandler<DeactivateAutomaticPromotionCommand>
+public class DeactivateAutomaticPromotionCommandHandler(IRepository<Registrable> registrables) : IRequestHandler<DeactivateAutomaticPromotionCommand>
 {
-    private readonly IRepository<Registrable> _registrables;
-
-    public DeactivateAutomaticPromotionCommandHandler(IRepository<Registrable> registrables)
+    public async Task Handle(DeactivateAutomaticPromotionCommand command, CancellationToken cancellationToken)
     {
-        _registrables = registrables;
-    }
-
-    public async Task<Unit> Handle(DeactivateAutomaticPromotionCommand command, CancellationToken cancellationToken)
-    {
-        var registrable = await _registrables.FirstAsync(rbl => rbl.Id == command.RegistrableId);
+        var registrable = await registrables.FirstAsync(rbl => rbl.Id == command.RegistrableId,
+                                                        cancellationToken);
         if (registrable.AutomaticPromotionFromWaitingList == false)
-            // already activated
         {
-            return Unit.Value;
+            // already activated
+            return;
         }
 
         registrable.AutomaticPromotionFromWaitingList = false;
-        return Unit.Value;
     }
 }

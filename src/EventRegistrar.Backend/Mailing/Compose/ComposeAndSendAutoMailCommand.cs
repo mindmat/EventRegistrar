@@ -24,53 +24,25 @@ public class ComposeAndSendAutoMailCommand : IRequest, IEventBoundRequest
     public object? Data { get; set; }
 }
 
-public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSendAutoMailCommand>
+public class ComposeAndSendAutoMailCommandHandler(IQueryable<AutoMailTemplate> templates,
+                                                  IQueryable<Registration> registrations,
+                                                  IRepository<Mail> mails,
+                                                  IRepository<MailToRegistration> mailsToRegistrations,
+                                                  MailConfiguration configuration,
+                                                  MailComposer mailComposer,
+                                                  CommandQueue commandQueue,
+                                                  IDateTimeProvider dateTimeProvider,
+                                                  ILogger log,
+                                                  ChangeTrigger changeTrigger,
+                                                  DirtyTagger dirtyTagger,
+                                                  IEventBus eventBus)
+    : IRequestHandler<ComposeAndSendAutoMailCommand>
 {
     public const string FallbackLanguage = Language.English;
 
-    private readonly ILogger _log;
-    private readonly ChangeTrigger _changeTrigger;
-    private readonly DirtyTagger _dirtyTagger;
-    private readonly IEventBus _eventBus;
-    private readonly MailComposer _mailComposer;
-    private readonly IRepository<Mail> _mails;
-    private readonly IRepository<MailToRegistration> _mailsToRegistrations;
-    private readonly MailConfiguration _configuration;
-    private readonly IQueryable<Registration> _registrations;
-    private readonly CommandQueue _commandQueue;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IQueryable<AutoMailTemplate> _templates;
-
-    public ComposeAndSendAutoMailCommandHandler(IQueryable<AutoMailTemplate> templates,
-                                                IQueryable<Registration> registrations,
-                                                IRepository<Mail> mails,
-                                                IRepository<MailToRegistration> mailsToRegistrations,
-                                                MailConfiguration configuration,
-                                                MailComposer mailComposer,
-                                                CommandQueue commandQueue,
-                                                IDateTimeProvider dateTimeProvider,
-                                                ILogger log,
-                                                ChangeTrigger changeTrigger,
-                                                DirtyTagger dirtyTagger,
-                                                IEventBus eventBus)
+    public async Task Handle(ComposeAndSendAutoMailCommand command, CancellationToken cancellationToken)
     {
-        _templates = templates;
-        _registrations = registrations;
-        _mails = mails;
-        _mailsToRegistrations = mailsToRegistrations;
-        _configuration = configuration;
-        _mailComposer = mailComposer;
-        _commandQueue = commandQueue;
-        _dateTimeProvider = dateTimeProvider;
-        _log = log;
-        _changeTrigger = changeTrigger;
-        _dirtyTagger = dirtyTagger;
-        _eventBus = eventBus;
-    }
-
-    public async Task<Unit> Handle(ComposeAndSendAutoMailCommand command, CancellationToken cancellationToken)
-    {
-        await _dirtyTagger.WaitForRemovedTags(command.RegistrationId, typeof(RegistrationPriceAndWaitingListSegment));
+        await dirtyTagger.WaitForRemovedTags(command.RegistrationId, typeof(RegistrationPriceAndWaitingListSegment));
 
         string? dataTypeFullName = null;
         string? dataJson = null;
@@ -86,42 +58,42 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
 
         if (!command.AllowDuplicate)
         {
-            var duplicate = await _mails.Where(ml => ml.Type == command.MailType
-                                                  && !ml.Discarded
-                                                  && ml.Registrations!.Any(map => map.RegistrationId == command.RegistrationId))
-                                        .WhereIf(dataJson != null && dataTypeFullName != null,
-                                                 ml => ml.DataTypeFullName == dataTypeFullName && ml.DataJson == dataJson)
-                                        .FirstOrDefaultAsync(cancellationToken);
+            var duplicate = await mails.Where(ml => ml.Type == command.MailType
+                                                 && !ml.Discarded
+                                                 && ml.Registrations!.Any(map => map.RegistrationId == command.RegistrationId))
+                                       .WhereIf(dataJson != null && dataTypeFullName != null,
+                                                ml => ml.DataTypeFullName == dataTypeFullName && ml.DataJson == dataJson)
+                                       .FirstOrDefaultAsync(cancellationToken);
             if (duplicate != null)
             {
-                _log.LogWarning("No mail created because Mail with type {0} found (Id {1})",
-                                command.MailType,
-                                duplicate.Id);
-                return Unit.Value;
+                log.LogWarning("No mail created because Mail with type {0} found (Id {1})",
+                               command.MailType,
+                               duplicate.Id);
+                return;
             }
         }
 
-        var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId
-                                                               && reg.EventId == command.EventId, cancellationToken);
-        var templates = await _templates.Where(mtp => mtp.EventId == command.EventId)
-                                        .Where(mtp => mtp.Type == command.MailType)
-                                        .ToListAsync(cancellationToken);
-        var language = registration.Language ?? _configuration.FallbackLanguage ?? FallbackLanguage;
-        var template = templates.FirstOrDefault(mtp => mtp.Language == language)
-                    ?? templates.FirstOrDefault(mtp => mtp.Language == FallbackLanguage)
-                    ?? templates.FirstOrDefault();
+        var registration = await registrations.FirstAsync(reg => reg.Id == command.RegistrationId
+                                                              && reg.EventId == command.EventId, cancellationToken);
+        var templatesOfEvent = await templates.Where(mtp => mtp.EventId == command.EventId)
+                                              .Where(mtp => mtp.Type == command.MailType)
+                                              .ToListAsync(cancellationToken);
+        var language = registration.Language ?? configuration.FallbackLanguage ?? FallbackLanguage;
+        var template = templatesOfEvent.FirstOrDefault(mtp => mtp.Language == language)
+                    ?? templatesOfEvent.FirstOrDefault(mtp => mtp.Language == FallbackLanguage)
+                    ?? templatesOfEvent.FirstOrDefault();
         if (template?.ContentHtml == null)
         {
             throw new ArgumentException($"No template in event {registration.EventId} with type {command.MailType}");
         }
 
         var partnerRegistration = registration.RegistrationId_Partner != null
-                                      ? await _registrations.FirstOrDefaultAsync(reg => reg.Id == registration.RegistrationId_Partner
-                                                                                     && reg.EventId == command.EventId,
-                                                                                 cancellationToken)
+                                      ? await registrations.FirstOrDefaultAsync(reg => reg.Id == registration.RegistrationId_Partner
+                                                                                    && reg.EventId == command.EventId,
+                                                                                cancellationToken)
                                       : null;
 
-        var content = await _mailComposer.Compose(command.RegistrationId, template.ContentHtml, language, cancellationToken);
+        var content = await mailComposer.Compose(command.RegistrationId, template.ContentHtml, language, cancellationToken);
 
         var registrations_Recipients = new List<Registration> { registration };
         if (registration.RegistrationId_Partner != null
@@ -140,18 +112,18 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
                        EventId = registration.EventId,
                        AutoMailTemplateId = template.Id,
                        Type = command.MailType,
-                       SenderMail = _configuration.SenderMail,
-                       SenderName = _configuration.SenderName,
+                       SenderMail = configuration.SenderMail,
+                       SenderName = configuration.SenderName,
                        Subject = template.Subject,
                        Recipients = registrations_Recipients.Select(reg => reg.RespondentEmail?.ToLowerInvariant())
                                                             .Distinct()
                                                             .StringJoinNullable(";"),
                        Withhold = withhold,
-                       Created = _dateTimeProvider.Now,
+                       Created = dateTimeProvider.Now,
                        ContentHtml = content
                    };
 
-        _mails.InsertObjectTree(mail);
+        mails.InsertObjectTree(mail);
         foreach (var mailToRegistration in registrations_Recipients.Select(reg => new MailToRegistration
                                                                                   {
                                                                                       Id = Guid.NewGuid(),
@@ -160,12 +132,12 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
                                                                                       RegistrationId = reg.Id
                                                                                   }))
         {
-            await _mailsToRegistrations.InsertOrUpdateEntity(mailToRegistration, cancellationToken);
+            await mailsToRegistrations.InsertOrUpdateEntity(mailToRegistration, cancellationToken);
         }
 
         if (!withhold)
         {
-            mail.Sent = _dateTimeProvider.Now;
+            mail.Sent = dateTimeProvider.Now;
             var sendMailCommand = new SendMailCommand
                                   {
                                       EventId = mail.EventId!.Value,
@@ -186,22 +158,21 @@ public class ComposeAndSendAutoMailCommandHandler : IRequestHandler<ComposeAndSe
                                                                                })
                                                                    .ToList()
                                   };
-            _commandQueue.EnqueueCommand(sendMailCommand);
+            commandQueue.EnqueueCommand(sendMailCommand);
         }
 
-        registrations_Recipients.ForEach(reg => _changeTrigger.TriggerUpdate<RegistrationCalculator>(reg.Id, reg.EventId));
-        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(PendingMailsQuery)
-                          });
+        registrations_Recipients.ForEach(reg => changeTrigger.TriggerUpdate<RegistrationCalculator>(reg.Id, reg.EventId));
+        changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(PendingMailsQuery)
+                         });
 
         // ToDo
         //foreach (var registrable in registrablesToCheckWaitingList)
         //{
         //    await _serviceBusClient.SendCommand(new TryPromoteFromWaitingListCommand { RegistrableId = registrable.Id }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
         //}
-        return Unit.Value;
     }
 }

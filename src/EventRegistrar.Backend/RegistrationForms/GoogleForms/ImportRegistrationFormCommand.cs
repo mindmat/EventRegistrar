@@ -15,51 +15,31 @@ public class ImportRegistrationFormCommand : IRequest, IEventBoundRequest
     public string FormExternalIdentifier { get; set; }
 }
 
-public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegistrationFormCommand>
+public class ImportRegistrationFormCommandHandler(IRepository<RegistrationForm> forms,
+                                                  IRepository<RawRegistrationForm> rawForms,
+                                                  IRepository<Question> questions,
+                                                  IRepository<QuestionOption> questionOptions,
+                                                  IRepository<Response> responses,
+                                                  IQueryable<Event> events,
+                                                  IDateTimeProvider dateTimeProvider,
+                                                  IEventBus eventBus)
+    : IRequestHandler<ImportRegistrationFormCommand>
 {
-    private readonly IQueryable<Event> _events;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IEventBus _eventBus;
-    private readonly IRepository<RegistrationForm> _forms;
-    private readonly IRepository<QuestionOption> _questionOptions;
-    private readonly IRepository<Response> _responses;
-    private readonly IRepository<Question> _questions;
-    private readonly IRepository<RawRegistrationForm> _rawForms;
-
-    public ImportRegistrationFormCommandHandler(IRepository<RegistrationForm> forms,
-                                                IRepository<RawRegistrationForm> rawForms,
-                                                IRepository<Question> questions,
-                                                IRepository<QuestionOption> questionOptions,
-                                                IRepository<Response> responses,
-                                                IQueryable<Event> events,
-                                                IDateTimeProvider dateTimeProvider,
-                                                IEventBus eventBus)
+    public async Task Handle(ImportRegistrationFormCommand command, CancellationToken cancellationToken)
     {
-        _forms = forms;
-        _rawForms = rawForms;
-        _questions = questions;
-        _questionOptions = questionOptions;
-        _responses = responses;
-        _events = events;
-        _dateTimeProvider = dateTimeProvider;
-        _eventBus = eventBus;
-    }
-
-    public async Task<Unit> Handle(ImportRegistrationFormCommand command, CancellationToken cancellationToken)
-    {
-        var acronym = await _events.FirstAsync(evt => evt.Id == command.EventId, cancellationToken);
-        var rawForm = await _rawForms.Where(frm => frm.EventAcronym == acronym.Acronym
-                                                && frm.FormExternalIdentifier == command.FormExternalIdentifier
-                                                && frm.Processed == null)
-                                     .OrderByDescending(frm => frm.Created)
-                                     .FirstOrDefaultAsync(cancellationToken);
+        var acronym = await events.FirstAsync(evt => evt.Id == command.EventId, cancellationToken);
+        var rawForm = await rawForms.Where(frm => frm.EventAcronym == acronym.Acronym
+                                               && frm.FormExternalIdentifier == command.FormExternalIdentifier
+                                               && frm.Processed == null)
+                                    .OrderByDescending(frm => frm.Created)
+                                    .FirstOrDefaultAsync(cancellationToken);
         if (rawForm == null)
         {
             throw new ArgumentException("No unprocessed form found");
         }
 
         var formDescription = JsonConvert.DeserializeObject<FormDescription>(rawForm.ReceivedMessage);
-        var form = await _forms.FirstOrDefaultAsync(frm => frm.ExternalIdentifier == command.FormExternalIdentifier, cancellationToken);
+        var form = await forms.FirstOrDefaultAsync(frm => frm.ExternalIdentifier == command.FormExternalIdentifier, cancellationToken);
         if (form != null)
         {
             // update existing form
@@ -81,14 +61,14 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
                        Title = formDescription.Title,
                        State = EventState.Setup
                    };
-            await _forms.InsertOrUpdateEntity(form, cancellationToken);
+            await forms.InsertOrUpdateEntity(form, cancellationToken);
         }
 
         // update questions
-        var existingQuestions = await _questions.Where(qst => qst.RegistrationFormId == form.Id)
-                                                .Include(qst => qst.Responses)
-                                                .AsTracking()
-                                                .ToListAsync(cancellationToken);
+        var existingQuestions = await questions.Where(qst => qst.RegistrationFormId == form.Id)
+                                               .Include(qst => qst.Responses)
+                                               .AsTracking()
+                                               .ToListAsync(cancellationToken);
         string section = null;
         foreach (var receivedQuestion in formDescription.Questions.OrderBy(que => que.Index))
         {
@@ -113,17 +93,17 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
                                    Type = type,
                                    Section = section
                                };
-                _questions.InsertObjectTree(question);
+                questions.InsertObjectTree(question);
                 if (receivedQuestion.Choices?.Any() == true)
                 {
                     foreach (var choice in receivedQuestion.Choices)
                     {
-                        _questionOptions.InsertObjectTree(new QuestionOption
-                                                          {
-                                                              Id = Guid.NewGuid(),
-                                                              QuestionId = question.Id,
-                                                              Answer = choice
-                                                          });
+                        questionOptions.InsertObjectTree(new QuestionOption
+                                                         {
+                                                             Id = Guid.NewGuid(),
+                                                             QuestionId = question.Id,
+                                                             Answer = choice
+                                                         });
                     }
                 }
             }
@@ -139,19 +119,19 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
                 // update options
                 if (receivedQuestion.Choices?.Any() == true)
                 {
-                    var existingOptions = await _questionOptions.Where(opt => opt.QuestionId == existingQuestion.Id)
-                                                                .ToListAsync(cancellationToken);
+                    var existingOptions = await questionOptions.Where(opt => opt.QuestionId == existingQuestion.Id)
+                                                               .ToListAsync(cancellationToken);
                     foreach (var receivedChoice in receivedQuestion.Choices)
                     {
                         var existingOption = existingOptions.FirstOrDefault(exo => exo.Answer == receivedChoice);
                         if (existingOption == null)
                         {
-                            _questionOptions.InsertObjectTree(new QuestionOption
-                                                              {
-                                                                  Id = Guid.NewGuid(),
-                                                                  QuestionId = existingQuestion.Id,
-                                                                  Answer = receivedChoice
-                                                              });
+                            questionOptions.InsertObjectTree(new QuestionOption
+                                                             {
+                                                                 Id = Guid.NewGuid(),
+                                                                 QuestionId = existingQuestion.Id,
+                                                                 Answer = receivedChoice
+                                                             });
                         }
                         else
                         {
@@ -161,8 +141,8 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
 
                     foreach (var existingOption in existingOptions)
                     {
-                        _questionOptions.Remove(existingOption);
-                        existingOption.Responses?.ForEach(rsp => _responses.Remove(rsp)); // "cascaded delete"
+                        questionOptions.Remove(existingOption);
+                        existingOption.Responses?.ForEach(rsp => responses.Remove(rsp)); // "cascaded delete"
                     }
                 }
             }
@@ -171,16 +151,15 @@ public class ImportRegistrationFormCommandHandler : IRequestHandler<ImportRegist
         // Remove the questions that were not delivered anymore
         foreach (var existingQuestion in existingQuestions)
         {
-            _questions.Remove(existingQuestion);
-            existingQuestion.Responses?.ForEach(rsp => _responses.Remove(rsp)); // "cascaded delete"
+            questions.Remove(existingQuestion);
+            existingQuestion.Responses?.ForEach(rsp => responses.Remove(rsp)); // "cascaded delete"
         }
 
-        rawForm.Processed = _dateTimeProvider.Now;
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(RegistrationFormsQuery)
-                          });
-        return Unit.Value;
+        rawForm.Processed = dateTimeProvider.Now;
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(RegistrationFormsQuery)
+                         });
     }
 }

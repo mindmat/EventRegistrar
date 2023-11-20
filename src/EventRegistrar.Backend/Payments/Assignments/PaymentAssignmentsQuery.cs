@@ -12,21 +12,11 @@ public class PaymentAssignmentsQuery : IRequest<PaymentAssignments>, IEventBound
     public string? SearchString { get; set; }
 }
 
-public class PaymentAssignmentsQueryHandler : IRequestHandler<PaymentAssignmentsQuery, PaymentAssignments>
+public class PaymentAssignmentsQueryHandler(IQueryable<Registration> _registrations,
+                                            IQueryable<Payment> _payments,
+                                            IQueryable<PayoutRequest> payoutRequests)
+    : IRequestHandler<PaymentAssignmentsQuery, PaymentAssignments>
 {
-    private readonly IQueryable<Payment> _payments;
-    private readonly IQueryable<PayoutRequest> _payoutRequests;
-    private readonly IQueryable<Registration> _registrations;
-
-    public PaymentAssignmentsQueryHandler(IQueryable<Registration> registrations,
-                                          IQueryable<Payment> payments,
-                                          IQueryable<PayoutRequest> payoutRequests)
-    {
-        _registrations = registrations;
-        _payments = payments;
-        _payoutRequests = payoutRequests;
-    }
-
     public async Task<PaymentAssignments> Handle(PaymentAssignmentsQuery query,
                                                  CancellationToken cancellationToken)
     {
@@ -152,21 +142,21 @@ public class PaymentAssignmentsQueryHandler : IRequestHandler<PaymentAssignments
                                                                })
                                                 .ToList();
 
-            var payoutRequestCandidates = await _payoutRequests.Where(prq => prq.Registration!.EventId == query.EventId
-                                                                          && prq.State != PayoutState.Confirmed)
-                                                               .WhereIf(search, pmt => EF.Functions.Like(pmt.Registration!.RespondentFirstName!, $"%{query.SearchString}%")
-                                                                                    || EF.Functions.Like(pmt.Registration!.RespondentLastName!, $"%{query.SearchString}%"))
-                                                               .Select(prq => new PayoutRequestCandidate
-                                                                              {
-                                                                                  PayoutRequestId = prq.Id,
-                                                                                  Participant = $"{prq.Registration!.RespondentFirstName} {prq.Registration.RespondentLastName}",
-                                                                                  Amount = prq.Amount,
-                                                                                  AmountUnsettled = prq.Amount - prq.Assignments!.Sum(pas => pas.Amount),
-                                                                                  Info = prq.Reason,
-                                                                                  IbanProposed = prq.IbanProposed
-                                                                              })
-                                                               .Where(prq => prq.AmountUnsettled > 0)
-                                                               .ToListAsync(cancellationToken);
+            var payoutRequestCandidates = await payoutRequests.Where(prq => prq.Registration!.EventId == query.EventId
+                                                                         && prq.State != PayoutState.Confirmed)
+                                                              .WhereIf(search, pmt => EF.Functions.Like(pmt.Registration!.RespondentFirstName!, $"%{query.SearchString}%")
+                                                                                   || EF.Functions.Like(pmt.Registration!.RespondentLastName!, $"%{query.SearchString}%"))
+                                                              .Select(prq => new PayoutRequestCandidate
+                                                                             {
+                                                                                 PayoutRequestId = prq.Id,
+                                                                                 Participant = $"{prq.Registration!.RespondentFirstName} {prq.Registration.RespondentLastName}",
+                                                                                 Amount = prq.Amount,
+                                                                                 AmountUnsettled = prq.Amount - prq.Assignments!.Sum(pas => pas.Amount),
+                                                                                 Info = prq.Reason,
+                                                                                 IbanProposed = prq.IbanProposed
+                                                                             })
+                                                              .Where(prq => prq.AmountUnsettled > 0)
+                                                              .ToListAsync(cancellationToken);
             if (!search)
             {
                 payoutRequestCandidates.ForEach(pmt => pmt.MatchScore = CalculateMatchScore(pmt, payment.Outgoing));

@@ -10,40 +10,30 @@ public class DeleteMailsCommand : IRequest, IEventBoundRequest
     public IEnumerable<Guid> MailIds { get; set; } = null!;
 }
 
-public class DeleteMailsCommandHandler : AsyncRequestHandler<DeleteMailsCommand>
+public class DeleteMailsCommandHandler(IRepository<Mail> mails,
+                                       ChangeTrigger changeTrigger,
+                                       IEventBus eventBus)
+    : IRequestHandler<DeleteMailsCommand>
 {
-    private readonly IRepository<Mail> _mails;
-    private readonly ChangeTrigger _changeTrigger;
-    private readonly IEventBus _eventBus;
-
-    public DeleteMailsCommandHandler(IRepository<Mail> mails,
-                                     ChangeTrigger changeTrigger,
-                                     IEventBus eventBus)
+    public async Task Handle(DeleteMailsCommand command, CancellationToken cancellationToken)
     {
-        _mails = mails;
-        _changeTrigger = changeTrigger;
-        _eventBus = eventBus;
-    }
-
-    protected override async Task Handle(DeleteMailsCommand command, CancellationToken cancellationToken)
-    {
-        var mailsToDelete = await _mails.Where(mail => command.MailIds.Contains(mail.Id)
-                                                    && mail.EventId == command.EventId)
-                                        .Include(mail => mail.Registrations)
-                                        .ToListAsync(cancellationToken);
+        var mailsToDelete = await mails.Where(mail => command.MailIds.Contains(mail.Id)
+                                                   && mail.EventId == command.EventId)
+                                       .Include(mail => mail.Registrations)
+                                       .ToListAsync(cancellationToken);
         foreach (var mailToDelete in mailsToDelete)
         {
             mailToDelete.Discarded = true;
             foreach (var registrationId in mailToDelete.Registrations!.Select(reg => reg.RegistrationId))
             {
-                _changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId, command.EventId);
+                changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId, command.EventId);
             }
         }
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(PendingMailsQuery)
-                          });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(PendingMailsQuery)
+                         });
     }
 }

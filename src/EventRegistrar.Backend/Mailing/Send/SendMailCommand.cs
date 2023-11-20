@@ -25,35 +25,22 @@ public class SendMailCommand : IRequest, IEventBoundRequest
     public IEnumerable<EmailAddress> To { get; set; }
 }
 
-public class SendMailCommandHandler : AsyncRequestHandler<SendMailCommand>
+public class SendMailCommandHandler(ILogger logger,
+                                    IRepository<Mail> mails,
+                                    ChangeTrigger changeTrigger,
+                                    MailConfiguration mailConfiguration,
+                                    ExternalMailConfigurations externalMailConfiguration)
+    : IRequestHandler<SendMailCommand>
 {
     private const string MessageIdHeader = "X-Message-Id";
-    private readonly ILogger _logger;
-    private readonly IRepository<Mail> _mails;
-    private readonly ChangeTrigger _changeTrigger;
-    private readonly MailConfiguration _mailConfiguration;
-    private readonly ExternalMailConfigurations _externalMailConfiguration;
 
-    public SendMailCommandHandler(ILogger logger,
-                                  IRepository<Mail> mails,
-                                  ChangeTrigger changeTrigger,
-                                  MailConfiguration mailConfiguration,
-                                  ExternalMailConfigurations externalMailConfiguration)
+    public async Task Handle(SendMailCommand command, CancellationToken cancellationToken)
     {
-        _logger = logger;
-        _mails = mails;
-        _changeTrigger = changeTrigger;
-        _mailConfiguration = mailConfiguration;
-        _externalMailConfiguration = externalMailConfiguration;
-    }
-
-    protected override async Task Handle(SendMailCommand command, CancellationToken cancellationToken)
-    {
-        var mail = await _mails.AsTracking()
-                               .FirstAsync(mil => mil.Id == command.MailId, cancellationToken);
-        if (_mailConfiguration.MailSender == MailSender.Imap)
+        var mail = await mails.AsTracking()
+                              .FirstAsync(mil => mil.Id == command.MailId, cancellationToken);
+        if (mailConfiguration.MailSender == MailSender.Imap)
         {
-            var config = _externalMailConfiguration.MailConfigurations?.FirstOrDefault();
+            var config = externalMailConfiguration.MailConfigurations?.FirstOrDefault();
             if (config != null
              && mail.SenderMail != null
              && config.ImapHost != null)
@@ -98,7 +85,7 @@ public class SendMailCommandHandler : AsyncRequestHandler<SendMailCommand>
             var response = await client.SendEmailAsync(msg, cancellationToken);
             if (response.StatusCode != HttpStatusCode.OK && response.StatusCode != HttpStatusCode.Accepted)
             {
-                _logger.LogWarning($"ComposeAndSendMailCommandHandler status {response.StatusCode}, Body {await response.Body.ReadAsStringAsync(cancellationToken)}");
+                logger.LogWarning($"ComposeAndSendMailCommandHandler status {response.StatusCode}, Body {await response.Body.ReadAsStringAsync(cancellationToken)}");
             }
             else
             {
@@ -108,14 +95,14 @@ public class SendMailCommandHandler : AsyncRequestHandler<SendMailCommand>
                 }
                 else
                 {
-                    _logger.LogWarning($"Header {MessageIdHeader} not present in response, cannot determine Message-ID");
+                    logger.LogWarning($"Header {MessageIdHeader} not present in response, cannot determine Message-ID");
                 }
             }
         }
 
         if (mail.EventId != null)
         {
-            _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, mail.EventId);
+            changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, mail.EventId);
         }
     }
 }

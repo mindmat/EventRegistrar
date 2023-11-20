@@ -1,8 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-using MediatR;
-
-namespace EventRegistrar.Backend.Registrables.Reductions;
+﻿namespace EventRegistrar.Backend.Registrables.Reductions;
 
 public class SaveReductionCommand : IRequest, IEventBoundRequest
 {
@@ -14,35 +10,28 @@ public class SaveReductionCommand : IRequest, IEventBoundRequest
     public Guid EventId { get; set; }
 }
 
-public class SaveReductionCommandHandler : IRequestHandler<SaveReductionCommand>
+public class SaveReductionCommandHandler(IRepository<Reduction> reductions) : IRequestHandler<SaveReductionCommand>
 {
-    private readonly IRepository<Reduction> _reductions;
-
-    public SaveReductionCommandHandler(IRepository<Reduction> reductions)
+    public async Task Handle(SaveReductionCommand command, CancellationToken cancellationToken)
     {
-        _reductions = reductions;
-    }
-
-    public async Task<Unit> Handle(SaveReductionCommand command, CancellationToken cancellationToken)
-    {
-        var reduction = await _reductions.FirstOrDefaultAsync(red => red.Id == command.ReductionId)
-                     ?? new Reduction
-                        {
-                            Id = command.ReductionId,
-                            RegistrableId = command.RegistrableId
-                        };
+        var reduction = await reductions.AsTracking()
+                                        .FirstOrDefaultAsync(red => red.Id == command.ReductionId,
+                                                             cancellationToken)
+                     ?? reductions.InsertObjectTree(new Reduction
+                                                    {
+                                                        Id = command.ReductionId,
+                                                        RegistrableId = command.RegistrableId
+                                                    });
         if (reduction.RegistrableId != command.RegistrableId)
+        {
             throw new ArgumentException(
                 $"Invalid data, reduction {command.ReductionId} does not belong to registrable {command.RegistrableId}");
+        }
 
         reduction.Amount = command.Amount;
         reduction.RegistrableId1_ReductionActivatedIfCombinedWith =
             command.RegistrableId1_ReductionActivatedIfCombinedWith;
         reduction.RegistrableId2_ReductionActivatedIfCombinedWith =
             command.RegistrableId2_ReductionActivatedIfCombinedWith;
-
-        await _reductions.InsertOrUpdateEntity(reduction);
-
-        return Unit.Value;
     }
 }

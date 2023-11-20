@@ -6,15 +6,8 @@ using EventRegistrar.Backend.Events.UsersInEvents;
 
 namespace EventRegistrar.Backend.Authentication;
 
-public class Auth0IdentityProvider : IIdentityProvider
+public class Auth0IdentityProvider(Auth0TokenProvider tokenProvider) : IIdentityProvider
 {
-    private readonly Auth0TokenProvider _tokenProvider;
-
-    public Auth0IdentityProvider(Auth0TokenProvider tokenProvider)
-    {
-        _tokenProvider = tokenProvider;
-    }
-
     public (IdentityProvider Provider, string Identifier)? GetIdentifier(IHttpContextAccessor contextAccessor)
     {
         if (contextAccessor.HttpContext?.User.Identity is ClaimsIdentity { IsAuthenticated: true } claimsIdentity)
@@ -40,7 +33,7 @@ public class Auth0IdentityProvider : IIdentityProvider
 
     public async Task<ExternalUserDetails?> GetUserDetails(string identifier)
     {
-        var token = await _tokenProvider.GetToken();
+        var token = await tokenProvider.GetToken();
         if (token != null)
         {
             // Get user details: https://auth0.com/docs/manage-users/user-search/retrieve-users-with-get-users-by-id-endpoint

@@ -8,18 +8,11 @@ public class RegistrationMovedUpFromWaitingList : DomainEvent
     public Guid? RegistrationId { get; set; }
 }
 
-public class RegistrationMovedUpFromWaitingListUserTranslation : IEventToUserTranslation<RegistrationMovedUpFromWaitingList>
+public class RegistrationMovedUpFromWaitingListUserTranslation(IQueryable<Registration> registrations) : IEventToUserTranslation<RegistrationMovedUpFromWaitingList>
 {
-    private readonly IQueryable<Registration> _registrations;
-
-    public RegistrationMovedUpFromWaitingListUserTranslation(IQueryable<Registration> registrations)
-    {
-        _registrations = registrations;
-    }
-
     public string GetText(RegistrationMovedUpFromWaitingList domainEvent)
     {
-        var registration = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
+        var registration = registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
         return $"{registration?.RespondentFirstName} {registration?.RespondentLastName} ist nicht mehr auf der Warteliste";
     }
 }

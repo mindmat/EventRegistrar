@@ -8,28 +8,16 @@ public class TryAssignImportedMailCommand : IRequest
     public Guid ImportedMailId { get; set; }
 }
 
-public class TryAssignImportedMailCommandHandler : IRequestHandler<TryAssignImportedMailCommand>
+public class TryAssignImportedMailCommandHandler(IQueryable<ImportedMail> importedMails,
+                                                 IRepository<ImportedMailToRegistration> mailToRegistrations,
+                                                 IQueryable<Registration> _registrations,
+                                                 IEventBus eventBus)
+    : IRequestHandler<TryAssignImportedMailCommand>
 {
-    private readonly IEventBus _eventBus;
-    private readonly IQueryable<ImportedMail> _importedMails;
-    private readonly IRepository<ImportedMailToRegistration> _mailToRegistrations;
-    private readonly IQueryable<Registration> _registrations;
-
-    public TryAssignImportedMailCommandHandler(IQueryable<ImportedMail> importedMails,
-                                               IRepository<ImportedMailToRegistration> mailToRegistrations,
-                                               IQueryable<Registration> registrations,
-                                               IEventBus eventBus)
+    public async Task Handle(TryAssignImportedMailCommand command, CancellationToken cancellationToken)
     {
-        _importedMails = importedMails;
-        _mailToRegistrations = mailToRegistrations;
-        _registrations = registrations;
-        _eventBus = eventBus;
-    }
-
-    public async Task<Unit> Handle(TryAssignImportedMailCommand command, CancellationToken cancellationToken)
-    {
-        var mail = await _importedMails.Include(ml => ml.Registrations)
-                                       .FirstAsync(ml => ml.Id == command.ImportedMailId, cancellationToken);
+        var mail = await importedMails.Include(ml => ml.Registrations)
+                                      .FirstAsync(ml => ml.Id == command.ImportedMailId, cancellationToken);
         var existingRegistrationMappings = mail.Registrations!.Select(reg => reg.RegistrationId).ToList();
         var emailAddresses = new List<string>(mail.Recipients?.Split(";")) { mail.SenderMail };
         foreach (var emailAddress in emailAddresses)
@@ -41,21 +29,19 @@ public class TryAssignImportedMailCommandHandler : IRequestHandler<TryAssignImpo
                                                     .ToListAsync(cancellationToken);
             foreach (var registration in registrations)
             {
-                await _mailToRegistrations.InsertOrUpdateEntity(
+                await mailToRegistrations.InsertOrUpdateEntity(
                     new ImportedMailToRegistration { ImportedMailId = mail.Id, RegistrationId = registration.Id },
                     cancellationToken);
-                _eventBus.Publish(new ImportedMailAssigned
-                                  {
-                                      EventId = registration.EventId,
-                                      ImportedMailId = mail.Id,
-                                      RegistrationId = registration.Id,
-                                      ExternalDate = mail.Date,
-                                      SenderMail = mail.SenderMail,
-                                      SenderName = mail.SenderName
-                                  });
+                eventBus.Publish(new ImportedMailAssigned
+                                 {
+                                     EventId = registration.EventId,
+                                     ImportedMailId = mail.Id,
+                                     RegistrationId = registration.Id,
+                                     ExternalDate = mail.Date,
+                                     SenderMail = mail.SenderMail,
+                                     SenderName = mail.SenderName
+                                 });
             }
         }
-
-        return Unit.Value;
     }
 }

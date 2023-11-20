@@ -8,28 +8,21 @@ public class AvailableQuestionOptionMappingsQuery : IRequest<IEnumerable<Availab
     public Guid EventId { get; set; }
 }
 
-public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<AvailableQuestionOptionMappingsQuery, IEnumerable<AvailableQuestionOptionMapping>>
+public class AvailableQuestionOptionMappingsQueryHandler(IQueryable<Registrable> registrables) : IRequestHandler<AvailableQuestionOptionMappingsQuery, IEnumerable<AvailableQuestionOptionMapping>>
 {
-    private readonly IQueryable<Registrable> _registrables;
-
-    public AvailableQuestionOptionMappingsQueryHandler(IQueryable<Registrable> registrables)
-    {
-        _registrables = registrables;
-    }
-
     public async Task<IEnumerable<AvailableQuestionOptionMapping>> Handle(AvailableQuestionOptionMappingsQuery query,
                                                                           CancellationToken cancellationToken)
     {
         var result = new List<AvailableQuestionOptionMapping>();
-        var doubleRegistrables = await _registrables.Where(rbl => rbl.EventId == query.EventId
-                                                               && rbl.MaximumDoubleSeats != null)
-                                                    .Select(rbl => new
-                                                                   {
-                                                                       rbl.Id,
-                                                                       rbl.DisplayName,
-                                                                       SortKey = rbl.ShowInMailListOrder ?? int.MaxValue
-                                                                   })
-                                                    .ToListAsync(cancellationToken);
+        var doubleRegistrables = await registrables.Where(rbl => rbl.EventId == query.EventId
+                                                              && rbl.MaximumDoubleSeats != null)
+                                                   .Select(rbl => new
+                                                                  {
+                                                                      rbl.Id,
+                                                                      rbl.DisplayName,
+                                                                      SortKey = rbl.ShowInMailListOrder ?? int.MaxValue
+                                                                  })
+                                                   .ToListAsync(cancellationToken);
 
         result.AddRange(doubleRegistrables.OrderBy(rbl => rbl.SortKey)
                                           .SelectMany(rbl =>
@@ -57,16 +50,16 @@ public class AvailableQuestionOptionMappingsQueryHandler : IRequestHandler<Avail
                                                      };
                                           }));
 
-        var singleRegistrables = await _registrables.Where(rbl => rbl.EventId == query.EventId
-                                                               && rbl.MaximumDoubleSeats == null)
-                                                    .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
-                                                    .Select(rbl => new AvailableQuestionOptionMapping
-                                                                   {
-                                                                       Type = MappingType.SingleRegistrable,
-                                                                       Id = rbl.Id,
-                                                                       Name = rbl.DisplayName
-                                                                   })
-                                                    .ToListAsync(cancellationToken);
+        var singleRegistrables = await registrables.Where(rbl => rbl.EventId == query.EventId
+                                                              && rbl.MaximumDoubleSeats == null)
+                                                   .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
+                                                   .Select(rbl => new AvailableQuestionOptionMapping
+                                                                  {
+                                                                      Type = MappingType.SingleRegistrable,
+                                                                      Id = rbl.Id,
+                                                                      Name = rbl.DisplayName
+                                                                  })
+                                                   .ToListAsync(cancellationToken);
         result.AddRange(singleRegistrables);
 
         // Languages

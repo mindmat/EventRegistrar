@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations;
@@ -14,31 +13,15 @@ public class ProcessReceivedSmsCommand : IRequest
     public TwilioSms Sms { get; set; }
 }
 
-public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedSmsCommand>
+public class ProcessReceivedSmsCommandHandler(IQueryable<Registration> _registrations,
+                                              IRepository<Sms> _sms,
+                                              ConfigurationRegistry configurationRegistry,
+                                              PhoneNormalizer phoneNormalizer,
+                                              IEventBus eventBus,
+                                              IDateTimeProvider dateTimeProvider)
+    : IRequestHandler<ProcessReceivedSmsCommand>
 {
-    private readonly ConfigurationRegistry _configurationRegistry;
-    private readonly PhoneNormalizer _phoneNormalizer;
-    private readonly IEventBus _eventBus;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IQueryable<Registration> _registrations;
-    private readonly IRepository<Sms> _sms;
-
-    public ProcessReceivedSmsCommandHandler(IQueryable<Registration> registrations,
-                                            IRepository<Sms> sms,
-                                            ConfigurationRegistry configurationRegistry,
-                                            PhoneNormalizer phoneNormalizer,
-                                            IEventBus eventBus,
-                                            IDateTimeProvider dateTimeProvider)
-    {
-        _registrations = registrations;
-        _sms = sms;
-        _configurationRegistry = configurationRegistry;
-        _phoneNormalizer = phoneNormalizer;
-        _eventBus = eventBus;
-        _dateTimeProvider = dateTimeProvider;
-    }
-
-    public async Task<Unit> Handle(ProcessReceivedSmsCommand command, CancellationToken cancellationToken)
+    public async Task Handle(ProcessReceivedSmsCommand command, CancellationToken cancellationToken)
     {
         var registrations = await _registrations
                                   .Where(reg => reg.PhoneNormalized == command.Sms.From
@@ -71,20 +54,20 @@ public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedS
                                      .ToList();
 
         var registration = registrations.FirstOrDefault();
-        _eventBus.Publish(new SmsReceived
-                          {
-                              RegistrationId = registration?.Id,
-                              EventId = registration?.EventId,
-                              Registration = registration == null
-                                                 ? null
-                                                 : $"{registration.RespondentFirstName} {registration.RespondentLastName}",
-                              From = command.Sms.From,
-                              Text = command.Sms.Body,
-                              Received = _dateTimeProvider.Now
-                          });
+        eventBus.Publish(new SmsReceived
+                         {
+                             RegistrationId = registration?.Id,
+                             EventId = registration?.EventId,
+                             Registration = registration == null
+                                                ? null
+                                                : $"{registration.RespondentFirstName} {registration.RespondentLastName}",
+                             From = command.Sms.From,
+                             Text = command.Sms.Body,
+                             Received = dateTimeProvider.Now
+                         });
         if (registration == null)
         {
-            return Unit.Value;
+            return;
         }
 
         var sms = new Sms
@@ -98,18 +81,16 @@ public class ProcessReceivedSmsCommandHandler : IRequestHandler<ProcessReceivedS
                       To = command.Sms.To,
                       AccountSid = command.Sms.AccountSid,
                       RawData = JsonConvert.SerializeObject(command.Sms),
-                      Received = _dateTimeProvider.Now
+                      Received = dateTimeProvider.Now
                   };
 
         await _sms.InsertOrUpdateEntity(sms, cancellationToken);
-
-        return Unit.Value;
     }
 
     private bool IsSmsAddressedToEvent(Guid eventId, TwilioSms sms)
     {
-        var config = _configurationRegistry.GetConfiguration<TwilioConfiguration>(eventId);
+        var config = configurationRegistry.GetConfiguration<TwilioConfiguration>(eventId);
         return config.Sid == sms.AccountSid
-            && _phoneNormalizer.NormalizePhone(config.Number) == sms.To;
+            && phoneNormalizer.NormalizePhone(config.Number) == sms.To;
     }
 }

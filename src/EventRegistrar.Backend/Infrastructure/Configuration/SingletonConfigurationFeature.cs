@@ -1,12 +1,7 @@
 ﻿namespace EventRegistrar.Backend.Infrastructure.Configuration;
 
-public class SingletonConfigurationFeature<TFeatureConfiguration>
+public class SingletonConfigurationFeature<TFeatureConfiguration>(TFeatureConfiguration configuration)
     where TFeatureConfiguration : IConfigurationItem
 {
-    public SingletonConfigurationFeature(TFeatureConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
-
-    public TFeatureConfiguration Configuration { get; }
+    public TFeatureConfiguration Configuration { get; } = configuration;
 }

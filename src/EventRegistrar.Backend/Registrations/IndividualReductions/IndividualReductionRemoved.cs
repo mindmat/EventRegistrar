@@ -9,18 +9,11 @@ public class IndividualReductionRemoved : DomainEvent
     public string? Reason { get; set; }
 }
 
-public class IndividualReductionRemovedUserTranslation : IEventToUserTranslation<IndividualReductionRemoved>
+public class IndividualReductionRemovedUserTranslation(IQueryable<Registration> registrations) : IEventToUserTranslation<IndividualReductionRemoved>
 {
-    private readonly IQueryable<Registration> _registrations;
-
-    public IndividualReductionRemovedUserTranslation(IQueryable<Registration> registrations)
-    {
-        _registrations = registrations;
-    }
-
     public string GetText(IndividualReductionRemoved domainEvent)
     {
-        var registration = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
+        var registration = registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
         return $"Bei {registration?.RespondentFirstName} {registration?.RespondentLastName} wurde ein persönlicher Rabatt über {domainEvent.Amount} entfernt.";
     }
 }

@@ -25,37 +25,23 @@ public class CreateEventCommand : IRequest
     public bool CopyConfigurations { get; set; }
 }
 
-public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
+public class CreateEventCommandHandler(IRepository<Event> events,
+                                       IRepository<RegistrableComposition> registrableCompositions,
+                                       AuthenticatedUserId authenticatedUserId,
+                                       ChangeTrigger changeTrigger,
+                                       IEventBus eventBus)
+    : IRequestHandler<CreateEventCommand>
 {
-    private readonly AuthenticatedUserId _authenticatedUserId;
-    private readonly ChangeTrigger _changeTrigger;
-    private readonly IRepository<Event> _events;
-    private readonly IRepository<RegistrableComposition> _registrableCompositions;
-    private readonly IEventBus _eventBus;
-
-    public CreateEventCommandHandler(IRepository<Event> events,
-                                     IRepository<RegistrableComposition> registrableCompositions,
-                                     AuthenticatedUserId authenticatedUserId,
-                                     ChangeTrigger changeTrigger,
-                                     IEventBus eventBus)
+    public async Task Handle(CreateEventCommand command, CancellationToken cancellationToken)
     {
-        _events = events;
-        _registrableCompositions = registrableCompositions;
-        _authenticatedUserId = authenticatedUserId;
-        _changeTrigger = changeTrigger;
-        _eventBus = eventBus;
-    }
-
-    public async Task<Unit> Handle(CreateEventCommand command, CancellationToken cancellationToken)
-    {
-        var existingEvent = await _events.FirstOrDefaultAsync(evt => evt.Acronym == command.Acronym
-                                                                  || evt.Id == command.Id, cancellationToken);
+        var existingEvent = await events.FirstOrDefaultAsync(evt => evt.Acronym == command.Acronym
+                                                                 || evt.Id == command.Id, cancellationToken);
         if (existingEvent != null)
         {
             throw new Exception($"Event with Acronym {existingEvent.Acronym} already exists (Id {existingEvent.Id})");
         }
 
-        if (_authenticatedUserId.UserId == null)
+        if (authenticatedUserId.UserId == null)
         {
             throw new UnauthorizedAccessException("Unknown authenticated user");
         }
@@ -76,7 +62,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                                                              {
                                                                  Id = newEventId,
                                                                  Role = UserInEventRole.Admin,
-                                                                 UserId = _authenticatedUserId.UserId!.Value
+                                                                 UserId = authenticatedUserId.UserId!.Value
                                                              }
                                                          }),
                            Registrables = new List<Registrable>()
@@ -86,18 +72,18 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
         if (command.EventId_Predecessor != null)
         {
             var sourceEventId = command.EventId_Predecessor.Value;
-            var sourceEvent = await _events.Where(evt => evt.Id == sourceEventId)
-                                           .Include(evt => evt.Users)
-                                           .Include(evt => evt.Configurations)
-                                           .Include(evt => evt.Registrables!)
-                                           .ThenInclude(rbl => rbl.Reductions)
-                                           .Include(evt => evt.Registrables!)
-                                           .ThenInclude(rbl => rbl.Compositions)
-                                           .Include(evt => evt.AutoMailTemplates)
-                                           .Include(evt => evt.BulkMailTemplates)
-                                           .FirstAsync(cancellationToken);
+            var sourceEvent = await events.Where(evt => evt.Id == sourceEventId)
+                                          .Include(evt => evt.Users)
+                                          .Include(evt => evt.Configurations)
+                                          .Include(evt => evt.Registrables!)
+                                          .ThenInclude(rbl => rbl.Reductions)
+                                          .Include(evt => evt.Registrables!)
+                                          .ThenInclude(rbl => rbl.Compositions)
+                                          .Include(evt => evt.AutoMailTemplates)
+                                          .Include(evt => evt.BulkMailTemplates)
+                                          .FirstAsync(cancellationToken);
 
-            var isUserAdminInOtherEvent = sourceEvent.Users!.Any(uie => uie.UserId == _authenticatedUserId.UserId);
+            var isUserAdminInOtherEvent = sourceEvent.Users!.Any(uie => uie.UserId == authenticatedUserId.UserId);
 
             if (!isUserAdminInOtherEvent)
             {
@@ -107,7 +93,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
             if (command.CopyAccessRights)
             {
                 sourceEvent.Users!
-                           .Where(uie => uie.UserId != _authenticatedUserId.UserId)
+                           .Where(uie => uie.UserId != authenticatedUserId.UserId)
                            .ForEach(uie => newEvent.Users.Add(new UserInEvent
                                                               {
                                                                   Id = Guid.NewGuid(),
@@ -188,12 +174,12 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
                         var mappedRegistrableId_Contains = registrableMap.Lookup(composition.RegistrableId_Contains);
                         if (mappedRegistrableId_Contains != null)
                         {
-                            _registrableCompositions.InsertObjectTree(new RegistrableComposition
-                                                                      {
-                                                                          Id = Guid.NewGuid(),
-                                                                          RegistrableId = newRegistrableId,
-                                                                          RegistrableId_Contains = mappedRegistrableId_Contains.Value
-                                                                      });
+                            registrableCompositions.InsertObjectTree(new RegistrableComposition
+                                                                     {
+                                                                         Id = Guid.NewGuid(),
+                                                                         RegistrableId = newRegistrableId,
+                                                                         RegistrableId_Contains = mappedRegistrableId_Contains.Value
+                                                                     });
                         }
                     }
                 }
@@ -212,14 +198,12 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand>
             }
         }
 
-        _events.InsertObjectTree(newEvent);
+        events.InsertObjectTree(newEvent);
 
-        _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, newEventId);
-        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, newEventId);
+        changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, newEventId);
+        changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, newEventId);
 
-        _eventBus.Publish(new QueryChanged { QueryName = nameof(EventsOfUserQuery) });
-        _eventBus.Publish(new QueryChanged { QueryName = nameof(SearchEventQuery) });
-
-        return Unit.Value;
+        eventBus.Publish(new QueryChanged { QueryName = nameof(EventsOfUserQuery) });
+        eventBus.Publish(new QueryChanged { QueryName = nameof(SearchEventQuery) });
     }
 }

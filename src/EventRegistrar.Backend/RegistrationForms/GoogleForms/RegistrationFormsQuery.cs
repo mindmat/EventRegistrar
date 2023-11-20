@@ -9,25 +9,15 @@ public class RegistrationFormsQuery : IRequest<IEnumerable<RegistrationFormItem>
     public Guid EventId { get; set; }
 }
 
-public class RegistrationFormsQueryHandler : IRequestHandler<RegistrationFormsQuery, IEnumerable<RegistrationFormItem>>
+public class RegistrationFormsQueryHandler(IQueryable<RawRegistrationForm> _rawForms,
+                                           IQueryable<RegistrationForm> _forms,
+                                           IQueryable<Event> events)
+    : IRequestHandler<RegistrationFormsQuery, IEnumerable<RegistrationFormItem>>
 {
-    private readonly IQueryable<RawRegistrationForm> _rawForms;
-    private readonly IQueryable<RegistrationForm> _forms;
-    private readonly IQueryable<Event> _events;
-
-    public RegistrationFormsQueryHandler(IQueryable<RawRegistrationForm> rawForms,
-                                         IQueryable<RegistrationForm> forms,
-                                         IQueryable<Event> events)
-    {
-        _rawForms = rawForms;
-        _forms = forms;
-        _events = events;
-    }
-
     public async Task<IEnumerable<RegistrationFormItem>> Handle(RegistrationFormsQuery query,
                                                                 CancellationToken cancellationToken)
     {
-        var @event = await _events.FirstAsync(evt => evt.Id == query.EventId, cancellationToken);
+        var @event = await events.FirstAsync(evt => evt.Id == query.EventId, cancellationToken);
         var rawFormsData = await _rawForms.Where(frm => frm.EventAcronym == @event.Acronym)
                                           .Select(frm => new { frm.FormExternalIdentifier, frm.Processed, frm.Created, frm.Id })
                                           .ToListAsync(cancellationToken);

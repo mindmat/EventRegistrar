@@ -7,26 +7,17 @@ public class TryAssignPaymentSlipCommand : IRequest
     public string? Reference { get; set; }
 }
 
-public class TryAssignPaymentSlipCommandHandler : IRequestHandler<TryAssignPaymentSlipCommand>
+public class TryAssignPaymentSlipCommandHandler(IRepository<IncomingPayment> payments) : IRequestHandler<TryAssignPaymentSlipCommand>
 {
-    private readonly IRepository<IncomingPayment> _payments;
-
-    public TryAssignPaymentSlipCommandHandler(IRepository<IncomingPayment> payments)
+    public async Task Handle(TryAssignPaymentSlipCommand command, CancellationToken cancellationToken)
     {
-        _payments = payments;
-    }
-
-    public async Task<Unit> Handle(TryAssignPaymentSlipCommand command, CancellationToken cancellationToken)
-    {
-        var payment = await _payments.Where(pmt => pmt.Payment!.EventId == command.EventId
-                                                && pmt.Payment.InstructionIdentification == command.Reference)
-                                     .ToListAsync(cancellationToken);
+        var payment = await payments.Where(pmt => pmt.Payment!.EventId == command.EventId
+                                               && pmt.Payment.InstructionIdentification == command.Reference)
+                                    .ToListAsync(cancellationToken);
 
         if (payment.Count == 1)
         {
             payment[0].PaymentSlipId = command.PaymentSlipId;
         }
-
-        return Unit.Value;
     }
 }

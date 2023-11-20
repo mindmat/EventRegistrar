@@ -9,21 +9,13 @@ public class HostingQuery : IRequest<HostingOffersAndRequests>, IEventBoundReque
     public Guid EventId { get; set; }
 }
 
-public class HostingQueryHandler : IRequestHandler<HostingQuery, HostingOffersAndRequests>
+public class HostingQueryHandler(HostingMappingReader hostingMappingReader,
+                                 IQueryable<Registration> _registrations)
+    : IRequestHandler<HostingQuery, HostingOffersAndRequests>
 {
-    private readonly HostingMappingReader _hostingMappingReader;
-    private readonly IQueryable<Registration> _registrations;
-
-    public HostingQueryHandler(HostingMappingReader hostingMappingReader,
-                               IQueryable<Registration> registrations)
-    {
-        _hostingMappingReader = hostingMappingReader;
-        _registrations = registrations;
-    }
-
     public async Task<HostingOffersAndRequests> Handle(HostingQuery query, CancellationToken cancellationToken)
     {
-        var hostingMappings = await _hostingMappingReader.GetHostingMappings(query.EventId, cancellationToken);
+        var hostingMappings = await hostingMappingReader.GetHostingMappings(query.EventId, cancellationToken);
         var result = new HostingOffersAndRequests();
         if (hostingMappings.QuestionOptionId_Offer == null
          && hostingMappings.QuestionOptionId_Request == null)

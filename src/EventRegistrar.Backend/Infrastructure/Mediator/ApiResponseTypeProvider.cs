@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
+﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace EventRegistrar.Backend.Infrastructure.Mediator;

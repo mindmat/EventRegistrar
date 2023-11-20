@@ -8,20 +8,13 @@ public class DuePaymentsQuery : IRequest<SerializedJson<IEnumerable<DuePaymentIt
     public Guid EventId { get; set; }
 }
 
-public class DuePaymentsQueryHandler : IRequestHandler<DuePaymentsQuery, SerializedJson<IEnumerable<DuePaymentItem>>>
+public class DuePaymentsQueryHandler(ReadModelReader readModelReader) : IRequestHandler<DuePaymentsQuery, SerializedJson<IEnumerable<DuePaymentItem>>>
 {
-    private readonly ReadModelReader _readModelReader;
-
-    public DuePaymentsQueryHandler(ReadModelReader readModelReader)
-    {
-        _readModelReader = readModelReader;
-    }
-
     public async Task<SerializedJson<IEnumerable<DuePaymentItem>>> Handle(DuePaymentsQuery query, CancellationToken cancellationToken)
     {
-        return await _readModelReader.Get<IEnumerable<DuePaymentItem>>(nameof(DuePaymentsQuery),
-                                                                       query.EventId,
-                                                                       null,
-                                                                       cancellationToken);
+        return await readModelReader.Get<IEnumerable<DuePaymentItem>>(nameof(DuePaymentsQuery),
+                                                                      query.EventId,
+                                                                      null,
+                                                                      cancellationToken);
     }
 }

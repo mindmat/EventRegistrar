@@ -7,15 +7,8 @@ public class CancellationsQuery : IRequest<IEnumerable<CancellationDisplayItem>>
     public Guid EventId { get; set; }
 }
 
-public class CancellationsQueryHandler : IRequestHandler<CancellationsQuery, IEnumerable<CancellationDisplayItem>>
+public class CancellationsQueryHandler(IQueryable<RegistrationCancellation> _cancellations) : IRequestHandler<CancellationsQuery, IEnumerable<CancellationDisplayItem>>
 {
-    private readonly IQueryable<RegistrationCancellation> _cancellations;
-
-    public CancellationsQueryHandler(IQueryable<RegistrationCancellation> cancellations)
-    {
-        _cancellations = cancellations;
-    }
-
     public async Task<IEnumerable<CancellationDisplayItem>> Handle(CancellationsQuery query, CancellationToken cancellationToken)
     {
         var cancellations = await _cancellations.Where(cnc => cnc.Registration!.EventId == query.EventId)

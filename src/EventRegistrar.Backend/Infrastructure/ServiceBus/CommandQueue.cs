@@ -4,16 +4,10 @@ using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.Infrastructure.ServiceBus;
 
-public class CommandQueue
+public class CommandQueue(ServiceBusSender sender)
 {
-    private readonly ServiceBusSender _sender;
     public const string CommandQueueName = "CommandQueue";
     private readonly List<CommandMessage> _messages = new();
-
-    public CommandQueue(ServiceBusSender sender)
-    {
-        _sender = sender;
-    }
 
     public async Task Release()
     {
@@ -22,7 +16,7 @@ public class CommandQueue
             return;
         }
 
-        await _sender.SendMessagesAsync(_messages.Select(msg => new ServiceBusMessage(JsonConvert.SerializeObject(msg))));
+        await sender.SendMessagesAsync(_messages.Select(msg => new ServiceBusMessage(JsonConvert.SerializeObject(msg))));
     }
 
     public void EnqueueCommand<T>(T command)

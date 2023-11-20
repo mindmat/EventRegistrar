@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
+﻿namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 public interface IEventToCommandTranslation<in TEvent>
     where TEvent : DomainEvent

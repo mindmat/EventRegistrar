@@ -11,19 +11,11 @@ public class RegistrationCancelled : DomainEvent
     public string? Participant { get; set; }
 }
 
-public class RegistrationCancelledUserTranslation : IEventToUserTranslation<RegistrationCancelled>
+public class RegistrationCancelledUserTranslation(IQueryable<Registration> registrations) : IEventToUserTranslation<RegistrationCancelled>
 {
-    private readonly IQueryable<Registration> _registrations;
-
-    public RegistrationCancelledUserTranslation(IQueryable<Registration> registrations)
-    {
-        _registrations = registrations;
-    }
-
-
     public string GetText(RegistrationCancelled domainEvent)
     {
-        var registration = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
+        var registration = registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
         return
             $"{registration?.RespondentFirstName} {registration?.RespondentLastName} hat am {domainEvent.Received:g} storniert mit Begründung '{domainEvent.Reason}'. Rückerstattung {domainEvent.Refund}";
     }

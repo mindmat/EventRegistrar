@@ -11,36 +11,27 @@ public class UpdateAutoMailTemplateCommand : IRequest, IEventBoundRequest
     public string? ContentHtml { get; set; }
 }
 
-public class UpdateAutoMailTemplateCommandHandler : IRequestHandler<UpdateAutoMailTemplateCommand>
+public class UpdateAutoMailTemplateCommandHandler(IRepository<AutoMailTemplate> autoMailTemplates,
+                                                  IEventBus eventBus)
+    : IRequestHandler<UpdateAutoMailTemplateCommand>
 {
-    private readonly IRepository<AutoMailTemplate> _autoMailTemplates;
-    private readonly IEventBus _eventBus;
-
-    public UpdateAutoMailTemplateCommandHandler(IRepository<AutoMailTemplate> autoMailTemplates,
-                                                IEventBus eventBus)
+    public async Task Handle(UpdateAutoMailTemplateCommand command, CancellationToken cancellationToken)
     {
-        _autoMailTemplates = autoMailTemplates;
-        _eventBus = eventBus;
-    }
-
-    public async Task<Unit> Handle(UpdateAutoMailTemplateCommand command, CancellationToken cancellationToken)
-    {
-        var template = await _autoMailTemplates.AsTracking()
-                                               .FirstAsync(mtp => mtp.EventId == command.EventId
-                                                               && mtp.Id == command.TemplateId,
-                                                           cancellationToken);
+        var template = await autoMailTemplates.AsTracking()
+                                              .FirstAsync(mtp => mtp.EventId == command.EventId
+                                                              && mtp.Id == command.TemplateId,
+                                                          cancellationToken);
         template.Subject = command.Subject;
         if (!string.IsNullOrWhiteSpace(command.ContentHtml))
         {
             template.ContentHtml = command.ContentHtml;
         }
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              QueryName = nameof(MailTemplatePreviewQuery),
-                              EventId = command.EventId,
-                              RowId = template.Id
-                          });
-        return Unit.Value;
+        eventBus.Publish(new QueryChanged
+                         {
+                             QueryName = nameof(MailTemplatePreviewQuery),
+                             EventId = command.EventId,
+                             RowId = template.Id
+                         });
     }
 }

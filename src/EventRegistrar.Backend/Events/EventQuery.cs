@@ -5,18 +5,11 @@ public class EventQuery : IRequest<EventDetails>, IEventBoundRequest
     public Guid EventId { get; set; }
 }
 
-public class EventQueryHandler : IRequestHandler<EventQuery, EventDetails>
+public class EventQueryHandler(IQueryable<Event> events) : IRequestHandler<EventQuery, EventDetails>
 {
-    private readonly IQueryable<Event> _events;
-
-    public EventQueryHandler(IQueryable<Event> events)
-    {
-        _events = events;
-    }
-
     public async Task<EventDetails> Handle(EventQuery query, CancellationToken cancellationToken)
     {
-        var @event = await _events.FirstAsync(evt => evt.Id == query.EventId, cancellationToken);
+        var @event = await events.FirstAsync(evt => evt.Id == query.EventId, cancellationToken);
         return new EventDetails
                {
                    Id = @event.Id,

@@ -20,18 +20,10 @@ public class PricePackageCount
     public int Count { get; set; }
 }
 
-public class PricePackageOverviewQueryHandler : IRequestHandler<PricePackageOverviewQuery, PricePackageOverview>
+public class PricePackageOverviewQueryHandler(IQueryable<PricePackage> _pricePackages,
+                                              IQueryable<Registration> _registrations)
+    : IRequestHandler<PricePackageOverviewQuery, PricePackageOverview>
 {
-    private readonly IQueryable<PricePackage> _pricePackages;
-    private readonly IQueryable<Registration> _registrations;
-
-    public PricePackageOverviewQueryHandler(IQueryable<PricePackage> pricePackages,
-                                            IQueryable<Registration> registrations)
-    {
-        _pricePackages = pricePackages;
-        _registrations = registrations;
-    }
-
     public async Task<PricePackageOverview> Handle(PricePackageOverviewQuery query, CancellationToken cancellationToken)
     {
         var registrations = await _registrations.Where(reg => reg.EventId == query.EventId
@@ -47,11 +39,11 @@ public class PricePackageOverviewQueryHandler : IRequestHandler<PricePackageOver
                                           .ToDictionary(grp => grp.Key, grp => grp.Count());
 
         var packages = await _pricePackages.Where(pkg => pkg.EventId == query.EventId
-                                                      && packagesCounts.Keys.Contains(pkg.Id)
-                                                      && pkg.ShowInOverview)
-                                           .ToDictionaryAsync(pkg => pkg.Id,
-                                                              pkg => new { pkg.Name, pkg.SortKey },
-                                                              cancellationToken);
+                                                     && packagesCounts.Keys.Contains(pkg.Id)
+                                                     && pkg.ShowInOverview)
+                                          .ToDictionaryAsync(pkg => pkg.Id,
+                                                             pkg => new { pkg.Name, pkg.SortKey },
+                                                             cancellationToken);
 
         return new PricePackageOverview
                {

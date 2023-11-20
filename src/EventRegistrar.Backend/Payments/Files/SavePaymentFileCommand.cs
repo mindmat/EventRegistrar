@@ -23,40 +23,22 @@ public class SavePaymentFileCommand : IRequest, IEventBoundRequest
     public MemoryStream FileStream { get; set; }
 }
 
-public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileCommand>
+public class SavePaymentFileCommandHandler(IRepository<PaymentsFile> paymentFiles,
+                                           IRepository<Payment> payments,
+                                           IRepository<PaymentSlip> paymentSlips,
+                                           IQueryable<Event> events,
+                                           CamtParser camtParser,
+                                           ILogger log,
+                                           IEventBus eventBus,
+                                           ChangeTrigger changeTrigger)
+    : IRequestHandler<SavePaymentFileCommand>
 {
     private const string PostfinancePaymentSlipFilenameRegex =
         @"^camt\.053_._(?<IBAN>CH[0-9]{19})_\d+_\d+_\d+-(?<ID>\d+)\.(?<Extension>[a-z]+)";
 
-    private readonly CamtParser _camtParser;
-    private readonly IEventBus _eventBus;
-    private readonly ChangeTrigger _changeTrigger;
-    private readonly IQueryable<Event> _events;
-    private readonly ILogger _log;
-    private readonly IRepository<PaymentsFile> _paymentFiles;
-    private readonly IRepository<Payment> _payments;
-    private readonly IRepository<PaymentSlip> _paymentSlips;
+    private readonly ChangeTrigger _changeTrigger = changeTrigger;
 
-    public SavePaymentFileCommandHandler(IRepository<PaymentsFile> paymentFiles,
-                                         IRepository<Payment> payments,
-                                         IRepository<PaymentSlip> paymentSlips,
-                                         IQueryable<Event> events,
-                                         CamtParser camtParser,
-                                         ILogger log,
-                                         IEventBus eventBus,
-                                         ChangeTrigger changeTrigger)
-    {
-        _paymentFiles = paymentFiles;
-        _payments = payments;
-        _paymentSlips = paymentSlips;
-        _events = events;
-        _camtParser = camtParser;
-        _log = log;
-        _eventBus = eventBus;
-        _changeTrigger = changeTrigger;
-    }
-
-    public async Task<Unit> Handle(SavePaymentFileCommand command, CancellationToken cancellationToken)
+    public async Task Handle(SavePaymentFileCommand command, CancellationToken cancellationToken)
     {
         command.FileStream.Position = 0;
         switch (command.ContentType)
@@ -84,8 +66,6 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
 
             default: throw new ArgumentOutOfRangeException($"Invalid content typ {command.ContentType}");
         }
-
-        return Unit.Value;
     }
 
     private static string ConvertExtensionToContentType(string extension)
@@ -109,17 +89,17 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
         stream.Position = 0;
         var xml = XDocument.Load(stream);
 
-        var camt = _camtParser.Parse(xml);
+        var camt = camtParser.Parse(xml);
 
-        var existingFile = await _paymentFiles.FirstOrDefaultAsync(fil => fil.EventId == eventId
-                                                                       && fil.FileId == camt.FileId, cancellationToken);
+        var existingFile = await paymentFiles.FirstOrDefaultAsync(fil => fil.EventId == eventId
+                                                                      && fil.FileId == camt.FileId, cancellationToken);
         if (existingFile != null)
         {
-            _log.LogInformation($"File with Id {camt.FileId} already exists (PaymentFile.Id = {existingFile.Id})");
+            log.LogInformation($"File with Id {camt.FileId} already exists (PaymentFile.Id = {existingFile.Id})");
             return newPayments;
         }
 
-        var @event = await _events.FirstOrDefaultAsync(evt => evt.AccountIban == camt.Account, cancellationToken);
+        var @event = await events.FirstOrDefaultAsync(evt => evt.AccountIban == camt.Account, cancellationToken);
 
         var paymentFile = new PaymentsFile
                           {
@@ -134,12 +114,12 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                               BookingsTo = camt.BookingsTo
                           };
 
-        await _paymentFiles.InsertOrUpdateEntity(paymentFile, cancellationToken);
+        await paymentFiles.InsertOrUpdateEntity(paymentFile, cancellationToken);
         foreach (var camtEntry in camt.Entries)
         {
             // dedup
-            if (await _payments.AnyAsync(pmt => pmt.Reference == camtEntry.Reference
-                                             && pmt.EventId == eventId, cancellationToken))
+            if (await payments.AnyAsync(pmt => pmt.Reference == camtEntry.Reference
+                                            && pmt.EventId == eventId, cancellationToken))
             {
                 continue;
             }
@@ -188,23 +168,23 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                                                       DebitorIban = camtEntry.DebitorIban
                                                   }
                                    };
-            _payments.InsertObjectTree(newPayment);
+            payments.InsertObjectTree(newPayment);
             newPayments.Add(newPayment);
         }
 
         if (@event != null)
         {
-            _eventBus.Publish(new PaymentFileProcessed
-                              {
-                                  EventId = eventId,
-                                  Account = camt.Account,
-                                  Balance = camt.Balance,
-                                  EntriesCount = camt.Entries.Count
-                              });
+            eventBus.Publish(new PaymentFileProcessed
+                             {
+                                 EventId = eventId,
+                                 Account = camt.Account,
+                                 Balance = camt.Balance,
+                                 EntriesCount = camt.Entries.Count
+                             });
         }
 
-        _eventBus.Publish(new QueryChanged { EventId = eventId, QueryName = nameof(BookingsByStateQuery) });
-        _eventBus.Publish(new QueryChanged { EventId = eventId, QueryName = nameof(PaymentsByDayQuery) });
+        eventBus.Publish(new QueryChanged { EventId = eventId, QueryName = nameof(BookingsByStateQuery) });
+        eventBus.Publish(new QueryChanged { EventId = eventId, QueryName = nameof(PaymentsByDayQuery) });
         return newPayments;
     }
 
@@ -256,14 +236,14 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                                       Filename = entry.Name,
                                       Reference = reference
                                   };
-                await _paymentSlips.InsertOrUpdateEntity(paymentSlip, cancellationToken);
+                await paymentSlips.InsertOrUpdateEntity(paymentSlip, cancellationToken);
 
-                _eventBus.Publish(new PaymentSlipReceived
-                                  {
-                                      EventId = eventId,
-                                      Reference = reference,
-                                      PaymentSlipId = paymentSlip.Id
-                                  });
+                eventBus.Publish(new PaymentSlipReceived
+                                 {
+                                     EventId = eventId,
+                                     Reference = reference,
+                                     PaymentSlipId = paymentSlip.Id
+                                 });
             }
         }
     }
@@ -283,12 +263,12 @@ public class SavePaymentFileCommandHandler : IRequestHandler<SavePaymentFileComm
                               Reference = reference,
                               ContentType = contentType
                           };
-        await _paymentSlips.InsertOrUpdateEntity(paymentSlip);
-        _eventBus.Publish(new PaymentSlipReceived
-                          {
-                              EventId = eventId,
-                              Reference = reference,
-                              PaymentSlipId = paymentSlip.Id
-                          });
+        await paymentSlips.InsertOrUpdateEntity(paymentSlip);
+        eventBus.Publish(new PaymentSlipReceived
+                         {
+                             EventId = eventId,
+                             Reference = reference,
+                             PaymentSlipId = paymentSlip.Id
+                         });
     }
 }

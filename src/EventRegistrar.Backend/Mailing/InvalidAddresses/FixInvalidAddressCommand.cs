@@ -15,25 +15,15 @@ public class FixInvalidAddressCommand : IRequest, IEventBoundRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class FixInvalidAddressCommandHandler : AsyncRequestHandler<FixInvalidAddressCommand>
+public class FixInvalidAddressCommandHandler(IRepository<Registration> registrations,
+                                             ChangeTrigger changeTrigger,
+                                             IEventBus eventBus)
+    : IRequestHandler<FixInvalidAddressCommand>
 {
-    private readonly IEventBus _eventBus;
-    private readonly IRepository<Registration> _registrations;
-    private readonly ChangeTrigger _changeTrigger;
-
-    public FixInvalidAddressCommandHandler(IRepository<Registration> registrations,
-                                           ChangeTrigger changeTrigger,
-                                           IEventBus eventBus)
+    public async Task Handle(FixInvalidAddressCommand command, CancellationToken cancellationToken)
     {
-        _registrations = registrations;
-        _changeTrigger = changeTrigger;
-        _eventBus = eventBus;
-    }
-
-    protected override async Task Handle(FixInvalidAddressCommand command, CancellationToken cancellationToken)
-    {
-        var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
-                                               .FirstAsync(cancellationToken);
+        var registration = await registrations.Where(reg => reg.Id == command.RegistrationId)
+                                              .FirstAsync(cancellationToken);
 
         if (registration.RespondentEmail != command.OldEmailAddress)
         {
@@ -51,14 +41,14 @@ public class FixInvalidAddressCommandHandler : AsyncRequestHandler<FixInvalidAdd
 
         registration.RespondentEmail = command.NewEmailAddress;
 
-        _eventBus.Publish(new InvalidEmailAddressFixed
-                          {
-                              EventId = command.EventId,
-                              RegistrationId = command.RegistrationId,
-                              OldEmailAddress = command.OldEmailAddress,
-                              NewEmailAddress = command.NewEmailAddress
-                          });
+        eventBus.Publish(new InvalidEmailAddressFixed
+                         {
+                             EventId = command.EventId,
+                             RegistrationId = command.RegistrationId,
+                             OldEmailAddress = command.OldEmailAddress,
+                             NewEmailAddress = command.NewEmailAddress
+                         });
 
-        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
     }
 }

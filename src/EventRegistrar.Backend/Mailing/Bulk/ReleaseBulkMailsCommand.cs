@@ -12,35 +12,24 @@ public class ReleaseBulkMailsCommand : IRequest, IEventBoundRequest
     public string BulkMailKey { get; set; } = null!;
 }
 
-public class ReleaseBulkMailsCommandHandler : AsyncRequestHandler<ReleaseBulkMailsCommand>
+public class ReleaseBulkMailsCommandHandler(IRepository<Mail> mails,
+                                            CommandQueue commandQueue,
+                                            IEventBus eventBus,
+                                            IDateTimeProvider dateTimeProvider)
+    : IRequestHandler<ReleaseBulkMailsCommand>
 {
     private const int ChunkSize = 100;
-    private readonly IRepository<Mail> _mails;
-    private readonly CommandQueue _commandQueue;
-    private readonly IEventBus _eventBus;
-    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public ReleaseBulkMailsCommandHandler(IRepository<Mail> mails,
-                                          CommandQueue commandQueue,
-                                          IEventBus eventBus,
-                                          IDateTimeProvider dateTimeProvider)
+    public async Task Handle(ReleaseBulkMailsCommand command, CancellationToken cancellationToken)
     {
-        _mails = mails;
-        _commandQueue = commandQueue;
-        _eventBus = eventBus;
-        _dateTimeProvider = dateTimeProvider;
-    }
-
-    protected override async Task Handle(ReleaseBulkMailsCommand command, CancellationToken cancellationToken)
-    {
-        var withheldMails = await _mails.Where(mail => mail.BulkMailKey == command.BulkMailKey
-                                                    && mail.EventId == command.EventId
-                                                    && mail.Withhold
-                                                    && !mail.Discarded)
-                                        .Include(mail => mail.Registrations!)
-                                        .ThenInclude(map => map.Registration)
-                                        .Take(ChunkSize)
-                                        .ToListAsync(cancellationToken);
+        var withheldMails = await mails.Where(mail => mail.BulkMailKey == command.BulkMailKey
+                                                   && mail.EventId == command.EventId
+                                                   && mail.Withhold
+                                                   && !mail.Discarded)
+                                       .Include(mail => mail.Registrations!)
+                                       .ThenInclude(map => map.Registration)
+                                       .Take(ChunkSize)
+                                       .ToListAsync(cancellationToken);
 
         foreach (var withheldMail in withheldMails)
         {
@@ -65,24 +54,24 @@ public class ReleaseBulkMailsCommandHandler : AsyncRequestHandler<ReleaseBulkMai
                                   };
 
             withheldMail.Withhold = false;
-            withheldMail.Sent = _dateTimeProvider.Now;
+            withheldMail.Sent = dateTimeProvider.Now;
 
-            _commandQueue.EnqueueCommand(sendMailCommand);
+            commandQueue.EnqueueCommand(sendMailCommand);
         }
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(GeneratedBulkMailsQuery)
-                          });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(GeneratedBulkMailsQuery)
+                         });
         if (withheldMails.Count >= ChunkSize)
         {
             // enqueue next chunk
-            _commandQueue.EnqueueCommand(new ReleaseBulkMailsCommand
-                                         {
-                                             EventId = command.EventId,
-                                             BulkMailKey = command.BulkMailKey
-                                         });
+            commandQueue.EnqueueCommand(new ReleaseBulkMailsCommand
+                                        {
+                                            EventId = command.EventId,
+                                            BulkMailKey = command.BulkMailKey
+                                        });
         }
     }
 }

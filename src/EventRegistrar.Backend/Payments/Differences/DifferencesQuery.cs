@@ -9,49 +9,42 @@ public class DifferencesQuery : IRequest<IEnumerable<DifferencesDisplayItem>>, I
     public Guid EventId { get; set; }
 }
 
-public class DifferencesQueryHandler : IRequestHandler<DifferencesQuery, IEnumerable<DifferencesDisplayItem>>
+public class DifferencesQueryHandler(IQueryable<Registration> registrations) : IRequestHandler<DifferencesQuery, IEnumerable<DifferencesDisplayItem>>
 {
-    private readonly IQueryable<Registration> _registrations;
-
-    public DifferencesQueryHandler(IQueryable<Registration> registrations)
-    {
-        _registrations = registrations;
-    }
-
     public async Task<IEnumerable<DifferencesDisplayItem>> Handle(DifferencesQuery query,
                                                                   CancellationToken cancellationToken)
     {
-        var differences = await _registrations.Where(reg => reg.EventId == query.EventId
-                                                         && (reg.State == RegistrationState.Received || reg.State == RegistrationState.Paid)
-                                                         && reg.IsOnWaitingList == false
-                                                         && reg.Price_AdmittedAndReduced > 0m
-                                                         && !reg.WillPayAtCheckin)
-                                              .Select(reg => new
-                                                             {
-                                                                 Registration = reg,
-                                                                 PaymentsTotal = reg.PaymentAssignments!
-                                                                                    .Where(asn => asn.IncomingPaymentId != null)
-                                                                                    .Sum(asn => asn.Amount),
-                                                                 AmountRepaid = reg.PaymentAssignments!
-                                                                                   .Where(asn => asn.OutgoingPaymentId != null)
+        var differences = await registrations.Where(reg => reg.EventId == query.EventId
+                                                        && (reg.State == RegistrationState.Received || reg.State == RegistrationState.Paid)
+                                                        && reg.IsOnWaitingList == false
+                                                        && reg.Price_AdmittedAndReduced > 0m
+                                                        && !reg.WillPayAtCheckin)
+                                             .Select(reg => new
+                                                            {
+                                                                Registration = reg,
+                                                                PaymentsTotal = reg.PaymentAssignments!
+                                                                                   .Where(asn => asn.IncomingPaymentId != null)
                                                                                    .Sum(asn => asn.Amount),
-                                                                 AmountPayoutRequests = reg.PayoutRequests!
-                                                                                           .Where(rpy => rpy.State != PayoutState.Confirmed)
-                                                                                           .Sum(rpy => rpy.Amount),
-                                                                 Mails = reg.Mails!.Select(mtr => mtr.Mail!)
-                                                                            .Where(mail => !mail.Discarded
-                                                                                        && (mail.Type == MailType.MoneyOwed
-                                                                                         || mail.Type == MailType.TooMuchPaid))
-                                                                            .Select(mail => new
-                                                                                            {
-                                                                                                mail.Type,
-                                                                                                mail.Created,
-                                                                                                mail.Sent
-                                                                                            })
-                                                             })
-                                              .Where(reg => reg.PaymentsTotal > 0m)
-                                              .OrderBy(reg => reg.Registration.AdmittedAt)
-                                              .ToListAsync(cancellationToken);
+                                                                AmountRepaid = reg.PaymentAssignments!
+                                                                                  .Where(asn => asn.OutgoingPaymentId != null)
+                                                                                  .Sum(asn => asn.Amount),
+                                                                AmountPayoutRequests = reg.PayoutRequests!
+                                                                                          .Where(rpy => rpy.State != PayoutState.Confirmed)
+                                                                                          .Sum(rpy => rpy.Amount),
+                                                                Mails = reg.Mails!.Select(mtr => mtr.Mail!)
+                                                                           .Where(mail => !mail.Discarded
+                                                                                       && (mail.Type == MailType.MoneyOwed
+                                                                                        || mail.Type == MailType.TooMuchPaid))
+                                                                           .Select(mail => new
+                                                                                           {
+                                                                                               mail.Type,
+                                                                                               mail.Created,
+                                                                                               mail.Sent
+                                                                                           })
+                                                            })
+                                             .Where(reg => reg.PaymentsTotal > 0m)
+                                             .OrderBy(reg => reg.Registration.AdmittedAt)
+                                             .ToListAsync(cancellationToken);
 
         return differences.Select(reg => new DifferencesDisplayItem
                                          {

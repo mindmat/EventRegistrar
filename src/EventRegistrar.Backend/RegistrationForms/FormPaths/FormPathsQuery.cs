@@ -16,15 +16,8 @@ public class RegistrationFormGroup
     public IEnumerable<FormSection> Sections { get; set; }
 }
 
-public class FormPathsQueryHandler : IRequestHandler<FormPathsQuery, IEnumerable<RegistrationFormGroup>>
+public class FormPathsQueryHandler(IQueryable<RegistrationForm> _forms) : IRequestHandler<FormPathsQuery, IEnumerable<RegistrationFormGroup>>
 {
-    private readonly IQueryable<RegistrationForm> _forms;
-
-    public FormPathsQueryHandler(IQueryable<RegistrationForm> forms)
-    {
-        _forms = forms;
-    }
-
     public async Task<IEnumerable<RegistrationFormGroup>> Handle(FormPathsQuery query,
                                                                  CancellationToken cancellationToken)
     {
@@ -81,13 +74,13 @@ public class FormPathsQueryHandler : IRequestHandler<FormPathsQuery, IEnumerable
                                                                                                           Mappable = qst.Type is QuestionType.Text or QuestionType.ParagraphText,
                                                                                                           Mapping = qst.Mapping,
                                                                                                           Options = qst.Options.Select(qop =>
-                                                                                                              new QuestionOptionMappingDisplayItem
-                                                                                                              {
-                                                                                                                  Id = qop.Id,
-                                                                                                                  Answer = qop.Answer,
-                                                                                                                  MappedRegistrableCombinedIds = qop.MappedRegistrables
-                                                                                                                      .Select(map => $"{map.RegistrableId}|{map.Type}|{map.Language}")
-                                                                                                              })
+                                                                                                                  new QuestionOptionMappingDisplayItem
+                                                                                                                  {
+                                                                                                                      Id = qop.Id,
+                                                                                                                      Answer = qop.Answer,
+                                                                                                                      MappedRegistrableCombinedIds = qop.MappedRegistrables
+                                                                                                                          .Select(map => $"{map.RegistrableId}|{map.Type}|{map.Language}")
+                                                                                                                  })
                                                                                                       })
                                                                                        .OrderBy(qst => qst.SortKey)
                                                                     })

@@ -6,35 +6,27 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.RegistrationForms;
 
-public class RegistrationFormController : Controller
+public class RegistrationFormController(IMediator mediator,
+                                        IEventAcronymResolver eventAcronymResolver)
+    : Controller
 {
-    private readonly IEventAcronymResolver _eventAcronymResolver;
-    private readonly IMediator _mediator;
-
-    public RegistrationFormController(IMediator mediator,
-                                      IEventAcronymResolver eventAcronymResolver)
-    {
-        _mediator = mediator;
-        _eventAcronymResolver = eventAcronymResolver;
-    }
-
     [HttpDelete("api/events/{eventAcronym}/registrationForms/{registrationFormId}")]
     public async Task DeleteRegistrationForm(string eventAcronym, Guid registrationFormId)
     {
-        await _mediator.Send(new DeleteRegistrationFormCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 RegistrationFormId = registrationFormId
-                             });
+        await mediator.Send(new DeleteRegistrationFormCommand
+                            {
+                                EventId = await eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                                RegistrationFormId = registrationFormId
+                            });
     }
 
 
     [HttpGet("api/events/{eventAcronym}/formPaths")]
     public async Task<IEnumerable<RegistrationFormGroup>> GetFormPaths(string eventAcronym)
     {
-        return await _mediator.Send(new FormPathsQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
+        return await mediator.Send(new FormPathsQuery
+                                   {
+                                       EventId = await eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+                                   });
     }
 }

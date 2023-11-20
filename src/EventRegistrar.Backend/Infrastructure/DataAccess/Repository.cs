@@ -4,17 +4,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess;
 
-public class Repository<TEntity> : Queryable<TEntity>, IRepository<TEntity>
+public class Repository<TEntity>(DbContext dbContext) : Queryable<TEntity>(dbContext), IRepository<TEntity>
     where TEntity : Entity, new()
 {
-    private readonly DbContext _dbContext;
-
-    public Repository(DbContext dbContext)
-        : base(dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     public Task<TEntity?> Get(Expression<Func<TEntity, bool>> predicate)
     {
         return DbSet.FirstOrDefaultAsync(predicate);
@@ -42,7 +34,7 @@ public class Repository<TEntity> : Queryable<TEntity>, IRepository<TEntity>
         // add entity to context
         DbSet.Attach(entity);
 
-        var entry = _dbContext.Entry(entity);
+        var entry = dbContext.Entry(entity);
         var dbValues = await entry.GetDatabaseValuesAsync(cancellationToken);
         if (dbValues == null)
         {

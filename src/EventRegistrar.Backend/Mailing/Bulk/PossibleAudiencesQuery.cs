@@ -1,5 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Events;
+﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
 
@@ -16,18 +15,10 @@ public class PossibleAudiencesQuery : IRequest<IEnumerable<PossibleAudience>>, I
     public Guid EventId { get; set; }
 }
 
-public class PossibleAudiencesQueryHandler : IRequestHandler<PossibleAudiencesQuery, IEnumerable<PossibleAudience>>
+public class PossibleAudiencesQueryHandler(IQueryable<Event> events,
+                                           IQueryable<Registration> _registrations)
+    : IRequestHandler<PossibleAudiencesQuery, IEnumerable<PossibleAudience>>
 {
-    private readonly IQueryable<Event> _events;
-    private readonly IQueryable<Registration> _registrations;
-
-    public PossibleAudiencesQueryHandler(IQueryable<Event> events,
-                                         IQueryable<Registration> registrations)
-    {
-        _events = events;
-        _registrations = registrations;
-    }
-
     public async Task<IEnumerable<PossibleAudience>> Handle(PossibleAudiencesQuery query,
                                                             CancellationToken cancellationToken)
     {
@@ -55,19 +46,19 @@ public class PossibleAudiencesQueryHandler : IRequestHandler<PossibleAudiencesQu
                              Name = Properties.Resources.MailingAudience_WaitingList + $" ({registrations.Count(reg => reg.State == RegistrationState.Received && reg.IsWaitingList == true)})"
                          }
                      };
-        var predecessorEvent = await _events.Where(evt => evt.Id == query.EventId)
-                                            .Select(evt => new
-                                                           {
-                                                               evt.PredecessorEvent,
-                                                               PredecessorEventRegistrationCount =
-                                                                   evt.PredecessorEvent.Registrations.Count(),
-                                                               PrePredecessorEvent =
-                                                                   evt.PredecessorEvent.PredecessorEvent,
-                                                               PrePredecessorEventRegistrationCount =
-                                                                   evt.PredecessorEvent.PredecessorEvent.Registrations
-                                                                      .Count()
-                                                           })
-                                            .FirstAsync();
+        var predecessorEvent = await events.Where(evt => evt.Id == query.EventId)
+                                           .Select(evt => new
+                                                          {
+                                                              evt.PredecessorEvent,
+                                                              PredecessorEventRegistrationCount =
+                                                                  evt.PredecessorEvent.Registrations.Count(),
+                                                              PrePredecessorEvent =
+                                                                  evt.PredecessorEvent.PredecessorEvent,
+                                                              PrePredecessorEventRegistrationCount =
+                                                                  evt.PredecessorEvent.PredecessorEvent.Registrations
+                                                                     .Count()
+                                                          })
+                                           .FirstAsync();
         if (predecessorEvent?.PredecessorEvent != null)
         {
             result.Add(new PossibleAudience

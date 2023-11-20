@@ -1,4 +1,3 @@
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
@@ -11,44 +10,33 @@ public class SetRoleOfUserInEventCommand : IRequest, IEventBoundRequest
     public UserInEventRole Role { get; set; }
 }
 
-public class SetRoleOfUserInEventCommandHandler : IRequestHandler<SetRoleOfUserInEventCommand>
+public class SetRoleOfUserInEventCommandHandler(IRepository<UserInEvent> usersInEvents,
+                                                IEventBus eventBus)
+    : IRequestHandler<SetRoleOfUserInEventCommand>
 {
-    private readonly IRepository<UserInEvent> _usersInEvents;
-    private readonly IEventBus _eventBus;
-
-    public SetRoleOfUserInEventCommandHandler(IRepository<UserInEvent> usersInEvents,
-                                              IEventBus eventBus)
+    public async Task Handle(SetRoleOfUserInEventCommand command, CancellationToken cancellationToken)
     {
-        _usersInEvents = usersInEvents;
-        _eventBus = eventBus;
-    }
-
-    public async Task<Unit> Handle(SetRoleOfUserInEventCommand command, CancellationToken cancellationToken)
-    {
-        var userInEvent = await _usersInEvents.AsTracking()
-                                              .FirstOrDefaultAsync(uie => uie.EventId == command.EventId
-                                                                       && uie.UserId == command.UserId, cancellationToken);
+        var userInEvent = await usersInEvents.AsTracking()
+                                             .FirstOrDefaultAsync(uie => uie.EventId == command.EventId
+                                                                      && uie.UserId == command.UserId, cancellationToken);
         if (userInEvent == null)
         {
-            userInEvent = new UserInEvent
-                          {
-                              Id = Guid.NewGuid(),
-                              EventId = command.EventId,
-                              UserId = command.UserId
-                          };
-            await _usersInEvents.InsertOrUpdateEntity(userInEvent, cancellationToken);
+            usersInEvents.InsertObjectTree(new UserInEvent
+                                           {
+                                               Id = Guid.NewGuid(),
+                                               EventId = command.EventId,
+                                               UserId = command.UserId
+                                           });
         }
         else
         {
             userInEvent.Role = command.Role;
         }
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(UsersOfEventQuery)
-                          });
-
-        return Unit.Value;
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(UsersOfEventQuery)
+                         });
     }
 }

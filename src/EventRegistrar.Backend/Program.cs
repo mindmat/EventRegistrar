@@ -9,7 +9,6 @@ using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Hosting;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.DirtyTags;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
@@ -109,15 +108,14 @@ container.Register(typeof(IRequestHandler<>), assemblies);
 container.Register(typeof(IRequestHandler<,>), assemblies);
 container.Collection.Register(typeof(IEventToCommandTranslation<>), assemblies);
 
-container.RegisterSingleton<IMediator, Mediator>();
-container.Register(() => new ServiceFactory(container.GetInstance), Lifestyle.Singleton);
+container.Register<IMediator>(() => new Mediator(new SimpleInjectorServiceProvider(container)), Lifestyle.Singleton);
 container.Register<IHttpContextAccessor, HttpContextContainer>();
 container.Register<EventContext>();
 
 container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
                                                             {
                                                                 typeof(ExtractEventIdDecorator<,>),
-                                                                //typeof(AuthorizationDecorator<,>),
+                                                                typeof(AuthorizationDecorator<,>),
                                                                 typeof(CommitUnitOfWorkDecorator<,>)
                                                             });
 

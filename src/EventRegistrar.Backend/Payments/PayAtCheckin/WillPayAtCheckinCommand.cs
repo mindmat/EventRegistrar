@@ -9,31 +9,23 @@ public class WillPayAtCheckinCommand : IRequest, IEventBoundRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class WillPayAtCheckinCommandHandler : AsyncRequestHandler<WillPayAtCheckinCommand>
+public class WillPayAtCheckinCommandHandler(IRepository<Registration> registrations,
+                                            IEventBus eventBus)
+    : IRequestHandler<WillPayAtCheckinCommand>
 {
-    private readonly IEventBus _eventBus;
-    private readonly IRepository<Registration> _registrations;
-
-    public WillPayAtCheckinCommandHandler(IRepository<Registration> registrations,
-                                          IEventBus eventBus)
+    public async Task Handle(WillPayAtCheckinCommand command, CancellationToken cancellationToken)
     {
-        _registrations = registrations;
-        _eventBus = eventBus;
-    }
-
-    protected override async Task Handle(WillPayAtCheckinCommand command, CancellationToken cancellationToken)
-    {
-        var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId
-                                                               && reg.EventId == command.EventId, cancellationToken);
+        var registration = await registrations.FirstAsync(reg => reg.Id == command.RegistrationId
+                                                              && reg.EventId == command.EventId, cancellationToken);
 
         if (!registration.WillPayAtCheckin)
         {
             registration.WillPayAtCheckin = true;
-            _eventBus.Publish(new WillPayAtCheckinSet
-                              {
-                                  EventId = registration.EventId,
-                                  RegistrationId = registration.Id
-                              });
+            eventBus.Publish(new WillPayAtCheckinSet
+                             {
+                                 EventId = registration.EventId,
+                                 RegistrationId = registration.Id
+                             });
         }
     }
 }

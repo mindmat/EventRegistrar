@@ -4,27 +4,16 @@ using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations.Register;
 
-public class RegistrationProcessorDelegator
+public class RegistrationProcessorDelegator(SingleRegistrationProcessor singleRegistrationProcessor,
+                                            PartnerRegistrationProcessor partnerRegistrationProcessor,
+                                            IQueryable<FormPath> formPaths,
+                                            JsonHelper jsonHelper)
 {
-    private readonly PartnerRegistrationProcessor _partnerRegistrationProcessor;
-    private readonly IQueryable<FormPath> _formPaths;
-    private readonly JsonHelper _jsonHelper;
-    private readonly SingleRegistrationProcessor _singleRegistrationProcessor;
-
-    public RegistrationProcessorDelegator(SingleRegistrationProcessor singleRegistrationProcessor,
-                                          PartnerRegistrationProcessor partnerRegistrationProcessor,
-                                          IQueryable<FormPath> formPaths,
-                                          JsonHelper jsonHelper)
-    {
-        _singleRegistrationProcessor = singleRegistrationProcessor;
-        _partnerRegistrationProcessor = partnerRegistrationProcessor;
-        _formPaths = formPaths;
-        _jsonHelper = jsonHelper;
-    }
+    private readonly PartnerRegistrationProcessor _partnerRegistrationProcessor = partnerRegistrationProcessor;
 
     public Task<IEnumerable<Seat>> Process(Registration registration)
     {
-        return _singleRegistrationProcessor.Process(registration);
+        return singleRegistrationProcessor.Process(registration);
 
         //var processConfigurations = await GetConfigurations(registrationFormId);
         //var spots = new List<Seat>();
@@ -53,11 +42,13 @@ public class RegistrationProcessorDelegator
     private async Task<IEnumerable<IRegistrationProcessConfiguration>> GetConfigurations(Guid registrationFormId)
     {
         // ToDo: multiple configs per form
-        var configs = await _formPaths.Where(fpt => fpt.RegistrationFormId == registrationFormId)
-                                      .ToListAsync();
+        var configs = await formPaths.Where(fpt => fpt.RegistrationFormId == registrationFormId)
+                                     .ToListAsync();
         if (configs.Any())
+        {
             return configs.Select(fpt =>
-                _jsonHelper.Deserialize<IRegistrationProcessConfiguration>(fpt.ConfigurationJson));
+                                      jsonHelper.Deserialize<IRegistrationProcessConfiguration>(fpt.ConfigurationJson));
+        }
         //IRegistrationProcessConfiguration? config = null;
         //if (form.ProcessConfigurationJson != null)
         //{

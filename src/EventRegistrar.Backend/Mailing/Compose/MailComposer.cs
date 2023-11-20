@@ -13,32 +13,16 @@ using EventRegistrar.Backend.Registrations.Price;
 
 namespace EventRegistrar.Backend.Mailing.Compose;
 
-public class MailComposer
+public class MailComposer(IQueryable<Registration> registrations,
+                          ILogger log,
+                          PaidAmountSummarizer paidAmountSummarizer,
+                          DuePaymentConfiguration duePaymentConfiguration,
+                          PriceCalculator priceCalculator,
+                          QrBillConfiguration qrBillConfiguration)
 {
     private const string DateFormat = "dd.MM.yy";
     private const string PrefixFollower = "FOLLOWER";
     private const string PrefixLeader = "LEADER";
-    private readonly DuePaymentConfiguration _duePaymentConfiguration;
-    private readonly PriceCalculator _priceCalculator;
-    private readonly QrBillConfiguration _qrBillConfiguration;
-    private readonly ILogger _log;
-    private readonly PaidAmountSummarizer _paidAmountSummarizer;
-    private readonly IQueryable<Registration> _registrations;
-
-    public MailComposer(IQueryable<Registration> registrations,
-                        ILogger log,
-                        PaidAmountSummarizer paidAmountSummarizer,
-                        DuePaymentConfiguration duePaymentConfiguration,
-                        PriceCalculator priceCalculator,
-                        QrBillConfiguration qrBillConfiguration)
-    {
-        _registrations = registrations;
-        _log = log;
-        _paidAmountSummarizer = paidAmountSummarizer;
-        _duePaymentConfiguration = duePaymentConfiguration;
-        _priceCalculator = priceCalculator;
-        _qrBillConfiguration = qrBillConfiguration;
-    }
 
     public async Task<string> Compose(Guid registrationId,
                                       string template,
@@ -47,18 +31,18 @@ public class MailComposer
     {
         var cultureInfoBefore = CultureInfo.CurrentUICulture;
         CultureInfo.CurrentUICulture = new CultureInfo(language);
-        var registration = await _registrations.Where(reg => reg.Id == registrationId)
-                                               .Include(reg => reg.Seats_AsLeader!)
-                                               .ThenInclude(seat => seat.Registrable)
-                                               .Include(reg => reg.Seats_AsFollower!)
-                                               .ThenInclude(seat => seat.Registrable)
-                                               .Include(reg => reg.Responses!)
-                                               .ThenInclude(rsp => rsp.Question)
-                                               .Include(reg => reg.Cancellations)
-                                               .Include(reg => reg.Mails!)
-                                               .ThenInclude(map => map.Mail)
-                                               .Include(reg => reg.Event)
-                                               .FirstAsync(cancellationToken);
+        var registration = await registrations.Where(reg => reg.Id == registrationId)
+                                              .Include(reg => reg.Seats_AsLeader!)
+                                              .ThenInclude(seat => seat.Registrable)
+                                              .Include(reg => reg.Seats_AsFollower!)
+                                              .ThenInclude(seat => seat.Registrable)
+                                              .Include(reg => reg.Responses!)
+                                              .ThenInclude(rsp => rsp.Question)
+                                              .Include(reg => reg.Cancellations)
+                                              .Include(reg => reg.Mails!)
+                                              .ThenInclude(map => map.Mail)
+                                              .Include(reg => reg.Event)
+                                              .FirstAsync(cancellationToken);
 
         var mainRegistrationRole = registration.Seats_AsFollower!.Any(spt => !spt.IsCancelled)
                                        ? Role.Follower
@@ -71,18 +55,18 @@ public class MailComposer
 
         if (templateFiller.Prefixes.Any())
         {
-            _log.LogInformation($"Prefixes {string.Join(",", templateFiller.Prefixes)}");
-            partnerRegistration = await _registrations.Where(reg => reg.Id == registration.RegistrationId_Partner)
-                                                      .Include(reg => reg.Seats_AsLeader!)
-                                                      .ThenInclude(seat => seat.Registrable)
-                                                      .Include(reg => reg.Seats_AsFollower!)
-                                                      .ThenInclude(seat => seat.Registrable)
-                                                      .Include(reg => reg.Responses!)
-                                                      .ThenInclude(rsp => rsp.Question)
-                                                      .Include(reg => reg.Cancellations)
-                                                      .Include(reg => reg.Mails!)
-                                                      .ThenInclude(map => map.Mail)
-                                                      .FirstOrDefaultAsync(cancellationToken);
+            log.LogInformation($"Prefixes {string.Join(",", templateFiller.Prefixes)}");
+            partnerRegistration = await registrations.Where(reg => reg.Id == registration.RegistrationId_Partner)
+                                                     .Include(reg => reg.Seats_AsLeader!)
+                                                     .ThenInclude(seat => seat.Registrable)
+                                                     .Include(reg => reg.Seats_AsFollower!)
+                                                     .ThenInclude(seat => seat.Registrable)
+                                                     .Include(reg => reg.Responses!)
+                                                     .ThenInclude(rsp => rsp.Question)
+                                                     .Include(reg => reg.Cancellations)
+                                                     .Include(reg => reg.Mails!)
+                                                     .ThenInclude(map => map.Mail)
+                                                     .FirstOrDefaultAsync(cancellationToken);
             if (mainRegistrationRole == Role.Leader)
             {
                 leaderRegistration = registration;
@@ -147,12 +131,12 @@ public class MailComposer
                 }
                 else if (placeholderKey == MailPlaceholder.PaidAmount)
                 {
-                    templateFiller[key] = (await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id))
+                    templateFiller[key] = (await paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id))
                         .ToString("F2"); // HACK: format hardcoded
                 }
                 else if (placeholderKey is MailPlaceholder.DueAmount or MailPlaceholder.OverpaidAmount)
                 {
-                    var paid = await _paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id);
+                    var paid = await paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id);
                     var price = parts.prefix == null
                                     ? registration.Price_AdmittedAndReduced + (partnerRegistration?.Price_AdmittedAndReduced ?? 0m)
                                     : (registrationForPrefix ?? registration).Price_AdmittedAndReduced;
@@ -204,7 +188,7 @@ public class MailComposer
                 {
                     var reminder1Date = registration.Mails!
                                                     .Where(map => map.Mail!.Type != null
-                                                               && _duePaymentConfiguration.MailTypes_Reminder1.Contains(
+                                                               && duePaymentConfiguration.MailTypes_Reminder1.Contains(
                                                                       map.Mail.Type.Value)
                                                                && map.Mail.Sent.HasValue)
                                                     .Select(map => map.Mail!.Sent)
@@ -236,10 +220,10 @@ public class MailComposer
     private async Task<decimal> GetUnpaidAmount(Registration registration, Registration? partnerRegistration)
     {
         return registration.Price_AdmittedAndReduced
-             - await _paidAmountSummarizer.GetPaidAmount(registration.Id)
+             - await paidAmountSummarizer.GetPaidAmount(registration.Id)
              + (partnerRegistration == null
                     ? 0m
-                    : partnerRegistration.Price_AdmittedAndReduced - await _paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
+                    : partnerRegistration.Price_AdmittedAndReduced - await paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
     }
 
     private async Task<string?> GenerateQrCode(Registration registration)
@@ -248,15 +232,15 @@ public class MailComposer
         var bill = new Bill
                    {
                        // creditor data
-                       Account = _qrBillConfiguration.Iban,
+                       Account = qrBillConfiguration.Iban,
                        Creditor = new Address
                                   {
-                                      Name = _qrBillConfiguration.AccountHolderName,
-                                      Street = _qrBillConfiguration.AccountHolderStreet,
-                                      HouseNo = _qrBillConfiguration.AccountHolderHouseNo,
-                                      PostalCode = _qrBillConfiguration.AccountHolderPostalCode,
-                                      Town = _qrBillConfiguration.AccountHolderTown,
-                                      CountryCode = _qrBillConfiguration.AccountHolderCountryCode
+                                      Name = qrBillConfiguration.AccountHolderName,
+                                      Street = qrBillConfiguration.AccountHolderStreet,
+                                      HouseNo = qrBillConfiguration.AccountHolderHouseNo,
+                                      PostalCode = qrBillConfiguration.AccountHolderPostalCode,
+                                      Town = qrBillConfiguration.AccountHolderTown,
+                                      CountryCode = qrBillConfiguration.AccountHolderCountryCode
                                   },
 
                        // payment data
@@ -303,7 +287,7 @@ public class MailComposer
 
     private async Task<string> GetSpotList(Guid registrationId, string? soldOutMessage)
     {
-        var (_, _, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, _, _) = await _priceCalculator.CalculatePrice(registrationId);
+        var (_, _, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, _, _) = await priceCalculator.CalculatePrice(registrationId);
         var result = new StringBuilder();
 
         // Label
@@ -348,7 +332,7 @@ public class MailComposer
             result.AppendLine("</tr>");
 
             // payments
-            var paid = await _paidAmountSummarizer.GetPaidAmount(registrationId);
+            var paid = await paidAmountSummarizer.GetPaidAmount(registrationId);
             if (paid > 0)
             {
                 // paid

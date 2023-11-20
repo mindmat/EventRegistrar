@@ -1,7 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.RegistrationForms;
@@ -22,41 +20,21 @@ public class ProcessRawRegistrationCommand : IRequest
     public Guid RawRegistrationId { get; set; }
 }
 
-public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessRawRegistrationCommand>
+public class ProcessRawRegistrationCommandHandler(ILogger logger,
+                                                  IRepository<RawRegistration> rawRegistrations,
+                                                  IRepository<Registration> registrations,
+                                                  IRepository<Response> responses,
+                                                  IQueryable<RegistrationForm> forms,
+                                                  RegistrationProcessorDelegator registrationProcessorDelegator,
+                                                  IDateTimeProvider dateTimeProvider,
+                                                  ChangeTrigger changeTrigger)
+    : IRequestHandler<ProcessRawRegistrationCommand>
 {
-    private readonly ChangeTrigger _changeTrigger;
-    private readonly IQueryable<RegistrationForm> _forms;
-    private readonly ILogger _logger;
-    private readonly IRepository<RawRegistration> _rawRegistrations;
-    private readonly RegistrationProcessorDelegator _registrationProcessorDelegator;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IRepository<Registration> _registrations;
-    private readonly IRepository<Response> _responses;
-
-    public ProcessRawRegistrationCommandHandler(ILogger logger,
-                                                IRepository<RawRegistration> rawRegistrations,
-                                                IRepository<Registration> registrations,
-                                                IRepository<Response> responses,
-                                                IQueryable<RegistrationForm> forms,
-                                                RegistrationProcessorDelegator registrationProcessorDelegator,
-                                                IDateTimeProvider dateTimeProvider,
-                                                ChangeTrigger changeTrigger)
+    public async Task Handle(ProcessRawRegistrationCommand command, CancellationToken cancellationToken)
     {
-        _logger = logger;
-        _rawRegistrations = rawRegistrations;
-        _registrations = registrations;
-        _responses = responses;
-        _forms = forms;
-        _registrationProcessorDelegator = registrationProcessorDelegator;
-        _dateTimeProvider = dateTimeProvider;
-        _changeTrigger = changeTrigger;
-    }
-
-    protected override async Task Handle(ProcessRawRegistrationCommand command, CancellationToken cancellationToken)
-    {
-        var rawRegistration = await _rawRegistrations.AsTracking()
-                                                     .FirstAsync(reg => reg.Id == command.RawRegistrationId,
-                                                                 cancellationToken);
+        var rawRegistration = await rawRegistrations.AsTracking()
+                                                    .FirstAsync(reg => reg.Id == command.RawRegistrationId,
+                                                                cancellationToken);
         if (rawRegistration.Processed != null)
         {
             throw new KeyNotFoundException($"RawRegistrationId {command.RawRegistrationId} has already been processed at {rawRegistration.Processed}");
@@ -66,16 +44,16 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
         {
             var googleRegistration = JsonConvert.DeserializeObject<GoogleRegistration>(rawRegistration.ReceivedMessage);
 
-            var form = await _forms.Where(frm => frm.ExternalIdentifier == rawRegistration.FormExternalIdentifier)
-                                   .Include(frm => frm.Questions!)
-                                   .ThenInclude(qst => qst.QuestionOptions)
-                                   .FirstOrDefaultAsync(cancellationToken);
+            var form = await forms.Where(frm => frm.ExternalIdentifier == rawRegistration.FormExternalIdentifier)
+                                  .Include(frm => frm.Questions!)
+                                  .ThenInclude(qst => qst.QuestionOptions)
+                                  .FirstOrDefaultAsync(cancellationToken);
             if (form == null)
             {
                 throw new KeyNotFoundException($"No form found with id '{rawRegistration.FormExternalIdentifier}'");
             }
 
-            _logger.LogInformation($"Questions: {form.Questions?.Count}, Options: {form.Questions?.Sum(qst => qst.QuestionOptions?.Count)}");
+            logger.LogInformation($"Questions: {form.Questions?.Count}, Options: {form.Questions?.Sum(qst => qst.QuestionOptions?.Count)}");
 
             // check form state
             if (form.State == EventState.RegistrationClosed)
@@ -87,20 +65,20 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
             //    throw new ApplicationException("Registration form is not yet assigned to an event");
             //}
 
-            var registration = await _registrations.FirstOrDefaultAsync(reg => reg.ExternalIdentifier == rawRegistration.RegistrationExternalIdentifier, cancellationToken);
+            var registration = await registrations.FirstOrDefaultAsync(reg => reg.ExternalIdentifier == rawRegistration.RegistrationExternalIdentifier, cancellationToken);
             if (registration != null)
             {
                 // Duplicate RawRegistration?
-                var processedDuplicate = await _rawRegistrations.Where(rrg => rrg.EventAcronym == rawRegistration.EventAcronym
-                                                                           && rrg.FormExternalIdentifier == rawRegistration.FormExternalIdentifier
-                                                                           && rrg.RegistrationExternalIdentifier == rawRegistration.RegistrationExternalIdentifier
-                                                                           && rrg.Processed != null)
-                                                                .FirstOrDefaultAsync(cancellationToken);
+                var processedDuplicate = await rawRegistrations.Where(rrg => rrg.EventAcronym == rawRegistration.EventAcronym
+                                                                          && rrg.FormExternalIdentifier == rawRegistration.FormExternalIdentifier
+                                                                          && rrg.RegistrationExternalIdentifier == rawRegistration.RegistrationExternalIdentifier
+                                                                          && rrg.Processed != null)
+                                                               .FirstOrDefaultAsync(cancellationToken);
                 if (processedDuplicate != null
                  && processedDuplicate.ReceivedMessage == rawRegistration.ReceivedMessage)
                 {
-                    _rawRegistrations.Remove(rawRegistration);
-                    _changeTrigger.QueryChanged<UnprocessedRawRegistrationCountQuery>(form.EventId);
+                    rawRegistrations.Remove(rawRegistration);
+                    changeTrigger.QueryChanged<UnprocessedRawRegistrationCountQuery>(form.EventId);
                     return;
                 }
 
@@ -113,7 +91,7 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
                                EventId = form.EventId,
                                ExternalIdentifier = rawRegistration.RegistrationExternalIdentifier,
                                RegistrationFormId = form.Id,
-                               ReceivedAt = _dateTimeProvider.Now,
+                               ReceivedAt = dateTimeProvider.Now,
                                ExternalTimestamp = googleRegistration.Timestamp,
                                RespondentEmail = googleRegistration.Email,
                                //Language = form.Language,
@@ -139,7 +117,7 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
                                            QuestionOptionId = questionOptionId
                                        };
                         registration.Responses.Add(response);
-                        _responses.InsertObjectTree(response);
+                        responses.InsertObjectTree(response);
                     }
                 }
                 else
@@ -154,38 +132,38 @@ public class ProcessRawRegistrationCommandHandler : AsyncRequestHandler<ProcessR
                                        QuestionId = responseLookup.questionId
                                    };
                     registration.Responses.Add(response);
-                    _responses.InsertObjectTree(response);
+                    responses.InsertObjectTree(response);
                 }
             }
 
-            var spots = (await _registrationProcessorDelegator.Process(registration)).ToList();
+            var spots = (await registrationProcessorDelegator.Process(registration)).ToList();
 
-            _changeTrigger.PublishEvent(new RegistrationProcessed
-                                        {
-                                            Id = Guid.NewGuid(),
-                                            EventId = form.EventId,
-                                            RegistrationId = registration.Id,
-                                            FirstName = registration.RespondentFirstName?.Trim(),
-                                            LastName = registration.RespondentLastName?.Trim(),
-                                            Email = registration.RespondentEmail?.Trim(),
-                                            Registrables = spots.Select(spt => spt.Registrable?.DisplayName ?? string.Empty).ToArray()
-                                        });
-            _changeTrigger.QueryChanged<UnprocessedRawRegistrationCountQuery>(form.EventId);
+            changeTrigger.PublishEvent(new RegistrationProcessed
+                                       {
+                                           Id = Guid.NewGuid(),
+                                           EventId = form.EventId,
+                                           RegistrationId = registration.Id,
+                                           FirstName = registration.RespondentFirstName?.Trim(),
+                                           LastName = registration.RespondentLastName?.Trim(),
+                                           Email = registration.RespondentEmail?.Trim(),
+                                           Registrables = spots.Select(spt => spt.Registrable?.DisplayName ?? string.Empty).ToArray()
+                                       });
+            changeTrigger.QueryChanged<UnprocessedRawRegistrationCountQuery>(form.EventId);
             foreach (var trackId in spots.Select(spt => spt.RegistrableId))
             {
-                _changeTrigger.QueryChanged<ParticipantsOfRegistrableQuery>(form.EventId, trackId);
+                changeTrigger.QueryChanged<ParticipantsOfRegistrableQuery>(form.EventId, trackId);
             }
 
             if (registration is { PartnerNormalized: not null, RegistrationId_Partner: null } || registration.RegistrationId_Partner != null)
             {
-                _changeTrigger.QueryChanged<RegistrationsWithUnmatchedPartnerQuery>(form.EventId);
+                changeTrigger.QueryChanged<RegistrationsWithUnmatchedPartnerQuery>(form.EventId);
             }
 
-            _changeTrigger.EnqueueCommand(new RecalculatePriceAndWaitingListCommand { RegistrationId = registration.Id });
-            _changeTrigger.QueryChanged<PaymentOverviewQuery>(form.EventId);
-            _changeTrigger.QueryChanged<PricePackageOverviewQuery>(form.EventId);
-            _changeTrigger.QueryChanged<ParticipantsOfEventQuery>(form.EventId);
-            rawRegistration.Processed = _dateTimeProvider.Now;
+            changeTrigger.EnqueueCommand(new RecalculatePriceAndWaitingListCommand { RegistrationId = registration.Id });
+            changeTrigger.QueryChanged<PaymentOverviewQuery>(form.EventId);
+            changeTrigger.QueryChanged<PricePackageOverviewQuery>(form.EventId);
+            changeTrigger.QueryChanged<ParticipantsOfEventQuery>(form.EventId);
+            rawRegistration.Processed = dateTimeProvider.Now;
         }
         catch (Exception ex)
         {

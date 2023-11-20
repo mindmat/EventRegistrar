@@ -8,24 +8,17 @@ public class PricePackagePartSelectionTypeQuery : IRequest<IEnumerable<PricePack
     public Guid EventId { get; set; }
 }
 
-public class PricePackagePartSelectionTypeQueryHandler : IRequestHandler<PricePackagePartSelectionTypeQuery, IEnumerable<PricePackagePartSelectionTypeOption>>
+public class PricePackagePartSelectionTypeQueryHandler(EnumTranslator enumTranslator) : IRequestHandler<PricePackagePartSelectionTypeQuery, IEnumerable<PricePackagePartSelectionTypeOption>>
 {
-    private readonly EnumTranslator _enumTranslator;
-
-    public PricePackagePartSelectionTypeQueryHandler(EnumTranslator enumTranslator)
-    {
-        _enumTranslator = enumTranslator;
-    }
-
     public Task<IEnumerable<PricePackagePartSelectionTypeOption>> Handle(PricePackagePartSelectionTypeQuery query,
                                                                          CancellationToken cancellationToken)
     {
-        var mappings = _enumTranslator.TranslateAll<PricePackagePartSelectionType>()
-                                      .Select(kvp => new PricePackagePartSelectionTypeOption
-                                                     {
-                                                         Type = kvp.Key,
-                                                         Text = kvp.Value
-                                                     });
+        var mappings = enumTranslator.TranslateAll<PricePackagePartSelectionType>()
+                                     .Select(kvp => new PricePackagePartSelectionTypeOption
+                                                    {
+                                                        Type = kvp.Key,
+                                                        Text = kvp.Value
+                                                    });
         return Task.FromResult(mappings);
     }
 }

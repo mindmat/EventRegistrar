@@ -1,9 +1,6 @@
 ﻿using System.Text.Json;
 
-using EventRegistrar.Backend.Authorization;
 using EventRegistrar.Backend.Properties;
-
-using MediatR;
 
 using SimpleInjector;
 
@@ -23,33 +20,25 @@ public class DomainEventsQuery : IRequest<IEnumerable<DomainEventDisplayItem>>, 
     public IEnumerable<string> Types { get; set; }
 }
 
-public class DomainEventsQueryHandler : IRequestHandler<DomainEventsQuery, IEnumerable<DomainEventDisplayItem>>
+public class DomainEventsQueryHandler(IQueryable<PersistedDomainEvent> domainEvents,
+                                      Container container)
+    : IRequestHandler<DomainEventsQuery, IEnumerable<DomainEventDisplayItem>>
 {
-    private readonly IQueryable<PersistedDomainEvent> _domainEvents;
-    private readonly Container _container;
-
-    public DomainEventsQueryHandler(IQueryable<PersistedDomainEvent> domainEvents,
-                                    Container container)
-    {
-        _domainEvents = domainEvents;
-        _container = container;
-    }
-
     public async Task<IEnumerable<DomainEventDisplayItem>> Handle(DomainEventsQuery query,
                                                                   CancellationToken cancellationToken)
     {
-        var rawEvents = await _domainEvents.Where(evt => evt.EventId == query.EventId)
-                                           .WhereIf(query.Types?.Any() == true, evt => query.Types.Contains(evt.Type))
-                                           .OrderByDescending(evt => evt.Timestamp)
-                                           .Take(100)
-                                           .Select(evt => new
-                                                          {
-                                                              evt.Id,
-                                                              evt.Timestamp,
-                                                              evt.Type,
-                                                              evt.Data
-                                                          })
-                                           .ToListAsync(cancellationToken);
+        var rawEvents = await domainEvents.Where(evt => evt.EventId == query.EventId)
+                                          .WhereIf(query.Types?.Any() == true, evt => query.Types.Contains(evt.Type))
+                                          .OrderByDescending(evt => evt.Timestamp)
+                                          .Take(100)
+                                          .Select(evt => new
+                                                         {
+                                                             evt.Id,
+                                                             evt.Timestamp,
+                                                             evt.Type,
+                                                             evt.Data
+                                                         })
+                                          .ToListAsync(cancellationToken);
 
         return rawEvents.Select(dev => new DomainEventDisplayItem
                                        {
@@ -73,7 +62,7 @@ public class DomainEventsQueryHandler : IRequestHandler<DomainEventsQuery, IEnum
             var domainEvent = JsonSerializer.Deserialize(data, domainEventType) as DomainEvent;
             var translationType = typeof(IEventToUserTranslation<>).MakeGenericType(domainEventType);
             //var translationsType = typeof(IEnumerable<>).MakeGenericType(translationType);
-            var translation = _container.GetInstance(translationType);
+            var translation = container.GetInstance(translationType);
             var method = translationType.GetMethod(nameof(IEventToUserTranslation<DomainEvent>.GetText));
             return method?.Invoke(translation, new object[] { domainEvent }) as string;
         }

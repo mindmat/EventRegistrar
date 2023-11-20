@@ -8,25 +8,17 @@ public class ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand : IRe
     public Guid RegistrationId { get; set; }
 }
 
-public class ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommandHandler : IRequestHandler<ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand>
+public class ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommandHandler(IRepository<Registration> registrations,
+                                                                                  IRepository<Seat> spots)
+    : IRequestHandler<ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand>
 {
-    private readonly IRepository<Registration> _registrations;
-    private readonly IRepository<Seat> _spots;
-
-    public ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommandHandler(IRepository<Registration> registrations,
-                                                                                IRepository<Seat> spots)
+    public async Task Handle(ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand command, CancellationToken cancellationToken)
     {
-        _registrations = registrations;
-        _spots = spots;
-    }
-
-    public async Task<Unit> Handle(ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand command, CancellationToken cancellationToken)
-    {
-        var registration = await _registrations.Where(reg => reg.EventId == command.EventId
-                                                          && reg.Id == command.RegistrationId)
-                                               .Include(reg => reg.Seats_AsFollower)
-                                               .Include(reg => reg.Seats_AsLeader)
-                                               .FirstAsync(cancellationToken);
+        var registration = await registrations.Where(reg => reg.EventId == command.EventId
+                                                         && reg.Id == command.RegistrationId)
+                                              .Include(reg => reg.Seats_AsFollower)
+                                              .Include(reg => reg.Seats_AsLeader)
+                                              .FirstAsync(cancellationToken);
 
         if (registration.RegistrationId_Partner != null)
         {
@@ -38,9 +30,9 @@ public class ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommandHandle
             throw new ArgumentException($"Registration {registration.Id} is already assigned to a partner");
         }
 
-        var partnerRegistration = await _registrations.FirstOrDefaultAsync(reg => reg.EventId == command.EventId
-                                                                               && reg.RegistrationId_Partner == registration.Id
-                                                                               && reg.State != RegistrationState.Cancelled, cancellationToken);
+        var partnerRegistration = await registrations.FirstOrDefaultAsync(reg => reg.EventId == command.EventId
+                                                                              && reg.RegistrationId_Partner == registration.Id
+                                                                              && reg.State != RegistrationState.Cancelled, cancellationToken);
         if (partnerRegistration != null)
         {
             throw new ArgumentException(
@@ -58,21 +50,19 @@ public class ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommandHandle
         {
             spot.IsPartnerSpot = false;
             spot.PartnerEmail = null;
-            await _spots.InsertOrUpdateEntity(spot, cancellationToken);
+            await spots.InsertOrUpdateEntity(spot, cancellationToken);
         }
 
         foreach (var spot in registration.Seats_AsFollower!.Where(spt => !spt.IsCancelled && spt.IsUnmatchedPartnerSpot()))
         {
             spot.IsPartnerSpot = false;
             spot.PartnerEmail = null;
-            await _spots.InsertOrUpdateEntity(spot, cancellationToken);
+            await spots.InsertOrUpdateEntity(spot, cancellationToken);
         }
 
         registration.RegistrationId_Partner = null;
         registration.PartnerOriginal = null;
         registration.PartnerNormalized = null;
-        await _registrations.InsertOrUpdateEntity(registration, cancellationToken);
-
-        return Unit.Value;
+        await registrations.InsertOrUpdateEntity(registration, cancellationToken);
     }
 }

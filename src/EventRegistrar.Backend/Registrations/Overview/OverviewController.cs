@@ -4,40 +4,29 @@ using ClosedXML.Excel;
 
 using EventRegistrar.Backend.Events;
 
-using MediatR;
-
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Registrations.Overview;
 
-public class OverviewController : Controller
+public class OverviewController(IMediator mediator,
+                                IEventAcronymResolver eventAcronymResolver) : Controller
 {
-    private readonly IEventAcronymResolver _eventAcronymResolver;
-    private readonly IMediator _mediator;
-
-    public OverviewController(IMediator mediator,
-                              IEventAcronymResolver eventAcronymResolver)
-    {
-        _mediator = mediator;
-        _eventAcronymResolver = eventAcronymResolver;
-    }
-
     [HttpGet("api/events/{eventAcronym}/checkinView")]
     public async Task<CheckInView> GetCheckinView(string eventAcronym)
     {
-        return await _mediator.Send(new CheckInQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
+        return await mediator.Send(new CheckInQuery
+                                   {
+                                       EventId = await eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+                                   });
     }
 
     [HttpGet("api/events/{eventAcronym}/checkinView.xlsx")]
     public async Task<IActionResult> GetCheckinViewXlsx(string eventAcronym)
     {
-        var data = await _mediator.Send(new CheckInQuery
-                                        {
-                                            EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                        });
+        var data = await mediator.Send(new CheckInQuery
+                                       {
+                                           EventId = await eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+                                       });
 
         var mappings = new List<(string Title, Func<CheckInViewItem, object> GetValue)>
                        {
@@ -84,9 +73,9 @@ public class OverviewController : Controller
     [HttpGet("api/events/{eventAcronym}/partyOverview")]
     public async Task<IEnumerable<PartyItem>> GetPartyOverview(string eventAcronym)
     {
-        return await _mediator.Send(new PartyOverviewQuery
-                                    {
-                                        EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                    });
+        return await mediator.Send(new PartyOverviewQuery
+                                   {
+                                       EventId = await eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
+                                   });
     }
 }

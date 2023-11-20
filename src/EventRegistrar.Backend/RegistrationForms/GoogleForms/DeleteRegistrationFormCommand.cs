@@ -1,9 +1,5 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
+﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.RegistrationForms.Questions;
-
-using MediatR;
 
 namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
 
@@ -13,31 +9,21 @@ public class DeleteRegistrationFormCommand : IRequest, IEventBoundRequest
     public Guid RegistrationFormId { get; set; }
 }
 
-public class DeleteRegistrationFormCommandHandler : IRequestHandler<DeleteRegistrationFormCommand>
+public class DeleteRegistrationFormCommandHandler(IQueryable<Event> events,
+                                                  IRepository<RegistrationForm> forms,
+                                                  IRepository<Question> questions)
+    : IRequestHandler<DeleteRegistrationFormCommand>
 {
-    private readonly IQueryable<Event> _events;
-    private readonly IRepository<RegistrationForm> _forms;
-    private readonly IRepository<Question> _questions;
-
-    public DeleteRegistrationFormCommandHandler(IQueryable<Event> events,
-                                                IRepository<RegistrationForm> forms,
-                                                IRepository<Question> questions)
+    public async Task Handle(DeleteRegistrationFormCommand command, CancellationToken cancellationToken)
     {
-        _events = events;
-        _forms = forms;
-        _questions = questions;
-    }
-
-    public async Task<Unit> Handle(DeleteRegistrationFormCommand command, CancellationToken cancellationToken)
-    {
-        var @event = await _events.FirstAsync(evt => evt.Id == command.EventId, cancellationToken);
+        var @event = await events.FirstAsync(evt => evt.Id == command.EventId, cancellationToken);
         if (@event.State != EventState.Setup)
         {
             throw new Exception(
                 $"To delete a registration form, event must be in state Setup, but it is in state {@event.State}");
         }
 
-        var form = await _forms.FirstAsync(rbl => rbl.Id == command.RegistrationFormId, cancellationToken);
+        var form = await forms.FirstAsync(rbl => rbl.Id == command.RegistrationFormId, cancellationToken);
         if (form.State != EventState.Setup)
         {
             throw new Exception(
@@ -47,8 +33,7 @@ public class DeleteRegistrationFormCommandHandler : IRequestHandler<DeleteRegist
         //var rawForms = await _rawForms.Where(rfm => rfm.FormExternalIdentifier == form.ExternalIdentifier)
         //                              .ToListAsync(cancellationToken);
 
-        _questions.Remove(qst => qst.RegistrationFormId == form.Id);
-        _forms.Remove(form);
-        return Unit.Value;
+        questions.Remove(qst => qst.RegistrationFormId == form.Id);
+        forms.Remove(form);
     }
 }

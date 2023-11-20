@@ -13,22 +13,14 @@ public class OutgoingPaymentAssigned : DomainEvent
     public decimal Amount { get; set; }
 }
 
-public class OutgoingPaymentAssignedUserTranslation : IEventToUserTranslation<OutgoingPaymentAssigned>
+public class OutgoingPaymentAssignedUserTranslation(IQueryable<OutgoingPayment> outgoingPayments,
+                                                    IQueryable<Registration> registrations)
+    : IEventToUserTranslation<OutgoingPaymentAssigned>
 {
-    private readonly IQueryable<OutgoingPayment> _outgoingPayments;
-    private readonly IQueryable<Registration> _registrations;
-
-    public OutgoingPaymentAssignedUserTranslation(IQueryable<OutgoingPayment> outgoingPayments,
-                                                  IQueryable<Registration> registrations)
-    {
-        _outgoingPayments = outgoingPayments;
-        _registrations = registrations;
-    }
-
     public string GetText(OutgoingPaymentAssigned domainEvent)
     {
-        var outgoingPayment = _outgoingPayments.FirstOrDefault(pmt => pmt.Id == domainEvent.OutgoingPaymentId);
-        var registration = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
+        var outgoingPayment = outgoingPayments.FirstOrDefault(pmt => pmt.Id == domainEvent.OutgoingPaymentId);
+        var registration = registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
 
         return domainEvent.PayoutRequestId != null
                    ? $"Rückerstattung über {domainEvent.Amount} an {outgoingPayment?.CreditorName} zugeordnet. Anmeldung {registration?.RespondentFirstName} {registration?.RespondentLastName} zugeordnet"

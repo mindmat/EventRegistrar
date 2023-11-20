@@ -18,52 +18,36 @@ public class SendSmsCommand : IRequest, IEventBoundRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class SendSmsCommandHandler : IRequestHandler<SendSmsCommand>
+public class SendSmsCommandHandler(IQueryable<Registration> registrations,
+                                   IRepository<Sms> _sms,
+                                   TwilioConfiguration twilioConfiguration,
+                                   IEventBus eventBus,
+                                   IDateTimeProvider dateTimeProvider,
+                                   ChangeTrigger changeTrigger)
+    : IRequestHandler<SendSmsCommand>
 {
-    private readonly IQueryable<Registration> _registrations;
-    private readonly IRepository<Sms> _sms;
-    private readonly TwilioConfiguration _twilioConfiguration;
-    private readonly IEventBus _eventBus;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ChangeTrigger _changeTrigger;
-
-    public SendSmsCommandHandler(IQueryable<Registration> registrations,
-                                 IRepository<Sms> sms,
-                                 TwilioConfiguration twilioConfiguration,
-                                 IEventBus eventBus,
-                                 IDateTimeProvider dateTimeProvider,
-                                 ChangeTrigger changeTrigger)
+    public async Task Handle(SendSmsCommand command, CancellationToken cancellationToken)
     {
-        _registrations = registrations;
-        _sms = sms;
-        _twilioConfiguration = twilioConfiguration;
-        _eventBus = eventBus;
-        _dateTimeProvider = dateTimeProvider;
-        _changeTrigger = changeTrigger;
-    }
-
-    public async Task<Unit> Handle(SendSmsCommand command, CancellationToken cancellationToken)
-    {
-        if (_twilioConfiguration.Sid == null || _twilioConfiguration.Token == null)
+        if (twilioConfiguration.Sid == null || twilioConfiguration.Token == null)
         {
             throw new Exception("No Twilio SID/Token found");
         }
 
-        var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId
-                                                          && reg.EventId == command.EventId)
-                                               .FirstOrDefaultAsync(cancellationToken);
+        var registration = await registrations.Where(reg => reg.Id == command.RegistrationId
+                                                         && reg.EventId == command.EventId)
+                                              .FirstOrDefaultAsync(cancellationToken);
 
         if (registration.PhoneNormalized == null)
         {
             throw new Exception("No number found in registration");
         }
 
-        TwilioClient.Init(_twilioConfiguration.Sid, _twilioConfiguration.Token);
+        TwilioClient.Init(twilioConfiguration.Sid, twilioConfiguration.Token);
 
         var callbackUrl = new Uri($"https://event-admin-functions.azurewebsites.net/api/events/{command.EventId}/sms/setStatus");
 
         var message = await MessageResource.CreateAsync(registration.PhoneNormalized,
-                                                        from: _twilioConfiguration.Number,
+                                                        from: twilioConfiguration.Number,
                                                         body: command.Message,
                                                         statusCallback: callbackUrl);
 
@@ -77,7 +61,7 @@ public class SendSmsCommandHandler : IRequestHandler<SendSmsCommand>
                       From = message.From.ToString(),
                       To = message.To,
                       AccountSid = message.AccountSid,
-                      Sent = _dateTimeProvider.Now,
+                      Sent = dateTimeProvider.Now,
                       Price = $"{message.Price}{message.PriceUnit}",
                       ErrorCode = message.ErrorCode,
                       Error = message.ErrorMessage,
@@ -87,17 +71,14 @@ public class SendSmsCommandHandler : IRequestHandler<SendSmsCommand>
 
         _sms.InsertObjectTree(sms);
 
-        _eventBus.Publish(new SmsSent
-                          {
-                              RegistrationId = registration?.Id,
-                              EventId = registration?.EventId,
-                              To = registration.PhoneNormalized,
-                              Text = command.Message,
-                              Sent = _dateTimeProvider.Now
-                          });
-        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
-
-
-        return Unit.Value;
+        eventBus.Publish(new SmsSent
+                         {
+                             RegistrationId = registration?.Id,
+                             EventId = registration?.EventId,
+                             To = registration.PhoneNormalized,
+                             Text = command.Message,
+                             Sent = dateTimeProvider.Now
+                         });
+        changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
     }
 }

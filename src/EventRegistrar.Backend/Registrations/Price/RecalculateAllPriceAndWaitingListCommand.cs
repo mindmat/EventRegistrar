@@ -7,30 +7,22 @@ public class RecalculateAllPriceAndWaitingListCommand : IRequest, IEventBoundReq
     public Guid EventId { get; set; }
 }
 
-public class RecalculateAllPriceAndWaitingListCommandHandler : AsyncRequestHandler<RecalculateAllPriceAndWaitingListCommand>
+public class RecalculateAllPriceAndWaitingListCommandHandler(IQueryable<Registration> registrations,
+                                                             CommandQueue commandQueue)
+    : IRequestHandler<RecalculateAllPriceAndWaitingListCommand>
 {
-    private readonly IQueryable<Registration> _registrations;
-    private readonly CommandQueue _commandQueue;
-
-    public RecalculateAllPriceAndWaitingListCommandHandler(IQueryable<Registration> registrations,
-                                                           CommandQueue commandQueue)
+    public async Task Handle(RecalculateAllPriceAndWaitingListCommand command, CancellationToken cancellationToken)
     {
-        _registrations = registrations;
-        _commandQueue = commandQueue;
-    }
-
-    protected override async Task Handle(RecalculateAllPriceAndWaitingListCommand command, CancellationToken cancellationToken)
-    {
-        var registrationIds = await _registrations.Where(reg => reg.EventId == command.EventId
-                                                             && reg.State != RegistrationState.Cancelled)
-                                                  .Select(reg => reg.Id)
-                                                  .ToListAsync(cancellationToken);
+        var registrationIds = await registrations.Where(reg => reg.EventId == command.EventId
+                                                            && reg.State != RegistrationState.Cancelled)
+                                                 .Select(reg => reg.Id)
+                                                 .ToListAsync(cancellationToken);
         foreach (var registrationId in registrationIds)
         {
-            _commandQueue.EnqueueCommand(new RecalculatePriceAndWaitingListCommand
-                                         {
-                                             RegistrationId = registrationId
-                                         });
+            commandQueue.EnqueueCommand(new RecalculatePriceAndWaitingListCommand
+                                        {
+                                            RegistrationId = registrationId
+                                        });
         }
     }
 }

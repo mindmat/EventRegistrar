@@ -14,21 +14,13 @@ public class UpdateAutoMailConfigurationCommand : IRequest, IEventBoundRequest
     public IEnumerable<string>? AvailableLanguages { get; set; }
 }
 
-public class UpdateAutoMailConfigurationCommandHandler : IRequestHandler<UpdateAutoMailConfigurationCommand>
+public class UpdateAutoMailConfigurationCommandHandler(ConfigurationRegistry configurationRegistry,
+                                                       IEventBus eventBus)
+    : IRequestHandler<UpdateAutoMailConfigurationCommand>
 {
-    private readonly ConfigurationRegistry _configurationRegistry;
-    private readonly IEventBus _eventBus;
-
-    public UpdateAutoMailConfigurationCommandHandler(ConfigurationRegistry configurationRegistry,
-                                                     IEventBus eventBus)
+    public async Task Handle(UpdateAutoMailConfigurationCommand command, CancellationToken cancellationToken)
     {
-        _configurationRegistry = configurationRegistry;
-        _eventBus = eventBus;
-    }
-
-    public async Task<Unit> Handle(UpdateAutoMailConfigurationCommand command, CancellationToken cancellationToken)
-    {
-        var config = _configurationRegistry.GetConfiguration<MailConfiguration>(command.EventId);
+        var config = configurationRegistry.GetConfiguration<MailConfiguration>(command.EventId);
         config.SenderName = command.SenderName;
         if (command.SenderMail != null)
         {
@@ -43,13 +35,12 @@ public class UpdateAutoMailConfigurationCommandHandler : IRequestHandler<UpdateA
             config.AvailableLanguages = command.AvailableLanguages.OrderBy(lng => lng);
         }
 
-        await _configurationRegistry.UpdateConfiguration(command.EventId, config);
+        await configurationRegistry.UpdateConfiguration(command.EventId, config);
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(AutoMailTemplatesQuery)
-                          });
-        return Unit.Value;
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(AutoMailTemplatesQuery)
+                         });
     }
 }

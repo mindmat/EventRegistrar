@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Authentication.Users;
 using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
@@ -13,42 +12,26 @@ public class RequestAccessCommand : IRequest<Guid>
     public string? RequestText { get; set; }
 }
 
-public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand, Guid>
+public class RequestAccessCommandHandler(IRepository<AccessToEventRequest> accessRequests,
+                                         AuthenticatedUserId _user,
+                                         IAuthenticatedUserProvider authenticatedUserProvider,
+                                         IEventBus eventBus,
+                                         CommandQueue commandQueue,
+                                         IDateTimeProvider dateTimeProvider)
+    : IRequestHandler<RequestAccessCommand, Guid>
 {
-    private readonly IRepository<AccessToEventRequest> _accessRequests;
-    private readonly IAuthenticatedUserProvider _authenticatedUserProvider;
-    private readonly IEventBus _eventBus;
-    private readonly CommandQueue _commandQueue;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly AuthenticatedUserId _user;
-
-    public RequestAccessCommandHandler(IRepository<AccessToEventRequest> accessRequests,
-                                       AuthenticatedUserId user,
-                                       IAuthenticatedUserProvider authenticatedUserProvider,
-                                       IEventBus eventBus,
-                                       CommandQueue commandQueue,
-                                       IDateTimeProvider dateTimeProvider)
-    {
-        _accessRequests = accessRequests;
-        _user = user;
-        _authenticatedUserProvider = authenticatedUserProvider;
-        _eventBus = eventBus;
-        _commandQueue = commandQueue;
-        _dateTimeProvider = dateTimeProvider;
-    }
-
     public async Task<Guid> Handle(RequestAccessCommand command, CancellationToken cancellationToken)
     {
-        var requestExpression = _accessRequests.Where(req => req.EventId == command.EventId
-                                                          && (req.Response == null || req.Response == RequestResponse.Granted));
-        var existingUserId = await _authenticatedUserProvider.GetAuthenticatedUserId();
+        var requestExpression = accessRequests.Where(req => req.EventId == command.EventId
+                                                         && (req.Response == null || req.Response == RequestResponse.Granted));
+        var existingUserId = await authenticatedUserProvider.GetAuthenticatedUserId();
         if (existingUserId != null)
         {
             requestExpression = requestExpression.Where(req => req.UserId_Requestor == existingUserId);
         }
         else
         {
-            var authenticatedUser = _authenticatedUserProvider.GetAuthenticatedUser();
+            var authenticatedUser = authenticatedUserProvider.GetAuthenticatedUser();
             if (authenticatedUser.IdentityProviderUserIdentifier == null)
             {
                 throw new ArgumentException("You are not authenticated");
@@ -62,7 +45,7 @@ public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand,
 
         if (request == null)
         {
-            var user = _authenticatedUserProvider.GetAuthenticatedUser();
+            var user = authenticatedUserProvider.GetAuthenticatedUser();
             request = new AccessToEventRequest
                       {
                           Id = Guid.NewGuid(),
@@ -75,29 +58,29 @@ public class RequestAccessCommandHandler : IRequestHandler<RequestAccessCommand,
                           AvatarUrl = user.AvatarUrl,
                           RequestText = command.RequestText,
                           EventId = command.EventId,
-                          RequestReceived = _dateTimeProvider.Now
+                          RequestReceived = dateTimeProvider.Now
                       };
-            _accessRequests.InsertObjectTree(request);
+            accessRequests.InsertObjectTree(request);
 
-            _eventBus.Publish(new QueryChanged
-                              {
-                                  QueryName = nameof(EventsOfUserQuery)
-                              });
-            _eventBus.Publish(new QueryChanged
-                              {
-                                  EventId = command.EventId,
-                                  QueryName = nameof(AccessRequestsOfEventQuery)
-                              });
+            eventBus.Publish(new QueryChanged
+                             {
+                                 QueryName = nameof(EventsOfUserQuery)
+                             });
+            eventBus.Publish(new QueryChanged
+                             {
+                                 EventId = command.EventId,
+                                 QueryName = nameof(AccessRequestsOfEventQuery)
+                             });
 
             if (string.IsNullOrEmpty(user.FirstName)
              || string.IsNullOrEmpty(user.LastName)
              || string.IsNullOrEmpty(user.Email))
             {
-                _commandQueue.EnqueueCommand(new UpdateUserInfoCommand
-                                             {
-                                                 Provider = request.IdentityProvider,
-                                                 Identifier = request.Identifier
-                                             });
+                commandQueue.EnqueueCommand(new UpdateUserInfoCommand
+                                            {
+                                                Provider = request.IdentityProvider,
+                                                Identifier = request.Identifier
+                                            });
             }
         }
 

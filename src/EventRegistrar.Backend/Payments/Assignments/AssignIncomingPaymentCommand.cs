@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Due;
@@ -21,43 +20,23 @@ public class AssignIncomingPaymentCommand : IRequest, IEventBoundRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class AssignIncomingPaymentCommandHandler : AsyncRequestHandler<AssignIncomingPaymentCommand>
+public class AssignIncomingPaymentCommandHandler(IQueryable<Registration> registrations,
+                                                 IQueryable<IncomingPayment> incomingPayments,
+                                                 IRepository<PaymentAssignment> assignments,
+                                                 IRepository<IndividualReduction> individualReductions,
+                                                 IEventBus eventBus,
+                                                 AuthenticatedUserId userId,
+                                                 IDateTimeProvider dateTimeProvider,
+                                                 ChangeTrigger changeTrigger)
+    : IRequestHandler<AssignIncomingPaymentCommand>
 {
-    private readonly IRepository<PaymentAssignment> _assignments;
-    private readonly IEventBus _eventBus;
-    private readonly IRepository<IndividualReduction> _individualReductions;
-    private readonly IQueryable<IncomingPayment> _incomingPayments;
-    private readonly IQueryable<Registration> _registrations;
-    private readonly AuthenticatedUserId _userId;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ChangeTrigger _changeTrigger;
-
-    public AssignIncomingPaymentCommandHandler(IQueryable<Registration> registrations,
-                                               IQueryable<IncomingPayment> incomingPayments,
-                                               IRepository<PaymentAssignment> assignments,
-                                               IRepository<IndividualReduction> individualReductions,
-                                               IEventBus eventBus,
-                                               AuthenticatedUserId userId,
-                                               IDateTimeProvider dateTimeProvider,
-                                               ChangeTrigger changeTrigger)
+    public async Task Handle(AssignIncomingPaymentCommand command, CancellationToken cancellationToken)
     {
-        _registrations = registrations;
-        _incomingPayments = incomingPayments;
-        _assignments = assignments;
-        _individualReductions = individualReductions;
-        _eventBus = eventBus;
-        _userId = userId;
-        _dateTimeProvider = dateTimeProvider;
-        _changeTrigger = changeTrigger;
-    }
-
-    protected override async Task Handle(AssignIncomingPaymentCommand command, CancellationToken cancellationToken)
-    {
-        var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId
-                                                          && reg.EventId == command.EventId)
-                                               .Include(reg => reg.PaymentAssignments)
-                                               .FirstAsync(cancellationToken);
-        var incomingPayment = await _incomingPayments.FirstAsync(pmt => pmt.Id == command.PaymentIncomingId, cancellationToken);
+        var registration = await registrations.Where(reg => reg.Id == command.RegistrationId
+                                                         && reg.EventId == command.EventId)
+                                              .Include(reg => reg.PaymentAssignments)
+                                              .FirstAsync(cancellationToken);
+        var incomingPayment = await incomingPayments.FirstAsync(pmt => pmt.Id == command.PaymentIncomingId, cancellationToken);
 
         var assignment = new PaymentAssignment
                          {
@@ -65,9 +44,9 @@ public class AssignIncomingPaymentCommandHandler : AsyncRequestHandler<AssignInc
                              RegistrationId = registration.Id,
                              IncomingPaymentId = incomingPayment.Id,
                              Amount = command.Amount,
-                             Created = _dateTimeProvider.Now
+                             Created = dateTimeProvider.Now
                          };
-        await _assignments.InsertOrUpdateEntity(assignment, cancellationToken);
+        await assignments.InsertOrUpdateEntity(assignment, cancellationToken);
 
         if (command.AcceptDifference)
         {
@@ -75,32 +54,32 @@ public class AssignIncomingPaymentCommandHandler : AsyncRequestHandler<AssignInc
                            - registration.PaymentAssignments!.Sum(pmt => pmt.OutgoingPayment == null
                                                                              ? pmt.Amount
                                                                              : -pmt.Amount);
-            await _individualReductions.InsertOrUpdateEntity(new IndividualReduction
-                                                             {
-                                                                 Id = Guid.NewGuid(),
-                                                                 RegistrationId = registration.Id,
-                                                                 Amount = difference,
-                                                                 Reason = command.AcceptDifferenceReason,
-                                                                 UserId = _userId.UserId ?? Guid.Empty
-                                                             }, cancellationToken);
+            await individualReductions.InsertOrUpdateEntity(new IndividualReduction
+                                                            {
+                                                                Id = Guid.NewGuid(),
+                                                                RegistrationId = registration.Id,
+                                                                Amount = difference,
+                                                                Reason = command.AcceptDifferenceReason,
+                                                                UserId = userId.UserId ?? Guid.Empty
+                                                            }, cancellationToken);
 
-            _eventBus.Publish(new IndividualReductionAdded
-                              {
-                                  RegistrationId = registration.Id,
-                                  Amount = difference,
-                                  Reason = command.AcceptDifferenceReason
-                              });
+            eventBus.Publish(new IndividualReductionAdded
+                             {
+                                 RegistrationId = registration.Id,
+                                 Amount = difference,
+                                 Reason = command.AcceptDifferenceReason
+                             });
         }
 
-        _eventBus.Publish(new IncomingPaymentAssigned
-                          {
-                              PaymentAssignmentId = assignment.Id,
-                              Amount = assignment.Amount,
-                              RegistrationId = registration.Id,
-                              IncomingPaymentId = incomingPayment.Id
-                          });
+        eventBus.Publish(new IncomingPaymentAssigned
+                         {
+                             PaymentAssignmentId = assignment.Id,
+                             Amount = assignment.Amount,
+                             RegistrationId = registration.Id,
+                             IncomingPaymentId = incomingPayment.Id
+                         });
 
-        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
-        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+        changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
     }
 }

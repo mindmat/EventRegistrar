@@ -10,53 +10,42 @@ public class PaymentOverviewQuery : IRequest<PaymentOverview>, IEventBoundReques
     public Guid EventId { get; set; }
 }
 
-public class PaymentOverviewQueryHandler : IRequestHandler<PaymentOverviewQuery, PaymentOverview>
+public class PaymentOverviewQueryHandler(IQueryable<PaymentsFile> paymentFiles,
+                                         IQueryable<Registration> registrations,
+                                         IQueryable<Registrable> _registrables,
+                                         IDateTimeProvider dateTimeProvider)
+    : IRequestHandler<PaymentOverviewQuery, PaymentOverview>
 {
-    private readonly IQueryable<PaymentsFile> _paymentFiles;
-    private readonly IQueryable<Registrable> _registrables;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IQueryable<Registration> _registrations;
     private const int BalanceHistoryMonthsBack = 3;
-
-    public PaymentOverviewQueryHandler(IQueryable<PaymentsFile> paymentFiles,
-                                       IQueryable<Registration> registrations,
-                                       IQueryable<Registrable> registrables,
-                                       IDateTimeProvider dateTimeProvider)
-    {
-        _paymentFiles = paymentFiles;
-        _registrations = registrations;
-        _registrables = registrables;
-        _dateTimeProvider = dateTimeProvider;
-    }
 
     public async Task<PaymentOverview> Handle(PaymentOverviewQuery query, CancellationToken cancellationToken)
     {
-        var balances = await _paymentFiles.Where(pmf => pmf.EventId == query.EventId
-                                                     && pmf.BookingsTo >= _dateTimeProvider.Now.AddMonths(-BalanceHistoryMonthsBack))
-                                          .OrderByDescending(pmf => pmf.BookingsTo ?? DateTime.MinValue)
-                                          .Select(pmf => new
-                                                         {
-                                                             pmf.AccountIban,
-                                                             pmf.Balance,
-                                                             pmf.Currency,
-                                                             Date = pmf.BookingsTo
-                                                         })
-                                          .ToListAsync(cancellationToken);
+        var balances = await paymentFiles.Where(pmf => pmf.EventId == query.EventId
+                                                    && pmf.BookingsTo >= dateTimeProvider.Now.AddMonths(-BalanceHistoryMonthsBack))
+                                         .OrderByDescending(pmf => pmf.BookingsTo ?? DateTime.MinValue)
+                                         .Select(pmf => new
+                                                        {
+                                                            pmf.AccountIban,
+                                                            pmf.Balance,
+                                                            pmf.Currency,
+                                                            Date = pmf.BookingsTo
+                                                        })
+                                         .ToListAsync(cancellationToken);
         var latestBalance = balances.FirstOrDefault();
 
-        var activeRegistrations = await _registrations.Where(reg => reg.EventId == query.EventId
-                                                                 && reg.IsOnWaitingList != true
-                                                                 && reg.State != RegistrationState.Cancelled)
-                                                      .Select(reg => new
-                                                                     {
-                                                                         reg.Id,
-                                                                         reg.State,
-                                                                         reg.Price_AdmittedAndReduced,
-                                                                         Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null
-                                                                                                                                 ? asn.Amount
-                                                                                                                                 : -asn.Amount)
-                                                                     })
-                                                      .ToListAsync(cancellationToken);
+        var activeRegistrations = await registrations.Where(reg => reg.EventId == query.EventId
+                                                                && reg.IsOnWaitingList != true
+                                                                && reg.State != RegistrationState.Cancelled)
+                                                     .Select(reg => new
+                                                                    {
+                                                                        reg.Id,
+                                                                        reg.State,
+                                                                        reg.Price_AdmittedAndReduced,
+                                                                        Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null
+                                                                                                                                ? asn.Amount
+                                                                                                                                : -asn.Amount)
+                                                                    })
+                                                     .ToListAsync(cancellationToken);
 
         var registrables = await _registrables.Where(rbl => rbl.EventId == query.EventId
                                                          && (rbl.MaximumDoubleSeats != null || rbl.MaximumSingleSeats != null)

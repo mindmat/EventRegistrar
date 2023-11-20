@@ -1,7 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using MediatR;
-
-namespace EventRegistrar.Backend.Registrables.Pricing;
+﻿namespace EventRegistrar.Backend.Registrables.Pricing;
 
 public class SetRegistrablesPricesCommand : IRequest, IEventBoundRequest
 {
@@ -11,22 +8,14 @@ public class SetRegistrablesPricesCommand : IRequest, IEventBoundRequest
     public decimal? ReducedPrice { get; set; }
 }
 
-public class SetRegistrablesPricesCommandHandler : IRequestHandler<SetRegistrablesPricesCommand>
+public class SetRegistrablesPricesCommandHandler(IQueryable<Registrable> registrables) : IRequestHandler<SetRegistrablesPricesCommand>
 {
-    private readonly IQueryable<Registrable> _registrables;
-
-    public SetRegistrablesPricesCommandHandler(IQueryable<Registrable> registrables)
+    public async Task Handle(SetRegistrablesPricesCommand command, CancellationToken cancellationToken)
     {
-        _registrables = registrables;
-    }
-
-    public async Task<Unit> Handle(SetRegistrablesPricesCommand command, CancellationToken cancellationToken)
-    {
-        var registrable = await _registrables.FirstAsync(rbl => rbl.EventId == command.EventId
-                                                             && rbl.Id == command.RegistrableId);
+        var registrable = await registrables.FirstAsync(rbl => rbl.EventId == command.EventId
+                                                            && rbl.Id == command.RegistrableId,
+                                                        cancellationToken);
         registrable.Price = command.Price;
         registrable.ReducedPrice = command.ReducedPrice;
-
-        return Unit.Value;
     }
 }

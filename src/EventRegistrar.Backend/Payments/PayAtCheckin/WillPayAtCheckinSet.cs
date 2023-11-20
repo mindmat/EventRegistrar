@@ -8,18 +8,11 @@ public class WillPayAtCheckinSet : DomainEvent
     public Guid RegistrationId { get; set; }
 }
 
-public class WillPayAtCheckinSetUserTranslation : IEventToUserTranslation<WillPayAtCheckinSet>
+public class WillPayAtCheckinSetUserTranslation(IQueryable<Registration> registrations) : IEventToUserTranslation<WillPayAtCheckinSet>
 {
-    private readonly IQueryable<Registration> _registrations;
-
-    public WillPayAtCheckinSetUserTranslation(IQueryable<Registration> registrations)
-    {
-        _registrations = registrations;
-    }
-
     public string GetText(WillPayAtCheckinSet domainEvent)
     {
-        var registration = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
+        var registration = registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
         return $"{registration?.RespondentFirstName} {registration?.RespondentLastName} wird am Checkin bezahlen";
     }
 }

@@ -7,24 +7,17 @@ public class RegistrableTypesQuery : IRequest<IEnumerable<RegistrableTypeOption>
     public Guid EventId { get; set; }
 }
 
-public class RegistrableTypesQueryHandler : IRequestHandler<RegistrableTypesQuery, IEnumerable<RegistrableTypeOption>>
+public class RegistrableTypesQueryHandler(EnumTranslator enumTranslator) : IRequestHandler<RegistrableTypesQuery, IEnumerable<RegistrableTypeOption>>
 {
-    private readonly EnumTranslator _enumTranslator;
-
-    public RegistrableTypesQueryHandler(EnumTranslator enumTranslator)
-    {
-        _enumTranslator = enumTranslator;
-    }
-
     public Task<IEnumerable<RegistrableTypeOption>> Handle(RegistrableTypesQuery query,
                                                            CancellationToken cancellationToken)
     {
-        var mappings = _enumTranslator.TranslateAll<RegistrableType>()
-                                      .Select(kvp => new RegistrableTypeOption
-                                                     {
-                                                         Type = kvp.Key,
-                                                         Text = kvp.Value
-                                                     });
+        var mappings = enumTranslator.TranslateAll<RegistrableType>()
+                                     .Select(kvp => new RegistrableTypeOption
+                                                    {
+                                                        Type = kvp.Key,
+                                                        Text = kvp.Value
+                                                    });
         return Task.FromResult(mappings);
     }
 }

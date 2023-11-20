@@ -9,28 +9,18 @@ public class UpdateUserInfoCommand : IRequest
     public string? Identifier { get; set; } = null!;
 }
 
-public class UpdateUserInfoCommandHandler : AsyncRequestHandler<UpdateUserInfoCommand>
+public class UpdateUserInfoCommandHandler(IIdentityProvider identityProvider,
+                                          IRepository<AccessToEventRequest> accessRequests,
+                                          IRepository<User> _users)
+    : IRequestHandler<UpdateUserInfoCommand>
 {
-    private readonly IIdentityProvider _identityProvider;
-    private readonly IRepository<AccessToEventRequest> _accessRequests;
-    private readonly IRepository<User> _users;
-
-    public UpdateUserInfoCommandHandler(IIdentityProvider identityProvider,
-                                        IRepository<AccessToEventRequest> accessRequests,
-                                        IRepository<User> users)
+    public async Task Handle(UpdateUserInfoCommand command, CancellationToken cancellationToken)
     {
-        _identityProvider = identityProvider;
-        _accessRequests = accessRequests;
-        _users = users;
-    }
-
-    protected override async Task Handle(UpdateUserInfoCommand command, CancellationToken cancellationToken)
-    {
-        var requests = await _accessRequests.Where(arq => arq.IdentityProvider == command.Provider
-                                                       && (arq.FirstName == null || arq.LastName == null || arq.Email == null || arq.AvatarUrl == null))
-                                            .WhereIf(command.Identifier != null, arq => arq.Identifier == command.Identifier)
-                                            .AsTracking()
-                                            .ToListAsync(cancellationToken);
+        var requests = await accessRequests.Where(arq => arq.IdentityProvider == command.Provider
+                                                      && (arq.FirstName == null || arq.LastName == null || arq.Email == null || arq.AvatarUrl == null))
+                                           .WhereIf(command.Identifier != null, arq => arq.Identifier == command.Identifier)
+                                           .AsTracking()
+                                           .ToListAsync(cancellationToken);
         var users = await _users.Where(usr => usr.IdentityProvider == command.Provider
                                            && (usr.FirstName == null || usr.LastName == null || usr.Email == null || usr.AvatarUrl == null))
                                 .WhereIf(command.Identifier != null, usr => usr.IdentityProviderUserIdentifier == command.Identifier)
@@ -46,7 +36,7 @@ public class UpdateUserInfoCommandHandler : AsyncRequestHandler<UpdateUserInfoCo
                                   .Distinct();
         foreach (var identifier in identifiers.Where(id => id != null))
         {
-            var userDetails = await _identityProvider.GetUserDetails(identifier!);
+            var userDetails = await identityProvider.GetUserDetails(identifier!);
             if (userDetails != null)
             {
                 requests.Where(arq => arq.Identifier == identifier)

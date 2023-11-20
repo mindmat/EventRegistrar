@@ -1,7 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.Configuration;
 
-using Microsoft.IdentityModel.Tokens;
-
 namespace EventRegistrar.Backend.Authentication;
 
 public class Auth0Configuration : IConfigurationItem

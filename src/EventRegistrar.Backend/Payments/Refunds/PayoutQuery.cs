@@ -5,61 +5,54 @@ public class PayoutQuery : IRequest<IEnumerable<PayoutDisplayItem>>, IEventBound
     public Guid EventId { get; set; }
 }
 
-public class PayoutQueryHandler : IRequestHandler<PayoutQuery, IEnumerable<PayoutDisplayItem>>
+public class PayoutQueryHandler(IQueryable<PayoutRequest> payoutRequests) : IRequestHandler<PayoutQuery, IEnumerable<PayoutDisplayItem>>
 {
-    private readonly IQueryable<PayoutRequest> _payoutRequests;
-
-    public PayoutQueryHandler(IQueryable<PayoutRequest> payoutRequests)
-    {
-        _payoutRequests = payoutRequests;
-    }
-
     public async Task<IEnumerable<PayoutDisplayItem>> Handle(PayoutQuery query, CancellationToken cancellationToken)
     {
-        var payouts = await _payoutRequests.Where(por => por.Registration!.EventId == query.EventId)
-                                           .Select(por => new PayoutDisplayItem
-                                                          {
-                                                              RegistrationId = por.RegistrationId,
-                                                              Amount = por.Amount,
-                                                              FirstName = por.Registration!.RespondentFirstName,
-                                                              LastName = por.Registration.RespondentLastName,
-                                                              Price = por.Registration.Price_AdmittedAndReduced,
-                                                              Paid = por.Registration.PaymentAssignments!.Sum(ass => ass.OutgoingPayment == null
-                                                                                                                         ? ass.Amount
-                                                                                                                         : -ass.Amount),
-                                                              IncomingPayments = por.Registration
-                                                                                    .PaymentAssignments!
-                                                                                    .Where(ass => ass.IncomingPayment != null)
-                                                                                    .Select(pmt => new IncomingPaymentDisplayItem
-                                                                                                   {
-                                                                                                       Assigned = pmt.Amount,
-                                                                                                       PaymentAmount = pmt.IncomingPayment!.Payment!.Amount,
-                                                                                                       PaymentBookingDate = pmt.IncomingPayment.Payment.BookingDate,
-                                                                                                       PaymentDebitorIban = pmt.IncomingPayment.DebitorIban,
-                                                                                                       PaymentDebitorName = pmt.IncomingPayment.DebitorName,
-                                                                                                       PaymentMessage = pmt.IncomingPayment.Payment.Message,
-                                                                                                       PaymentInfo = pmt.IncomingPayment.Payment.Info
-                                                                                                   }),
-                                                              OutgoingPayments = por.Registration
-                                                                                    .PaymentAssignments!
-                                                                                    .Where(ass => ass.OutgoingPayment != null)
-                                                                                    .Select(pmt => new OutgoingPaymentDisplayItem
-                                                                                                   {
-                                                                                                       Assigned = pmt.Amount,
-                                                                                                       PaymentAmount = pmt.OutgoingPayment!.Payment!.Amount,
-                                                                                                       PaymentBookingDate = pmt.OutgoingPayment.Payment.BookingDate,
-                                                                                                       PaymentCreditorIban = pmt.OutgoingPayment.CreditorIban,
-                                                                                                       PaymentCreditorName = pmt.OutgoingPayment.CreditorName,
-                                                                                                       PaymentMessage = pmt.OutgoingPayment.Payment.Message,
-                                                                                                       PaymentInfo = pmt.OutgoingPayment.Payment.Info
-                                                                                                   }),
-                                                              Reason = por.Reason,
-                                                              StateText = por.State.ToString(),
-                                                              State = por.State,
-                                                              Created = por.Created
-                                                          })
-                                           .OrderByDescending(rpy => rpy.Created)
-                                           .ToListAsync(cancellationToken);
+        var payouts = await payoutRequests.Where(por => por.Registration!.EventId == query.EventId)
+                                          .Select(por => new PayoutDisplayItem
+                                                         {
+                                                             RegistrationId = por.RegistrationId,
+                                                             Amount = por.Amount,
+                                                             FirstName = por.Registration!.RespondentFirstName,
+                                                             LastName = por.Registration.RespondentLastName,
+                                                             Price = por.Registration.Price_AdmittedAndReduced,
+                                                             Paid = por.Registration.PaymentAssignments!.Sum(ass => ass.OutgoingPayment == null
+                                                                                                                        ? ass.Amount
+                                                                                                                        : -ass.Amount),
+                                                             IncomingPayments = por.Registration
+                                                                                   .PaymentAssignments!
+                                                                                   .Where(ass => ass.IncomingPayment != null)
+                                                                                   .Select(pmt => new IncomingPaymentDisplayItem
+                                                                                                  {
+                                                                                                      Assigned = pmt.Amount,
+                                                                                                      PaymentAmount = pmt.IncomingPayment!.Payment!.Amount,
+                                                                                                      PaymentBookingDate = pmt.IncomingPayment.Payment.BookingDate,
+                                                                                                      PaymentDebitorIban = pmt.IncomingPayment.DebitorIban,
+                                                                                                      PaymentDebitorName = pmt.IncomingPayment.DebitorName,
+                                                                                                      PaymentMessage = pmt.IncomingPayment.Payment.Message,
+                                                                                                      PaymentInfo = pmt.IncomingPayment.Payment.Info
+                                                                                                  }),
+                                                             OutgoingPayments = por.Registration
+                                                                                   .PaymentAssignments!
+                                                                                   .Where(ass => ass.OutgoingPayment != null)
+                                                                                   .Select(pmt => new OutgoingPaymentDisplayItem
+                                                                                                  {
+                                                                                                      Assigned = pmt.Amount,
+                                                                                                      PaymentAmount = pmt.OutgoingPayment!.Payment!.Amount,
+                                                                                                      PaymentBookingDate = pmt.OutgoingPayment.Payment.BookingDate,
+                                                                                                      PaymentCreditorIban = pmt.OutgoingPayment.CreditorIban,
+                                                                                                      PaymentCreditorName = pmt.OutgoingPayment.CreditorName,
+                                                                                                      PaymentMessage = pmt.OutgoingPayment.Payment.Message,
+                                                                                                      PaymentInfo = pmt.OutgoingPayment.Payment.Info
+                                                                                                  }),
+                                                             Reason = por.Reason,
+                                                             StateText = por.State.ToString(),
+                                                             State = por.State,
+                                                             Created = por.Created
+                                                         })
+                                          .OrderByDescending(rpy => rpy.Created)
+                                          .ToListAsync(cancellationToken);
         return payouts;
     }
 }

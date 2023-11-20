@@ -5,29 +5,22 @@ public class InternalNotesQuery : IRequest<IEnumerable<NotesDisplayItem>>, IEven
     public Guid EventId { get; set; }
 }
 
-public class InternalNotesQueryHandler : IRequestHandler<InternalNotesQuery, IEnumerable<NotesDisplayItem>>
+public class InternalNotesQueryHandler(IQueryable<Registration> registrations) : IRequestHandler<InternalNotesQuery, IEnumerable<NotesDisplayItem>>
 {
-    private readonly IQueryable<Registration> _registrations;
-
-    public InternalNotesQueryHandler(IQueryable<Registration> registrations)
-    {
-        _registrations = registrations;
-    }
-
     public async Task<IEnumerable<NotesDisplayItem>> Handle(InternalNotesQuery query, CancellationToken cancellationToken)
     {
-        return await _registrations.Where(reg => reg.EventId == query.EventId
-                                              && reg.InternalNotes != null
-                                              && reg.InternalNotes != string.Empty)
-                                   .OrderByDescending(reg => reg.ReceivedAt)
-                                   .Select(reg => new NotesDisplayItem
-                                                  {
-                                                      RegistrationId = reg.Id,
-                                                      DisplayName = $"{reg.RespondentFirstName} {reg.RespondentLastName}",
-                                                      Email = reg.RespondentEmail,
-                                                      Notes = reg.InternalNotes!
-                                                  })
-                                   .ToListAsync(cancellationToken);
+        return await registrations.Where(reg => reg.EventId == query.EventId
+                                             && reg.InternalNotes != null
+                                             && reg.InternalNotes != string.Empty)
+                                  .OrderByDescending(reg => reg.ReceivedAt)
+                                  .Select(reg => new NotesDisplayItem
+                                                 {
+                                                     RegistrationId = reg.Id,
+                                                     DisplayName = $"{reg.RespondentFirstName} {reg.RespondentLastName}",
+                                                     Email = reg.RespondentEmail,
+                                                     Notes = reg.InternalNotes!
+                                                 })
+                                  .ToListAsync(cancellationToken);
     }
 }
 

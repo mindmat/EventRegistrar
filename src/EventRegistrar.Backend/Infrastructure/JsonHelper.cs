@@ -4,16 +4,11 @@ namespace EventRegistrar.Backend.Infrastructure;
 
 public class JsonHelper
 {
-    private readonly JsonSerializerSettings _settings;
-
-    public JsonHelper()
-    {
-        _settings = new JsonSerializerSettings
-                    {
-                        TypeNameHandling = TypeNameHandling.Auto,
-                        DefaultValueHandling = DefaultValueHandling.Ignore
-                    };
-    }
+    private readonly JsonSerializerSettings _settings = new()
+                                                        {
+                                                            TypeNameHandling = TypeNameHandling.Auto,
+                                                            DefaultValueHandling = DefaultValueHandling.Ignore
+                                                        };
 
     public T? TryDeserialize<T>(string json)
         where T : class

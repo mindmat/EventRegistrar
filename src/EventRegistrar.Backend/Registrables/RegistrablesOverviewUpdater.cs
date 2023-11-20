@@ -9,24 +9,12 @@ using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrables;
 
-public class RegistrablesOverviewCalculator : ReadModelCalculator<RegistrablesOverview>
+public class RegistrablesOverviewCalculator(IQueryable<Registration> registrations,
+                                            IQueryable<Registrable> _registrables,
+                                            IQueryable<RegistrableTag> _tags,
+                                            IAuthorizationChecker authorizationChecker)
+    : ReadModelCalculator<RegistrablesOverview>
 {
-    private readonly IQueryable<Registration> _registrations;
-    private readonly IQueryable<Registrable> _registrables;
-    private readonly IQueryable<RegistrableTag> _tags;
-    private readonly IAuthorizationChecker _authorizationChecker;
-
-    public RegistrablesOverviewCalculator(IQueryable<Registration> registrations,
-                                          IQueryable<Registrable> registrables,
-                                          IQueryable<RegistrableTag> tags,
-                                          IAuthorizationChecker authorizationChecker)
-    {
-        _registrations = registrations;
-        _registrables = registrables;
-        _tags = tags;
-        _authorizationChecker = authorizationChecker;
-    }
-
     public override string QueryName => nameof(RegistrablesOverviewQuery);
     public override bool IsDateDependent => false;
 
@@ -41,11 +29,11 @@ public class RegistrablesOverviewCalculator : ReadModelCalculator<RegistrablesOv
                                               .Include(rbl => rbl.Event)
                                               .ToListAsync(cancellationToken);
 
-        var registrationsOnWaitingList = new HashSet<Guid>(_registrations.Where(reg => reg.EventId == eventId
-                                                                                    && reg.IsOnWaitingList == true)
-                                                                         .Select(reg => reg.Id));
+        var registrationsOnWaitingList = new HashSet<Guid>(registrations.Where(reg => reg.EventId == eventId
+                                                                                   && reg.IsOnWaitingList == true)
+                                                                        .Select(reg => reg.Id));
 
-        var userCanDeleteRegistrable = await _authorizationChecker.UserHasRight(eventId, nameof(DeleteRegistrableCommand));
+        var userCanDeleteRegistrable = await authorizationChecker.UserHasRight(eventId, nameof(DeleteRegistrableCommand));
         var tags = await _tags.Where(tag => tag.EventId == eventId)
                               .ToDictionaryAsync(tag => tag.Tag,
                                                  tag => tag.SortKey,
@@ -151,18 +139,11 @@ public class RegistrablesOverviewCalculator : ReadModelCalculator<RegistrablesOv
     }
 }
 
-public class UpdateTrackOverviewReadModel : IEventToCommandTranslation<RegistrationProcessed>,
-                                            IEventToCommandTranslation<RegistrationCancelled>,
-                                            IEventToCommandTranslation<SpotAdded>,
-                                            IEventToCommandTranslation<SpotRemoved>
+public class UpdateTrackOverviewReadModel(IDateTimeProvider dateTimeProvider) : IEventToCommandTranslation<RegistrationProcessed>,
+                                                                                IEventToCommandTranslation<RegistrationCancelled>,
+                                                                                IEventToCommandTranslation<SpotAdded>,
+                                                                                IEventToCommandTranslation<SpotRemoved>
 {
-    private readonly IDateTimeProvider _dateTimeProvider;
-
-    public UpdateTrackOverviewReadModel(IDateTimeProvider dateTimeProvider)
-    {
-        _dateTimeProvider = dateTimeProvider;
-    }
-
     public IEnumerable<IRequest> Translate(RegistrationProcessed e)
     {
         if (e.EventId != null)
@@ -202,7 +183,7 @@ public class UpdateTrackOverviewReadModel : IEventToCommandTranslation<Registrat
                {
                    QueryName = nameof(RegistrablesOverviewQuery),
                    EventId = eventId,
-                   DirtyMoment = _dateTimeProvider.Now
+                   DirtyMoment = dateTimeProvider.Now
                };
     }
 }

@@ -1,17 +1,8 @@
-﻿using MediatR;
+﻿namespace EventRegistrar.Backend.Authorization;
 
-namespace EventRegistrar.Backend.Authorization;
-
-public class AuthorizationDecorator<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-    where TRequest : IRequest<TResponse>
+public class AuthorizationDecorator<TRequest, TResponse>(IAuthorizationChecker authorizationChecker) : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull
 {
-    private readonly IAuthorizationChecker _authorizationChecker;
-
-    public AuthorizationDecorator(IAuthorizationChecker authorizationChecker)
-    {
-        _authorizationChecker = authorizationChecker;
-    }
-
     public async Task<TResponse> Handle(TRequest request,
                                         RequestHandlerDelegate<TResponse> next,
                                         CancellationToken cancellationToken)
@@ -19,7 +10,7 @@ public class AuthorizationDecorator<TRequest, TResponse> : IPipelineBehavior<TRe
         var requestType = request.GetType().Name;
         if (request is IEventBoundRequest eventBoundRequest)
         {
-            await _authorizationChecker.ThrowIfUserHasNotRight(eventBoundRequest.EventId, requestType);
+            await authorizationChecker.ThrowIfUserHasNotRight(eventBoundRequest.EventId, requestType);
         }
 
         return await next();

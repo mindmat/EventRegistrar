@@ -1,8 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations.Confirmation;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Payments.Assignments;
 
 public class CheckRegistrationAfterIncomingPaymentUnassigned : IEventToCommandTranslation<IncomingPaymentUnassigned>

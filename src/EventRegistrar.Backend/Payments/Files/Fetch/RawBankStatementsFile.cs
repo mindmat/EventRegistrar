@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-
 namespace EventRegistrar.Backend.Payments.Files.Fetch;
 
 public class RawBankStatementsFile : Entity

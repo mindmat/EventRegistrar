@@ -8,22 +8,14 @@ public class RegistrablesOverviewQuery : IRequest<SerializedJson<RegistrablesOve
     public Guid EventId { get; set; }
 }
 
-public class RegistrablesOverviewQueryHandler : IRequestHandler<RegistrablesOverviewQuery, SerializedJson<RegistrablesOverview>>
+public class RegistrablesOverviewQueryHandler(ReadModelReader readModelReader) : IRequestHandler<RegistrablesOverviewQuery, SerializedJson<RegistrablesOverview>>
 {
-    private readonly ReadModelReader _readModelReader;
-
-    public RegistrablesOverviewQueryHandler(ReadModelReader readModelReader)
-    {
-        _readModelReader = readModelReader;
-    }
-
-
     public async Task<SerializedJson<RegistrablesOverview>> Handle(RegistrablesOverviewQuery query, CancellationToken cancellationToken)
     {
-        return await _readModelReader.Get<RegistrablesOverview>(nameof(RegistrablesOverviewQuery),
-                                                                query.EventId,
-                                                                null,
-                                                                cancellationToken);
+        return await readModelReader.Get<RegistrablesOverview>(nameof(RegistrablesOverviewQuery),
+                                                               query.EventId,
+                                                               null,
+                                                               cancellationToken);
     }
 }
 

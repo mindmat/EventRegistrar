@@ -13,34 +13,20 @@ public class ReleaseMailsCommand : IRequest, IEventBoundRequest
     public IEnumerable<Guid> MailIds { get; set; } = null!;
 }
 
-public class ReleaseMailsCommandHandler : AsyncRequestHandler<ReleaseMailsCommand>
+public class ReleaseMailsCommandHandler(IRepository<Mail> mails,
+                                        CommandQueue commandQueue,
+                                        IEventBus eventBus,
+                                        IDateTimeProvider dateTimeProvider,
+                                        ChangeTrigger changeTrigger)
+    : IRequestHandler<ReleaseMailsCommand>
 {
-    private readonly IRepository<Mail> _mails;
-    private readonly CommandQueue _commandQueue;
-    private readonly IEventBus _eventBus;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ChangeTrigger _changeTrigger;
-
-    public ReleaseMailsCommandHandler(IRepository<Mail> mails,
-                                      CommandQueue commandQueue,
-                                      IEventBus eventBus,
-                                      IDateTimeProvider dateTimeProvider,
-                                      ChangeTrigger changeTrigger)
+    public async Task Handle(ReleaseMailsCommand command, CancellationToken cancellationToken)
     {
-        _mails = mails;
-        _commandQueue = commandQueue;
-        _eventBus = eventBus;
-        _dateTimeProvider = dateTimeProvider;
-        _changeTrigger = changeTrigger;
-    }
-
-    protected override async Task Handle(ReleaseMailsCommand command, CancellationToken cancellationToken)
-    {
-        var withheldMails = await _mails.Where(mail => command.MailIds.Contains(mail.Id)
-                                                    && !mail.Discarded)
-                                        .Include(mail => mail.Registrations!)
-                                        .ThenInclude(map => map.Registration)
-                                        .ToListAsync(cancellationToken);
+        var withheldMails = await mails.Where(mail => command.MailIds.Contains(mail.Id)
+                                                   && !mail.Discarded)
+                                       .Include(mail => mail.Registrations!)
+                                       .ThenInclude(map => map.Registration)
+                                       .ToListAsync(cancellationToken);
         foreach (var withheldMail in withheldMails)
         {
             var sendMailCommand = new SendMailCommand
@@ -67,24 +53,24 @@ public class ReleaseMailsCommandHandler : AsyncRequestHandler<ReleaseMailsComman
                                   };
 
             withheldMail.Withhold = false;
-            withheldMail.Sent = _dateTimeProvider.Now;
+            withheldMail.Sent = dateTimeProvider.Now;
 
-            _commandQueue.EnqueueCommand(sendMailCommand);
+            commandQueue.EnqueueCommand(sendMailCommand);
 
-            _eventBus.Publish(new MailReleased
-                              {
-                                  MailId = withheldMail.Id,
-                                  To = sendMailCommand.To.Select(to => $"{to.Name} - {to.Email}").StringJoin(),
-                                  Subject = sendMailCommand.Subject
-                              });
+            eventBus.Publish(new MailReleased
+                             {
+                                 MailId = withheldMail.Id,
+                                 To = sendMailCommand.To.Select(to => $"{to.Name} - {to.Email}").StringJoin(),
+                                 Subject = sendMailCommand.Subject
+                             });
 
-            withheldMail.Registrations!.ForEach(reg => _changeTrigger.TriggerUpdate<RegistrationCalculator>(reg.RegistrationId, command.EventId));
+            withheldMail.Registrations!.ForEach(reg => changeTrigger.TriggerUpdate<RegistrationCalculator>(reg.RegistrationId, command.EventId));
         }
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(PendingMailsQuery)
-                          });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(PendingMailsQuery)
+                         });
     }
 }

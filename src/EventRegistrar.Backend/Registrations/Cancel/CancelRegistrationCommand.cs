@@ -18,43 +18,25 @@ public class CancelRegistrationCommand : IRequest, IEventBoundRequest
     public DateTimeOffset? Received { get; set; }
 }
 
-public class CancelRegistrationCommandHandler : AsyncRequestHandler<CancelRegistrationCommand>
+public class CancelRegistrationCommandHandler(IQueryable<Registration> registrations,
+                                              IQueryable<Seat> _spots,
+                                              IRepository<RegistrationCancellation> cancellations,
+                                              IRepository<PayoutRequest> payoutRequests,
+                                              SpotManager spotManager,
+                                              IEventBus eventBus,
+                                              IDateTimeProvider dateTimeProvider)
+    : IRequestHandler<CancelRegistrationCommand>
 {
-    private readonly IRepository<RegistrationCancellation> _cancellations;
-    private readonly IRepository<PayoutRequest> _payoutRequests;
-    private readonly IEventBus _eventBus;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IQueryable<Registration> _registrations;
-    private readonly SpotManager _spotManager;
-    private readonly IQueryable<Seat> _spots;
-
-    public CancelRegistrationCommandHandler(IQueryable<Registration> registrations,
-                                            IQueryable<Seat> spots,
-                                            IRepository<RegistrationCancellation> cancellations,
-                                            IRepository<PayoutRequest> payoutRequests,
-                                            SpotManager spotManager,
-                                            IEventBus eventBus,
-                                            IDateTimeProvider dateTimeProvider)
+    public async Task Handle(CancelRegistrationCommand command, CancellationToken cancellationToken)
     {
-        _registrations = registrations;
-        _spots = spots;
-        _cancellations = cancellations;
-        _payoutRequests = payoutRequests;
-        _spotManager = spotManager;
-        _eventBus = eventBus;
-        _dateTimeProvider = dateTimeProvider;
-    }
-
-    protected override async Task Handle(CancelRegistrationCommand command, CancellationToken cancellationToken)
-    {
-        var registration = await _registrations.AsTracking()
-                                               .Include(reg => reg.PaymentAssignments!)
-                                               .ThenInclude(pas => pas.IncomingPayment)
-                                               .Include(reg => reg.RegistrationForm)
-                                               .Include(reg => reg.Mails!)
-                                               .ThenInclude(mtr => mtr.Mail)
-                                               .FirstAsync(reg => reg.Id == command.RegistrationId
-                                                               && reg.EventId == command.EventId, cancellationToken);
+        var registration = await registrations.AsTracking()
+                                              .Include(reg => reg.PaymentAssignments!)
+                                              .ThenInclude(pas => pas.IncomingPayment)
+                                              .Include(reg => reg.RegistrationForm)
+                                              .Include(reg => reg.Mails!)
+                                              .ThenInclude(mtr => mtr.Mail)
+                                              .FirstAsync(reg => reg.Id == command.RegistrationId
+                                                              && reg.EventId == command.EventId, cancellationToken);
 
         var paidAmount = registration.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null
                                                                          ? asn.Amount
@@ -83,7 +65,7 @@ public class CancelRegistrationCommandHandler : AsyncRequestHandler<CancelRegist
                                 .ToListAsync(cancellationToken);
         foreach (var spot in spots)
         {
-            _spotManager.RemoveSpot(spot, command.RegistrationId, RemoveSpotReason.CancellationOfRegistration);
+            spotManager.RemoveSpot(spot, command.RegistrationId, RemoveSpotReason.CancellationOfRegistration);
         }
 
         // discard unsent mails
@@ -99,14 +81,14 @@ public class CancelRegistrationCommandHandler : AsyncRequestHandler<CancelRegist
                                Id = Guid.NewGuid(),
                                RegistrationId = command.RegistrationId,
                                Reason = command.Reason,
-                               Created = _dateTimeProvider.Now,
+                               Created = dateTimeProvider.Now,
                                RefundPercentage = paidAmount > 0 && command.RefundAmount != null
                                                       ? command.RefundAmount.Value / paidAmount
                                                       : 0,
                                Refund = command.RefundAmount ?? 0,
                                Received = command.Received
                            };
-        _cancellations.InsertObjectTree(cancellation);
+        cancellations.InsertObjectTree(cancellation);
 
         if (cancellation.Refund > 0m)
         {
@@ -117,33 +99,33 @@ public class CancelRegistrationCommandHandler : AsyncRequestHandler<CancelRegist
                                     Amount = cancellation.Refund,
                                     Reason = command.Reason,
                                     State = PayoutState.Requested,
-                                    Created = _dateTimeProvider.Now,
+                                    Created = dateTimeProvider.Now,
                                     IbanProposed = registration.PaymentAssignments!
                                                                .Select(pas => pas.IncomingPayment?.DebitorIban)
                                                                .FirstOrDefault(iban => iban != null)
                                 };
-            _payoutRequests.InsertObjectTree(payoutRequest);
+            payoutRequests.InsertObjectTree(payoutRequest);
         }
 
-        _eventBus.Publish(new RegistrationCancelled
-                          {
-                              Id = Guid.NewGuid(),
-                              RegistrationId = command.RegistrationId,
-                              EventId = registration.EventId,
-                              Reason = command.Reason,
-                              Refund = cancellation.Refund,
-                              Received = command.Received ?? _dateTimeProvider.Now,
-                              Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}"
-                          });
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(DifferencesQuery)
-                          });
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(CancellationsQuery)
-                          });
+        eventBus.Publish(new RegistrationCancelled
+                         {
+                             Id = Guid.NewGuid(),
+                             RegistrationId = command.RegistrationId,
+                             EventId = registration.EventId,
+                             Reason = command.Reason,
+                             Refund = cancellation.Refund,
+                             Received = command.Received ?? dateTimeProvider.Now,
+                             Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}"
+                         });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(DifferencesQuery)
+                         });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(CancellationsQuery)
+                         });
     }
 }

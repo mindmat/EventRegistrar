@@ -13,18 +13,11 @@ public class SpotAdded : DomainEvent
     public bool IsWaitingList { get; set; }
 }
 
-public class SpotAddedUserTranslation : IEventToUserTranslation<SpotAdded>
+public class SpotAddedUserTranslation(IQueryable<Registration> registrations) : IEventToUserTranslation<SpotAdded>
 {
-    private readonly IQueryable<Registration> _registrations;
-
-    public SpotAddedUserTranslation(IQueryable<Registration> registrations)
-    {
-        _registrations = registrations;
-    }
-
     public string GetText(SpotAdded domainEvent)
     {
-        var registration = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
+        var registration = registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
         return
             $"{registration?.RespondentFirstName} {registration?.RespondentLastName} wurde in {(domainEvent.IsWaitingList ? "die Warteliste von " : "")}{domainEvent.Registrable} aufgenommen.";
     }

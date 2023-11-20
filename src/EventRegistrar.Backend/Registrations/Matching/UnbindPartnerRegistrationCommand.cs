@@ -10,25 +10,17 @@ public class UnbindPartnerRegistrationCommand : IRequest, IEventBoundRequest
     public Guid RegistrationId { get; set; }
 }
 
-public class UnbindPartnerRegistrationCommandHandler : AsyncRequestHandler<UnbindPartnerRegistrationCommand>
+public class UnbindPartnerRegistrationCommandHandler(IRepository<Registration> registrations,
+                                                     ChangeTrigger changeTrigger)
+    : IRequestHandler<UnbindPartnerRegistrationCommand>
 {
-    private readonly IRepository<Registration> _registrations;
-    private readonly ChangeTrigger _changeTrigger;
-
-    public UnbindPartnerRegistrationCommandHandler(IRepository<Registration> registrations,
-                                                   ChangeTrigger changeTrigger)
+    public async Task Handle(UnbindPartnerRegistrationCommand command, CancellationToken cancellationToken)
     {
-        _registrations = registrations;
-        _changeTrigger = changeTrigger;
-    }
-
-    protected override async Task Handle(UnbindPartnerRegistrationCommand command, CancellationToken cancellationToken)
-    {
-        var registration = await _registrations.AsTracking()
-                                               .Include(reg => reg.Seats_AsLeader)
-                                               .Include(reg => reg.Seats_AsFollower)
-                                               .FirstAsync(reg => reg.Id == command.RegistrationId
-                                                               && reg.EventId == command.EventId, cancellationToken);
+        var registration = await registrations.AsTracking()
+                                              .Include(reg => reg.Seats_AsLeader)
+                                              .Include(reg => reg.Seats_AsFollower)
+                                              .FirstAsync(reg => reg.Id == command.RegistrationId
+                                                              && reg.EventId == command.EventId, cancellationToken);
 
         Guid? registrationId_Partner = null;
         if (registration.RegistrationId_Partner != null)
@@ -57,11 +49,11 @@ public class UnbindPartnerRegistrationCommandHandler : AsyncRequestHandler<Unbin
             }
         }
 
-        _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
-        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, command.EventId);
+        changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, command.EventId);
         if (registrationId_Partner != null)
         {
-            _changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId_Partner, command.EventId);
+            changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId_Partner, command.EventId);
         }
     }
 }

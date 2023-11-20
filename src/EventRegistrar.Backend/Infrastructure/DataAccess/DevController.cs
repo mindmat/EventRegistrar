@@ -1,18 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+
 using SimpleInjector;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess;
 
-public class DevController : Controller
+public class DevController(DbContext dbContext, Container container) : Controller
 {
-    private readonly Container _container;
-    private readonly DbContext _dbContext;
-
-    public DevController(DbContext dbContext, Container container)
-    {
-        _dbContext = dbContext;
-        _container = container;
-    }
+    private readonly Container _container = container;
+    private readonly DbContext _dbContext = dbContext;
 
     [HttpPost("api/dev/migratedb")]
     public async Task MigrateDb()

@@ -4,54 +4,41 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.DirtyTags;
 
-public class DirtyTagger
+public class DirtyTagger(CommandQueue commandQueue,
+                         IEnumerable<IDirtySegment> dirtySegments,
+                         DbContext dbContext,
+                         IDateTimeProvider dateTimeProvider)
 {
-    private readonly CommandQueue _commandQueue;
-    private readonly IEnumerable<IDirtySegment> _dirtySegments;
-    private readonly DbContext _dbContext;
-    private readonly IDateTimeProvider _dateTimeProvider;
-
-    public DirtyTagger(CommandQueue commandQueue,
-                       IEnumerable<IDirtySegment> dirtySegments,
-                       DbContext dbContext,
-                       IDateTimeProvider dateTimeProvider)
-    {
-        _commandQueue = commandQueue;
-        _dirtySegments = dirtySegments;
-        _dbContext = dbContext;
-        _dateTimeProvider = dateTimeProvider;
-    }
-
     public void UpdateSegment<TSegment>(Guid entityId)
         where TSegment : IDirtySegment
     {
-        var dirtySegment = _dirtySegments.First(dys => dys.GetType() == typeof(TSegment));
-        dirtySegment.EnqueueCommand(_commandQueue, entityId);
-        var dirtyTags = _dbContext.Set<DirtyTag>();
+        var dirtySegment = dirtySegments.First(dys => dys.GetType() == typeof(TSegment));
+        dirtySegment.EnqueueCommand(commandQueue, entityId);
+        var dirtyTags = dbContext.Set<DirtyTag>();
         dirtyTags.Add(new DirtyTag
                       {
                           Entity = dirtySegment.Entity,
                           EntityId = entityId,
                           Segment = dirtySegment.Name,
-                          DirtyMoment = _dateTimeProvider.Now
+                          DirtyMoment = dateTimeProvider.Now
                       });
     }
 
     public async Task<IEnumerable<DirtyTag>> IsDirty<TSegment>(Guid entityId)
         where TSegment : IDirtySegment
     {
-        var dirtySegment = _dirtySegments.First(dys => dys.GetType() == typeof(TSegment));
-        return await _dbContext.Set<DirtyTag>()
-                               .Where(dyt => dyt.Entity == dirtySegment.Entity
-                                          && dyt.EntityId == entityId
-                                          && dyt.Segment == dirtySegment.Name)
-                               .ToListAsync();
+        var dirtySegment = dirtySegments.First(dys => dys.GetType() == typeof(TSegment));
+        return await dbContext.Set<DirtyTag>()
+                              .Where(dyt => dyt.Entity == dirtySegment.Entity
+                                         && dyt.EntityId == entityId
+                                         && dyt.Segment == dirtySegment.Name)
+                              .ToListAsync();
     }
 
     public void RemoveDirtyTags(IEnumerable<DirtyTag> dirtyTags)
     {
-        _dbContext.Set<DirtyTag>()
-                  .RemoveRange(dirtyTags);
+        dbContext.Set<DirtyTag>()
+                 .RemoveRange(dirtyTags);
     }
 
     public async Task WaitForRemovedTags(Guid entityId, params Type[] segmentNames)
@@ -61,10 +48,10 @@ public class DirtyTagger
             return;
         }
 
-        var now = _dateTimeProvider.Now;
-        var tagSet = _dbContext.Set<DirtyTag>();
-        var segments = _dirtySegments.Where(dys => segmentNames.Contains(dys.GetType()))
-                                     .ToList();
+        var now = dateTimeProvider.Now;
+        var tagSet = dbContext.Set<DirtyTag>();
+        var segments = dirtySegments.Where(dys => segmentNames.Contains(dys.GetType()))
+                                    .ToList();
 
         var watchdog = 10;
         do

@@ -8,15 +8,8 @@ public class UnassignedPayoutsQuery : IRequest<IEnumerable<PaymentDisplayItem>>,
     public Guid PaymentId { get; set; }
 }
 
-public class UnassignedPayoutsQueryHandler : IRequestHandler<UnassignedPayoutsQuery, IEnumerable<PaymentDisplayItem>>
+public class UnassignedPayoutsQueryHandler(IQueryable<OutgoingPayment> _payments) : IRequestHandler<UnassignedPayoutsQuery, IEnumerable<PaymentDisplayItem>>
 {
-    private readonly IQueryable<OutgoingPayment> _payments;
-
-    public UnassignedPayoutsQueryHandler(IQueryable<OutgoingPayment> payments)
-    {
-        _payments = payments;
-    }
-
     public async Task<IEnumerable<PaymentDisplayItem>> Handle(UnassignedPayoutsQuery query,
                                                               CancellationToken cancellationToken)
     {

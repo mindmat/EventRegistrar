@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Authentication;
 using EventRegistrar.Backend.Authentication.Users;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

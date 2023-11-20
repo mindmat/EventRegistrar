@@ -11,22 +11,14 @@ public class OutgoingPaymentUnassigned : DomainEvent
     public Guid? RegistrationId { get; set; }
 }
 
-public class OutgoingPaymentUnassignedUserTranslation : IEventToUserTranslation<OutgoingPaymentUnassigned>
+public class OutgoingPaymentUnassignedUserTranslation(IQueryable<Registration> registrations,
+                                                      IQueryable<PaymentAssignment> assignments)
+    : IEventToUserTranslation<OutgoingPaymentUnassigned>
 {
-    private readonly IQueryable<PaymentAssignment> _assignments;
-    private readonly IQueryable<Registration> _registrations;
-
-    public OutgoingPaymentUnassignedUserTranslation(IQueryable<Registration> registrations,
-                                                    IQueryable<PaymentAssignment> assignments)
-    {
-        _registrations = registrations;
-        _assignments = assignments;
-    }
-
     public string GetText(OutgoingPaymentUnassigned domainEvent)
     {
-        var assignment = _assignments.FirstOrDefault(pmt => pmt.Id == domainEvent.PaymentAssignmentId);
-        var registration = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
+        var assignment = assignments.FirstOrDefault(pmt => pmt.Id == domainEvent.PaymentAssignmentId);
+        var registration = registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
 
         return $"Zuordnung von Auszahlung über {assignment?.Amount} zu Anmeldung {registration?.RespondentFirstName} {registration?.RespondentLastName} rückgängig gemacht";
     }

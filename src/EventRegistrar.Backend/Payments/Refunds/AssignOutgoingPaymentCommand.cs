@@ -19,54 +19,38 @@ public class AssignOutgoingPaymentCommand : IRequest, IEventBoundRequest
     public string? AcceptDifferenceReason { get; set; }
 }
 
-public class AssignOutgoingPaymentCommandHandler : AsyncRequestHandler<AssignOutgoingPaymentCommand>
+public class AssignOutgoingPaymentCommandHandler(IQueryable<PayoutRequest> payoutRequests,
+                                                 IQueryable<OutgoingPayment> outgoingPayments,
+                                                 IQueryable<Registration> registrations,
+                                                 IRepository<PaymentAssignment> assignments,
+                                                 IEventBus eventBus,
+                                                 IDateTimeProvider dateTimeProvider)
+    : IRequestHandler<AssignOutgoingPaymentCommand>
 {
-    private readonly IRepository<PaymentAssignment> _assignments;
-    private readonly IEventBus _eventBus;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IQueryable<PayoutRequest> _payoutRequests;
-    private readonly IQueryable<OutgoingPayment> _outgoingPayments;
-    private readonly IQueryable<Registration> _registrations;
-
-    public AssignOutgoingPaymentCommandHandler(IQueryable<PayoutRequest> payoutRequests,
-                                               IQueryable<OutgoingPayment> outgoingPayments,
-                                               IQueryable<Registration> registrations,
-                                               IRepository<PaymentAssignment> assignments,
-                                               IEventBus eventBus,
-                                               IDateTimeProvider dateTimeProvider)
-    {
-        _payoutRequests = payoutRequests;
-        _outgoingPayments = outgoingPayments;
-        _registrations = registrations;
-        _assignments = assignments;
-        _eventBus = eventBus;
-        _dateTimeProvider = dateTimeProvider;
-    }
-
-    protected override async Task Handle(AssignOutgoingPaymentCommand command, CancellationToken cancellationToken)
+    public async Task Handle(AssignOutgoingPaymentCommand command, CancellationToken cancellationToken)
     {
         Guid registrationId;
         if (command.PayoutRequestId != null)
         {
-            registrationId = await _payoutRequests.Where(por => por.Id == command.PayoutRequestId
-                                                             && por.Registration!.EventId == command.EventId)
-                                                  .Select(por => por.RegistrationId)
-                                                  .FirstAsync(cancellationToken);
+            registrationId = await payoutRequests.Where(por => por.Id == command.PayoutRequestId
+                                                            && por.Registration!.EventId == command.EventId)
+                                                 .Select(por => por.RegistrationId)
+                                                 .FirstAsync(cancellationToken);
         }
         else if (command.RegistrationId != null)
         {
             // only to validate registration id vs event id
-            registrationId = await _registrations.Where(reg => reg.Id == command.RegistrationId
-                                                            && reg.EventId == command.EventId)
-                                                 .Select(reg => reg.Id)
-                                                 .FirstAsync(cancellationToken);
+            registrationId = await registrations.Where(reg => reg.Id == command.RegistrationId
+                                                           && reg.EventId == command.EventId)
+                                                .Select(reg => reg.Id)
+                                                .FirstAsync(cancellationToken);
         }
         else
         {
             throw new ArgumentNullException("Either RegistrationId or PayoutRequestId have to be set", (Exception?)null);
         }
 
-        var outgoingPayment = await _outgoingPayments.FirstAsync(pmt => pmt.Id == command.OutgoingPaymentId, cancellationToken);
+        var outgoingPayment = await outgoingPayments.FirstAsync(pmt => pmt.Id == command.OutgoingPaymentId, cancellationToken);
 
         var assignment = new PaymentAssignment
                          {
@@ -75,17 +59,17 @@ public class AssignOutgoingPaymentCommandHandler : AsyncRequestHandler<AssignOut
                              PayoutRequestId = command.PayoutRequestId,
                              OutgoingPaymentId = outgoingPayment.Id,
                              Amount = command.Amount,
-                             Created = _dateTimeProvider.Now
+                             Created = dateTimeProvider.Now
                          };
-        await _assignments.InsertOrUpdateEntity(assignment, cancellationToken);
+        await assignments.InsertOrUpdateEntity(assignment, cancellationToken);
 
-        _eventBus.Publish(new OutgoingPaymentAssigned
-                          {
-                              PaymentAssignmentId = assignment.Id,
-                              RegistrationId = assignment.RegistrationId,
-                              PayoutRequestId = assignment.PayoutRequestId,
-                              OutgoingPaymentId = outgoingPayment.Id,
-                              Amount = assignment.Amount
-                          });
+        eventBus.Publish(new OutgoingPaymentAssigned
+                         {
+                             PaymentAssignmentId = assignment.Id,
+                             RegistrationId = assignment.RegistrationId,
+                             PayoutRequestId = assignment.PayoutRequestId,
+                             OutgoingPaymentId = outgoingPayment.Id,
+                             Amount = assignment.Amount
+                         });
     }
 }

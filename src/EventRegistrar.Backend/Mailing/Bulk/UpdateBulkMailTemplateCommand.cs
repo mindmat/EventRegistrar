@@ -17,24 +17,16 @@ public class UpdateBulkMailTemplateCommand : IRequest, IEventBoundRequest
     public Guid? RegistrableId { get; set; }
 }
 
-public class UpdateBulkMailTemplateCommandHandler : IRequestHandler<UpdateBulkMailTemplateCommand>
+public class UpdateBulkMailTemplateCommandHandler(IRepository<BulkMailTemplate> bulkMailTemplates,
+                                                  IEventBus eventBus)
+    : IRequestHandler<UpdateBulkMailTemplateCommand>
 {
-    private readonly IRepository<BulkMailTemplate> _bulkMailTemplates;
-    private readonly IEventBus _eventBus;
-
-    public UpdateBulkMailTemplateCommandHandler(IRepository<BulkMailTemplate> bulkMailTemplates,
-                                                IEventBus eventBus)
+    public async Task Handle(UpdateBulkMailTemplateCommand command, CancellationToken cancellationToken)
     {
-        _bulkMailTemplates = bulkMailTemplates;
-        _eventBus = eventBus;
-    }
-
-    public async Task<Unit> Handle(UpdateBulkMailTemplateCommand command, CancellationToken cancellationToken)
-    {
-        var template = await _bulkMailTemplates.AsTracking()
-                                               .FirstAsync(mtp => mtp.EventId == command.EventId
-                                                               && mtp.Id == command.TemplateId,
-                                                           cancellationToken);
+        var template = await bulkMailTemplates.AsTracking()
+                                              .FirstAsync(mtp => mtp.EventId == command.EventId
+                                                              && mtp.Id == command.TemplateId,
+                                                          cancellationToken);
         template.SenderMail = command.SenderMail;
         template.SenderName = command.SenderName;
         template.Subject = command.Subject;
@@ -45,12 +37,11 @@ public class UpdateBulkMailTemplateCommandHandler : IRequestHandler<UpdateBulkMa
 
         template.MailingAudience = command.Audiences.ConvertToFlags();
         template.RegistrableId = command.RegistrableId;
-        _eventBus.Publish(new QueryChanged
-                          {
-                              QueryName = nameof(BulkMailPreviewQuery),
-                              EventId = command.EventId,
-                              RowId = template.Id
-                          });
-        return Unit.Value;
+        eventBus.Publish(new QueryChanged
+                         {
+                             QueryName = nameof(BulkMailPreviewQuery),
+                             EventId = command.EventId,
+                             RowId = template.Id
+                         });
     }
 }

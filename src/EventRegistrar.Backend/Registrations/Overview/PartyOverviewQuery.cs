@@ -29,26 +29,16 @@ public class PartyOverviewQuery : IRequest<IEnumerable<PartyItem>>, IEventBoundR
     public Guid EventId { get; set; }
 }
 
-public class PartyOverviewQueryHandler : IRequestHandler<PartyOverviewQuery, IEnumerable<PartyItem>>
+public class PartyOverviewQueryHandler(IQueryable<RegistrableComposition> compositions,
+                                       IQueryable<Registrable> registrables,
+                                       IQueryable<Registration> registrations)
+    : IRequestHandler<PartyOverviewQuery, IEnumerable<PartyItem>>
 {
-    private readonly IQueryable<RegistrableComposition> _compositions;
-    private readonly IQueryable<Registrable> _registrables;
-    private readonly IQueryable<Registration> _registrations;
-
-    public PartyOverviewQueryHandler(IQueryable<RegistrableComposition> compositions,
-                                     IQueryable<Registrable> registrables,
-                                     IQueryable<Registration> registrations)
-    {
-        _compositions = compositions;
-        _registrables = registrables;
-        _registrations = registrations;
-    }
-
     public async Task<IEnumerable<PartyItem>> Handle(PartyOverviewQuery query, CancellationToken cancellationToken)
     {
-        var mappings = (await _compositions.Where(cmp => cmp.Registrable.EventId == query.EventId)
-                                           .Select(cmp => new { cmp.RegistrableId_Contains, cmp.RegistrableId })
-                                           .ToListAsync(cancellationToken)
+        var mappings = (await compositions.Where(cmp => cmp.Registrable.EventId == query.EventId)
+                                          .Select(cmp => new { cmp.RegistrableId_Contains, cmp.RegistrableId })
+                                          .ToListAsync(cancellationToken)
                        )
                        .GroupBy(cmp => cmp.RegistrableId_Contains)
                        .Select(grp => new
@@ -61,29 +51,29 @@ public class PartyOverviewQueryHandler : IRequestHandler<PartyOverviewQuery, IEn
         var registrableIdsPartyParticipants = mappings.Select(map => map.PartyId).ToList();
         registrableIdsPartyParticipants.AddRange(mappings.SelectMany(map => map.DependentRegistrablesIds));
 
-        var registrationsOnWaitingList = await _registrations.Where(reg => reg.EventId == query.EventId
-                                                                        && reg.IsOnWaitingList == true
-                                                                        && reg.State == RegistrationState.Received)
-                                                             .ToListAsync(cancellationToken);
+        var registrationsOnWaitingList = await registrations.Where(reg => reg.EventId == query.EventId
+                                                                       && reg.IsOnWaitingList == true
+                                                                       && reg.State == RegistrationState.Received)
+                                                            .ToListAsync(cancellationToken);
         var partyPassFallbacksOnWaitingList = registrationsOnWaitingList.Count(reg => reg.FallbackToPartyPass == true);
         var registrationsOnWaitinglist = registrationsOnWaitingList.Count();
 
         //log.Info(string.Join(",", idsOfInterest));
 
-        var participants = await _registrables.Where(rbl => registrableIdsPartyParticipants.Contains(rbl.Id))
-                                              .Select(rbl => new
-                                                             {
-                                                                 rbl.Id,
-                                                                 rbl.DisplayName,
-                                                                 rbl.ShowInMailListOrder,
-                                                                 Participants = rbl.Spots.Where(spt =>
-                                                                                                    !spt.IsCancelled && !spt.IsWaitingList)
-                                                                                   .Select(spt =>
-                                                                                               (spt.RegistrationId.HasValue ? 1 : 0) + (spt.RegistrationId_Follower.HasValue ? 1 : 0))
-                                                                                   .Sum(),
-                                                                 Potential = rbl.MaximumSingleSeats ?? (rbl.MaximumDoubleSeats ?? 0) * 2
-                                                             })
-                                              .ToDictionaryAsync(rbl => rbl.Id, cancellationToken);
+        var participants = await registrables.Where(rbl => registrableIdsPartyParticipants.Contains(rbl.Id))
+                                             .Select(rbl => new
+                                                            {
+                                                                rbl.Id,
+                                                                rbl.DisplayName,
+                                                                rbl.ShowInMailListOrder,
+                                                                Participants = rbl.Spots.Where(spt =>
+                                                                                                   !spt.IsCancelled && !spt.IsWaitingList)
+                                                                                  .Select(spt =>
+                                                                                              (spt.RegistrationId.HasValue ? 1 : 0) + (spt.RegistrationId_Follower.HasValue ? 1 : 0))
+                                                                                  .Sum(),
+                                                                Potential = rbl.MaximumSingleSeats ?? (rbl.MaximumDoubleSeats ?? 0) * 2
+                                                            })
+                                             .ToDictionaryAsync(rbl => rbl.Id, cancellationToken);
 
         var overview = mappings.Select(map => new PartyItem
                                               {

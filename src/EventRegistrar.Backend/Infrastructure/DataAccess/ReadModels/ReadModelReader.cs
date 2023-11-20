@@ -4,15 +4,9 @@ using EventRegistrar.Backend.Infrastructure.Mediator;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 
-public class ReadModelReader
+public class ReadModelReader(IQueryable<ReadModel> _readModels)
 {
-    private readonly IQueryable<ReadModel> _readModels;
     private static readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerDefaults.Web);
-
-    public ReadModelReader(IQueryable<ReadModel> readModels)
-    {
-        _readModels = readModels;
-    }
 
     public async Task<SerializedJson<T>> Get<T>(string queryName,
                                                 Guid eventId,

@@ -13,39 +13,21 @@ public class TriggerMoveUpFromWaitingListCommand : IRequest, IEventBoundRequest
     public Guid? RegistrationId { get; set; }
 }
 
-public class TriggerMoveUpFromWaitingListCommandHandler : AsyncRequestHandler<TriggerMoveUpFromWaitingListCommand>
+public class TriggerMoveUpFromWaitingListCommandHandler(IQueryable<Registrable> registrables,
+                                                        IQueryable<Registration> registrations,
+                                                        IRepository<Seat> _spots,
+                                                        ImbalanceManager imbalanceManager,
+                                                        IEventBus eventBus,
+                                                        ILogger log,
+                                                        ChangeTrigger changeTrigger)
+    : IRequestHandler<TriggerMoveUpFromWaitingListCommand>
 {
-    private readonly IEventBus _eventBus;
-    private readonly ImbalanceManager _imbalanceManager;
-    private readonly ILogger _log;
-    private readonly ChangeTrigger _changeTrigger;
-    private readonly IQueryable<Registrable> _registrables;
-    private readonly IQueryable<Registration> _registrations;
-    private readonly IRepository<Seat> _spots;
-
-    public TriggerMoveUpFromWaitingListCommandHandler(IQueryable<Registrable> registrables,
-                                                      IQueryable<Registration> registrations,
-                                                      IRepository<Seat> spots,
-                                                      ImbalanceManager imbalanceManager,
-                                                      IEventBus eventBus,
-                                                      ILogger log,
-                                                      ChangeTrigger changeTrigger)
+    public async Task Handle(TriggerMoveUpFromWaitingListCommand command, CancellationToken cancellationToken)
     {
-        _registrables = registrables;
-        _registrations = registrations;
-        _spots = spots;
-        _imbalanceManager = imbalanceManager;
-        _eventBus = eventBus;
-        _log = log;
-        _changeTrigger = changeTrigger;
-    }
-
-    protected override async Task Handle(TriggerMoveUpFromWaitingListCommand command, CancellationToken cancellationToken)
-    {
-        var registrableToCheck = await _registrables.Where(rbl => rbl.Id == command.RegistrableId
-                                                               && rbl.EventId == command.EventId)
-                                                    .Include(rbl => rbl.Spots)
-                                                    .FirstAsync(cancellationToken);
+        var registrableToCheck = await registrables.Where(rbl => rbl.Id == command.RegistrableId
+                                                              && rbl.EventId == command.EventId)
+                                                   .Include(rbl => rbl.Spots)
+                                                   .FirstAsync(cancellationToken);
         var spots = registrableToCheck.Spots!.Where(spt => !spt.IsCancelled).ToList();
         if (registrableToCheck.MaximumSingleSeats != null)
         {
@@ -114,7 +96,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : AsyncRequestHandler<Tr
                 {
                     if (nextPartnerRegistration == null)
                     {
-                        if (!_imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(
+                        if (!imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(
                                 registrableToCheck.MaximumDoubleSeats.Value,
                                 registrableToCheck.MaximumAllowedImbalance ?? 0,
                                 spots,
@@ -157,13 +139,13 @@ public class TriggerMoveUpFromWaitingListCommandHandler : AsyncRequestHandler<Tr
             }
         }
 
-        _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(ParticipantsOfRegistrableQuery),
-                              RowId = command.RegistrableId
-                          });
+        changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(ParticipantsOfRegistrableQuery),
+                             RowId = command.RegistrableId
+                         });
     }
 
     private static DateTimeOffset GetAverage(DateTimeOffset dateTime1, DateTimeOffset dateTime2)
@@ -227,16 +209,16 @@ public class TriggerMoveUpFromWaitingListCommandHandler : AsyncRequestHandler<Tr
 
     private void PublishPromotedEvent(Guid registrableId, Guid registrationId)
     {
-        var registrable = _registrables.First(rbl => rbl.Id == registrableId);
-        var registration = _registrations.First(reg => reg.Id == registrationId);
-        _eventBus.Publish(new SingleSpotMovedUpFromWaitingList
-                          {
-                              Id = Guid.NewGuid(),
-                              RegistrableId = registrableId,
-                              Registrable = registrable.DisplayName,
-                              RegistrationId = registrationId,
-                              Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}"
-                          });
+        var registrable = registrables.First(rbl => rbl.Id == registrableId);
+        var registration = registrations.First(reg => reg.Id == registrationId);
+        eventBus.Publish(new SingleSpotMovedUpFromWaitingList
+                         {
+                             Id = Guid.NewGuid(),
+                             RegistrableId = registrableId,
+                             Registrable = registrable.DisplayName,
+                             RegistrationId = registrationId,
+                             Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}"
+                         });
     }
 
     private async Task PromoteSpotFromWaitingList(Seat spot, ICollection<Seat>? waitingList = null)
@@ -244,7 +226,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler : AsyncRequestHandler<Tr
         var registrationId = spot.RegistrationId ?? spot.RegistrationId_Follower;
         if (registrationId == null)
         {
-            _log.LogWarning("Unexpected situation: Spot {0} has neither leader nor follower set", spot.Id);
+            log.LogWarning("Unexpected situation: Spot {0} has neither leader nor follower set", spot.Id);
             return;
         }
 
@@ -255,13 +237,13 @@ public class TriggerMoveUpFromWaitingListCommandHandler : AsyncRequestHandler<Tr
 
         if (spot.IsPartnerSpot)
         {
-            _eventBus.Publish(new PartnerSpotMovedUpFromWaitingList
-                              {
-                                  Id = Guid.NewGuid(),
-                                  RegistrableId = spot.RegistrableId,
-                                  RegistrationId = spot.RegistrationId,
-                                  RegistrationId_Follower = spot.RegistrationId_Follower
-                              });
+            eventBus.Publish(new PartnerSpotMovedUpFromWaitingList
+                             {
+                                 Id = Guid.NewGuid(),
+                                 RegistrableId = spot.RegistrableId,
+                                 RegistrationId = spot.RegistrationId,
+                                 RegistrationId_Follower = spot.RegistrationId_Follower
+                             });
         }
         else
         {

@@ -12,29 +12,17 @@ public class UnassignPaymentCommand : IRequest, IEventBoundRequest
     public Guid PaymentAssignmentId { get; set; }
 }
 
-public class UnassignPaymentCommandHandler : AsyncRequestHandler<UnassignPaymentCommand>
+public class UnassignPaymentCommandHandler(IRepository<PaymentAssignment> assignments,
+                                           IEventBus eventBus,
+                                           IDateTimeProvider dateTimeProvider,
+                                           ChangeTrigger changeTrigger)
+    : IRequestHandler<UnassignPaymentCommand>
 {
-    private readonly IRepository<PaymentAssignment> _assignments;
-    private readonly IEventBus _eventBus;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ChangeTrigger _changeTrigger;
-
-    public UnassignPaymentCommandHandler(IRepository<PaymentAssignment> assignments,
-                                         IEventBus eventBus,
-                                         IDateTimeProvider dateTimeProvider,
-                                         ChangeTrigger changeTrigger)
+    public async Task Handle(UnassignPaymentCommand command, CancellationToken cancellationToken)
     {
-        _assignments = assignments;
-        _eventBus = eventBus;
-        _dateTimeProvider = dateTimeProvider;
-        _changeTrigger = changeTrigger;
-    }
-
-    protected override async Task Handle(UnassignPaymentCommand command, CancellationToken cancellationToken)
-    {
-        var existingAssignment = await _assignments.FirstAsync(ass => ass.Id == command.PaymentAssignmentId
-                                                                   && ass.Registration!.EventId == command.EventId
-                                                                   && (ass.IncomingPaymentId != null || ass.OutgoingPaymentId != null), cancellationToken);
+        var existingAssignment = await assignments.FirstAsync(ass => ass.Id == command.PaymentAssignmentId
+                                                                  && ass.Registration!.EventId == command.EventId
+                                                                  && (ass.IncomingPaymentId != null || ass.OutgoingPaymentId != null), cancellationToken);
         if (existingAssignment.PaymentAssignmentId_Counter != null)
         {
             throw new ArgumentException($"Assignment {existingAssignment.Id} already has a counter assignment: {existingAssignment.PaymentAssignmentId_Counter}");
@@ -48,35 +36,35 @@ public class UnassignPaymentCommandHandler : AsyncRequestHandler<UnassignPayment
                                     OutgoingPaymentId = existingAssignment.OutgoingPaymentId,
                                     PaymentAssignmentId_Counter = existingAssignment.Id,
                                     Amount = -existingAssignment.Amount,
-                                    Created = _dateTimeProvider.Now
+                                    Created = dateTimeProvider.Now
                                 };
         existingAssignment.PaymentAssignmentId_Counter = counterAssignment.Id;
-        await _assignments.InsertOrUpdateEntity(counterAssignment, cancellationToken);
+        await assignments.InsertOrUpdateEntity(counterAssignment, cancellationToken);
 
         if (existingAssignment.IncomingPaymentId != null)
         {
-            _eventBus.Publish(new IncomingPaymentUnassigned
-                              {
-                                  EventId = command.EventId,
-                                  PaymentAssignmentId = command.PaymentAssignmentId,
-                                  PaymentAssignmentId_Counter = counterAssignment.Id,
-                                  IncomingPaymentId = existingAssignment.IncomingPaymentId!.Value,
-                                  RegistrationId = existingAssignment.RegistrationId
-                              });
+            eventBus.Publish(new IncomingPaymentUnassigned
+                             {
+                                 EventId = command.EventId,
+                                 PaymentAssignmentId = command.PaymentAssignmentId,
+                                 PaymentAssignmentId_Counter = counterAssignment.Id,
+                                 IncomingPaymentId = existingAssignment.IncomingPaymentId!.Value,
+                                 RegistrationId = existingAssignment.RegistrationId
+                             });
         }
         else if (existingAssignment.OutgoingPaymentId != null)
         {
-            _eventBus.Publish(new OutgoingPaymentUnassigned
-                              {
-                                  EventId = command.EventId,
-                                  PaymentAssignmentId = command.PaymentAssignmentId,
-                                  PaymentAssignmentId_Counter = counterAssignment.Id,
-                                  OutgoingPaymentId = existingAssignment.OutgoingPaymentId!.Value,
-                                  RegistrationId = existingAssignment.RegistrationId
-                              });
+            eventBus.Publish(new OutgoingPaymentUnassigned
+                             {
+                                 EventId = command.EventId,
+                                 PaymentAssignmentId = command.PaymentAssignmentId,
+                                 PaymentAssignmentId_Counter = counterAssignment.Id,
+                                 OutgoingPaymentId = existingAssignment.OutgoingPaymentId!.Value,
+                                 RegistrationId = existingAssignment.RegistrationId
+                             });
         }
 
-        _changeTrigger.TriggerUpdate<RegistrationCalculator>(existingAssignment.RegistrationId, command.EventId);
-        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(existingAssignment.RegistrationId, command.EventId);
+        changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
     }
 }

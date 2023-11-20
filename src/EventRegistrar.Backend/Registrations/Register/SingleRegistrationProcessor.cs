@@ -12,47 +12,24 @@ using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations.Register;
 
-public class SingleRegistrationProcessor
+public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
+                                         SpotManager spotManager,
+                                         PriceCalculator priceCalculator,
+                                         IRepository<Registration> registrations,
+                                         CommandQueue commandQueue,
+                                         IQueryable<RegistrationForm> forms,
+                                         IQueryable<Registrable> registrables,
+                                         IDateTimeProvider dateTimeProvider,
+                                         ReadableIdProvider readableIdProvider)
 {
-    private readonly PhoneNormalizer _phoneNormalizer;
-    private readonly PriceCalculator _priceCalculator;
-    private readonly IRepository<Registration> _registrations;
-    private readonly SpotManager _spotManager;
-    private readonly CommandQueue _commandQueue;
-    private readonly IQueryable<RegistrationForm> _forms;
-    private readonly IQueryable<Registrable> _registrables;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ReadableIdProvider _readableIdProvider;
-
-    public SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
-                                       SpotManager spotManager,
-                                       PriceCalculator priceCalculator,
-                                       IRepository<Registration> registrations,
-                                       CommandQueue commandQueue,
-                                       IQueryable<RegistrationForm> forms,
-                                       IQueryable<Registrable> registrables,
-                                       IDateTimeProvider dateTimeProvider,
-                                       ReadableIdProvider readableIdProvider)
-    {
-        _phoneNormalizer = phoneNormalizer;
-        _spotManager = spotManager;
-        _priceCalculator = priceCalculator;
-        _registrations = registrations;
-        _commandQueue = commandQueue;
-        _forms = forms;
-        _registrables = registrables;
-        _dateTimeProvider = dateTimeProvider;
-        _readableIdProvider = readableIdProvider;
-    }
-
     public async Task<IEnumerable<Seat>> Process(Registration registration)
     {
-        var form = await _forms.Where(frm => frm.Id == registration.RegistrationFormId)
-                               .Include(frm => frm.Questions!)
-                               .ThenInclude(qst => qst.QuestionOptions!)
-                               .ThenInclude(qop => qop.Mappings!)
-                               .Include(frm => frm.MultiMappings)
-                               .FirstOrDefaultAsync();
+        var form = await forms.Where(frm => frm.Id == registration.RegistrationFormId)
+                              .Include(frm => frm.Questions!)
+                              .ThenInclude(qst => qst.QuestionOptions!)
+                              .ThenInclude(qop => qop.Mappings!)
+                              .Include(frm => frm.MultiMappings)
+                              .FirstOrDefaultAsync();
         if (form?.Questions == null)
         {
             return Enumerable.Empty<Seat>();
@@ -89,7 +66,7 @@ public class SingleRegistrationProcessor
                         case QuestionMappingType.Phone:
                             {
                                 registration.Phone = response.ResponseString;
-                                registration.PhoneNormalized = _phoneNormalizer.NormalizePhone(registration.Phone);
+                                registration.PhoneNormalized = phoneNormalizer.NormalizePhone(registration.Phone);
                                 break;
                             }
                         //case QuestionMappingType.Town:
@@ -190,14 +167,14 @@ public class SingleRegistrationProcessor
         foreach (var partnerRegistrableRequest in partnerRegistrableRequests)
         {
             var ownIdentification = new RegistrationIdentification(registration);
-            var spot = await _spotManager.ReserveSinglePartOfPartnerSpot(registration.EventId,
-                                                                         partnerRegistrableRequest.RegistrableId,
-                                                                         registration.Id,
-                                                                         ownIdentification,
-                                                                         registration.PartnerNormalized,
-                                                                         null,
-                                                                         partnerRegistrableRequest.Role,
-                                                                         true);
+            var spot = await spotManager.ReserveSinglePartOfPartnerSpot(registration.EventId,
+                                                                        partnerRegistrableRequest.RegistrableId,
+                                                                        registration.Id,
+                                                                        ownIdentification,
+                                                                        registration.PartnerNormalized,
+                                                                        null,
+                                                                        partnerRegistrableRequest.Role,
+                                                                        true);
             if (spot == null)
             {
                 soldOutRegistrableIds.Add(partnerRegistrableRequest.RegistrableId);
@@ -209,7 +186,7 @@ public class SingleRegistrationProcessor
                 {
                     registration.RegistrationId_Partner = spot.GetOtherRegistrationId(registration.Id);
                     // set own id as partner id of partner registration
-                    var partnerRegistration = await _registrations.FirstOrDefaultAsync(reg => reg.Id == registration.RegistrationId_Partner);
+                    var partnerRegistration = await registrations.FirstOrDefaultAsync(reg => reg.Id == registration.RegistrationId_Partner);
                     if (partnerRegistration != null)
                     {
                         partnerRegistration.RegistrationId_Partner = registration.Id;
@@ -223,9 +200,9 @@ public class SingleRegistrationProcessor
 
         if (soldOutRegistrableIds.Any())
         {
-            var soldOutRegistrableNames = await _registrables.Where(rbl => soldOutRegistrableIds.Contains(rbl.Id))
-                                                             .Select(rbl => rbl.DisplayName)
-                                                             .ToListAsync();
+            var soldOutRegistrableNames = await registrables.Where(rbl => soldOutRegistrableIds.Contains(rbl.Id))
+                                                            .Select(rbl => rbl.DisplayName)
+                                                            .ToListAsync();
             registration.SoldOutMessage = soldOutRegistrableNames
                                           .Select(rbn => string.Format(Properties.Resources.RegistrableSoldOut, rbn))
                                           .StringJoin(Environment.NewLine);
@@ -235,7 +212,7 @@ public class SingleRegistrationProcessor
             }
         }
 
-        var (original, admitted, admittedAndReduced, _, _, isOnWaitingList, _) = await _priceCalculator.CalculatePrice(registration, spots);
+        var (original, admitted, admittedAndReduced, _, _, isOnWaitingList, _) = await priceCalculator.CalculatePrice(registration, spots);
         registration.Price_Original = original;
         registration.Price_Admitted = admitted;
         registration.Price_AdmittedAndReduced = admittedAndReduced;
@@ -244,11 +221,11 @@ public class SingleRegistrationProcessor
         if (registration.IsOnWaitingList == false
          && registration.AdmittedAt == null)
         {
-            registration.AdmittedAt = _dateTimeProvider.Now;
+            registration.AdmittedAt = dateTimeProvider.Now;
         }
 
-        registration.ReadableIdentifier = await _readableIdProvider.GetNextId(registration.EventId, GetInitials(registration));
-        await _registrations.InsertOrUpdateEntity(registration);
+        registration.ReadableIdentifier = await readableIdProvider.GetNextId(registration.EventId, GetInitials(registration));
+        await registrations.InsertOrUpdateEntity(registration);
 
         // send mail
         var isPartnerRegistration = registration.PartnerNormalized != null;
@@ -282,13 +259,13 @@ public class SingleRegistrationProcessor
             }
         }
 
-        _commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
-                                     {
-                                         EventId = registration.EventId,
-                                         MailType = mailToSend,
-                                         RegistrationId = registration.Id,
-                                         AllowDuplicate = false
-                                     });
+        commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
+                                    {
+                                        EventId = registration.EventId,
+                                        MailType = mailToSend,
+                                        RegistrationId = registration.Id,
+                                        AllowDuplicate = false
+                                    });
 
         return spots;
     }
@@ -316,10 +293,10 @@ public class SingleRegistrationProcessor
                 {
                     if (registrableId != null)
                     {
-                        var spot = await _spotManager.ReserveSingleSpot(registration.EventId,
-                                                                        registrableId.Value,
-                                                                        registration.Id,
-                                                                        true);
+                        var spot = await spotManager.ReserveSingleSpot(registration.EventId,
+                                                                       registrableId.Value,
+                                                                       registration.Id,
+                                                                       true);
                         if (spot == null)
                         {
                             soldOutRegistrableIds.Add(registrableId.Value);

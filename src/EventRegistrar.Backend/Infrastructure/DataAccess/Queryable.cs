@@ -3,18 +3,13 @@ using System.Linq.Expressions;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess;
 
-public class Queryable<TEntity> : IQueryable<TEntity>, IAsyncEnumerable<TEntity>
+public class Queryable<TEntity>(DbContext dbContext) : IQueryable<TEntity>, IAsyncEnumerable<TEntity>
     where TEntity : class
 {
-    public Queryable(DbContext dbContext)
-    {
-        DbSet = dbContext.Set<TEntity>();
-    }
-
     public Type ElementType => ((IQueryable)DbSet).ElementType;
     public Expression Expression => ((IQueryable)DbSet).Expression;
     public IQueryProvider Provider => ((IQueryable)DbSet).Provider;
-    protected DbSet<TEntity> DbSet { get; }
+    protected DbSet<TEntity> DbSet { get; } = dbContext.Set<TEntity>();
 
     IEnumerator IEnumerable.GetEnumerator()
     {

@@ -11,52 +11,40 @@ public class PossibleMailTypesQuery : IRequest<IEnumerable<MailTypeItem>>, IEven
     public Guid RegistrationId { get; set; }
 }
 
-public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQuery, IEnumerable<MailTypeItem>>
+public class PossibleMailTypesQueryHandler(IQueryable<Registration> registrations,
+                                           IQueryable<BulkMailTemplate> mailTemplates,
+                                           EnumTranslator enumTranslator,
+                                           MailConfiguration mailConfiguration)
+    : IRequestHandler<PossibleMailTypesQuery, IEnumerable<MailTypeItem>>
 {
-    private readonly IQueryable<BulkMailTemplate> _mailTemplates;
-    private readonly EnumTranslator _enumTranslator;
-    private readonly MailConfiguration _mailConfiguration;
-    private readonly IQueryable<Registration> _registrations;
-
-    public PossibleMailTypesQueryHandler(IQueryable<Registration> registrations,
-                                         IQueryable<BulkMailTemplate> mailTemplates,
-                                         EnumTranslator enumTranslator,
-                                         MailConfiguration mailConfiguration)
-    {
-        _registrations = registrations;
-        _mailTemplates = mailTemplates;
-        _enumTranslator = enumTranslator;
-        _mailConfiguration = mailConfiguration;
-    }
-
     public async Task<IEnumerable<MailTypeItem>> Handle(PossibleMailTypesQuery query,
                                                         CancellationToken cancellationToken)
     {
-        var registration = await _registrations.Where(reg => reg.Id == query.RegistrationId
-                                                          && reg.EventId == query.EventId)
-                                               .Include(reg => reg.Event)
-                                               .FirstAsync(cancellationToken);
+        var registration = await registrations.Where(reg => reg.Id == query.RegistrationId
+                                                         && reg.EventId == query.EventId)
+                                              .Include(reg => reg.Event)
+                                              .FirstAsync(cancellationToken);
         var partnerRegistration = registration.RegistrationId_Partner == null
                                       ? null
-                                      : await _registrations.Where(reg => reg.Id == registration.RegistrationId_Partner
-                                                                       && reg.EventId == query.EventId)
-                                                            .FirstAsync(cancellationToken);
+                                      : await registrations.Where(reg => reg.Id == registration.RegistrationId_Partner
+                                                                      && reg.EventId == query.EventId)
+                                                           .FirstAsync(cancellationToken);
 
         var possibleMailTypes = GetPossibleMailTypes(registration, partnerRegistration, registration.Event!.State == EventState.Setup);
 
-        var activeBulkMails = await _mailTemplates.Where(tpl => tpl.EventId == query.EventId
-                                                             && tpl.Mails!.Any())
-                                                  .Select(tpl => new MailTypeItem
-                                                                 {
-                                                                     BulkMailKey = tpl.BulkMailKey,
-                                                                     UserText = tpl.Subject
-                                                                 })
-                                                  .ToListAsync(cancellationToken);
+        var activeBulkMails = await mailTemplates.Where(tpl => tpl.EventId == query.EventId
+                                                            && tpl.Mails!.Any())
+                                                 .Select(tpl => new MailTypeItem
+                                                                {
+                                                                    BulkMailKey = tpl.BulkMailKey,
+                                                                    UserText = tpl.Subject
+                                                                })
+                                                 .ToListAsync(cancellationToken);
 
         return possibleMailTypes.Select(typ => new MailTypeItem
                                                {
                                                    Type = typ,
-                                                   UserText = _enumTranslator.Translate(typ)
+                                                   UserText = enumTranslator.Translate(typ)
                                                })
                                 .Union(activeBulkMails);
     }
@@ -76,7 +64,7 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
         }
 
         var isPartnerRegistration = registration.IsPartnerRegistration();
-        if (_mailConfiguration.PartnerRegistrationPossible && (isPartnerRegistration || isInSetupPhase))
+        if (mailConfiguration.PartnerRegistrationPossible && (isPartnerRegistration || isInSetupPhase))
         {
             if (registration.RegistrationId_Partner == null)
             {
@@ -112,7 +100,7 @@ public class PossibleMailTypesQueryHandler : IRequestHandler<PossibleMailTypesQu
             }
         }
 
-        if (_mailConfiguration.SingleRegistrationPossible && (!isPartnerRegistration || isInSetupPhase))
+        if (mailConfiguration.SingleRegistrationPossible && (!isPartnerRegistration || isInSetupPhase))
         {
             if (registration.IsOnWaitingList == true || isInSetupPhase)
             {

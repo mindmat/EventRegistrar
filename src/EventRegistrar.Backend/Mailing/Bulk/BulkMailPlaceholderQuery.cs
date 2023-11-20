@@ -5,15 +5,8 @@ namespace EventRegistrar.Backend.Mailing.Bulk;
 
 public class BulkMailPlaceholderQuery : IRequest<IEnumerable<PlaceholderDescription>> { }
 
-public class BulkMailPlaceholderQueryHandler : IRequestHandler<BulkMailPlaceholderQuery, IEnumerable<PlaceholderDescription>>
+public class BulkMailPlaceholderQueryHandler(EnumTranslator enumTranslator) : IRequestHandler<BulkMailPlaceholderQuery, IEnumerable<PlaceholderDescription>>
 {
-    private readonly EnumTranslator _enumTranslator;
-
-    public BulkMailPlaceholderQueryHandler(EnumTranslator enumTranslator)
-    {
-        _enumTranslator = enumTranslator;
-    }
-
     public Task<IEnumerable<PlaceholderDescription>> Handle(BulkMailPlaceholderQuery query, CancellationToken cancellationToken)
     {
         var values = Enum.GetValues<MailPlaceholder>()
@@ -21,7 +14,7 @@ public class BulkMailPlaceholderQueryHandler : IRequestHandler<BulkMailPlacehold
                                         {
                                             Key = mph.ToString(),
                                             Placeholder = $"{{{{{mph}}}}}",
-                                            Description = _enumTranslator.Translate(mph)
+                                            Description = enumTranslator.Translate(mph)
                                         });
         return Task.FromResult(values);
     }

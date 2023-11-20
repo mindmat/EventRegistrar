@@ -12,37 +12,23 @@ public class AssignRepaymentCommand : IRequest, IEventBoundRequest
     public Guid OutgoingPaymentId { get; set; }
 }
 
-public class AssignRepaymentCommandHandler : AsyncRequestHandler<AssignRepaymentCommand>
+public class AssignRepaymentCommandHandler(IQueryable<IncomingPayment> incomingPayments,
+                                           IQueryable<OutgoingPayment> outgoingPayments,
+                                           IRepository<PaymentAssignment> assignments,
+                                           IEventBus eventBus,
+                                           IDateTimeProvider dateTimeProvider)
+    : IRequestHandler<AssignRepaymentCommand>
 {
-    private readonly IRepository<PaymentAssignment> _assignments;
-    private readonly IEventBus _eventBus;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IQueryable<IncomingPayment> _incomingPayments;
-    private readonly IQueryable<OutgoingPayment> _outgoingPayments;
-
-    public AssignRepaymentCommandHandler(IQueryable<IncomingPayment> incomingIncomingPayments,
-                                         IQueryable<OutgoingPayment> outgoingPayments,
-                                         IRepository<PaymentAssignment> assignments,
-                                         IEventBus eventBus,
-                                         IDateTimeProvider dateTimeProvider)
+    public async Task Handle(AssignRepaymentCommand command, CancellationToken cancellationToken)
     {
-        _incomingPayments = incomingIncomingPayments;
-        _assignments = assignments;
-        _eventBus = eventBus;
-        _dateTimeProvider = dateTimeProvider;
-        _outgoingPayments = outgoingPayments;
-    }
-
-    protected override async Task Handle(AssignRepaymentCommand command, CancellationToken cancellationToken)
-    {
-        var incomingPayment = await _incomingPayments.Where(pmt => pmt.Id == command.IncomingPaymentId
-                                                                && pmt.Payment!.EventId == command.EventId)
-                                                     .Include(pmt => pmt.Payment)
-                                                     .FirstAsync(cancellationToken);
-        var outgoingPayment = await _outgoingPayments.Where(pmt => pmt.Id == command.OutgoingPaymentId
-                                                                && pmt.Payment!.EventId == command.EventId)
-                                                     .Include(pmt => pmt.Payment)
-                                                     .FirstAsync(cancellationToken);
+        var incomingPayment = await incomingPayments.Where(pmt => pmt.Id == command.IncomingPaymentId
+                                                               && pmt.Payment!.EventId == command.EventId)
+                                                    .Include(pmt => pmt.Payment)
+                                                    .FirstAsync(cancellationToken);
+        var outgoingPayment = await outgoingPayments.Where(pmt => pmt.Id == command.OutgoingPaymentId
+                                                               && pmt.Payment!.EventId == command.EventId)
+                                                    .Include(pmt => pmt.Payment)
+                                                    .FirstAsync(cancellationToken);
 
         var assignment = new PaymentAssignment
                          {
@@ -50,17 +36,17 @@ public class AssignRepaymentCommandHandler : AsyncRequestHandler<AssignRepayment
                              IncomingPaymentId = incomingPayment.Id,
                              OutgoingPaymentId = outgoingPayment.Id,
                              Amount = command.Amount,
-                             Created = _dateTimeProvider.Now
+                             Created = dateTimeProvider.Now
                          };
-        _assignments.InsertObjectTree(assignment);
+        assignments.InsertObjectTree(assignment);
 
-        _eventBus.Publish(new RepaymentAssigned
-                          {
-                              PaymentAssignmentId = assignment.Id,
-                              Amount = assignment.Amount,
-                              EventId = command.EventId,
-                              IncomingPaymentId = incomingPayment.Id,
-                              OutgoingPaymentId = outgoingPayment.Id
-                          });
+        eventBus.Publish(new RepaymentAssigned
+                         {
+                             PaymentAssignmentId = assignment.Id,
+                             Amount = assignment.Amount,
+                             EventId = command.EventId,
+                             IncomingPaymentId = incomingPayment.Id,
+                             OutgoingPaymentId = outgoingPayment.Id
+                         });
     }
 }

@@ -1,5 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DataAccess;
-using EventRegistrar.Backend.Infrastructure.DataAccess.DirtyTags;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.DirtyTags;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
@@ -19,51 +18,35 @@ public class MatchPartnerRegistrationsCommand : IEventBoundRequest, IRequest
     public Guid RegistrationId2 { get; set; }
 }
 
-public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPartnerRegistrationsCommand>
+public class MatchPartnerRegistrationsCommandHandler(IRepository<Registration> registrations,
+                                                     IRepository<Seat> seats,
+                                                     CommandQueue commandQueue,
+                                                     ChangeTrigger changeTrigger,
+                                                     DirtyTagger dirtyTagger,
+                                                     IEventBus eventBus)
+    : IRequestHandler<MatchPartnerRegistrationsCommand>
 {
-    private readonly IRepository<Registration> _registrations;
-    private readonly IRepository<Seat> _seats;
-    private readonly CommandQueue _commandQueue;
-    private readonly ChangeTrigger _changeTrigger;
-    private readonly DirtyTagger _dirtyTagger;
-    private readonly IEventBus _eventBus;
-
-    public MatchPartnerRegistrationsCommandHandler(IRepository<Registration> registrations,
-                                                   IRepository<Seat> seats,
-                                                   CommandQueue commandQueue,
-                                                   ChangeTrigger changeTrigger,
-                                                   DirtyTagger dirtyTagger,
-                                                   IEventBus eventBus)
-    {
-        _registrations = registrations;
-        _seats = seats;
-        _commandQueue = commandQueue;
-        _changeTrigger = changeTrigger;
-        _dirtyTagger = dirtyTagger;
-        _eventBus = eventBus;
-    }
-
-    public async Task<Unit> Handle(MatchPartnerRegistrationsCommand command, CancellationToken cancellationToken)
+    public async Task Handle(MatchPartnerRegistrationsCommand command, CancellationToken cancellationToken)
     {
         if (command.RegistrationId1 == command.RegistrationId2)
         {
             throw new ArgumentException($"Can't assign {command.RegistrationId1} to itself");
         }
 
-        var registration1 = await _registrations.Where(reg => reg.EventId == command.EventId
-                                                           && reg.Id == command.RegistrationId1)
-                                                .Include(reg => reg.Seats_AsLeader!.Where(spt => !spt.IsCancelled && spt.Registrable!.MaximumDoubleSeats != null))
-                                                .ThenInclude(seat => seat.Registrable)
-                                                .Include(reg => reg.Seats_AsFollower!.Where(spt => !spt.IsCancelled && spt.Registrable!.MaximumDoubleSeats != null))
-                                                .ThenInclude(seat => seat.Registrable)
-                                                .FirstAsync(cancellationToken);
-        var registration2 = await _registrations.Where(reg => reg.EventId == command.EventId
-                                                           && reg.Id == command.RegistrationId2)
-                                                .Include(reg => reg.Seats_AsLeader!.Where(spt => !spt.IsCancelled && spt.Registrable!.MaximumDoubleSeats != null))
-                                                .ThenInclude(seat => seat.Registrable)
-                                                .Include(reg => reg.Seats_AsFollower!.Where(spt => !spt.IsCancelled && spt.Registrable!.MaximumDoubleSeats != null))
-                                                .ThenInclude(seat => seat.Registrable)
-                                                .FirstAsync(cancellationToken);
+        var registration1 = await registrations.Where(reg => reg.EventId == command.EventId
+                                                          && reg.Id == command.RegistrationId1)
+                                               .Include(reg => reg.Seats_AsLeader!.Where(spt => !spt.IsCancelled && spt.Registrable!.MaximumDoubleSeats != null))
+                                               .ThenInclude(seat => seat.Registrable)
+                                               .Include(reg => reg.Seats_AsFollower!.Where(spt => !spt.IsCancelled && spt.Registrable!.MaximumDoubleSeats != null))
+                                               .ThenInclude(seat => seat.Registrable)
+                                               .FirstAsync(cancellationToken);
+        var registration2 = await registrations.Where(reg => reg.EventId == command.EventId
+                                                          && reg.Id == command.RegistrationId2)
+                                               .Include(reg => reg.Seats_AsLeader!.Where(spt => !spt.IsCancelled && spt.Registrable!.MaximumDoubleSeats != null))
+                                               .ThenInclude(seat => seat.Registrable)
+                                               .Include(reg => reg.Seats_AsFollower!.Where(spt => !spt.IsCancelled && spt.Registrable!.MaximumDoubleSeats != null))
+                                               .ThenInclude(seat => seat.Registrable)
+                                               .FirstAsync(cancellationToken);
 
         if (registration1.RegistrationId_Partner != null)
         {
@@ -138,47 +121,45 @@ public class MatchPartnerRegistrationsCommandHandler : IRequestHandler<MatchPart
             spotToCancel.IsCancelled = true;
             mergedSpot.IsPartnerSpot = true;
 
-            await _seats.InsertOrUpdateEntity(mergedSpot, cancellationToken);
-            await _seats.InsertOrUpdateEntity(spotToCancel, cancellationToken);
+            await seats.InsertOrUpdateEntity(mergedSpot, cancellationToken);
+            await seats.InsertOrUpdateEntity(spotToCancel, cancellationToken);
             isWaitingList |= mergedSpot.IsWaitingList;
         }
 
         // update waiting list
-        _dirtyTagger.UpdateSegment<RegistrationPriceAndWaitingListSegment>(registration1.Id);
-        _dirtyTagger.UpdateSegment<RegistrationPriceAndWaitingListSegment>(registration2.Id);
+        dirtyTagger.UpdateSegment<RegistrationPriceAndWaitingListSegment>(registration1.Id);
+        dirtyTagger.UpdateSegment<RegistrationPriceAndWaitingListSegment>(registration2.Id);
 
         var mailType = isWaitingList
                            ? MailType.PartnerRegistrationMatchedOnWaitingList
                            : MailType.PartnerRegistrationMatchedAndAccepted;
-        _commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
-                                     {
-                                         EventId = command.EventId,
-                                         RegistrationId = registrationLeader.Id,
-                                         MailType = mailType
-                                     });
+        commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
+                                    {
+                                        EventId = command.EventId,
+                                        RegistrationId = registrationLeader.Id,
+                                        MailType = mailType
+                                    });
 
-        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration1.Id, command.EventId);
-        _changeTrigger.TriggerUpdate<RegistrationCalculator>(registration2.Id, command.EventId);
-        _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(registration1.Id, command.EventId);
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(registration2.Id, command.EventId);
+        changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(RegistrationsWithUnmatchedPartnerQuery)
-                          });
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(PotentialPartnersQuery),
-                              RowId = registration1.Id
-                          });
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(PotentialPartnersQuery),
-                              RowId = registration2.Id
-                          });
-
-        return Unit.Value;
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(RegistrationsWithUnmatchedPartnerQuery)
+                         });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(PotentialPartnersQuery),
+                             RowId = registration1.Id
+                         });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(PotentialPartnersQuery),
+                             RowId = registration2.Id
+                         });
     }
 }

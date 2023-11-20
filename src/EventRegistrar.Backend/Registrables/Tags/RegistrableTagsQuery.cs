@@ -5,29 +5,22 @@ public class RegistrableTagsQuery : IRequest<IEnumerable<RegistrableTagDisplayIt
     public Guid EventId { get; set; }
 }
 
-public class RegistrableTagsQueryHandler : IRequestHandler<RegistrableTagsQuery, IEnumerable<RegistrableTagDisplayItem>>
+public class RegistrableTagsQueryHandler(IQueryable<RegistrableTag> tags) : IRequestHandler<RegistrableTagsQuery, IEnumerable<RegistrableTagDisplayItem>>
 {
-    private readonly IQueryable<RegistrableTag> _tags;
-
-    public RegistrableTagsQueryHandler(IQueryable<RegistrableTag> tags)
-    {
-        _tags = tags;
-    }
-
     public async Task<IEnumerable<RegistrableTagDisplayItem>> Handle(RegistrableTagsQuery query,
                                                                      CancellationToken cancellationToken)
     {
-        return await _tags.Where(rbl => rbl.EventId == query.EventId)
-                          .OrderBy(rbt => rbt.SortKey)
-                          .ThenBy(rbt => rbt.Tag)
-                          .Select(rbt => new RegistrableTagDisplayItem
-                                         {
-                                             TagId = rbt.Id,
-                                             Tag = rbt.Tag,
-                                             Text = rbt.FallbackText,
-                                             SortKey = rbt.SortKey
-                                         })
-                          .ToListAsync(cancellationToken);
+        return await tags.Where(rbl => rbl.EventId == query.EventId)
+                         .OrderBy(rbt => rbt.SortKey)
+                         .ThenBy(rbt => rbt.Tag)
+                         .Select(rbt => new RegistrableTagDisplayItem
+                                        {
+                                            TagId = rbt.Id,
+                                            Tag = rbt.Tag,
+                                            Text = rbt.FallbackText,
+                                            SortKey = rbt.SortKey
+                                        })
+                         .ToListAsync(cancellationToken);
     }
 }
 

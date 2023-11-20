@@ -9,25 +9,18 @@ public class ManualFallbackToPricePackageSet : DomainEvent
     public Guid RegistrationId { get; set; }
 }
 
-public class ManualFallbackToPricePackageSetUserTranslation : IEventToUserTranslation<ManualFallbackToPricePackageSet>
+public class ManualFallbackToPricePackageSetUserTranslation(IQueryable<Registration> registrations) : IEventToUserTranslation<ManualFallbackToPricePackageSet>
 {
-    private readonly IQueryable<Registration> _registrations;
-
-    public ManualFallbackToPricePackageSetUserTranslation(IQueryable<Registration> registrations)
-    {
-        _registrations = registrations;
-    }
-
     public string GetText(ManualFallbackToPricePackageSet domainEvent)
     {
-        var registration = _registrations.Where(reg => reg.Id == domainEvent.RegistrationId)
-                                         .Select(reg => new
-                                                        {
-                                                            reg.RespondentFirstName,
-                                                            reg.RespondentLastName,
-                                                            FallbacPricePackageName = reg.PricePackage_ManualFallback!.Name
-                                                        })
-                                         .FirstOrDefault();
+        var registration = registrations.Where(reg => reg.Id == domainEvent.RegistrationId)
+                                        .Select(reg => new
+                                                       {
+                                                           reg.RespondentFirstName,
+                                                           reg.RespondentLastName,
+                                                           FallbacPricePackageName = reg.PricePackage_ManualFallback!.Name
+                                                       })
+                                        .FirstOrDefault();
         return $"{registration?.RespondentFirstName} {registration?.RespondentLastName} wünscht {registration?.FallbacPricePackageName} als Fallback";
     }
 }

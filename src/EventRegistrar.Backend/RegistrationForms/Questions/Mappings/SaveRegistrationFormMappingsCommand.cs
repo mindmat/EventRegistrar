@@ -10,22 +10,12 @@ public class SaveRegistrationFormMappingsCommand : IRequest, IEventBoundRequest
     public IEnumerable<MultiMapping>? MultiMappings { get; set; }
 }
 
-public class SaveRegistrationFormMappingsCommandHandler : AsyncRequestHandler<SaveRegistrationFormMappingsCommand>
+public class SaveRegistrationFormMappingsCommandHandler(IRepository<RegistrationForm> forms,
+                                                        IRepository<QuestionOptionMapping> mappings,
+                                                        IRepository<MultiQuestionOptionMapping> multiMappings)
+    : IRequestHandler<SaveRegistrationFormMappingsCommand>
 {
-    private readonly IRepository<RegistrationForm> _forms;
-    private readonly IRepository<QuestionOptionMapping> _mappings;
-    private readonly IRepository<MultiQuestionOptionMapping> _multiMappings;
-
-    public SaveRegistrationFormMappingsCommandHandler(IRepository<RegistrationForm> forms,
-                                                      IRepository<QuestionOptionMapping> mappings,
-                                                      IRepository<MultiQuestionOptionMapping> multiMappings)
-    {
-        _forms = forms;
-        _mappings = mappings;
-        _multiMappings = multiMappings;
-    }
-
-    protected override async Task Handle(SaveRegistrationFormMappingsCommand command, CancellationToken cancellationToken)
+    public async Task Handle(SaveRegistrationFormMappingsCommand command, CancellationToken cancellationToken)
     {
         var sectionsToSave = command.Sections;
         var multiMappingsToSave = (command.MultiMappings ?? Enumerable.Empty<MultiMapping>()).ToList();
@@ -34,14 +24,14 @@ public class SaveRegistrationFormMappingsCommandHandler : AsyncRequestHandler<Sa
             return;
         }
 
-        var form = await _forms.AsTracking()
-                               .Where(frm => frm.EventId == command.EventId
-                                          && frm.Id == command.FormId)
-                               .Include(frm => frm.Questions!)
-                               .ThenInclude(qst => qst.QuestionOptions!)
-                               .ThenInclude(qop => qop.Mappings)
-                               .Include(frm => frm.MultiMappings)
-                               .FirstAsync(cancellationToken);
+        var form = await forms.AsTracking()
+                              .Where(frm => frm.EventId == command.EventId
+                                         && frm.Id == command.FormId)
+                              .Include(frm => frm.Questions!)
+                              .ThenInclude(qst => qst.QuestionOptions!)
+                              .ThenInclude(qop => qop.Mappings)
+                              .Include(frm => frm.MultiMappings)
+                              .FirstAsync(cancellationToken);
 
         foreach (var questionToSave in sectionsToSave.SelectMany(sec => sec.Questions))
         {
@@ -70,14 +60,14 @@ public class SaveRegistrationFormMappingsCommandHandler : AsyncRequestHandler<Sa
                                                                               && map.Language == mapping.Language);
                     if (existingMapping == null)
                     {
-                        await _mappings.InsertOrUpdateEntity(new QuestionOptionMapping
-                                                             {
-                                                                 Id = Guid.NewGuid(),
-                                                                 QuestionOptionId = option.Id,
-                                                                 Type = mapping.Type,
-                                                                 RegistrableId = mapping.Id,
-                                                                 Language = mapping.Language
-                                                             }, cancellationToken);
+                        await mappings.InsertOrUpdateEntity(new QuestionOptionMapping
+                                                            {
+                                                                Id = Guid.NewGuid(),
+                                                                QuestionOptionId = option.Id,
+                                                                Type = mapping.Type,
+                                                                RegistrableId = mapping.Id,
+                                                                Language = mapping.Language
+                                                            }, cancellationToken);
                     }
                     else
                     {
@@ -88,7 +78,7 @@ public class SaveRegistrationFormMappingsCommandHandler : AsyncRequestHandler<Sa
                 // Check if option has been removed
                 foreach (var removedMapping in existingMappings)
                 {
-                    _mappings.Remove(removedMapping);
+                    mappings.Remove(removedMapping);
                 }
             }
         }
@@ -97,18 +87,18 @@ public class SaveRegistrationFormMappingsCommandHandler : AsyncRequestHandler<Sa
         var multiMappingsToDelete = form.MultiMappings!.ExceptBy(multiMappingsToSave.Select(mqm => mqm.Id), mqm => mqm.Id).ToList();
         foreach (var multiMappingToDelete in multiMappingsToDelete)
         {
-            _multiMappings.Remove(multiMappingToDelete);
+            multiMappings.Remove(multiMappingToDelete);
         }
 
         // upsert multi mappings
         foreach (var multiMappingToSave in multiMappingsToSave)
         {
             var multiMapping = form.MultiMappings!.FirstOrDefault(mqm => mqm.Id == multiMappingToSave.Id)
-                            ?? _multiMappings.InsertObjectTree(new MultiQuestionOptionMapping
-                                                               {
-                                                                   Id = multiMappingToSave.Id,
-                                                                   RegistrationFormId = form.Id
-                                                               });
+                            ?? multiMappings.InsertObjectTree(new MultiQuestionOptionMapping
+                                                              {
+                                                                  Id = multiMappingToSave.Id,
+                                                                  RegistrationFormId = form.Id
+                                                              });
             multiMapping.QuestionOptionIds = multiMappingToSave.QuestionOptionIds.ToList();
             multiMapping.RegistrableCombinedIds = multiMappingToSave.RegistrableCombinedIds.ToList();
             multiMapping.SortKey = multiMappingToSave.SortKey;

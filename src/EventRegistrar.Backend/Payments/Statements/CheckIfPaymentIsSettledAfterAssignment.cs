@@ -1,8 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Assignments;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Payments.Statements;
 
 public class CheckIfPaymentIsSettledAfterAssignment : IEventToCommandTranslation<IncomingPaymentAssigned>

@@ -9,15 +9,8 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace EventRegistrar.Backend.Infrastructure.Mediator;
 
-public class MediatorEndpointApiDescriptionGroupCollectionProvider : IApiDescriptionGroupCollectionProvider
+public class MediatorEndpointApiDescriptionGroupCollectionProvider(RequestRegistry requestRegistry) : IApiDescriptionGroupCollectionProvider
 {
-    private readonly RequestRegistry _requestRegistry;
-
-    public MediatorEndpointApiDescriptionGroupCollectionProvider(RequestRegistry requestRegistry)
-    {
-        _requestRegistry = requestRegistry;
-    }
-
     public int Order => 1;
 
     public ApiDescriptionGroupCollection ApiDescriptionGroups
@@ -25,7 +18,7 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider : IApiDescrip
         get
         {
             var apis = new List<ApiDescription>();
-            foreach (var requestType in _requestRegistry.RequestTypes)
+            foreach (var requestType in requestRegistry.RequestTypes)
             {
                 var (request, suffix) = Split(requestType.Request.Name);
                 var controllerActionDescriptor = new ControllerActionDescriptor

@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Files.Fetch;
 

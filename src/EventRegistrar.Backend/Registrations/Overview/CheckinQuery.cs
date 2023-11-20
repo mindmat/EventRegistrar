@@ -8,24 +8,16 @@ public class CheckInQuery : IRequest<CheckInView>, IEventBoundRequest
     public Guid EventId { get; set; }
 }
 
-public class CheckInQueryHandler : IRequestHandler<CheckInQuery, CheckInView>
+public class CheckInQueryHandler(IQueryable<Registration> _registrations,
+                                 IQueryable<Registrable> registrables)
+    : IRequestHandler<CheckInQuery, CheckInView>
 {
-    private readonly IQueryable<Registrable> _registrables;
-    private readonly IQueryable<Registration> _registrations;
-
-    public CheckInQueryHandler(IQueryable<Registration> registrations,
-                               IQueryable<Registrable> registrables)
-    {
-        _registrations = registrations;
-        _registrables = registrables;
-    }
-
     public async Task<CheckInView> Handle(CheckInQuery query, CancellationToken cancellationToken)
     {
-        var columns = (await _registrables.Where(rbl => rbl.EventId == query.EventId
-                                                     && rbl.CheckinListColumn != null)
-                                          .Select(rbl => new { rbl.Id, rbl.DisplayName, rbl.CheckinListColumn })
-                                          .ToListAsync(cancellationToken)
+        var columns = (await registrables.Where(rbl => rbl.EventId == query.EventId
+                                                    && rbl.CheckinListColumn != null)
+                                         .Select(rbl => new { rbl.Id, rbl.DisplayName, rbl.CheckinListColumn })
+                                         .ToListAsync(cancellationToken)
                       )
                       .GroupBy(rbl => rbl.CheckinListColumn)
                       .ToDictionary(grp => grp.Key, grp => grp.Select(rbl => new { rbl.Id, rbl.DisplayName }));

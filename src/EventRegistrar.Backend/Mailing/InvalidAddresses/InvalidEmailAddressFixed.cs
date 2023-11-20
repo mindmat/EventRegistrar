@@ -10,18 +10,11 @@ public class InvalidEmailAddressFixed : DomainEvent
     public Guid RegistrationId { get; set; }
 }
 
-public class InvalidEmailAddressFixedUserTranslation : IEventToUserTranslation<InvalidEmailAddressFixed>
+public class InvalidEmailAddressFixedUserTranslation(IQueryable<Registration> registrations) : IEventToUserTranslation<InvalidEmailAddressFixed>
 {
-    private readonly IQueryable<Registration> _registrations;
-
-    public InvalidEmailAddressFixedUserTranslation(IQueryable<Registration> registrations)
-    {
-        _registrations = registrations;
-    }
-
     public string GetText(InvalidEmailAddressFixed domainEvent)
     {
-        var registration = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
+        var registration = registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
         return
             $"Ungültige Mailadresse {domainEvent.OldEmailAddress} zu {domainEvent.NewEmailAddress} geändert (Anmeldung {registration?.RespondentFirstName} {registration?.RespondentLastName})";
     }

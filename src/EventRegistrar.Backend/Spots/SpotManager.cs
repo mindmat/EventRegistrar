@@ -6,33 +6,14 @@ using EventRegistrar.Backend.Registrations.Register;
 
 namespace EventRegistrar.Backend.Spots;
 
-public class SpotManager
+public class SpotManager(IRepository<Seat> _spots,
+                         ImbalanceManager imbalanceManager,
+                         ILogger logger,
+                         IQueryable<Registration> registrations,
+                         IQueryable<Registrable> registrables,
+                         IEventBus eventBus,
+                         IDateTimeProvider dateTimeProvider)
 {
-    private readonly IEventBus _eventBus;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly ImbalanceManager _imbalanceManager;
-    private readonly ILogger _logger;
-    private readonly IQueryable<Registration> _registrations;
-    private readonly IQueryable<Registrable> _registrables;
-    private readonly IRepository<Seat> _seats;
-
-    public SpotManager(IRepository<Seat> seats,
-                       ImbalanceManager imbalanceManager,
-                       ILogger logger,
-                       IQueryable<Registration> registrations,
-                       IQueryable<Registrable> registrables,
-                       IEventBus eventBus,
-                       IDateTimeProvider dateTimeProvider)
-    {
-        _seats = seats;
-        _imbalanceManager = imbalanceManager;
-        _logger = logger;
-        _registrations = registrations;
-        _registrables = registrables;
-        _eventBus = eventBus;
-        _dateTimeProvider = dateTimeProvider;
-    }
-
     public async Task<Seat?> ReservePartnerSpot(Guid eventId,
                                                 Registrable registrable,
                                                 Guid registrationId_Leader,
@@ -52,7 +33,7 @@ public class SpotManager
                        RegistrationId_Follower = registrationId_Follower,
                        RegistrableId = registrable.Id,
                        IsPartnerSpot = true,
-                       FirstPartnerJoined = _dateTimeProvider.Now
+                       FirstPartnerJoined = dateTimeProvider.Now
                    };
         if (registrable.MaximumDoubleSeats != null)
         {
@@ -67,27 +48,27 @@ public class SpotManager
             seat.IsWaitingList = !seatAvailable;
         }
 
-        _seats.InsertObjectTree(seat);
-        _eventBus.Publish(new SpotAdded
-                          {
-                              Id = Guid.NewGuid(),
-                              EventId = eventId,
-                              RegistrableId = registrable.Id,
-                              Registrable = registrable.DisplayName,
-                              RegistrationId = registrationId_Leader,
-                              IsInitialProcessing = initialProcessing,
-                              IsWaitingList = seat.IsWaitingList
-                          });
-        _eventBus.Publish(new SpotAdded
-                          {
-                              Id = Guid.NewGuid(),
-                              EventId = eventId,
-                              RegistrableId = registrable.Id,
-                              Registrable = registrable.DisplayName,
-                              RegistrationId = registrationId_Follower,
-                              IsInitialProcessing = initialProcessing,
-                              IsWaitingList = seat.IsWaitingList
-                          });
+        _spots.InsertObjectTree(seat);
+        eventBus.Publish(new SpotAdded
+                         {
+                             Id = Guid.NewGuid(),
+                             EventId = eventId,
+                             RegistrableId = registrable.Id,
+                             Registrable = registrable.DisplayName,
+                             RegistrationId = registrationId_Leader,
+                             IsInitialProcessing = initialProcessing,
+                             IsWaitingList = seat.IsWaitingList
+                         });
+        eventBus.Publish(new SpotAdded
+                         {
+                             Id = Guid.NewGuid(),
+                             EventId = eventId,
+                             RegistrableId = registrable.Id,
+                             Registrable = registrable.DisplayName,
+                             RegistrationId = registrationId_Follower,
+                             IsInitialProcessing = initialProcessing,
+                             IsWaitingList = seat.IsWaitingList
+                         });
         return seat;
     }
 
@@ -101,16 +82,16 @@ public class SpotManager
                                                             bool initialProcessing)
     {
         Seat seat;
-        var registrable = await _registrables.Where(rbl => rbl.Id == registrableId)
-                                             .Include(rbl => rbl.Spots)
-                                             .FirstAsync();
+        var registrable = await registrables.Where(rbl => rbl.Id == registrableId)
+                                            .Include(rbl => rbl.Spots)
+                                            .FirstAsync();
         var spots = registrable.Spots!.Where(st => !st.IsCancelled)
                                .ToList();
         if (registrable.MaximumSingleSeats != null)
         {
             var waitingList = spots.Any(spot => spot.IsWaitingList);
             var spotAvailable = !waitingList && spots.Count < registrable.MaximumSingleSeats.Value;
-            _logger.LogInformation($"Registrable {registrable.DisplayName}, Seat count {spots.Count}, MaximumSingleSeats {registrable.MaximumSingleSeats}, seat available {spotAvailable}");
+            logger.LogInformation($"Registrable {registrable.DisplayName}, Seat count {spots.Count}, MaximumSingleSeats {registrable.MaximumSingleSeats}, seat available {spotAvailable}");
             if (!spotAvailable && !registrable.HasWaitingList)
             {
                 return null;
@@ -118,7 +99,7 @@ public class SpotManager
 
             seat = new Seat
                    {
-                       FirstPartnerJoined = _dateTimeProvider.Now,
+                       FirstPartnerJoined = dateTimeProvider.Now,
                        RegistrationId = registrationId,
                        RegistrableId = registrable.Id,
                        IsWaitingList = !spotAvailable
@@ -143,16 +124,16 @@ public class SpotManager
                 if (existingPartnerSeat != null)
                 {
                     ComplementExistingSeat(registrationId, ownRole, existingPartnerSeat);
-                    _eventBus.Publish(new SpotAdded
-                                      {
-                                          Id = Guid.NewGuid(),
-                                          EventId = eventId,
-                                          RegistrableId = registrable.Id,
-                                          Registrable = registrable.DisplayName,
-                                          RegistrationId = registrationId,
-                                          IsInitialProcessing = initialProcessing,
-                                          IsWaitingList = existingPartnerSeat.IsWaitingList
-                                      });
+                    eventBus.Publish(new SpotAdded
+                                     {
+                                         Id = Guid.NewGuid(),
+                                         EventId = eventId,
+                                         RegistrableId = registrable.Id,
+                                         Registrable = registrable.DisplayName,
+                                         RegistrationId = registrationId,
+                                         IsInitialProcessing = initialProcessing,
+                                         IsWaitingList = existingPartnerSeat.IsWaitingList
+                                     });
                     return existingPartnerSeat;
                 }
 
@@ -166,7 +147,7 @@ public class SpotManager
 
                 seat = new Seat
                        {
-                           FirstPartnerJoined = _dateTimeProvider.Now,
+                           FirstPartnerJoined = dateTimeProvider.Now,
                            PartnerEmail = partner?.ToLowerInvariant(),
                            RegistrationId = ownRole == Role.Leader ? registrationId : null,
                            RegistrationId_Follower = ownRole == Role.Follower ? registrationId : null,
@@ -187,7 +168,7 @@ public class SpotManager
                                          || (ownRole == Role.Follower && waitingListForSingleFollowers);
                 var matchingSingleSeat = FindMatchingSingleSeat(spots, ownRole);
                 var seatAvailable = !waitingListForOwnRole
-                                 && (_imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(
+                                 && (imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(
                                          registrable.MaximumDoubleSeats.Value,
                                          registrable.MaximumAllowedImbalance ?? 0,
                                          spots,
@@ -208,22 +189,22 @@ public class SpotManager
                 if (!waitingListForOwnRole && matchingSingleSeat != null)
                 {
                     ComplementExistingSeat(registrationId, ownRole, matchingSingleSeat);
-                    _eventBus.Publish(new SpotAdded
-                                      {
-                                          Id = Guid.NewGuid(),
-                                          EventId = eventId,
-                                          RegistrableId = registrable.Id,
-                                          Registrable = registrable.DisplayName,
-                                          RegistrationId = registrationId,
-                                          IsInitialProcessing = initialProcessing,
-                                          IsWaitingList = matchingSingleSeat.IsWaitingList
-                                      });
+                    eventBus.Publish(new SpotAdded
+                                     {
+                                         Id = Guid.NewGuid(),
+                                         EventId = eventId,
+                                         RegistrableId = registrable.Id,
+                                         Registrable = registrable.DisplayName,
+                                         RegistrationId = registrationId,
+                                         IsInitialProcessing = initialProcessing,
+                                         IsWaitingList = matchingSingleSeat.IsWaitingList
+                                     });
                     return matchingSingleSeat;
                 }
 
                 seat = new Seat
                        {
-                           FirstPartnerJoined = _dateTimeProvider.Now,
+                           FirstPartnerJoined = dateTimeProvider.Now,
                            RegistrationId = ownRole == Role.Leader ? registrationId : null,
                            RegistrationId_Follower = ownRole == Role.Follower ? registrationId : null,
                            RegistrableId = registrable.Id,
@@ -238,22 +219,22 @@ public class SpotManager
                    {
                        RegistrationId = registrationId,
                        RegistrableId = registrable.Id,
-                       FirstPartnerJoined = _dateTimeProvider.Now
+                       FirstPartnerJoined = dateTimeProvider.Now
                    };
         }
 
         seat.Id = Guid.NewGuid();
-        _seats.InsertObjectTree(seat);
-        _eventBus.Publish(new SpotAdded
-                          {
-                              Id = Guid.NewGuid(),
-                              EventId = eventId,
-                              RegistrableId = registrable.Id,
-                              Registrable = registrable.DisplayName,
-                              RegistrationId = registrationId,
-                              IsInitialProcessing = initialProcessing,
-                              IsWaitingList = seat.IsWaitingList
-                          });
+        _spots.InsertObjectTree(seat);
+        eventBus.Publish(new SpotAdded
+                         {
+                             Id = Guid.NewGuid(),
+                             EventId = eventId,
+                             RegistrableId = registrable.Id,
+                             Registrable = registrable.DisplayName,
+                             RegistrationId = registrationId,
+                             IsInitialProcessing = initialProcessing,
+                             IsWaitingList = seat.IsWaitingList
+                         });
 
         return seat;
     }
@@ -263,9 +244,9 @@ public class SpotManager
                                                Guid registrationId,
                                                bool initialProcessing)
     {
-        var registrable = await _registrables.Where(rbl => rbl.Id == registrableId)
-                                             .Include(rbl => rbl.Spots)
-                                             .FirstAsync();
+        var registrable = await registrables.Where(rbl => rbl.Id == registrableId)
+                                            .Include(rbl => rbl.Spots)
+                                            .FirstAsync();
         var seats = registrable.Spots!
                                .Where(st => !st.IsCancelled)
                                .ToList();
@@ -279,7 +260,7 @@ public class SpotManager
                        Id = Guid.NewGuid(),
                        RegistrationId = registrationId,
                        RegistrableId = registrable.Id,
-                       FirstPartnerJoined = _dateTimeProvider.Now
+                       FirstPartnerJoined = dateTimeProvider.Now
                    };
         if (registrable.MaximumSingleSeats != null)
         {
@@ -294,16 +275,16 @@ public class SpotManager
             seat.IsWaitingList = !seatAvailable;
         }
 
-        _seats.InsertObjectTree(seat);
-        _eventBus.Publish(new SpotAdded
-                          {
-                              Id = Guid.NewGuid(),
-                              RegistrableId = registrable.Id,
-                              Registrable = registrable.DisplayName,
-                              RegistrationId = registrationId,
-                              IsInitialProcessing = initialProcessing,
-                              IsWaitingList = seat.IsWaitingList
-                          });
+        _spots.InsertObjectTree(seat);
+        eventBus.Publish(new SpotAdded
+                         {
+                             Id = Guid.NewGuid(),
+                             RegistrableId = registrable.Id,
+                             Registrable = registrable.DisplayName,
+                             RegistrationId = registrationId,
+                             IsInitialProcessing = initialProcessing,
+                             IsWaitingList = seat.IsWaitingList
+                         });
 
         return seat;
     }
@@ -341,18 +322,18 @@ public class SpotManager
             }
         }
 
-        var registration = _registrations.First(reg => reg.Id == registrationId);
-        var registrable = _registrables.First(rbl => rbl.Id == spot.RegistrableId);
-        _eventBus.Publish(new SpotRemoved
-                          {
-                              Id = Guid.NewGuid(),
-                              RegistrableId = spot.RegistrableId,
-                              RegistrationId = registrationId,
-                              Reason = reason,
-                              SpotWasOnWaitingList = spot.IsWaitingList,
-                              Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}",
-                              Registrable = registrable.DisplayName
-                          });
+        var registration = registrations.First(reg => reg.Id == registrationId);
+        var registrable = registrables.First(rbl => rbl.Id == spot.RegistrableId);
+        eventBus.Publish(new SpotRemoved
+                         {
+                             Id = Guid.NewGuid(),
+                             RegistrableId = spot.RegistrableId,
+                             RegistrationId = registrationId,
+                             Reason = reason,
+                             SpotWasOnWaitingList = spot.IsWaitingList,
+                             Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}",
+                             Registrable = registrable.DisplayName
+                         });
     }
 
     private static void ComplementExistingSeat(Guid registrationId, Role ownRole, Seat existingSeat)
@@ -404,17 +385,17 @@ public class SpotManager
             }
         }
 
-        _logger.LogInformation($"partner seats ids: {string.Join(", ", partnerSeats.Select(seat => seat.Id))}");
+        logger.LogInformation($"partner seats ids: {string.Join(", ", partnerSeats.Select(seat => seat.Id))}");
 
         var otherRole = ownRole == Role.Leader ? Role.Follower : Role.Leader;
         var partnerRegistrationIds = partnerSeats
                                      .Select(seat => otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower)
                                      .ToList();
-        var registrationsThatReferenceOwnRegistration = await _registrations.Where(reg => reg.RegistrationForm!.EventId == eventId
-                                                                                       && (reg.RegistrationId_Partner == null || reg.RegistrationId_Partner == ownIdentification.Id)
-                                                                                       && partnerRegistrationIds.Contains(reg.Id))
-                                                                            .ToListAsync();
-        _logger.LogInformation(
+        var registrationsThatReferenceOwnRegistration = await registrations.Where(reg => reg.RegistrationForm!.EventId == eventId
+                                                                                      && (reg.RegistrationId_Partner == null || reg.RegistrationId_Partner == ownIdentification.Id)
+                                                                                      && partnerRegistrationIds.Contains(reg.Id))
+                                                                           .ToListAsync();
+        logger.LogInformation(
             $"Partner registrations with this partner mail: {string.Join(", ", registrationsThatReferenceOwnRegistration.Select(reg => $"{reg.Id} ({reg.RespondentFirstName} {reg.RespondentLastName} - {reg.RespondentEmail})"))}");
 
         registrationId_Partner ??= registrationsThatReferenceOwnRegistration.FirstOrDefault(reg => string.Equals(reg.RespondentEmail,

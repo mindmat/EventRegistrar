@@ -1,6 +1,4 @@
-﻿using MediatR;
-
-namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
+﻿namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 public class SaveDomainEventCommand : IRequest
 {
@@ -11,19 +9,12 @@ public class SaveDomainEventCommand : IRequest
     public string EventType { get; set; }
 }
 
-public class SaveDomainEventCommandHandler : IRequestHandler<SaveDomainEventCommand>
+public class SaveDomainEventCommandHandler(DbContext dbContext,
+                                           IDateTimeProvider dateTimeProvider) : IRequestHandler<SaveDomainEventCommand>
 {
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly DbSet<PersistedDomainEvent> _domainEvents;
+    private readonly DbSet<PersistedDomainEvent> _domainEvents = dbContext.Set<PersistedDomainEvent>();
 
-    public SaveDomainEventCommandHandler(DbContext dbContext,
-                                         IDateTimeProvider dateTimeProvider)
-    {
-        _dateTimeProvider = dateTimeProvider;
-        _domainEvents = dbContext.Set<PersistedDomainEvent>();
-    }
-
-    public async Task<Unit> Handle(SaveDomainEventCommand command, CancellationToken cancellationToken)
+    public async Task Handle(SaveDomainEventCommand command, CancellationToken cancellationToken)
     {
         var id = command.DomainEventId == Guid.Empty ? Guid.NewGuid() : command.DomainEventId;
         await _domainEvents.AddAsync(new PersistedDomainEvent
@@ -31,11 +22,9 @@ public class SaveDomainEventCommandHandler : IRequestHandler<SaveDomainEventComm
                                          Id = id,
                                          EventId = command.EventId,
                                          DomainEventId_Parent = command.DomainEventId_Parent,
-                                         Timestamp = _dateTimeProvider.Now,
+                                         Timestamp = dateTimeProvider.Now,
                                          Type = command.EventType,
                                          Data = command.EventData
                                      }, cancellationToken);
-
-        return Unit.Value;
     }
 }

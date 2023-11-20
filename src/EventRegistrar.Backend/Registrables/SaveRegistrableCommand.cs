@@ -19,46 +19,32 @@ public class SaveRegistrableCommand : IRequest, IEventBoundRequest
     public string? Tag { get; set; }
 }
 
-public class SaveRegistrableCommandHandler : AsyncRequestHandler<SaveRegistrableCommand>
+public class SaveRegistrableCommandHandler(IRepository<Registrable> registrables,
+                                           IRepository<RegistrableTag> tags,
+                                           IQueryable<Event> events,
+                                           ChangeTrigger changeTrigger,
+                                           EnumTranslator enumTranslator)
+    : IRequestHandler<SaveRegistrableCommand>
 {
-    private readonly IRepository<Registrable> _registrables;
-    private readonly IRepository<RegistrableTag> _tags;
-    private readonly IQueryable<Event> _events;
-    private readonly ChangeTrigger _changeTrigger;
-    private readonly EnumTranslator _enumTranslator;
-
-    public SaveRegistrableCommandHandler(IRepository<Registrable> registrables,
-                                         IRepository<RegistrableTag> tags,
-                                         IQueryable<Event> events,
-                                         ChangeTrigger changeTrigger,
-                                         EnumTranslator enumTranslator)
-    {
-        _registrables = registrables;
-        _tags = tags;
-        _events = events;
-        _changeTrigger = changeTrigger;
-        _enumTranslator = enumTranslator;
-    }
-
-    protected override async Task Handle(SaveRegistrableCommand command, CancellationToken cancellationToken)
+    public async Task Handle(SaveRegistrableCommand command, CancellationToken cancellationToken)
     {
         if (string.IsNullOrWhiteSpace(command.Name))
         {
             throw new ArgumentNullException(nameof(SaveRegistrableCommand.Name));
         }
 
-        var @event = await _events.FirstAsync(evt => evt.Id == command.EventId, cancellationToken);
-        var registrable = await _registrables.AsTracking()
-                                             .Include(rbl => rbl.Spots)
-                                             .FirstOrDefaultAsync(rbl => rbl.Id == command.RegistrableId, cancellationToken);
+        var @event = await events.FirstAsync(evt => evt.Id == command.EventId, cancellationToken);
+        var registrable = await registrables.AsTracking()
+                                            .Include(rbl => rbl.Spots)
+                                            .FirstOrDefaultAsync(rbl => rbl.Id == command.RegistrableId, cancellationToken);
         if (registrable == null)
         {
-            registrable = _registrables.InsertObjectTree(new Registrable
-                                                         {
-                                                             Id = command.RegistrableId,
-                                                             EventId = command.EventId,
-                                                             Type = command.Type
-                                                         });
+            registrable = registrables.InsertObjectTree(new Registrable
+                                                        {
+                                                            Id = command.RegistrableId,
+                                                            EventId = command.EventId,
+                                                            Type = command.Type
+                                                        });
         }
         else
         {
@@ -71,7 +57,7 @@ public class SaveRegistrableCommandHandler : AsyncRequestHandler<SaveRegistrable
             {
                 if (@event.State != RegistrationForms.EventState.Setup)
                 {
-                    throw new Exception($"To change the type of a track, event must be in state setup, but it is in state {_enumTranslator.Translate(@event.State)}");
+                    throw new Exception($"To change the type of a track, event must be in state setup, but it is in state {enumTranslator.Translate(@event.State)}");
                 }
 
                 var hasSpots = registrable.Spots?.Any(spt => !spt.IsCancelled) == true;
@@ -101,7 +87,7 @@ public class SaveRegistrableCommandHandler : AsyncRequestHandler<SaveRegistrable
         {
             registrable.Tag = command.Tag;
             await CreateTagIfNecessary(@event.Id, command.Tag);
-            _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+            changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
         }
 
         switch (registrable.Type)
@@ -121,7 +107,7 @@ public class SaveRegistrableCommandHandler : AsyncRequestHandler<SaveRegistrable
                 break;
         }
 
-        _changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
     }
 
     private async Task CreateTagIfNecessary(Guid eventId, string? tag)
@@ -131,24 +117,24 @@ public class SaveRegistrableCommandHandler : AsyncRequestHandler<SaveRegistrable
             return;
         }
 
-        if (!await _tags.AnyAsync(tg => tg.EventId == eventId
-                                     && tg.Tag == tag))
+        if (!await tags.AnyAsync(tg => tg.EventId == eventId
+                                    && tg.Tag == tag))
         {
-            var maxSortKey = await _tags.Where(tg => tg.EventId == eventId)
-                                        .Select(tg => tg.SortKey)
-                                        .DefaultIfEmpty()
-                                        .MaxAsync();
+            var maxSortKey = await tags.Where(tg => tg.EventId == eventId)
+                                       .Select(tg => tg.SortKey)
+                                       .DefaultIfEmpty()
+                                       .MaxAsync();
 
-            _tags.InsertObjectTree(new RegistrableTag
-                                   {
-                                       Id = Guid.NewGuid(),
-                                       EventId = eventId,
-                                       Tag = tag,
-                                       FallbackText = tag,
-                                       SortKey = maxSortKey + 1
-                                   });
+            tags.InsertObjectTree(new RegistrableTag
+                                  {
+                                      Id = Guid.NewGuid(),
+                                      EventId = eventId,
+                                      Tag = tag,
+                                      FallbackText = tag,
+                                      SortKey = maxSortKey + 1
+                                  });
 
-            _changeTrigger.QueryChanged<RegistrableTagsQuery>(eventId);
+            changeTrigger.QueryChanged<RegistrableTagsQuery>(eventId);
         }
     }
 }

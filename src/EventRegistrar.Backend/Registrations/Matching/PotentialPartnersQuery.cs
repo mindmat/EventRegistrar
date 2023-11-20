@@ -9,36 +9,29 @@ public class PotentialPartnersQuery : IEventBoundRequest, IRequest<PotentialPart
     public string? SearchString { get; set; }
 }
 
-public class PotentialPartnersQueryHandler : IRequestHandler<PotentialPartnersQuery, PotentialPartners>
+public class PotentialPartnersQueryHandler(IQueryable<Registration> registrations) : IRequestHandler<PotentialPartnersQuery, PotentialPartners>
 {
-    private readonly IQueryable<Registration> _registrations;
-
-    public PotentialPartnersQueryHandler(IQueryable<Registration> registrations)
-    {
-        _registrations = registrations;
-    }
-
     public async Task<PotentialPartners> Handle(PotentialPartnersQuery query,
                                                 CancellationToken cancellationToken)
     {
-        var ownRegistration = await _registrations.Where(reg => reg.EventId == query.EventId
-                                                             && reg.Id == query.RegistrationId)
-                                                  .Select(reg => new
-                                                                 {
-                                                                     reg.Id,
-                                                                     reg.RespondentFirstName,
-                                                                     reg.RespondentLastName,
-                                                                     reg.RespondentEmail,
-                                                                     reg.State,
-                                                                     reg.PartnerNormalized,
-                                                                     reg.PartnerOriginal,
-                                                                     IsOnWaitingList = reg.IsOnWaitingList == true,
-                                                                     PartnerRegistrableAsLeader = reg.Seats_AsLeader!.Where(spt => spt.Registrable!.MaximumDoubleSeats != null)
-                                                                                                     .Select(trk => trk.Registrable!),
-                                                                     PartnerRegistrableAsFollower = reg.Seats_AsFollower!.Where(spt => spt.Registrable!.MaximumDoubleSeats != null)
-                                                                                                       .Select(trk => trk.Registrable!)
-                                                                 })
-                                                  .FirstAsync(cancellationToken);
+        var ownRegistration = await registrations.Where(reg => reg.EventId == query.EventId
+                                                            && reg.Id == query.RegistrationId)
+                                                 .Select(reg => new
+                                                                {
+                                                                    reg.Id,
+                                                                    reg.RespondentFirstName,
+                                                                    reg.RespondentLastName,
+                                                                    reg.RespondentEmail,
+                                                                    reg.State,
+                                                                    reg.PartnerNormalized,
+                                                                    reg.PartnerOriginal,
+                                                                    IsOnWaitingList = reg.IsOnWaitingList == true,
+                                                                    PartnerRegistrableAsLeader = reg.Seats_AsLeader!.Where(spt => spt.Registrable!.MaximumDoubleSeats != null)
+                                                                                                    .Select(trk => trk.Registrable!),
+                                                                    PartnerRegistrableAsFollower = reg.Seats_AsFollower!.Where(spt => spt.Registrable!.MaximumDoubleSeats != null)
+                                                                                                      .Select(trk => trk.Registrable!)
+                                                                })
+                                                 .FirstAsync(cancellationToken);
 
         var ownPartnerTracks = ownRegistration.PartnerRegistrableAsLeader
                                               .Union(ownRegistration.PartnerRegistrableAsFollower)
@@ -63,26 +56,26 @@ public class PotentialPartnersQueryHandler : IRequestHandler<PotentialPartnersQu
                             ? Role.Follower
                             : Role.Leader;
 
-        var queryable = _registrations.Where(reg => reg.EventId == query.EventId
-                                                 && reg.Id != ownRegistration.Id)
-                                      .WhereIf(otherRole == Role.Leader, reg => reg.Seats_AsLeader!.Any(spt => !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
-                                      .WhereIf(otherRole == Role.Follower, reg => reg.Seats_AsFollower!.Any(spt => !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
-                                      .Select(reg => new
-                                                     {
-                                                         RegistrationId = reg.Id,
-                                                         Email = reg.RespondentEmail,
-                                                         FirstName = reg.RespondentFirstName,
-                                                         LastName = reg.RespondentLastName,
-                                                         State = reg.State.ToString(),
-                                                         Partner = reg.PartnerOriginal,
-                                                         IsWaitingList = reg.IsOnWaitingList,
-                                                         reg.RegistrationId_Partner,
-                                                         MatchedPartnerFirstName = reg.Registration_Partner!.RespondentFirstName,
-                                                         MatchedPartnerLastName = reg.Registration_Partner.RespondentLastName,
-                                                         Registrables = reg.Seats_AsLeader!.Where(spt => spt.Registrable!.MaximumDoubleSeats != null)
-                                                                           .Select(spt => spt.Registrable!)
-                                                                           .Union(reg.Seats_AsFollower!.Where(spt => spt.Registrable!.MaximumDoubleSeats != null).Select(spt => spt.Registrable!))
-                                                     });
+        var queryable = registrations.Where(reg => reg.EventId == query.EventId
+                                                && reg.Id != ownRegistration.Id)
+                                     .WhereIf(otherRole == Role.Leader, reg => reg.Seats_AsLeader!.Any(spt => !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
+                                     .WhereIf(otherRole == Role.Follower, reg => reg.Seats_AsFollower!.Any(spt => !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
+                                     .Select(reg => new
+                                                    {
+                                                        RegistrationId = reg.Id,
+                                                        Email = reg.RespondentEmail,
+                                                        FirstName = reg.RespondentFirstName,
+                                                        LastName = reg.RespondentLastName,
+                                                        State = reg.State.ToString(),
+                                                        Partner = reg.PartnerOriginal,
+                                                        IsWaitingList = reg.IsOnWaitingList,
+                                                        reg.RegistrationId_Partner,
+                                                        MatchedPartnerFirstName = reg.Registration_Partner!.RespondentFirstName,
+                                                        MatchedPartnerLastName = reg.Registration_Partner.RespondentLastName,
+                                                        Registrables = reg.Seats_AsLeader!.Where(spt => spt.Registrable!.MaximumDoubleSeats != null)
+                                                                          .Select(spt => spt.Registrable!)
+                                                                          .Union(reg.Seats_AsFollower!.Where(spt => spt.Registrable!.MaximumDoubleSeats != null).Select(spt => spt.Registrable!))
+                                                    });
         foreach (var searchPart in searchParts)
         {
             queryable = queryable.Where(mat => EF.Functions.Like(mat.Email!, $"%{searchPart}%")

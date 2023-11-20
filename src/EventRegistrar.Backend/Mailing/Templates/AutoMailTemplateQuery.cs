@@ -14,26 +14,19 @@ public class AutoMailTemplateDisplayItem
     public string? ContentHtml { get; set; }
 }
 
-public class AutoMailTemplateQueryHandler : IRequestHandler<AutoMailTemplateQuery, AutoMailTemplateDisplayItem>
+public class AutoMailTemplateQueryHandler(IQueryable<AutoMailTemplate> mailTemplates) : IRequestHandler<AutoMailTemplateQuery, AutoMailTemplateDisplayItem>
 {
-    private readonly IQueryable<AutoMailTemplate> _mailTemplates;
-
-    public AutoMailTemplateQueryHandler(IQueryable<AutoMailTemplate> mailTemplates)
-    {
-        _mailTemplates = mailTemplates;
-    }
-
     public async Task<AutoMailTemplateDisplayItem> Handle(AutoMailTemplateQuery query, CancellationToken cancellationToken)
     {
-        return await _mailTemplates.Where(mtp => mtp.EventId == query.EventId
-                                              && mtp.Id == query.MailTemplateId)
-                                   .Select(mtp => new AutoMailTemplateDisplayItem
-                                                  {
-                                                      Id = mtp.Id,
-                                                      Type = mtp.Type,
-                                                      Subject = mtp.Subject,
-                                                      ContentHtml = mtp.ContentHtml
-                                                  })
-                                   .FirstAsync(cancellationToken);
+        return await mailTemplates.Where(mtp => mtp.EventId == query.EventId
+                                             && mtp.Id == query.MailTemplateId)
+                                  .Select(mtp => new AutoMailTemplateDisplayItem
+                                                 {
+                                                     Id = mtp.Id,
+                                                     Type = mtp.Type,
+                                                     Subject = mtp.Subject,
+                                                     ContentHtml = mtp.ContentHtml
+                                                 })
+                                  .FirstAsync(cancellationToken);
     }
 }

@@ -12,35 +12,26 @@ internal class IgnorePaymentCommand : IRequest, IEventBoundRequest
     public Guid PaymentId { get; set; }
 }
 
-internal class IgnorePaymentCommandHandler : AsyncRequestHandler<IgnorePaymentCommand>
+internal class IgnorePaymentCommandHandler(IRepository<Payment> payments,
+                                           IEventBus eventBus) : IRequestHandler<IgnorePaymentCommand>
 {
-    private readonly IRepository<Payment> _payments;
-    private readonly IEventBus _eventBus;
-
-    public IgnorePaymentCommandHandler(IRepository<Payment> payments,
-                                       IEventBus eventBus)
+    public async Task Handle(IgnorePaymentCommand command, CancellationToken cancellationToken)
     {
-        _payments = payments;
-        _eventBus = eventBus;
-    }
-
-    protected override async Task Handle(IgnorePaymentCommand command, CancellationToken cancellationToken)
-    {
-        var payment = await _payments.AsTracking()
-                                     .FirstAsync(pmt => pmt.Id == command.PaymentId
-                                                     && pmt.EventId == command.EventId,
-                                                 cancellationToken);
+        var payment = await payments.AsTracking()
+                                    .FirstAsync(pmt => pmt.Id == command.PaymentId
+                                                    && pmt.EventId == command.EventId,
+                                                cancellationToken);
         payment.Ignore = true;
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(BookingsByStateQuery)
-                          });
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(PaymentsByDayQuery)
-                          });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(BookingsByStateQuery)
+                         });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(PaymentsByDayQuery)
+                         });
     }
 }

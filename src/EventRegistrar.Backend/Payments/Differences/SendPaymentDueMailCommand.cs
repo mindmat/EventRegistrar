@@ -11,23 +11,15 @@ public class SendPaymentDueMailCommand : IRequest, IEventBoundRequest
     public Guid EventId { get; set; }
 }
 
-public class SendPaymentDueMailCommandHandler : AsyncRequestHandler<SendPaymentDueMailCommand>
+public class SendPaymentDueMailCommandHandler(CommandQueue commandQueue,
+                                              IQueryable<Registration> registrations)
+    : IRequestHandler<SendPaymentDueMailCommand>
 {
-    private readonly CommandQueue _commandQueue;
-    private readonly IQueryable<Registration> _registrations;
-
-    public SendPaymentDueMailCommandHandler(CommandQueue commandQueue,
-                                            IQueryable<Registration> registrations)
+    public async Task Handle(SendPaymentDueMailCommand command, CancellationToken cancellationToken)
     {
-        _commandQueue = commandQueue;
-        _registrations = registrations;
-    }
-
-    protected override async Task Handle(SendPaymentDueMailCommand command, CancellationToken cancellationToken)
-    {
-        var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
-                                               .Include(reg => reg.PaymentAssignments)
-                                               .FirstAsync(cancellationToken);
+        var registration = await registrations.Where(reg => reg.Id == command.RegistrationId)
+                                              .Include(reg => reg.PaymentAssignments)
+                                              .FirstAsync(cancellationToken);
         var data = new PaymentDueMailData
                    {
                        Price = registration.Price_AdmittedAndReduced,
@@ -45,7 +37,7 @@ public class SendPaymentDueMailCommandHandler : AsyncRequestHandler<SendPaymentD
                                   RegistrationId = command.RegistrationId,
                                   Data = data
                               };
-        _commandQueue.EnqueueCommand(sendMailCommand);
+        commandQueue.EnqueueCommand(sendMailCommand);
     }
 }
 

@@ -1,12 +1,7 @@
 ﻿namespace EventRegistrar.Backend.Infrastructure.DataAccess;
 
-public class EventRegistratorDbContext : DbContext
+public class EventRegistratorDbContext(DbContextOptions<EventRegistratorDbContext> options) : DbContext(options)
 {
-    public EventRegistratorDbContext(DbContextOptions<EventRegistratorDbContext> options)
-        : base(options)
-    {
-    }
-
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.ApplyConfigurationsFromAssembly(typeof(EventRegistratorDbContext).Assembly);

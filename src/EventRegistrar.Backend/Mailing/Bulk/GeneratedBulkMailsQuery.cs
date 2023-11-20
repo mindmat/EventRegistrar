@@ -6,15 +6,8 @@ public class GeneratedBulkMailsQuery : IRequest<GeneratedBulkMails>, IEventBound
     public string? BulkMailKey { get; set; }
 }
 
-public class GeneratedBulkMailsQueryHandler : IRequestHandler<GeneratedBulkMailsQuery, GeneratedBulkMails>
+public class GeneratedBulkMailsQueryHandler(IQueryable<Mail> mails) : IRequestHandler<GeneratedBulkMailsQuery, GeneratedBulkMails>
 {
-    private readonly IQueryable<Mail> _mails;
-
-    public GeneratedBulkMailsQueryHandler(IQueryable<Mail> mails)
-    {
-        _mails = mails;
-    }
-
     public async Task<GeneratedBulkMails> Handle(GeneratedBulkMailsQuery query, CancellationToken cancellationToken)
     {
         if (query.BulkMailKey == null)
@@ -22,14 +15,14 @@ public class GeneratedBulkMailsQueryHandler : IRequestHandler<GeneratedBulkMails
             throw new ArgumentNullException(nameof(query.BulkMailKey));
         }
 
-        return await _mails.Where(mail => mail.BulkMailKey == query.BulkMailKey)
-                           .GroupBy(mail => mail.BulkMailKey)
-                           .Select(grp => new GeneratedBulkMails
-                                          {
-                                              GeneratedCount = grp.Count(),
-                                              SentCount = grp.Count(mail => mail.Sent != null)
-                                          })
-                           .FirstOrDefaultAsync(cancellationToken)
+        return await mails.Where(mail => mail.BulkMailKey == query.BulkMailKey)
+                          .GroupBy(mail => mail.BulkMailKey)
+                          .Select(grp => new GeneratedBulkMails
+                                         {
+                                             GeneratedCount = grp.Count(),
+                                             SentCount = grp.Count(mail => mail.Sent != null)
+                                         })
+                          .FirstOrDefaultAsync(cancellationToken)
             ?? new GeneratedBulkMails
                {
                    GeneratedCount = 0,

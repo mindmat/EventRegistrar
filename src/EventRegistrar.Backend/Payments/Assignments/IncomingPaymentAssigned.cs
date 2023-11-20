@@ -12,22 +12,14 @@ public class IncomingPaymentAssigned : DomainEvent
     public decimal Amount { get; set; }
 }
 
-public class IncomingPaymentAssignedUserTranslation : IEventToUserTranslation<IncomingPaymentAssigned>
+public class IncomingPaymentAssignedUserTranslation(IQueryable<IncomingPayment> incomingPayments,
+                                                    IQueryable<Registration> registrations)
+    : IEventToUserTranslation<IncomingPaymentAssigned>
 {
-    private readonly IQueryable<IncomingPayment> _incomingPayments;
-    private readonly IQueryable<Registration> _registrations;
-
-    public IncomingPaymentAssignedUserTranslation(IQueryable<IncomingPayment> incomingPayments,
-                                                  IQueryable<Registration> registrations)
-    {
-        _incomingPayments = incomingPayments;
-        _registrations = registrations;
-    }
-
     public string GetText(IncomingPaymentAssigned domainEvent)
     {
-        var incomingPaymentIncoming = _incomingPayments.FirstOrDefault(pmt => pmt.Id == domainEvent.IncomingPaymentId);
-        var registration = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
+        var incomingPaymentIncoming = incomingPayments.FirstOrDefault(pmt => pmt.Id == domainEvent.IncomingPaymentId);
+        var registration = registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId);
 
         return $"Zahlungseingang über {domainEvent.Amount} von {incomingPaymentIncoming?.DebitorName} zu Anmeldung {registration?.RespondentFirstName} {registration?.RespondentLastName} zugeordnet";
     }

@@ -7,27 +7,12 @@ using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations.Price;
 
-public class PriceCalculator
+public class PriceCalculator(IQueryable<Seat> _spots,
+                             IQueryable<PricePackage> pricePackages,
+                             IQueryable<Registration> registrations,
+                             IQueryable<Registrable> tracks,
+                             EnumTranslator enumTranslator)
 {
-    private readonly IQueryable<Registration> _registrations;
-    private readonly IQueryable<Registrable> _tracks;
-    private readonly EnumTranslator _enumTranslator;
-    private readonly IQueryable<Seat> _spots;
-    private readonly IQueryable<PricePackage> _pricePackages;
-
-    public PriceCalculator(IQueryable<Seat> spots,
-                           IQueryable<PricePackage> pricePackages,
-                           IQueryable<Registration> registrations,
-                           IQueryable<Registrable> tracks,
-                           EnumTranslator enumTranslator)
-    {
-        _spots = spots;
-        _pricePackages = pricePackages;
-        _registrations = registrations;
-        _tracks = tracks;
-        _enumTranslator = enumTranslator;
-    }
-
     public async Task<(decimal priceOriginal,
             decimal priceAdmitted,
             decimal priceAdmittedAndReduced,
@@ -37,9 +22,9 @@ public class PriceCalculator
             IEnumerable<MatchingPackageResult> possibleFallbackPackages)>
         CalculatePrice(Guid registrationId, CancellationToken cancellationToken = default)
     {
-        var registration = await _registrations.Where(reg => reg.Id == registrationId)
-                                               .Include(reg => reg.IndividualReductions)
-                                               .FirstAsync(cancellationToken);
+        var registration = await registrations.Where(reg => reg.Id == registrationId)
+                                              .Include(reg => reg.IndividualReductions)
+                                              .FirstAsync(cancellationToken);
         var spots = await _spots.Where(spot => spot.RegistrationId == registrationId
                                             || spot.RegistrationId_Follower == registrationId)
                                 .Where(spot => !spot.IsCancelled)
@@ -59,20 +44,20 @@ public class PriceCalculator
         CalculatePrice(Registration registration,
                        IEnumerable<Seat> spots)
     {
-        var coreTracks = await _tracks.Where(trk => trk.EventId == registration.EventId && trk.IsCore)
-                                      .ToListAsync();
+        var coreTracks = await tracks.Where(trk => trk.EventId == registration.EventId && trk.IsCore)
+                                     .ToListAsync();
         var isOnWaitingList = false;
         var notCancelledSpots = spots.Where(spot => !spot.IsCancelled
                                                  && (spot.RegistrationId == registration.Id
                                                   || spot.RegistrationId_Follower == registration.Id))
                                      .ToList();
 
-        var packages = await _pricePackages.Where(ppg => ppg.EventId == registration.EventId)
-                                           .Include(ppg => ppg.Parts!.OrderBy(ppp => ppp.SortKey))
-                                           .ThenInclude(ppp => ppp.Registrables!)
-                                           .ThenInclude(rip => rip.Registrable)
-                                           .OrderBy(ppg => ppg.SortKey)
-                                           .ToListAsync();
+        var packages = await pricePackages.Where(ppg => ppg.EventId == registration.EventId)
+                                          .Include(ppg => ppg.Parts!.OrderBy(ppp => ppp.SortKey))
+                                          .ThenInclude(ppp => ppp.Registrables!)
+                                          .ThenInclude(rip => rip.Registrable)
+                                          .OrderBy(ppg => ppg.SortKey)
+                                          .ToListAsync();
         var (priceOriginal, packagesOriginal, allCoveredOriginal) = CalculatePriceOfSpots(registration.Id, notCancelledSpots, packages, coreTracks);
 
         var hasSpotsOnWaitingList = notCancelledSpots.Any(spot => spot.IsWaitingList);
@@ -266,7 +251,7 @@ public class PriceCalculator
             var role = spot.RegistrationId_Follower == registrationId
                            ? Role.Follower
                            : Role.Leader;
-            return ($"{registrable.Registrable.DisplayName} ({_enumTranslator.Translate(role)})", registrable.Registrable.ShowInMailListOrder);
+            return ($"{registrable.Registrable.DisplayName} ({enumTranslator.Translate(role)})", registrable.Registrable.ShowInMailListOrder);
         }
 
         return (registrable.Registrable.DisplayName, registrable.Registrable.ShowInMailListOrder);

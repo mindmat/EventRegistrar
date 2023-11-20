@@ -15,31 +15,17 @@ public class AddIndividualReductionCommand : IRequest, IEventBoundRequest
     public string? Reason { get; set; }
 }
 
-public class AddIndividualReductionCommandHandler : IRequestHandler<AddIndividualReductionCommand>
+public class AddIndividualReductionCommandHandler(IQueryable<Registration> registrations,
+                                                  IRepository<IndividualReduction> reductions,
+                                                  AuthenticatedUserId userId,
+                                                  IEventBus eventBus,
+                                                  ChangeTrigger changeTrigger)
+    : IRequestHandler<AddIndividualReductionCommand>
 {
-    private readonly IEventBus _eventBus;
-    private readonly ChangeTrigger _changeTrigger;
-    private readonly IRepository<IndividualReduction> _reductions;
-    private readonly IQueryable<Registration> _registrations;
-    private readonly AuthenticatedUserId _userId;
-
-    public AddIndividualReductionCommandHandler(IQueryable<Registration> registrations,
-                                                IRepository<IndividualReduction> reductions,
-                                                AuthenticatedUserId userId,
-                                                IEventBus eventBus,
-                                                ChangeTrigger changeTrigger)
+    public async Task Handle(AddIndividualReductionCommand command, CancellationToken cancellationToken)
     {
-        _registrations = registrations;
-        _reductions = reductions;
-        _userId = userId;
-        _eventBus = eventBus;
-        _changeTrigger = changeTrigger;
-    }
-
-    public async Task<Unit> Handle(AddIndividualReductionCommand command, CancellationToken cancellationToken)
-    {
-        var registration = await _registrations.FirstAsync(reg => reg.Id == command.RegistrationId
-                                                               && reg.EventId == command.EventId, cancellationToken);
+        var registration = await registrations.FirstAsync(reg => reg.Id == command.RegistrationId
+                                                              && reg.EventId == command.EventId, cancellationToken);
 
         var reduction = new IndividualReduction
                         {
@@ -48,19 +34,17 @@ public class AddIndividualReductionCommandHandler : IRequestHandler<AddIndividua
                             Type = command.Type,
                             Amount = command.Amount,
                             Reason = command.Reason,
-                            UserId = _userId.UserId!.Value
+                            UserId = userId.UserId!.Value
                         };
-        _reductions.InsertObjectTree(reduction);
+        reductions.InsertObjectTree(reduction);
 
-        _eventBus.Publish(new IndividualReductionAdded
-                          {
-                              RegistrationId = registration.Id,
-                              Amount = command.Amount,
-                              Reason = command.Reason
-                          });
+        eventBus.Publish(new IndividualReductionAdded
+                         {
+                             RegistrationId = registration.Id,
+                             Amount = command.Amount,
+                             Reason = command.Reason
+                         });
 
-        _changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
-
-        return Unit.Value;
+        changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
     }
 }

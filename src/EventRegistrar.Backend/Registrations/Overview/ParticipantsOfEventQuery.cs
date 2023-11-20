@@ -28,35 +28,21 @@ public class Participant
     public decimal AmountOutstanding { get; set; }
 }
 
-public class ParticipantsOfEventQueryHandler : IRequestHandler<ParticipantsOfEventQuery, IEnumerable<Participant>>
+public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrations,
+                                             IQueryable<PricePackage> pricePackages,
+                                             EnumTranslator enumTranslator,
+                                             ReadModelReader readModelReader,
+                                             IQueryable<Registrable> tracks)
+    : IRequestHandler<ParticipantsOfEventQuery, IEnumerable<Participant>>
 {
-    private readonly IQueryable<Registration> _registrations;
-    private readonly IQueryable<PricePackage> _pricePackages;
-    private readonly EnumTranslator _enumTranslator;
-    private readonly ReadModelReader _readModelReader;
-    private readonly IQueryable<Registrable> _tracks;
-
-    public ParticipantsOfEventQueryHandler(IQueryable<Registration> registrations,
-                                           IQueryable<PricePackage> pricePackages,
-                                           EnumTranslator enumTranslator,
-                                           ReadModelReader readModelReader,
-                                           IQueryable<Registrable> tracks)
-    {
-        _registrations = registrations;
-        _pricePackages = pricePackages;
-        _enumTranslator = enumTranslator;
-        _readModelReader = readModelReader;
-        _tracks = tracks;
-    }
-
     public async Task<IEnumerable<Participant>> Handle(ParticipantsOfEventQuery query, CancellationToken cancellationToken)
     {
         var allowedStates = query.States?.Any() == true
                                 ? query.States
                                 : new[] { RegistrationState.Received, RegistrationState.Paid };
         var searchParts = query.SearchString?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-        var packages = await _pricePackages.Where(pkg => pkg.EventId == query.EventId)
-                                           .ToDictionaryAsync(pkg => pkg.Id, pkg => pkg.Name, cancellationToken);
+        var packages = await pricePackages.Where(pkg => pkg.EventId == query.EventId)
+                                          .ToDictionaryAsync(pkg => pkg.Id, pkg => pkg.Name, cancellationToken);
 
         var queryable = _registrations.Where(reg => reg.EventId == query.EventId);
         if (searchParts != null)
@@ -77,11 +63,11 @@ public class ParticipantsOfEventQueryHandler : IRequestHandler<ParticipantsOfEve
                                              .Select(reg => new { reg.Id, PricePackageIds_Admitted = reg.PricePackageIds_Admitted.SplitGuidKeys() })
                                              .ToListAsync(cancellationToken);
 
-        var registrations = await _readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery), query.EventId, registrationIds.Select(reg => reg.Id), cancellationToken);
-        var registrableIds = await _tracks.Where(trk => trk.IsCore && trk.CheckinListColumn == "Tracks")
-                                          //.WhereIf(!string.IsNullOrWhiteSpace(query.Tag), trk => trk.Tag == query.Tag)
-                                          .Select(trk => trk.Id)
-                                          .ToListAsync(cancellationToken);
+        var registrations = await readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery), query.EventId, registrationIds.Select(reg => reg.Id), cancellationToken);
+        var registrableIds = await tracks.Where(trk => trk.IsCore && trk.CheckinListColumn == "Tracks")
+                                         //.WhereIf(!string.IsNullOrWhiteSpace(query.Tag), trk => trk.Tag == query.Tag)
+                                         .Select(trk => trk.Id)
+                                         .ToListAsync(cancellationToken);
         return registrations.Select(reg => new Participant
                                            {
                                                RegistrationId = reg.Id,
@@ -90,7 +76,7 @@ public class ParticipantsOfEventQueryHandler : IRequestHandler<ParticipantsOfEve
                                                Email = reg.Email,
                                                AmountOutstanding = (reg.Price ?? 0m) - reg.Paid,
                                                State = reg.Status,
-                                               StateText = _enumTranslator.Translate(reg.Status),
+                                               StateText = enumTranslator.Translate(reg.Status),
                                                IsOnWaitingList = reg.IsWaitingList == true,
                                                CoreSpots = reg.Spots!
                                                               .Where(spt => !spt.IsWaitingList && registrableIds.Contains(spt.RegistrableId))

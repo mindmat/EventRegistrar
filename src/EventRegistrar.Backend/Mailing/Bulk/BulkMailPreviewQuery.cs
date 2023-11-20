@@ -15,30 +15,22 @@ public class BulkMailPreview
     public string? ContentHtml { get; set; }
 }
 
-public class BulkMailPreviewQueryHandler : IRequestHandler<BulkMailPreviewQuery, BulkMailPreview>
+public class BulkMailPreviewQueryHandler(IQueryable<BulkMailTemplate> mailTemplates,
+                                         MailComposer mailComposer)
+    : IRequestHandler<BulkMailPreviewQuery, BulkMailPreview>
 {
-    private readonly IQueryable<BulkMailTemplate> _mailTemplates;
-    private readonly MailComposer _mailComposer;
-
-    public BulkMailPreviewQueryHandler(IQueryable<BulkMailTemplate> mailTemplates,
-                                       MailComposer mailComposer)
-    {
-        _mailTemplates = mailTemplates;
-        _mailComposer = mailComposer;
-    }
-
     public async Task<BulkMailPreview> Handle(BulkMailPreviewQuery query, CancellationToken cancellationToken)
     {
-        var template = await _mailTemplates.Where(mtp => mtp.EventId == query.EventId
-                                                      && mtp.Id == query.BulkMailTemplateId)
-                                           .FirstAsync(cancellationToken);
+        var template = await mailTemplates.Where(mtp => mtp.EventId == query.EventId
+                                                     && mtp.Id == query.BulkMailTemplateId)
+                                          .FirstAsync(cancellationToken);
 
         var content = query.RegistrationId == null
                           ? template.ContentHtml
-                          : await _mailComposer.Compose(query.RegistrationId.Value,
-                                                        template.ContentHtml ?? string.Empty,
-                                                        template.Language,
-                                                        cancellationToken);
+                          : await mailComposer.Compose(query.RegistrationId.Value,
+                                                       template.ContentHtml ?? string.Empty,
+                                                       template.Language,
+                                                       cancellationToken);
         return new BulkMailPreview
                {
                    Subject = template.Subject,

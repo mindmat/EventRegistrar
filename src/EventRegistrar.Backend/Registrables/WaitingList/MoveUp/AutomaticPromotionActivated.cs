@@ -7,18 +7,11 @@ public class AutomaticPromotionActivated : DomainEvent
     public Guid RegistrableId { get; set; }
 }
 
-public class AutomaticPromotionActivatedUserTranslation : IEventToUserTranslation<AutomaticPromotionActivated>
+public class AutomaticPromotionActivatedUserTranslation(IQueryable<Registrable> registrables) : IEventToUserTranslation<AutomaticPromotionActivated>
 {
-    private readonly IQueryable<Registrable> _registrables;
-
-    public AutomaticPromotionActivatedUserTranslation(IQueryable<Registrable> registrables)
-    {
-        _registrables = registrables;
-    }
-
     public string GetText(AutomaticPromotionActivated domainEvent)
     {
-        var registrable = _registrables.FirstOrDefault(reg => reg.Id == domainEvent.RegistrableId);
+        var registrable = registrables.FirstOrDefault(reg => reg.Id == domainEvent.RegistrableId);
         return $"Automatisches Nachrücken für {registrable?.DisplayName} aktiviert";
     }
 }

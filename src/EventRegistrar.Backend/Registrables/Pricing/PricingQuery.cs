@@ -5,38 +5,31 @@ public class PricingQuery : IRequest<IEnumerable<PricePackageDto>>, IEventBoundR
     public Guid EventId { get; set; }
 }
 
-public class PricingQueryHandler : IRequestHandler<PricingQuery, IEnumerable<PricePackageDto>>
+public class PricingQueryHandler(IQueryable<PricePackage> packages) : IRequestHandler<PricingQuery, IEnumerable<PricePackageDto>>
 {
-    private readonly IQueryable<PricePackage> _packages;
-
-    public PricingQueryHandler(IQueryable<PricePackage> packages)
-    {
-        _packages = packages;
-    }
-
     public async Task<IEnumerable<PricePackageDto>> Handle(PricingQuery query, CancellationToken cancellationToken)
     {
-        return await _packages.Where(ppg => ppg.EventId == query.EventId)
-                              .OrderBy(ppg => ppg.SortKey)
-                              .ThenBy(ppg => ppg.Name)
-                              .Select(ppg => new PricePackageDto
-                                             {
-                                                 Id = ppg.Id,
-                                                 Name = ppg.Name, Price = ppg.Price,
-                                                 AllowAsAutomaticFallback = ppg.AllowAsAutomaticFallback,
-                                                 AllowAsManualFallback = ppg.AllowAsManualFallback,
-                                                 ShowInOverview = ppg.ShowInOverview,
-                                                 Parts = ppg.Parts!
-                                                            .OrderBy(ppp => ppg.SortKey)
-                                                            .Select(ppp => new PricePackagePartDto
-                                                                           {
-                                                                               Id = ppp.Id,
-                                                                               SelectionType = ppp.SelectionType,
-                                                                               PriceAdjustment = ppp.PriceAdjustment,
-                                                                               RegistrableIds = ppp.Registrables!.Select(rip => rip.RegistrableId)
-                                                                           })
-                                             })
-                              .ToListAsync(cancellationToken);
+        return await packages.Where(ppg => ppg.EventId == query.EventId)
+                             .OrderBy(ppg => ppg.SortKey)
+                             .ThenBy(ppg => ppg.Name)
+                             .Select(ppg => new PricePackageDto
+                                            {
+                                                Id = ppg.Id,
+                                                Name = ppg.Name, Price = ppg.Price,
+                                                AllowAsAutomaticFallback = ppg.AllowAsAutomaticFallback,
+                                                AllowAsManualFallback = ppg.AllowAsManualFallback,
+                                                ShowInOverview = ppg.ShowInOverview,
+                                                Parts = ppg.Parts!
+                                                           .OrderBy(ppp => ppg.SortKey)
+                                                           .Select(ppp => new PricePackagePartDto
+                                                                          {
+                                                                              Id = ppp.Id,
+                                                                              SelectionType = ppp.SelectionType,
+                                                                              PriceAdjustment = ppp.PriceAdjustment,
+                                                                              RegistrableIds = ppp.Registrables!.Select(rip => rip.RegistrableId)
+                                                                          })
+                                            })
+                             .ToListAsync(cancellationToken);
     }
 }
 

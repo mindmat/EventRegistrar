@@ -8,31 +8,24 @@ public class RemarksOverviewQuery : IRequest<IEnumerable<RemarksDisplayItem>>, I
     public bool OnlyUnprocessed { get; set; }
 }
 
-public class RemarksOverviewQueryHandler : IRequestHandler<RemarksOverviewQuery, IEnumerable<RemarksDisplayItem>>
+public class RemarksOverviewQueryHandler(IQueryable<Registration> registrations) : IRequestHandler<RemarksOverviewQuery, IEnumerable<RemarksDisplayItem>>
 {
-    private readonly IQueryable<Registration> _registrations;
-
-    public RemarksOverviewQueryHandler(IQueryable<Registration> registrations)
-    {
-        _registrations = registrations;
-    }
-
     public async Task<IEnumerable<RemarksDisplayItem>> Handle(RemarksOverviewQuery query, CancellationToken cancellationToken)
     {
-        return await _registrations.Where(reg => reg.EventId == query.EventId
-                                              && reg.Remarks != null
-                                              && reg.Remarks != string.Empty)
-                                   .WhereIf(query.OnlyUnprocessed, reg => !reg.RemarksProcessed)
-                                   .OrderByDescending(reg => reg.ReceivedAt)
-                                   .Select(reg => new RemarksDisplayItem
-                                                  {
-                                                      RegistrationId = reg.Id,
-                                                      DisplayName = $"{reg.RespondentFirstName} {reg.RespondentLastName}",
-                                                      Email = reg.RespondentEmail,
-                                                      Remarks = reg.Remarks!,
-                                                      Processed = reg.RemarksProcessed
-                                                  })
-                                   .ToListAsync(cancellationToken);
+        return await registrations.Where(reg => reg.EventId == query.EventId
+                                             && reg.Remarks != null
+                                             && reg.Remarks != string.Empty)
+                                  .WhereIf(query.OnlyUnprocessed, reg => !reg.RemarksProcessed)
+                                  .OrderByDescending(reg => reg.ReceivedAt)
+                                  .Select(reg => new RemarksDisplayItem
+                                                 {
+                                                     RegistrationId = reg.Id,
+                                                     DisplayName = $"{reg.RespondentFirstName} {reg.RespondentLastName}",
+                                                     Email = reg.RespondentEmail,
+                                                     Remarks = reg.Remarks!,
+                                                     Processed = reg.RemarksProcessed
+                                                 })
+                                  .ToListAsync(cancellationToken);
     }
 }
 

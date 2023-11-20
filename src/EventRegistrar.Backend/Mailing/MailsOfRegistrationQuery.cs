@@ -1,6 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Mailing.Import;
-using MediatR;
+﻿using EventRegistrar.Backend.Mailing.Import;
 
 namespace EventRegistrar.Backend.Mailing;
 
@@ -10,18 +8,10 @@ public class MailsOfRegistrationQuery : IRequest<IEnumerable<MailDisplayItem>>, 
     public Guid RegistrationId { get; set; }
 }
 
-public class MailsOfRegistrationQueryHandler : IRequestHandler<MailsOfRegistrationQuery, IEnumerable<MailDisplayItem>>
+public class MailsOfRegistrationQueryHandler(IQueryable<MailToRegistration> _mails,
+                                             IQueryable<ImportedMailToRegistration> _importedMails)
+    : IRequestHandler<MailsOfRegistrationQuery, IEnumerable<MailDisplayItem>>
 {
-    private readonly IQueryable<ImportedMailToRegistration> _importedMails;
-    private readonly IQueryable<MailToRegistration> _mails;
-
-    public MailsOfRegistrationQueryHandler(IQueryable<MailToRegistration> mails,
-                                           IQueryable<ImportedMailToRegistration> importedMails)
-    {
-        _mails = mails;
-        _importedMails = importedMails;
-    }
-
     public async Task<IEnumerable<MailDisplayItem>> Handle(MailsOfRegistrationQuery query,
                                                            CancellationToken cancellationToken)
     {
@@ -62,8 +52,7 @@ public class MailsOfRegistrationQueryHandler : IRequestHandler<MailsOfRegistrati
                                                                    Recipients = mtr.Mail.Recipients,
                                                                    Subject = mtr.Mail.Subject,
                                                                    Created = mtr.Mail.Date,
-                                                                   ContentHtml = mtr.Mail.ContentHtml ??
-                                                                       mtr.Mail.ContentPlainText,
+                                                                   ContentHtml = mtr.Mail.ContentHtml ?? mtr.Mail.ContentPlainText,
                                                                    State = null
                                                                })
                                                 .ToListAsync(cancellationToken);

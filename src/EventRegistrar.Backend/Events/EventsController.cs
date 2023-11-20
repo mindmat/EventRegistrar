@@ -2,26 +2,16 @@
 
 namespace EventRegistrar.Backend.Events;
 
-public class EventsController : Controller
+public class EventsController(IMediator mediator,
+                              IEventAcronymResolver eventAcronymResolver) : Controller
 {
-    private readonly IEventAcronymResolver _eventAcronymResolver;
-    private readonly IMediator _mediator;
-
-    public EventsController(IMediator mediator,
-                            IEventAcronymResolver eventAcronymResolver)
-    {
-        _mediator = mediator;
-        _eventAcronymResolver = eventAcronymResolver;
-    }
-
-
     [HttpPost("api/events/{eventAcronym}/openRegistration")]
     public async Task OpenRegistration(string eventAcronym, bool deleteTestData = false)
     {
-        await _mediator.Send(new OpenRegistrationCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 DeleteTestData = deleteTestData
-                             });
+        await mediator.Send(new OpenRegistrationCommand
+                            {
+                                EventId = await eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                                DeleteTestData = deleteTestData
+                            });
     }
 }

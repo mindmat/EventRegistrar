@@ -1,7 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations.Confirmation;
 using EventRegistrar.Backend.Registrations.Price;
-using MediatR;
 
 namespace EventRegistrar.Backend.Payments.Statements;
 

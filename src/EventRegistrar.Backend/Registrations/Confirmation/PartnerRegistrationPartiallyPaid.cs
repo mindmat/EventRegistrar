@@ -8,19 +8,12 @@ public class PartnerRegistrationPartiallyPaid : DomainEvent
     public Guid RegistrationId2 { get; set; }
 }
 
-public class PartnerRegistrationPartiallyPaidUserTranslation : IEventToUserTranslation<PartnerRegistrationPartiallyPaid>
+public class PartnerRegistrationPartiallyPaidUserTranslation(IQueryable<Registration> registrations) : IEventToUserTranslation<PartnerRegistrationPartiallyPaid>
 {
-    private readonly IQueryable<Registration> _registrations;
-
-    public PartnerRegistrationPartiallyPaidUserTranslation(IQueryable<Registration> registrations)
-    {
-        _registrations = registrations;
-    }
-
     public string GetText(PartnerRegistrationPartiallyPaid domainEvent)
     {
-        var registrationLeader = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId1);
-        var registrationFollower = _registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId2);
+        var registrationLeader = registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId1);
+        var registrationFollower = registrations.FirstOrDefault(reg => reg.Id == domainEvent.RegistrationId2);
         return
             $"{registrationLeader?.RespondentFirstName} {registrationLeader?.RespondentLastName} und {registrationFollower?.RespondentFirstName} {registrationFollower?.RespondentLastName} haben teilweise bezahlt";
     }

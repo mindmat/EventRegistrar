@@ -1,43 +1,32 @@
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents;
 
-public class RemoveUserFromEventCommand : IRequest<Unit>, IEventBoundRequest
+public class RemoveUserFromEventCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
     public Guid UserId { get; set; }
 }
 
-public class RemoveUserFromEventCommandHandler : IRequestHandler<RemoveUserFromEventCommand>
+public class RemoveUserFromEventCommandHandler(IRepository<UserInEvent> usersInEvents,
+                                               IEventBus eventBus)
+    : IRequestHandler<RemoveUserFromEventCommand>
 {
-    private readonly IRepository<UserInEvent> _usersInEvents;
-    private readonly IEventBus _eventBus;
-
-    public RemoveUserFromEventCommandHandler(IRepository<UserInEvent> usersInEvents,
-                                             IEventBus eventBus)
+    public async Task Handle(RemoveUserFromEventCommand command, CancellationToken cancellationToken)
     {
-        _usersInEvents = usersInEvents;
-        _eventBus = eventBus;
-    }
-
-    public async Task<Unit> Handle(RemoveUserFromEventCommand command, CancellationToken cancellationToken)
-    {
-        var userInEvent = await _usersInEvents.FirstOrDefaultAsync(uie => uie.EventId == command.EventId
-                                                                       && uie.UserId == command.UserId, cancellationToken);
+        var userInEvent = await usersInEvents.FirstOrDefaultAsync(uie => uie.EventId == command.EventId
+                                                                      && uie.UserId == command.UserId, cancellationToken);
 
         if (userInEvent != null)
         {
-            _usersInEvents.Remove(userInEvent);
+            usersInEvents.Remove(userInEvent);
         }
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(UsersOfEventQuery)
-                          });
-
-        return Unit.Value;
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(UsersOfEventQuery)
+                         });
     }
 }

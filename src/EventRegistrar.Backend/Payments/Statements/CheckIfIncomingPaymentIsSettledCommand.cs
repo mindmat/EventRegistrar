@@ -9,22 +9,15 @@ public class CheckIfIncomingPaymentIsSettledCommand : IRequest
     public Guid IncomingPaymentId { get; set; }
 }
 
-public class CheckIfIncomingPaymentIsSettledCommandHandler : AsyncRequestHandler<CheckIfIncomingPaymentIsSettledCommand>
+public class CheckIfIncomingPaymentIsSettledCommandHandler(IRepository<IncomingPayment> incomingPayments) : IRequestHandler<CheckIfIncomingPaymentIsSettledCommand>
 {
-    private readonly IRepository<IncomingPayment> _incomingPayments;
-
-    public CheckIfIncomingPaymentIsSettledCommandHandler(IRepository<IncomingPayment> incomingPayments)
+    public async Task Handle(CheckIfIncomingPaymentIsSettledCommand command, CancellationToken cancellationToken)
     {
-        _incomingPayments = incomingPayments;
-    }
-
-    protected override async Task Handle(CheckIfIncomingPaymentIsSettledCommand command, CancellationToken cancellationToken)
-    {
-        var incomingPayment = await _incomingPayments.AsTracking()
-                                                     .Where(pmt => pmt.Id == command.IncomingPaymentId)
-                                                     .Include(pmt => pmt.Payment)
-                                                     .Include(pmt => pmt.Assignments)
-                                                     .FirstAsync(cancellationToken);
+        var incomingPayment = await incomingPayments.AsTracking()
+                                                    .Where(pmt => pmt.Id == command.IncomingPaymentId)
+                                                    .Include(pmt => pmt.Payment)
+                                                    .Include(pmt => pmt.Assignments)
+                                                    .FirstAsync(cancellationToken);
         var balance = incomingPayment.Payment!.Amount
                     - incomingPayment.Assignments!.Sum(asn => asn.PayoutRequestId == null
                                                                   ? asn.Amount

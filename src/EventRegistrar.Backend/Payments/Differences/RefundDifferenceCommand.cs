@@ -16,33 +16,19 @@ public class RefundDifferenceCommand : IRequest, IEventBoundRequest
     public string? Reason { get; set; }
 }
 
-public class RefundDifferenceCommandHandler : AsyncRequestHandler<RefundDifferenceCommand>
+public class RefundDifferenceCommandHandler(CommandQueue commandQueue,
+                                            IQueryable<Registration> registrations,
+                                            IRepository<PayoutRequest> payoutRequests,
+                                            IDateTimeProvider dateTimeProvider,
+                                            IEventBus eventBus)
+    : IRequestHandler<RefundDifferenceCommand>
 {
-    private readonly CommandQueue _commandQueue;
-    private readonly IQueryable<Registration> _registrations;
-    private readonly IRepository<PayoutRequest> _payoutRequests;
-    private readonly IDateTimeProvider _dateTimeProvider;
-    private readonly IEventBus _eventBus;
-
-    public RefundDifferenceCommandHandler(CommandQueue commandQueue,
-                                          IQueryable<Registration> registrations,
-                                          IRepository<PayoutRequest> payoutRequests,
-                                          IDateTimeProvider dateTimeProvider,
-                                          IEventBus eventBus)
+    public async Task Handle(RefundDifferenceCommand command, CancellationToken cancellationToken)
     {
-        _commandQueue = commandQueue;
-        _registrations = registrations;
-        _payoutRequests = payoutRequests;
-        _dateTimeProvider = dateTimeProvider;
-        _eventBus = eventBus;
-    }
-
-    protected override async Task Handle(RefundDifferenceCommand command, CancellationToken cancellationToken)
-    {
-        var registration = await _registrations.Where(reg => reg.Id == command.RegistrationId)
-                                               .Include(reg => reg.PaymentAssignments!)
-                                               .ThenInclude(pas => pas.IncomingPayment)
-                                               .FirstAsync(cancellationToken);
+        var registration = await registrations.Where(reg => reg.Id == command.RegistrationId)
+                                              .Include(reg => reg.PaymentAssignments!)
+                                              .ThenInclude(pas => pas.IncomingPayment)
+                                              .FirstAsync(cancellationToken);
         var data = new TooMuchPaidMailData
                    {
                        Price = registration.Price_AdmittedAndReduced,
@@ -62,12 +48,12 @@ public class RefundDifferenceCommandHandler : AsyncRequestHandler<RefundDifferen
                                 Amount = data.RefundAmount,
                                 Reason = command.Reason ?? "Refund of difference",
                                 State = PayoutState.Requested,
-                                Created = _dateTimeProvider.Now,
+                                Created = dateTimeProvider.Now,
                                 IbanProposed = registration.PaymentAssignments!
                                                            .Select(pas => pas.IncomingPayment?.DebitorIban)
                                                            .FirstOrDefault(iban => iban != null)
                             };
-        await _payoutRequests.InsertOrUpdateEntity(payoutRequest, cancellationToken);
+        await payoutRequests.InsertOrUpdateEntity(payoutRequest, cancellationToken);
 
         var sendMailCommand = new ComposeAndSendAutoMailCommand
                               {
@@ -76,13 +62,13 @@ public class RefundDifferenceCommandHandler : AsyncRequestHandler<RefundDifferen
                                   RegistrationId = command.RegistrationId,
                                   Data = data
                               };
-        _commandQueue.EnqueueCommand(sendMailCommand);
+        commandQueue.EnqueueCommand(sendMailCommand);
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(DifferencesQuery)
-                          });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(DifferencesQuery)
+                         });
     }
 }
 

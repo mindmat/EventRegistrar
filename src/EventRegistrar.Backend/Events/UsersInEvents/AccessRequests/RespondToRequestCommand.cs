@@ -1,38 +1,25 @@
 ﻿using EventRegistrar.Backend.Authentication.Users;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 
-public class RespondToRequestCommand : IRequest<Unit>, IEventBoundRequest
+public class RespondToRequestCommand : IRequest, IEventBoundRequest
 {
     public Guid AccessToEventRequestId { get; set; }
     public Guid EventId { get; set; }
     public RequestResponse Response { get; set; }
 }
 
-public class RespondToRequestCommandHandler : IRequestHandler<RespondToRequestCommand>
+public class RespondToRequestCommandHandler(IRepository<AccessToEventRequest> accessRequests,
+                                            IRepository<UserInEvent> usersInEvents,
+                                            IRepository<User> users,
+                                            IEventBus eventBus)
+    : IRequestHandler<RespondToRequestCommand>
 {
-    private readonly IRepository<AccessToEventRequest> _accessRequests;
-    private readonly IRepository<User> _users;
-    private readonly IEventBus _eventBus;
-    private readonly IRepository<UserInEvent> _usersInEvents;
-
-    public RespondToRequestCommandHandler(IRepository<AccessToEventRequest> accessRequests,
-                                          IRepository<UserInEvent> usersInEvents,
-                                          IRepository<User> users,
-                                          IEventBus eventBus)
+    public async Task Handle(RespondToRequestCommand command, CancellationToken cancellationToken)
     {
-        _accessRequests = accessRequests;
-        _usersInEvents = usersInEvents;
-        _users = users;
-        _eventBus = eventBus;
-    }
-
-    public async Task<Unit> Handle(RespondToRequestCommand command, CancellationToken cancellationToken)
-    {
-        var request = await _accessRequests.FirstAsync(req => req.Id == command.AccessToEventRequestId, cancellationToken);
+        var request = await accessRequests.FirstAsync(req => req.Id == command.AccessToEventRequestId, cancellationToken);
         if (request.Response != null)
         {
             throw new ArgumentException("Request has already been answered");
@@ -49,20 +36,19 @@ public class RespondToRequestCommandHandler : IRequestHandler<RespondToRequestCo
                                   EventId = request.EventId,
                                   Role = UserInEventRole.Reader
                               };
-            await _usersInEvents.InsertOrUpdateEntity(userInEvent, cancellationToken);
+            await usersInEvents.InsertOrUpdateEntity(userInEvent, cancellationToken);
         }
 
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(UsersOfEventQuery)
-                          });
-        _eventBus.Publish(new QueryChanged
-                          {
-                              EventId = command.EventId,
-                              QueryName = nameof(AccessRequestsOfEventQuery)
-                          });
-        return Unit.Value;
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(UsersOfEventQuery)
+                         });
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = command.EventId,
+                             QueryName = nameof(AccessRequestsOfEventQuery)
+                         });
     }
 
     private async Task<Guid> CreateUserIfNecessary(AccessToEventRequest request)
@@ -81,7 +67,7 @@ public class RespondToRequestCommandHandler : IRequestHandler<RespondToRequestCo
                        LastName = request.LastName,
                        Email = request.Email
                    };
-        await _users.InsertOrUpdateEntity(user);
+        await users.InsertOrUpdateEntity(user);
 
         return user.Id;
     }

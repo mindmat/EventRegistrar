@@ -5,15 +5,8 @@ public class RegistrablesQuery : IRequest<IEnumerable<RegistrableDisplayItem>>, 
     public Guid EventId { get; set; }
 }
 
-public class RegistrablesQueryHandler : IRequestHandler<RegistrablesQuery, IEnumerable<RegistrableDisplayItem>>
+public class RegistrablesQueryHandler(IQueryable<Registrable> _registrables) : IRequestHandler<RegistrablesQuery, IEnumerable<RegistrableDisplayItem>>
 {
-    private readonly IQueryable<Registrable> _registrables;
-
-    public RegistrablesQueryHandler(IQueryable<Registrable> registrables)
-    {
-        _registrables = registrables;
-    }
-
     public async Task<IEnumerable<RegistrableDisplayItem>> Handle(RegistrablesQuery query,
                                                                   CancellationToken cancellationToken)
     {

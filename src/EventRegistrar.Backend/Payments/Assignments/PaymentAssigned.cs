@@ -1,8 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using EventRegistrar.Backend.Payments.Files;
-using EventRegistrar.Backend.Registrations;
-
-namespace EventRegistrar.Backend.Payments.Assignments;
+﻿namespace EventRegistrar.Backend.Payments.Assignments;
 
 //public class PaymentAssigned : DomainEvent
 //{

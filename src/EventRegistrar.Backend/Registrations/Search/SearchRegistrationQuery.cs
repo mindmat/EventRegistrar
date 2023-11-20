@@ -9,18 +9,10 @@ public class SearchRegistrationQuery : IRequest<IEnumerable<RegistrationMatch>>,
     public IEnumerable<RegistrationState>? States { get; set; }
 }
 
-public class SearchRegistrationQueryHandler : IRequestHandler<SearchRegistrationQuery, IEnumerable<RegistrationMatch>>
+public class SearchRegistrationQueryHandler(IQueryable<Registration> _registrations,
+                                            ReadModelReader readModelReader)
+    : IRequestHandler<SearchRegistrationQuery, IEnumerable<RegistrationMatch>>
 {
-    private readonly IQueryable<Registration> _registrations;
-    private readonly ReadModelReader _readModelReader;
-
-    public SearchRegistrationQueryHandler(IQueryable<Registration> registrations,
-                                          ReadModelReader readModelReader)
-    {
-        _registrations = registrations;
-        _readModelReader = readModelReader;
-    }
-
     public async Task<IEnumerable<RegistrationMatch>> Handle(SearchRegistrationQuery query,
                                                              CancellationToken cancellationToken)
     {
@@ -48,7 +40,7 @@ public class SearchRegistrationQueryHandler : IRequestHandler<SearchRegistration
                                              .Select(reg => reg.Id)
                                              .ToListAsync(cancellationToken);
 
-        var registrations = await _readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery), query.EventId, registrationIds, cancellationToken);
+        var registrations = await readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery), query.EventId, registrationIds, cancellationToken);
 
         return registrations.Select(reg => new RegistrationMatch
                                            {

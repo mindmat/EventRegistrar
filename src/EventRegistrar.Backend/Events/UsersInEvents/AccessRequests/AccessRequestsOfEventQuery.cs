@@ -17,31 +17,24 @@ public class AccessRequestOfEvent
     public string? RequestText { get; set; }
 }
 
-public class AccessRequestsOfEventQueryHandler : IRequestHandler<AccessRequestsOfEventQuery, IEnumerable<AccessRequestOfEvent>>
+public class AccessRequestsOfEventQueryHandler(IQueryable<AccessToEventRequest> accessRequests) : IRequestHandler<AccessRequestsOfEventQuery, IEnumerable<AccessRequestOfEvent>>
 {
-    private readonly IQueryable<AccessToEventRequest> _accessRequests;
-
-    public AccessRequestsOfEventQueryHandler(IQueryable<AccessToEventRequest> accessRequests)
-    {
-        _accessRequests = accessRequests;
-    }
-
     public async Task<IEnumerable<AccessRequestOfEvent>> Handle(AccessRequestsOfEventQuery query,
                                                                 CancellationToken cancellationToken)
     {
-        return await _accessRequests.Where(req => req.EventId == query.EventId)
-                                    .Where(req => req.Response == null
-                                               || (req.Response == RequestResponse.Denied && query.IncludeDeniedRequests))
-                                    .Select(req => new AccessRequestOfEvent
-                                                   {
-                                                       Id = req.Id,
-                                                       FirstName = req.FirstName,
-                                                       LastName = req.LastName,
-                                                       Email = req.Email,
-                                                       AvatarUrl = req.AvatarUrl,
-                                                       RequestReceived = req.RequestReceived,
-                                                       RequestText = req.RequestText
-                                                   })
-                                    .ToListAsync(cancellationToken);
+        return await accessRequests.Where(req => req.EventId == query.EventId)
+                                   .Where(req => req.Response == null
+                                              || (req.Response == RequestResponse.Denied && query.IncludeDeniedRequests))
+                                   .Select(req => new AccessRequestOfEvent
+                                                  {
+                                                      Id = req.Id,
+                                                      FirstName = req.FirstName,
+                                                      LastName = req.LastName,
+                                                      Email = req.Email,
+                                                      AvatarUrl = req.AvatarUrl,
+                                                      RequestReceived = req.RequestReceived,
+                                                      RequestText = req.RequestText
+                                                  })
+                                   .ToListAsync(cancellationToken);
     }
 }

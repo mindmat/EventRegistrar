@@ -3,11 +3,9 @@ using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
 namespace EventRegistrar.Backend.Hosting;
 
-public class HostingMappingReader
+public class HostingMappingReader(IQueryable<Question> questions,
+                                  IQueryable<QuestionOption> questionOptions)
 {
-    private readonly IQueryable<Question> _questions;
-    private readonly IQueryable<QuestionOption> _questionOptions;
-
     private readonly IReadOnlyCollection<QuestionMappingType> _hostingQuestionMappings = new[]
                                                                                          {
                                                                                              QuestionMappingType.HostingOffer_Location,
@@ -27,32 +25,25 @@ public class HostingMappingReader
                                                                                    MappingType.HostingRequest_TravelByCar
                                                                                };
 
-    public HostingMappingReader(IQueryable<Question> questions,
-                                IQueryable<QuestionOption> questionOptions)
-    {
-        _questions = questions;
-        _questionOptions = questionOptions;
-    }
-
     public async Task<HostingQuestionMappings> GetHostingMappings(Guid eventId, CancellationToken cancellationToken = default)
     {
-        var questionMappings = await _questions.Where(qst => qst.RegistrationForm!.EventId == eventId
-                                                          && _hostingQuestionMappings.Contains(qst.Mapping!.Value))
-                                               .Select(qst => new QuestionMapping
-                                                       (
-                                                           qst.Id,
-                                                           qst.Mapping!.Value
-                                                       ))
-                                               .ToListAsync(cancellationToken);
-        var questionOptionMappings = await _questionOptions.Where(qop => qop.Question!.RegistrationForm!.EventId == eventId
-                                                                      && qop.Mappings!.Any(qom => _hostingOptionMappings.Contains(qom.Type!.Value)))
-                                                           .Select(qop => new QuestionOptionMapping
-                                                                   (
-                                                                       qop.Id,
-                                                                       qop.Mappings!.FirstOrDefault(qom => _hostingOptionMappings.Contains(qom.Type!.Value))!.Type!.Value,
-                                                                       qop.Mappings!.Where(qom => qom.RegistrableId != null).Select(qom => qom.RegistrableId!.Value)
-                                                                   ))
-                                                           .ToListAsync(cancellationToken);
+        var questionMappings = await questions.Where(qst => qst.RegistrationForm!.EventId == eventId
+                                                         && _hostingQuestionMappings.Contains(qst.Mapping!.Value))
+                                              .Select(qst => new QuestionMapping
+                                                      (
+                                                          qst.Id,
+                                                          qst.Mapping!.Value
+                                                      ))
+                                              .ToListAsync(cancellationToken);
+        var questionOptionMappings = await questionOptions.Where(qop => qop.Question!.RegistrationForm!.EventId == eventId
+                                                                     && qop.Mappings!.Any(qom => _hostingOptionMappings.Contains(qom.Type!.Value)))
+                                                          .Select(qop => new QuestionOptionMapping
+                                                                  (
+                                                                      qop.Id,
+                                                                      qop.Mappings!.FirstOrDefault(qom => _hostingOptionMappings.Contains(qom.Type!.Value))!.Type!.Value,
+                                                                      qop.Mappings!.Where(qom => qom.RegistrableId != null).Select(qom => qom.RegistrableId!.Value)
+                                                                  ))
+                                                          .ToListAsync(cancellationToken);
 
         return new HostingQuestionMappings
                {

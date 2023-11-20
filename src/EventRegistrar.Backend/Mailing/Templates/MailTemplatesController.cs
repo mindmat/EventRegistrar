@@ -5,25 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EventRegistrar.Backend.Mailing.Templates;
 
-public class MailTemplatesController : Controller
+public class MailTemplatesController(IMediator mediator,
+                                     IEventAcronymResolver eventAcronymResolver)
+    : Controller
 {
-    private readonly IEventAcronymResolver _eventAcronymResolver;
-    private readonly IMediator _mediator;
-
-    public MailTemplatesController(IMediator mediator,
-                                   IEventAcronymResolver eventAcronymResolver)
-    {
-        _mediator = mediator;
-        _eventAcronymResolver = eventAcronymResolver;
-    }
-
     [HttpDelete("api/events/{eventAcronym}/mailTemplates/{mailTemplateId:guid}")]
     public async Task DeleteMailTemplate(string eventAcronym, Guid mailTemplateId)
     {
-        await _mediator.Send(new DeleteBulkMailTemplateCommand
-                             {
-                                 EventId = await _eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
-                                 MailTemplateId = mailTemplateId
-                             });
+        await mediator.Send(new DeleteBulkMailTemplateCommand
+                            {
+                                EventId = await eventAcronymResolver.GetEventIdFromAcronym(eventAcronym),
+                                MailTemplateId = mailTemplateId
+                            });
     }
 }

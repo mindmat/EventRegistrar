@@ -1,14 +1,9 @@
 ﻿namespace EventRegistrar.Backend.Infrastructure.Mediator;
 
-public struct SerializedJson<TContent> : ISerializedJson
+public struct SerializedJson<TContent>(string json) : ISerializedJson
     where TContent : class?
 {
-    public SerializedJson(string json)
-    {
-        Content = json;
-    }
-
-    public string Content { get; }
+    public string Content { get; } = json;
     public Type ContentType => typeof(TContent);
 }
 

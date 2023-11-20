@@ -5,30 +5,22 @@ public class BulkMailTemplatesQuery : IRequest<BulkMailTemplates>, IEventBoundRe
     public Guid EventId { get; set; }
 }
 
-public class BulkMailTemplatesQueryHandler : IRequestHandler<BulkMailTemplatesQuery, BulkMailTemplates>
+public class BulkMailTemplatesQueryHandler(IQueryable<BulkMailTemplate> mailTemplates,
+                                           MailConfiguration config)
+    : IRequestHandler<BulkMailTemplatesQuery, BulkMailTemplates>
 {
-    private readonly IQueryable<BulkMailTemplate> _mailTemplates;
-    private readonly MailConfiguration _config;
-
-    public BulkMailTemplatesQueryHandler(IQueryable<BulkMailTemplate> mailTemplates,
-                                         MailConfiguration config)
-    {
-        _mailTemplates = mailTemplates;
-        _config = config;
-    }
-
     public async Task<BulkMailTemplates> Handle(BulkMailTemplatesQuery query, CancellationToken cancellationToken)
     {
-        var existingTemplates = await _mailTemplates.Where(mtp => mtp.EventId == query.EventId)
-                                                    .OrderBy(mtp => mtp.BulkMailKey)
-                                                    .ThenBy(mtp => mtp.Language)
-                                                    .ToListAsync(cancellationToken);
+        var existingTemplates = await mailTemplates.Where(mtp => mtp.EventId == query.EventId)
+                                                   .OrderBy(mtp => mtp.BulkMailKey)
+                                                   .ThenBy(mtp => mtp.Language)
+                                                   .ToListAsync(cancellationToken);
         return new BulkMailTemplates
                {
                    EventId = query.EventId,
-                   SenderMail = _config.SenderMail,
-                   SenderAlias = _config.SenderName,
-                   AvailableLanguages = _config.AvailableLanguages,
+                   SenderMail = config.SenderMail,
+                   SenderAlias = config.SenderName,
+                   AvailableLanguages = config.AvailableLanguages,
                    Keys = existingTemplates.GroupBy(btp => btp.BulkMailKey)
                                            .Select(grp => CreateKey(grp.Key, grp))
                };
@@ -41,7 +33,7 @@ public class BulkMailTemplatesQueryHandler : IRequestHandler<BulkMailTemplatesQu
         return new BulkMailTemplateKey
                {
                    Key = key,
-                   Templates = _config.AvailableLanguages.Select(lng => CreateTemplate(lng, existing.FirstOrDefault(mtp => mtp.Language == lng)))
+                   Templates = config.AvailableLanguages.Select(lng => CreateTemplate(lng, existing.FirstOrDefault(mtp => mtp.Language == lng)))
                };
     }
 

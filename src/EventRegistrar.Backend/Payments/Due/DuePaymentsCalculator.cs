@@ -8,7 +8,9 @@ using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Payments.Due;
 
-public class DuePaymentsCalculator : ReadModelCalculator<IEnumerable<DuePaymentItem>>
+public class DuePaymentsCalculator(IQueryable<Registration> registrations,
+                                   IDateTimeProvider dateTimeProvider)
+    : ReadModelCalculator<IEnumerable<DuePaymentItem>>
 {
     public const int DefaultPaymentGracePeriod = 6;
 
@@ -21,53 +23,43 @@ public class DuePaymentsCalculator : ReadModelCalculator<IEnumerable<DuePaymentI
     public static readonly ImmutableHashSet<MailType?> MailTypes_Reminder2 =
         new HashSet<MailType?> { MailType.PartnerRegistrationSecondReminder, MailType.SingleRegistrationSecondReminder }.ToImmutableHashSet();
 
-    private readonly IQueryable<Registration> _registrations;
-    private readonly IDateTimeProvider _dateTimeProvider;
-
-
-    public DuePaymentsCalculator(IQueryable<Registration> registrations,
-                                 IDateTimeProvider dateTimeProvider)
-    {
-        _registrations = registrations;
-        _dateTimeProvider = dateTimeProvider;
-    }
 
     public override string QueryName => nameof(DuePaymentsQuery);
     public override bool IsDateDependent => true;
 
     public override async Task<IEnumerable<DuePaymentItem>> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
     {
-        var now = _dateTimeProvider.Now;
+        var now = dateTimeProvider.Now;
         var reminderDueFrom = now.AddDays(-DefaultPaymentGracePeriod);
-        var data = await _registrations.Where(reg => reg.RegistrationForm!.EventId == eventId
-                                                  && reg.State == RegistrationState.Received
-                                                  && reg.IsOnWaitingList != true
-                                                  && reg.Price_AdmittedAndReduced > 0)
-                                       .Select(reg => new
-                                                      {
-                                                          reg.Id,
-                                                          FirstName = reg.RespondentFirstName,
-                                                          LastName = reg.RespondentLastName,
-                                                          Email = reg.RespondentEmail,
-                                                          reg.Price_AdmittedAndReduced,
-                                                          reg.ReceivedAt,
-                                                          reg.PhoneNormalized,
-                                                          reg.ReminderLevel,
-                                                          Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null
-                                                                                                                  ? asn.Amount
-                                                                                                                  : -asn.Amount),
-                                                          Mails = reg.Mails!.Select(rml => new
-                                                                                           {
-                                                                                               rml.Mail!.Id,
-                                                                                               Sent = rml.Mail.Created,
-                                                                                               rml.Mail.Type,
-                                                                                               rml.Mail.Withhold,
-                                                                                               rml.Mail.Discarded
-                                                                                           }),
-                                                          ReminderSms = reg.Sms!.Where(sms => sms.Type == SmsType.Reminder),
-                                                          reg.WillPayAtCheckin
-                                                      })
-                                       .ToListAsync(cancellationToken);
+        var data = await registrations.Where(reg => reg.RegistrationForm!.EventId == eventId
+                                                 && reg.State == RegistrationState.Received
+                                                 && reg.IsOnWaitingList != true
+                                                 && reg.Price_AdmittedAndReduced > 0)
+                                      .Select(reg => new
+                                                     {
+                                                         reg.Id,
+                                                         FirstName = reg.RespondentFirstName,
+                                                         LastName = reg.RespondentLastName,
+                                                         Email = reg.RespondentEmail,
+                                                         reg.Price_AdmittedAndReduced,
+                                                         reg.ReceivedAt,
+                                                         reg.PhoneNormalized,
+                                                         reg.ReminderLevel,
+                                                         Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null
+                                                                                                                 ? asn.Amount
+                                                                                                                 : -asn.Amount),
+                                                         Mails = reg.Mails!.Select(rml => new
+                                                                                          {
+                                                                                              rml.Mail!.Id,
+                                                                                              Sent = rml.Mail.Created,
+                                                                                              rml.Mail.Type,
+                                                                                              rml.Mail.Withhold,
+                                                                                              rml.Mail.Discarded
+                                                                                          }),
+                                                         ReminderSms = reg.Sms!.Where(sms => sms.Type == SmsType.Reminder),
+                                                         reg.WillPayAtCheckin
+                                                     })
+                                      .ToListAsync(cancellationToken);
 
         var result = data.Select(tmp => new
                                         {

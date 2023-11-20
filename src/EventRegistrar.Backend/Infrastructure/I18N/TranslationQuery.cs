@@ -4,8 +4,6 @@ using System.Resources;
 
 using EventRegistrar.Backend.Properties;
 
-using MediatR;
-
 namespace EventRegistrar.Backend.Infrastructure.I18N;
 
 public class TranslationQuery : IRequest<IDictionary<string, string>>
@@ -13,15 +11,17 @@ public class TranslationQuery : IRequest<IDictionary<string, string>>
     public string? Language { get; set; }
 }
 
-public class TranslationQueryHandler : RequestHandler<TranslationQuery, IDictionary<string, string>>
+public class TranslationQueryHandler : IRequestHandler<TranslationQuery, IDictionary<string, string>>
 {
-    protected override IDictionary<string, string> Handle(TranslationQuery query)
+    public Task<IDictionary<string, string>> Handle(TranslationQuery query, CancellationToken cancellationToken)
     {
-        var culture = query.Language == null ? CultureInfo.InvariantCulture : new CultureInfo(query.Language);
-        var dict = GetTranslations(Resources.ResourceManager, culture)
+        var culture = query.Language == null
+                          ? CultureInfo.InvariantCulture
+                          : new CultureInfo(query.Language);
+        IDictionary<string, string> dict = GetTranslations(Resources.ResourceManager, culture)
             .ToDictionary(entry => entry.Key,
                           entry => entry.Value);
-        return dict;
+        return Task.FromResult(dict);
     }
 
     private static IEnumerable<KeyValuePair<string, string>> GetTranslations(ResourceManager resourceManager, CultureInfo culture)

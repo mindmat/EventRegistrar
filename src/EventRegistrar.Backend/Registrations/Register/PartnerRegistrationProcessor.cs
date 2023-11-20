@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
@@ -9,33 +8,14 @@ using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations.Register;
 
-public class PartnerRegistrationProcessor
+public class PartnerRegistrationProcessor(PhoneNormalizer phoneNormalizer,
+                                          IQueryable<QuestionOptionMapping> optionToRegistrableMappings,
+                                          SpotManager spotManager,
+                                          IRepository<Registration> registrations,
+                                          PriceCalculator priceCalculator,
+                                          CommandQueue commandQueue,
+                                          IDateTimeProvider dateTimeProvider)
 {
-    private readonly IQueryable<QuestionOptionMapping> _optionToRegistrableMappings;
-    private readonly PhoneNormalizer _phoneNormalizer;
-    private readonly PriceCalculator _priceCalculator;
-    private readonly IRepository<Registration> _registrations;
-    private readonly SpotManager _spotManager;
-    private readonly CommandQueue _commandQueue;
-    private readonly IDateTimeProvider _dateTimeProvider;
-
-    public PartnerRegistrationProcessor(PhoneNormalizer phoneNormalizer,
-                                        IQueryable<QuestionOptionMapping> optionToRegistrableMappings,
-                                        SpotManager spotManager,
-                                        IRepository<Registration> registrations,
-                                        PriceCalculator priceCalculator,
-                                        CommandQueue commandQueue,
-                                        IDateTimeProvider dateTimeProvider)
-    {
-        _phoneNormalizer = phoneNormalizer;
-        _optionToRegistrableMappings = optionToRegistrableMappings;
-        _spotManager = spotManager;
-        _registrations = registrations;
-        _priceCalculator = priceCalculator;
-        _commandQueue = commandQueue;
-        _dateTimeProvider = dateTimeProvider;
-    }
-
     public async Task<IEnumerable<Seat>> Process(Registration registration,
                                                  PartnerRegistrationProcessConfiguration config)
     {
@@ -59,7 +39,7 @@ public class PartnerRegistrationProcessor
             registration.Phone = registration.Responses
                                              .FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Leader_Phone.Value)
                                              ?.ResponseString;
-            registration.PhoneNormalized = _phoneNormalizer.NormalizePhone(registration.Phone);
+            registration.PhoneNormalized = phoneNormalizer.NormalizePhone(registration.Phone);
         }
 
         var followerRegistration = new Registration
@@ -88,7 +68,7 @@ public class PartnerRegistrationProcessor
             followerRegistration.Phone = registration.Responses
                                                      .FirstOrDefault(rsp => rsp.QuestionId == config.QuestionId_Follower_Phone.Value)
                                                      ?.ResponseString;
-            followerRegistration.PhoneNormalized = _phoneNormalizer.NormalizePhone(followerRegistration.Phone);
+            followerRegistration.PhoneNormalized = phoneNormalizer.NormalizePhone(followerRegistration.Phone);
         }
 
         registration.RegistrationId_Partner = followerRegistration.Id;
@@ -98,7 +78,7 @@ public class PartnerRegistrationProcessor
         var questionOptionIds = new HashSet<Guid>(registration.Responses.Where(rsp => rsp.QuestionOptionId.HasValue)
                                                               .Select(rsp => rsp.QuestionOptionId.Value));
         var roleSpecificRegistrableIds = config.RoleSpecificMappings?.Select(rsm => rsm.RegistrableId).ToHashSet();
-        var registrables = await _optionToRegistrableMappings
+        var registrables = await optionToRegistrableMappings
                                  .Where(map => map.Registrable.EventId == registration.EventId
                                             && (questionOptionIds.Contains(map.QuestionOptionId)
                                              || (roleSpecificRegistrableIds != null
@@ -112,12 +92,12 @@ public class PartnerRegistrationProcessor
             foreach (var registrable in registrables.Where(rbl => rbl.QuestionOptionId == response.QuestionOptionId))
             {
                 var seat = registrable.Registrable.MaximumDoubleSeats.HasValue
-                               ? await _spotManager.ReservePartnerSpot(registration.EventId,
-                                                                       registrable.Registrable,
-                                                                       registration.Id,
-                                                                       followerRegistration.Id,
-                                                                       true)
-                               : await _spotManager.ReserveSingleSpot(registration.EventId, registrable.Id, registration.Id, true);
+                               ? await spotManager.ReservePartnerSpot(registration.EventId,
+                                                                      registrable.Registrable,
+                                                                      registration.Id,
+                                                                      followerRegistration.Id,
+                                                                      true)
+                               : await spotManager.ReserveSingleSpot(registration.EventId, registrable.Id, registration.Id, true);
 
                 if (seat == null)
                 {
@@ -142,8 +122,8 @@ public class PartnerRegistrationProcessor
                 var registrationId = roleSpecificMapping.Role == Role.Leader
                                          ? registration.Id
                                          : followerRegistration.Id;
-                var seat = await _spotManager.ReserveSingleSpot(registration.EventId, registrable.Id, registrationId,
-                                                                false);
+                var seat = await spotManager.ReserveSingleSpot(registration.EventId, registrable.Id, registrationId,
+                                                               false);
                 if (seat == null)
                 {
                     registration.SoldOutMessage = (registration.SoldOutMessage == null
@@ -165,41 +145,41 @@ public class PartnerRegistrationProcessor
         followerRegistration.IsOnWaitingList = isOnWaitingList;
         if (followerRegistration.IsOnWaitingList == false && followerRegistration.AdmittedAt == null)
         {
-            followerRegistration.AdmittedAt = _dateTimeProvider.Now;
+            followerRegistration.AdmittedAt = dateTimeProvider.Now;
         }
 
-        var (totalFollower, admittedFollower, admittedAndReducedFollower, _, _, _, _) = await _priceCalculator.CalculatePrice(followerRegistration, spots);
+        var (totalFollower, admittedFollower, admittedAndReducedFollower, _, _, _, _) = await priceCalculator.CalculatePrice(followerRegistration, spots);
         followerRegistration.Price_Original = totalFollower;
         followerRegistration.Price_Admitted = admittedFollower;
         followerRegistration.Price_AdmittedAndReduced = admittedAndReducedFollower;
 
-        await _registrations.InsertOrUpdateEntity(followerRegistration);
+        await registrations.InsertOrUpdateEntity(followerRegistration);
 
         // finalize leader registration
         registration.IsOnWaitingList = isOnWaitingList;
         if (registration.IsOnWaitingList == false && registration.AdmittedAt == null)
         {
-            registration.AdmittedAt = _dateTimeProvider.Now;
+            registration.AdmittedAt = dateTimeProvider.Now;
         }
 
-        var (total, admitted, admittedAndReduced, _, _, _, _) = await _priceCalculator.CalculatePrice(registration, spots);
+        var (total, admitted, admittedAndReduced, _, _, _, _) = await priceCalculator.CalculatePrice(registration, spots);
         registration.Price_Original = total;
         registration.Price_Admitted = admitted;
         registration.Price_AdmittedAndReduced = admittedAndReduced;
 
-        await _registrations.InsertOrUpdateEntity(registration);
+        await registrations.InsertOrUpdateEntity(registration);
 
         // send mail
         var mailType = isOnWaitingList
                            ? MailType.PartnerRegistrationMatchedOnWaitingList
                            : MailType.PartnerRegistrationMatchedAndAccepted;
-        _commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
-                                     {
-                                         EventId = registration.EventId,
-                                         MailType = mailType,
-                                         RegistrationId = registration.Id,
-                                         AllowDuplicate = false
-                                     });
+        commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
+                                    {
+                                        EventId = registration.EventId,
+                                        MailType = mailType,
+                                        RegistrationId = registration.Id,
+                                        AllowDuplicate = false
+                                    });
 
         return spots;
     }

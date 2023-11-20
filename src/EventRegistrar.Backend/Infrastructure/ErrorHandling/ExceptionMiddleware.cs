@@ -2,15 +2,9 @@
 
 namespace EventRegistrar.Backend.Infrastructure.ErrorHandling;
 
-public class ExceptionMiddleware : IMiddleware
+public class ExceptionMiddleware(ExceptionTranslator exceptionTranslator) : IMiddleware
 {
-    private readonly ExceptionTranslator _exceptionTranslator;
     private const string TranslatedExceptionKey = "TranslatedException";
-
-    public ExceptionMiddleware(ExceptionTranslator exceptionTranslator)
-    {
-        _exceptionTranslator = exceptionTranslator;
-    }
 
     public async Task InvokeAsync(HttpContext context, RequestDelegate next)
     {
@@ -31,7 +25,7 @@ public class ExceptionMiddleware : IMiddleware
         {
             var errors = aggregateException
                          .InnerExceptions
-                         .Select(ex => _exceptionTranslator.TranslateExceptionToUserText(ex).result as string ?? ex.Message)
+                         .Select(ex => exceptionTranslator.TranslateExceptionToUserText(ex).result as string ?? ex.Message)
                          .StringJoin(Environment.NewLine);
             context.Response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
             await context.Response.WriteAsync(errors).ConfigureAwait(false);
@@ -39,7 +33,7 @@ public class ExceptionMiddleware : IMiddleware
         }
         else
         {
-            var (result, httpCode) = _exceptionTranslator.TranslateExceptionToUserText(exception);
+            var (result, httpCode) = exceptionTranslator.TranslateExceptionToUserText(exception);
             context.Response.StatusCode = (int)(httpCode ?? HttpStatusCode.InternalServerError);
             switch (result)
             {

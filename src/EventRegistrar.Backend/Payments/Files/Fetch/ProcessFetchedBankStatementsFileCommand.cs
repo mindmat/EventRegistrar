@@ -1,8 +1,4 @@
-﻿using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.Infrastructure.DataAccess;
-using MediatR;
-
-namespace EventRegistrar.Backend.Payments.Files.Fetch;
+﻿namespace EventRegistrar.Backend.Payments.Files.Fetch;
 
 public class ProcessFetchedBankStatementsFileCommand : IRequest, IEventBoundRequest
 {
@@ -10,23 +6,18 @@ public class ProcessFetchedBankStatementsFileCommand : IRequest, IEventBoundRequ
     public Guid EventId { get; set; }
 }
 
-public class ProcessFetchedBankStatementsFileCommandHandler : IRequestHandler<ProcessFetchedBankStatementsFileCommand>
+public class ProcessFetchedBankStatementsFileCommandHandler(IRepository<RawBankStatementsFile> files,
+                                                            IRequestHandler<SavePaymentFileCommand> savePaymentFileCommandHandler)
+    : IRequestHandler<ProcessFetchedBankStatementsFileCommand>
 {
-    private readonly IRepository<RawBankStatementsFile> _files;
-    private readonly IRequestHandler<SavePaymentFileCommand> _savePaymentFileCommandHandler;
-
-    public ProcessFetchedBankStatementsFileCommandHandler(IRepository<RawBankStatementsFile> files,
-                                                          IRequestHandler<SavePaymentFileCommand>
-                                                              savePaymentFileCommandHandler)
+    public async Task Handle(ProcessFetchedBankStatementsFileCommand command, CancellationToken cancellationToken)
     {
-        _files = files;
-        _savePaymentFileCommandHandler = savePaymentFileCommandHandler;
-    }
+        var file = await files.FirstAsync(fil => fil.Id == command.RawBankStatementFileId, cancellationToken);
+        if (file.Processed != null)
+        {
+            return;
+        }
 
-    public async Task<Unit> Handle(ProcessFetchedBankStatementsFileCommand command, CancellationToken cancellationToken)
-    {
-        var file = await _files.FirstAsync(fil => fil.Id == command.RawBankStatementFileId, cancellationToken);
-        if (file.Processed != null) return Unit.Value;
         file.Processed = DateTimeOffset.Now;
 
         var savePaymentFileCommand = new SavePaymentFileCommand
@@ -35,14 +26,26 @@ public class ProcessFetchedBankStatementsFileCommandHandler : IRequestHandler<Pr
                                          ContentType = GetContentType(file.Filename),
                                          EventId = command.EventId
                                      };
-        return await _savePaymentFileCommandHandler.Handle(savePaymentFileCommand, cancellationToken);
+        await savePaymentFileCommandHandler.Handle(savePaymentFileCommand, cancellationToken);
     }
 
     private static string GetContentType(string filename)
     {
-        if (filename == null) return null;
-        if (filename.EndsWith(".xml")) return "text/xml";
-        if (filename.EndsWith(".tar.gz")) return "application/x-gzip";
+        if (filename == null)
+        {
+            return null;
+        }
+
+        if (filename.EndsWith(".xml"))
+        {
+            return "text/xml";
+        }
+
+        if (filename.EndsWith(".tar.gz"))
+        {
+            return "application/x-gzip";
+        }
+
         throw new ArgumentException($"Unknown file extension {filename}");
     }
 }
