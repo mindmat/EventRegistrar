@@ -26,13 +26,13 @@ public static class EndpointRouteBuilderExtensions
                             //.RequireCors(c => c.AllowAnyHeader().AllowAnyOrigin().AllowAnyHeader())
                             .WithDisplayName(request.Request.Name)
                             .WithMetadata(request);
-            //for (var i = 0; i < endpoint.Metadata.Count; i++) builder.WithMetadata(endpoint.Metadata[i]);
         }
     }
 
     private static RequestDelegate CreateProcessRequest(Type requestType, Container container)
     {
-        var openGenericMethod = typeof(EndpointRouteBuilderExtensions).GetMethod(nameof(CreateProcessRequestGeneric), BindingFlags.Static | BindingFlags.NonPublic)!;
+        var openGenericMethod = typeof(EndpointRouteBuilderExtensions).GetMethod(nameof(CreateProcessRequestGeneric),
+                                                                                 BindingFlags.Static | BindingFlags.NonPublic)!;
         var genericMethod = openGenericMethod.MakeGenericMethod(requestType);
         return (RequestDelegate)genericMethod.Invoke(null, new object?[] { container })!;
     }

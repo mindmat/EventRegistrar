@@ -101,8 +101,9 @@ var app = builder.Build();
 
 var assemblies = new[] { typeof(Program).Assembly };
 
-var requestTypes = container.GetTypesToRegister(typeof(IRequestHandler<,>), assemblies);
-container.RegisterSingleton(() => new RequestRegistry(requestTypes));
+var requestQueryTypes = container.GetTypesToRegister(typeof(IRequestHandler<,>), assemblies);
+var requestCommandTypes = container.GetTypesToRegister(typeof(IRequestHandler<>), assemblies);
+container.RegisterSingleton(() => new RequestRegistry(requestQueryTypes, requestCommandTypes));
 
 container.Register(typeof(IRequestHandler<>), assemblies);
 container.Register(typeof(IRequestHandler<,>), assemblies);
@@ -115,7 +116,6 @@ container.Register<EventContext>();
 container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
                                                             {
                                                                 typeof(ExtractEventIdDecorator<,>),
-                                                                typeof(AuthorizationDecorator<,>),
                                                                 typeof(CommitUnitOfWorkDecorator<,>)
                                                             });
 

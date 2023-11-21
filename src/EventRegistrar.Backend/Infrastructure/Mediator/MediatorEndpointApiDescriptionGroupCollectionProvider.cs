@@ -56,11 +56,14 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider(RequestRegist
                                          SupportedRequestFormats = { new ApiRequestFormat { MediaType = "application/json" } }
                                      };
 
-                var responseTypes = new ApiResponseTypeProvider().GetApiResponseTypes(apiDescription, requestType.Request);
-
-                foreach (var responseType in responseTypes)
+                if (requestType.Type == RequestType.Query)
                 {
-                    apiDescription.SupportedResponseTypes.Add(responseType);
+                    var responseTypes = new ApiResponseTypeProvider().GetApiResponseTypes(apiDescription, requestType.Request);
+
+                    foreach (var responseType in responseTypes)
+                    {
+                        apiDescription.SupportedResponseTypes.Add(responseType);
+                    }
                 }
 
                 apis.Add(apiDescription);
