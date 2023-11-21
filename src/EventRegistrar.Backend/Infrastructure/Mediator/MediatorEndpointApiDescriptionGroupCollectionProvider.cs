@@ -65,6 +65,10 @@ public class MediatorEndpointApiDescriptionGroupCollectionProvider(RequestRegist
                         apiDescription.SupportedResponseTypes.Add(responseType);
                     }
                 }
+                else
+                {
+                    apiDescription.SupportedResponseTypes.Add(new ApiResponseType { StatusCode = 204 });
+                }
 
                 apis.Add(apiDescription);
             }

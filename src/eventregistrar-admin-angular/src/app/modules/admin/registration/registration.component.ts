@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { FallbackPricePackage, IndividualReductionType, MailDisplayItem, MailDisplayType, MailState, MailTypeItem, RegistrationDisplayItem, RegistrationState, SpotDisplayItem } from 'app/api/api';
+import { FallbackPricePackage, IndividualReductionType, MailDisplayItem, MailDisplayType, MailMetadata, MailState, MailTypeItem, RegistrationDisplayItem, RegistrationState, SpotDisplayItem } from 'app/api/api';
 import { BehaviorSubject, debounceTime, filter, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { MailService } from '../mailing/mails/mail-view/mail.service';
@@ -23,9 +23,8 @@ import { ChangeNameComponent } from './change-name/change-name.component';
 export class RegistrationComponent implements OnInit
 {
   public registration: RegistrationDisplayItem;
-  private unsubscribeAll: Subject<any> = new Subject<any>();
   public possibleMailTypes: MailTypeItem[];
-  public mails: MailDisplayItem[];
+  public mails: MailMetadata[];
   public notes: string | null = null;
   public notesDirty: boolean;
   public notesVersion: number;
@@ -38,6 +37,7 @@ export class RegistrationComponent implements OnInit
   RegistrationState = RegistrationState;
   MailDisplayType = MailDisplayType;
   possibleFallbackPricePackages: FallbackPricePackage[];
+  private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
     private registrationService: RegistrationService,
@@ -82,7 +82,7 @@ export class RegistrationComponent implements OnInit
 
     this.notesToSave$.pipe(
       debounceTime(500),
-      filter(notes => notes != null && notes != undefined),
+      filter(notes => notes !== null && notes !== undefined),
       switchMap(notes =>
       {
         this.lastSentNotes = notes;

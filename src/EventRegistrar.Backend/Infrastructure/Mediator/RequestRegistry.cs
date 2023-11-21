@@ -8,6 +8,7 @@ public class RequestRegistry
     {
         RequestTypes = Enumerable.Concat(requestQueryTypes.Select(rht => (rht.GetInterface(typeof(IRequestHandler<,>).Name)!.GetGenericArguments()[0], rht, RequestType.Query)),
                                          requestCommandTypes.Select(rht => (rht.GetInterface(typeof(IRequestHandler<>).Name)!.GetGenericArguments()[0], rht, RequestType.Command)))
+                                 .OrderBy(rht => rht.Item1.Name)
                                  .ToList();
     }
 }

@@ -36,12 +36,12 @@ public class RegistrationDisplayItem
 
     public IEnumerable<SpotDisplayItem>? Spots { get; set; }
     public IEnumerable<AssignedPaymentDisplayItem>? Payments { get; set; }
-    public IEnumerable<MailDisplayItem>? Mails { get; set; }
-    public IEnumerable<MailDisplayItem>? ImportedMails { get; set; }
+    public IEnumerable<MailMetadata>? Mails { get; set; }
+    public IEnumerable<MailMetadata>? ImportedMails { get; set; }
     public IEnumerable<IndividualReductionDisplayItem>? Reductions { get; set; }
 }
 
-public class MailDisplayItem
+public class MailMetadata
 {
     public MailDisplayType Type { get; set; }
     public Guid MailId { get; set; }

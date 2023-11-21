@@ -69,7 +69,7 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                             Mails = reg.Mails!
                                                                        .Where(mir => !mir.Mail!.Discarded)
                                                                        .OrderByDescending(mir => mir.Mail!.Created)
-                                                                       .Select(mir => new MailDisplayItem
+                                                                       .Select(mir => new MailMetadata
                                                                                       {
                                                                                           Type = mir.Mail!.BulkMailKey == null
                                                                                                      ? MailDisplayType.Auto
@@ -83,7 +83,7 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                                       }),
                                                             ImportedMails = reg.ImportedMails!
                                                                                .OrderByDescending(mir => mir.Mail!.Date)
-                                                                               .Select(mir => new MailDisplayItem
+                                                                               .Select(mir => new MailMetadata
                                                                                               {
                                                                                                   Type = MailDisplayType.Imported,
                                                                                                   MailId = mir.ImportedMailId,

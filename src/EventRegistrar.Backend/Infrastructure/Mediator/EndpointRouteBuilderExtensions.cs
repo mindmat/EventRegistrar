@@ -94,7 +94,14 @@ public static class EndpointRouteBuilderExtensions
         }
         else
         {
-            await SerializeAsJson(context, response, requestType);
+            if (response is Unit)
+            {
+                context.Response.StatusCode = 204;
+            }
+            else
+            {
+                await SerializeAsJson(context, response, requestType);
+            }
         }
 
         await context.Response.Body.FlushAsync(context.RequestAborted);
