@@ -59,6 +59,7 @@ public class SavePricingCommandHandler(IRepository<PricePackage> packages,
 
                 part.SelectionType = partToSave.SelectionType;
                 part.PriceAdjustment = partToSave.PriceAdjustment;
+                part.ShowInMailSpotList = partToSave.ShowInMailSpotList;
 
                 var registrableIdsToSave = (partToSave.RegistrableIds ?? Enumerable.Empty<Guid>()).ToList();
                 var existingRegistrableIds = part.Registrables?

@@ -60,7 +60,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                                           .ToListAsync();
         var (priceOriginal, packagesOriginal, allCoveredOriginal) = CalculatePriceOfSpots(registration.Id, notCancelledSpots, packages, coreTracks);
 
-        var hasSpotsOnWaitingList = notCancelledSpots.Any(spot => spot.IsWaitingList);
+        var hasSpotsOnWaitingList = notCancelledSpots.Exists(spot => spot.IsWaitingList);
         var priceAdmitted = priceOriginal;
         var packagesAdmitted = packagesOriginal;
         var originalPackageIds = packagesOriginal.Select(pkg => pkg.Id).ToList();
@@ -169,12 +169,12 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                     var matchingSpotsOfPart = partMatches.MatchingRequiredRegistrableIds.Select(mtc =>
                                                          {
                                                              var (name, sortKey) = GetRegistrable(registrationId, mtc, part.Registrables!, spots);
-                                                             return new MatchingPackageSpot(name, null, sortKey);
+                                                             return new MatchingPackageSpot(name, null, part.ShowInMailSpotList ? sortKey : null);
                                                          })
                                                          .Concat(partMatches.MatchingOptionalRegistrableIds.Select(mtc =>
                                                          {
                                                              var (name, sortKey) = GetRegistrable(registrationId, mtc, part.Registrables!, spots);
-                                                             return new MatchingPackageSpot(name, null, sortKey);
+                                                             return new MatchingPackageSpot(name, null, part.ShowInMailSpotList ? sortKey : null);
                                                          }))
                                                          .ToList();
                     if (part is { PriceAdjustment: not null, SelectionType: PricePackagePartSelectionType.Optional })

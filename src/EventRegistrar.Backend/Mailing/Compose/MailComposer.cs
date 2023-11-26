@@ -298,32 +298,7 @@ public class MailComposer(IQueryable<Registration> registrations,
         {
             result.AppendLine("<table>");
             result.AppendLine("<tbody>");
-            foreach (var package in packagesAdmitted)
-            {
-                // Package header
-                var price = package.Price - package.Spots.Sum(spot => spot.PriceAdjustment ?? 0m);
-                result.AppendLine("<tr>");
-                result.AppendLine($"<td><strong>{package.Name}</strong></td>");
-                if (package.IsReductionsPackage)
-                {
-                    result.AppendLine("<td></td>");
-                }
-                else
-                {
-                    result.AppendLine($"<td style=\"text-align: right;\">{price}</td>");
-                }
-
-                result.AppendLine("</tr>");
-
-                // Package content
-                foreach (var matchingPackageSpot in package.Spots.Where(spt => spt.SortKey != null).OrderBy(spt => spt.SortKey))
-                {
-                    result.AppendLine("<tr>");
-                    result.AppendLine($"<td>- {matchingPackageSpot.Name}</td>");
-                    result.AppendLine($"<td style=\"text-align: right;\">{matchingPackageSpot.PriceAdjustment?.ToString("F2")}</td>");
-                    result.AppendLine("</tr>");
-                }
-            }
+            AddPackageLines(packagesAdmitted, result);
 
             // Total
             result.AppendLine("<tr>");
@@ -372,25 +347,7 @@ public class MailComposer(IQueryable<Registration> registrations,
             // Table
             result.AppendLine("<table>");
             result.AppendLine("<tbody>");
-            foreach (var package in packagesOnWaitingList)
-            {
-                // Package header
-                var price = package.Price - package.Spots.Sum(spot => spot.PriceAdjustment ?? 0m);
-                result.AppendLine("<tr>");
-                result.AppendLine($"<td><strong>{package.Name}</strong></td>");
-                result.AppendLine($"<td style=\"text-align: right;\"><strong>{price}</strong></td>");
-                result.AppendLine("</tr>");
-
-                // Package content
-                foreach (var matchingPackageSpot in package.Spots.Where(spt => spt.SortKey != null).OrderBy(spt => spt.SortKey))
-                {
-                    result.AppendLine("<tr>");
-                    result.AppendLine($"<td>- {matchingPackageSpot.Name}</td>");
-                    result.AppendLine($"<td style=\"text-align: right;\">{matchingPackageSpot.PriceAdjustment?.ToString("F2")}</td>");
-                    result.AppendLine("</tr>");
-                }
-            }
-
+            AddPackageLines(packagesOnWaitingList, result);
             result.AppendLine("</tbody>");
             result.AppendLine("</table>");
         }
@@ -406,5 +363,37 @@ public class MailComposer(IQueryable<Registration> registrations,
         }
 
         return result.ToString();
+    }
+
+    private static void AddPackageLines(IReadOnlyCollection<MatchingPackageResult> packages, StringBuilder result)
+    {
+        foreach (var package in packages)
+        {
+            // Package header
+            var price = package.Price - package.Spots.Sum(spot => spot.PriceAdjustment ?? 0m);
+            result.AppendLine("<tr>");
+            result.AppendLine($"<td><strong>{package.Name}</strong></td>");
+            if (package.IsReductionsPackage)
+            {
+                result.AppendLine("<td></td>");
+            }
+            else
+            {
+                result.AppendLine($"<td style=\"text-align: right;\">{price}</td>");
+            }
+
+            result.AppendLine("</tr>");
+
+            // Package content
+            foreach (var matchingPackageSpot in package.Spots
+                                                       .Where(spt => spt.SortKey != null)
+                                                       .OrderBy(spt => spt.SortKey))
+            {
+                result.AppendLine("<tr>");
+                result.AppendLine($"<td>- {matchingPackageSpot.Name}</td>");
+                result.AppendLine($"<td style=\"text-align: right;\">{matchingPackageSpot.PriceAdjustment?.ToString("F2")}</td>");
+                result.AppendLine("</tr>");
+            }
+        }
     }
 }

@@ -8522,6 +8522,9 @@
               "type": "string",
               "format": "guid"
             }
+          },
+          "showInMailSpotList": {
+            "type": "boolean"
           }
         }
       },

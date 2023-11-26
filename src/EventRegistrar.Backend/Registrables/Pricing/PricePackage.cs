@@ -49,6 +49,7 @@ public class PricePackagePart : Entity
     public PricePackagePartSelectionType SelectionType { get; set; }
     public decimal? PriceAdjustment { get; set; }
     public int SortKey { get; set; }
+    public bool ShowInMailSpotList { get; set; }
 }
 
 public enum PricePackagePartSelectionType

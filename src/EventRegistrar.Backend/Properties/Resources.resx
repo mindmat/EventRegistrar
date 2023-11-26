@@ -1129,6 +1129,12 @@
   <data name="ShowFinished" xml:space="preserve">
     <value>Beendete Events anzeigen</value>
   </data>
+  <data name="ShowInMailSpotList" xml:space="preserve">
+    <value>In Mail anzeigen</value>
+  </data>
+  <data name="ShowInMailSpotListExplanation" xml:space="preserve">
+    <value>Als Detailzeile(n) des Preispaket in Mails anzeigen.</value>
+  </data>
   <data name="ShowInOverview" xml:space="preserve">
     <value>In Übersicht anzeigen</value>
   </data>

@@ -3099,6 +3099,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to In Mail anzeigen.
+        /// </summary>
+        internal static string ShowInMailSpotList {
+            get {
+                return ResourceManager.GetString("ShowInMailSpotList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Als Detailzeile(n) des Preispaket in Mails anzeigen..
+        /// </summary>
+        internal static string ShowInMailSpotListExplanation {
+            get {
+                return ResourceManager.GetString("ShowInMailSpotListExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to In Übersicht anzeigen.
         /// </summary>
         internal static string ShowInOverview {

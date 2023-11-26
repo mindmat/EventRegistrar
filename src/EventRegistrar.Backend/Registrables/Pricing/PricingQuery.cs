@@ -26,7 +26,8 @@ public class PricingQueryHandler(IQueryable<PricePackage> packages) : IRequestHa
                                                                               Id = ppp.Id,
                                                                               SelectionType = ppp.SelectionType,
                                                                               PriceAdjustment = ppp.PriceAdjustment,
-                                                                              RegistrableIds = ppp.Registrables!.Select(rip => rip.RegistrableId)
+                                                                              RegistrableIds = ppp.Registrables!.Select(rip => rip.RegistrableId),
+                                                                              ShowInMailSpotList = ppp.ShowInMailSpotList
                                                                           })
                                             })
                              .ToListAsync(cancellationToken);
@@ -50,4 +51,5 @@ public record PricePackagePartDto
     public PricePackagePartSelectionType SelectionType { get; set; }
     public decimal? PriceAdjustment { get; set; }
     public IEnumerable<Guid>? RegistrableIds { get; set; }
+    public bool ShowInMailSpotList { get; set; }
 }

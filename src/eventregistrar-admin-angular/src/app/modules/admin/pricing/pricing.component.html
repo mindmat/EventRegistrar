@@ -120,6 +120,17 @@
                                 </app-tags-picker>
                             </ng-container>
 
+                            <div class="flex flex-row items-stretch justify-start mt-2">
+                                <div class="flex-auto cursor-pointer" (click)="showInMailSpotList.toggle()">
+                                    <div class="leading-6 font-medium">{{ 'ShowInMailSpotList' | translate }}</div>
+                                    <div class="text-md text-secondary">
+                                        {{ 'ShowInMailSpotListExplanation' | translate }}
+                                    </div>
+                                </div>
+                                <mat-slide-toggle class="ml-auto" [color]="'primary'" #showInMailSpotList formControlName="showInMailSpotList">
+                                </mat-slide-toggle>
+                            </div>
+
                             <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
                         </div>
                     </ng-container>

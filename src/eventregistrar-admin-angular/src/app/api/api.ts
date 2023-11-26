@@ -8817,6 +8817,7 @@ export interface PricePackagePartDto {
     selectionType?: PricePackagePartSelectionType;
     priceAdjustment?: number | null;
     registrableIds?: string[] | null;
+    showInMailSpotList?: boolean;
 }
 
 export interface PricingQuery {
