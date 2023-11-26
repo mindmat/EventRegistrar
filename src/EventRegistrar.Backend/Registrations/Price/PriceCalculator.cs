@@ -122,6 +122,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             return (reducedPrice, new MatchingPackageResult(null,
                                                             $"{Resources.Reduction}: {overwrite.Reason}",
                                                             reducedPrice - priceNotReduced,
+                                                            priceNotReduced,
                                                             false,
                                                             false,
                                                             Array.Empty<MatchingPackageSpot>()));
@@ -134,6 +135,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
         var priceAdmittedAndReduced = priceNotReduced - clampedReduction;
         return (priceAdmittedAndReduced, new MatchingPackageResult(null,
                                                                    Resources.Reduction,
+                                                                   0m,
                                                                    0m,
                                                                    false,
                                                                    false,
@@ -148,7 +150,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
     {
         var bookedRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId));
         var bookedCoreRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId).Where(rid => coreTracks.Select(trk => trk.Id).Contains(rid)));
-        List<MatchingPackage> matchingPackages = new();
+        var matchingPackages = new List<MatchingPackage>();
         foreach (var package in packages)
         {
             var packageMatches = true;
@@ -180,7 +182,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                     if (part is { PriceAdjustment: not null, SelectionType: PricePackagePartSelectionType.Optional })
                     {
                         packagePrice += part.PriceAdjustment.Value;
-                        matchingSpotsOfPart.First().PriceAdjustment = part.PriceAdjustment.Value;
+                        matchingSpotsOfPart[0].PriceAdjustment = part.PriceAdjustment.Value;
                     }
 
                     matchingSpots.AddRange(matchingSpotsOfPart);
@@ -196,7 +198,12 @@ public class PriceCalculator(IQueryable<Seat> _spots,
 
             if (packageMatches && (matchingRequiredRegistrableIds.Any() || matchingOptionalRegistrableIds.Any()))
             {
-                matchingPackages.Add(new MatchingPackage(package, matchingRequiredRegistrableIds, matchingOptionalRegistrableIds, packagePrice, matchingSpots));
+                matchingPackages.Add(new MatchingPackage(package,
+                                                         matchingRequiredRegistrableIds,
+                                                         matchingOptionalRegistrableIds,
+                                                         packagePrice,
+                                                         package.Price,
+                                                         matchingSpots));
             }
         }
 
@@ -231,6 +238,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                                                pkg.Package.Id,
                                                pkg.Package.Name,
                                                pkg.Price,
+                                               pkg.OriginalPrice,
                                                pkg.Package.AllowAsAutomaticFallback,
                                                pkg.Package.AllowAsManualFallback,
                                                pkg.Spots
@@ -285,11 +293,13 @@ public record struct MatchingPackage(PricePackage Package,
                                      IReadOnlyCollection<Guid> MatchingRequiredRegistrableId,
                                      IReadOnlyCollection<Guid> MatchingOptionalRegistrableId,
                                      decimal Price,
+                                     decimal OriginalPrice,
                                      IEnumerable<MatchingPackageSpot> Spots);
 
 public record struct MatchingPackageResult(Guid? Id,
                                            string Name,
                                            decimal Price,
+                                           decimal OriginalPrice,
                                            bool AllowAsAutomaticFallback,
                                            bool AllowAsManualFallback,
                                            IEnumerable<MatchingPackageSpot> Spots,
