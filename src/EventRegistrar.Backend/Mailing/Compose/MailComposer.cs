@@ -387,8 +387,9 @@ public class MailComposer(IQueryable<Registration> registrations,
 
             if (package.OriginalPrice != package.Price)
             {
-                result.AppendLine(
-                    $"<td><img src=\"data:image/png;base64,{ImgReductionBinary}\" style=\"width: 20px;\" class=\"fr-fic fr-dib\" title=\"{GetReductionText(package.OriginalPrice, package.Price)}\" /></td>");
+                var text = GetReductionText(package.OriginalPrice, package.Price);
+                //result.AppendLine($"<td><img src=\"data:image/png;base64,{ImgReductionBinary}\" style=\"width: 20px;\" class=\"fr-fic fr-dib\" title=\"{text}\" alt=\"{text}\" /></td>");
+                result.AppendLine($"<td><span style=\"font-size: 12px;\">{text}</span></td>");
             }
             else
             {
@@ -413,6 +414,6 @@ public class MailComposer(IQueryable<Registration> registrations,
 
     private static string GetReductionText(decimal originalPrice, decimal reducedPrice)
     {
-        return $"{Resources.Reduction} {originalPrice:F2} \u2794 {reducedPrice:F2}";
+        return string.Format(Resources.ReductionText, originalPrice, reducedPrice);
     }
 }

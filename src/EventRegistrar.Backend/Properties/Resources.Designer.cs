@@ -2595,6 +2595,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to reduziert von {0:F2}.
+        /// </summary>
+        internal static string ReductionText {
+            get {
+                return ResourceManager.GetString("ReductionText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Rückerstattung.
         /// </summary>
         internal static string RefundAmount {

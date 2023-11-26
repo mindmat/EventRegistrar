@@ -960,6 +960,9 @@
   <data name="Reductions" xml:space="preserve">
     <value>Reduktionen</value>
   </data>
+  <data name="ReductionText" xml:space="preserve">
+    <value>reduziert von {0:F2}</value>
+  </data>
   <data name="RefundAmount" xml:space="preserve">
     <value>Rückerstattung</value>
   </data>

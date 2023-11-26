@@ -72,8 +72,7 @@ public class SendMailCommandHandler(ILogger logger,
                           Subject = command.Subject,
                           PlainTextContent = command.ContentPlainText,
                           HtmlContent = command.ContentHtml,
-                          CustomArgs = new Dictionary<string, string>
-                                       { { nameof(SendGridEvent.MailId), mail.Id.ToString() } }
+                          CustomArgs = new Dictionary<string, string> { { nameof(SendGridEvent.MailId), mail.Id.ToString() } }
                       };
 
             msg.AddTos(command.To.Select(to => new SendGrid.Helpers.Mail.EmailAddress(to.Email, to.Name)).ToList());

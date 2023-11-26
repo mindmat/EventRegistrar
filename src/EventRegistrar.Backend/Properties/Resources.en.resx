@@ -864,6 +864,9 @@
   <data name="Reductions" xml:space="preserve">
     <value>Reductions</value>
   </data>
+  <data name="ReductionText" xml:space="preserve">
+    <value>reduced from {0:F2}</value>
+  </data>
   <data name="RefundAmount" xml:space="preserve">
     <value>Refund</value>
   </data>
