@@ -236,7 +236,8 @@ app.UseEndpoints(endpoints =>
 
 app.MapGet("/", () => container.GetInstance<HomeController>().Index()).AllowAnonymous();
 
-app.MapPost("api/events/{eventAcronym}/paymentfiles/upload", (string eventAcronym, IFormFile file) => container.GetInstance<PaymentFileController>().UploadFile(eventAcronym, file));
+app.MapPost("api/events/{eventAcronym}/paymentfiles/upload", (string eventAcronym, IFormFile file) => container.GetInstance<PaymentFileController>().UploadFile(eventAcronym, file))
+   .DisableAntiforgery();
 
 app.Run();
 
