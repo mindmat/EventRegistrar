@@ -14,7 +14,7 @@ namespace EventRegistrar.Functions;
 public static class ReceivePostmarkMailNotification
 {
     [Function(nameof(ReceivePostmarkMailNotification))]
-    public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "mails/state/postmark/{type:string?}")] HttpRequestData req, string? type)
+    public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "mails/state/postmark/{type:alpha?}")] HttpRequestData req, string? type)
     {
         var bodyJson = await req.ReadAsStringAsync();
 
