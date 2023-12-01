@@ -40,7 +40,7 @@ public class SecretReader
         var keyVaultUri = configuration.GetValue<string>(_keyVaultConfigKey)
                        ?? throw new ConfigurationException(_keyVaultConfigKey);
 
-        var client = new SecretClient(new Uri(keyVaultUri), new InteractiveBrowserCredential());
+        var client = new SecretClient(new Uri(keyVaultUri), new DefaultAzureCredential());
 
         try
         {
