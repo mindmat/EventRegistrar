@@ -11,10 +11,10 @@ using Microsoft.Extensions.Configuration;
 
 namespace EventRegistrar.Functions;
 
-public static class ReceiveSendGridMailNotification
+public static class ReceivePostmarkMailNotification
 {
-    [Function(nameof(ReceiveSendGridMailNotification))]
-    public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "mails/state")] HttpRequestData req)
+    [Function(nameof(ReceivePostmarkMailNotification))]
+    public static async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "mails/state/postmark/{type:string?}")] HttpRequestData req, string? type)
     {
         var bodyJson = await req.ReadAsStringAsync();
 
@@ -25,10 +25,11 @@ public static class ReceiveSendGridMailNotification
         var id = Guid.NewGuid();
         await using (var connection = new SqlConnection(connectionString))
         {
-            const string insertQuery = "INSERT INTO dbo.RawMailEvents(Id, MailSender, [Body], Created) VALUES (@Id, 2, @Body, @Created)";
+            const string insertQuery = "INSERT INTO dbo.RawMailEvents(Id, MailSender, Type, [Body], Created) VALUES (@Id, 3, @Type, @Body, @Created)";
             var parameters = new
                              {
                                  Id = id,
+                                 Type = type,
                                  Body = bodyJson,
                                  Created = DateTimeOffset.Now
                              };

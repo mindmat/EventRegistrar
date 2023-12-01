@@ -4,6 +4,8 @@ namespace EventRegistrar.Backend.Mailing.Feedback;
 
 public class RawMailEvent : Entity
 {
+    public MailSender? MailSender { get; set; }
+    public MailState? Type { get; set; }
     public string Body { get; set; } = null!;
     public DateTimeOffset Created { get; set; }
     public DateTimeOffset? Processed { get; set; }

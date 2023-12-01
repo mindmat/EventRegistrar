@@ -1,4 +1,7 @@
-﻿using Azure.Identity;
+﻿using System.Collections.Concurrent;
+using System.Security;
+
+using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 
 using EventRegistrar.Backend.Infrastructure.ErrorHandling;
@@ -9,24 +12,27 @@ public class SecretReader
 {
     private const string _keyVaultConfigKey = "KeyVaultUri";
     private readonly ILogger _logger;
-    private readonly Lazy<SecretClient?> _secretClient;
+    private readonly Lazy<SecretClient> _secretClient;
+    private readonly IDictionary<string, string> _cache = new ConcurrentDictionary<string, string>();
 
     public SecretReader(IConfiguration configuration,
                         ILogger logger)
     {
         _logger = logger;
-        _secretClient = new Lazy<SecretClient?>(() => CreateSecretClient(configuration));
+        _secretClient = new Lazy<SecretClient>(() => CreateSecretClient(configuration));
     }
 
     public async Task<string?> GetSecret(string key, CancellationToken cancellationToken = default)
     {
-        if (_secretClient.Value == null)
+        if (_cache.TryGetValue(key, out var cachedSecret))
         {
-            return null;
+            return cachedSecret;
         }
 
         var response = await _secretClient.Value.GetSecretAsync(key, null, cancellationToken);
-        return response.Value.Value;
+        var secret = response.Value.Value;
+        _cache[key] = secret;
+        return secret;
     }
 
     private SecretClient CreateSecretClient(IConfiguration configuration)
@@ -34,11 +40,11 @@ public class SecretReader
         var keyVaultUri = configuration.GetValue<string>(_keyVaultConfigKey)
                        ?? throw new ConfigurationException(_keyVaultConfigKey);
 
-        var client = new SecretClient(new Uri(keyVaultUri), new DefaultAzureCredential());
+        var client = new SecretClient(new Uri(keyVaultUri), new InteractiveBrowserCredential());
 
         try
         {
-            var _ = client.GetPropertiesOfSecrets().ToList();
+            _ = client.GetPropertiesOfSecrets().ToList();
         }
         catch (Exception ex)
         {

@@ -36,6 +36,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Postmark" Version="4.7.10" />
     <PackageReference Include="Sendgrid" Version="9.28.1" />
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
     <PackageReference Include="SimpleInjector" Version="5.4.2" />

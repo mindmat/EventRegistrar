@@ -20,7 +20,7 @@ public class ResendSentMailsWithoutStateCommandHandler(IQueryable<Mail> mails,
 
         var failedMailIds = await mails.Where(mail => mail.EventId == command.EventId
                                                    && mail.Sent < threshold
-                                                   && mail.SendGridMessageId == null
+                                                   && mail.MailSenderMessageId == null
                                                    && mail.State == null
                                                    && !mail.Discarded
                                                    && !mail.Withhold

@@ -141,22 +141,7 @@ public class ComposeAndSendAutoMailCommandHandler(IQueryable<AutoMailTemplate> t
             var sendMailCommand = new SendMailCommand
                                   {
                                       EventId = mail.EventId!.Value,
-                                      MailId = mail.Id,
-                                      ContentHtml = mail.ContentHtml,
-                                      ContentPlainText = mail.ContentPlainText,
-                                      Subject = mail.Subject,
-                                      Sender = new EmailAddress
-                                               {
-                                                   Email = mail.SenderMail,
-                                                   Name = mail.SenderName
-                                               },
-                                      To = registrations_Recipients.Select(reg =>
-                                                                               new EmailAddress
-                                                                               {
-                                                                                   Email = reg.RespondentEmail,
-                                                                                   Name = reg.RespondentFirstName
-                                                                               })
-                                                                   .ToList()
+                                      MailId = mail.Id
                                   };
             commandQueue.EnqueueCommand(sendMailCommand);
         }

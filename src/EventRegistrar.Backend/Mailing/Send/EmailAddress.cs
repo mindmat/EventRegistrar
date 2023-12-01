@@ -2,6 +2,13 @@
 
 public class EmailAddress
 {
-    public string Email { get; set; }
-    public string Name { get; set; }
+    public required string Email { get; set; }
+    public string? Name { get; set; }
+
+    public string ToNameMail()
+    {
+        return Name == null
+                   ? Email
+                   : $"{Name} <{Email}>";
+    }
 }

@@ -28,10 +28,12 @@ public class Mail : Entity
     public string? ContentPlainText { get; set; }
 
     public DateTimeOffset Created { get; set; }
-    public string? SendGridMessageId { get; set; }
     public DateTimeOffset? Sent { get; set; }
     public MailState? State { get; set; }
     public MailType? Type { get; set; }
+
+    public MailSender? SentBy { get; set; }
+    public string? MailSenderMessageId { get; set; }
 
     public bool Withhold { get; set; }
     public bool Discarded { get; set; }

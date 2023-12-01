@@ -28,59 +28,190 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
             return;
         }
 
-        var events = JsonConvert.DeserializeObject<IEnumerable<SendGridEvent>>(rawMailEvents.Body)
-                  ?? Enumerable.Empty<SendGridEvent>();
-        foreach (var sendGridEvent in events)
+        if (rawMailEvents.MailSender == MailSender.SendGrid || rawMailEvents.MailSender == null)
         {
-            var mail = await GetMail(sendGridEvent);
-            if (mail == null)
+            var events = JsonConvert.DeserializeObject<IEnumerable<SendGridEvent>>(rawMailEvents.Body)
+                      ?? Enumerable.Empty<SendGridEvent>();
+            foreach (var sendGridEvent in events)
             {
-                continue;
-            }
-
-            // dedup
-            if (!string.IsNullOrEmpty(sendGridEvent.Sg_event_id))
-            {
-                var existingEvent = await mailEvents.FirstOrDefaultAsync(mev => mev.ExternalIdentifier == sendGridEvent.Sg_event_id,
-                                                                         cancellationToken);
-                if (existingEvent != null)
+                var mail = await GetMail(sendGridEvent);
+                if (mail == null)
                 {
-                    log.LogWarning("MailEvent {0} already exists", sendGridEvent.Sg_event_id);
+                    continue;
+                }
+
+                // dedup
+                if (!string.IsNullOrEmpty(sendGridEvent.Sg_event_id))
+                {
+                    var existingEvent = await mailEvents.FirstOrDefaultAsync(mev => mev.ExternalIdentifier == sendGridEvent.Sg_event_id,
+                                                                             cancellationToken);
+                    if (existingEvent != null)
+                    {
+                        log.LogWarning("MailEvent {0} already exists", sendGridEvent.Sg_event_id);
+                    }
+                }
+
+                if (!Enum.TryParse(sendGridEvent.Event, true, out MailState state))
+                {
+                    state = MailState.Unknown;
+                }
+                else
+                {
+                    mail.State = state;
+                    // if addressed to multiple emails, save which receiver is concerned
+                    foreach (var mailToRegistration in mail.Registrations!.Where(mil => string.Equals(mil.Email, sendGridEvent.Email, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        mailToRegistration.State = state;
+                        changeTrigger.TriggerUpdate<RegistrationCalculator>(mailToRegistration.RegistrationId,
+                                                                            mailToRegistration.Registration!.EventId);
+                    }
+                }
+
+                var mailEvent = new MailEvent
+                                {
+                                    Id = Guid.NewGuid(),
+                                    MailSender = mail.SentBy,
+                                    ExternalIdentifier = sendGridEvent.Sg_event_id,
+                                    MailId = mail.Id,
+                                    EMail = sendGridEvent.Email,
+                                    RawEvent = JsonConvert.SerializeObject(sendGridEvent),
+                                    State = state,
+                                    Reason = sendGridEvent.Reason,
+                                    BounceClassification = sendGridEvent.Bounce_Classification
+                                };
+                mailEvents.InsertObjectTree(mailEvent);
+            }
+        }
+        else if (rawMailEvents.MailSender == MailSender.Postmark)
+        {
+            if (rawMailEvents.Type == MailState.Delivered)
+            {
+                var deliveryEvent = JsonConvert.DeserializeObject<PostmarkEventDelivery>(rawMailEvents.Body);
+                if (deliveryEvent != null)
+                {
+                    var mail = await GetMail(deliveryEvent.MessageID);
+                    if (mail != null
+                     && mail.State != MailState.Open
+                     && mail.State != MailState.Click)
+                    {
+                        var newState = MailState.Delivered;
+                        mail.State = newState;
+                        // if addressed to multiple emails, save which receiver is concerned
+                        foreach (var mailToRegistration in mail.Registrations!.Where(mil => string.Equals(mil.Email, deliveryEvent.Recipient, StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            mailToRegistration.State = newState;
+                            changeTrigger.TriggerUpdate<RegistrationCalculator>(mailToRegistration.RegistrationId,
+                                                                                mailToRegistration.Registration!.EventId);
+                        }
+
+                        var mailEvent = new MailEvent
+                                        {
+                                            Id = Guid.NewGuid(),
+                                            MailSender = mail.SentBy,
+                                            ExternalIdentifier = deliveryEvent.MessageID,
+                                            MailId = mail.Id,
+                                            EMail = deliveryEvent.Recipient,
+                                            RawEvent = JsonConvert.SerializeObject(deliveryEvent),
+                                            State = newState,
+                                            Reason = deliveryEvent.Details
+                                        };
+                        mailEvents.InsertObjectTree(mailEvent);
+                    }
                 }
             }
-
-            if (!Enum.TryParse(sendGridEvent.Event, true, out MailState state))
+            else if (rawMailEvents.Type == MailState.Bounce)
             {
-                state = MailState.Unknown;
-            }
-            else
-            {
-                mail.State = state;
-                // if addressed to multiple emails, save which receiver is concerned
-                foreach (var mailToRegistration in mail.Registrations!.Where(mil => mil.Email?.ToLowerInvariant() == sendGridEvent.Email?.ToLowerInvariant()))
+                var bounceEvent = JsonConvert.DeserializeObject<PostmarkEventBounce>(rawMailEvents.Body);
+                if (bounceEvent != null)
                 {
-                    mailToRegistration.State = state;
-                    changeTrigger.TriggerUpdate<RegistrationCalculator>(mailToRegistration.RegistrationId,
-                                                                        mailToRegistration.Registration!.EventId);
+                    var mail = await GetMail(bounceEvent.MessageID);
+                    if (mail != null
+                     && mail.State != MailState.Delivered
+                     && mail.State != MailState.Open
+                     && mail.State != MailState.Click)
+                    {
+                        var newState = MailState.Bounce;
+                        mail.State = newState;
+                        // if addressed to multiple emails, save which receiver is concerned
+                        foreach (var mailToRegistration in mail.Registrations!.Where(mil => string.Equals(mil.Email, bounceEvent.Email, StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            mailToRegistration.State = newState;
+                            changeTrigger.TriggerUpdate<RegistrationCalculator>(mailToRegistration.RegistrationId,
+                                                                                mailToRegistration.Registration!.EventId);
+                        }
+
+                        var mailEvent = new MailEvent
+                                        {
+                                            Id = Guid.NewGuid(),
+                                            MailSender = mail.SentBy,
+                                            ExternalIdentifier = bounceEvent.MessageID,
+                                            MailId = mail.Id,
+                                            EMail = bounceEvent.Email,
+                                            RawEvent = JsonConvert.SerializeObject(bounceEvent),
+                                            State = newState,
+                                            Reason = bounceEvent.Details
+                                        };
+                        mailEvents.InsertObjectTree(mailEvent);
+                    }
                 }
             }
+            else if (rawMailEvents.Type == MailState.Open)
+            {
+                var openEvent = JsonConvert.DeserializeObject<PostmarkEventOpen>(rawMailEvents.Body);
+                if (openEvent != null)
+                {
+                    var mail = await GetMail(openEvent.MessageID);
+                    if (mail != null
+                     && mail.State != MailState.Click)
+                    {
+                        var newState = MailState.Open;
+                        mail.State = newState;
+                        // if addressed to multiple emails, save which receiver is concerned
+                        foreach (var mailToRegistration in mail.Registrations!.Where(mil => string.Equals(mil.Email, openEvent.Recipient, StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            mailToRegistration.State = newState;
+                            changeTrigger.TriggerUpdate<RegistrationCalculator>(mailToRegistration.RegistrationId,
+                                                                                mailToRegistration.Registration!.EventId);
+                        }
 
-            var mailEvent = new MailEvent
-                            {
-                                Id = Guid.NewGuid(),
-                                Created = dateTimeProvider.Now,
-                                ExternalIdentifier = sendGridEvent.Sg_event_id,
-                                MailId = mail.Id,
-                                EMail = sendGridEvent.Email,
-                                RawEvent = JsonConvert.SerializeObject(sendGridEvent),
-                                State = state,
-                                Reason = sendGridEvent.Reason,
-                                BounceClassification = sendGridEvent.Bounce_Classification
-                            };
-            mailEvents.InsertObjectTree(mailEvent);
+                        var mailEvent = new MailEvent
+                                        {
+                                            Id = Guid.NewGuid(),
+                                            MailSender = mail.SentBy,
+                                            ExternalIdentifier = openEvent.MessageID,
+                                            MailId = mail.Id,
+                                            EMail = openEvent.Recipient,
+                                            RawEvent = JsonConvert.SerializeObject(openEvent),
+                                            State = newState
+                                        };
+                        mailEvents.InsertObjectTree(mailEvent);
+                    }
+                }
+            }
+        }
+        else
+        {
+            throw new NotImplementedException($"MailSender {rawMailEvents.MailSender} not implemented");
         }
 
         rawMailEvents.Processed = dateTimeProvider.Now;
+    }
+
+
+    private async Task<Mail?> GetMail(SendGridEvent sendGridEvent)
+    {
+        var mail = await GetMail(sendGridEvent.MailId);
+        if (mail != null)
+        {
+            return mail;
+        }
+
+        // fallback to smtp-id
+        var messageId = ExtractMessageId(sendGridEvent.Smtp_id);
+        return await mails.Where(mil => mil.MailSenderMessageId == messageId)
+                          .Include(mil => mil.Registrations!)
+                          .ThenInclude(reg => reg.Registration)
+                          .FirstOrDefaultAsync();
     }
 
     /// <summary>
@@ -99,25 +230,17 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
         return id;
     }
 
-    private async Task<Mail?> GetMail(SendGridEvent sendGridEvent)
+    private async Task<Mail?> GetMail(string? messageId)
     {
-        if (Guid.TryParse(sendGridEvent.MailId, out var mailId))
+        if (messageId != null
+         && Guid.TryParse(messageId, out var mailId))
         {
-            var mail = await mails.Where(mil => mil.Id == mailId)
-                                  .Include(mil => mil.Registrations!)
-                                  .ThenInclude(reg => reg.Registration)
-                                  .FirstOrDefaultAsync();
-            if (mail != null)
-            {
-                return mail;
-            }
+            return await mails.Where(mil => mil.Id == mailId)
+                              .Include(mil => mil.Registrations!)
+                              .ThenInclude(reg => reg.Registration)
+                              .FirstOrDefaultAsync();
         }
 
-        // fallback to smtp-id
-        var messageId = ExtractMessageId(sendGridEvent.Smtp_id);
-        return await mails.Where(mil => mil.SendGridMessageId == messageId)
-                          .Include(mil => mil.Registrations!)
-                          .ThenInclude(reg => reg.Registration)
-                          .FirstOrDefaultAsync();
+        return null;
     }
 }

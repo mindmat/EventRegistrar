@@ -36,21 +36,7 @@ public class ReleaseBulkMailsCommandHandler(IRepository<Mail> mails,
             var sendMailCommand = new SendMailCommand
                                   {
                                       EventId = withheldMail.EventId!.Value,
-                                      MailId = withheldMail.Id,
-                                      ContentHtml = withheldMail.ContentHtml,
-                                      ContentPlainText = withheldMail.ContentPlainText,
-                                      Subject = withheldMail.Subject,
-                                      Sender = new EmailAddress
-                                               {
-                                                   Email = withheldMail.SenderMail,
-                                                   Name = withheldMail.SenderName
-                                               },
-                                      To = withheldMail.Registrations!.Select(reg => new EmailAddress
-                                                                                     {
-                                                                                         Email = reg.Registration!.RespondentEmail,
-                                                                                         Name = reg.Registration!.RespondentFirstName
-                                                                                     })
-                                                       .ToList()
+                                      MailId = withheldMail.Id
                                   };
 
             withheldMail.Withhold = false;

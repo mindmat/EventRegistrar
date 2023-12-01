@@ -142,22 +142,7 @@ public class ComposeAndSendBulkMailCommandHandler(IQueryable<BulkMailTemplate> t
         var sendMailCommand = new SendMailCommand
                               {
                                   EventId = mail.EventId!.Value,
-                                  MailId = mail.Id,
-                                  ContentHtml = mail.ContentHtml,
-                                  ContentPlainText = mail.ContentPlainText,
-                                  Subject = mail.Subject,
-                                  Sender = new EmailAddress
-                                           {
-                                               Email = mail.SenderMail,
-                                               Name = mail.SenderName
-                                           },
-                                  To = mappings.Select(reg =>
-                                                           new EmailAddress
-                                                           {
-                                                               Email = reg.RespondentEmail,
-                                                               Name = reg.RespondentFirstName
-                                                           })
-                                               .ToList()
+                                  MailId = mail.Id
                               };
 
         if (!command.Withhold)
@@ -165,11 +150,5 @@ public class ComposeAndSendBulkMailCommandHandler(IQueryable<BulkMailTemplate> t
             mail.Sent = dateTimeProvider.Now;
             commandQueue.EnqueueCommand(sendMailCommand);
         }
-
-        // ToDo
-        //foreach (var registrable in registrablesToCheckWaitingList)
-        //{
-        //    await _serviceBusClient.SendCommand(new TryPromoteFromWaitingListCommand { RegistrableId = registrable.Id }, TryPromoteFromWaitingList.TryPromoteFromWaitingListQueueName);
-        //}
     }
 }

@@ -31,5 +31,6 @@ public class DefaultMailConfiguration : MailConfiguration, IDefaultConfiguration
 public enum MailSender
 {
     Imap = 1,
-    SendGrid = 2
+    SendGrid = 2,
+    Postmark = 3
 }
