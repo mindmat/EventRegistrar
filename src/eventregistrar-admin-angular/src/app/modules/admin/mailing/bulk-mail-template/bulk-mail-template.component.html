@@ -60,15 +60,17 @@
                     <div class="text-secondary">{{ 'Released' | translate }}: {{ mailsProgress.sent }}</div>
                 </div>
 
-                <div class="flex flex-col items-center justify-center space-y-2 p-2 border border-gray-300 rounded-md shadow-sm bg-card w-44">
-                    <div class="text-secondary">{{ 'MailState_Processed' | translate }}: {{ mailsProgress.processed }}</div>
-                    <div class="text-secondary">{{ 'MailState_Bounce' | translate }}: {{ mailsProgress.bounce }}</div>
-                    <div class="text-secondary">{{ 'MailState_Dropped' | translate }}: {{ mailsProgress.dropped }}</div>
+                <div *ngIf="mailsProgress.processed > 0 || mailsProgress.bounce > 0 || mailsProgress.dropped > 0"
+                    class="flex flex-col items-center justify-center space-y-2 p-2 border border-gray-300 rounded-md shadow-sm bg-card w-44">
+                    <div *ngIf="mailsProgress.processed > 0" class="text-secondary">{{ 'MailState_Processed' | translate }}: {{ mailsProgress.processed }}</div>
+                    <div *ngIf="mailsProgress.bounce > 0" class="text-secondary">{{ 'MailState_Bounce' | translate }}: {{ mailsProgress.bounce }}</div>
+                    <div *ngIf="mailsProgress.dropped > 0" class="text-secondary">{{ 'MailState_Dropped' | translate }}: {{ mailsProgress.dropped }}</div>
                 </div>
 
-                <div class="flex flex-col items-center justify-center space-y-2 p-2 border border-gray-300 rounded-md shadow-sm bg-card w-44">
-                    <div class="text-secondary">{{ 'MailState_Delivered' | translate }}: {{ mailsProgress.delivered }}</div>
-                    <div class="text-secondary">{{ 'MailState_Open' | translate }}: {{ mailsProgress.opened }}</div>
+                <div *ngIf="mailsProgress.delivered > 0 || mailsProgress.opened > 0"
+                    class="flex flex-col items-center justify-center space-y-2 p-2 border border-gray-300 rounded-md shadow-sm bg-card w-44">
+                    <div *ngIf="mailsProgress.delivered > 0" class="text-secondary">{{ 'MailState_Delivered' | translate }}: {{ mailsProgress.delivered }}</div>
+                    <div *ngIf="mailsProgress.opened > 0" class="text-secondary">{{ 'MailState_Open' | translate }}: {{ mailsProgress.opened }}</div>
                 </div>
 
             </div>
