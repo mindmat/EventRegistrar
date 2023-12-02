@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Api, BulkMailTemplateDisplayItem, MailingAudience, PlaceholderDescription, PossibleAudience } from 'app/api/api';
+import { Api, BulkMailTemplateDisplayItem, GeneratedBulkMails, MailingAudience, PlaceholderDescription, PossibleAudience } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { BulkMailTemplateService } from './bulk-mail-template.service';
@@ -23,8 +23,7 @@ export class BulkMailTemplateComponent implements OnInit
   possibleAudiences: PossibleAudience[];
   selectedAudiences: MailingAudience[];
   registrableId: string | null;
-  generatedCount: number;
-  sentCount: number;
+  mailsProgress: GeneratedBulkMails;
 
   templateForm = this.fb.group({
     id: '',
@@ -131,9 +130,7 @@ export class BulkMailTemplateComponent implements OnInit
 
     this.generatedBulkMailsService.generated$.subscribe((result) =>
     {
-      this.generatedCount = result?.generatedCount ?? 0;
-      this.sentCount = result?.sentCount ?? 0;
-
+      this.mailsProgress = result;
       this.changeDetectorRef.markForCheck();
     });
   }

@@ -22,7 +22,8 @@ public class ReleaseBulkMailsCommandHandler(IRepository<Mail> mails,
 
     public async Task Handle(ReleaseBulkMailsCommand command, CancellationToken cancellationToken)
     {
-        var withheldMails = await mails.Where(mail => mail.BulkMailKey == command.BulkMailKey
+        var withheldMails = await mails.AsTracking()
+                                       .Where(mail => mail.BulkMailKey == command.BulkMailKey
                                                    && mail.EventId == command.EventId
                                                    && mail.Withhold
                                                    && !mail.Discarded)

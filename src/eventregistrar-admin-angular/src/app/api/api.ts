@@ -8171,8 +8171,13 @@ export interface FroalaKeyQuery {
 }
 
 export interface GeneratedBulkMails {
-    generatedCount?: number;
-    sentCount?: number;
+    generated?: number;
+    sent?: number;
+    processed?: number;
+    dropped?: number;
+    delivered?: number;
+    opened?: number;
+    bounce?: number;
 }
 
 export interface GeneratedBulkMailsQuery {
@@ -8327,7 +8332,7 @@ export interface MailView {
 
 export interface EmailAddress {
     email?: string;
-    name?: string;
+    name?: string | null;
 }
 
 export interface MailRecipient {
@@ -9267,12 +9272,7 @@ export interface SearchRegistrationQuery {
 
 export interface SendMailCommand {
     eventId?: string;
-    contentHtml?: string;
-    contentPlainText?: string;
     mailId?: string;
-    sender?: EmailAddress;
-    subject?: string;
-    to?: EmailAddress[];
 }
 
 export interface SendPaymentDueMailCommand {

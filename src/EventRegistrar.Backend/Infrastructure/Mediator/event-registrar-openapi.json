@@ -6435,11 +6435,31 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "generatedCount": {
+          "generated": {
             "type": "integer",
             "format": "int32"
           },
-          "sentCount": {
+          "sent": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "processed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dropped": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "delivered": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "opened": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bounce": {
             "type": "integer",
             "format": "int32"
           }
@@ -6906,7 +6926,8 @@
             "type": "string"
           },
           "name": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -9936,27 +9957,9 @@
             "type": "string",
             "format": "guid"
           },
-          "contentHtml": {
-            "type": "string"
-          },
-          "contentPlainText": {
-            "type": "string"
-          },
           "mailId": {
             "type": "string",
             "format": "guid"
-          },
-          "sender": {
-            "$ref": "#/components/schemas/EmailAddress"
-          },
-          "subject": {
-            "type": "string"
-          },
-          "to": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EmailAddress"
-            }
           }
         }
       },
