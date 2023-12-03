@@ -8,7 +8,7 @@ export class CreateEventService
 {
   constructor(private api: Api) { }
 
-  createEvent(command: CreateEventCommand)
+  createEvent(command: CreateEventCommand): void
   {
     this.api.createEvent_Command(command)
       .subscribe();

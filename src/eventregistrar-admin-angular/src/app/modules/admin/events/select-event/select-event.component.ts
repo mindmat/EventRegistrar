@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AccessRequest, EventOfUser, EventSearchResult, EventState, RoleDescription, UserInEventRole } from 'app/api/api';
+import { AccessRequest, CreateEventCommand, EventOfUser, EventSearchResult, EventState, RoleDescription, UserInEventRole } from 'app/api/api';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { CreateEventComponent } from './create-event/create-event.component';
 import { EventsOfUserService } from './events-of-user.service';
 import { SearchEventsService } from './search-events.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { v4 as createUuid } from 'uuid';
+import { CreateEventService } from './create-event/create-event.service';
 
 @Component({
   selector: 'app-select-event',
@@ -13,7 +16,6 @@ import { SearchEventsService } from './search-events.service';
 })
 export class SelectEventComponent implements OnInit
 {
-  private unsubscribeAll: Subject<any> = new Subject<any>();
   events: EventOfUser[];
   filteredEvents: EventOfUser[];
   requests: AccessRequest[];
@@ -26,15 +28,27 @@ export class SelectEventComponent implements OnInit
   finishedOtherEventsInList: boolean = false;
   showOtherFinishedEvents$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  createNewEventForm: FormGroup;
+
   query$: BehaviorSubject<string | null> = new BehaviorSubject(null);
+
+  private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(private eventsOfUserService: EventsOfUserService,
     private searchEventService: SearchEventsService,
     private changeDetectorRef: ChangeDetectorRef,
+    private fb: FormBuilder,
+    private createEventService: CreateEventService,
     private matDialog: MatDialog) { }
 
   ngOnInit(): void
   {
+    this.createNewEventForm = this.fb.group<CreateEventCommand>({
+      id: createUuid(),
+      name: '',
+      acronym: '',
+    });
+
     combineLatest([this.eventsOfUserService.events$, this.query$, this.showFinishedEvents$])
       .pipe(takeUntil(this.unsubscribeAll))
       .subscribe(([events, query, showFinishedEvents]) =>
@@ -93,32 +107,32 @@ export class SelectEventComponent implements OnInit
     return item.id || index;
   }
 
-  showFinishedEvents()
+  showFinishedEvents(): void
   {
     this.showFinishedEvents$.next(true);
   }
 
-  hideFinishedEvents()
+  hideFinishedEvents(): void
   {
     this.showFinishedEvents$.next(false);
   }
 
-  showOtherFinishedEvents()
+  showOtherFinishedEvents(): void
   {
     this.showOtherFinishedEvents$.next(true);
   }
 
-  hideOtherFinishedEvents()
+  hideOtherFinishedEvents(): void
   {
     this.showOtherFinishedEvents$.next(false);
   }
 
-  requestAccess(eventId: string)
+  requestAccess(eventId: string): void
   {
     this.eventsOfUserService.requestAccess(eventId);
   }
 
-  createSuccessorEvent(event: EventOfUser)
+  createSuccessorEvent(event: EventOfUser): void
   {
     const dialogRef = this.matDialog.open(CreateEventComponent, { data: { event } });
 
@@ -127,6 +141,11 @@ export class SelectEventComponent implements OnInit
       {
         console.log('Create event dialog was closed!');
       });
+  }
+
+  onSubmit(): void
+  {
+    this.createEventService.createEvent(this.createNewEventForm.value);
   }
 
   // setRoleOfUser(change: MatSelectChange, userId: string)

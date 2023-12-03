@@ -63,17 +63,25 @@
             </button>
         </div>
 
-        <!-- Add new event -->
-        <div class="w-full mt-4">
-            <mat-form-field class="fuse-mat-no-subscript w-full" [floatLabel]="'always'">
-                <mat-label>{{ 'NewEvent' | translate }}</mat-label>
-                <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
-                <input matInput [placeholder]="'EventName' | translate">
-                <button mat-icon-button matSuffix>
-                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
-                </button>
-            </mat-form-field>
-        </div>
+        <!-- Create new event -->
+        <form class="grid grid-cols-4 gap-6 w-full mt-8 items-baseline" [formGroup]="createNewEventForm" (ngSubmit)="onSubmit()">
+            <!-- Name -->
+            <div class="col-span-4 sm:col-span-2">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'NewEvent' | translate }}</mat-label>
+                    <input [formControlName]="'name'" [placeholder]="'EventName' | translate" matInput>
+                </mat-form-field>
+            </div>
+            <!-- Acronym -->
+            <div class="col-span-2 sm:col-span-1">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <input [formControlName]="'acronym'" [placeholder]="'Acronym' | translate" matInput>
+                </mat-form-field>
+            </div>
+            <button class="ml-4" mat-flat-button type="submit" [color]="'primary'">{{ 'Create' | translate }}
+            </button>
+        </form>
+
 
         <!-- Access requests -->
         <div class="flex flex-col mt-8 divide-y border-t border-b" *ngIf="requests?.length > 0">

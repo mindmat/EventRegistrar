@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DoubleRegistrableDisplayItem, RegistrableDisplayItem, RegistrableType, RegistrableTypeOption, SaveRegistrableCommand, SingleRegistrableDisplayItem } from 'app/api/api';
@@ -11,7 +11,7 @@ import { v4 as createUuid } from 'uuid';
   templateUrl: './registrable-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RegistrableDetailComponent
+export class RegistrableDetailComponent implements OnInit
 {
   registrableForm: FormGroup;
   registrableTypes: RegistrableTypeOption[];
