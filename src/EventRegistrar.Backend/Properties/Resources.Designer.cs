@@ -1614,6 +1614,33 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mail-Service.
+        /// </summary>
+        internal static string MailSender {
+            get {
+                return ResourceManager.GetString("MailSender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Postmark.
+        /// </summary>
+        internal static string MailSender_Postmark {
+            get {
+                return ResourceManager.GetString("MailSender_Postmark", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SendGrid.
+        /// </summary>
+        internal static string MailSender_SendGrid {
+            get {
+                return ResourceManager.GetString("MailSender_SendGrid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bounce.
         /// </summary>
         internal static string MailState_Bounce {

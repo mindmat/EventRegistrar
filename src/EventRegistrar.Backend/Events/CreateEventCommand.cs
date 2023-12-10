@@ -37,6 +37,16 @@ public class CreateEventCommandHandler(IRepository<Event> events,
 {
     public async Task Handle(CreateEventCommand command, CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(command.Name))
+        {
+            throw new ArgumentException("Name must not be empty", nameof(command.Name));
+        }
+
+        if (string.IsNullOrWhiteSpace(command.Acronym))
+        {
+            throw new ArgumentException("Acronym must not be empty", nameof(command.Acronym));
+        }
+
         var existingEvent = await events.FirstOrDefaultAsync(evt => evt.Acronym == command.Acronym
                                                                  || evt.Id == command.Id, cancellationToken);
         if (existingEvent != null)

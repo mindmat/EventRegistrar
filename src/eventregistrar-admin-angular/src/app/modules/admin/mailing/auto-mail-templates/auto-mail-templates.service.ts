@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, AutoMailTemplates, MailType } from 'app/api/api';
+import { Api, AutoMailTemplates, MailSender, MailType } from 'app/api/api';
 import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { FetchService } from '../../infrastructure/fetchService';
@@ -22,7 +22,7 @@ export class AutoMailTemplatesService extends FetchService<AutoMailTemplates> {
     return this.result$;
   }
 
-  fetchAutoMailTemplates()
+  fetchAutoMailTemplates(): Observable<AutoMailTemplates>
   {
     return this.fetchItems(this.api.autoMailTemplates_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
@@ -32,15 +32,35 @@ export class AutoMailTemplatesService extends FetchService<AutoMailTemplates> {
     return this.api.createAutoMailTemplate_Command({ eventId: this.eventService.selectedId, type, language });
   }
 
-  updateSettings(senderMail: string, senderName: string, availableLanguages: string[], singleRegistrationPossible: boolean, partnerRegistrationPossible: boolean)
+  updateSettings(
+    senderMail: string,
+    senderName: string,
+    availableLanguages: string[],
+    singleRegistrationPossible: boolean,
+    partnerRegistrationPossible: boolean,
+    mailSender: MailSender): void
   {
-    this.api.updateAutoMailConfiguration_Command({ eventId: this.eventService.selectedId, senderMail, senderName, availableLanguages, singleRegistrationPossible, partnerRegistrationPossible })
+    this.api.updateAutoMailConfiguration_Command(
+      {
+        eventId: this.eventService.selectedId,
+        senderMail,
+        senderName,
+        availableLanguages,
+        singleRegistrationPossible,
+        partnerRegistrationPossible,
+        mailSender
+      })
       .subscribe();
   }
 
-  setReleaseMail(type: MailType, releaseImmediately: boolean)
+  setReleaseMail(type: MailType, releaseImmediately: boolean): void
   {
     this.api.setReleaseMail_Command({ eventId: this.eventService.selectedId, type, releaseImmediately })
       .subscribe();
+  }
+
+  getAvailableMailers(): Observable<MailSender[]>
+  {
+    return this.api.availableMailers_Query({ eventId: this.eventService.selectedId });
   }
 }

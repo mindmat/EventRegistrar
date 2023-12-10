@@ -35,6 +35,18 @@ public class SecretReader
         return secret;
     }
 
+    public Task<string?> GetSendGridApiKey(CancellationToken cancellationToken = default)
+    {
+        const string SendGridApiKey = "SendGridApiKey";
+        return GetSecret(SendGridApiKey, cancellationToken);
+    }
+
+    public Task<string?> GetPostmarkToken(CancellationToken cancellationToken = default)
+    {
+        const string PostmarkTokenKey = "PostmarkToken";
+        return GetSecret(PostmarkTokenKey, cancellationToken);
+    }
+
     private SecretClient CreateSecretClient(IConfiguration configuration)
     {
         var keyVaultUri = configuration.GetValue<string>(_keyVaultConfigKey)

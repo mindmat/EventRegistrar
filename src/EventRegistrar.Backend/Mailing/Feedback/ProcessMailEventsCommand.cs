@@ -3,6 +3,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Registrations.ReadModels;
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace EventRegistrar.Backend.Mailing.Feedback;
 
@@ -84,7 +85,17 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
         }
         else if (rawMailEvents.MailSender == MailSender.Postmark)
         {
-            if (rawMailEvents.Type == MailState.Delivered)
+            var mailState = rawMailEvents.Type;
+            if (mailState == null)
+            {
+                var parsed = JObject.Parse(rawMailEvents.Body);
+                if (parsed.TryGetValue("RecordType", out var jToken))
+                {
+                    mailState = ConvertPostmarkRecordType(jToken.Value<string>());
+                }
+            }
+
+            if (mailState == MailState.Delivered)
             {
                 var deliveryEvent = JsonConvert.DeserializeObject<PostmarkEventDelivery>(rawMailEvents.Body);
                 if (deliveryEvent != null)
@@ -119,7 +130,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                     }
                 }
             }
-            else if (rawMailEvents.Type == MailState.Bounce)
+            else if (mailState == MailState.Bounce)
             {
                 var bounceEvent = JsonConvert.DeserializeObject<PostmarkEventBounce>(rawMailEvents.Body);
                 if (bounceEvent != null)
@@ -155,7 +166,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                     }
                 }
             }
-            else if (rawMailEvents.Type == MailState.Open)
+            else if (mailState == MailState.Open)
             {
                 var openEvent = JsonConvert.DeserializeObject<PostmarkEventOpen>(rawMailEvents.Body);
                 if (openEvent != null)
@@ -195,6 +206,19 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
         }
 
         rawMailEvents.Processed = dateTimeProvider.Now;
+    }
+
+    private static MailState? ConvertPostmarkRecordType(string? postmarkRecordType)
+    {
+        return postmarkRecordType switch
+        {
+            "Delivery"      => MailState.Delivered,
+            "Bounce"        => MailState.Bounce,
+            "SpamComplaint" => MailState.SpamReport,
+            "Open"          => MailState.Open,
+            "Click"         => MailState.Click,
+            _               => null
+        };
     }
 
 

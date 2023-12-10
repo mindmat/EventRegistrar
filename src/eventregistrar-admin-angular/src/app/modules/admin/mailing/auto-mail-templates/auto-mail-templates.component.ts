@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AutoMailTemplates, AutoMailTemplateMetadataLanguage, AutoMailTemplateMetadataType } from 'app/api/api';
+import { AutoMailTemplates, AutoMailTemplateMetadataLanguage, AutoMailTemplateMetadataType, MailSender } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { AutoMailTemplatesService } from './auto-mail-templates.service';
 
@@ -12,7 +12,6 @@ import { AutoMailTemplatesService } from './auto-mail-templates.service';
 })
 export class AutoMailTemplatesComponent implements OnInit
 {
-  private unsubscribeAll: Subject<any> = new Subject<any>();
   templates: AutoMailTemplates;
   selectedTemplate: AutoMailTemplateMetadataLanguage;
   flagCodes: any;
@@ -27,8 +26,12 @@ export class AutoMailTemplatesComponent implements OnInit
     senderMail: '',
     singleRegistrationPossible: false,
     partnerRegistrationPossible: false,
+    mailSender: MailSender.Imap,
     availableLanguages: this.fb.array([] as string[])
   });
+  MailSender = MailSender;
+  public mailers: MailSender[];
+  private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
     private service: AutoMailTemplatesService,
@@ -55,6 +58,7 @@ export class AutoMailTemplatesComponent implements OnInit
           senderMail: templates.senderMail,
           singleRegistrationPossible: templates.singleRegistrationPossible,
           partnerRegistrationPossible: templates.partnerRegistrationPossible,
+          mailSender: templates.mailSender,
           availableLanguages: []
         });
         this.configForm.setControl('availableLanguages', this.fb.array(templates.availableLanguages));
@@ -63,12 +67,15 @@ export class AutoMailTemplatesComponent implements OnInit
         this.changeDetectorRef.markForCheck();
       });
 
+    this.service.getAvailableMailers().subscribe(
+      (mailers: MailSender[]) => { this.mailers = mailers; }
+    );
   }
 
-  toggleLang(langId: string)
+  toggleLang(langId: string): void
   {
-    var langs = this.configForm.value.availableLanguages;
-    var index = langs.indexOf(langId);
+    const langs = this.configForm.value.availableLanguages;
+    const index = langs.indexOf(langId);
     if (index < 0)
     {
       langs.push(langId);
@@ -79,27 +86,27 @@ export class AutoMailTemplatesComponent implements OnInit
     }
   }
 
-  toggleSingle()
+  toggleSingle(): void
   {
     this.configForm.patchValue({
       singleRegistrationPossible: !this.configForm.value.singleRegistrationPossible
     });
   }
 
-  togglePartner()
+  togglePartner(): void
   {
     this.configForm.patchValue({
       partnerRegistrationPossible: !this.configForm.value.partnerRegistrationPossible
     });
   }
 
-  toggleRelease(type: AutoMailTemplateMetadataType)
+  toggleRelease(type: AutoMailTemplateMetadataType): void
   {
     type.releaseImmediately = !type.releaseImmediately;
     this.service.setReleaseMail(type.type, type.releaseImmediately);
   }
 
-  selectTemplate(template: AutoMailTemplateMetadataLanguage, type: AutoMailTemplateMetadataType)
+  selectTemplate(template: AutoMailTemplateMetadataLanguage, type: AutoMailTemplateMetadataType): void
   {
     this.selectedTemplate = template;
 
@@ -117,13 +124,14 @@ export class AutoMailTemplatesComponent implements OnInit
     this.changeDetectorRef.markForCheck();
   }
 
-  saveSettings()
+  saveSettings(): void
   {
     this.service.updateSettings(
       this.configForm.value.senderMail,
       this.configForm.value.senderName,
       this.configForm.value.availableLanguages,
       this.configForm.value.singleRegistrationPossible,
-      this.configForm.value.partnerRegistrationPossible);
+      this.configForm.value.partnerRegistrationPossible,
+      this.configForm.value.mailSender);
   }
 }

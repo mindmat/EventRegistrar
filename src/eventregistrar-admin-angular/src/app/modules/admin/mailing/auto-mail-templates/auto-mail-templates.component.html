@@ -49,6 +49,14 @@
                                 </mat-form-field>
                             </div>
 
+                            <!-- Mail sender -->
+                            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                                <mat-label>{{ 'MailSender' | translate }}</mat-label>
+                                <mat-select [formControlName]="'mailSender'">
+                                    <mat-option *ngFor="let mailer of mailers" [value]="mailer">{{ mailer | translateEnum: MailSender : 'MailSender' }}</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
                             <!-- Single available -->
                             <button class="pr-4 pl-3.5" mat-button (click)="toggleSingle()">
 
@@ -98,7 +106,7 @@
                                         <button (click)="toggleLang(lang.id)">
                                             <span class="flex items-center relative w-6 shadow rounded-sm overflow-hidden">
                                                 <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
-                                                <img class="w-full" [ngClass]="{'opacity-25': this.configForm.value.availableLanguages.includes(lang.id)==false}"
+                                                <img class="w-full" [ngClass]="{'opacity-25': this.configForm.value.availableLanguages.includes(lang.id)===false}"
                                                     [src]="'assets/images/flags/' + flagCodes[lang.id]?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + lang.label">
                                             </span>
                                         </button>
@@ -111,7 +119,6 @@
                                             </button> -->
                                     </ng-container>
                                 </div>
-
                             </div>
 
                             <!-- <input matInput [autocomplete]="'off'" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" (input)="filterByQuery(searchField.value)" #searchField> -->

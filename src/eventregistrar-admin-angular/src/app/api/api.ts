@@ -622,6 +622,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    availableMailers_Query(availableMailersQuery: AvailableMailersQuery | undefined): Observable<MailSender[]> {
+        let url_ = this.baseUrl + "/api/AvailableMailersQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(availableMailersQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAvailableMailers_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAvailableMailers_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<MailSender[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<MailSender[]>;
+        }));
+    }
+
+    protected processAvailableMailers_Query(response: HttpResponseBase): Observable<MailSender[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as MailSender[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     availableQuestionMappings_Query(availableQuestionMappingsQuery: AvailableQuestionMappingsQuery | undefined): Observable<AvailableQuestionMapping[]> {
         let url_ = this.baseUrl + "/api/AvailableQuestionMappingsQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -7634,6 +7685,7 @@ export interface AutoMailTemplates {
     availableLanguages?: string[];
     singleRegistrationPossible?: boolean;
     partnerRegistrationPossible?: boolean;
+    mailSender?: MailSender;
 }
 
 export interface AutoMailTemplateGroup {
@@ -7654,7 +7706,17 @@ export interface AutoMailTemplateMetadataLanguage {
     subject?: string | null;
 }
 
+export enum MailSender {
+    Imap = 1,
+    SendGrid = 2,
+    Postmark = 3,
+}
+
 export interface AutoMailTemplatesQuery {
+    eventId?: string;
+}
+
+export interface AvailableMailersQuery {
     eventId?: string;
 }
 
@@ -9441,12 +9503,6 @@ export interface UpdateAutoMailConfigurationCommand {
     partnerRegistrationPossible?: boolean;
     availableLanguages?: string[] | null;
     mailSender?: MailSender | null;
-}
-
-export enum MailSender {
-    Imap = 1,
-    SendGrid = 2,
-    Postmark = 3,
 }
 
 export interface UpdateAutoMailTemplateCommand {

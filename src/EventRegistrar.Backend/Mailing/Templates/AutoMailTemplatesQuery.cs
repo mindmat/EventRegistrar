@@ -27,6 +27,7 @@ public class AutoMailTemplatesQueryHandler(IQueryable<AutoMailTemplate> mailTemp
                    AvailableLanguages = config.AvailableLanguages,
                    SingleRegistrationPossible = config.SingleRegistrationPossible,
                    PartnerRegistrationPossible = config.PartnerRegistrationPossible,
+                   MailSender = config.MailSender,
                    Groups = new[]
                             {
                                 new AutoMailTemplateGroup
@@ -109,6 +110,7 @@ public class AutoMailTemplates
     public IEnumerable<string> AvailableLanguages { get; set; } = null!;
     public bool SingleRegistrationPossible { get; set; }
     public bool PartnerRegistrationPossible { get; set; }
+    public MailSender MailSender { get; set; }
 }
 
 public class AutoMailTemplateGroup

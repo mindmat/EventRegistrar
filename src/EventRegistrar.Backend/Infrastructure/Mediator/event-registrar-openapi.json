@@ -365,6 +365,41 @@
         }
       }
     },
+    "/api/AvailableMailersQuery": {
+      "post": {
+        "tags": [
+          "AvailableMailers"
+        ],
+        "operationId": "AvailableMailers_Query",
+        "requestBody": {
+          "x-name": "AvailableMailersQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AvailableMailersQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/MailSender"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/AvailableQuestionMappingsQuery": {
       "post": {
         "tags": [
@@ -4831,6 +4866,9 @@
           },
           "partnerRegistrationPossible": {
             "type": "boolean"
+          },
+          "mailSender": {
+            "$ref": "#/components/schemas/MailSender"
           }
         }
       },
@@ -4894,7 +4932,31 @@
           }
         }
       },
+      "MailSender": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Imap",
+          "SendGrid",
+          "Postmark"
+        ],
+        "enum": [
+          1,
+          2,
+          3
+        ]
+      },
       "AutoMailTemplatesQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "AvailableMailersQuery": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -10480,20 +10542,6 @@
             ]
           }
         }
-      },
-      "MailSender": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Imap",
-          "SendGrid",
-          "Postmark"
-        ],
-        "enum": [
-          1,
-          2,
-          3
-        ]
       },
       "UpdateAutoMailTemplateCommand": {
         "type": "object",

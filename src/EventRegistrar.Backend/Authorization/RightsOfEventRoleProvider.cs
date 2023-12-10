@@ -120,6 +120,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(PossibleManualFallbackPricePackagesQuery);
             yield return nameof(ParticipantsOfEventQuery);
             yield return nameof(PricePackageOverviewQuery);
+            yield return nameof(AvailableMailersQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)

@@ -34,8 +34,6 @@ public class SendMailCommandHandler(ILogger logger,
     : IRequestHandler<SendMailCommand>
 {
     private const string MessageIdHeader = "X-Message-Id";
-    private const string PostmarkTokenKey = "PostmarkToken";
-    private const string SendGridApiKey = "SendGridApiKey";
 
     public async Task Handle(SendMailCommand command, CancellationToken cancellationToken)
     {
@@ -110,7 +108,7 @@ public class SendMailCommandHandler(ILogger logger,
                                  .ToList());
 
             // send mail
-            var apiKey = await secretReader.GetSecret(SendGridApiKey, cancellationToken);
+            var apiKey = await secretReader.GetSendGridApiKey(cancellationToken);
             var client = new SendGridClient(apiKey);
 
             var response = await client.SendEmailAsync(msg, cancellationToken);
@@ -134,7 +132,7 @@ public class SendMailCommandHandler(ILogger logger,
         }
         else if (mailConfiguration.MailSender == MailSender.Postmark)
         {
-            var postmarkToken = await secretReader.GetSecret(PostmarkTokenKey, cancellationToken);
+            var postmarkToken = await secretReader.GetPostmarkToken(cancellationToken);
             var message = new PostmarkMessage
                           {
                               To = recipients.Select(to => to.ToNameMail()).StringJoin(","),
