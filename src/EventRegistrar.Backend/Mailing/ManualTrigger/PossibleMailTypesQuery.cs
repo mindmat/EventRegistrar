@@ -33,6 +33,7 @@ public class PossibleMailTypesQueryHandler(IQueryable<Registration> registration
         var possibleMailTypes = GetPossibleMailTypes(registration, partnerRegistration, registration.Event!.State == EventState.Setup);
 
         var activeBulkMails = await mailTemplates.Where(tpl => tpl.EventId == query.EventId
+                                                            && tpl.Discarded == false
                                                             && tpl.Mails!.Any())
                                                  .Select(tpl => new MailTypeItem
                                                                 {

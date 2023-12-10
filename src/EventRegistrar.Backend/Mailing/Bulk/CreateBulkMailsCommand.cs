@@ -44,7 +44,7 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
         var remainingChunkSize = ChunkSize;
         foreach (var mailTemplate in templates)
         {
-            if (remainingChunkSize <= 0)
+            if (remainingChunkSize <= 0 || mailTemplate.Discarded)
             {
                 break;
             }

@@ -11,7 +11,8 @@ public class BulkMailTemplatesQueryHandler(IQueryable<BulkMailTemplate> mailTemp
 {
     public async Task<BulkMailTemplates> Handle(BulkMailTemplatesQuery query, CancellationToken cancellationToken)
     {
-        var existingTemplates = await mailTemplates.Where(mtp => mtp.EventId == query.EventId)
+        var existingTemplates = await mailTemplates.Where(mtp => mtp.EventId == query.EventId
+                                                              && !mtp.Discarded)
                                                    .OrderBy(mtp => mtp.BulkMailKey)
                                                    .ThenBy(mtp => mtp.Language)
                                                    .ToListAsync(cancellationToken);
@@ -33,7 +34,7 @@ public class BulkMailTemplatesQueryHandler(IQueryable<BulkMailTemplate> mailTemp
         return new BulkMailTemplateKey
                {
                    Key = key,
-                   Templates = config.AvailableLanguages.Select(lng => CreateTemplate(lng, existing.FirstOrDefault(mtp => mtp.Language == lng)))
+                   Templates = config.AvailableLanguages.Select(lng => CreateTemplate(lng, existing.Find(mtp => mtp.Language == lng)))
                };
     }
 

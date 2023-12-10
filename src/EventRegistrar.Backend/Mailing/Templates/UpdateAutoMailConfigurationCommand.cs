@@ -12,6 +12,7 @@ public class UpdateAutoMailConfigurationCommand : IRequest, IEventBoundRequest
     public bool SingleRegistrationPossible { get; set; }
     public bool PartnerRegistrationPossible { get; set; }
     public IEnumerable<string>? AvailableLanguages { get; set; }
+    public MailSender? MailSender { get; set; }
 }
 
 public class UpdateAutoMailConfigurationCommandHandler(ConfigurationRegistry configurationRegistry,
@@ -33,6 +34,11 @@ public class UpdateAutoMailConfigurationCommandHandler(ConfigurationRegistry con
         if (command.AvailableLanguages?.Any() == true)
         {
             config.AvailableLanguages = command.AvailableLanguages.OrderBy(lng => lng);
+        }
+
+        if (command.MailSender != null)
+        {
+            config.MailSender = command.MailSender.Value;
         }
 
         await configurationRegistry.UpdateConfiguration(command.EventId, config);

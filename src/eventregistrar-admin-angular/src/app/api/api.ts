@@ -9438,6 +9438,13 @@ export interface UpdateAutoMailConfigurationCommand {
     singleRegistrationPossible?: boolean;
     partnerRegistrationPossible?: boolean;
     availableLanguages?: string[] | null;
+    mailSender?: MailSender | null;
+}
+
+export enum MailSender {
+    Imap = 1,
+    SendGrid = 2,
+    Postmark = 3,
 }
 
 export interface UpdateAutoMailTemplateCommand {

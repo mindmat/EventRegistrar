@@ -10,16 +10,21 @@ public class DeleteBulkMailTemplateCommandHandler(IRepository<BulkMailTemplate> 
 {
     public async Task Handle(DeleteBulkMailTemplateCommand command, CancellationToken cancellationToken)
     {
-        var template = await mailTemplates.AsTracking()
-                                          .Where(mtp => mtp.Id == command.MailTemplateId
-                                                     && mtp.EventId == command.EventId)
-                                          .Include(mtp => mtp.Event)
-                                          .FirstAsync(cancellationToken);
-        if (template.Event!.State != RegistrationForms.EventState.Setup)
+        var data = await mailTemplates.AsTracking()
+                                      .Where(mtp => mtp.Id == command.MailTemplateId
+                                                 && mtp.EventId == command.EventId)
+                                      .Select(mtp => new
+                                                     {
+                                                         Template = mtp,
+                                                         EventState = mtp.Event!.State,
+                                                         MailCount = mtp.Mails!.Count
+                                                     })
+                                      .FirstAsync(cancellationToken);
+        if (data.EventState != RegistrationForms.EventState.Setup || data.MailCount > 0)
         {
-            throw new Exception($"To delete a template, event must be in state Setup, but it is in state {template.Event.State}");
+            throw new Exception($"To delete a template, event must be in state Setup, but it is in state {data.EventState}");
         }
 
-        mailTemplates.Remove(template);
+        mailTemplates.Remove(data.Template);
     }
 }

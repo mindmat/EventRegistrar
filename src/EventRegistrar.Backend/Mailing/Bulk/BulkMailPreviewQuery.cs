@@ -13,6 +13,7 @@ public class BulkMailPreview
 {
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
+    public bool Discarded { get; set; }
 }
 
 public class BulkMailPreviewQueryHandler(IQueryable<BulkMailTemplate> mailTemplates,
@@ -34,7 +35,8 @@ public class BulkMailPreviewQueryHandler(IQueryable<BulkMailTemplate> mailTempla
         return new BulkMailPreview
                {
                    Subject = template.Subject,
-                   ContentHtml = content
+                   ContentHtml = content,
+                   Discarded = template.Discarded
                };
     }
 }

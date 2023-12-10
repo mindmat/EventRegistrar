@@ -10464,8 +10464,30 @@
             "items": {
               "type": "string"
             }
+          },
+          "mailSender": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MailSender"
+              }
+            ]
           }
         }
+      },
+      "MailSender": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Imap",
+          "SendGrid",
+          "Postmark"
+        ],
+        "enum": [
+          1,
+          2,
+          3
+        ]
       },
       "UpdateAutoMailTemplateCommand": {
         "type": "object",
