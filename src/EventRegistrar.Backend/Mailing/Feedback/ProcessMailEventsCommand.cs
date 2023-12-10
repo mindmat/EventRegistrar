@@ -119,7 +119,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                         var mailEvent = new MailEvent
                                         {
                                             Id = Guid.NewGuid(),
-                                            Created = dateTimeProvider.Now,
+                                            Created = deliveryEvent.DeliveredAt ?? dateTimeProvider.Now,
                                             MailSender = mail.SentBy,
                                             ExternalIdentifier = deliveryEvent.MessageID,
                                             MailId = mail.Id,
@@ -156,7 +156,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                         var mailEvent = new MailEvent
                                         {
                                             Id = Guid.NewGuid(),
-                                            Created = dateTimeProvider.Now,
+                                            Created = bounceEvent.BouncedAt ?? dateTimeProvider.Now,
                                             MailSender = mail.SentBy,
                                             ExternalIdentifier = bounceEvent.MessageID,
                                             MailId = mail.Id,
@@ -171,10 +171,10 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
             }
             else if (mailState == MailState.SpamReport)
             {
-                var bounceEvent = JsonConvert.DeserializeObject<PostmarkSpamReport>(rawMailEvents.Body);
-                if (bounceEvent != null)
+                var spamEvent = JsonConvert.DeserializeObject<PostmarkSpamReport>(rawMailEvents.Body);
+                if (spamEvent != null)
                 {
-                    var mail = await GetMail(bounceEvent.MessageID);
+                    var mail = await GetMail(spamEvent.MessageID);
                     if (mail != null
                      && mail.State != MailState.Delivered
                      && mail.State != MailState.Open
@@ -183,7 +183,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                         var newState = MailState.SpamReport;
                         mail.State = newState;
                         // if addressed to multiple emails, save which receiver is concerned
-                        foreach (var mailToRegistration in mail.Registrations!.Where(mil => string.Equals(mil.Email, bounceEvent.Email, StringComparison.InvariantCultureIgnoreCase)))
+                        foreach (var mailToRegistration in mail.Registrations!.Where(mil => string.Equals(mil.Email, spamEvent.Email, StringComparison.InvariantCultureIgnoreCase)))
                         {
                             mailToRegistration.State = newState;
                             changeTrigger.TriggerUpdate<RegistrationCalculator>(mailToRegistration.RegistrationId,
@@ -193,14 +193,14 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                         var mailEvent = new MailEvent
                                         {
                                             Id = Guid.NewGuid(),
-                                            Created = dateTimeProvider.Now,
+                                            Created = spamEvent.BouncedAt ?? dateTimeProvider.Now,
                                             MailSender = mail.SentBy,
-                                            ExternalIdentifier = bounceEvent.MessageID,
+                                            ExternalIdentifier = spamEvent.MessageID,
                                             MailId = mail.Id,
-                                            EMail = bounceEvent.Email,
+                                            EMail = spamEvent.Email,
                                             RawEvent = rawMailEvents.Body,
                                             State = newState,
-                                            Reason = bounceEvent.Details
+                                            Reason = spamEvent.Details
                                         };
                         mailEvents.InsertObjectTree(mailEvent);
                     }
@@ -228,7 +228,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                         var mailEvent = new MailEvent
                                         {
                                             Id = Guid.NewGuid(),
-                                            Created = dateTimeProvider.Now,
+                                            Created = openEvent.ReceivedAt ?? dateTimeProvider.Now,
                                             MailSender = mail.SentBy,
                                             ExternalIdentifier = openEvent.MessageID,
                                             MailId = mail.Id,
