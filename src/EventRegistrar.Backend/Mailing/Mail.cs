@@ -50,6 +50,23 @@ public class MailMap : EntityMap<Mail>
     {
         builder.ToTable("Mails");
 
+        builder.Property(mail => mail.SenderMail)
+               .HasMaxLength(200);
+        builder.Property(mail => mail.SenderName)
+               .HasMaxLength(200);
+        builder.Property(mail => mail.Subject)
+               .HasMaxLength(200);
+        builder.Property(mail => mail.Recipients)
+               .HasMaxLength(500);
+        builder.Property(mail => mail.MailSenderMessageId)
+               .HasMaxLength(200);
+        builder.Property(mail => mail.BulkMailKey)
+               .HasMaxLength(200);
+        builder.Property(mail => mail.DataTypeFullName)
+               .HasMaxLength(500);
+        builder.Property(mail => mail.DataJson)
+               .HasMaxLength(2000);
+
         builder.HasOne(map => map.Event)
                .WithMany()
                .HasForeignKey(map => map.EventId);
@@ -57,5 +74,7 @@ public class MailMap : EntityMap<Mail>
         builder.HasOne(map => map.AutoMailTemplate)
                .WithMany(mail => mail.Mails)
                .HasForeignKey(map => map.AutoMailTemplateId);
+
+        builder.HasIndex(mail => mail.MailSenderMessageId);
     }
 }

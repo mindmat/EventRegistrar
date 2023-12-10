@@ -80,3 +80,27 @@ public class Geo
     public string? Coords { get; set; }
     public string? IP { get; set; }
 }
+
+public class PostmarkSpamReport
+{
+    public string? RecordType { get; set; }
+    public int? ID { get; set; }
+    public string? Type { get; set; }
+    public int? TypeCode { get; set; }
+    public string? Tag { get; set; }
+    public string? MessageID { get; set; }
+    public string? Details { get; set; }
+    public string? Email { get; set; }
+    public string? From { get; set; }
+    public DateTime? BouncedAt { get; set; }
+    public bool? Inactive { get; set; }
+    public bool? DumpAvailable { get; set; }
+    public bool? CanActivate { get; set; }
+    public string? Subject { get; set; }
+    public int? ServerID { get; set; }
+    public string? MessageStream { get; set; }
+    public string? Content { get; set; }
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+    public IDictionary<string, string>? Metadata { get; set; }
+}

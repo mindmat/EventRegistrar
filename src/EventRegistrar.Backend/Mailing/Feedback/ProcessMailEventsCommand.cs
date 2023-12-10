@@ -71,11 +71,12 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                 var mailEvent = new MailEvent
                                 {
                                     Id = Guid.NewGuid(),
+                                    Created = dateTimeProvider.Now,
                                     MailSender = mail.SentBy,
                                     ExternalIdentifier = sendGridEvent.Sg_event_id,
                                     MailId = mail.Id,
                                     EMail = sendGridEvent.Email,
-                                    RawEvent = JsonConvert.SerializeObject(sendGridEvent),
+                                    RawEvent = rawMailEvents.Body,
                                     State = state,
                                     Reason = sendGridEvent.Reason,
                                     BounceClassification = sendGridEvent.Bounce_Classification
@@ -118,11 +119,12 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                         var mailEvent = new MailEvent
                                         {
                                             Id = Guid.NewGuid(),
+                                            Created = dateTimeProvider.Now,
                                             MailSender = mail.SentBy,
                                             ExternalIdentifier = deliveryEvent.MessageID,
                                             MailId = mail.Id,
                                             EMail = deliveryEvent.Recipient,
-                                            RawEvent = JsonConvert.SerializeObject(deliveryEvent),
+                                            RawEvent = rawMailEvents.Body,
                                             State = newState,
                                             Reason = deliveryEvent.Details
                                         };
@@ -154,11 +156,49 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                         var mailEvent = new MailEvent
                                         {
                                             Id = Guid.NewGuid(),
+                                            Created = dateTimeProvider.Now,
                                             MailSender = mail.SentBy,
                                             ExternalIdentifier = bounceEvent.MessageID,
                                             MailId = mail.Id,
                                             EMail = bounceEvent.Email,
-                                            RawEvent = JsonConvert.SerializeObject(bounceEvent),
+                                            RawEvent = rawMailEvents.Body,
+                                            State = newState,
+                                            Reason = bounceEvent.Details
+                                        };
+                        mailEvents.InsertObjectTree(mailEvent);
+                    }
+                }
+            }
+            else if (mailState == MailState.SpamReport)
+            {
+                var bounceEvent = JsonConvert.DeserializeObject<PostmarkSpamReport>(rawMailEvents.Body);
+                if (bounceEvent != null)
+                {
+                    var mail = await GetMail(bounceEvent.MessageID);
+                    if (mail != null
+                     && mail.State != MailState.Delivered
+                     && mail.State != MailState.Open
+                     && mail.State != MailState.Click)
+                    {
+                        var newState = MailState.SpamReport;
+                        mail.State = newState;
+                        // if addressed to multiple emails, save which receiver is concerned
+                        foreach (var mailToRegistration in mail.Registrations!.Where(mil => string.Equals(mil.Email, bounceEvent.Email, StringComparison.InvariantCultureIgnoreCase)))
+                        {
+                            mailToRegistration.State = newState;
+                            changeTrigger.TriggerUpdate<RegistrationCalculator>(mailToRegistration.RegistrationId,
+                                                                                mailToRegistration.Registration!.EventId);
+                        }
+
+                        var mailEvent = new MailEvent
+                                        {
+                                            Id = Guid.NewGuid(),
+                                            Created = dateTimeProvider.Now,
+                                            MailSender = mail.SentBy,
+                                            ExternalIdentifier = bounceEvent.MessageID,
+                                            MailId = mail.Id,
+                                            EMail = bounceEvent.Email,
+                                            RawEvent = rawMailEvents.Body,
                                             State = newState,
                                             Reason = bounceEvent.Details
                                         };
@@ -188,11 +228,12 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                         var mailEvent = new MailEvent
                                         {
                                             Id = Guid.NewGuid(),
+                                            Created = dateTimeProvider.Now,
                                             MailSender = mail.SentBy,
                                             ExternalIdentifier = openEvent.MessageID,
                                             MailId = mail.Id,
                                             EMail = openEvent.Recipient,
-                                            RawEvent = JsonConvert.SerializeObject(openEvent),
+                                            RawEvent = rawMailEvents.Body,
                                             State = newState
                                         };
                         mailEvents.InsertObjectTree(mailEvent);
@@ -260,6 +301,10 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
          && Guid.TryParse(messageId, out var mailId))
         {
             return await mails.Where(mil => mil.Id == mailId)
+                              .Include(mil => mil.Registrations!)
+                              .ThenInclude(reg => reg.Registration)
+                              .FirstOrDefaultAsync()
+                ?? await mails.Where(mil => mil.MailSenderMessageId == messageId)
                               .Include(mil => mil.Registrations!)
                               .ThenInclude(reg => reg.Registration)
                               .FirstOrDefaultAsync();
