@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Events.UsersInEvents;
+﻿using EventRegistrar.Backend.Authentication.Users;
+using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
@@ -28,8 +29,10 @@ public class CreateEventCommand : IRequest
 public class CreateEventCommandHandler(IRepository<Event> events,
                                        IRepository<RegistrableComposition> registrableCompositions,
                                        AuthenticatedUserId authenticatedUserId,
+                                       AuthenticatedUser authenticatedUser,
                                        ChangeTrigger changeTrigger,
-                                       IEventBus eventBus)
+                                       IEventBus eventBus,
+                                       IRepository<User> users)
     : IRequestHandler<CreateEventCommand>
 {
     public async Task Handle(CreateEventCommand command, CancellationToken cancellationToken)
@@ -41,10 +44,7 @@ public class CreateEventCommandHandler(IRepository<Event> events,
             throw new Exception($"Event with Acronym {existingEvent.Acronym} already exists (Id {existingEvent.Id})");
         }
 
-        if (authenticatedUserId.UserId == null)
-        {
-            throw new UnauthorizedAccessException("Unknown authenticated user");
-        }
+        var userId = CreateUserIfNecessary();
 
         // create event
         var newEventId = command.Id;
@@ -62,7 +62,7 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                                                              {
                                                                  Id = newEventId,
                                                                  Role = UserInEventRole.Admin,
-                                                                 UserId = authenticatedUserId.UserId!.Value
+                                                                 UserId = userId
                                                              }
                                                          }),
                            Registrables = new List<Registrable>()
@@ -83,7 +83,7 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                                           .Include(evt => evt.BulkMailTemplates)
                                           .FirstAsync(cancellationToken);
 
-            var isUserAdminInOtherEvent = sourceEvent.Users!.Any(uie => uie.UserId == authenticatedUserId.UserId);
+            var isUserAdminInOtherEvent = sourceEvent.Users!.Any(uie => uie.UserId == userId);
 
             if (!isUserAdminInOtherEvent)
             {
@@ -93,7 +93,7 @@ public class CreateEventCommandHandler(IRepository<Event> events,
             if (command.CopyAccessRights)
             {
                 sourceEvent.Users!
-                           .Where(uie => uie.UserId != authenticatedUserId.UserId)
+                           .Where(uie => uie.UserId != userId)
                            .ForEach(uie => newEvent.Users.Add(new UserInEvent
                                                               {
                                                                   Id = Guid.NewGuid(),
@@ -205,5 +205,31 @@ public class CreateEventCommandHandler(IRepository<Event> events,
 
         eventBus.Publish(new QueryChanged { QueryName = nameof(EventsOfUserQuery) });
         eventBus.Publish(new QueryChanged { QueryName = nameof(SearchEventQuery) });
+    }
+
+    private Guid CreateUserIfNecessary()
+    {
+        if (authenticatedUserId.UserId != null)
+        {
+            return authenticatedUserId.UserId.Value;
+        }
+
+        if (authenticatedUser == AuthenticatedUser.None)
+        {
+            throw new UnauthorizedAccessException("Unknown authenticated user");
+        }
+
+        var user = new User
+                   {
+                       Id = Guid.NewGuid(),
+                       IdentityProvider = authenticatedUser.IdentityProvider,
+                       IdentityProviderUserIdentifier = authenticatedUser.IdentityProviderUserIdentifier,
+                       FirstName = authenticatedUser.FirstName,
+                       LastName = authenticatedUser.LastName,
+                       Email = authenticatedUser.Email
+                   };
+        users.InsertObjectTree(user);
+
+        return user.Id;
     }
 }
