@@ -18,107 +18,112 @@
             <!-- Bookings list -->
             <div class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100 bg-card dark:bg-transparent">
 
+                <div class="prose prose-sm max-w-3xl">
+                    <h2 class="mt-4 px-4">{{ 'AutoMailTemplates' | translate }}</h2>
+                </div>
+
                 <!-- Header -->
-                <div class="flex flex-col flex-0 py-4 px-8 border-b bg-gray-50 dark:bg-transparent">
-                    <!-- <div class="flex items-center">
-                        <button class="ml-auto" mat-icon-button (click)="openNewChat()">
-                            <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
-                        </button>
-                    </div> -->
-                    <!-- Sender -->
-                    <div class="mt-4 space-y-4" [formGroup]="configForm">
-                        <!-- <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full" [floatLabel]="'always'"> -->
+                <mat-accordion class="max-w-4xl py-2 px-2 border-b bg-gray-50">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header [collapsedHeight]="'56px'">
+                            <mat-panel-title>{{ 'Settings' | translate }}</mat-panel-title>
+                        </mat-expansion-panel-header>
 
-                        <!-- Name -->
-                        <div class="sm:col-span-4">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>{{ 'SenderAlias' | translate }}</mat-label>
-                                <input [formControlName]="'senderName'" matInput>
-                            </mat-form-field>
-                        </div>
+                        <!-- Sender -->
+                        <div class="mt-4 space-y-4" [formGroup]="configForm">
+                            <!-- <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full" [floatLabel]="'always'"> -->
 
-                        <!-- Mail -->
-                        <div class="sm:col-span-4">
-                            <mat-form-field class="fuse-mat-no-subscript w-full">
-                                <mat-label>{{ 'SenderMail' | translate }}</mat-label>
-                                <input [formControlName]="'senderMail'" matInput>
-                            </mat-form-field>
-                        </div>
+                            <!-- Name -->
+                            <div class="sm:col-span-4">
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>{{ 'SenderAlias' | translate }}</mat-label>
+                                    <input [formControlName]="'senderName'" matInput>
+                                </mat-form-field>
+                            </div>
 
-                        <!-- Single available -->
-                        <button class="pr-4 pl-3.5" mat-button (click)="toggleSingle()">
+                            <!-- Mail -->
+                            <div class="sm:col-span-4">
+                                <mat-form-field class="fuse-mat-no-subscript w-full">
+                                    <mat-label>{{ 'SenderMail' | translate }}</mat-label>
+                                    <input [formControlName]="'senderMail'" matInput>
+                                </mat-form-field>
+                            </div>
 
-                            <!-- Mark as complete -->
-                            <ng-container *ngIf="!configForm.get('singleRegistrationPossible').value">
-                                <div class="flex items-center justify-center">
-                                    <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
-                                    <span class="ml-2 font-semibold">{{ 'SingleNotPossible' | translate }}</span>
-                                </div>
-                            </ng-container>
+                            <!-- Single available -->
+                            <button class="pr-4 pl-3.5" mat-button (click)="toggleSingle()">
 
-                            <!-- Mark as incomplete -->
-                            <ng-container *ngIf="configForm.get('singleRegistrationPossible').value">
-                                <div class="flex items-center justify-center">
-                                    <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
-                                    <span class="ml-2 font-semibold">{{ 'SinglePossible' | translate }}</span>
-                                </div>
-                            </ng-container>
-                        </button>
+                                <!-- Mark as complete -->
+                                <ng-container *ngIf="!configForm.get('singleRegistrationPossible').value">
+                                    <div class="flex items-center justify-center">
+                                        <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
+                                        <span class="ml-2 font-semibold">{{ 'SingleNotPossible' | translate }}</span>
+                                    </div>
+                                </ng-container>
 
-                        <!-- Partner available -->
-                        <button class="pr-4 pl-3.5" mat-button (click)="togglePartner()">
+                                <!-- Mark as incomplete -->
+                                <ng-container *ngIf="configForm.get('singleRegistrationPossible').value">
+                                    <div class="flex items-center justify-center">
+                                        <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                                        <span class="ml-2 font-semibold">{{ 'SinglePossible' | translate }}</span>
+                                    </div>
+                                </ng-container>
+                            </button>
 
-                            <!-- Mark as complete -->
-                            <ng-container *ngIf="!configForm.get('partnerRegistrationPossible').value">
-                                <div class="flex items-center justify-center">
-                                    <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
-                                    <span class="ml-2 font-semibold">{{ 'PartnerNotPossible' | translate }}</span>
-                                </div>
-                            </ng-container>
+                            <!-- Partner available -->
+                            <button class="pr-4 pl-3.5" mat-button (click)="togglePartner()">
 
-                            <!-- Mark as incomplete -->
-                            <ng-container *ngIf="configForm.get('partnerRegistrationPossible').value">
-                                <div class="flex items-center justify-center">
-                                    <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
-                                    <span class="ml-2 font-semibold">{{ 'PartnerPossible' | translate }}</span>
-                                </div>
-                            </ng-container>
-                        </button>
+                                <!-- Mark as complete -->
+                                <ng-container *ngIf="!configForm.get('partnerRegistrationPossible').value">
+                                    <div class="flex items-center justify-center">
+                                        <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
+                                        <span class="ml-2 font-semibold">{{ 'PartnerNotPossible' | translate }}</span>
+                                    </div>
+                                </ng-container>
 
-                        <!-- Languages -->
-                        <div class="sm:col-span-4">
-                            <mat-label>{{ 'AngeboteneSprachen' | translate }}</mat-label>
-                            <div class="flex flex-row items-start space-x-3">
-                                <!-- templates (per language) -->
-                                <ng-container *ngFor="let lang of availableLangs">
-                                    <button (click)="toggleLang(lang.id)">
-                                        <span class="flex items-center relative w-6 shadow rounded-sm overflow-hidden">
-                                            <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
-                                            <img class="w-full" [ngClass]="{'opacity-25': this.configForm.value.availableLanguages.includes(lang.id)==false}"
-                                                [src]="'assets/images/flags/' + flagCodes[lang.id]?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + lang.label">
-                                        </span>
-                                    </button>
-                                    <!-- <button (click)="selectTemplate(template)" [routerLink]="[template.id]"
+                                <!-- Mark as incomplete -->
+                                <ng-container *ngIf="configForm.get('partnerRegistrationPossible').value">
+                                    <div class="flex items-center justify-center">
+                                        <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                                        <span class="ml-2 font-semibold">{{ 'PartnerPossible' | translate }}</span>
+                                    </div>
+                                </ng-container>
+                            </button>
+
+                            <!-- Languages -->
+                            <div class="sm:col-span-4">
+                                <mat-label>{{ 'AngeboteneSprachen' | translate }}</mat-label>
+                                <div class="flex flex-row items-start space-x-3">
+                                    <!-- templates (per language) -->
+                                    <ng-container *ngFor="let lang of availableLangs">
+                                        <button (click)="toggleLang(lang.id)">
+                                            <span class="flex items-center relative w-6 shadow rounded-sm overflow-hidden">
+                                                <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
+                                                <img class="w-full" [ngClass]="{'opacity-25': this.configForm.value.availableLanguages.includes(lang.id)==false}"
+                                                    [src]="'assets/images/flags/' + flagCodes[lang.id]?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + lang.label">
+                                            </span>
+                                        </button>
+                                        <!-- <button (click)="selectTemplate(template)" [routerLink]="[template.id]"
                                                 [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
                                                                                                                                                         'bg-primary-50 dark:bg-hover': selectedTemplate && selectedTemplate.id === template.id}">
                                                 <span class="flex items-center">
                                                     <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: template}"></ng-container>
                                                 </span>
                                             </button> -->
-                                </ng-container>
+                                    </ng-container>
+                                </div>
+
+                            </div>
+
+                            <!-- <input matInput [autocomplete]="'off'" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" (input)="filterByQuery(searchField.value)" #searchField> -->
+                            <!-- </mat-form-field> -->
+                            <div class="flex items-center justify-end mt-4">
+                                <button (click)="drawer.close()" mat-button>{{ 'Cancel' | translate }}</button>
+                                <button class="ml-2" mat-flat-button [color]="'primary'" (click)="saveSettings()">{{ 'Save' | translate }}</button>
                             </div>
 
                         </div>
-
-                        <!-- <input matInput [autocomplete]="'off'" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" (input)="filterByQuery(searchField.value)" #searchField> -->
-                        <!-- </mat-form-field> -->
-                        <div class="flex items-center justify-end mt-4">
-                            <button (click)="drawer.close()" mat-button>{{ 'Cancel' | translate }}</button>
-                            <button class="ml-2" mat-flat-button [color]="'primary'" (click)="saveSettings()">{{ 'Save' | translate }}</button>
-                        </div>
-
-                    </div>
-                </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
 
                 <!-- topic groups -->
                 <div class="flex-auto overflow-y-auto">
@@ -129,6 +134,7 @@
                                     {{ group.name }}
                                 </div>
                             </div>
+
                             <!-- template types -->
                             <ng-container *ngFor="let type of group.types">
                                 <div class="z-20 flex flex-col py-5 px-4 cursor-pointer border-t border-b">

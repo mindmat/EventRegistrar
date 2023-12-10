@@ -1008,6 +1008,9 @@
   <data name="SetFallbackPackage" xml:space="preserve">
     <value>Activate different package</value>
   </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
   <data name="Settled" xml:space="preserve">
     <value>Settled</value>
   </data>

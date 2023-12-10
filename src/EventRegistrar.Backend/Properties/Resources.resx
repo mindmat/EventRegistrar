@@ -1114,6 +1114,9 @@
   <data name="SetFallbackPackage" xml:space="preserve">
     <value>Anderes Paket aktivieren</value>
   </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
   <data name="Settled" xml:space="preserve">
     <value>Ausgeglichene</value>
   </data>

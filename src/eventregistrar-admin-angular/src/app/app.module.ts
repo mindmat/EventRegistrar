@@ -84,6 +84,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatOptionModule } from '@angular/material/core';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { SharedModule } from './shared/shared.module';
 import { FileUploadComponent } from './modules/admin/infrastructure/file-upload/file-upload.component';
 import { MailViewerComponent } from './modules/admin/mailing/mails/mail-viewer/mail-viewer.component';
@@ -226,6 +227,7 @@ const routerConfig: ExtraOptions = {
         MatDialogModule,
         MatOptionModule,
         MatDatepickerModule,
+        MatExpansionModule,
 
         FroalaEditorModule.forRoot(),
         FroalaViewModule.forRoot(),
