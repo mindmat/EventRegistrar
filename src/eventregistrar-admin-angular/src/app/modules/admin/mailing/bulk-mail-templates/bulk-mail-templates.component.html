@@ -57,7 +57,7 @@
                                 <ng-container *ngFor="let lang of availableLangs">
                                     <span class="flex items-center relative w-6 shadow rounded-sm overflow-hidden">
                                         <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
-                                        <img class="w-full" [ngClass]="{'opacity-25': templates.availableLanguages.includes(lang.id)==false}"
+                                        <img class="w-full" [ngClass]="{'opacity-25': templates.availableLanguages.includes(lang.id)===false}"
                                             [src]="'assets/images/flags/' + lang.flag?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + lang.label">
                                     </span>
                                 </ng-container>
@@ -75,9 +75,9 @@
                     <ng-container *ngFor="let key of templates.keys">
                         <div class="z-20 flex flex-col py-5 px-4 cursor-pointer border-t border-b">
                             <div class="font-medium leading-5 truncate items">{{ key.key }}</div>
-                            <div class="flex flex-row items-center justify-between space-x-3">
+                            <div class="flex items-center">
                                 <!-- templates (per language) -->
-                                <div class="flex flex-row items-start">
+                                <div class="flex flex-row w-full">
                                     <ng-container *ngFor="let template of key.templates">
                                         <button (click)="selectTemplate(template, key)" class="ml-2" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
                                                 'bg-primary-50 dark:bg-hover': selectedTemplate && selectedTemplate.id === template.id}">
@@ -86,6 +86,17 @@
                                             </span>
                                         </button>
                                     </ng-container>
+
+                                    <button class="ml-auto" mat-icon-button [matMenuTriggerFor]="templateMenu">
+                                        <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                                    </button>
+                                    <mat-menu #templateMenu="matMenu">
+                                        <!-- Delete -->
+                                        <button mat-menu-item (click)="deleteTemplate(key.key)">
+                                            <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                            <span>{{ 'Delete'|translate }}</span>
+                                        </button>
+                                    </mat-menu>
                                 </div>
                             </div>
                         </div>

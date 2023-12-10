@@ -7748,6 +7748,7 @@ export interface BulkMailPlaceholderQuery {
 export interface BulkMailPreview {
     subject?: string | null;
     contentHtml?: string | null;
+    discarded?: boolean;
 }
 
 export interface BulkMailPreviewQuery {
@@ -7765,6 +7766,7 @@ export interface BulkMailTemplateDisplayItem {
     contentHtml?: string | null;
     audiences?: MailingAudience[] | null;
     registrableId?: string | null;
+    discarded?: boolean;
 }
 
 export enum MailingAudience {
@@ -7943,7 +7945,7 @@ export interface DeactivateAutomaticPromotionCommand {
 
 export interface DeleteBulkMailTemplateCommand {
     eventId?: string;
-    mailTemplateId?: string;
+    bulkMailKey?: string | null;
 }
 
 export interface DeleteMailsCommand {

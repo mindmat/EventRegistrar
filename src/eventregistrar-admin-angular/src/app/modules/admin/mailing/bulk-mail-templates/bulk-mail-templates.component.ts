@@ -11,7 +11,6 @@ import { BulkMailTemplatesService } from './bulk-mail-templates.service';
 })
 export class BulkMailTemplatesComponent implements OnInit
 {
-  private unsubscribeAll: Subject<any> = new Subject<any>();
   templates: BulkMailTemplates;
   selectedTemplate: BulkMailTemplateMetadataLanguage;
   drawerOpened: boolean = false;
@@ -21,6 +20,7 @@ export class BulkMailTemplatesComponent implements OnInit
     { id: 'de', label: 'Deutsch', flag: 'de' },
     { id: 'en', label: 'English', flag: 'us' }
   ];
+  private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(
     private service: BulkMailTemplatesService,
@@ -47,18 +47,23 @@ export class BulkMailTemplatesComponent implements OnInit
 
   };
 
-  createNewBulkMail(key: string)
+  createNewBulkMail(key: string): void
   {
     this.service.createTemplate(key);
     this.drawerOpened = false;
   }
 
-  selectTemplate(template: BulkMailTemplateMetadataLanguage, type: BulkMailTemplateKey)
+  selectTemplate(template: BulkMailTemplateMetadataLanguage, type: BulkMailTemplateKey): void
   {
     this.selectedTemplate = template;
     this.router.navigate([`./${template.id}`], { relativeTo: this.route });
 
     // Mark for check
     this.changeDetectorRef.markForCheck();
+  }
+
+  deleteTemplate(key: string): void
+  {
+    this.service.deleteTemplate(key);
   }
 }

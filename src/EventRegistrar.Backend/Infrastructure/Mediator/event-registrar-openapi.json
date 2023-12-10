@@ -5151,6 +5151,9 @@
           "contentHtml": {
             "type": "string",
             "nullable": true
+          },
+          "discarded": {
+            "type": "boolean"
           }
         }
       },
@@ -5211,6 +5214,9 @@
             "type": "string",
             "format": "guid",
             "nullable": true
+          },
+          "discarded": {
+            "type": "boolean"
           }
         }
       },
@@ -5759,9 +5765,9 @@
             "type": "string",
             "format": "guid"
           },
-          "mailTemplateId": {
+          "bulkMailKey": {
             "type": "string",
-            "format": "guid"
+            "nullable": true
           }
         }
       },

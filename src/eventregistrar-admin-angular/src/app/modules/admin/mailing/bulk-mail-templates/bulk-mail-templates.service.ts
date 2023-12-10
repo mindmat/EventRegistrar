@@ -22,14 +22,20 @@ export class BulkMailTemplatesService extends FetchService<BulkMailTemplates> {
     return this.result$;
   }
 
-  fetchBulkMailTemplates()
+  fetchBulkMailTemplates(): Observable<BulkMailTemplates>
   {
     return this.fetchItems(this.api.bulkMailTemplates_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
 
-  createTemplate(key: string)
+  createTemplate(key: string): void
   {
     this.api.createBulkMailTemplate_Command({ eventId: this.eventService.selectedId, key })
+      .subscribe();
+  }
+
+  deleteTemplate(key: string): void
+  {
+    this.api.deleteBulkMailTemplate_Command({ eventId: this.eventService.selectedId, bulkMailKey: key })
       .subscribe();
   }
 }
