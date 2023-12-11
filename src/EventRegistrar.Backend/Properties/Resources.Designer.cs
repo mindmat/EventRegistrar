@@ -2604,6 +2604,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zuletzt versendete Mails.
+        /// </summary>
+        internal static string RecentlySentMailsStats {
+            get {
+                return ResourceManager.GetString("RecentlySentMailsStats", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reduktion.
         /// </summary>
         internal static string Reduction {
@@ -3068,6 +3077,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string SendReminderSms {
             get {
                 return ResourceManager.GetString("SendReminderSms", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gesendet.
+        /// </summary>
+        internal static string Sent {
+            get {
+                return ResourceManager.GetString("Sent", resourceCulture);
             }
         }
         

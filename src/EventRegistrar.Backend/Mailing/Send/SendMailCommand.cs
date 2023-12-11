@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Mailing.Feedback;
 using EventRegistrar.Backend.Mailing.Import;
+using EventRegistrar.Backend.Mailing.InvalidAddresses;
 using EventRegistrar.Backend.Payments.Due;
 
 using MailKit.Net.Smtp;
@@ -161,6 +162,7 @@ public class SendMailCommandHandler(ILogger logger,
         if (mail.EventId != null)
         {
             changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, mail.EventId);
+            changeTrigger.QueryChanged<MailDeliverySuccessQuery>(mail.EventId.Value);
         }
     }
 }

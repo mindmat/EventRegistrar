@@ -3,6 +3,9 @@ import { MailDeliverySeverity, ProblematicEmail, RegistrationMatch } from 'app/a
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { ProblematicEmailsService } from './problematic-emails.service';
+import { ChartType } from 'angular-google-charts';
+import { MailDeliverySuccessService } from './mail-delivery-success.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-problematic-emails',
@@ -12,15 +15,25 @@ import { ProblematicEmailsService } from './problematic-emails.service';
 export class ProblematicEmailsComponent implements OnInit
 {
   public searchString$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
-  private unsubscribeAll: Subject<any> = new Subject<any>();
   emails: ProblematicEmail[];
   emailsNoneSucceeded: ProblematicEmail[];
   emailsSomeSucceeded: ProblematicEmail[];
   emailsLastSucceeded: ProblematicEmail[];
+  ChartType = ChartType;
+  chartColumns = [
+    { type: 'string', role: 'From' },
+    { type: 'string', role: 'To' },
+    { type: 'number', role: 'Weight' }
+  ];
+  mailDeliveryData;
+  recentlySentMailCount: number;
+  private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(private service: ProblematicEmailsService,
+    private deliveryService: MailDeliverySuccessService,
     public navigator: NavigatorService,
-    private changeDetectorRef: ChangeDetectorRef) { }
+    private changeDetectorRef: ChangeDetectorRef,
+    private translateService: TranslateService) { }
 
   ngOnInit(): void
   {
@@ -43,6 +56,26 @@ export class ProblematicEmailsComponent implements OnInit
       {
         searchString = searchString?.toLowerCase();
         this.service.fetchItems(searchString).subscribe();
+      });
+
+    const sent = this.translateService.instant('Sent');
+    const processed = this.translateService.instant('MailState_Processed');
+    const bounce = this.translateService.instant('MailState_Bounce');
+    const dropped = this.translateService.instant('MailState_Dropped');
+    const delivered = this.translateService.instant('MailState_Delivered');
+    const opened = this.translateService.instant('MailState_Open');
+    this.deliveryService.stats$.pipe(debounceTime(2000))
+      .subscribe((stats) =>
+      {
+        this.mailDeliveryData = [
+          [sent, processed, stats.processed + stats.bounce + stats.dropped + stats.delivered + stats.opened],
+          [processed, bounce, stats.bounce],
+          [processed, dropped, stats.dropped],
+          [processed, delivered, stats.delivered + stats.opened],
+          [delivered, opened, stats.opened],
+        ];
+        this.recentlySentMailCount = stats.sent;
+        this.changeDetectorRef.markForCheck();
       });
   }
 

@@ -6,7 +6,7 @@ import { EventService } from '../../events/event.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ProblematicEmailsService 
+export class ProblematicEmailsService
 {
   private list: BehaviorSubject<ProblematicEmail[] | null> = new BehaviorSubject(null);
 

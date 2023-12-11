@@ -867,6 +867,9 @@
   <data name="Reason" xml:space="preserve">
     <value>Reason</value>
   </data>
+  <data name="RecentlySentMailsStats" xml:space="preserve">
+    <value>Recently sent mails</value>
+  </data>
   <data name="Reduction" xml:space="preserve">
     <value>Reduction</value>
   </data>
@@ -1013,6 +1016,9 @@
   </data>
   <data name="SendReminderSms" xml:space="preserve">
     <value>Send reminder SMS</value>
+  </data>
+  <data name="Sent" xml:space="preserve">
+    <value>Sent</value>
   </data>
   <data name="SetFallbackPackage" xml:space="preserve">
     <value>Activate different package</value>

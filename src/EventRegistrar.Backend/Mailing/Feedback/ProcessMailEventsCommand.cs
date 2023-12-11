@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Mailing.InvalidAddresses;
 using EventRegistrar.Backend.Registrations.ReadModels;
 
 using Newtonsoft.Json;
@@ -29,6 +30,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
             return;
         }
 
+        Guid? eventId = null;
         if (rawMailEvents.MailSender == MailSender.SendGrid || rawMailEvents.MailSender == null)
         {
             var events = JsonConvert.DeserializeObject<IEnumerable<SendGridEvent>>(rawMailEvents.Body)
@@ -59,6 +61,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                 else
                 {
                     mail.State = state;
+                    eventId = mail.EventId;
                     // if addressed to multiple emails, save which receiver is concerned
                     foreach (var mailToRegistration in mail.Registrations!.Where(mil => string.Equals(mil.Email, sendGridEvent.Email, StringComparison.InvariantCultureIgnoreCase)))
                     {
@@ -108,6 +111,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                     {
                         var newState = MailState.Delivered;
                         mail.State = newState;
+                        eventId = mail.EventId;
                         // if addressed to multiple emails, save which receiver is concerned
                         foreach (var mailToRegistration in mail.Registrations!.Where(mil => string.Equals(mil.Email, deliveryEvent.Recipient, StringComparison.InvariantCultureIgnoreCase)))
                         {
@@ -145,6 +149,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                     {
                         var newState = MailState.Bounce;
                         mail.State = newState;
+                        eventId = mail.EventId;
                         // if addressed to multiple emails, save which receiver is concerned
                         foreach (var mailToRegistration in mail.Registrations!.Where(mil => string.Equals(mil.Email, bounceEvent.Email, StringComparison.InvariantCultureIgnoreCase)))
                         {
@@ -182,6 +187,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                     {
                         var newState = MailState.SpamReport;
                         mail.State = newState;
+                        eventId = mail.EventId;
                         // if addressed to multiple emails, save which receiver is concerned
                         foreach (var mailToRegistration in mail.Registrations!.Where(mil => string.Equals(mil.Email, spamEvent.Email, StringComparison.InvariantCultureIgnoreCase)))
                         {
@@ -217,6 +223,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                     {
                         var newState = MailState.Open;
                         mail.State = newState;
+                        eventId = mail.EventId;
                         // if addressed to multiple emails, save which receiver is concerned
                         foreach (var mailToRegistration in mail.Registrations!.Where(mil => string.Equals(mil.Email, openEvent.Recipient, StringComparison.InvariantCultureIgnoreCase)))
                         {
@@ -247,6 +254,10 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
         }
 
         rawMailEvents.Processed = dateTimeProvider.Now;
+        if (eventId != null)
+        {
+            changeTrigger.QueryChanged<MailDeliverySuccessQuery>(eventId.Value);
+        }
     }
 
     private static MailState? ConvertPostmarkRecordType(string? postmarkRecordType)

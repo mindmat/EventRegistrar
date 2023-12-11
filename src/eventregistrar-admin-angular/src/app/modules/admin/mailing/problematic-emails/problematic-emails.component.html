@@ -16,6 +16,14 @@
         </mat-form-field>
     </div>
 
+    <!-- Stats of recently sent mails -->
+    <div *ngIf="mailDeliveryData" class="flex min-w-0 flex-row items-baseline gap-2 m-4">
+        <div class="text-xl font-bold tracking-tight leading-none">{{ 'RecentlySentMailsStats' | translate }}</div>
+        <div class="mt-1.5 text-lg text-secondary">({{ recentlySentMailCount }})</div>
+    </div>
+    <google-chart #chart *ngIf="mailDeliveryData" [type]="ChartType.Sankey" [data]="mailDeliveryData" [columns]="chartColumns" [height]="100" class="w-full h-48 p-2">
+    </google-chart>
+
     <!-- None succeeded -->
     <div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
         <div class="text-xl font-bold tracking-tight leading-none">{{ 'MailDeliverySeverity_NoneSucceeded' | translate }}</div>

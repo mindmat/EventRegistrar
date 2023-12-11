@@ -111,6 +111,7 @@ import { PayoutsComponent } from './modules/admin/accounting/payouts/payouts.com
 import { AllParticipantsComponent } from './modules/admin/registrations/all-participants/all-participants.component';
 import { CreateAssignPaymentComponent } from './modules/admin/registration/create-assign-payment/create-assign-payment.component';
 import { ChangeNameComponent } from './modules/admin/registration/change-name/change-name.component';
+import { GoogleChartsModule } from 'angular-google-charts';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -233,6 +234,7 @@ const routerConfig: ExtraOptions = {
         FroalaViewModule.forRoot(),
 
         NgApexchartsModule,
+        GoogleChartsModule.forRoot(),
 
         AuthModule.forRoot({
             domain: 'eventregistrar.eu.auth0.com',
@@ -244,7 +246,7 @@ const routerConfig: ExtraOptions = {
             // Request this scope at user authentication time
             // scope: 'read:current_user',
 
-            // Specify configuration for the interceptor              
+            // Specify configuration for the interceptor
             httpInterceptor: {
                 allowedList: [
                     {

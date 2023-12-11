@@ -75,6 +75,14 @@ public class MailMap : EntityMap<Mail>
                .WithMany(mail => mail.Mails)
                .HasForeignKey(map => map.AutoMailTemplateId);
 
+        builder.HasIndex(mail => mail.EventId);
+
         builder.HasIndex(mail => mail.MailSenderMessageId);
+
+        builder.HasIndex(mail => new
+                                 {
+                                     mail.EventId,
+                                     mail.Sent
+                                 });
     }
 }

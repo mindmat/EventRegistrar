@@ -1823,6 +1823,38 @@
         }
       }
     },
+    "/api/MailDeliverySuccessQuery": {
+      "post": {
+        "tags": [
+          "MailDeliverySuccess"
+        ],
+        "operationId": "MailDeliverySuccess_Query",
+        "requestBody": {
+          "x-name": "MailDeliverySuccessQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MailDeliverySuccessQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MailDeliverySuccess"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/MailsOfRegistrationQuery": {
       "post": {
         "tags": [
@@ -6799,6 +6831,51 @@
           "eventId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "MailDeliverySuccess": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "sent": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "processed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dropped": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "delivered": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "opened": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "bounce": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "MailDeliverySuccessQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "sentSinceDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         }
       },

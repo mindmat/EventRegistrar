@@ -121,6 +121,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(ParticipantsOfEventQuery);
             yield return nameof(PricePackageOverviewQuery);
             yield return nameof(AvailableMailersQuery);
+            yield return nameof(MailDeliverySuccessQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
