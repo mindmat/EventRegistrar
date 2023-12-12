@@ -49,7 +49,17 @@ public class PotentialPartnersQueryHandler(IQueryable<Registration> registration
                                 ?? ownRegistration.PartnerRegistrableAsFollower.FirstOrDefault()?.Id;
         if (partnerRegistrableId == null)
         {
-            throw new ArgumentException("No partner spot found");
+            return new PotentialPartners
+                   {
+                       RegistrationId = ownRegistration.Id,
+                       Name = $"{ownRegistration.RespondentFirstName} {ownRegistration.RespondentLastName}",
+                       Email = ownRegistration.RespondentEmail,
+                       IsOnWaitingList = ownRegistration.IsOnWaitingList,
+                       DeclaredPartner = ownRegistration.PartnerOriginal,
+                       State = ownRegistration.State,
+                       Tracks = ownPartnerTracks.Select(trk => trk.DisplayName).ToList(),
+                       Matches = null
+                   };
         }
 
         var otherRole = ownRegistration.PartnerRegistrableAsLeader.FirstOrDefault() != null

@@ -1,4 +1,6 @@
-﻿using EventRegistrar.Backend.Spots;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Registrations.ReadModels;
+using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations.Matching;
 
@@ -9,21 +11,18 @@ public class ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand : IRe
 }
 
 public class ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommandHandler(IRepository<Registration> registrations,
-                                                                                  IRepository<Seat> spots)
+                                                                                  IRepository<Seat> spots,
+                                                                                  ChangeTrigger changeTrigger)
     : IRequestHandler<ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand>
 {
     public async Task Handle(ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommand command, CancellationToken cancellationToken)
     {
-        var registration = await registrations.Where(reg => reg.EventId == command.EventId
+        var registration = await registrations.AsTracking()
+                                              .Where(reg => reg.EventId == command.EventId
                                                          && reg.Id == command.RegistrationId)
                                               .Include(reg => reg.Seats_AsFollower)
                                               .Include(reg => reg.Seats_AsLeader)
                                               .FirstAsync(cancellationToken);
-
-        if (registration.RegistrationId_Partner != null)
-        {
-            throw new ArgumentException($"Registration {registration.Id} is already assigned to a partner");
-        }
 
         if (registration.RegistrationId_Partner != null)
         {
@@ -63,6 +62,8 @@ public class ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommandHandle
         registration.RegistrationId_Partner = null;
         registration.PartnerOriginal = null;
         registration.PartnerNormalized = null;
-        await registrations.InsertOrUpdateEntity(registration, cancellationToken);
+
+        changeTrigger.QueryChanged<RegistrationsWithUnmatchedPartnerQuery>(command.EventId);
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, command.EventId);
     }
 }
