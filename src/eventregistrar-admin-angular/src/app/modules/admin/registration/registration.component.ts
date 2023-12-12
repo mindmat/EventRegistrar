@@ -15,6 +15,7 @@ import { RegistrationService } from './registration.service';
 import { FallbackPackagesService } from '../pricing/fallback-packages.service';
 import { CreateAssignPaymentComponent } from './create-assign-payment/create-assign-payment.component';
 import { ChangeNameComponent } from './change-name/change-name.component';
+import { MatchPartnerService } from '../registrations/match-partner/match-partner.service';
 
 @Component({
   selector: 'app-registration',
@@ -48,7 +49,8 @@ export class RegistrationComponent implements OnInit
     private mailService: MailService,
     private reductionService: IndividualReductionService,
     private remarksService: RemarksOverviewService,
-    private fallbackPackagesService: FallbackPackagesService) { }
+    private fallbackPackagesService: FallbackPackagesService,
+    private matchPartnerService: MatchPartnerService) { }
 
   ngOnInit(): void
   {
@@ -173,6 +175,11 @@ export class RegistrationComponent implements OnInit
       autoFocus: true,
       data: { registrationId: this.registration.id, oldEmailAddress: this.registration.email }
     });
+  }
+
+  convertToSingleRegistration(): void
+  {
+    this.matchPartnerService.transformToSingle(this.registration.id);
   }
 
   addManualPayment()

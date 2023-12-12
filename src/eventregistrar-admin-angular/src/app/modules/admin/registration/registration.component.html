@@ -79,6 +79,8 @@
                             <button mat-menu-item (click)="cancelRegistration()">{{ 'CancelRegistration' | translate }}</button>
                             <button mat-menu-item (click)="changeName()">{{ 'ChangeName' | translate }}</button>
                             <button mat-menu-item (click)="changeEmail()">{{ 'ChangeEmail' | translate }}</button>
+                            <button mat-menu-item *ngIf="registration.partnerId===null && registration.partnerOriginal!==null" (click)="convertToSingleRegistration()">
+                                {{ 'TransformToSingle' | translate }}</button>
                             <button mat-menu-item *ngIf="registration.status===RegistrationState.Received&&registration.paid<registration.price" (click)="setWillPayAtCheckin()">{{
                                 'SetWillPayAtCheckin' | translate }}</button>
                             <button mat-menu-item *ngIf="registration.partnerId" (click)="unbindPartnerRegistrations()">{{ 'TransformToSingle' | translate }}</button>
