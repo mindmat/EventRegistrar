@@ -3,7 +3,7 @@
 public class PostmarkEventDelivery
 {
     public string? RecordType { get; set; }
-    public int? ServerID { get; set; }
+    public ulong? ServerID { get; set; }
     public string? MessageStream { get; set; }
     public string? MessageID { get; set; }
     public string? Recipient { get; set; }
@@ -16,13 +16,13 @@ public class PostmarkEventDelivery
 public class PostmarkEventBounce
 {
     public string? RecordType { get; set; }
-    public int? ID { get; set; }
+    public ulong? ID { get; set; }
     public string? Type { get; set; }
     public int? TypeCode { get; set; }
     public string? Name { get; set; }
     public string? Tag { get; set; }
     public string? MessageID { get; set; }
-    public int? ServerID { get; set; }
+    public ulong? ServerID { get; set; }
     public string? MessageStream { get; set; }
     public string? Description { get; set; }
     public string? Details { get; set; }
@@ -84,7 +84,7 @@ public class Geo
 public class PostmarkSpamReport
 {
     public string? RecordType { get; set; }
-    public int? ID { get; set; }
+    public ulong? ID { get; set; }
     public string? Type { get; set; }
     public int? TypeCode { get; set; }
     public string? Tag { get; set; }
@@ -97,7 +97,7 @@ public class PostmarkSpamReport
     public bool? DumpAvailable { get; set; }
     public bool? CanActivate { get; set; }
     public string? Subject { get; set; }
-    public int? ServerID { get; set; }
+    public ulong? ServerID { get; set; }
     public string? MessageStream { get; set; }
     public string? Content { get; set; }
     public string? Name { get; set; }
