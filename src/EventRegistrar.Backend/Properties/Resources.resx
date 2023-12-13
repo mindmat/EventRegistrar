@@ -534,6 +534,12 @@
   <data name="InvalidRefundAmount" xml:space="preserve">
 	  <value>Rückzahlbetrag {0:F2} muss zwischen 0.00 und {1:F2}l liegen.</value>
   </data>
+  <data name="IsCorePackage" xml:space="preserve">
+    <value>Kern-Paket</value>
+  </data>
+  <data name="IsCorePackageExplanation" xml:space="preserve">
+    <value>Wenn ein:e Teilnehmer:in bei mindestens einem Kern-Paket zugelassen ist, ist er/sie nicht mehr auf der Warteliste.</value>
+  </data>
   <data name="Key" xml:space="preserve">
     <value>Schlüssel</value>
   </data>

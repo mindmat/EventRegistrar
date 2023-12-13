@@ -63,6 +63,17 @@
                 </div>
 
                 <div class="flex flex-row items-start justify-start">
+                    <div class="flex-auto cursor-pointer" (click)="isCorePackageToggle.toggle()">
+                        <div class="leading-6 font-medium">{{ 'IsCorePackage' | translate }}</div>
+                        <div class="text-md text-secondary">
+                            {{ 'IsCorePackageExplanation' | translate }}
+                        </div>
+                    </div>
+                    <mat-slide-toggle class="ml-2" [color]="'primary'" #isCorePackageToggle formControlName="isCorePackage">
+                    </mat-slide-toggle>
+                </div>
+
+                <div class="flex flex-row items-start justify-start">
                     <div class="flex-auto cursor-pointer" (click)="showInOverviewToggle.toggle()">
                         <div class="leading-6 font-medium">{{ 'ShowInOverview' | translate }}</div>
                         <div class="text-md text-secondary">

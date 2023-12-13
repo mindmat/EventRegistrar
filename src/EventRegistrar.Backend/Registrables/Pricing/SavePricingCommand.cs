@@ -46,6 +46,7 @@ public class SavePricingCommandHandler(IRepository<PricePackage> packages,
             package.Price = packageToSave.Price;
             package.AllowAsAutomaticFallback = packageToSave.AllowAsAutomaticFallback;
             package.AllowAsManualFallback = packageToSave.AllowAsManualFallback;
+            package.IsCorePackage = packageToSave.IsCorePackage;
             package.ShowInOverview = packageToSave.ShowInOverview;
 
             foreach (var partToSave in packageToSave.Parts ?? Enumerable.Empty<PricePackagePartDto>())

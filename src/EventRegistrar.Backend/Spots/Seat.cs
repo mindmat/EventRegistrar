@@ -1,10 +1,13 @@
-﻿using EventRegistrar.Backend.Registrables;
+﻿using System.Diagnostics;
+
+using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Spots;
 
+[DebuggerDisplay("{Registrable.Name,nq} {IsWaitingList?\"W\":\"\"}")]
 public class Seat : Entity
 {
     public Guid RegistrableId { get; set; }

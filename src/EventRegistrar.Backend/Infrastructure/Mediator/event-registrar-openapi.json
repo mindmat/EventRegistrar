@@ -8653,6 +8653,9 @@
           "allowAsManualFallback": {
             "type": "boolean"
           },
+          "isCorePackage": {
+            "type": "boolean"
+          },
           "showInOverview": {
             "type": "boolean"
           },

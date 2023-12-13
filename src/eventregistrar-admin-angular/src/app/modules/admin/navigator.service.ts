@@ -16,19 +16,19 @@ export class NavigatorService
     return `/${this.eventService.selected.acronym}/registrations/${registrationId}`;
   }
 
-  goToRegistration(registrationId: string)
+  goToRegistration(registrationId: string): void
   {
     this.router.navigate(['/', this.eventService.selected.acronym, 'registrations', registrationId]);
   }
 
   getRegistrableUrl(registrableId: string, type: RegistrableType): string
   {
-    return `/${this.eventService.selected.acronym}/overview/${registrableId}/${type == RegistrableType.Single ? 'single' : 'double'}/participants`;
+    return `/${this.eventService.selected.acronym}/overview/${registrableId}/${type === RegistrableType.Single ? 'single' : 'double'}/participants`;
   }
 
-  goToRegistrable(registrableId: string, type: RegistrableType)
+  goToRegistrable(registrableId: string, type: RegistrableType): void
   {
-    this.router.navigate(['/', this.eventService.selected.acronym, 'overview', registrableId, type == RegistrableType.Single ? 'single' : 'double', 'participants']);
+    this.router.navigate(['/', this.eventService.selected.acronym, 'overview', registrableId, type === RegistrableType.Single ? 'single' : 'double', 'participants']);
   }
 
   getDuePaymentUrl(): string

@@ -1317,6 +1317,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kern-Paket.
+        /// </summary>
+        internal static string IsCorePackage {
+            get {
+                return ResourceManager.GetString("IsCorePackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wenn ein:e Teilnehmer:in bei mindestens einem Kern-Paket zugelassen ist, ist er/sie nicht mehr auf der Warteliste..
+        /// </summary>
+        internal static string IsCorePackageExplanation {
+            get {
+                return ResourceManager.GetString("IsCorePackageExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Schlüssel.
         /// </summary>
         internal static string Key {

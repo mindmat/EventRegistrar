@@ -21,6 +21,7 @@ public class PricePackage : Entity
 
     public bool AllowAsAutomaticFallback { get; set; }
     public bool AllowAsManualFallback { get; set; }
+    public bool IsCorePackage { get; set; }
     public int FallbackPriority { get; set; }
     public int SortKey { get; set; }
     public bool ShowInOverview { get; set; }

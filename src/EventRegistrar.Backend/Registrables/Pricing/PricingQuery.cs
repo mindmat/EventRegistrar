@@ -18,6 +18,7 @@ public class PricingQueryHandler(IQueryable<PricePackage> packages) : IRequestHa
                                                 Name = ppg.Name, Price = ppg.Price,
                                                 AllowAsAutomaticFallback = ppg.AllowAsAutomaticFallback,
                                                 AllowAsManualFallback = ppg.AllowAsManualFallback,
+                                                IsCorePackage = ppg.IsCorePackage,
                                                 ShowInOverview = ppg.ShowInOverview,
                                                 Parts = ppg.Parts!
                                                            .OrderBy(ppp => ppg.SortKey)
@@ -41,6 +42,7 @@ public record PricePackageDto
     public decimal Price { get; set; }
     public bool AllowAsAutomaticFallback { get; set; }
     public bool AllowAsManualFallback { get; set; }
+    public bool IsCorePackage { get; set; }
     public bool ShowInOverview { get; set; }
     public IEnumerable<PricePackagePartDto>? Parts { get; set; }
 }

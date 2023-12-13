@@ -444,6 +444,9 @@
   <data name="InternalNotes" xml:space="preserve">
     <value>Internal notes</value>
   </data>
+  <data name="IsCorePackage" xml:space="preserve">
+    <value>Core package</value>
+  </data>
   <data name="Key" xml:space="preserve">
     <value>Key</value>
   </data>

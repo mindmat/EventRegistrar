@@ -21,7 +21,7 @@
         <div class="text-xl font-bold tracking-tight leading-none">{{ 'RecentlySentMailsStats' | translate }}</div>
         <div class="mt-1.5 text-lg text-secondary">({{ recentlySentMailCount }})</div>
     </div>
-    <google-chart #chart *ngIf="mailDeliveryData" [type]="ChartType.Sankey" [data]="mailDeliveryData" [columns]="chartColumns" [height]="100" class="w-full h-48 p-2">
+    <google-chart #chart *ngIf="mailDeliveryData" [type]="ChartType.Sankey" [data]="mailDeliveryData" [columns]="chartColumns" [height]="150" class="w-full h-96 p-2">
     </google-chart>
 
     <!-- None succeeded -->

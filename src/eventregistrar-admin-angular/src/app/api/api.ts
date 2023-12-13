@@ -8942,6 +8942,7 @@ export interface PricePackageDto {
     price?: number;
     allowAsAutomaticFallback?: boolean;
     allowAsManualFallback?: boolean;
+    isCorePackage?: boolean;
     showInOverview?: boolean;
     parts?: PricePackagePartDto[] | null;
 }
