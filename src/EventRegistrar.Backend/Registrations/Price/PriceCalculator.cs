@@ -68,7 +68,6 @@ public class PriceCalculator(IQueryable<Seat> _spots,
 
         if (hasSpotsOnWaitingList || !allCoveredOriginal)
         {
-            isOnWaitingList = true;
             var admittedSpots = notCancelledSpots.Where(spot => !spot.IsWaitingList)
                                                  .ToList();
             (priceAdmitted, packagesAdmitted, var allCoveredAdmitted) = CalculatePriceOfSpots(registration.Id, admittedSpots, packages, coreTracks);
@@ -94,6 +93,11 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                 }
 
                 possibleFallbackPackages = fallbackPackages.Where(ppk => ppk.AllowAsManualFallback);
+            }
+            else
+            {
+                var corePackageAdmitted = packagesAdmitted.Any(ppk => ppk.IsCorePackage);
+                isOnWaitingList = !corePackageAdmitted;
             }
         }
 
@@ -125,6 +129,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                                                             priceNotReduced,
                                                             false,
                                                             false,
+                                                            false,
                                                             Array.Empty<MatchingPackageSpot>()));
         }
 
@@ -137,6 +142,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                                                                    Resources.Reduction,
                                                                    0m,
                                                                    0m,
+                                                                   false,
                                                                    false,
                                                                    false,
                                                                    individualReductions.Select(ird => new MatchingPackageSpot(ird.Reason ?? Resources.Reduction, -ird.Amount)),
@@ -241,6 +247,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                                                pkg.OriginalPrice,
                                                pkg.Package.AllowAsAutomaticFallback,
                                                pkg.Package.AllowAsManualFallback,
+                                               pkg.Package.IsCorePackage,
                                                pkg.Spots
                                            ))
                                    .ToList(),
@@ -302,6 +309,7 @@ public record struct MatchingPackageResult(Guid? Id,
                                            decimal OriginalPrice,
                                            bool AllowAsAutomaticFallback,
                                            bool AllowAsManualFallback,
+                                           bool IsCorePackage,
                                            IEnumerable<MatchingPackageSpot> Spots,
                                            bool IsReductionsPackage = false);
 
