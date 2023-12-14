@@ -69,10 +69,10 @@ export class ProblematicEmailsComponent implements OnInit
       {
         this.mailDeliveryData = [
           [sent, processed, stats.processed + stats.bounce + stats.dropped + stats.delivered + stats.opened],
-          [processed, bounce, stats.bounce],
-          [processed, dropped, stats.dropped],
           [processed, delivered, stats.delivered + stats.opened],
           [delivered, opened, stats.opened],
+          [processed, bounce, stats.bounce],
+          [processed, dropped, stats.dropped],
         ];
         this.recentlySentMailCount = stats.sent;
         this.changeDetectorRef.markForCheck();
