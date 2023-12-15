@@ -96,8 +96,8 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             }
             else
             {
-                var corePackageAdmitted = packagesAdmitted.Any(ppk => ppk.IsCorePackage);
-                isOnWaitingList = !corePackageAdmitted;
+                var anyCorePackageAdmitted = packagesAdmitted.Any(ppk => ppk.IsCorePackage);
+                isOnWaitingList = !anyCorePackageAdmitted;
             }
         }
 

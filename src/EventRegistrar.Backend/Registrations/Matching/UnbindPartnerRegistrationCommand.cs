@@ -38,6 +38,7 @@ public class UnbindPartnerRegistrationCommandHandler(IRepository<Registration> r
             foreach (var spot in registration.Seats_AsLeader.Where(spot => spot.IsPartnerSpot))
             {
                 spot.IsPartnerSpot = false;
+                spot.PartnerEmail = null;
             }
         }
 
@@ -46,6 +47,7 @@ public class UnbindPartnerRegistrationCommandHandler(IRepository<Registration> r
             foreach (var spot in registration.Seats_AsFollower.Where(spot => spot.IsPartnerSpot))
             {
                 spot.IsPartnerSpot = false;
+                spot.PartnerEmail = null;
             }
         }
 

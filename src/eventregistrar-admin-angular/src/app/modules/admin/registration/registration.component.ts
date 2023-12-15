@@ -85,13 +85,13 @@ export class RegistrationComponent implements OnInit
     this.notesToSave$.pipe(
       debounceTime(500),
       filter(notes => notes !== null && notes !== undefined),
-      switchMap(notes =>
+      switchMap((notes) =>
       {
         this.lastSentNotes = notes;
         this.changeDetectorRef.markForCheck();
         return this.registrationService.updateNotes(this.registration.id, notes);
       }),
-      tap(savedNotes =>
+      tap((savedNotes) =>
       {
         if (this.lastSentNotes === savedNotes)
         {
@@ -102,7 +102,7 @@ export class RegistrationComponent implements OnInit
       .subscribe();
   }
 
-  fetchPossibleMailTypes()
+  fetchPossibleMailTypes(): void
   {
     if (!this.possibleMailTypes)
     {
@@ -111,7 +111,7 @@ export class RegistrationComponent implements OnInit
     }
   }
 
-  fetchPossibleFalbackPackages()
+  fetchPossibleFalbackPackages(): void
   {
     if (!this.possibleFallbackPricePackages)
     {
@@ -120,7 +120,7 @@ export class RegistrationComponent implements OnInit
     }
   }
 
-  createMail(mailTypeItem: MailTypeItem)
+  createMail(mailTypeItem: MailTypeItem): void
   {
     if (mailTypeItem.type)
     {
@@ -129,9 +129,9 @@ export class RegistrationComponent implements OnInit
     }
   }
 
-  viewMail(mailId: string)
+  viewMail(mailId: string): void
   {
-    var url = `${this.eventService.selected.acronym}/mail-viewer/${mailId}`;
+    const url = `${this.eventService.selected.acronym}/mail-viewer/${mailId}`;
     window.open(url, '_blank', 'location=yes,height=1000,width=800,scrollbars=yes,status=yes'); // Open new window
   }
 
@@ -140,7 +140,7 @@ export class RegistrationComponent implements OnInit
     return this.navigator.getRegistrableUrl(spot.registrableId, spot.type);
   }
 
-  addReduction()
+  addReduction(): void
   {
     this.matDialog.open(CreateIndividualReductionComponent, {
       autoFocus: true,
@@ -148,12 +148,12 @@ export class RegistrationComponent implements OnInit
     });
   }
 
-  removeReduction(reductionId: string)
+  removeReduction(reductionId: string): void
   {
     this.reductionService.removeReduction(reductionId);
   }
 
-  cancelRegistration()
+  cancelRegistration(): void
   {
     this.matDialog.open(CancelRegistrationComponent, {
       autoFocus: true,
@@ -161,7 +161,7 @@ export class RegistrationComponent implements OnInit
     });
   }
 
-  changeName()
+  changeName(): void
   {
     this.matDialog.open(ChangeNameComponent, {
       autoFocus: true,
@@ -169,7 +169,7 @@ export class RegistrationComponent implements OnInit
     });
   }
 
-  changeEmail()
+  changeEmail(): void
   {
     this.matDialog.open(ChangeEmailComponent, {
       autoFocus: true,
@@ -182,7 +182,7 @@ export class RegistrationComponent implements OnInit
     this.matchPartnerService.transformToSingle(this.registration.id);
   }
 
-  addManualPayment()
+  addManualPayment(): void
   {
     this.matDialog.open(CreateAssignPaymentComponent, {
       autoFocus: true,
@@ -190,12 +190,12 @@ export class RegistrationComponent implements OnInit
     });
   }
 
-  unassignPayment(paymentAssignmentId: string)
+  unassignPayment(paymentAssignmentId: string): void
   {
     this.registrationService.unassignPayment(paymentAssignmentId);
   }
 
-  changeSpots()
+  changeSpots(): void
   {
     this.changeSpotsDialog = this.matDialog.open(ChangeSpotsComponent, {
       autoFocus: true,
@@ -203,42 +203,42 @@ export class RegistrationComponent implements OnInit
     });
   }
 
-  deleteMail(mailId: string)
+  deleteMail(mailId: string): void
   {
     this.mailService.deleteMail(mailId);
   }
 
-  releaseMail(mailId: string)
+  releaseMail(mailId: string): void
   {
     this.mailService.releaseMail(mailId);
   }
 
-  processedChanged(registrationId: string, processed: boolean)
+  processedChanged(registrationId: string, processed: boolean): void
   {
     this.remarksService.setProcessedState(registrationId, processed);
   }
 
-  notesChanged(notes: string)
+  notesChanged(notes: string): void
   {
     this.notesToSave$.next(notes);
   }
 
-  unbindPartnerRegistrations()
+  unbindPartnerRegistrations(): void
   {
     this.registrationService.unbindPartnerRegistrations(this.registration.id);
   }
 
-  setWillPayAtCheckin()
+  setWillPayAtCheckin(): void
   {
     this.registrationService.setWillPayAtCheckin(this.registration.id);
   }
 
-  setFallbackPackage(pricePackageId: string)
+  setFallbackPackage(pricePackageId: string): void
   {
     this.registrationService.setFallbackPackage(this.registration.id, pricePackageId);
   }
 
-  removeFallbackPackage()
+  removeFallbackPackage(): void
   {
     this.registrationService.setFallbackPackage(this.registration.id, null);
   }
