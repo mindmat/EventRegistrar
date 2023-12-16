@@ -10,12 +10,13 @@ import { RegistrableDisplayInfo, RegistrationDisplayInfo, SpotDisplayInfo } from
 })
 export class ParticipantsDoubleComponent implements OnInit
 {
-  constructor(private service: ParticipantsService,
-    private changeDetectorRef: ChangeDetectorRef) { }
-
-  private unsubscribeAll: Subject<any> = new Subject<any>();
   registrable: RegistrableDisplayInfo;
   dragOverParticipants: boolean;
+  canDefrag: boolean;
+  private unsubscribeAll: Subject<any> = new Subject<any>();
+
+  constructor(private service: ParticipantsService,
+    private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
   {
@@ -26,9 +27,17 @@ export class ParticipantsDoubleComponent implements OnInit
       {
         this.registrable = registrable;
 
+        this.canDefrag = this.registrable.participants.some(prt => !prt.isPartnerRegistration && prt.leader !== null && prt.follower === null)
+          && this.registrable.participants.some(prt => !prt.isPartnerRegistration && prt.leader === null && prt.follower !== null);
+
         // Mark for check
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  defrag(): void
+  {
+    this.service.defrag(this.registrable.id);
   }
 
   triggerMoveUp(): void
@@ -39,9 +48,9 @@ export class ParticipantsDoubleComponent implements OnInit
     }
   }
 
-  drop(dragData: SpotDisplayInfo | RegistrationDisplayInfo)
+  drop(dragData: SpotDisplayInfo | RegistrationDisplayInfo): void
   {
-    var registrationId = (<RegistrationDisplayInfo>dragData).id
+    const registrationId = (<RegistrationDisplayInfo>dragData).id
       ?? (<SpotDisplayInfo>dragData).leader?.id
       ?? (<SpotDisplayInfo>dragData).follower?.id;
 

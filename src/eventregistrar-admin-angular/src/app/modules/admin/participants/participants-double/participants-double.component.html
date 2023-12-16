@@ -28,7 +28,30 @@
                 <!-- Participants -->
                 <div class="flex-0 w-144 p-2 rounded-2xl bg-default">
 
-                    <div class="font-medium">{{ 'Participants' | translate }}</div>
+                    <div class="flex flex-row">
+                        <div class="font-medium">{{ 'Participants' | translate }}</div>
+
+                        <!-- context menu -->
+                        <div class="flex items-center ml-auto">
+                            <button mat-icon-button [matMenuTriggerFor]="registrableMenu">
+                                <mat-icon class="icon-size-5" svgIcon="heroicons_solid:dots-vertical"></mat-icon>
+                            </button>
+                            <mat-menu #registrableMenu="matMenu">
+                                <button mat-menu-item (click)="defrag()">
+                                    <span class="flex items-center">
+                                        <mat-icon class="icon-size-5 mr-3" svgIcon="mat_outline:cleaning_services"></mat-icon>
+                                        <span>{{ 'DefragRegistrableCommand' | translate }}</span>
+                                    </span>
+                                </button>
+                                <button mat-menu-item (click)="triggerMoveUp()">
+                                    <span class="flex items-center">
+                                        <mat-icon class="icon-size-5 mr-3" svgIcon="heroicons_solid:bars-arrow-up"></mat-icon>
+                                        <span>{{ 'TriggerMoveUp' | translate }}</span>
+                                    </span>
+                                </button>
+                            </mat-menu>
+                        </div>
+                    </div>
 
                     <!-- Spots -->
                     <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border" [ngClass]="{'bg-primary-600': dragOverParticipants}">
@@ -67,10 +90,6 @@
 
                     <div class="flex flex-row">
                         <div class="font-medium">{{ 'WaitingList' | translate }}</div>
-
-                        <button class="ml-auto" *ngIf="registrable.waitingList.length > 0" mat-flat-button [color]="'primary'" (click)="triggerMoveUp()">
-                            {{ 'TriggerMoveUp' | translate }}
-                        </button>
                     </div>
 
                     <!-- Spots -->

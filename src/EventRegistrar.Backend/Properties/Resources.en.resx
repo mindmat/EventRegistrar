@@ -288,6 +288,9 @@
   <data name="DebitorName" xml:space="preserve">
     <value>Debitor</value>
   </data>
+  <data name="DefragRegistrableCommand" xml:space="preserve">
+    <value>Defragment</value>
+  </data>
   <data name="Delete" xml:space="preserve">
     <value>Delete</value>
   </data>

@@ -592,6 +592,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Defragmentieren.
+        /// </summary>
+        internal static string DefragRegistrableCommand {
+            get {
+                return ResourceManager.GetString("DefragRegistrableCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Löschen.
         /// </summary>
         internal static string Delete {

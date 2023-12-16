@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Api, RegistrableDisplayInfo } from 'app/api/api';
-import { BehaviorSubject, map, Observable, of, switchMap, throwError } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { FetchService } from '../infrastructure/fetchService';
 import { NotificationService } from '../infrastructure/notification.service';
@@ -12,7 +12,7 @@ export class ParticipantsService extends FetchService<RegistrableDisplayInfo>
 {
   constructor(private api: Api,
     private eventService: EventService,
-    notificationService: NotificationService) 
+    notificationService: NotificationService)
   {
     super('ParticipantsOfRegistrableQuery', notificationService);
   }
@@ -27,15 +27,21 @@ export class ParticipantsService extends FetchService<RegistrableDisplayInfo>
     return this.fetchItems(this.api.participantsOfRegistrable_Query({ eventId: this.eventService.selectedId, registrableId }), registrableId, this.eventService.selectedId);
   }
 
-  triggerMoveUp(registrableId: string)
+  triggerMoveUp(registrableId: string): Subscription
   {
     return this.api.triggerMoveUpFromWaitingList_Command({ eventId: this.eventService.selectedId, registrableId })
       .subscribe();
   }
 
-  promoteFromWaitingList(registrableId: string, registrationId: string)
+  promoteFromWaitingList(registrableId: string, registrationId: string): Subscription
   {
     return this.api.triggerMoveUpFromWaitingList_Command({ eventId: this.eventService.selectedId, registrableId, registrationId })
+      .subscribe();
+  }
+
+  defrag(registrableId: string): Subscription
+  {
+    return this.api.defragRegistrable_Command({ eventId: this.eventService.selectedId, registrableId })
       .subscribe();
   }
 }

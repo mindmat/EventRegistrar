@@ -1086,6 +1086,31 @@
         }
       }
     },
+    "/api/DefragRegistrableCommand": {
+      "post": {
+        "tags": [
+          "DefragRegistrable"
+        ],
+        "operationId": "DefragRegistrable_Command",
+        "requestBody": {
+          "x-name": "DefragRegistrableCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DefragRegistrableCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/DeleteBulkMailTemplateCommand": {
       "post": {
         "tags": [
@@ -5838,6 +5863,20 @@
         }
       },
       "DeactivateAutomaticPromotionCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrableId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "DefragRegistrableCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {

@@ -180,6 +180,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(AssignRepaymentCommand);
             yield return nameof(CreateAndAssignIncomingPaymentCommand);
             yield return nameof(ChangeParticipantNameCommand);
+            yield return nameof(DefragRegistrableCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))
