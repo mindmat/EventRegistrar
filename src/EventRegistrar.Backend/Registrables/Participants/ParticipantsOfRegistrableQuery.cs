@@ -30,35 +30,35 @@ public class ParticipantsOfRegistrableQueryHandler(IQueryable<Registrable> regis
                                                   && !spot.IsCancelled)
                                       .OrderBy(spot => spot.IsWaitingList)
                                       .ThenBy(spot => spot.FirstPartnerJoined)
-                                      .Select(seat => new SpotDisplayInfo
+                                      .Select(spot => new SpotDisplayInfo
                                                       {
-                                                          Leader = seat.RegistrationId == null
+                                                          Leader = spot.RegistrationId == null
                                                                        ? null
                                                                        : new RegistrationDisplayInfo
                                                                          {
-                                                                             Id = seat.Registration!.Id,
-                                                                             Email = seat.Registration.RespondentEmail,
-                                                                             State = seat.Registration.State,
-                                                                             FirstName = seat.Registration.RespondentFirstName,
-                                                                             LastName = seat.Registration.RespondentLastName
+                                                                             Id = spot.Registration!.Id,
+                                                                             Email = spot.Registration.RespondentEmail,
+                                                                             State = spot.Registration.State,
+                                                                             FirstName = spot.Registration.RespondentFirstName,
+                                                                             LastName = spot.Registration.RespondentLastName
                                                                          },
-                                                          Follower = seat.RegistrationId_Follower == null
+                                                          Follower = spot.RegistrationId_Follower == null
                                                                          ? null
                                                                          : new RegistrationDisplayInfo
                                                                            {
-                                                                               Id = seat.Registration_Follower!.Id,
-                                                                               Email = seat.Registration_Follower.RespondentEmail,
-                                                                               State = seat.Registration_Follower.State,
-                                                                               FirstName = seat.Registration_Follower
+                                                                               Id = spot.Registration_Follower!.Id,
+                                                                               Email = spot.Registration_Follower.RespondentEmail,
+                                                                               State = spot.Registration_Follower.State,
+                                                                               FirstName = spot.Registration_Follower
                                                                                                .RespondentFirstName,
-                                                                               LastName = seat.Registration_Follower
+                                                                               LastName = spot.Registration_Follower
                                                                                               .RespondentLastName
                                                                            },
-                                                          PlaceholderPartner = seat.IsPartnerSpot && (seat.RegistrationId == null || seat.RegistrationId_Follower == null)
-                                                                                   ? seat.PartnerEmail
+                                                          PlaceholderPartner = spot.IsPartnerSpot && (spot.RegistrationId == null || spot.RegistrationId_Follower == null)
+                                                                                   ? spot.PartnerEmail
                                                                                    : null,
-                                                          IsOnWaitingList = seat.IsWaitingList || (seat.Registration != null && seat.Registration.IsOnWaitingList == true),
-                                                          IsPartnerRegistration = seat.IsPartnerSpot || seat.PartnerEmail != null
+                                                          IsOnWaitingList = spot.IsWaitingList || (spot.Registration != null && spot.Registration.IsOnWaitingList == true),
+                                                          IsPartnerRegistration = spot.IsPartnerSpot || spot.PartnerEmail != null
                                                       })
                                       .ToListAsync(cancellationToken);
 
