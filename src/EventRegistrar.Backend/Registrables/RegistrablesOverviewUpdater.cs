@@ -22,9 +22,9 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
     {
         var registrables = await _registrables.Where(rbl => rbl.EventId == eventId)
                                               .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
-                                              .Include(rbl => rbl.Spots!)
+                                              .Include(rbl => rbl.Spots!.Where(spt => !spt.IsCancelled))
                                               .ThenInclude(spt => spt.Registration)
-                                              .Include(rbl => rbl.Spots!)
+                                              .Include(rbl => rbl.Spots!.Where(spt => !spt.IsCancelled))
                                               .ThenInclude(spt => spt.Registration_Follower)
                                               .Include(rbl => rbl.Event)
                                               .ToListAsync(cancellationToken);
@@ -60,12 +60,12 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                        IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
                                                                                   && userCanDeleteRegistrable
                                                                                   && rbl.Event!.State == RegistrationForms.EventState.Setup,
-                                                                       Class = rbl.Spots!.Where(spt => spt is { IsCancelled: false, IsWaitingList: false }
+                                                                       Class = rbl.Spots!.Where(spt => !spt.IsWaitingList
                                                                                                     && spt.Registration?.IsOnWaitingList != true)
                                                                                   .Select(GetSpotState)
                                                                                   .FillUpIf(rbl.MaximumSingleSeats, () => SpotState.Available)
                                                                                   .ToList(),
-                                                                       WaitingList = rbl.Spots!.Where(spt => spt is { IsCancelled: false, IsWaitingList: true }
+                                                                       WaitingList = rbl.Spots!.Where(spt => spt.IsWaitingList
                                                                                                           || spt.Registration?.IsOnWaitingList == true)
                                                                                         .Select(GetSpotState)
                                                                                         .ToList()
@@ -94,7 +94,7 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                        IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
                                                                                   && userCanDeleteRegistrable
                                                                                   && rbl.Event!.State == RegistrationForms.EventState.Setup,
-                                                                       Class = rbl.Spots!.Where(spt => spt is { IsCancelled: false, IsWaitingList: false }
+                                                                       Class = rbl.Spots!.Where(spt => !spt.IsWaitingList
                                                                                                     && spt.Registration?.IsOnWaitingList != true
                                                                                                     && spt.Registration_Follower?.IsOnWaitingList != true)
                                                                                   .OrderBy(spt => spt.FirstPartnerJoined)
@@ -102,7 +102,7 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                                   .FillUpIf(rbl.MaximumDoubleSeats,
                                                                                             () => new DoubleSpotState { Leader = SpotState.Available, Follower = SpotState.Available })
                                                                                   .ToList(),
-                                                                       WaitingList = rbl.Spots!.Where(spt => spt is { IsCancelled: false, IsWaitingList: true }
+                                                                       WaitingList = rbl.Spots!.Where(spt => spt.IsWaitingList
                                                                                                           || spt.Registration?.IsOnWaitingList == true
                                                                                                           || spt.Registration_Follower?.IsOnWaitingList == true)
                                                                                         .OrderBy(spt => spt.FirstPartnerJoined)
