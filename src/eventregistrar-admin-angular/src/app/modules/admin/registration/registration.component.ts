@@ -233,9 +233,23 @@ export class RegistrationComponent implements OnInit
     this.registrationService.setWillPayAtCheckin(this.registration.id);
   }
 
-  setFallbackPackage(pricePackageId: string): void
+
+  toggleManualFallbackPackage(pricePackageId: string, remove: boolean): void
   {
-    this.registrationService.setFallbackPackage(this.registration.id, pricePackageId);
+    let newFallbackPackages = this.registration.pricePackageIds_ManualFallback;
+    if (remove)
+    {
+      newFallbackPackages = [...this.registration.pricePackageIds_ManualFallback, pricePackageId];
+    }
+    else
+    {
+      const index = this.registration.pricePackageIds_ManualFallback.indexOf(pricePackageId, 0);
+      if (index > -1)
+      {
+        newFallbackPackages = this.registration.pricePackageIds_ManualFallback.splice(index, 1);
+      }
+    }
+    this.registrationService.setFallbackPackage(this.registration.id, newFallbackPackages);
   }
 
   removeFallbackPackage(): void

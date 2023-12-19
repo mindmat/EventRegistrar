@@ -9,7 +9,7 @@ public class SetManualFallbackToPricePackageCommand : IRequest, IEventBoundReque
 {
     public Guid EventId { get; set; }
     public Guid RegistrationId { get; set; }
-    public Guid? PricePackageId { get; set; }
+    public IEnumerable<Guid>? PricePackageIds { get; set; }
 }
 
 public class SetManualFallbackToPricePackageCommandHandler(IRepository<Registration> registrations,
@@ -19,14 +19,19 @@ public class SetManualFallbackToPricePackageCommandHandler(IRepository<Registrat
 {
     public async Task Handle(SetManualFallbackToPricePackageCommand command, CancellationToken cancellationToken)
     {
+        if (command.PricePackageIds == null)
+        {
+            return;
+        }
+
         var registration = await registrations.AsTracking()
                                               .FirstAsync(reg => reg.Id == command.RegistrationId
                                                               && reg.EventId == command.EventId,
                                                           cancellationToken);
-
-        if (registration.PricePackageId_ManualFallback != command.PricePackageId)
+        var newPackageIds = command.PricePackageIds.OrderBy(ppk => ppk).ToList();
+        if (!registration.PricePackageIds_ManualFallback.SequenceEqual(newPackageIds))
         {
-            registration.PricePackageId_ManualFallback = command.PricePackageId;
+            registration.PricePackageIds_ManualFallback = newPackageIds;
             changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
             eventBus.Publish(new ManualFallbackToPricePackageSet { RegistrationId = registration.Id, EventId = command.EventId });
         }

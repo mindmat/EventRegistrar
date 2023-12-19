@@ -9405,10 +9405,12 @@
             "type": "string",
             "nullable": true
           },
-          "pricePackageId_ManualFallback": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
+          "pricePackageIds_ManualFallback": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
           },
           "spots": {
             "type": "array",
@@ -10210,10 +10212,13 @@
             "type": "string",
             "format": "guid"
           },
-          "pricePackageId": {
-            "type": "string",
-            "format": "guid",
-            "nullable": true
+          "pricePackageIds": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
           }
         }
       },

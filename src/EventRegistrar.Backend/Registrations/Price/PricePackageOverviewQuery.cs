@@ -1,5 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Registrables.Pricing;
+﻿using EventRegistrar.Backend.Registrables.Pricing;
 
 namespace EventRegistrar.Backend.Registrations.Price;
 
@@ -26,12 +25,11 @@ public class PricePackageOverviewQueryHandler(IQueryable<PricePackage> _pricePac
 {
     public async Task<PricePackageOverview> Handle(PricePackageOverviewQuery query, CancellationToken cancellationToken)
     {
-        var registrations = await _registrations.Where(reg => reg.EventId == query.EventId
-                                                           && reg.PricePackageIds_Admitted != null)
+        var registrations = await _registrations.Where(reg => reg.EventId == query.EventId)
                                                 .Select(reg => new
                                                                {
                                                                    reg.Id,
-                                                                   PricePackageIds_Admitted = reg.PricePackageIds_Admitted.SplitGuidKeys()
+                                                                   reg.PricePackageIds_Admitted
                                                                })
                                                 .ToListAsync(cancellationToken);
         var packagesCounts = registrations.SelectMany(reg => reg.PricePackageIds_Admitted)
@@ -39,11 +37,11 @@ public class PricePackageOverviewQueryHandler(IQueryable<PricePackage> _pricePac
                                           .ToDictionary(grp => grp.Key, grp => grp.Count());
 
         var packages = await _pricePackages.Where(pkg => pkg.EventId == query.EventId
-                                                     && packagesCounts.Keys.Contains(pkg.Id)
-                                                     && pkg.ShowInOverview)
-                                          .ToDictionaryAsync(pkg => pkg.Id,
-                                                             pkg => new { pkg.Name, pkg.SortKey },
-                                                             cancellationToken);
+                                                      && packagesCounts.Keys.Contains(pkg.Id)
+                                                      && pkg.ShowInOverview)
+                                           .ToDictionaryAsync(pkg => pkg.Id,
+                                                              pkg => new { pkg.Name, pkg.SortKey },
+                                                              cancellationToken);
 
         return new PricePackageOverview
                {

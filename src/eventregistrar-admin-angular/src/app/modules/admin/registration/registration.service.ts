@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Api, MailType, MailTypeItem, RegistrationDisplayItem } from 'app/api/api';
-import { BehaviorSubject, filter, map, Observable } from 'rxjs';
+import { BehaviorSubject, filter, map, Observable, Subscription } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { NotificationService } from '../infrastructure/notification.service';
 
@@ -75,7 +75,7 @@ export class RegistrationService
       });
   }
 
-  unassignPayment(paymentAssignmentId: string)
+  unassignPayment(paymentAssignmentId: string): Subscription
   {
     return this.api.unassignPayment_Command({ eventId: this.eventService.selectedId, paymentAssignmentId })
       .subscribe();
@@ -86,21 +86,21 @@ export class RegistrationService
     return this.api.updateInternalNotes_Command({ eventId: this.eventService.selectedId, registrationId, notes });
   }
 
-  unbindPartnerRegistrations(registrationId: string)
+  unbindPartnerRegistrations(registrationId: string): Subscription
   {
     return this.api.unbindPartnerRegistration_Command({ eventId: this.eventService.selectedId, registrationId })
       .subscribe();
   }
 
-  setWillPayAtCheckin(registrationId: string)
+  setWillPayAtCheckin(registrationId: string): Subscription
   {
     return this.api.willPayAtCheckin_Command({ eventId: this.eventService.selectedId, registrationId })
       .subscribe();
   }
 
-  setFallbackPackage(registrationId: string, pricePackageId?: string)
+  setFallbackPackage(registrationId: string, pricePackageIds: string[]): Subscription
   {
-    return this.api.setManualFallbackToPricePackage_Command({ eventId: this.eventService.selectedId, registrationId, pricePackageId })
+    return this.api.setManualFallbackToPricePackage_Command({ eventId: this.eventService.selectedId, registrationId, pricePackageIds })
       .subscribe();
   }
 }

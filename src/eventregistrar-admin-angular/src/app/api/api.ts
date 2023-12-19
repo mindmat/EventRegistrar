@@ -9224,7 +9224,7 @@ export interface RegistrationDisplayItem {
     willPayAtCheckin?: boolean;
     fallbackToPartyPass?: boolean | null;
     internalNotes?: string | null;
-    pricePackageId_ManualFallback?: string | null;
+    pricePackageIds_ManualFallback?: string[];
     spots?: SpotDisplayItem[] | null;
     payments?: AssignedPaymentDisplayItem[] | null;
     mails?: MailMetadata[] | null;
@@ -9478,7 +9478,7 @@ export interface SendSmsCommand {
 export interface SetManualFallbackToPricePackageCommand {
     eventId?: string;
     registrationId?: string;
-    pricePackageId?: string | null;
+    pricePackageIds?: string[] | null;
 }
 
 export interface SetReductionCommand {

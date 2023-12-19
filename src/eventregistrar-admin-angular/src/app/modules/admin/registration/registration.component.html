@@ -108,8 +108,8 @@
                     <div class="flex items-center mt-4" *ngIf="!registration.isWaitingList">
                         <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:currency-dollar'"></mat-icon>
                         <span class="leading-none">{{ registration.paid | number : '1.2-2' }}</span>
-                        <span *ngIf="registration.price != registration.paid">&nbsp;/&nbsp;{{ registration.price | number : '1.2-2' }}</span>
-                        <mat-icon *ngIf="registration.price == registration.paid" class="icon-size-5 ml-1 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
+                        <span *ngIf="registration.price !== registration.paid">&nbsp;/&nbsp;{{ registration.price | number : '1.2-2' }}</span>
+                        <mat-icon *ngIf="registration.price === registration.paid" class="icon-size-5 ml-1 text-green-600" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon>
                     </div>
                     <div class="flex items-center mt-1" *ngIf="!registration.isWaitingList && registration.willPayAtCheckin">
                         <span class="leading-none ml-8">{{ 'WillPayAtCheckin' | translate }}</span>
@@ -118,8 +118,8 @@
                         <span class="leading-none">{{ 'Reductions' | translate }}:</span>
                         <div class="flex items-center mt-2" *ngFor="let reduction of registration.reductions">
                             <span class="leading-none">{{ reduction.reason }}:</span>
-                            <span class="leading-none ml-auto" *ngIf="reduction.type==IndividualReductionType.Reduction">-{{ reduction.amount | number : '1.2-2' }}</span>
-                            <span class="leading-none ml-auto" *ngIf="reduction.type==IndividualReductionType.OverwritePrice">-> {{ reduction.amount | number : '1.2-2' }}</span>
+                            <span class="leading-none ml-auto" *ngIf="reduction.type===IndividualReductionType.Reduction">-{{ reduction.amount | number : '1.2-2' }}</span>
+                            <span class="leading-none ml-auto" *ngIf="reduction.type===IndividualReductionType.OverwritePrice">-> {{ reduction.amount | number : '1.2-2' }}</span>
                             <button mat-icon-button (click)="removeReduction(reduction.id)">
                                 <mat-icon class="text-hint" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                             </button>
@@ -216,13 +216,14 @@
                             <button mat-menu-item [matMenuTriggerFor]="fallbackPackagesMenu">{{ 'SetFallbackPackage' | translate }}</button>
                         </mat-menu>
                         <mat-menu #fallbackPackagesMenu>
-                            <button *ngFor="let package of possibleFallbackPricePackages" mat-menu-item (click)="setFallbackPackage(package.id)">
-                                <mat-icon *ngIf="package.id===registration.pricePackageId_ManualFallback" [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                            <button *ngFor="let package of possibleFallbackPricePackages" mat-menu-item
+                                (click)="toggleManualFallbackPackage(package.id, registration.pricePackageIds_ManualFallback.includes(package.id))">
+                                <mat-icon *ngIf="registration.pricePackageIds_ManualFallback.includes(package.id)" [svgIcon]="'heroicons_outline:check'"></mat-icon>
                                 {{ package.name }}
                             </button>
-                            <button *ngIf="!!registration.pricePackageId_ManualFallback" mat-menu-item (click)="removeFallbackPackage()">
+                            <!-- <button *ngIf="!!registration.pricePackageId_ManualFallback" mat-menu-item (click)="removeFallbackPackage()">
                                 {{ 'Remove' | translate }}
-                            </button>
+                            </button> -->
                         </mat-menu>
                     </div>
                 </div>

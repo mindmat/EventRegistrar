@@ -44,7 +44,7 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
                                                   .Where(id => id != null)
                                                   .Select(id => id!.Value)
                                                   .OrderBy(id => id)
-                                                  .MergeKeys();
+                                                  .ToList();
         // update price
         if (oldOriginal != newOriginal
          || oldAdmitted != newAdmitted
@@ -64,7 +64,7 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
         }
 
         // update admitted package(s)
-        if (registration.PricePackageIds_Admitted != packageIds_admitted)
+        if (!registration.PricePackageIds_Admitted.SequenceEqual(packageIds_admitted))
         {
             registration.PricePackageIds_Admitted = packageIds_admitted;
 

@@ -32,7 +32,7 @@ public class RegistrationDisplayItem
     public bool WillPayAtCheckin { get; set; }
     public bool? FallbackToPartyPass { get; set; }
     public string? InternalNotes { get; set; }
-    public Guid? PricePackageId_ManualFallback { get; set; }
+    public IEnumerable<Guid> PricePackageIds_ManualFallback { get; set; } = null!;
 
     public IEnumerable<SpotDisplayItem>? Spots { get; set; }
     public IEnumerable<AssignedPaymentDisplayItem>? Payments { get; set; }

@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Reflection;
 
+using EventRegistrar.Backend.Infrastructure;
+
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -42,11 +44,21 @@ public static class StorageConverters
         return builder;
     }
 
+    public static PropertyBuilder IsKeysColumn(this PropertyBuilder<ICollection<Guid>> config)
+    {
+        return config.HasConversion(new ValueConverter<ICollection<Guid>, string?>(guids => guids.Any()
+                                                                                                ? guids.MergeKeys()
+                                                                                                : null,
+                                                                                   csv => csv.SplitGuidKeys().ToList()));
+    }
+
     private const string CommaSeparator = ",";
 
     public static PropertyBuilder IsCsvColumn(this PropertyBuilder<ICollection<Guid>> config)
     {
-        return config.HasConversion(new ValueConverter<ICollection<Guid>, string?>(guids => string.Join(CommaSeparator, guids),
+        return config.HasConversion(new ValueConverter<ICollection<Guid>, string?>(guids => guids.Any()
+                                                                                                ? string.Join(CommaSeparator, guids)
+                                                                                                : null,
                                                                                    csv => ParseCsvGuids(csv)));
     }
 

@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
+﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Price;
 
@@ -9,7 +10,9 @@ public class ManualFallbackToPricePackageSet : DomainEvent
     public Guid RegistrationId { get; set; }
 }
 
-public class ManualFallbackToPricePackageSetUserTranslation(IQueryable<Registration> registrations) : IEventToUserTranslation<ManualFallbackToPricePackageSet>
+public class ManualFallbackToPricePackageSetUserTranslation(IQueryable<Registration> registrations,
+                                                            IQueryable<Registrable> registrables)
+    : IEventToUserTranslation<ManualFallbackToPricePackageSet>
 {
     public string GetText(ManualFallbackToPricePackageSet domainEvent)
     {
@@ -18,10 +21,18 @@ public class ManualFallbackToPricePackageSetUserTranslation(IQueryable<Registrat
                                                        {
                                                            reg.RespondentFirstName,
                                                            reg.RespondentLastName,
-                                                           FallbacPricePackageName = reg.PricePackage_ManualFallback!.Name
+                                                           reg.PricePackageIds_ManualFallback
                                                        })
                                         .FirstOrDefault();
-        return $"{registration?.RespondentFirstName} {registration?.RespondentLastName} wünscht {registration?.FallbacPricePackageName} als Fallback";
+        List<string>? trackNames = null;
+        if (registration?.PricePackageIds_ManualFallback.Any() == true)
+        {
+            trackNames = registrables.Where(rbl => registration.PricePackageIds_ManualFallback.Contains(rbl.Id))
+                                     .Select(rbl => rbl.Name)
+                                     .ToList();
+        }
+
+        return $"{registration?.RespondentFirstName} {registration?.RespondentLastName} wünscht {trackNames?.StringJoin()} als Fallback";
     }
 }
 

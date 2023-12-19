@@ -60,7 +60,7 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                                         && reg.IsOnWaitingList == query.IncludeWaitingList)
                                              .OrderBy(reg => reg.RespondentFirstName)
                                              .ThenBy(reg => reg.RespondentLastName)
-                                             .Select(reg => new { reg.Id, PricePackageIds_Admitted = reg.PricePackageIds_Admitted.SplitGuidKeys() })
+                                             .Select(reg => new { reg.Id, reg.PricePackageIds_Admitted })
                                              .ToListAsync(cancellationToken);
 
         var registrations = await readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery), query.EventId, registrationIds.Select(reg => reg.Id), cancellationToken);
