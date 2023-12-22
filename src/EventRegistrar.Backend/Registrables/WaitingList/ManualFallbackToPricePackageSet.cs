@@ -25,7 +25,7 @@ public class ManualFallbackToPricePackageSetUserTranslation(IQueryable<Registrat
                                                        })
                                         .FirstOrDefault();
         List<string>? trackNames = null;
-        if (registration?.PricePackageIds_ManualFallback.Any() == true)
+        if (registration?.PricePackageIds_ManualFallback?.Any() == true)
         {
             trackNames = registrables.Where(rbl => registration.PricePackageIds_ManualFallback.Contains(rbl.Id))
                                      .Select(rbl => rbl.Name)

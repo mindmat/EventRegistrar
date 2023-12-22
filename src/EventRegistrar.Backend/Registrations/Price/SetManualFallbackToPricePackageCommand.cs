@@ -29,7 +29,7 @@ public class SetManualFallbackToPricePackageCommandHandler(IRepository<Registrat
                                                               && reg.EventId == command.EventId,
                                                           cancellationToken);
         var newPackageIds = command.PricePackageIds.OrderBy(ppk => ppk).ToList();
-        if (!registration.PricePackageIds_ManualFallback.SequenceEqual(newPackageIds))
+        if (registration.PricePackageIds_ManualFallback?.SequenceEqual(newPackageIds) != true)
         {
             registration.PricePackageIds_ManualFallback = newPackageIds;
             changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);

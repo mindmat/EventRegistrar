@@ -44,11 +44,11 @@ public static class StorageConverters
         return builder;
     }
 
-    public static PropertyBuilder IsKeysColumn(this PropertyBuilder<ICollection<Guid>> config)
+    public static PropertyBuilder IsKeysColumn(this PropertyBuilder<ICollection<Guid>?> config)
     {
-        return config.HasConversion(new ValueConverter<ICollection<Guid>, string?>(guids => guids.Any()
-                                                                                                ? guids.MergeKeys()
-                                                                                                : null,
+        return config.HasConversion(new ValueConverter<ICollection<Guid>?, string>(guids => guids != null && guids.Count > 0
+                                                                                                ? guids.MergeKeys()!
+                                                                                                : string.Empty,
                                                                                    csv => csv.SplitGuidKeys().ToList()));
     }
 
@@ -56,7 +56,7 @@ public static class StorageConverters
 
     public static PropertyBuilder IsCsvColumn(this PropertyBuilder<ICollection<Guid>> config)
     {
-        return config.HasConversion(new ValueConverter<ICollection<Guid>, string?>(guids => guids.Any()
+        return config.HasConversion(new ValueConverter<ICollection<Guid>, string?>(guids => guids.Count > 0
                                                                                                 ? string.Join(CommaSeparator, guids)
                                                                                                 : null,
                                                                                    csv => ParseCsvGuids(csv)));

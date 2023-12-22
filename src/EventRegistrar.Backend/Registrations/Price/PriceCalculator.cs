@@ -80,7 +80,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                                                        .ToList();
                 if (fallbackPackages.All(ppk => ppk.AllowAsAutomaticFallback
                                              || (ppk is { AllowAsManualFallback: true, Id: not null }
-                                              && registration.PricePackageIds_ManualFallback.Contains(ppk.Id.Value))))
+                                              && registration.PricePackageIds_ManualFallback?.Contains(ppk.Id.Value) == true)))
                 {
                     // allow fallback
                     isOnWaitingList = !allCoveredAdmitted;

@@ -58,7 +58,7 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                             PartnerId = reg.RegistrationId_Partner,
                                                             WillPayAtCheckin = reg.WillPayAtCheckin,
                                                             InternalNotes = reg.InternalNotes,
-                                                            PricePackageIds_ManualFallback = reg.PricePackageIds_ManualFallback,
+                                                            PricePackageIds_ManualFallback = reg.PricePackageIds_ManualFallback ?? Enumerable.Empty<Guid>(),
                                                             Reductions = reg.IndividualReductions!.Select(ird => new IndividualReductionDisplayItem
                                                                                                                  {
                                                                                                                      Id = ird.Id,

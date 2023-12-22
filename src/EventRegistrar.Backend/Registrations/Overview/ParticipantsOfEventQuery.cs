@@ -89,10 +89,10 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                             .ToList();
     }
 
-    private static string? GetPricePackageText(IEnumerable<Guid> pricePackageIds, IReadOnlyDictionary<Guid, string> packages)
+    private static string? GetPricePackageText(IEnumerable<Guid>? pricePackageIds, IReadOnlyDictionary<Guid, string> packages)
     {
-        var pricePackageId = pricePackageIds.FirstOrDefault();
-        return pricePackageId != default && packages.TryGetValue(pricePackageId, out var packageText)
+        var pricePackageId = pricePackageIds?.FirstOrDefault();
+        return pricePackageId != null && packages.TryGetValue(pricePackageId.Value, out var packageText)
                    ? packageText
                    : null;
     }

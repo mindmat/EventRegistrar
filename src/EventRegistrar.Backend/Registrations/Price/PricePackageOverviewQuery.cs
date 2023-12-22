@@ -32,7 +32,7 @@ public class PricePackageOverviewQueryHandler(IQueryable<PricePackage> _pricePac
                                                                    reg.PricePackageIds_Admitted
                                                                })
                                                 .ToListAsync(cancellationToken);
-        var packagesCounts = registrations.SelectMany(reg => reg.PricePackageIds_Admitted)
+        var packagesCounts = registrations.SelectMany(reg => reg.PricePackageIds_Admitted ?? Enumerable.Empty<Guid>())
                                           .GroupBy(grp => grp)
                                           .ToDictionary(grp => grp.Key, grp => grp.Count());
 

@@ -70,9 +70,9 @@ public class Registration : Entity
     [Obsolete]
     public Guid? PricePackageId_ManualFallback { get; set; }
 
-    public ICollection<Guid> PricePackageIds_ManualFallback { get; set; }
+    public ICollection<Guid>? PricePackageIds_ManualFallback { get; set; }
 
-    public ICollection<Guid> PricePackageIds_Admitted { get; set; }
+    public ICollection<Guid>? PricePackageIds_Admitted { get; set; }
 }
 
 public class RegistrationMap : EntityMap<Registration>

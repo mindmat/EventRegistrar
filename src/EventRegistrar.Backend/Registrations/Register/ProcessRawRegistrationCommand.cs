@@ -96,7 +96,9 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
                                RespondentEmail = googleRegistration.Email,
                                //Language = form.Language,
                                State = RegistrationState.Received,
-                               Responses = new List<Response>()
+                               Responses = new List<Response>(),
+                               PricePackageIds_ManualFallback = new List<Guid>(),
+                               PricePackageIds_Admitted = new List<Guid>()
                            };
 
             foreach (var rawResponse in googleRegistration.Responses)

@@ -64,7 +64,7 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
         }
 
         // update admitted package(s)
-        if (!registration.PricePackageIds_Admitted.SequenceEqual(packageIds_admitted))
+        if (registration.PricePackageIds_Admitted?.SequenceEqual(packageIds_admitted) != true)
         {
             registration.PricePackageIds_Admitted = packageIds_admitted;
 
