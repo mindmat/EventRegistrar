@@ -3173,6 +3173,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Event vorbereiten.
+        /// </summary>
+        internal static string SetupEvent {
+            get {
+                return ResourceManager.GetString("SetupEvent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bezahlt am Check-In.
         /// </summary>
         internal static string SetWillPayAtCheckin {

@@ -1151,6 +1151,9 @@
   <data name="Setup" xml:space="preserve">
     <value>Event vorbereiten</value>
   </data>
+  <data name="SetupEvent" xml:space="preserve">
+    <value>Event vorbereiten</value>
+  </data>
   <data name="SetWillPayAtCheckin" xml:space="preserve">
     <value>Bezahlt am Check-In</value>
   </data>
