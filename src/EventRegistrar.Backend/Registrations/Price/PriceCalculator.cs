@@ -127,11 +127,12 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             return (reducedPrice, new MatchingPackageResult(null,
                                                             $"{Resources.Reduction}: {overwrite.Reason}",
                                                             reducedPrice - priceNotReduced,
-                                                            priceNotReduced,
+                                                            0m,
                                                             false,
                                                             false,
                                                             false,
-                                                            Array.Empty<MatchingPackageSpot>()));
+                                                            Array.Empty<MatchingPackageSpot>(),
+                                                            true));
         }
 
         // adjust price

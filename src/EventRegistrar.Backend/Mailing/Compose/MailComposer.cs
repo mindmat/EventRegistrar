@@ -24,9 +24,6 @@ public class MailComposer(IQueryable<Registration> registrations,
     private const string PrefixFollower = "FOLLOWER";
     private const string PrefixLeader = "LEADER";
 
-    private const string ImgReductionBinary =
-        "iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAACXBIWXMAAA7DAAAOwwHHb6hkAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAAAatJREFUSInV1b1qVFEUBeBvByUDRgvJdFrZRIQUpksxZIKFiopgCsFObATxBSxEH8B3SGN8BctBC30AkUA6rXQUFQVDINtiTvDOzM3MlRjQBZsDa/+sfX42JzLTYeJIHRkRMziHU2jjJGYxU0J2sY3P+Ij3eJOZu2PFMnPIsFwS8g/tHZZH60X1iCKihS18xeOS9AGfsJOZ30vcHI5ivuzwNB7iBM5k5nbtDrBUurk22sk0w/WSu1TlZwzjeFm/1d3NFHwZqQFjAn8djQQi4lgNtxoRnQMLRMRZ9CNivcKt4TluH1igRnANG3iFe9Piawetisx8GxHzmfljpPilvWc7CY12UIrfwFO8xuUmxRsLlM6fleIXcT4iHkXEbJPuqsOyYjAsKyMDtIMXmCvcyxJ3YVJuZk6/A1wpBa9WjuUBVovoRDS55Ds1XA+9Bs39I5P8fwrEAN2IuBsR7Rp/u/i6ERH7KuzzTNex6fdv9dNggrvFNgq3598sOWPPdFSgU0nq4RYW8QT9iq9fuMUS06v4OpMEWriPhZofq4WbxVo1/oWSO+Qb+pMPA78Ai3xEwPEw5IcAAAAASUVORK5CYII=";
-
     public async Task<string> Compose(Guid registrationId,
                                       string template,
                                       string language,
@@ -376,16 +373,9 @@ public class MailComposer(IQueryable<Registration> registrations,
             // Package header
             result.AppendLine("<tr>");
             result.AppendLine($"<td><strong>{package.Name}</strong></td>");
-            if (package.IsReductionsPackage)
-            {
-                result.AppendLine("<td></td>");
-            }
-            else
-            {
-                result.AppendLine($"<td style=\"text-align: right;\">{package.Price}</td>");
-            }
+            result.AppendLine($"<td style=\"text-align: right;\">{package.Price}</td>");
 
-            if (package.OriginalPrice != package.Price)
+            if (package.OriginalPrice != package.Price && !package.IsReductionsPackage)
             {
                 var text = GetReductionText(package.OriginalPrice, package.Price);
                 //result.AppendLine($"<td><img src=\"data:image/png;base64,{ImgReductionBinary}\" style=\"width: 20px;\" class=\"fr-fic fr-dib\" title=\"{text}\" alt=\"{text}\" /></td>");

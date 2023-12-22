@@ -236,18 +236,18 @@ export class RegistrationComponent implements OnInit
 
   toggleManualFallbackPackage(pricePackageId: string, remove: boolean): void
   {
-    let newFallbackPackages = this.registration.pricePackageIds_ManualFallback;
+    let newFallbackPackages = this.registration.pricePackageIds_ManualFallback ?? [];
     if (remove)
-    {
-      newFallbackPackages = [...this.registration.pricePackageIds_ManualFallback, pricePackageId];
-    }
-    else
     {
       const index = this.registration.pricePackageIds_ManualFallback.indexOf(pricePackageId, 0);
       if (index > -1)
       {
         newFallbackPackages = this.registration.pricePackageIds_ManualFallback.splice(index, 1);
       }
+    }
+    else
+    {
+      newFallbackPackages = [...this.registration.pricePackageIds_ManualFallback, pricePackageId];
     }
     this.registrationService.setFallbackPackage(this.registration.id, newFallbackPackages);
   }

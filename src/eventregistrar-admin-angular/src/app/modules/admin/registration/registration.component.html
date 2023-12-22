@@ -217,7 +217,7 @@
                         </mat-menu>
                         <mat-menu #fallbackPackagesMenu>
                             <button *ngFor="let package of possibleFallbackPricePackages" mat-menu-item
-                                (click)="toggleManualFallbackPackage(package.id, registration.pricePackageIds_ManualFallback.includes(package.id))">
+                                (click)="toggleManualFallbackPackage(package.id, registration.pricePackageIds_ManualFallback?.includes(package.id)===true)">
                                 <mat-icon *ngIf="registration.pricePackageIds_ManualFallback.includes(package.id)" [svgIcon]="'heroicons_outline:check'"></mat-icon>
                                 {{ package.name }}
                             </button>
