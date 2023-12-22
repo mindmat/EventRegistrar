@@ -9,6 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="RegistrationForms\GoogleForms\GoogleFormsScript.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="RegistrationForms\GoogleForms\GoogleFormsScript.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Azure.Identity" Version="1.10.4" />
     <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.0" />
     <PackageReference Include="Azure.Security.KeyVault.Keys" Version="4.5.0" />

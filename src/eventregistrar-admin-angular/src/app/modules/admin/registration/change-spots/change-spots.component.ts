@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IndividualReductionType, SpotDisplayItem, RegistrableDisplayItem } from 'app/api/api';
 import { RegistrablesService } from '../../pricing/registrables.service';
@@ -9,14 +9,14 @@ import { SpotsService } from '../spots/spots.service';
   templateUrl: './change-spots.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChangeSpotsComponent
+export class ChangeSpotsComponent implements OnInit
 {
-  private bookedSpotIds: string[];
-  private registrables: RegistrableDisplayItem[];
   spotsOfRegistration: RegistrableSpot[];
   availableRegistrables: AvailableRegistrable[];
-
   IndividualReductionType = IndividualReductionType;
+
+  private bookedSpotIds: string[];
+  private registrables: RegistrableDisplayItem[];
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: { registrationId: string; spots?: SpotDisplayItem[]; },
@@ -27,28 +27,28 @@ export class ChangeSpotsComponent
   ngOnInit(): void
   {
     this.bookedSpotIds = this.data.spots?.map(spt => spt.registrableId);
-    this.registrablesService.registrables$.subscribe(rbl => { this.registrables = rbl; this.updateList(); });
+    this.registrablesService.registrables$.subscribe((rbl) => { this.registrables = rbl; this.updateList(); });
     this.registrablesService.fetchRegistrables().subscribe();
     this.updateList();
   }
 
-  public updateSpots(spots: SpotDisplayItem[] | null)
+  public updateSpots(spots: SpotDisplayItem[] | null): void
   {
     this.bookedSpotIds = spots?.map(spt => spt.registrableId);
     this.updateList();
   }
 
-  addSpot(registrableId: string, asFollower: boolean = false)
+  addSpot(registrableId: string, asFollower: boolean = false): void
   {
     this.spotsService.addSpot(this.data.registrationId, registrableId, asFollower);
   }
 
-  removeSpot(registrableId: string)
+  removeSpot(registrableId: string): void
   {
     this.spotsService.removeSpot(this.data.registrationId, registrableId);
   }
 
-  private updateList()
+  private updateList(): void
   {
     this.spotsOfRegistration = this.registrables?.filter(rbl => this.bookedSpotIds?.includes(rbl.id) === true)
       .map(rbl =>

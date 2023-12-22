@@ -35,4 +35,14 @@ export class NavigatorService
   {
     return `/${this.eventService.selected.acronym}/accounting/due-payments`;
   }
+
+  getFormMappingUrl(): string
+  {
+    return `/${this.eventService.selected.acronym}/admin/form-mapping`;
+  }
+
+  getOverviewUrl(): string
+  {
+    return `/${this.eventService.selected.acronym}/overview`;
+  }
 }

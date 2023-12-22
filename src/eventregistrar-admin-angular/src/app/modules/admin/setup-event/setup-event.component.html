@@ -1,0 +1,229 @@
+<div class="relative flex flex-col flex-auto min-w-0 overflow-hidden">
+
+    <!-- Main -->
+    <div class="flex flex-col flex-auto px-6 py-10 sm:px-16 sm:pt-18 sm:pb-20">
+
+        <!-- Activity feed -->
+        <div class="w-full max-w-3xl">
+
+            <!-- Title -->
+            <div class="text-4xl font-extrabold tracking-tight leading-none">Setup Event</div>
+            <!-- <div class="mt-1.5 text-lg text-secondary">Application wide activities are listed here as individual items, starting with the most recent.</div> -->
+
+            <div class="mt-2">
+                <ol>
+                    <!-- Create Forms -->
+                    <li class="relative flex py-7">
+
+                        <!-- Line -->
+                        <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
+
+                        <div class="relative flex flex-auto">
+                            <!-- Icon -->
+                            <div class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+                                <mat-icon *ngIf="state.formSent" class="icon-size-5 text-white" svgIcon="heroicons_solid:check">
+                                </mat-icon>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="flex flex-col flex-auto items-start">
+                                <!-- Description -->
+                                <ng-container>
+                                    <div>
+                                        <a>Google Forms erstellen</a>
+                                    </div>
+                                </ng-container>
+                                <div class="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-1 sm:space-x-2 text-md leading-5">
+                                    <!-- Date -->
+                                    <div class="text-secondary">
+                                        <!-- {{activity.date | date:'MMM dd, h:mm a'}} -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="relative flex">
+                        <!-- Line -->
+                        <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
+
+                        <div class="relative flex flex-auto">
+                            <!-- Icon -->
+                            <div class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+                                <mat-icon *ngIf="state.formSent" class="icon-size-5 text-white" svgIcon="heroicons_solid:check">
+                                </mat-icon>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="flex flex-col flex-auto items-start">
+                                <!-- Description -->
+                                <div>
+                                    <a>Skript hinterlegen</a>
+                                </div>
+                                <div class="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-1 sm:space-x-2 text-md leading-5">
+                                    <!-- Date -->
+                                    <!-- <div class="text-secondary">
+                                        {{activity.date | date:'MMM dd, h:mm a'}}
+                                    </div> -->
+                                </div>
+                                <div class="mt-4 py-4 px-5 rounded-lg bg-gray-200 dark:bg-gray-800">
+                                    <ol class="list-decimal list-inside space-y-2">
+                                        <li>
+                                            <a>Kontextmenu öffnen</a>
+                                            <mat-icon class="ml-2" svgIcon="heroicons_outline:dots-vertical"></mat-icon>
+                                        </li>
+                                        <li>
+                                            <a>Script editor öffnen</a>
+                                            <mat-icon class="ml-2" svgIcon="heroicons_outline:code"></mat-icon><br />
+                                        </li>
+                                        <li>
+                                            Inhalt von Code.gs ersetzen
+                                            <button class="relative ml-2 px-2 py-1 text-md font-medium leading-5 rounded-full bg-primary text-on-primary" (click)="downloadGoogleFormsScript()">
+                                                Copy Script to clipboard
+                                            </button>
+                                        </li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="relative flex py-7">
+                        <!-- Line -->
+                        <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
+
+                        <div class="relative flex flex-auto">
+                            <!-- Icon -->
+                            <div class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+                                <mat-icon *ngIf="state.formSent" class="icon-size-5 text-white" svgIcon="heroicons_solid:check">
+                                </mat-icon>
+                            </div>
+
+                            <!-- Content -->
+                            <div class="flex flex-col flex-auto items-start">
+                                <!-- Description -->
+                                <ng-container>
+                                    <div>
+                                        <a>Form-Definition senden</a>
+                                    </div>
+                                </ng-container>
+                                <div class="mt-4 py-4 px-5 rounded-lg bg-gray-200 dark:bg-gray-800">
+                                    <ol class="list-decimal list-inside space-y-2">
+                                        <li>
+                                            <a>Menü Add-ons öffnen</a>
+                                            <mat-icon svgIcon="heroicons_outline:puzzle-piece"></mat-icon>
+                                        </li>
+                                        <li>
+                                            <a>EventRegistrator Addon wählen</a>
+                                        </li>
+                                        <li>
+                                            <a>'UpdateQuestions in Event Registrator' selektieren</a>
+                                        </li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="relative flex py-7">
+                        <!-- Line -->
+                        <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
+
+                        <div class="relative flex flex-auto">
+                            <!-- Icon -->
+                            <ng-container>
+                                <div class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+                                    <mat-icon *ngIf="state.tracksDefined" class="icon-size-5 text-white" svgIcon="heroicons_solid:check">
+                                    </mat-icon>
+                                </div>
+                            </ng-container>
+
+                            <!-- Content -->
+                            <div class="flex flex-col flex-auto items-start">
+                                <!-- Description -->
+                                <ng-container>
+                                    <div>
+                                        <a>Tracks definieren</a>
+                                    </div>
+                                </ng-container>
+                                <div class="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-1 sm:space-x-2 text-md leading-5">
+                                    <a class="cursor-pointer text-primary" [routerLink]="navigator.getOverviewUrl()">
+                                        {{ 'Overview' | translate }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="relative flex py-7">
+                        <!-- Line -->
+                        <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
+
+                        <div class="relative flex flex-auto">
+                            <!-- Icon -->
+                            <ng-container>
+                                <div class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+                                    <mat-icon *ngIf="state.formImported" class="icon-size-5 text-white" svgIcon="heroicons_solid:check">
+                                    </mat-icon>
+                                </div>
+                            </ng-container>
+
+                            <!-- Content -->
+                            <div class="flex flex-col flex-auto items-start">
+                                <!-- Description -->
+                                <div>
+                                    <a>Form importieren</a>
+                                </div>
+                                <div class="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-1 sm:space-x-2 text-md leading-5">
+                                    <a class="cursor-pointer text-primary" [routerLink]="navigator.getFormMappingUrl()">
+                                        {{ 'Forms' | translate }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="relative flex py-7">
+                        <!-- Line -->
+                        <!-- <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div> -->
+
+                        <div class="relative flex flex-auto">
+                            <!-- Icon -->
+                            <ng-container>
+                                <div class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+                                    <mat-icon *ngIf="state.formMapped" class="icon-size-5 text-white" svgIcon="heroicons_solid:check">
+                                    </mat-icon>
+                                </div>
+                            </ng-container>
+
+                            <!-- Content -->
+                            <div class="flex flex-col flex-auto items-start">
+                                <!-- Description -->
+                                <div>
+                                    <a>Fragen zuordnen</a>
+                                </div>
+                                <div class="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-1 sm:space-x-2 text-md leading-5">
+                                    <a class="cursor-pointer text-primary" [routerLink]="navigator.getFormMappingUrl()">
+                                        {{ 'Forms' | translate }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- Loading template -->
+            <ng-template #loading>
+                Loading...
+            </ng-template>
+
+            <!-- No Activity template -->
+            <ng-template #noActivity>
+                There are is activity at the moment...
+            </ng-template>
+
+        </div>
+    </div>
+
+</div>

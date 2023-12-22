@@ -1465,6 +1465,38 @@
         }
       }
     },
+    "/api/EventSetupStateQuery": {
+      "post": {
+        "tags": [
+          "EventSetupState"
+        ],
+        "operationId": "EventSetupState_Query",
+        "requestBody": {
+          "x-name": "EventSetupStateQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventSetupStateQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventSetupState"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/EventsOfUserQuery": {
       "post": {
         "tags": [
@@ -1639,6 +1671,38 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/GeneratedBulkMails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GoogleFormsScriptQuery": {
+      "post": {
+        "tags": [
+          "GoogleFormsScript"
+        ],
+        "operationId": "GoogleFormsScript_Query",
+        "requestBody": {
+          "x-name": "GoogleFormsScriptQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GoogleFormsScriptQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
                 }
               }
             }
@@ -6282,6 +6346,34 @@
           }
         }
       },
+      "EventSetupState": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "formSent": {
+            "type": "boolean"
+          },
+          "formImported": {
+            "type": "boolean"
+          },
+          "tracksDefined": {
+            "type": "boolean"
+          },
+          "formMapped": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EventSetupStateQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "EventsOfUser": {
         "type": "object",
         "additionalProperties": false,
@@ -6615,6 +6707,16 @@
           "bulkMailKey": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "GoogleFormsScriptQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
           }
         }
       },

@@ -2497,6 +2497,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    eventSetupState_Query(eventSetupStateQuery: EventSetupStateQuery | undefined): Observable<EventSetupState> {
+        let url_ = this.baseUrl + "/api/EventSetupStateQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(eventSetupStateQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processEventSetupState_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processEventSetupState_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<EventSetupState>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<EventSetupState>;
+        }));
+    }
+
+    protected processEventSetupState_Query(response: HttpResponseBase): Observable<EventSetupState> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as EventSetupState;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     eventsOfUser_Query(eventsOfUserQuery: EventsOfUserQuery | undefined): Observable<EventsOfUser> {
         let url_ = this.baseUrl + "/api/EventsOfUserQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -2787,6 +2838,57 @@ export class Api {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as GeneratedBulkMails;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    googleFormsScript_Query(googleFormsScriptQuery: GoogleFormsScriptQuery | undefined): Observable<string> {
+        let url_ = this.baseUrl + "/api/GoogleFormsScriptQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(googleFormsScriptQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGoogleFormsScript_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGoogleFormsScript_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<string>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<string>;
+        }));
+    }
+
+    protected processGoogleFormsScript_Query(response: HttpResponseBase): Observable<string> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as string;
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -8237,6 +8339,17 @@ export interface EventQuery {
     eventId?: string;
 }
 
+export interface EventSetupState {
+    formSent?: boolean;
+    formImported?: boolean;
+    tracksDefined?: boolean;
+    formMapped?: boolean;
+}
+
+export interface EventSetupStateQuery {
+    eventId?: string;
+}
+
 export interface EventsOfUser {
     authorizedEvents?: EventOfUser[];
     requests?: AccessRequest[];
@@ -8351,6 +8464,10 @@ export interface GeneratedBulkMails {
 export interface GeneratedBulkMailsQuery {
     eventId?: string;
     bulkMailKey?: string | null;
+}
+
+export interface GoogleFormsScriptQuery {
+    eventId?: string;
 }
 
 export interface HostingOffersAndRequests {

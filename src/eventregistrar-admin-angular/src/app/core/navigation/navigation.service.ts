@@ -167,6 +167,13 @@ export class NavigationService
                             icon: 'mat_outline:mail',
                             children: [
                                 {
+                                    id: 'setup-event',
+                                    title: translateService.instant('SetupEvent'),
+                                    type: 'basic',
+                                    icon: 'heroicons_outline:cog-8-tooth',
+                                    link: `/${e.acronym}/admin/setup-event`,
+                                },
+                                {
                                     id: 'auto-mail-templates',
                                     title: translateService.instant('AutoMailTemplates'),
                                     type: 'basic',

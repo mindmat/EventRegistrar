@@ -15,10 +15,10 @@ import { PricePackagePartSelectionTypeService } from './pricing-selection-type.s
 export class PricingComponent implements OnInit
 {
   public packagesForms: FormGroup[] = [];
-  private unsubscribeAll: Subject<any> = new Subject<any>();
   packages: PricePackageDto[];
   registrables: RegistrableDisplayItem[];
   selectionTypes: PricePackagePartSelectionTypeOption[];
+  private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(private pricingService: PricingService,
     private registrablesService: RegistrablesService,

@@ -92,6 +92,11 @@ public static class EndpointRouteBuilderExtensions
         {
             await SerializeAsXlsx(context, response, container.GetInstance<ILogger>());
         }
+        else if (context.Request.Headers.Accept == "text/plain" && response is string textResponse)
+        {
+            context.Response.Headers["content-type"] = "text/plain";
+            await context.Response.WriteAsync(textResponse, context.RequestAborted);
+        }
         else
         {
             if (response is Unit)
@@ -109,7 +114,7 @@ public static class EndpointRouteBuilderExtensions
 
     private static async Task SerializeAsJson(HttpContext context, object? response, Type requestType)
     {
-        context.Response.Headers.Add("content-type", "application/json");
+        context.Response.Headers["content-type"] = "application/json";
         if (response is ISerializedJson serializedJson)
         {
             await context.Response.WriteAsync(serializedJson.Content, context.RequestAborted);
@@ -124,7 +129,7 @@ public static class EndpointRouteBuilderExtensions
     private static async Task SerializeAsXlsx(HttpContext context, object? response, ILogger logger)
     {
         // try to serialize as xlsx
-        context.Response.Headers.Add("content-type", "application/octet-stream");
+        context.Response.Headers["content-type"] = "application/octet-stream";
         LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine("DejaVu Sans");
         var workbook = new XLWorkbook();
         foreach (var (name, values, rowType) in GetEnumerableProperties(response))

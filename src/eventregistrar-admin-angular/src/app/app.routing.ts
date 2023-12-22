@@ -65,6 +65,8 @@ import { PayoutsComponent } from './modules/admin/accounting/payouts/payouts.com
 import { PayoutsResolver } from './modules/admin/accounting/payouts/payouts.resolver';
 import { AllParticipantsComponent } from './modules/admin/registrations/all-participants/all-participants.component';
 import { AllParticipantsResolver } from './modules/admin/registrations/all-participants/all-participants.resolver';
+import { SetupEventComponent } from './modules/admin/setup-event/setup-event.component';
+import { SetupEventResolver } from './modules/admin/setup-event/setup-event.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -365,6 +367,12 @@ export const appRoutes: Route[] =
                     component: LayoutComponent,
                     resolve: { initialData: InitialDataResolver },
                     children: [
+                        {
+                            path: 'setup-event',
+                            canActivate: [AuthGuard],
+                            component: SetupEventComponent,
+                            resolve: { initialData: SetupEventResolver }
+                        },
                         {
                             path: 'user-access',
                             canActivate: [AuthGuard],

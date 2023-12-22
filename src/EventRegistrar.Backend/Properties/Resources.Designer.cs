@@ -1119,6 +1119,26 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to /**
+        /// * Copyright 2015 Google Inc. All Rights Reserved.
+        /// *
+        /// * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+        /// * you may not use this file except in compliance with the License.
+        /// * You may obtain a copy of the License at
+        /// *
+        /// *     http://www.apache.org/licenses/LICENSE-2.0
+        /// *
+        /// * Unless required by applicable law or agreed to in writing, software
+        /// * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+        /// * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or im [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string GoogleFormsScript {
+            get {
+                return ResourceManager.GetString("GoogleFormsScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Maximale Anzahl Paar-Plätze.
         /// </summary>
         internal static string HasDoubleMax {

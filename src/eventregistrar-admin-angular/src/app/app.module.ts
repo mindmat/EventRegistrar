@@ -112,6 +112,7 @@ import { AllParticipantsComponent } from './modules/admin/registrations/all-part
 import { CreateAssignPaymentComponent } from './modules/admin/registration/create-assign-payment/create-assign-payment.component';
 import { ChangeNameComponent } from './modules/admin/registration/change-name/change-name.component';
 import { GoogleChartsModule } from 'angular-google-charts';
+import { SetupEventComponent } from './modules/admin/setup-event/setup-event.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -166,7 +167,8 @@ const routerConfig: ExtraOptions = {
         PayoutsComponent,
         AllParticipantsComponent,
         CreateAssignPaymentComponent,
-        ChangeNameComponent
+        ChangeNameComponent,
+        SetupEventComponent
     ],
     providers: [
         AuthServiceFuse,

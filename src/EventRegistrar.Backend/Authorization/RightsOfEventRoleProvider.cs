@@ -122,6 +122,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(PricePackageOverviewQuery);
             yield return nameof(AvailableMailersQuery);
             yield return nameof(MailDeliverySuccessQuery);
+            yield return nameof(EventSetupStateQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
@@ -196,6 +197,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SavePricingCommand);
             yield return nameof(RecalculateAllPriceAndWaitingListCommand);
             yield return nameof(DeleteTestDataCommand);
+            yield return nameof(GoogleFormsScriptQuery);
         }
     }
 }
