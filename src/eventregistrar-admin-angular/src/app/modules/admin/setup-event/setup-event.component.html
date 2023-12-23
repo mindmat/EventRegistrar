@@ -290,6 +290,9 @@
                                             <a>{{ error }}</a>
                                         </li>
                                     </ul>
+                                    <button class="ml-auto" mat-button [color]="'primary'" (click)="startProcessAllPendingRawRegistrationsCommand()">
+                                        {{ 'Import' | translate }}
+                                    </button>
                                 </div>
                             </div>
                         </div>

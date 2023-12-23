@@ -3,6 +3,7 @@ import { SetupEventService } from './setup-event.service';
 import { Subject, takeUntil } from 'rxjs';
 import { EventSetupState } from 'app/api/api';
 import { NavigatorService } from '../navigator.service';
+import { UnprocessedRawRegistrationsService } from '../registrations/unprocessed-raw-registrations.service';
 
 @Component({
   selector: 'app-setup-event',
@@ -15,6 +16,7 @@ export class SetupEventComponent implements OnInit
 
   constructor(public navigator: NavigatorService,
     private setupEventService: SetupEventService,
+    private unprocessedRawRegistrationsService: UnprocessedRawRegistrationsService,
     private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
@@ -31,5 +33,10 @@ export class SetupEventComponent implements OnInit
   downloadGoogleFormsScript(): void
   {
     this.setupEventService.copyScriptToClipboard();
+  }
+
+  startProcessAllPendingRawRegistrationsCommand(): void
+  {
+    this.unprocessedRawRegistrationsService.startProcessAllPendingRawRegistrationsCommand();
   }
 }

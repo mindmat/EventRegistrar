@@ -12,7 +12,6 @@ import { SearchRegistrationService } from './search-registration.service';
 })
 export class SearchRegistrationComponent implements OnInit
 {
-  private unsubscribeAll: Subject<any> = new Subject<any>();
   matches: RegistrationMatch[];
   unprocessedRawRegistrationsInfo: UnprocessedRawRegistrationsInfo;
 
@@ -25,6 +24,7 @@ export class SearchRegistrationComponent implements OnInit
       searchString$: new BehaviorSubject(''),
       // hideCompleted$: new BehaviorSubject(false)
     };
+  private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(private service: SearchRegistrationService,
     private unprocessedRawRegistrationsService: UnprocessedRawRegistrationsService,
@@ -36,7 +36,7 @@ export class SearchRegistrationComponent implements OnInit
   ngOnInit(): void
   {
     // use search string from url
-    this.route.queryParams.subscribe(params => 
+    this.route.queryParams.subscribe((params) =>
     {
       this.filters.searchString$.next(params.search ?? '');
     });
@@ -61,7 +61,7 @@ export class SearchRegistrationComponent implements OnInit
       });
 
     this.unprocessedRawRegistrationsService.unprocessedRawRegistrationsInfo$
-      .subscribe(info =>
+      .subscribe((info) =>
       {
         this.unprocessedRawRegistrationsInfo = info;
         this.changeDetectorRef.markForCheck();
@@ -81,7 +81,7 @@ export class SearchRegistrationComponent implements OnInit
       });
   }
 
-  startProcessAllPendingRawRegistrationsCommand()
+  startProcessAllPendingRawRegistrationsCommand(): void
   {
     this.unprocessedRawRegistrationsService.startProcessAllPendingRawRegistrationsCommand();
   }
