@@ -96,7 +96,7 @@
                 <div class="mt-8 flex flex-col items-center justify-between p-6 sm:px-10 rounded-2xl shadow bg-card transition-shadow ease-in-out duration-150">
                     <div class="text-xl font-semibold">{{ 'MultiMappings' | translate }}</div>
                     <!-- <div class="text-secondary">{{ 'LastImport' | translate }}: {{ section. | date:'dd.MM.yyyy HH:mm' }}</div> -->
-                    <div *ngFor="let multiMapping of form.multiMappings; last as lastMapping" class="flex flex-col w-full py-2 px-2">
+                    <div *ngFor="let multiMapping of form.multiMappings; let indexMultiMapping = index; last as lastMapping" class="flex flex-col w-full py-2 px-2">
 
                         <!-- Question -->
                         <!-- <div class="text-lg font-semibold">{{ question.question }}</div> -->
@@ -108,7 +108,17 @@
                                 [showBorder]="false">
                             </app-tags-picker>
                         </div>
-                        <mat-icon class="ml-auto mr-4" svgIcon="heroicons_solid:arrow-sm-down"></mat-icon>
+                        <!-- arrow down -->
+                        <button class="ml-auto mr-2" mat-icon-button [matMenuTriggerFor]="packageMenu">
+                            <mat-icon [svgIcon]="'heroicons_outline:arrow-sm-down'"></mat-icon>
+                        </button>
+                        <mat-menu #packageMenu="matMenu">
+                            <!-- Delete -->
+                            <button mat-menu-item (click)="removeMultiMapping(form, indexMultiMapping)">
+                                <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                <span>{{ 'Delete' | translate }}</span>
+                            </button>
+                        </mat-menu>
                         <div class="flex flex-auto items-center justify-center">
                             <div class="ml-1.5 leading-5">
                                 {{ 'Tracks' | translate }}

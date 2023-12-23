@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { AvailableQuestionMapping, AvailableQuestionOptionMapping, MappingType, RegistrationFormItem } from 'app/api/api';
+import { AvailableQuestionMapping, AvailableQuestionOptionMapping, MappingType, MultiMapping, RegistrationFormItem } from 'app/api/api';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { FormsService } from './forms.service';
 import { QuestionMappingService } from './question-mapping.service';
@@ -67,17 +67,17 @@ export class FormMappingComponent implements OnInit
   //   this.mappingDirection$.next(mappingDirection);
   // }
 
-  importFormUpdate(form: RegistrationFormItem)
+  importFormUpdate(form: RegistrationFormItem): void
   {
     this.formsService.importForm(form.externalIdentifier);
   }
 
-  addMultiMapping(form: RegistrationFormItem)
+  addMultiMapping(form: RegistrationFormItem): void
   {
-    let sortKey = form.multiMappings.length === 0
+    const sortKey = form.multiMappings.length === 0
       ? 1
       : Math.max(...form.multiMappings.map(mqm => mqm.sortKey)) + 1;
-    console.log(sortKey);
+
     form.multiMappings.push({
       id: createUuid(),
       questionOptionIds: [],
@@ -86,7 +86,12 @@ export class FormMappingComponent implements OnInit
     });
   }
 
-  saveMappings(form: RegistrationFormItem)
+  removeMultiMapping(form: RegistrationFormItem, index: number): void
+  {
+    form.multiMappings.splice(index, 1);
+  }
+
+  saveMappings(form: RegistrationFormItem): void
   {
     this.formsService.saveMappings(form.registrationFormId, form.sections, form.multiMappings);
   }

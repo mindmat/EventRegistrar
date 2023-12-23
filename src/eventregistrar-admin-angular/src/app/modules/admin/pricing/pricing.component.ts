@@ -70,7 +70,7 @@ export class PricingComponent implements OnInit
     return packageForm.controls.parts as FormArray;
   }
 
-  addPackage()
+  addPackage(): void
   {
     this.packagesForms.push(this.fb.group({
       id: createUuid(),
@@ -82,7 +82,7 @@ export class PricingComponent implements OnInit
     // this.changeDetectorRef.markForCheck();
   }
 
-  addPart(packageForm: FormGroup)
+  addPart(packageForm: FormGroup): void
   {
     this.getParts(packageForm).push(this.fb.group({
       id: createUuid(),
@@ -94,17 +94,17 @@ export class PricingComponent implements OnInit
     // this.changeDetectorRef.markForCheck();
   }
 
-  removePackage(index: number)
+  removePackage(index: number): void
   {
     this.packagesForms.splice(index, 1);
   }
 
-  removePackagePart(packageForm: FormGroup, index: number)
+  removePackagePart(packageForm: FormGroup, index: number): void
   {
     this.getParts(packageForm).removeAt(index);
   }
 
-  save()
+  save(): void
   {
     const packages = this.packagesForms.map(pkf => ({ ...pkf.value } as PricePackageDto));
     this.pricingService.save(packages);

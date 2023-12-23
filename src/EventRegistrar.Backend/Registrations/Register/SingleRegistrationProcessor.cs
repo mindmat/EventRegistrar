@@ -139,13 +139,14 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
             foreach (var registrableCombinedId in activatedMultiMapping.RegistrableCombinedIds)
             {
                 var parsed = new CombinedMappingId(registrableCombinedId);
-                defaultRole = await ProcessCombinedRegistrableId(registration,
-                                                                 parsed.Type,
-                                                                 parsed.Id,
-                                                                 parsed.Language,
-                                                                 soldOutRegistrableIds,
-                                                                 spots,
-                                                                 partnerRegistrableRequests);
+                var role = await ProcessCombinedRegistrableId(registration,
+                                                              parsed.Type,
+                                                              parsed.Id,
+                                                              parsed.Language,
+                                                              soldOutRegistrableIds,
+                                                              spots,
+                                                              partnerRegistrableRequests);
+                defaultRole ??= role;
             }
         }
 
