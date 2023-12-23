@@ -156,8 +156,11 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
         {
             if (defaultRole == null)
             {
+                var trackNames = await registrables.Where(rbl => requestsWithoutRole.Select(rwr => rwr.RegistrableId).Contains(rbl.Id))
+                                                   .Select(rbl => rbl.DisplayName)
+                                                   .ToListAsync();
                 throw new InvalidOperationException(
-                    $"Invalid mapping configuration: Mappings to partner registrable {requestsWithoutRole.Select(rwr => rwr.RegistrableId.ToString()).StringJoin()} but no role defined");
+                    $"Invalid mapping configuration: Mappings to partner registrable {trackNames.StringJoin()} but no role defined");
             }
 
             requestsWithoutRole.ForEach(rwr => rwr.Role = defaultRole);
