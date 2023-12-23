@@ -1,4 +1,6 @@
-﻿using EventRegistrar.Backend.RegistrationForms.GoogleForms;
+﻿using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 
 namespace EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
@@ -12,7 +14,8 @@ public class SaveRegistrationFormMappingsCommand : IRequest, IEventBoundRequest
 
 public class SaveRegistrationFormMappingsCommandHandler(IRepository<RegistrationForm> forms,
                                                         IRepository<QuestionOptionMapping> mappings,
-                                                        IRepository<MultiQuestionOptionMapping> multiMappings)
+                                                        IRepository<MultiQuestionOptionMapping> multiMappings,
+                                                        ChangeTrigger changeTrigger)
     : IRequestHandler<SaveRegistrationFormMappingsCommand>
 {
     public async Task Handle(SaveRegistrationFormMappingsCommand command, CancellationToken cancellationToken)
@@ -103,5 +106,8 @@ public class SaveRegistrationFormMappingsCommandHandler(IRepository<Registration
             multiMapping.RegistrableCombinedIds = multiMappingToSave.RegistrableCombinedIds.ToList();
             multiMapping.SortKey = multiMappingToSave.SortKey;
         }
+
+        changeTrigger.QueryChanged<RegistrationFormsQuery>(command.EventId);
+        changeTrigger.QueryChanged<EventSetupStateQuery>(command.EventId);
     }
 }

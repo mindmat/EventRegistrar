@@ -1,7 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations.Responses;
 
@@ -12,7 +11,7 @@ namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
 public class ImportRegistrationFormCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
-    public string FormExternalIdentifier { get; set; }
+    public string? FormExternalIdentifier { get; set; }
 }
 
 public class ImportRegistrationFormCommandHandler(IRepository<RegistrationForm> forms,
@@ -22,7 +21,7 @@ public class ImportRegistrationFormCommandHandler(IRepository<RegistrationForm> 
                                                   IRepository<Response> responses,
                                                   IQueryable<Event> events,
                                                   IDateTimeProvider dateTimeProvider,
-                                                  IEventBus eventBus)
+                                                  ChangeTrigger changeTrigger)
     : IRequestHandler<ImportRegistrationFormCommand>
 {
     public async Task Handle(ImportRegistrationFormCommand command, CancellationToken cancellationToken)
@@ -33,7 +32,7 @@ public class ImportRegistrationFormCommandHandler(IRepository<RegistrationForm> 
                                                && frm.Processed == null)
                                     .OrderByDescending(frm => frm.Created)
                                     .FirstOrDefaultAsync(cancellationToken);
-        if (rawForm == null)
+        if (command.FormExternalIdentifier == null || rawForm == null)
         {
             throw new ArgumentException("No unprocessed form found");
         }
@@ -48,7 +47,7 @@ public class ImportRegistrationFormCommandHandler(IRepository<RegistrationForm> 
                 throw new InvalidOperationException("Registration form can only be changed in state 'setup'");
             }
 
-            form.Title = formDescription.Title;
+            form.Title = formDescription?.Title;
         }
         else
         {
@@ -58,7 +57,7 @@ public class ImportRegistrationFormCommandHandler(IRepository<RegistrationForm> 
                        Id = Guid.NewGuid(),
                        EventId = command.EventId,
                        ExternalIdentifier = command.FormExternalIdentifier,
-                       Title = formDescription.Title,
+                       Title = formDescription?.Title,
                        State = EventState.Setup
                    };
             await forms.InsertOrUpdateEntity(form, cancellationToken);
@@ -69,7 +68,7 @@ public class ImportRegistrationFormCommandHandler(IRepository<RegistrationForm> 
                                                .Include(qst => qst.Responses)
                                                .AsTracking()
                                                .ToListAsync(cancellationToken);
-        string section = null;
+        string? section = null;
         foreach (var receivedQuestion in formDescription.Questions.OrderBy(que => que.Index))
         {
             var type = (QuestionType)receivedQuestion.Type;
@@ -156,10 +155,7 @@ public class ImportRegistrationFormCommandHandler(IRepository<RegistrationForm> 
         }
 
         rawForm.Processed = dateTimeProvider.Now;
-        eventBus.Publish(new QueryChanged
-                         {
-                             EventId = command.EventId,
-                             QueryName = nameof(RegistrationFormsQuery)
-                         });
+        changeTrigger.QueryChanged<RegistrationFormsQuery>(command.EventId);
+        changeTrigger.QueryChanged<EventSetupStateQuery>(command.EventId);
     }
 }

@@ -25,13 +25,14 @@ public static class SaveRegistrationForm
         var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
         var connectionString = config.GetConnectionString("DefaultConnection");
+        var rawRegistrationFormId = Guid.NewGuid();
         await using (var connection = new SqlConnection(connectionString))
         {
-            const string insertQuery = @"INSERT INTO dbo.RawRegistrationForms(Id, EventAcronym, ReceivedMessage, FormExternalIdentifier, Created) "
-                                     + @"VALUES (@Id, @EventAcronym, @ReceivedMessage, @FormExternalIdentifier, @Created)";
+            const string insertQuery = "INSERT INTO dbo.RawRegistrationForms(Id, EventAcronym, ReceivedMessage, FormExternalIdentifier, Created) "
+                                     + "VALUES (@Id, @EventAcronym, @ReceivedMessage, @FormExternalIdentifier, @Created)";
             var parameters = new
                              {
-                                 Id = Guid.NewGuid(),
+                                 Id = rawRegistrationFormId,
                                  EventAcronym = eventAcronym,
                                  ReceivedMessage = requestBody,
                                  FormExternalIdentifier = formId,
@@ -40,6 +41,8 @@ public static class SaveRegistrationForm
 
             await connection.ExecuteAsync(insertQuery, parameters);
         }
+
+        await CommandQueue.SendCommand("EventRegistrar.Backend.RegistrationForms.GoogleForms.ProcessRawRegistrationFormReceivedCommand", new { RawRegistrationFormId = rawRegistrationFormId });
 
         return req.CreateResponse(HttpStatusCode.OK);
     }

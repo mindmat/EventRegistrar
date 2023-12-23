@@ -4,7 +4,7 @@ using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
 namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
 
-public class RegistrationFormsQuery : IRequest<IEnumerable<RegistrationFormItem>>
+public class RegistrationFormsQuery : IRequest<IEnumerable<RegistrationFormItem>>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
 }
