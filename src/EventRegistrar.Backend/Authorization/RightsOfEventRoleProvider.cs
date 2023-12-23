@@ -123,6 +123,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(AvailableMailersQuery);
             yield return nameof(MailDeliverySuccessQuery);
             yield return nameof(EventSetupStateQuery);
+            yield return nameof(RegistrationFormsQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
