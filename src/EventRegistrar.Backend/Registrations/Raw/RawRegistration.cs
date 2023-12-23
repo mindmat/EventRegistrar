@@ -25,5 +25,7 @@ public class RawRegistrationMap : EntityMap<RawRegistration>
                .HasMaxLength(500);
         builder.Property(rrg => rrg.RegistrationExternalIdentifier)
                .HasMaxLength(500);
+
+        builder.HasIndex(rrg => rrg.EventAcronym); // Performance
     }
 }

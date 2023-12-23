@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Infrastructure;
+﻿using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Registrables.Participants;
@@ -35,6 +36,7 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
         var rawRegistration = await rawRegistrations.AsTracking()
                                                     .FirstAsync(reg => reg.Id == command.RawRegistrationId,
                                                                 cancellationToken);
+        Guid? eventId = null;
         if (rawRegistration.Processed != null)
         {
             throw new KeyNotFoundException($"RawRegistrationId {command.RawRegistrationId} has already been processed at {rawRegistration.Processed}");
@@ -53,6 +55,7 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
                 throw new KeyNotFoundException($"No form found with id '{rawRegistration.FormExternalIdentifier}'");
             }
 
+            eventId = form.EventId;
             logger.LogInformation($"Questions: {form.Questions?.Count}, Options: {form.Questions?.Sum(qst => qst.QuestionOptions?.Count)}");
 
             // check form state
@@ -165,11 +168,16 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
             changeTrigger.QueryChanged<PaymentOverviewQuery>(form.EventId);
             changeTrigger.QueryChanged<PricePackageOverviewQuery>(form.EventId);
             changeTrigger.QueryChanged<ParticipantsOfEventQuery>(form.EventId);
+            changeTrigger.QueryChanged<EventSetupStateQuery>(form.EventId);
             rawRegistration.Processed = dateTimeProvider.Now;
         }
         catch (Exception ex)
         {
             rawRegistration.LastProcessingError = ex.Message;
+            if (eventId != null)
+            {
+                changeTrigger.QueryChanged<EventSetupStateQuery>(eventId.Value);
+            }
         }
     }
 

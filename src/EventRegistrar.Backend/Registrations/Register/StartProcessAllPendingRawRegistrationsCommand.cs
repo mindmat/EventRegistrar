@@ -16,9 +16,9 @@ public class StartProcessAllPendingRawRegistrationsCommandHandler(IQueryable<Raw
                                                                   CommandQueue commandQueue)
     : IRequestHandler<StartProcessAllPendingRawRegistrationsCommand>
 {
-    public async Task Handle(StartProcessAllPendingRawRegistrationsCommand request, CancellationToken cancellationToken)
+    public async Task Handle(StartProcessAllPendingRawRegistrationsCommand command, CancellationToken cancellationToken)
     {
-        var eventAcronym = await events.Where(evt => evt.Id == request.EventId)
+        var eventAcronym = await events.Where(evt => evt.Id == command.EventId)
                                        .Select(evt => evt.Acronym)
                                        .FirstAsync(cancellationToken);
         var createdThreshold = dateTimeProvider.Now.AddMinutes(-5); // try to avoid that a user is faster than the processing pipeline

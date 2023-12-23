@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
+using EventRegistrar.Backend.Registrations.Raw;
 
 namespace EventRegistrar.Backend.Events;
 
@@ -14,11 +15,15 @@ public class EventSetupState
     public bool FormImported { get; set; }
     public bool TracksDefined { get; set; }
     public bool FormMapped { get; set; }
+    public int RegistrationsReceived { get; set; }
+    public int RegistrationsProcessed { get; set; }
+    public IEnumerable<string> ProcessingErrors { get; set; } = null!;
 }
 
 public class EventSetupStateQueryHandler(IQueryable<Event> events,
                                          IQueryable<RawRegistrationForm> rawRegistrationForms,
-                                         IQueryable<RegistrationForm> registrationForms)
+                                         IQueryable<RegistrationForm> registrationForms,
+                                         IQueryable<RawRegistration> rawRegistrations)
     : IRequestHandler<EventSetupStateQuery, EventSetupState>
 {
     public async Task<EventSetupState> Handle(EventSetupStateQuery query, CancellationToken cancellationToken)
@@ -41,12 +46,27 @@ public class EventSetupStateQueryHandler(IQueryable<Event> events,
                                                          })
                                           .FirstOrDefaultAsync(cancellationToken);
 
+        var rawRegistrationCounts = await rawRegistrations.Where(rr => rr.EventAcronym == @event.Acronym)
+                                                          .GroupBy(rrg => rrg.EventAcronym)
+                                                          .Select(grp => new
+                                                                         {
+                                                                             Received = grp.Count(),
+                                                                             Processed = grp.Count(rr => rr.Processed != null),
+                                                                             ProcessionErrors = grp.Where(rrg => rrg.LastProcessingError != null)
+                                                                                                   .Select(rrg => rrg.LastProcessingError!)
+                                                                                                   .Distinct()
+                                                                         })
+                                                          .FirstOrDefaultAsync(cancellationToken);
+
         return new EventSetupState
                {
                    FormSent = formSent,
                    FormImported = form != null,
                    TracksDefined = @event.AnyTracks,
-                   FormMapped = form?.Mapped == true
+                   FormMapped = form?.Mapped == true,
+                   RegistrationsReceived = rawRegistrationCounts?.Received ?? 0,
+                   ProcessingErrors = rawRegistrationCounts?.ProcessionErrors ?? Enumerable.Empty<string>(),
+                   RegistrationsProcessed = rawRegistrationCounts?.Processed ?? 0
                };
     }
 }

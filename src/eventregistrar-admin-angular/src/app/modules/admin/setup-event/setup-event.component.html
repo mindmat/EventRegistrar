@@ -13,7 +13,7 @@
             <div class="mt-2">
                 <ol>
                     <!-- Create Forms -->
-                    <li class="relative flex py-7">
+                    <li class="relative flex py-2">
 
                         <!-- Line -->
                         <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
@@ -43,7 +43,7 @@
                         </div>
                     </li>
 
-                    <li class="relative flex">
+                    <li class="relative flex py-2">
                         <!-- Line -->
                         <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
 
@@ -66,7 +66,7 @@
                                         {{activity.date | date:'MMM dd, h:mm a'}}
                                     </div> -->
                                 </div>
-                                <div class="mt-4 py-4 px-5 rounded-lg bg-gray-200 dark:bg-gray-800">
+                                <div class="mt-4 py-4 px-5 min-w-128 rounded-lg bg-gray-200 dark:bg-gray-800">
                                     <ol class="list-decimal list-inside space-y-2">
                                         <li>
                                             <a>Kontextmenu öffnen</a>
@@ -93,7 +93,7 @@
                         </div>
                     </li>
 
-                    <li class="relative flex py-7">
+                    <li class="relative flex py-2">
                         <!-- Line -->
                         <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
 
@@ -107,12 +107,10 @@
                             <!-- Content -->
                             <div class="flex flex-col flex-auto items-start">
                                 <!-- Description -->
-                                <ng-container>
-                                    <div>
-                                        <a>Form-Definition aus Google Forms senden</a>
-                                    </div>
-                                </ng-container>
-                                <div class="mt-4 py-4 px-5 rounded-lg bg-gray-200 dark:bg-gray-800">
+                                <div>
+                                    <a>Form-Definition aus Google Forms senden</a>
+                                </div>
+                                <div class="mt-4 py-4 px-5 min-w-128 rounded-lg bg-gray-200 dark:bg-gray-800">
                                     <ol class="list-decimal list-inside space-y-2">
                                         <li>
                                             <a>Menü Add-ons öffnen</a>
@@ -131,7 +129,7 @@
                         </div>
                     </li>
 
-                    <li class="relative flex py-7">
+                    <li class="relative flex py-2">
                         <!-- Line -->
                         <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
 
@@ -161,7 +159,7 @@
                         </div>
                     </li>
 
-                    <li class="relative flex py-7">
+                    <li class="relative flex py-2">
                         <!-- Line -->
                         <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
 
@@ -189,18 +187,17 @@
                         </div>
                     </li>
 
-                    <li class="relative flex py-7">
+                    <!-- form mapping -->
+                    <li class="relative flex py-2">
                         <!-- Line -->
-                        <!-- <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div> -->
+                        <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
 
                         <div class="relative flex flex-auto">
                             <!-- Icon -->
-                            <ng-container>
-                                <div class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
-                                    <mat-icon *ngIf="state.formMapped" class="icon-size-5 text-white" svgIcon="heroicons_solid:check">
-                                    </mat-icon>
-                                </div>
-                            </ng-container>
+                            <div class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+                                <mat-icon *ngIf="state.formMapped" class="icon-size-5 text-white" svgIcon="heroicons_solid:check">
+                                </mat-icon>
+                            </div>
 
                             <!-- Content -->
                             <div class="flex flex-col flex-auto items-start">
@@ -216,6 +213,87 @@
                             </div>
                         </div>
                     </li>
+
+                    <!-- receive registration -->
+                    <li class="relative flex py-2">
+                        <!-- Line -->
+                        <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
+
+                        <div class="relative flex flex-auto">
+                            <!-- Icon -->
+                            <ng-container>
+                                <div class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+                                    <mat-icon *ngIf="state.registrationsReceived > 0" class="icon-size-5 text-white" svgIcon="heroicons_solid:check">
+                                    </mat-icon>
+                                </div>
+                            </ng-container>
+
+                            <!-- Content -->
+                            <div class="flex flex-col flex-auto items-start">
+                                <!-- Description -->
+                                <div>
+                                    <a>Anmeldung von Google Forms erhalten</a>
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-1 sm:space-x-2 text-md leading-5">
+                                    <!-- Date -->
+                                    <div class="text-secondary">
+                                        Erhaltene Anmeldungen: {{ state.registrationsReceived }}
+                                    </div>
+                                    <!-- Linked content -->
+                                    <div class="hidden sm:block">&bull;</div>
+                                    <a class="cursor-pointer text-primary" [routerLink]="navigator.getOverviewUrl()">
+                                        {{ 'Overview' | translate }}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- receive registration -->
+                    <li class="relative flex py-2">
+                        <!-- Line -->
+                        <!-- <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div> -->
+
+                        <div class="relative flex flex-auto">
+                            <!-- Icon -->
+                            <ng-container>
+                                <div class="flex shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+                                    <mat-icon *ngIf="state.registrationsProcessed > 0" class="icon-size-5 text-white" svgIcon="heroicons_solid:check">
+                                    </mat-icon>
+                                </div>
+                            </ng-container>
+
+                            <!-- Content -->
+                            <div class="flex flex-col flex-auto items-start">
+                                <!-- Description -->
+                                <div>
+                                    <a>Anmeldung verarbeiten</a>
+                                </div>
+
+                                <div class="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-1 sm:space-x-2 text-md leading-5">
+                                    <!-- Date -->
+                                    <div class="text-secondary">
+                                        Verarbeitete Anmeldungen: {{ state.registrationsProcessed }}
+                                    </div>
+                                    <!-- Linked content -->
+                                    <div class="hidden sm:block">&bull;</div>
+                                    <a class="cursor-pointer text-primary" [routerLink]="navigator.getOverviewUrl()">
+                                        {{ 'Overview' | translate }}
+                                    </a>
+                                </div>
+
+                                <div *ngIf="state.processingErrors?.length > 0" class="mt-4 py-4 px-5 min-w-128 rounded-lg bg-warn-200 dark:bg-gray-800">
+                                    <a>Fehler bei der Verarbeitung:</a>
+                                    <ul class="list-decimal list-inside space-y-2">
+                                        <li *ngFor="let error of state.processingErrors">
+                                            <a>{{ error }}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
                 </ol>
             </div>
 
@@ -223,13 +301,6 @@
             <ng-template #loading>
                 Loading...
             </ng-template>
-
-            <!-- No Activity template -->
-            <ng-template #noActivity>
-                There are is activity at the moment...
-            </ng-template>
-
         </div>
     </div>
-
 </div>

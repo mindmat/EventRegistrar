@@ -2781,6 +2781,31 @@
         }
       }
     },
+    "/api/ProcessRawRegistrationFormReceivedCommand": {
+      "post": {
+        "tags": [
+          "ProcessRawRegistrationFormReceived"
+        ],
+        "operationId": "ProcessRawRegistrationFormReceived_Command",
+        "requestBody": {
+          "x-name": "ProcessRawRegistrationFormReceivedCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcessRawRegistrationFormReceivedCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/ProcessReceivedSmsCommand": {
       "post": {
         "tags": [
@@ -6361,6 +6386,20 @@
           },
           "formMapped": {
             "type": "boolean"
+          },
+          "registrationsReceived": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "registrationsProcessed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "processingErrors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -6897,7 +6936,8 @@
             "format": "guid"
           },
           "formExternalIdentifier": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -8877,6 +8917,16 @@
         "additionalProperties": false,
         "properties": {
           "rawRegistrationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "ProcessRawRegistrationFormReceivedCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "rawRegistrationFormId": {
             "type": "string",
             "format": "guid"
           }
