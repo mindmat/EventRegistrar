@@ -170,7 +170,7 @@ export class NavigationService
                                     id: 'setup-event',
                                     title: translateService.instant('SetupEvent'),
                                     type: 'basic',
-                                    icon: 'heroicons_outline:cog-8-tooth',
+                                    icon: 'heroicons_outline:cog-6-tooth',
                                     link: `/${e.acronym}/admin/setup-event`,
                                 },
                                 {

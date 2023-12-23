@@ -51,8 +51,9 @@ public class EventSetupStateQueryHandler(IQueryable<Event> events,
                                                           .Select(grp => new
                                                                          {
                                                                              Received = grp.Count(),
-                                                                             Processed = grp.Count(rr => rr.Processed != null),
-                                                                             ProcessionErrors = grp.Where(rrg => rrg.LastProcessingError != null)
+                                                                             Processed = grp.Count(rrg => rrg.Processed != null),
+                                                                             ProcessionErrors = grp.Where(rrg => rrg.Processed == null
+                                                                                                              && rrg.LastProcessingError != null)
                                                                                                    .Select(rrg => rrg.LastProcessingError!)
                                                                                                    .Distinct()
                                                                          })
