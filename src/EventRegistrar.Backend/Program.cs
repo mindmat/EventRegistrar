@@ -21,6 +21,7 @@ using EventRegistrar.Backend.Payments.Files;
 using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.Data.SqlClient;
 
 using SimpleInjector;
 
@@ -181,6 +182,9 @@ foreach (var configType in configTypes)
     container.RegisterSingleton(typeof(SingletonConfigurationFeature<>).MakeGenericType(configType),
                                 () => GetSingletonConfig(container, configType));
 }
+
+var dbConnection = new SqlConnection(connectionString);
+container.RegisterInstance(dbConnection);
 
 container.Collection.Register(typeof(IDirtySegment), assemblies);
 container.Register<DirtyTagger>();

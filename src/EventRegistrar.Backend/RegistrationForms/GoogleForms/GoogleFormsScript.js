@@ -56,7 +56,7 @@ function postAnswerToBackend(response) {
 
     var responseData =
     {
-        //email: response.getRespondentEmail(),
+        email: response.getRespondentEmail(), // collect email via form option
         timestamp: response.getTimestamp(),
         responses: responsesData
     };

@@ -1,4 +1,6 @@
-﻿using EventRegistrar.Backend.Events;
+﻿using Dapper;
+
+using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Payments;
@@ -11,6 +13,8 @@ using EventRegistrar.Backend.Registrations.Overview;
 using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.Raw;
 using EventRegistrar.Backend.Registrations.Responses;
+
+using Microsoft.Data.SqlClient;
 
 using Newtonsoft.Json;
 
@@ -28,7 +32,8 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
                                                   IQueryable<RegistrationForm> forms,
                                                   RegistrationProcessorDelegator registrationProcessorDelegator,
                                                   IDateTimeProvider dateTimeProvider,
-                                                  ChangeTrigger changeTrigger)
+                                                  ChangeTrigger changeTrigger,
+                                                  SqlConnection dbConnection)
     : IRequestHandler<ProcessRawRegistrationCommand>
 {
     public async Task Handle(ProcessRawRegistrationCommand command, CancellationToken cancellationToken)
@@ -173,7 +178,9 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
         }
         catch (Exception ex)
         {
-            rawRegistration.LastProcessingError = ex.Message;
+            // Update through Dapper as EF transaction will be rolled back
+            await dbConnection.ExecuteAsync("UPDATE dbo.RawRegistrations SET LastProcessingError = @Error WHERE Id = @Id", new { Error = ex.Message, Id = command.RawRegistrationId });
+            //rawRegistration.LastProcessingError = ex.Message;
             if (eventId != null)
             {
                 changeTrigger.QueryChanged<EventSetupStateQuery>(eventId.Value);
