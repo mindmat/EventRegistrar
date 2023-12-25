@@ -5015,6 +5015,22 @@
           },
           "mailSender": {
             "$ref": "#/components/schemas/MailSender"
+          },
+          "smtpHost": {
+            "type": "string",
+            "nullable": true
+          },
+          "smtpPort": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "smtpUsername": {
+            "type": "string",
+            "nullable": true
+          },
+          "passwordSet": {
+            "type": "boolean"
           }
         }
       },
@@ -5082,7 +5098,7 @@
         "type": "integer",
         "description": "",
         "x-enumNames": [
-          "Imap",
+          "Smtp",
           "SendGrid",
           "Postmark"
         ],
@@ -10816,6 +10832,23 @@
                 "$ref": "#/components/schemas/MailSender"
               }
             ]
+          },
+          "smtpHost": {
+            "type": "string",
+            "nullable": true
+          },
+          "smtpPort": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "smtpUsername": {
+            "type": "string",
+            "nullable": true
+          },
+          "smtpPassword": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

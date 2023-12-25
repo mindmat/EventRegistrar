@@ -1688,6 +1688,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to SMTP.
+        /// </summary>
+        internal static string MailSender_Smtp {
+            get {
+                return ResourceManager.GetString("MailSender_Smtp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bounce.
         /// </summary>
         internal static string MailState_Bounce {
@@ -3277,6 +3286,42 @@ namespace EventRegistrar.Backend.Properties {
         internal static string SMS {
             get {
                 return ResourceManager.GetString("SMS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SMTP: Host.
+        /// </summary>
+        internal static string SmtpHost {
+            get {
+                return ResourceManager.GetString("SmtpHost", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SMTP: Passwort.
+        /// </summary>
+        internal static string SmtpPassword {
+            get {
+                return ResourceManager.GetString("SmtpPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SMTP: Port.
+        /// </summary>
+        internal static string SmtpPort {
+            get {
+                return ResourceManager.GetString("SmtpPort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SMTP: Username.
+        /// </summary>
+        internal static string SmtpUsername {
+            get {
+                return ResourceManager.GetString("SmtpUsername", resourceCulture);
             }
         }
         

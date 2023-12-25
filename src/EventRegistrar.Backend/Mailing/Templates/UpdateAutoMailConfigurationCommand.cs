@@ -13,6 +13,11 @@ public class UpdateAutoMailConfigurationCommand : IRequest, IEventBoundRequest
     public bool PartnerRegistrationPossible { get; set; }
     public IEnumerable<string>? AvailableLanguages { get; set; }
     public MailSender? MailSender { get; set; }
+
+    public string? SmtpHost { get; set; }
+    public int? SmtpPort { get; set; }
+    public string? SmtpUsername { get; set; }
+    public string? SmtpPassword { get; set; }
 }
 
 public class UpdateAutoMailConfigurationCommandHandler(ConfigurationRegistry configurationRegistry,
@@ -39,7 +44,21 @@ public class UpdateAutoMailConfigurationCommandHandler(ConfigurationRegistry con
         if (command.MailSender != null)
         {
             config.MailSender = command.MailSender.Value;
+
+            if (command.MailSender == MailSender.Smtp)
+            {
+                config.SmtpConfiguration = new SmtpConfiguration
+                                           {
+                                               Host = command.SmtpHost,
+                                               Port = command.SmtpPort,
+                                               Username = command.SmtpUsername,
+                                               Password = string.IsNullOrWhiteSpace(command.SmtpPassword)
+                                                              ? config.SmtpConfiguration?.Password
+                                                              : command.SmtpPassword
+                                           };
+            }
         }
+
 
         await configurationRegistry.UpdateConfiguration(command.EventId, config);
 

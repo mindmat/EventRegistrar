@@ -49,14 +49,6 @@
                                 </mat-form-field>
                             </div>
 
-                            <!-- Mail sender -->
-                            <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                                <mat-label>{{ 'MailSender' | translate }}</mat-label>
-                                <mat-select [formControlName]="'mailSender'">
-                                    <mat-option *ngFor="let mailer of mailers" [value]="mailer">{{ mailer | translateEnum: MailSender : 'MailSender' }}</mat-option>
-                                </mat-select>
-                            </mat-form-field>
-
                             <!-- Single available -->
                             <button class="pr-4 pl-3.5" mat-button (click)="toggleSingle()">
 
@@ -118,6 +110,46 @@
                                                 </span>
                                             </button> -->
                                     </ng-container>
+                                </div>
+
+                                <!-- Mail sender -->
+                                <mat-form-field class="w-full  pt-2" [subscriptSizing]="'dynamic'">
+                                    <mat-label>{{ 'MailSender' | translate }}</mat-label>
+                                    <mat-select [formControlName]="'mailSender'">
+                                        <mat-option *ngFor="let mailer of mailers" [value]="mailer">{{ mailer | translateEnum: MailSender : 'MailSender' }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <!-- SMTP: Host -->
+                                <div *ngIf="configForm.value.mailSender === MailSender.Smtp" class="sm:col-span-4 pt-2">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>{{ 'SmtpHost' | translate }}</mat-label>
+                                        <input [formControlName]="'smtpHost'" matInput>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- SMTP: Port -->
+                                <div *ngIf="configForm.value.mailSender === MailSender.Smtp" class="sm:col-span-4">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>{{ 'SmtpPort' | translate }}</mat-label>
+                                        <input [formControlName]="'smtpPort'" matInput type="number">
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- SMTP: Username -->
+                                <div *ngIf="configForm.value.mailSender === MailSender.Smtp" class="sm:col-span-4">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>{{ 'SmtpUsername' | translate }}</mat-label>
+                                        <input [formControlName]="'smtpUsername'" matInput>
+                                    </mat-form-field>
+                                </div>
+
+                                <!-- SMTP: Password -->
+                                <div *ngIf="configForm.value.mailSender === MailSender.Smtp" class="sm:col-span-4">
+                                    <mat-form-field class="fuse-mat-no-subscript w-full">
+                                        <mat-label>{{ 'SmtpPassword' | translate }}</mat-label>
+                                        <input [formControlName]="'smtpPassword'" matInput type="password">
+                                    </mat-form-field>
                                 </div>
                             </div>
 

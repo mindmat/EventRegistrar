@@ -28,6 +28,10 @@ public class AutoMailTemplatesQueryHandler(IQueryable<AutoMailTemplate> mailTemp
                    SingleRegistrationPossible = config.SingleRegistrationPossible,
                    PartnerRegistrationPossible = config.PartnerRegistrationPossible,
                    MailSender = config.MailSender,
+                   SmtpHost = config.SmtpConfiguration?.Host,
+                   SmtpPort = config.SmtpConfiguration?.Port,
+                   SmtpUsername = config.SmtpConfiguration?.Username,
+                   PasswordSet = config.SmtpConfiguration?.Password != null,
                    Groups = new[]
                             {
                                 new AutoMailTemplateGroup
@@ -111,6 +115,11 @@ public class AutoMailTemplates
     public bool SingleRegistrationPossible { get; set; }
     public bool PartnerRegistrationPossible { get; set; }
     public MailSender MailSender { get; set; }
+
+    public string? SmtpHost { get; set; }
+    public int? SmtpPort { get; set; }
+    public string? SmtpUsername { get; set; }
+    public bool PasswordSet { get; set; }
 }
 
 public class AutoMailTemplateGroup

@@ -655,6 +655,9 @@
   <data name="MailSender_SendGrid" xml:space="preserve">
     <value>SendGrid</value>
   </data>
+  <data name="MailSender_Smtp" xml:space="preserve">
+    <value>SMTP</value>
+  </data>
   <data name="MailState_Bounce" xml:space="preserve">
     <value>Bounce</value>
   </data>
@@ -1186,6 +1189,18 @@
   </data>
   <data name="SMS" xml:space="preserve">
     <value>SMS</value>
+  </data>
+  <data name="SmtpHost" xml:space="preserve">
+    <value>SMTP: Host</value>
+  </data>
+  <data name="SmtpPassword" xml:space="preserve">
+    <value>SMTP: Passwort</value>
+  </data>
+  <data name="SmtpPort" xml:space="preserve">
+    <value>SMTP: Port</value>
+  </data>
+  <data name="SmtpUsername" xml:space="preserve">
+    <value>SMTP: Username</value>
   </data>
   <data name="SpotListLabelAccepted" xml:space="preserve">
     <value>Du bist dabei bei:</value>

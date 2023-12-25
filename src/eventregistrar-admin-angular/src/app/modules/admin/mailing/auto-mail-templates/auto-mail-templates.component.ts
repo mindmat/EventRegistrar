@@ -26,7 +26,11 @@ export class AutoMailTemplatesComponent implements OnInit
     senderMail: '',
     singleRegistrationPossible: false,
     partnerRegistrationPossible: false,
-    mailSender: MailSender.Imap,
+    mailSender: MailSender.Smtp,
+    smtpHost: null as string,
+    smtpPort: null as number,
+    smtpUsername: null as string,
+    smtpPassword: null as string,
     availableLanguages: this.fb.array([] as string[])
   });
   MailSender = MailSender;
@@ -59,6 +63,9 @@ export class AutoMailTemplatesComponent implements OnInit
           singleRegistrationPossible: templates.singleRegistrationPossible,
           partnerRegistrationPossible: templates.partnerRegistrationPossible,
           mailSender: templates.mailSender,
+          smtpHost: templates.smtpHost,
+          smtpPort: templates.smtpPort,
+          smtpUsername: templates.smtpUsername,
           availableLanguages: []
         });
         this.configForm.setControl('availableLanguages', this.fb.array(templates.availableLanguages));
@@ -132,6 +139,10 @@ export class AutoMailTemplatesComponent implements OnInit
       this.configForm.value.availableLanguages,
       this.configForm.value.singleRegistrationPossible,
       this.configForm.value.partnerRegistrationPossible,
-      this.configForm.value.mailSender);
+      this.configForm.value.mailSender,
+      this.configForm.value.smtpHost,
+      this.configForm.value.smtpPort,
+      this.configForm.value.smtpUsername,
+      this.configForm.value.smtpPassword);
   }
 }

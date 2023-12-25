@@ -7935,6 +7935,10 @@ export interface AutoMailTemplates {
     singleRegistrationPossible?: boolean;
     partnerRegistrationPossible?: boolean;
     mailSender?: MailSender;
+    smtpHost?: string | null;
+    smtpPort?: number | null;
+    smtpUsername?: string | null;
+    passwordSet?: boolean;
 }
 
 export interface AutoMailTemplateGroup {
@@ -7956,7 +7960,7 @@ export interface AutoMailTemplateMetadataLanguage {
 }
 
 export enum MailSender {
-    Imap = 1,
+    Smtp = 1,
     SendGrid = 2,
     Postmark = 3,
 }
@@ -9794,6 +9798,10 @@ export interface UpdateAutoMailConfigurationCommand {
     partnerRegistrationPossible?: boolean;
     availableLanguages?: string[] | null;
     mailSender?: MailSender | null;
+    smtpHost?: string | null;
+    smtpPort?: number | null;
+    smtpUsername?: string | null;
+    smtpPassword?: string | null;
 }
 
 export interface UpdateAutoMailTemplateCommand {

@@ -12,6 +12,15 @@ public class MailConfiguration : IConfigurationItem
     public IEnumerable<string> AvailableLanguages { get; set; } = null!;
     public string? FallbackLanguage { get; set; }
     public MailSender MailSender { get; set; }
+    public SmtpConfiguration? SmtpConfiguration { get; set; }
+}
+
+public class SmtpConfiguration
+{
+    public string? Host { get; set; }
+    public int? Port { get; set; }
+    public string? Username { get; set; }
+    public string? Password { get; set; }
 }
 
 public class DefaultMailConfiguration : MailConfiguration, IDefaultConfigurationItem
@@ -30,7 +39,7 @@ public class DefaultMailConfiguration : MailConfiguration, IDefaultConfiguration
 
 public enum MailSender
 {
-    Imap = 1,
+    Smtp = 1,
     SendGrid = 2,
     Postmark = 3
 }

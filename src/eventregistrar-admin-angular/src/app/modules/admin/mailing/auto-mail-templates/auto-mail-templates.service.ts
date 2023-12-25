@@ -8,7 +8,8 @@ import { NotificationService } from '../../infrastructure/notification.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AutoMailTemplatesService extends FetchService<AutoMailTemplates> {
+export class AutoMailTemplatesService extends FetchService<AutoMailTemplates>
+{
 
   constructor(private api: Api,
     private eventService: EventService,
@@ -38,7 +39,11 @@ export class AutoMailTemplatesService extends FetchService<AutoMailTemplates> {
     availableLanguages: string[],
     singleRegistrationPossible: boolean,
     partnerRegistrationPossible: boolean,
-    mailSender: MailSender): void
+    mailSender: MailSender,
+    smtpHost: string,
+    smtpPort: number,
+    smtpUsername?: string,
+    smtpPassword?: string): void
   {
     this.api.updateAutoMailConfiguration_Command(
       {
@@ -48,7 +53,11 @@ export class AutoMailTemplatesService extends FetchService<AutoMailTemplates> {
         availableLanguages,
         singleRegistrationPossible,
         partnerRegistrationPossible,
-        mailSender
+        mailSender,
+        smtpHost,
+        smtpPort,
+        smtpUsername,
+        smtpPassword
       })
       .subscribe();
   }

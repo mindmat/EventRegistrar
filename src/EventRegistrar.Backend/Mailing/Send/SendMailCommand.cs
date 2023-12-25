@@ -3,7 +3,6 @@
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Mailing.Feedback;
-using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Mailing.InvalidAddresses;
 using EventRegistrar.Backend.Payments.Due;
 
@@ -29,7 +28,6 @@ public class SendMailCommandHandler(ILogger logger,
                                     IRepository<Mail> mails,
                                     ChangeTrigger changeTrigger,
                                     MailConfiguration mailConfiguration,
-                                    ExternalMailConfigurations externalMailConfiguration,
                                     SecretReader secretReader,
                                     IDateTimeProvider dateTimeProvider)
     : IRequestHandler<SendMailCommand>
@@ -65,12 +63,11 @@ public class SendMailCommandHandler(ILogger logger,
                          Name = mail.SenderName ?? mailConfiguration.SenderName
                      };
 
-        if (mailConfiguration.MailSender == MailSender.Imap)
+        if (mailConfiguration.MailSender == MailSender.Smtp)
         {
-            var config = externalMailConfiguration.MailConfigurations?.FirstOrDefault();
-            if (config != null
-             && mail.SenderMail != null
-             && config.ImapHost != null)
+            var config = mailConfiguration.SmtpConfiguration;
+            if (config is { Host: not null, Port: not null, Username: not null, Password: not null }
+             && mail.SenderMail != null)
             {
                 var mailMessage = new MimeMessage();
                 mailMessage.From.Add(new MailboxAddress(sender.Name, sender.Email));
@@ -83,15 +80,16 @@ public class SendMailCommandHandler(ILogger logger,
 
                 var bodyBuilder = new BodyBuilder { HtmlBody = mail.ContentHtml };
                 mailMessage.Body = bodyBuilder.ToMessageBody();
+                mailMessage.MessageId = mail.Id.ToString();
 
                 using var smtpClient = new SmtpClient();
-                await smtpClient.ConnectAsync(config.ImapHost, config.ImapPort, true, cancellationToken);
+                await smtpClient.ConnectAsync(config.Host, config.Port.Value, true, cancellationToken);
                 await smtpClient.AuthenticateAsync(config.Username, config.Password, cancellationToken);
                 await smtpClient.SendAsync(mailMessage, cancellationToken);
                 await smtpClient.DisconnectAsync(true, cancellationToken);
 
                 mail.Sent ??= dateTimeProvider.Now;
-                mail.SentBy = MailSender.Imap;
+                mail.SentBy = MailSender.Smtp;
             }
         }
         else if (mailConfiguration.MailSender == MailSender.SendGrid)
