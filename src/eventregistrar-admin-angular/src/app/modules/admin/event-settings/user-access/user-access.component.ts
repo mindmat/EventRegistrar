@@ -13,13 +13,13 @@ import { UserRolesService } from './user-roles.service';
 })
 export class UserAccessComponent implements OnInit
 {
-  private unsubscribeAll: Subject<any> = new Subject<any>();
   usersWithAccess: UserInEventDisplayItem[];
   filteredUsersWithAccess: UserInEventDisplayItem[];
   requests: AccessRequestOfEvent[];
   filteredRequests: AccessRequestOfEvent[];
   query$: BehaviorSubject<string | null> = new BehaviorSubject(null);
   roles: RoleDescription[];
+  private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(private userAccessService: UserAccessService,
     private accessRequestService: UserAccessRequestsService,
@@ -50,14 +50,14 @@ export class UserAccessComponent implements OnInit
         this.changeDetectorRef.markForCheck();
       });
 
-    this.userRolesService.roles$.subscribe(roles =>
+    this.userRolesService.roles$.subscribe((roles) =>
     {
       this.roles = roles;
       this.changeDetectorRef.markForCheck();
     });
   }
 
-  filterUsers(query: string)
+  filterUsers(query: string): void
   {
     this.query$.next(query);
   }
@@ -69,26 +69,26 @@ export class UserAccessComponent implements OnInit
 
   lookupRoleName(role: UserInEventRole): string
   {
-    return this.roles.find(rol => rol.role == role)?.name;
+    return this.roles.find(rol => rol.role === role)?.name;
   }
 
-  removeUser(userId: string)
+  removeUser(userId: string): void
   {
     this.userRolesService.removeUserFromEvent(userId);
   }
 
-  setRoleOfUser(change: MatSelectChange, userId: string)
+  setRoleOfUser(change: MatSelectChange, userId: string): void
   {
     const role = change.value as UserInEventRole;
     this.userRolesService.setRoleOfUserInEvent(userId, role);
   }
 
-  approveRequest(requestId: string)
+  approveRequest(requestId: string): void
   {
     this.accessRequestService.approveRequest(requestId);
   }
 
-  denyRequest(requestId: string)
+  denyRequest(requestId: string): void
   {
     this.accessRequestService.denyRequest(requestId);
   }

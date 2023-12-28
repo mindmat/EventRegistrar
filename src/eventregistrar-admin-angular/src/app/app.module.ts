@@ -64,7 +64,7 @@ import { AutoMailPreviewComponent } from './modules/admin/mailing/auto-mail-temp
 import { SearchModule } from './layout/common/search/search.module';
 import { ReleaseMailsComponent } from './modules/admin/mailing/mails/release-mails/release-mails.component';
 import { MailViewComponent } from './modules/admin/mailing/mails/mail-view/mail-view.component';
-import { UserAccessComponent } from './modules/admin/auth/user-access/user-access.component';
+import { UserAccessComponent } from './modules/admin/event-settings/user-access/user-access.component';
 import { SelectEventComponent } from './modules/admin/events/select-event/select-event.component';
 import { CreateEventComponent } from './modules/admin/events/select-event/create-event/create-event.component';
 import { FormMappingComponent } from './modules/admin/registration-forms/form-mapping/form-mapping.component';
@@ -113,6 +113,8 @@ import { CreateAssignPaymentComponent } from './modules/admin/registration/creat
 import { ChangeNameComponent } from './modules/admin/registration/change-name/change-name.component';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { SetupEventComponent } from './modules/admin/setup-event/setup-event.component';
+import { EventSettingsComponent } from './modules/admin/event-settings/event-settings.component';
+import { MailConfigComponent } from './modules/admin/event-settings/mail-config/mail-config.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -168,7 +170,9 @@ const routerConfig: ExtraOptions = {
         AllParticipantsComponent,
         CreateAssignPaymentComponent,
         ChangeNameComponent,
-        SetupEventComponent
+        SetupEventComponent,
+        EventSettingsComponent,
+        MailConfigComponent
     ],
     providers: [
         AuthServiceFuse,
@@ -297,7 +301,7 @@ export class AppModule
 {
 }
 
-export function TranslationLoaderFactory(service: TranslationLoaderService)
+export function TranslationLoaderFactory(service: TranslationLoaderService): TranslateLoader
 {
     return service.createLoader();
 }

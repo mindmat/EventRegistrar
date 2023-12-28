@@ -20,18 +20,18 @@ export class UserRolesService extends FetchService<RoleDescription[]>
     return this.result$;
   }
 
-  fetchRoles()
+  fetchRoles(): Observable<RoleDescription[]>
   {
     return this.fetchItems(this.api.userInEventRoles_Query({}));
   }
 
-  setRoleOfUserInEvent(userId: string, role: UserInEventRole)
+  setRoleOfUserInEvent(userId: string, role: UserInEventRole): void
   {
     this.api.setRoleOfUserInEvent_Command({ userId, role, eventId: this.eventService.selectedId })
       .subscribe();
   }
 
-  removeUserFromEvent(userId: string)
+  removeUserFromEvent(userId: string): void
   {
     this.api.removeUserFromEvent_Command({ userId, eventId: this.eventService.selectedId })
       .subscribe();

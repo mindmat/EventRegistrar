@@ -29,8 +29,8 @@ import { ReleaseMailsComponent } from './modules/admin/mailing/mails/release-mai
 import { ReleaseMailsResolver } from './modules/admin/mailing/mails/release-mails/release-mails.resolver';
 import { MailViewComponent } from './modules/admin/mailing/mails/mail-view/mail-view.component';
 import { MailViewResolver } from './modules/admin/mailing/mails/mail-view/mail-view.resolver';
-import { UserAccessComponent } from './modules/admin/auth/user-access/user-access.component';
-import { UserAccessResolver } from './modules/admin/auth/user-access/user-access.resolver';
+import { UserAccessComponent } from './modules/admin/event-settings/user-access/user-access.component';
+import { EventSettingsResolver } from './modules/admin/event-settings/event-settings.resolver';
 import { EventAcronymResolver } from './modules/admin/events/event-acronym.resolver';
 import { SelectEventComponent } from './modules/admin/events/select-event/select-event.component';
 import { SelectEventResolver } from './modules/admin/events/select-event/select-event.resolver';
@@ -67,6 +67,7 @@ import { AllParticipantsComponent } from './modules/admin/registrations/all-part
 import { AllParticipantsResolver } from './modules/admin/registrations/all-participants/all-participants.resolver';
 import { SetupEventComponent } from './modules/admin/setup-event/setup-event.component';
 import { SetupEventResolver } from './modules/admin/setup-event/setup-event.resolver';
+import { EventSettingsComponent } from './modules/admin/event-settings/event-settings.component';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -368,16 +369,16 @@ export const appRoutes: Route[] =
                     resolve: { initialData: InitialDataResolver },
                     children: [
                         {
+                            path: 'event-settings',
+                            canActivate: [AuthGuard],
+                            component: EventSettingsComponent,
+                            resolve: { initialData: EventSettingsResolver }
+                        },
+                        {
                             path: 'setup-event',
                             canActivate: [AuthGuard],
                             component: SetupEventComponent,
                             resolve: { initialData: SetupEventResolver }
-                        },
-                        {
-                            path: 'user-access',
-                            canActivate: [AuthGuard],
-                            component: UserAccessComponent,
-                            resolve: { initialData: UserAccessResolver }
                         },
                         {
                             path: 'form-mapping',

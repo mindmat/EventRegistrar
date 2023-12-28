@@ -167,6 +167,13 @@ export class NavigationService
                             icon: 'mat_outline:mail',
                             children: [
                                 {
+                                    id: 'event-settings',
+                                    title: translateService.instant('Settings'),
+                                    type: 'basic',
+                                    icon: 'heroicons_outline:cog-8-tooth',
+                                    link: `/${e.acronym}/admin/event-settings`,
+                                },
+                                {
                                     id: 'setup-event',
                                     title: translateService.instant('SetupEvent'),
                                     type: 'basic',
@@ -186,13 +193,6 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'mat_outline:mail',
                                     link: `/${e.acronym}/mailing/bulk-mail-templates`,
-                                },
-                                {
-                                    id: 'user-access',
-                                    title: translateService.instant('AccessRights'),
-                                    type: 'basic',
-                                    icon: 'heroicons_outline:user',
-                                    link: `/${e.acronym}/admin/user-access`,
                                 },
                                 {
                                     id: 'form-mapping',
