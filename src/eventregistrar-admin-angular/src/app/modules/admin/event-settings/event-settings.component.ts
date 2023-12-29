@@ -15,7 +15,7 @@ export class EventSettingsComponent implements OnInit, OnDestroy
     drawerMode: 'over' | 'side' = 'side';
     drawerOpened: boolean = true;
     panels: any[] = [];
-    selectedPanel: string = 'team';
+    selectedPanel: string = 'mail-config';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -39,12 +39,12 @@ export class EventSettingsComponent implements OnInit, OnDestroy
     {
         // Setup available panels
         this.panels = [
-            // {
-            //     id: 'account',
-            //     icon: 'heroicons_outline:user-circle',
-            //     title: 'Account',
-            //     description: 'Manage your public profile and private information'
-            // },
+            {
+                id: 'mail-config',
+                icon: 'heroicons_outline:mail',
+                title: 'Mailing',
+                description: 'Configure IMAP access to import mails from an external mail address'
+            },
             // {
             //     id: 'security',
             //     icon: 'heroicons_outline:lock-closed',

@@ -4,6 +4,7 @@ import { catchError, Observable, throwError, zip } from 'rxjs';
 import { UserAccessRequestsService } from './user-access/user-access-requests.service';
 import { UserAccessService } from './user-access/user-access.service';
 import { UserRolesService } from './user-access/user-roles.service';
+import { MailConfigService } from './mail-config/mail-config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +13,15 @@ export class EventSettingsResolver implements Resolve<boolean>
 {
   constructor(private userAccessService: UserAccessService,
     private accessRequestService: UserAccessRequestsService,
-    private userRolesService: UserRolesService) { }
+    private userRolesService: UserRolesService,
+    private mailConfigService: MailConfigService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
   {
     return zip(
       this.userAccessService.fetchUsersOfEvent(),
       this.accessRequestService.fetchRequestOfEvent(),
-      this.userRolesService.fetchRoles());
+      this.userRolesService.fetchRoles(),
+      this.mailConfigService.fetchMailConfigs());
   }
 }

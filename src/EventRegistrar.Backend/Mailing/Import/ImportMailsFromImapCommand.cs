@@ -49,8 +49,8 @@ public class ImportMailsFromImapCommandHandler(ExternalMailConfigurations config
             {
                 var message = await inbox.GetMessageAsync(i, cancellationToken);
                 if (message.Date < minDate
-                 && importedMails.Any(iml => iml.EventId == command.EventId
-                                          && iml.MessageIdentifier == message.MessageId))
+                 && await importedMails.AnyAsync(iml => iml.EventId == command.EventId
+                                                     && iml.MessageIdentifier == message.MessageId, cancellationToken))
                     // mail has been imported earlier
                 {
                     continue;
@@ -71,8 +71,7 @@ public class ImportMailsFromImapCommandHandler(ExternalMailConfigurations config
                                SenderName = message.From.FirstOrDefault()?.Name,
                                Subject = message.Subject,
                                Date = message.Date,
-                               SendGridMessageId =
-                                   message.References.FirstOrDefault(rfr => rfr.EndsWith("sendgrid.net"))
+                               SendGridMessageId = message.References.FirstOrDefault(rfr => rfr.EndsWith("sendgrid.net"))
                            };
 
                 importedMails.InsertObjectTree(mail);

@@ -27,13 +27,13 @@ export class FormsService extends FetchService<RegistrationFormItem[]>
     return this.fetchItems(this.api.registrationForms_Query({ eventId: this.eventService.selectedId }));
   }
 
-  importForm(formExternalIdentifier: string)
+  importForm(formExternalIdentifier: string): void
   {
     this.api.importRegistrationForm_Command({ eventId: this.eventService.selectedId, formExternalIdentifier })
       .subscribe();
   }
 
-  saveMappings(formId: string, sections: FormSection[], multiMappings: MultiMapping[])
+  saveMappings(formId: string, sections: FormSection[], multiMappings: MultiMapping[]): void
   {
     this.api.saveRegistrationFormMappings_Command({ eventId: this.eventService.selectedId, formId, sections, multiMappings })
       .subscribe();

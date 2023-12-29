@@ -1529,6 +1529,41 @@
         }
       }
     },
+    "/api/ExternalMailConfigurationQuery": {
+      "post": {
+        "tags": [
+          "ExternalMailConfiguration"
+        ],
+        "operationId": "ExternalMailConfiguration_Query",
+        "requestBody": {
+          "x-name": "ExternalMailConfigurationQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExternalMailConfigurationQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ExternalMailConfigurationDisplayItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/FetchBankStatementsFileCommand": {
       "post": {
         "tags": [
@@ -3496,6 +3531,31 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SaveDomainEventCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/SaveExternalMailConfigurationCommand": {
+      "post": {
+        "tags": [
+          "SaveExternalMailConfiguration"
+        ],
+        "operationId": "SaveExternalMailConfiguration_Command",
+        "requestBody": {
+          "x-name": "SaveExternalMailConfigurationCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveExternalMailConfigurationCommand"
               }
             }
           },
@@ -6520,6 +6580,37 @@
       "EventsOfUserQuery": {
         "type": "object",
         "additionalProperties": false
+      },
+      "ExternalMailConfigurationDisplayItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "imapHost": {
+            "type": "string",
+            "nullable": true
+          },
+          "imapPort": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "passwordSet": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ExternalMailConfigurationQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
       },
       "FetchBankStatementsFileCommand": {
         "type": "object",
@@ -9969,6 +10060,45 @@
           },
           "eventType": {
             "type": "string"
+          }
+        }
+      },
+      "SaveExternalMailConfigurationCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "configs": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ExternalMailConfigurationUpdateItem"
+            }
+          }
+        }
+      },
+      "ExternalMailConfigurationUpdateItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "imapHost": {
+            "type": "string",
+            "nullable": true
+          },
+          "imapPort": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
           }
         }
       },

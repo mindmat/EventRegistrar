@@ -199,6 +199,8 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(RecalculateAllPriceAndWaitingListCommand);
             yield return nameof(DeleteTestDataCommand);
             yield return nameof(GoogleFormsScriptQuery);
+            yield return nameof(ExternalMailConfigurationQuery);
+            yield return nameof(SaveExternalMailConfigurationCommand);
         }
     }
 }
