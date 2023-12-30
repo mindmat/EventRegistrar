@@ -36,6 +36,18 @@ export class MailConfigComponent implements OnInit
       });
   }
 
+  addImap(): void
+  {
+    this.configForms.push(this.fb.group({
+      imapHost: null as string,
+      imapPort: null as number,
+      username: null as string,
+      password: null as string
+    }));
+
+    this.changeDetectorRef.markForCheck();
+  }
+
   save(): void
   {
     const configs = this.configForms.map(cfg => ({ ...cfg.value } as ExternalMailConfigurationUpdateItem));

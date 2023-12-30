@@ -147,6 +147,9 @@
   <data name="Add" xml:space="preserve">
     <value>Hinzufügen</value>
   </data>
+  <data name="AddImap" xml:space="preserve">
+    <value>Mail-Import hinzufügen</value>
+  </data>
   <data name="AddLink" xml:space="preserve">
     <value>Neue Zuordnung</value>
   </data>
@@ -499,6 +502,9 @@
   <data name="HoldMailBack" xml:space="preserve">
     <value>Zurückhalten</value>
   </data>
+  <data name="Host" xml:space="preserve">
+    <value>Host</value>
+  </data>
   <data name="Hosting" xml:space="preserve">
     <value>Hosting</value>
   </data>
@@ -513,6 +519,9 @@
   </data>
   <data name="Ignored" xml:space="preserve">
     <value>Ignorierte</value>
+  </data>
+  <data name="ImapConfigExplanation" xml:space="preserve">
+    <value>IMAP-Postfächer konfigurieren, deren eingehende Mails fortlaufend importiert werden sollen.</value>
   </data>
   <data name="Import" xml:space="preserve">
     <value>Importieren</value>
@@ -871,6 +880,9 @@
   <data name="PartnerPossible" xml:space="preserve">
     <value>Partneranmeldung möglich</value>
   </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
   <data name="PaymentDifferences" xml:space="preserve">
     <value>Zahlungsdifferenzen</value>
   </data>
@@ -900,6 +912,9 @@
   </data>
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
+  </data>
+  <data name="Port" xml:space="preserve">
+    <value>Port</value>
   </data>
   <data name="Preview" xml:space="preserve">
     <value>Vorschau</value>
@@ -1276,6 +1291,9 @@
   </data>
   <data name="UserInEventRole_Writer_Description" xml:space="preserve">
     <value>Kann das Tagesgeschäft erledigen</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
   </data>
   <data name="Valuta" xml:space="preserve">
     <value>Valuta</value>

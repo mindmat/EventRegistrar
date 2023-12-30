@@ -1,3 +1,5 @@
+<div class="text-secondary">{{ 'ImapConfigExplanation' | translate }}</div>
+
 <div class="w-full max-w-3xl">
 
     <!-- Form -->
@@ -5,16 +7,12 @@
         <form class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border p-6 space-y-3" [formGroup]="configForm">
 
             <!-- Section -->
-            <div class="w-full">
-                <div class="text-xl">IMAP</div>
-                <div class="text-secondary">Configure IMAP access to import mails from an external mail address</div>
-            </div>
-            <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <div class="grid sm:grid-cols-4 gap-6 w-full">
 
                 <!-- Host -->
                 <div class="sm:col-span-3">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>Host</mat-label>
+                        <mat-label>{{ 'Host' | translate }}</mat-label>
                         <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'" matPrefix></mat-icon> -->
                         <input [formControlName]="'imapHost'" matInput>
                     </mat-form-field>
@@ -22,7 +20,7 @@
                 <!-- Port -->
                 <div class="sm:col-span-1">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>Port</mat-label>
+                        <mat-label>{{ 'Port' | translate }}</mat-label>
                         <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'" matPrefix></mat-icon> -->
                         <input [formControlName]="'imapPort'" matInput type="number">
                     </mat-form-field>
@@ -30,7 +28,7 @@
                 <!-- Username -->
                 <div class="sm:col-span-2">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>Username</mat-label>
+                        <mat-label>{{ 'Username' | translate }}</mat-label>
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:user'" matPrefix></mat-icon>
                         <input [formControlName]="'username'" matInput>
                     </mat-form-field>
@@ -38,21 +36,21 @@
                 <!-- Password -->
                 <div class="sm:col-span-2">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
-                        <mat-label>Password</mat-label>
+                        <mat-label>{{ 'Password' | translate }}</mat-label>
                         <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:key'" matPrefix></mat-icon>
                         <input [formControlName]="'password'" matInput type="password">
                     </mat-form-field>
                 </div>
             </div>
 
-            <!-- Divider -->
-            <div class="mt-11 mb-10 border-t"></div>
-
         </form>
     </div>
 
     <!-- Actions -->
     <div class="flex items-center justify-end mt-4">
+        <button mat-stroked-button (click)="addImap()">
+            {{ 'AddImap' | translate }}
+        </button>
         <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="save()">{{ 'Save' | translate }}</button>
     </div>
 

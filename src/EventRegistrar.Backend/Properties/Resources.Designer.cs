@@ -151,6 +151,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mail-Import hinzufügen.
+        /// </summary>
+        internal static string AddImap {
+            get {
+                return ResourceManager.GetString("AddImap", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Neue Zuordnung.
         /// </summary>
         internal static string AddLink {
@@ -1220,6 +1229,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Host.
+        /// </summary>
+        internal static string Host {
+            get {
+                return ResourceManager.GetString("Host", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hosting.
         /// </summary>
         internal static string Hosting {
@@ -1261,6 +1279,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Ignored {
             get {
                 return ResourceManager.GetString("Ignored", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IMAP-Postfächer konfigurieren, deren eingehende Mails fortlaufend importiert werden sollen..
+        /// </summary>
+        internal static string ImapConfigExplanation {
+            get {
+                return ResourceManager.GetString("ImapConfigExplanation", resourceCulture);
             }
         }
         
@@ -2336,6 +2363,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Password.
+        /// </summary>
+        internal static string Password {
+            get {
+                return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zahlungsdifferenzen.
         /// </summary>
         internal static string PaymentDifferences {
@@ -2422,6 +2458,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Phone {
             get {
                 return ResourceManager.GetString("Phone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Port.
+        /// </summary>
+        internal static string Port {
+            get {
+                return ResourceManager.GetString("Port", resourceCulture);
             }
         }
         
@@ -3541,6 +3586,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string UserInEventRole_Writer_Description {
             get {
                 return ResourceManager.GetString("UserInEventRole_Writer_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Username.
+        /// </summary>
+        internal static string Username {
+            get {
+                return ResourceManager.GetString("Username", resourceCulture);
             }
         }
         
