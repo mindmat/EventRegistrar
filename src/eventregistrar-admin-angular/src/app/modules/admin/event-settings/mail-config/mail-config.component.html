@@ -17,14 +17,28 @@
                         <input [formControlName]="'imapHost'" matInput>
                     </mat-form-field>
                 </div>
+
                 <!-- Port -->
-                <div class="sm:col-span-1">
+                <div class="sm:col-span-1 flex flex-row">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
                         <mat-label>{{ 'Port' | translate }}</mat-label>
                         <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:office-building'" matPrefix></mat-icon> -->
                         <input [formControlName]="'imapPort'" matInput type="number">
                     </mat-form-field>
+
+                    <!-- Other actions button & menu -->
+                    <button class="ml-2 mt-7" mat-icon-button [matMenuTriggerFor]="packageMenu">
+                        <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                    </button>
+                    <mat-menu #packageMenu="matMenu">
+                        <!-- Delete -->
+                        <button mat-menu-item (click)="removeImap(indexPackage)">
+                            <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                            <span>{{ 'Delete' | translate }}</span>
+                        </button>
+                    </mat-menu>
                 </div>
+
                 <!-- Username -->
                 <div class="sm:col-span-2">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">

@@ -48,6 +48,11 @@ export class MailConfigComponent implements OnInit
     this.changeDetectorRef.markForCheck();
   }
 
+  removeImap(index: number): void
+  {
+    this.configForms.splice(index, 1);
+  }
+
   save(): void
   {
     const configs = this.configForms.map(cfg => ({ ...cfg.value } as ExternalMailConfigurationUpdateItem));
