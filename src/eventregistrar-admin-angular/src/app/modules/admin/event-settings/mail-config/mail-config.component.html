@@ -75,6 +75,8 @@
                 <fuse-alert *ngIf="configForm.value.checkSuccessful === true" class="sm:col-span-3" [type]="'success'" [appearance]="'outline'">
                     <span fuseAlertTitle>{{ 'ImapImportSuccess' | translate }}</span>
                     {{ 'ImapImportSuccessful' | translate }}
+                    <br />
+                    <span>{{ 'ImapImportCounts' | translate : { total: configForm.value.totalImportedMails, assigned: configForm.value.totalAssignedMails } }}</span>
                 </fuse-alert>
             </div>
 

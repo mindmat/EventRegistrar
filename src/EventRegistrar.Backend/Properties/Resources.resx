@@ -523,6 +523,9 @@
   <data name="ImapConfigExplanation" xml:space="preserve">
     <value>IMAP-Postfächer konfigurieren, deren eingehende Mails fortlaufend importiert werden sollen.</value>
   </data>
+  <data name="ImapImportCounts" xml:space="preserve">
+    <value>{{total}} Mails importiert, {{assigned}} zugewiesen.</value>
+  </data>
   <data name="ImapImportError" xml:space="preserve">
     <value>IMAP-Mapping konnte nicht eingerichtet werden</value>
   </data>

@@ -8600,6 +8600,8 @@ export interface ExternalMailConfigurationDisplayItem {
     importMailsSince?: Date | null;
     checkSuccessful?: boolean | null;
     checkError?: string | null;
+    totalImportedMails?: number;
+    totalAssignedMails?: number;
 }
 
 export interface ExternalMailConfigurationQuery {

@@ -6655,6 +6655,14 @@
           "checkError": {
             "type": "string",
             "nullable": true
+          },
+          "totalImportedMails": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalAssignedMails": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },

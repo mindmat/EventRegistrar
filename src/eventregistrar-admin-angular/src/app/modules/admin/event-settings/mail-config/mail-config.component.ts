@@ -64,6 +64,8 @@ export class MailConfigComponent implements OnInit
 
             checkSuccessful: cfg.checkSuccessful,
             checkError: cfg.checkError,
+            totalImportedMails: cfg.totalImportedMails,
+            totalAssignedMails: cfg.totalAssignedMails
           }));
         this.changeDetectorRef.markForCheck();
       });
@@ -83,7 +85,9 @@ export class MailConfigComponent implements OnInit
       imapPort: null as number,
       username: null as string,
       password: null as string,
-      importMailsSince: null as Date
+      importMailsSince: null as Date,
+      totalImportedMails: 0,
+      totalAssignedMails: 0
     });
     this.configForms.push(newForm);
     newForm.statusChanges.subscribe((_) =>

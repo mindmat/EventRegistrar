@@ -432,6 +432,9 @@
   <data name="ImapConfigExplanation" xml:space="preserve">
     <value>Configure IMAP access to continuously import mails from external mail addresses.</value>
   </data>
+  <data name="ImapImportCounts" xml:space="preserve">
+    <value>{{total}} mails imported, {{assigned}} assigned.</value>
+  </data>
   <data name="ImapImportError" xml:space="preserve">
     <value>Could not set up IMAP mapping</value>
   </data>

@@ -88,8 +88,6 @@ public class ImportMailsFromImapCommandHandler(ExternalMailConfigurations config
                                                    .StringJoin(";")
                                  });
             }
-
-            await client.DisconnectAsync(true, cancellationToken);
         }
     }
 }

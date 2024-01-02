@@ -1292,6 +1292,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {{total}} Mails importiert, {{assigned}} zugewiesen..
+        /// </summary>
+        internal static string ImapImportCounts {
+            get {
+                return ResourceManager.GetString("ImapImportCounts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to IMAP-Mapping konnte nicht eingerichtet werden.
         /// </summary>
         internal static string ImapImportError {
