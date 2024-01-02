@@ -60,8 +60,7 @@
                 <div class="sm:col-span-1">
                     <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
                         <mat-label>{{ 'ImportMailsSince' | translate }}</mat-label>
-                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:calendar'" matPrefix></mat-icon>
-                        <input matInput [matDatepicker]="importMailSinceDatepicker" [formControlName]="'importMailsSince'" [placeholder]="'Birthday'">
+                        <input matInput [matDatepicker]="importMailSinceDatepicker" [formControlName]="'importMailsSince'">
                         <mat-datepicker-toggle matSuffix [for]="importMailSinceDatepicker">
                         </mat-datepicker-toggle>
                         <mat-datepicker #importMailSinceDatepicker></mat-datepicker>
