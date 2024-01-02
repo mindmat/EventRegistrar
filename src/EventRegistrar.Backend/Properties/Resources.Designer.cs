@@ -1292,11 +1292,47 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to IMAP-Mapping konnte nicht eingerichtet werden.
+        /// </summary>
+        internal static string ImapImportError {
+            get {
+                return ResourceManager.GetString("ImapImportError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IMAP-Mapping erfolgreich.
+        /// </summary>
+        internal static string ImapImportSuccess {
+            get {
+                return ResourceManager.GetString("ImapImportSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Die Mails des Postfachs werden fortlaufend importiert..
+        /// </summary>
+        internal static string ImapImportSuccessful {
+            get {
+                return ResourceManager.GetString("ImapImportSuccessful", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Importieren.
         /// </summary>
         internal static string Import {
             get {
                 return ResourceManager.GetString("Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Mails importieren ab.
+        /// </summary>
+        internal static string ImportMailsSince {
+            get {
+                return ResourceManager.GetString("ImportMailsSince", resourceCulture);
             }
         }
         

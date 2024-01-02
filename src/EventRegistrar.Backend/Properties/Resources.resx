@@ -523,8 +523,20 @@
   <data name="ImapConfigExplanation" xml:space="preserve">
     <value>IMAP-Postfächer konfigurieren, deren eingehende Mails fortlaufend importiert werden sollen.</value>
   </data>
+  <data name="ImapImportError" xml:space="preserve">
+    <value>IMAP-Mapping konnte nicht eingerichtet werden</value>
+  </data>
+  <data name="ImapImportSuccess" xml:space="preserve">
+    <value>IMAP-Mapping erfolgreich</value>
+  </data>
+  <data name="ImapImportSuccessful" xml:space="preserve">
+    <value>Die Mails des Postfachs werden fortlaufend importiert.</value>
+  </data>
   <data name="Import" xml:space="preserve">
     <value>Importieren</value>
+  </data>
+  <data name="ImportMailsSince" xml:space="preserve">
+    <value>Mails importieren ab</value>
   </data>
   <data name="ImportNewVersion" xml:space="preserve">
     <value>Neue Version importieren</value>

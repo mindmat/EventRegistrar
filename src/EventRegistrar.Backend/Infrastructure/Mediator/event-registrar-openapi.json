@@ -746,6 +746,31 @@
         }
       }
     },
+    "/api/CheckExternalMailConfigurationCommand": {
+      "post": {
+        "tags": [
+          "CheckExternalMailConfiguration"
+        ],
+        "operationId": "CheckExternalMailConfiguration_Command",
+        "requestBody": {
+          "x-name": "CheckExternalMailConfigurationCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckExternalMailConfigurationCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/CheckIfIncomingPaymentIsSettledCommand": {
       "post": {
         "tags": [
@@ -5742,6 +5767,20 @@
           }
         }
       },
+      "CheckExternalMailConfigurationCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "externalMailConfigurationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "CheckIfIncomingPaymentIsSettledCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -6585,6 +6624,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
           "imapHost": {
             "type": "string",
             "nullable": true
@@ -6599,6 +6642,19 @@
           },
           "passwordSet": {
             "type": "boolean"
+          },
+          "importMailsSince": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "checkSuccessful": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "checkError": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -10084,6 +10140,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
           "imapHost": {
             "type": "string",
             "nullable": true
@@ -10098,6 +10158,11 @@
           },
           "password": {
             "type": "string",
+            "nullable": true
+          },
+          "importMailsSince": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         }

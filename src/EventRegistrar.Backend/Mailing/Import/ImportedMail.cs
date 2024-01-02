@@ -9,6 +9,7 @@ public class ImportedMail : Entity
     public Guid EventId { get; set; }
     public Event? Event { get; set; }
     public ICollection<ImportedMailToRegistration>? Registrations { get; set; }
+    public Guid? ExternalMailConfigurationId { get; set; }
 
     public string? SenderMail { get; set; }
     public string? SenderName { get; set; }

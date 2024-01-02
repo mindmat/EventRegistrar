@@ -4,7 +4,7 @@
 
     <!-- Form -->
     <div *ngFor="let configForm of configForms; let indexPackage = index" class="flex flex-col">
-        <form class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border p-6 space-y-3" [formGroup]="configForm">
+        <form class="mt-2 rounded-xl bg-card dark:bg-transparent dark:border p-6 space-y-3" [formGroup]="configForm">
 
             <!-- Section -->
             <div class="grid sm:grid-cols-4 gap-6 w-full">
@@ -55,6 +55,28 @@
                         <input [formControlName]="'password'" matInput type="password">
                     </mat-form-field>
                 </div>
+
+                <!-- Import mails since -->
+                <div class="sm:col-span-1">
+                    <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                        <mat-label>{{ 'ImportMailsSince' | translate }}</mat-label>
+                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:calendar'" matPrefix></mat-icon>
+                        <input matInput [matDatepicker]="importMailSinceDatepicker" [formControlName]="'importMailsSince'" [placeholder]="'Birthday'">
+                        <mat-datepicker-toggle matSuffix [for]="importMailSinceDatepicker">
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #importMailSinceDatepicker></mat-datepicker>
+                    </mat-form-field>
+                </div>
+
+                <fuse-alert *ngIf="configForm.value.checkSuccessful === false" class="sm:col-span-3" [type]="'warn'" [appearance]="'outline'">
+                    <span fuseAlertTitle>{{ 'ImapImportError' | translate }}</span>
+                    {{ configForm.value.checkError }}
+                </fuse-alert>
+
+                <fuse-alert *ngIf="configForm.value.checkSuccessful === true" class="sm:col-span-3" [type]="'success'" [appearance]="'outline'">
+                    <span fuseAlertTitle>{{ 'ImapImportSuccess' | translate }}</span>
+                    {{ 'ImapImportSuccessful' | translate }}
+                </fuse-alert>
             </div>
 
         </form>
@@ -65,7 +87,7 @@
         <button mat-stroked-button (click)="addImap()">
             {{ 'AddImap' | translate }}
         </button>
-        <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="save()">{{ 'Save' | translate }}</button>
+        <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="save()" [disabled]="!submittable">{{ 'Save' | translate }}</button>
     </div>
 
 </div>

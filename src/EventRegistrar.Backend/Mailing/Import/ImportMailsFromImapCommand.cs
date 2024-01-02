@@ -27,7 +27,6 @@ public class ImportMailsFromImapCommandHandler(ExternalMailConfigurations config
             return;
         }
 
-        var minDate = dateTimeProvider.Now.AddMonths(-2);
         foreach (var mailConfiguration in configurations.MailConfigurations)
         {
             using var client = new ImapClient();
@@ -44,6 +43,8 @@ public class ImportMailsFromImapCommandHandler(ExternalMailConfigurations config
 
             log.LogInformation("Total messages: {0}", inbox.Count);
             log.LogInformation("Recent messages: {0}", inbox.Recent);
+            var minDate = mailConfiguration.ImportMailsSince
+                       ?? dateTimeProvider.Now.AddMonths(-2);
 
             for (var i = 0; i < inbox.Count; i++)
             {
@@ -59,6 +60,7 @@ public class ImportMailsFromImapCommandHandler(ExternalMailConfigurations config
                 var mail = new ImportedMail
                            {
                                Id = Guid.NewGuid(),
+                               ExternalMailConfigurationId = mailConfiguration.Id,
                                EventId = command.EventId,
                                ContentHtml = message.HtmlBody,
                                ContentPlainText = message.TextBody,

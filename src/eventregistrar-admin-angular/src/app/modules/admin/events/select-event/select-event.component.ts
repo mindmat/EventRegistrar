@@ -97,7 +97,7 @@ export class SelectEventComponent implements OnInit
       });
   }
 
-  filterByQuery(query: string)
+  filterByQuery(query: string): void
   {
     this.query$.next(query);
   }

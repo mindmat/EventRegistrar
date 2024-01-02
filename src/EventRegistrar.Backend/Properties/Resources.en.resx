@@ -432,8 +432,20 @@
   <data name="ImapConfigExplanation" xml:space="preserve">
     <value>Configure IMAP access to continuously import mails from external mail addresses.</value>
   </data>
+  <data name="ImapImportError" xml:space="preserve">
+    <value>Could not set up IMAP mapping</value>
+  </data>
+  <data name="ImapImportSuccess" xml:space="preserve">
+    <value>IMAP mapping successful</value>
+  </data>
+  <data name="ImapImportSuccessful" xml:space="preserve">
+    <value>Mails of this mailbox will be regularly imported.</value>
+  </data>
   <data name="Import" xml:space="preserve">
     <value>Import</value>
+  </data>
+  <data name="ImportMailsSince" xml:space="preserve">
+    <value>Import mails since</value>
   </data>
   <data name="ImportNewVersion" xml:space="preserve">
     <value>Import new version</value>
