@@ -29,9 +29,12 @@ public class TryAssignImportedMailCommandHandler(IQueryable<ImportedMail> import
                                                     .ToListAsync(cancellationToken);
             foreach (var registration in registrations)
             {
-                await mailToRegistrations.InsertOrUpdateEntity(
-                    new ImportedMailToRegistration { ImportedMailId = mail.Id, RegistrationId = registration.Id },
-                    cancellationToken);
+                mailToRegistrations.InsertObjectTree(new ImportedMailToRegistration
+                                                     {
+                                                         Id = Guid.NewGuid(),
+                                                         ImportedMailId = mail.Id,
+                                                         RegistrationId = registration.Id
+                                                     });
                 eventBus.Publish(new ImportedMailAssigned
                                  {
                                      EventId = registration.EventId,
