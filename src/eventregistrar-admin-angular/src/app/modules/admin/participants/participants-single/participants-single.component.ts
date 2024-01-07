@@ -30,11 +30,19 @@ export class ParticipantsSingleComponent implements OnInit
       });
   }
 
-  drop(registration: RegistrationDisplayInfo)
+  drop(registration: RegistrationDisplayInfo): void
   {
     if (!!registration.id)
     {
       this.service.promoteFromWaitingList(this.registrable.id, registration.id);
+    }
+  }
+
+  triggerMoveUp(): void
+  {
+    if (this.registrable?.id != null)
+    {
+      this.service.triggerMoveUp(this.registrable.id);
     }
   }
 
