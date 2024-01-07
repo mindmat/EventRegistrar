@@ -59,6 +59,7 @@ public class AutoMailTemplatesQueryHandler(IQueryable<AutoMailTemplate> mailTemp
                                                       .AppendIf(config.SingleRegistrationPossible, () => CreateType(MailType.SingleRegistrationOnWaitingList, existingTemplates))
                                                       .AppendIf(config.PartnerRegistrationPossible, () => CreateType(MailType.PartnerRegistrationFirstPartnerOnWaitingList, existingTemplates))
                                                       .AppendIf(config.PartnerRegistrationPossible, () => CreateType(MailType.PartnerRegistrationMatchedOnWaitingList, existingTemplates))
+                                                      .Append(CreateType(MailType.OptionsForRegistrationsOnWaitingList, existingTemplates))
                                 },
                                 new AutoMailTemplateGroup
                                 {
