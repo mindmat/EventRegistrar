@@ -252,6 +252,9 @@
   <data name="ChangeSpots" xml:space="preserve">
     <value>Plätze ändern</value>
   </data>
+  <data name="CheckinListColumn" xml:space="preserve">
+    <value>Spalte in Checkin-Liste</value>
+  </data>
   <data name="ClickToUpload" xml:space="preserve">
     <value>Klicken zum Hochladen</value>
   </data>
@@ -564,6 +567,9 @@
   </data>
   <data name="InvalidRefundAmount" xml:space="preserve">
     <value>Rückzahlbetrag {0:F2} muss zwischen 0.00 und {1:F2}l liegen.</value>
+  </data>
+  <data name="IsCore" xml:space="preserve">
+    <value>Haupt-Track</value>
   </data>
   <data name="IsCorePackage" xml:space="preserve">
     <value>Kern-Paket</value>

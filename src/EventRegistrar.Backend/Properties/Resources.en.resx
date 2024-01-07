@@ -246,6 +246,9 @@
   <data name="ChangeSpots" xml:space="preserve">
     <value>Change spots</value>
   </data>
+  <data name="CheckinListColumn" xml:space="preserve">
+    <value>Column in checkin list</value>
+  </data>
   <data name="ClickToUpload" xml:space="preserve">
     <value>Click to upload</value>
   </data>
@@ -470,6 +473,9 @@
   </data>
   <data name="InternalNotes" xml:space="preserve">
     <value>Internal notes</value>
+  </data>
+  <data name="IsCore" xml:space="preserve">
+    <value>Is core</value>
   </data>
   <data name="IsCorePackage" xml:space="preserve">
     <value>Core package</value>

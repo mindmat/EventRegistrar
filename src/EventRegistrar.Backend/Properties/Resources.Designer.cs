@@ -466,6 +466,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Spalte in Checkin-Liste.
+        /// </summary>
+        internal static string CheckinListColumn {
+            get {
+                return ResourceManager.GetString("CheckinListColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Klicken zum Hochladen.
         /// </summary>
         internal static string ClickToUpload {
@@ -1414,6 +1423,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string InvalidRefundAmount {
             get {
                 return ResourceManager.GetString("InvalidRefundAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Haupt-Track.
+        /// </summary>
+        internal static string IsCore {
+            get {
+                return ResourceManager.GetString("IsCore", resourceCulture);
             }
         }
         

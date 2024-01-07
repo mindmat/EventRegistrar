@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { DoubleRegistrableDisplayItem, RegistrableDisplayItem, RegistrableType, RegistrableTypeOption, SaveRegistrableCommand, SingleRegistrableDisplayItem } from 'app/api/api';
+import { DoubleRegistrableDisplayItem, RegistrableType, RegistrableTypeOption, SaveRegistrableCommand, SingleRegistrableDisplayItem } from 'app/api/api';
 import { EventService } from '../../events/event.service';
 import { RegistrablesService } from '../../pricing/registrables.service';
 import { v4 as createUuid } from 'uuid';
@@ -57,8 +57,8 @@ export class RegistrableDetailComponent implements OnInit
         tag: this.data.doubleRegistrable.tag,
         hasWaitingList: this.data.doubleRegistrable.hasWaitingList,
         type: RegistrableType.Double,
-        isCore: this.data.singleRegistrable.isCore,
-        checkinListColumn: this.data.singleRegistrable.checkinListColumn,
+        isCore: this.data.doubleRegistrable.isCore,
+        checkinListColumn: this.data.doubleRegistrable.checkinListColumn,
 
         hasSingleMax: false,
         maximumSingleSpots: null,
@@ -88,7 +88,7 @@ export class RegistrableDetailComponent implements OnInit
         maximumAllowedImbalance: null,
 
         isCore: false,
-        checkinListColumn: null as string
+        checkinListColumn: null
       });
     }
 
