@@ -9273,6 +9273,13 @@
           "automaticPromotionFromWaitingList": {
             "type": "boolean"
           },
+          "isCore": {
+            "type": "boolean"
+          },
+          "checkinListColumn": {
+            "type": "string",
+            "nullable": true
+          },
           "class": {
             "type": "array",
             "items": {
@@ -9360,6 +9367,13 @@
           },
           "automaticPromotionFromWaitingList": {
             "type": "boolean"
+          },
+          "isCore": {
+            "type": "boolean"
+          },
+          "checkinListColumn": {
+            "type": "string",
+            "nullable": true
           },
           "class": {
             "type": "array",
@@ -10349,6 +10363,13 @@
             "type": "boolean"
           },
           "tag": {
+            "type": "string",
+            "nullable": true
+          },
+          "isCore": {
+            "type": "boolean"
+          },
+          "checkinListColumn": {
             "type": "string",
             "nullable": true
           }

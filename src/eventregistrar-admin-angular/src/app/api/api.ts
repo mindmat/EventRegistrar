@@ -9426,6 +9426,8 @@ export interface SingleRegistrableDisplayItem {
     hasWaitingList?: boolean;
     isDeletable?: boolean;
     automaticPromotionFromWaitingList?: boolean;
+    isCore?: boolean;
+    checkinListColumn?: string | null;
     class?: SpotState[];
     waitingList?: SpotState[];
 }
@@ -9452,6 +9454,8 @@ export interface DoubleRegistrableDisplayItem {
     hasWaitingList?: boolean;
     isDeletable?: boolean;
     automaticPromotionFromWaitingList?: boolean;
+    isCore?: boolean;
+    checkinListColumn?: string | null;
     class?: DoubleSpotState[];
     waitingList?: DoubleSpotState[];
 }
@@ -9762,6 +9766,8 @@ export interface SaveRegistrableCommand {
     maximumAllowedImbalance?: number | null;
     hasWaitingList?: boolean;
     tag?: string | null;
+    isCore?: boolean;
+    checkinListColumn?: string | null;
 }
 
 export interface SaveRegistrationFormMappingsCommand {

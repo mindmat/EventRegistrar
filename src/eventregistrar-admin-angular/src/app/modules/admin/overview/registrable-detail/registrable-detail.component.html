@@ -97,6 +97,24 @@
                 <mat-slide-toggle class="ml-auto" [color]="'primary'" [formControlName]="'hasWaitingList'" #waitingList>
                 </mat-slide-toggle>
             </div>
+
+            <!-- core -->
+            <div class="col-span-3 items-center flex flex-row">
+                <div class="cursor-pointer" (click)="isCore.toggle()">
+                    <div class="leading-6 font-medium">{{ 'IsCore' | translate }}</div>
+                    <!-- <div class="text-md text-secondary">{{ 'HasWaitingListSecondary' | translate }}</div> -->
+                </div>
+                <mat-slide-toggle class="ml-auto" [color]="'primary'" [formControlName]="'isCore'" #isCore>
+                </mat-slide-toggle>
+            </div>
+
+            <!-- column in checkin list -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'CheckinListColumn' | translate }}</mat-label>
+                    <input [formControlName]="'checkinListColumn'" matInput>
+                </mat-form-field>
+            </div>
         </div>
 
         <!-- Actions -->

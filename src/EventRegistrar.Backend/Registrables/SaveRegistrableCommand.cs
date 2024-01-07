@@ -17,6 +17,8 @@ public class SaveRegistrableCommand : IRequest, IEventBoundRequest
     public int? MaximumAllowedImbalance { get; set; }
     public bool HasWaitingList { get; set; }
     public string? Tag { get; set; }
+    public bool IsCore { get; set; }
+    public string? CheckinListColumn { get; set; }
 }
 
 public class SaveRegistrableCommandHandler(IRepository<Registrable> registrables,
@@ -83,6 +85,9 @@ public class SaveRegistrableCommandHandler(IRepository<Registrable> registrables
                                             .Append(registrable.Name)
                                             .Append(registrable.NameSecondary)
                                             .StringJoinNullable(" - ");
+        registrable.IsCore = command.IsCore;
+        registrable.CheckinListColumn = command.CheckinListColumn;
+
         if (registrable.Tag != command.Tag)
         {
             registrable.Tag = command.Tag;

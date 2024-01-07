@@ -8,7 +8,8 @@ import { NotificationService } from '../infrastructure/notification.service';
 @Injectable({
   providedIn: 'root'
 })
-export class RegistrablesService extends FetchService<RegistrableDisplayItem[]> {
+export class RegistrablesService extends FetchService<RegistrableDisplayItem[]>
+{
 
   constructor(private api: Api,
     private eventService: EventService,
@@ -32,13 +33,15 @@ export class RegistrablesService extends FetchService<RegistrableDisplayItem[]> 
     return this.api.registrableTypes_Query({});
   }
 
-  saveRegistrable(command: SaveRegistrableCommand)
+  saveRegistrable(command: SaveRegistrableCommand): void
   {
-    throw this.api.saveRegistrable_Command(command).subscribe();
+    this.api.saveRegistrable_Command(command)
+      .subscribe();
   }
 
-  deleteRegistrable(registrableId: string)
+  deleteRegistrable(registrableId: string): void
   {
-    throw this.api.deleteRegistrable_Command({ eventId: this.eventService.selectedId, registrableId }).subscribe();
+    this.api.deleteRegistrable_Command({ eventId: this.eventService.selectedId, registrableId })
+      .subscribe();
   }
 }

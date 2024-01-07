@@ -52,6 +52,8 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                        SpotsAvailable = rbl.MaximumSingleSeats,
                                                                        HasWaitingList = rbl.HasWaitingList,
                                                                        AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,
+                                                                       IsCore = rbl.IsCore,
+                                                                       CheckinListColumn = rbl.CheckinListColumn,
                                                                        Accepted = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: false }
                                                                                                        && !registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty)),
                                                                        OnWaitingList = rbl.Spots!.Count(spt => !spt.IsCancelled
@@ -82,6 +84,8 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                        HasWaitingList = rbl.HasWaitingList,
                                                                        AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,
                                                                        MaximumAllowedImbalance = rbl.MaximumAllowedImbalance,
+                                                                       IsCore = rbl.IsCore,
+                                                                       CheckinListColumn = rbl.CheckinListColumn,
                                                                        LeadersAccepted = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: false, RegistrationId: not null }),
                                                                        FollowersAccepted = rbl.Spots!.Count(
                                                                            spt => spt is { IsCancelled: false, IsWaitingList: false, RegistrationId_Follower: not null }),
@@ -206,6 +210,8 @@ public class SingleRegistrableDisplayItem
     public bool HasWaitingList { get; set; }
     public bool IsDeletable { get; set; }
     public bool AutomaticPromotionFromWaitingList { get; set; }
+    public bool IsCore { get; set; }
+    public string? CheckinListColumn { get; set; }
     public IEnumerable<SpotState> Class { get; set; } = null!;
     public IEnumerable<SpotState> WaitingList { get; set; } = null!;
 }
@@ -226,6 +232,8 @@ public record DoubleRegistrableDisplayItem
     public bool HasWaitingList { get; set; }
     public bool IsDeletable { get; set; }
     public bool AutomaticPromotionFromWaitingList { get; set; }
+    public bool IsCore { get; set; }
+    public string? CheckinListColumn { get; set; }
     public IEnumerable<DoubleSpotState> Class { get; set; } = null!;
     public IEnumerable<DoubleSpotState> WaitingList { get; set; } = null!;
 }

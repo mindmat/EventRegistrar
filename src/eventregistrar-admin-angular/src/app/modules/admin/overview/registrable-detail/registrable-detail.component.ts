@@ -36,6 +36,8 @@ export class RegistrableDetailComponent implements OnInit
         tag: this.data.singleRegistrable.tag,
         hasWaitingList: this.data.singleRegistrable.hasWaitingList,
         type: RegistrableType.Single,
+        isCore: this.data.singleRegistrable.isCore,
+        checkinListColumn: this.data.singleRegistrable.checkinListColumn,
 
         hasSingleMax: this.data.singleRegistrable.spotsAvailable != null,
         maximumSingleSpots: this.data.singleRegistrable.spotsAvailable,
@@ -55,6 +57,8 @@ export class RegistrableDetailComponent implements OnInit
         tag: this.data.doubleRegistrable.tag,
         hasWaitingList: this.data.doubleRegistrable.hasWaitingList,
         type: RegistrableType.Double,
+        isCore: this.data.singleRegistrable.isCore,
+        checkinListColumn: this.data.singleRegistrable.checkinListColumn,
 
         hasSingleMax: false,
         maximumSingleSpots: null,
@@ -81,13 +85,16 @@ export class RegistrableDetailComponent implements OnInit
 
         hasDoubleMax: false,
         maximumDoubleSpots: null,
-        maximumAllowedImbalance: null
+        maximumAllowedImbalance: null,
+
+        isCore: false,
+        checkinListColumn: null as string
       });
     }
 
     this.changeDetectorRef.markForCheck();
 
-    this.registrablesService.getRegistrableTypes().subscribe(types =>
+    this.registrablesService.getRegistrableTypes().subscribe((types) =>
     {
       this.registrableTypes = types;
       this.changeDetectorRef.markForCheck();
@@ -96,8 +103,8 @@ export class RegistrableDetailComponent implements OnInit
 
   onSubmit(): void
   {
-    var command = { ... this.registrableForm.value } as SaveRegistrableCommand;
-    if (command.type == RegistrableType.Single)
+    const command = { ... this.registrableForm.value } as SaveRegistrableCommand;
+    if (command.type === RegistrableType.Single)
     {
       if (!this.registrableForm.value.hasSingleMax)
       {
@@ -107,7 +114,7 @@ export class RegistrableDetailComponent implements OnInit
       command.maximumAllowedImbalance = null;
       command.hasWaitingList &&= command.maximumSingleSpots != null;
     }
-    else if (command.type == RegistrableType.Double)
+    else if (command.type === RegistrableType.Double)
     {
       if (!this.registrableForm.value.hasDoubleMax)
       {
@@ -121,7 +128,7 @@ export class RegistrableDetailComponent implements OnInit
 
   canHaveWaitingList(): boolean
   {
-    return this.registrableForm.value.type == RegistrableType.Double && this.registrableForm.value.hasDoubleMax
-      || this.registrableForm.value.type == RegistrableType.Single && this.registrableForm.value.hasSingleMax;
+    return this.registrableForm.value.type === RegistrableType.Double && this.registrableForm.value.hasDoubleMax
+      || this.registrableForm.value.type === RegistrableType.Single && this.registrableForm.value.hasSingleMax;
   }
 }
