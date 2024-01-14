@@ -1,6 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Registrables.Participants;
-using EventRegistrar.Backend.Registrations.ReadModels;
+using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrables;

@@ -25,13 +25,13 @@ public class ProcessReceivedSmsCommandHandler(IQueryable<Registration> _registra
     {
         var registrations = await _registrations
                                   .Where(reg => reg.PhoneNormalized == command.Sms.From
-                                             && reg.Event.State != EventState.Finished)
+                                             && reg.Event!.State != EventState.Finished)
                                   .Select(reg => new
                                                  {
                                                      reg.Id,
                                                      reg.EventId,
-                                                     EventState = reg.Event.State,
-                                                     LastSmsSent = reg.Sms.Select(msg => msg.Sent)
+                                                     EventState = reg.Event!.State,
+                                                     LastSmsSent = reg.Sms!.Select(msg => msg.Sent)
                                                                       .OrderByDescending(snt => snt)
                                                                       .FirstOrDefault(),
                                                      RegistrationState = reg.State,

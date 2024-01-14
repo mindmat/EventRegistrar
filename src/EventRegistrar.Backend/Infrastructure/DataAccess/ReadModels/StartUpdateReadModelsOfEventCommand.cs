@@ -2,7 +2,6 @@
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
-using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 

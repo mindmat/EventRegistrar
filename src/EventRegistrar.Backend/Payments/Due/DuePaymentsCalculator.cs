@@ -9,11 +9,10 @@ using EventRegistrar.Backend.Registrations;
 namespace EventRegistrar.Backend.Payments.Due;
 
 public class DuePaymentsCalculator(IQueryable<Registration> registrations,
-                                   IDateTimeProvider dateTimeProvider)
+                                   IDateTimeProvider dateTimeProvider,
+                                   DuePaymentConfiguration duePaymentConfiguration)
     : ReadModelCalculator<IEnumerable<DuePaymentItem>>
 {
-    public const int DefaultPaymentGracePeriod = 6;
-
     public static readonly ImmutableHashSet<MailType?> MailTypes_Accepted =
         new HashSet<MailType?> { MailType.PartnerRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted }.ToImmutableHashSet();
 
@@ -30,7 +29,7 @@ public class DuePaymentsCalculator(IQueryable<Registration> registrations,
     public override async Task<IEnumerable<DuePaymentItem>> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
     {
         var now = dateTimeProvider.Now;
-        var reminderDueFrom = now.AddDays(-DefaultPaymentGracePeriod);
+        var reminderDueFrom = now.AddDays(-duePaymentConfiguration.PaymentGracePeriod);
         var data = await registrations.Where(reg => reg.RegistrationForm!.EventId == eventId
                                                  && reg.State == RegistrationState.Received
                                                  && reg.IsOnWaitingList != true

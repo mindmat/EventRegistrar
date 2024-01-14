@@ -20,6 +20,7 @@ public class RegistrationDisplayItem
     public Guid? PartnerId { get; set; }
     public string? PartnerOriginal { get; set; }
     public string? PartnerName { get; set; }
+    public bool IsPartnerRegistration { get; set; }
     public string? PhoneNormalized { get; set; }
     public string? PhoneFormatted { get; internal set; }
     public decimal? Price { get; set; }
