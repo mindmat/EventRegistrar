@@ -1,3 +1,6 @@
 ﻿CLI:
 dotnet ef migrations add {name}
+dotnet ef migrations remove -f
+
 dotnet ef database update
+dotnet ef database update --connection

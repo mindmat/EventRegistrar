@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventRegistrar.Backend.Migrations
 {
     [DbContext(typeof(EventRegistratorDbContext))]
-    partial class EventRegistratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240114130425_WellDefinedRegistrable")]
+    partial class WellDefinedRegistrable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -2431,10 +2434,6 @@ namespace EventRegistrar.Backend.Migrations
                     b.Property<string>("Language")
                         .HasMaxLength(2)
                         .HasColumnType("nvarchar(2)");
-
-                    b.Property<string>("Location")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("PartnerNormalized")
                         .HasMaxLength(200)

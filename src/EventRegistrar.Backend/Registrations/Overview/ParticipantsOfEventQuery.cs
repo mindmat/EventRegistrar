@@ -26,6 +26,8 @@ public class Participant
     public string CoreSpots { get; set; } = null!;
     public string StateText { get; set; } = null!;
     public decimal AmountOutstanding { get; set; }
+    public bool IsVolunteer { get; set; }
+    public string? Location { get; set; }
 }
 
 public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrations,
@@ -64,10 +66,21 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                              .ToListAsync(cancellationToken);
 
         var registrations = await readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery), query.EventId, registrationIds.Select(reg => reg.Id), cancellationToken);
-        var registrableIds = await tracks.Where(trk => trk.IsCore && trk.CheckinListColumn == "Tracks")
-                                         //.WhereIf(!string.IsNullOrWhiteSpace(query.Tag), trk => trk.Tag == query.Tag)
+        var registrables = await tracks.Where(trk => trk.EventId == query.EventId)
+                                       .Select(trk => new
+                                                      {
+                                                          trk.Id,
+                                                          IsCoreTrack = trk.IsCore && trk.CheckinListColumn == "Tracks",
+                                                          IsVolunteer = trk.WellDefined == WellDefinedRegistrable.Volunteer
+                                                      })
+                                       .Where(trk => trk.IsCoreTrack || trk.IsVolunteer)
+                                       .ToListAsync(cancellationToken);
+        var registrableIds = registrables.Where(trk => trk.IsCoreTrack)
                                          .Select(trk => trk.Id)
-                                         .ToListAsync(cancellationToken);
+                                         .ToList();
+        var volunteerIds = registrables.Where(trk => trk.IsVolunteer)
+                                       .Select(trk => trk.Id)
+                                       .ToList();
         return registrations.Select(reg => new Participant
                                            {
                                                RegistrationId = reg.Id,
@@ -82,7 +95,9 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                                               .Where(spt => !spt.IsWaitingList && registrableIds.Contains(spt.RegistrableId))
                                                               .Select(spt => $"{spt.RegistrableName} {spt.RegistrableNameSecondary}")
                                                               .StringJoin(),
-                                               PricePackageAdmitted = GetPricePackageText(registrationIds.First(r => r.Id == reg.Id).PricePackageIds_Admitted, packages)
+                                               IsVolunteer = reg.Spots!.Any(spt => volunteerIds.Contains(spt.RegistrableId)),
+                                               PricePackageAdmitted = GetPricePackageText(registrationIds.First(r => r.Id == reg.Id).PricePackageIds_Admitted, packages),
+                                               Location = reg.Location
                                            })
                             .OrderBy(reg => reg.FirstName)
                             .ThenBy(reg => reg.LastName)

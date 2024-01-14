@@ -69,11 +69,11 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                 registration.PhoneNormalized = phoneNormalizer.NormalizePhone(registration.Phone);
                                 break;
                             }
-                        //case QuestionMappingType.Town:
-                        //    {
-                        //        registration.RespondentEmail = response.ResponseString;
-                        //        break;
-                        //    }
+                        case QuestionMappingType.Location:
+                            {
+                                registration.Location = response.ResponseString;
+                                break;
+                            }
                         case QuestionMappingType.Remarks:
                             {
                                 if (string.IsNullOrWhiteSpace(response.ResponseString))

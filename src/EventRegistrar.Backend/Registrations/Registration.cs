@@ -62,6 +62,7 @@ public class Registration : Entity
     public string? RespondentEmail { get; set; }
     public string? RespondentFirstName { get; set; }
     public string? RespondentLastName { get; set; }
+    public string? Location { get; set; }
     public string? SoldOutMessage { get; set; }
     public RegistrationState State { get; set; }
     public bool WillPayAtCheckin { get; set; }
@@ -115,6 +116,9 @@ public class RegistrationMap : EntityMap<Registration>
 
         builder.Property(reg => reg.RespondentLastName)
                .HasMaxLength(100);
+
+        builder.Property(reg => reg.Location)
+               .HasMaxLength(200);
 
         builder.Property(reg => reg.ExternalIdentifier)
                .HasMaxLength(100);

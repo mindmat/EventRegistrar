@@ -12,6 +12,7 @@ public class RegistrationDisplayItem
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
+    public string? Location { get; set; }
     public bool IsReduced { get; set; }
     public bool? IsWaitingList { get; set; }
     public string? Language { get; set; }

@@ -37,6 +37,14 @@ public class Registrable : Entity
     public string? CheckinListColumn { get; set; }
     public string? Tag { get; set; }
     public RegistrableType Type { get; set; }
+    public WellDefinedRegistrable? WellDefined { get; set; }
+}
+
+public enum WellDefinedRegistrable
+{
+    Volunteer = 1,
+    HostingOffer = 2,
+    HostingRequest = 3
 }
 
 public enum RegistrableType
