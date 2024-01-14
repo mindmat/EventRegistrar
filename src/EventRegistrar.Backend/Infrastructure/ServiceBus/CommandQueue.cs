@@ -16,7 +16,10 @@ public class CommandQueue(ServiceBusSender sender)
             return;
         }
 
-        await sender.SendMessagesAsync(_messages.Select(msg => new ServiceBusMessage(JsonConvert.SerializeObject(msg))));
+        foreach (var chunkOfMessages in _messages.Chunk(100))
+        {
+            await sender.SendMessagesAsync(chunkOfMessages.Select(msg => new ServiceBusMessage(JsonConvert.SerializeObject(msg))));
+        }
     }
 
     public void EnqueueCommand<T>(T command)
