@@ -27,7 +27,8 @@ public class SendReminderMailCommandHandler(ILogger logger,
                                                     {
                                                         Registration = reg,
                                                         StartPaymentPeriod = reg.Mails!
-                                                                                .Where(map => paymentConfiguration.MailTypes_Accepted.Contains(map.Mail!.Type!.Value))
+                                                                                .Where(map => map.Mail!.Discarded == false
+                                                                                           && paymentConfiguration.MailTypes_Accepted.Contains(map.Mail!.Type!.Value))
                                                                                 .Select(map => map.Mail)
                                                                                 .Max(mail => mail!.Created)
                                                     })
@@ -67,6 +68,7 @@ public class SendReminderMailCommandHandler(ILogger logger,
 
         var acceptedMail = await mailsToRegistrations.Where(map => map.RegistrationId == command.RegistrationId
                                                                 && map.Mail!.Type != null
+                                                                && map.Mail!.Discarded == false
                                                                 && paymentConfiguration.MailTypes_Accepted.Contains(map.Mail.Type.Value))
                                                      .Include(map => map.Mail)
                                                      .OrderByDescending(map => map.Mail!.Created)
