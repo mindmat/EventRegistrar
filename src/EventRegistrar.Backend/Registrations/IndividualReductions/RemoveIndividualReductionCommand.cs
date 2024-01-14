@@ -1,7 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Due;
-using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Registrations.IndividualReductions;
 

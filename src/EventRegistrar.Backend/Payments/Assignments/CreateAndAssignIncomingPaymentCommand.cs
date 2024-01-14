@@ -4,7 +4,6 @@ using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Files;
 using EventRegistrar.Backend.Registrations;
-using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Payments.Assignments;
 

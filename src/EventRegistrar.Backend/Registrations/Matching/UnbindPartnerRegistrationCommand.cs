@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Registrables;
-using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Registrations.Matching;
 

@@ -1,7 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Mailing.InvalidAddresses;
-using EventRegistrar.Backend.Registrations.ReadModels;
+using EventRegistrar.Backend.Registrations;
 
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

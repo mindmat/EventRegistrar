@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Registrations.ReadModels;
 using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations.Matching;

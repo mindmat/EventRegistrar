@@ -6,7 +6,6 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations.Price;
-using EventRegistrar.Backend.Registrations.ReadModels;
 using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations.Matching;

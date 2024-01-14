@@ -8,7 +8,6 @@ using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.WaitingList;
 using EventRegistrar.Backend.Registrations.Cancel;
-using EventRegistrar.Backend.Registrations.ReadModels;
 
 namespace EventRegistrar.Backend.Registrations.Price;
 

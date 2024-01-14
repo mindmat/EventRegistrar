@@ -8,7 +8,6 @@ using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Price;
-using EventRegistrar.Backend.Registrations.ReadModels;
 
 using Newtonsoft.Json;
 

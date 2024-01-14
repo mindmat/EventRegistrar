@@ -3,7 +3,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
-using EventRegistrar.Backend.Registrations.ReadModels;
+using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Mailing;
 
