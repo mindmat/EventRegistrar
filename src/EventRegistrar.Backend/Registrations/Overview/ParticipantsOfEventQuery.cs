@@ -93,7 +93,7 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                                IsOnWaitingList = reg.IsWaitingList == true,
                                                CoreSpots = reg.Spots!
                                                               .Where(spt => !spt.IsWaitingList && registrableIds.Contains(spt.RegistrableId))
-                                                              .Select(spt => $"{spt.RegistrableName} {spt.RegistrableNameSecondary}")
+                                                              .Select(spt => new[] { spt.RegistrableName, spt.RegistrableNameSecondary }.StringJoinNullable(" - "))
                                                               .StringJoin(),
                                                IsVolunteer = reg.Spots!.Any(spt => volunteerIds.Contains(spt.RegistrableId)),
                                                PricePackageAdmitted = GetPricePackageText(registrationIds.First(r => r.Id == reg.Id).PricePackageIds_Admitted, packages),
