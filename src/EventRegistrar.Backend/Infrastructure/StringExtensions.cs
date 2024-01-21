@@ -9,9 +9,12 @@ public static class StringExtensions
         return string.Join(separator, strings);
     }
 
-    public static string StringJoinNullable(this IEnumerable<string?> strings, string separator = ", ")
+    public static string? StringJoinNullable(this IEnumerable<string?> strings, string separator = ", ")
     {
-        return string.Join(separator, strings.Where(s => !string.IsNullOrWhiteSpace(s)));
+        var joined = string.Join(separator, strings.Where(s => !string.IsNullOrWhiteSpace(s)));
+        return string.IsNullOrWhiteSpace(joined)
+                   ? null
+                   : joined;
     }
 
     public static decimal? TryToDecimal(this string? text)

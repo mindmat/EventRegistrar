@@ -140,9 +140,16 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                                                  .Sum();
         var clampedReduction = Math.Clamp(totalReduction, 0, priceNotReduced);
         var priceAdmittedAndReduced = priceNotReduced - clampedReduction;
+        var reductionText = Resources.Reduction;
+        var reductionReasons = individualReductions.Select(red => red.Reason).StringJoinNullable();
+        if (reductionReasons != null)
+        {
+            reductionText = $"{Resources.Reduction}: {reductionReasons}";
+        }
+
         return (priceAdmittedAndReduced, new MatchingPackageResult(null,
-                                                                   Resources.Reduction,
-                                                                   0m,
+                                                                   reductionText,
+                                                                   -clampedReduction,
                                                                    0m,
                                                                    false,
                                                                    false,
