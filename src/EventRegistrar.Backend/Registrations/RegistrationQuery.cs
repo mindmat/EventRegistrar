@@ -47,7 +47,7 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                         {
                                                             Id = reg.Id,
                                                             ReadableId = reg.ReadableIdentifier,
-                                                            IsWaitingList = reg.IsOnWaitingList != true,
+                                                            IsWaitingList = reg.IsOnWaitingList != false,
                                                             Price = reg.Price_AdmittedAndReduced,
                                                             Status = reg.State,
                                                             Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null

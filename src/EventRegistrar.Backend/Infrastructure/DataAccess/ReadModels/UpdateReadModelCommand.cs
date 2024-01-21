@@ -9,7 +9,7 @@ public class UpdateReadModelCommand : IRequest
     public Guid EventId { get; set; }
     public string QueryName { get; set; } = null!;
     public Guid? RowId { get; set; }
-    public DateTimeOffset DirtyMoment { get; set; }
+    public DateTimeOffset? DirtyMoment { get; set; }
 }
 
 public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> calculators,
