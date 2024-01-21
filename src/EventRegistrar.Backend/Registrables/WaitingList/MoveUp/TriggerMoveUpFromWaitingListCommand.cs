@@ -221,7 +221,8 @@ public class TriggerMoveUpFromWaitingListCommandHandler(IQueryable<Registrable> 
                          });
     }
 
-    private async Task PromoteSpotFromWaitingList(Seat spot, ICollection<Seat>? waitingList = null)
+    private async Task PromoteSpotFromWaitingList(Seat spot,
+                                                  ICollection<Seat>? waitingList = null)
     {
         var registrationId = spot.RegistrationId ?? spot.RegistrationId_Follower;
         if (registrationId == null)

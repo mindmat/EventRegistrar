@@ -72,6 +72,11 @@ public class PossibleMailTypesQueryHandler(IQueryable<BulkMailTemplate> mailTemp
             yield return MailType.SoldOut;
         }
 
+        if (registration.IsWaitingList == true || isInSetupPhase)
+        {
+            yield return MailType.OptionsForRegistrationsOnWaitingList;
+        }
+
         var isPartnerRegistration = registration.IsPartnerRegistration;
         if (mailConfiguration.PartnerRegistrationPossible && (isPartnerRegistration || isInSetupPhase))
         {
@@ -115,7 +120,6 @@ public class PossibleMailTypesQueryHandler(IQueryable<BulkMailTemplate> mailTemp
             if (registration.IsWaitingList == true || isInSetupPhase)
             {
                 yield return MailType.SingleRegistrationOnWaitingList;
-                yield return MailType.OptionsForRegistrationsOnWaitingList;
             }
 
             if (registration.Status == RegistrationState.Paid || isInSetupPhase)
