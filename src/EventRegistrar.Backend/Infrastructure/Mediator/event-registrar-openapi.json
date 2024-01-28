@@ -5233,6 +5233,7 @@
           "LastName",
           "EMail",
           "Phone",
+          "Location",
           "Remarks",
           "Iban",
           "Partner",
@@ -5248,6 +5249,7 @@
           2,
           3,
           4,
+          5,
           6,
           7,
           10,
@@ -7626,6 +7628,13 @@
           "amountOutstanding": {
             "type": "number",
             "format": "decimal"
+          },
+          "isVolunteer": {
+            "type": "boolean"
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -9664,6 +9673,10 @@
             "type": "string",
             "nullable": true
           },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
           "isReduced": {
             "type": "boolean"
           },
@@ -9691,6 +9704,9 @@
           "partnerName": {
             "type": "string",
             "nullable": true
+          },
+          "isPartnerRegistration": {
+            "type": "boolean"
           },
           "phoneNormalized": {
             "type": "string",
@@ -11176,7 +11192,8 @@
           },
           "dirtyMoment": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           }
         }
       },
@@ -11278,6 +11295,9 @@
           "registrationId": {
             "type": "string",
             "format": "guid"
+          },
+          "willPayAtCheckin": {
+            "type": "boolean"
           }
         }
       }

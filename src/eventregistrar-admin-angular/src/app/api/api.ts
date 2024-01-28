@@ -8130,6 +8130,7 @@ export enum QuestionMappingType {
     LastName = 2,
     EMail = 3,
     Phone = 4,
+    Location = 5,
     Remarks = 6,
     Iban = 7,
     Partner = 10,
@@ -8921,6 +8922,8 @@ export interface Participant {
     coreSpots?: string;
     stateText?: string;
     amountOutstanding?: number;
+    isVolunteer?: boolean;
+    location?: string | null;
 }
 
 export interface ParticipantsOfEventQuery {
@@ -9553,6 +9556,7 @@ export interface RegistrationDisplayItem {
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;
+    location?: string | null;
     isReduced?: boolean;
     isWaitingList?: boolean | null;
     language?: string | null;
@@ -9560,6 +9564,7 @@ export interface RegistrationDisplayItem {
     partnerId?: string | null;
     partnerOriginal?: string | null;
     partnerName?: string | null;
+    isPartnerRegistration?: boolean;
     phoneNormalized?: string | null;
     phoneFormatted?: string | null;
     price?: number | null;
@@ -10021,7 +10026,7 @@ export interface UpdateReadModelCommand {
     eventId?: string;
     queryName?: string;
     rowId?: string | null;
-    dirtyMoment?: Date;
+    dirtyMoment?: Date | null;
 }
 
 export interface UpdateUserInfoCommand {
@@ -10061,6 +10066,7 @@ export interface UsersOfEventQuery {
 export interface WillPayAtCheckinCommand {
     eventId?: string;
     registrationId?: string;
+    willPayAtCheckin?: boolean;
 }
 
 export interface FileResponse {

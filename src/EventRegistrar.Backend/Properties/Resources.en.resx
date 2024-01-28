@@ -1080,6 +1080,9 @@
   <data name="SetupEvent" xml:space="preserve">
     <value>Setup event</value>
   </data>
+  <data name="SetWillNotPayAtCheckin" xml:space="preserve">
+    <value>Will not pay at check in</value>
+  </data>
   <data name="SetWillPayAtCheckin" xml:space="preserve">
     <value>Pays at check in</value>
   </data>

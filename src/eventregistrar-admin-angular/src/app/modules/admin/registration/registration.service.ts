@@ -92,9 +92,9 @@ export class RegistrationService
       .subscribe();
   }
 
-  setWillPayAtCheckin(registrationId: string): Subscription
+  setWillPayAtCheckin(registrationId: string, willPayAtCheckin: boolean): Subscription
   {
-    return this.api.willPayAtCheckin_Command({ eventId: this.eventService.selectedId, registrationId })
+    return this.api.willPayAtCheckin_Command({ eventId: this.eventService.selectedId, registrationId, willPayAtCheckin })
       .subscribe();
   }
 

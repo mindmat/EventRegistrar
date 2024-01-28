@@ -228,9 +228,9 @@ export class RegistrationComponent implements OnInit
     this.registrationService.unbindPartnerRegistrations(this.registration.id);
   }
 
-  setWillPayAtCheckin(): void
+  setWillPayAtCheckin(willPayAtCheckin: boolean): void
   {
-    this.registrationService.setWillPayAtCheckin(this.registration.id);
+    this.registrationService.setWillPayAtCheckin(this.registration.id, willPayAtCheckin);
   }
 
 
