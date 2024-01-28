@@ -13,12 +13,13 @@ using EventRegistrar.Backend.Registrations.Price;
 
 namespace EventRegistrar.Backend.Mailing.Compose;
 
-public class MailComposer(IQueryable<Registration> registrations,
-                          ILogger log,
-                          PaidAmountSummarizer paidAmountSummarizer,
-                          DuePaymentConfiguration duePaymentConfiguration,
-                          PriceCalculator priceCalculator,
-                          QrBillConfiguration qrBillConfiguration)
+public class MailComposer(
+    IQueryable<Registration> registrations,
+    ILogger log,
+    PaidAmountSummarizer paidAmountSummarizer,
+    DuePaymentConfiguration duePaymentConfiguration,
+    PriceCalculator priceCalculator,
+    QrBillConfiguration qrBillConfiguration)
 {
     private const string DateFormat = "dd.MM.yy";
     private const string PrefixFollower = "FOLLOWER";
@@ -228,53 +229,60 @@ public class MailComposer(IQueryable<Registration> registrations,
 
     private async Task<string?> GenerateQrCode(Registration registration)
     {
-        var unpaidAmount = await GetUnpaidAmount(registration, null);
-        var bill = new Bill
-                   {
-                       // creditor data
-                       Account = qrBillConfiguration.Iban,
-                       Creditor = new Address
-                                  {
-                                      Name = qrBillConfiguration.AccountHolderName,
-                                      Street = qrBillConfiguration.AccountHolderStreet,
-                                      HouseNo = qrBillConfiguration.AccountHolderHouseNo,
-                                      PostalCode = qrBillConfiguration.AccountHolderPostalCode,
-                                      Town = qrBillConfiguration.AccountHolderTown,
-                                      CountryCode = qrBillConfiguration.AccountHolderCountryCode
-                                  },
+        try
+        {
+            var unpaidAmount = await GetUnpaidAmount(registration, null);
+            var bill = new Bill
+                       {
+                           // creditor data
+                           Account = qrBillConfiguration.Iban,
+                           Creditor = new Address
+                                      {
+                                          Name = qrBillConfiguration.AccountHolderName,
+                                          Street = qrBillConfiguration.AccountHolderStreet,
+                                          HouseNo = qrBillConfiguration.AccountHolderHouseNo,
+                                          PostalCode = qrBillConfiguration.AccountHolderPostalCode,
+                                          Town = qrBillConfiguration.AccountHolderTown,
+                                          CountryCode = qrBillConfiguration.AccountHolderCountryCode
+                                      },
 
-                       // payment data
-                       Amount = unpaidAmount,
-                       Currency = "CHF",
+                           // payment data
+                           Amount = unpaidAmount,
+                           Currency = "CHF",
 
-                       // debtor data
-                       Debtor = new Address
-                                {
-                                    Name = $"{registration.RespondentFirstName} {registration.RespondentLastName}",
-                                    PostalCode = "3000",
-                                    Town = "Bern",
-                                    CountryCode = "CH"
-                                },
+                           // debtor data
+                           Debtor = new Address
+                                    {
+                                        Name = $"{registration.RespondentFirstName} {registration.RespondentLastName}",
+                                        PostalCode = "3000",
+                                        Town = "Bern",
+                                        CountryCode = "CH"
+                                    },
 
-                       // more payment data
-                       UnstructuredMessage = registration.ReadableIdentifier,
-                       //Reference = "RF19 2320 QF02 T323 4UI2 34",
+                           // more payment data
+                           UnstructuredMessage = registration.ReadableIdentifier,
+                           //Reference = "RF19 2320 QF02 T323 4UI2 34",
 
-                       // output format
-                       Format = new BillFormat
-                                {
-                                    Language = Language.DE,
-                                    GraphicsFormat = GraphicsFormat.PNG,
-                                    OutputSize = OutputSize.QrCodeOnly
-                                }
-                   };
+                           // output format
+                           Format = new BillFormat
+                                    {
+                                        Language = Language.DE,
+                                        GraphicsFormat = GraphicsFormat.PNG,
+                                        OutputSize = OutputSize.QrCodeOnly
+                                    }
+                       };
 
-        // Generate QR bill
-        var png = QRBill.Generate(bill);
+            // Generate QR bill
+            var png = QRBill.Generate(bill);
 
-        // Convert byte[] to Base64 String
-        var pngBase64 = Convert.ToBase64String(png);
-        return $"""<img alt="QR-Code" style="width: 200px; height: 200px" src="data:image/png;base64,{pngBase64}" />""";
+            // Convert byte[] to Base64 String
+            var pngBase64 = Convert.ToBase64String(png);
+            return $"""<img alt="QR-Code" style="width: 200px; height: 200px" src="data:image/png;base64,{pngBase64}" />""";
+        }
+        catch (Exception ex)
+        {
+            return $"Fehler beim Erstellen des QR-Codes: {ex.Message}";
+        }
     }
 
     private static (string? prefix, string? key) GetPrefix(string key)

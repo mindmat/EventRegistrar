@@ -51,6 +51,7 @@
     <PackageReference Include="SimpleInjector" Version="5.4.2" />
     <PackageReference Include="SimpleInjector.Integration.AspNetCore" Version="5.5.0" />
     <PackageReference Include="SimpleInjector.Integration.AspNetCore.Mvc" Version="5.5.0" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.7" />
     <PackageReference Include="SSH.NET" Version="2020.0.2" />
     <PackageReference Include="Twilio" Version="5.81.2" />
   </ItemGroup>
