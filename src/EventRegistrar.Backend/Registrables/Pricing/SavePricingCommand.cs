@@ -1,4 +1,6 @@
-﻿namespace EventRegistrar.Backend.Registrables.Pricing;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+
+namespace EventRegistrar.Backend.Registrables.Pricing;
 
 public class SavePricingCommand : IRequest, IEventBoundRequest
 {
@@ -6,9 +8,11 @@ public class SavePricingCommand : IRequest, IEventBoundRequest
     public IEnumerable<PricePackageDto>? Packages { get; set; }
 }
 
-public class SavePricingCommandHandler(IRepository<PricePackage> packages,
-                                       IRepository<PricePackagePart> parts,
-                                       IRepository<RegistrableInPricePackagePart> registrableInParts)
+public class SavePricingCommandHandler(
+    IRepository<PricePackage> packages,
+    IRepository<PricePackagePart> parts,
+    IRepository<RegistrableInPricePackagePart> registrableInParts,
+    ChangeTrigger changeTrigger)
     : IRequestHandler<SavePricingCommand>
 {
     public async Task Handle(SavePricingCommand command, CancellationToken cancellationToken)
@@ -19,10 +23,10 @@ public class SavePricingCommandHandler(IRepository<PricePackage> packages,
             return;
         }
 
-        var existingPackages = await packages.Where(frm => frm.EventId == command.EventId)
+        var existingPackages = await packages.AsTracking()
+                                             .Where(frm => frm.EventId == command.EventId)
                                              .Include(ppg => ppg.Parts!)
                                              .ThenInclude(ppp => ppp.Registrables)
-                                             .AsTracking()
                                              .ToListAsync(cancellationToken);
 
         // remove deleted multi mappings
@@ -48,6 +52,14 @@ public class SavePricingCommandHandler(IRepository<PricePackage> packages,
             package.AllowAsManualFallback = packageToSave.AllowAsManualFallback;
             package.IsCorePackage = packageToSave.IsCorePackage;
             package.ShowInOverview = packageToSave.ShowInOverview;
+
+            var partIdsNew = packageToSave.Parts!
+                                          .Select(prt => prt.Id)
+                                          .ToList();
+            foreach (var removedPart in package.Parts!.Where(prt => !partIdsNew.Contains(prt.Id)).ToList())
+            {
+                package.Parts!.Remove(removedPart);
+            }
 
             foreach (var partToSave in packageToSave.Parts ?? Enumerable.Empty<PricePackagePartDto>())
             {
@@ -89,5 +101,7 @@ public class SavePricingCommandHandler(IRepository<PricePackage> packages,
                 }
             }
         }
+
+        changeTrigger.QueryChanged<PricingQuery>(command.EventId);
     }
 }
