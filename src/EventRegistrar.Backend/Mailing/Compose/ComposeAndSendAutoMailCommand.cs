@@ -23,18 +23,19 @@ public class ComposeAndSendAutoMailCommand : IRequest, IEventBoundRequest
     public object? Data { get; set; }
 }
 
-public class ComposeAndSendAutoMailCommandHandler(IQueryable<AutoMailTemplate> templates,
-                                                  IQueryable<Registration> registrations,
-                                                  IRepository<Mail> mails,
-                                                  IRepository<MailToRegistration> mailsToRegistrations,
-                                                  MailConfiguration configuration,
-                                                  MailComposer mailComposer,
-                                                  CommandQueue commandQueue,
-                                                  IDateTimeProvider dateTimeProvider,
-                                                  ILogger log,
-                                                  ChangeTrigger changeTrigger,
-                                                  DirtyTagger dirtyTagger,
-                                                  IEventBus eventBus)
+public class ComposeAndSendAutoMailCommandHandler(
+    IQueryable<AutoMailTemplate> templates,
+    IQueryable<Registration> registrations,
+    IRepository<Mail> mails,
+    IRepository<MailToRegistration> mailsToRegistrations,
+    MailConfiguration configuration,
+    MailComposer mailComposer,
+    CommandQueue commandQueue,
+    IDateTimeProvider dateTimeProvider,
+    ILogger log,
+    ChangeTrigger changeTrigger,
+    DirtyTagger dirtyTagger,
+    IEventBus eventBus)
     : IRequestHandler<ComposeAndSendAutoMailCommand>
 {
     public const string FallbackLanguage = Language.English;
@@ -77,7 +78,10 @@ public class ComposeAndSendAutoMailCommandHandler(IQueryable<AutoMailTemplate> t
         var templatesOfEvent = await templates.Where(mtp => mtp.EventId == command.EventId)
                                               .Where(mtp => mtp.Type == command.MailType)
                                               .ToListAsync(cancellationToken);
-        var language = registration.Language ?? configuration.FallbackLanguage ?? FallbackLanguage;
+        var language = registration.Language
+                    ?? configuration.FallbackLanguage
+                    ?? configuration.AvailableLanguages.FirstOrDefault()
+                    ?? FallbackLanguage;
         var template = templatesOfEvent.FirstOrDefault(mtp => mtp.Language == language)
                     ?? templatesOfEvent.FirstOrDefault(mtp => mtp.Language == FallbackLanguage)
                     ?? templatesOfEvent.FirstOrDefault();
