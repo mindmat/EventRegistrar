@@ -41,7 +41,7 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
     {
         var allowedStates = query.States?.Any() == true
                                 ? query.States
-                                : new[] { RegistrationState.Received, RegistrationState.Paid };
+                                : [RegistrationState.Received, RegistrationState.Paid];
         var searchParts = query.SearchString?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
         var packages = await pricePackages.Where(pkg => pkg.EventId == query.EventId)
                                           .ToDictionaryAsync(pkg => pkg.Id, pkg => pkg.Name, cancellationToken);
@@ -106,9 +106,6 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
 
     private static string? GetPricePackageText(IEnumerable<Guid>? pricePackageIds, IReadOnlyDictionary<Guid, string> packages)
     {
-        var pricePackageId = pricePackageIds?.FirstOrDefault();
-        return pricePackageId != null && packages.TryGetValue(pricePackageId.Value, out var packageText)
-                   ? packageText
-                   : null;
+        return pricePackageIds?.Select(packages.GetValueOrDefault).StringJoinNullable();
     }
 }
