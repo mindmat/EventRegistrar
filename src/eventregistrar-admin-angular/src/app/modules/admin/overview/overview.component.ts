@@ -127,8 +127,12 @@ export class OverviewComponent implements OnInit, OnDestroy
                 // Filter by search query
                 if (query !== '')
                 {
-                    this.filteredSingleRegistrables = this.filteredSingleRegistrables.filter(rbl => rbl.name.toLowerCase().includes(query.toLowerCase()) || rbl.nameSecondary?.toLowerCase().includes(query.toLowerCase()));
-                    this.filteredDoubleRegistrables = this.filteredDoubleRegistrables.filter(rbl => rbl.name.toLowerCase().includes(query.toLowerCase()) || rbl.nameSecondary?.toLowerCase().includes(query.toLowerCase()));
+                    this.filteredSingleRegistrables = this.filteredSingleRegistrables.filter(
+                        rbl => rbl.name.toLowerCase().includes(query.toLowerCase())
+                            || rbl.nameSecondary?.toLowerCase().includes(query.toLowerCase()));
+                    this.filteredDoubleRegistrables = this.filteredDoubleRegistrables.filter(
+                        rbl => rbl.name.toLowerCase().includes(query.toLowerCase())
+                            || rbl.nameSecondary?.toLowerCase().includes(query.toLowerCase()));
                 }
 
                 // Filter by completed

@@ -348,9 +348,9 @@
                                         >
                                     </mat-icon>
 
-                                    <div class="flex flex-wrap">
+                                    <div class="flex flex-wrap gap-x-0.5 gap-y-1" [ngClass]="{'gap-x-0' : singleRegistrable.class.length + singleRegistrable.waitingList.length > 100}">
                                         <ng-container *ngFor="let spotState of singleRegistrable.class; let i=index;trackBy: trackByFn">
-                                            <div class="flex flex-col ml-0.5 w-1 pt-0.5 pb-0.5">
+                                            <div class="flex flex-col w-1" [ngClass]="{'w-0.5' : singleRegistrable.class.length > 200}">
                                                 <!-- Leader: available -->
                                                 <div class="h-4 bg-gray-200 rounded overflow-hidden" *ngIf="spotState === 1">
                                                 </div>
@@ -365,7 +365,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="flex ml-1 mr-0.5 mb-1 w-0.5 h-5 bg-gray-600 rounded overflow-hidden" *ngIf="singleRegistrable.spotsAvailable == i + 1"
+                                            <div class="flex ml-1 mr-0.5 mb-1 w-0.5 h-5 bg-gray-600 rounded overflow-hidden" *ngIf="singleRegistrable.spotsAvailable === i + 1"
                                                 [matTooltip]="'max: ' + singleRegistrable.spotsAvailable" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                             </div>
                                         </ng-container>
