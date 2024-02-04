@@ -2768,6 +2768,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Neu berechnen.
+        /// </summary>
+        internal static string Recalculate {
+            get {
+                return ResourceManager.GetString("Recalculate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zuletzt versendete Mails.
         /// </summary>
         internal static string RecentlySentMailsStats {

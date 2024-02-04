@@ -86,6 +86,7 @@
                             <button mat-menu-item *ngIf="registration.paid<registration.price&&registration.willPayAtCheckin" (click)="setWillPayAtCheckin(false)">
                                 {{ 'SetWillNotPayAtCheckin' | translate }}</button>
                             <button mat-menu-item *ngIf="registration.partnerId" (click)="unbindPartnerRegistrations()">{{ 'TransformToSingle' | translate }}</button>
+                            <button mat-menu-item (click)="recalculateReadModel()">{{ 'Recalculate' | translate }}</button>
                         </mat-menu>
                     </div>
                 </div>

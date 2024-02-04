@@ -912,6 +912,9 @@
   <data name="Reason" xml:space="preserve">
     <value>Reason</value>
   </data>
+  <data name="Recalculate" xml:space="preserve">
+    <value>Recalculate</value>
+  </data>
   <data name="RecentlySentMailsStats" xml:space="preserve">
     <value>Recently sent mails</value>
   </data>

@@ -103,4 +103,10 @@ export class RegistrationService
     return this.api.setManualFallbackToPricePackage_Command({ eventId: this.eventService.selectedId, registrationId, pricePackageIds })
       .subscribe();
   }
+
+  recalculateReadModel(registrationId: string): Subscription
+  {
+    return this.api.updateReadModel_Command({ eventId: this.eventService.selectedId, queryName: 'RegistrationQuery', rowId: registrationId })
+      .subscribe();
+  }
 }

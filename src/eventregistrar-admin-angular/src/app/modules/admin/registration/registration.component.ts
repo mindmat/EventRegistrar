@@ -256,4 +256,9 @@ export class RegistrationComponent implements OnInit
   {
     this.registrationService.setFallbackPackage(this.registration.id, null);
   }
+
+  recalculateReadModel(): void
+  {
+    this.registrationService.recalculateReadModel(this.registration.id);
+  }
 }

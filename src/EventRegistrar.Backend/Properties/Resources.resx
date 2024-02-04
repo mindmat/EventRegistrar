@@ -1015,6 +1015,9 @@
   <data name="Reason" xml:space="preserve">
     <value>Begründung</value>
   </data>
+  <data name="Recalculate" xml:space="preserve">
+    <value>Neu berechnen</value>
+  </data>
   <data name="RecentlySentMailsStats" xml:space="preserve">
     <value>Zuletzt versendete Mails</value>
   </data>
