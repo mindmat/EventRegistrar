@@ -80,7 +80,7 @@ public class SendMailCommandHandler(ILogger logger,
 
                 var bodyBuilder = new BodyBuilder { HtmlBody = mail.ContentHtml };
                 mailMessage.Body = bodyBuilder.ToMessageBody();
-                mailMessage.MessageId = mail.Id.ToString();
+                mailMessage.MessageId = $"{mail.Id}@eventregistrar.ch";
 
                 using var smtpClient = new SmtpClient();
                 await smtpClient.ConnectAsync(config.Host, config.Port.Value, true, cancellationToken);
