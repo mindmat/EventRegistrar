@@ -8162,6 +8162,7 @@ export enum MappingType {
     Language = 5,
     RoleLeader = 7,
     RoleFollower = 8,
+    CanSwitchRole = 9,
     HostingOffer = 21,
     HostingRequest = 31,
     HostingRequest_ShareOkWithPartner = 32,
@@ -8966,6 +8967,7 @@ export interface RegistrationDisplayInfo {
     lastName?: string | null;
     email?: string | null;
     state?: RegistrationState;
+    switched?: boolean;
 }
 
 export interface ParticipantsOfRegistrableQuery {
@@ -9578,12 +9580,19 @@ export interface RegistrationDisplayItem {
     willPayAtCheckin?: boolean;
     fallbackToPartyPass?: boolean | null;
     internalNotes?: string | null;
+    defaultRole?: Role | null;
+    canSwitchRole?: boolean;
     pricePackageIds_ManualFallback?: string[];
     spots?: SpotDisplayItem[] | null;
     payments?: AssignedPaymentDisplayItem[] | null;
     mails?: MailMetadata[] | null;
     importedMails?: MailMetadata[] | null;
     reductions?: IndividualReductionDisplayItem[] | null;
+}
+
+export enum Role {
+    Leader = 1,
+    Follower = 2,
 }
 
 export interface SpotDisplayItem {

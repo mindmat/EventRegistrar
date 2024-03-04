@@ -6,16 +6,14 @@ import { NavigatorService } from '../../navigator.service';
   selector: 'app-participant',
   templateUrl: './participant.component.html'
 })
-export class ParticipantComponent implements OnInit
-{
+export class ParticipantComponent implements OnInit {
 
   @Input() registration?: RegistrationDisplayInfo;
   @Input() placeholderPartner?: string;
 
   constructor(public navigator: NavigatorService) { }
 
-  ngOnInit(): void
-  {
+  ngOnInit(): void {
   }
 
 }
