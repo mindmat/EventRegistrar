@@ -32,7 +32,7 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                               .FirstOrDefaultAsync();
         if (form?.Questions == null)
         {
-            return Enumerable.Empty<Seat>();
+            return [];
         }
 
         var partnerRegistrableRequests = new List<PartnerRegistrableRequest>();
@@ -126,6 +126,11 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                                                       spots,
                                                                       partnerRegistrableRequests);
                         defaultRole ??= role;
+
+                        if (questionOptionMapping.Type == MappingType.CanSwitchRole)
+                        {
+                            registration.CanSwitchRole = true;
+                        }
                     }
                 }
             }
@@ -166,6 +171,8 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
 
             requestsWithoutRole.ForEach(rwr => rwr.Role = defaultRole);
         }
+
+        registration.DefaultRole = defaultRole;
 
         // now book partner spots
         foreach (var partnerRegistrableRequest in partnerRegistrableRequests)
@@ -222,8 +229,7 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
         registration.Price_AdmittedAndReduced = admittedAndReduced;
 
         registration.IsOnWaitingList = isOnWaitingList;
-        if (registration.IsOnWaitingList == false
-         && registration.AdmittedAt == null)
+        if (registration is { IsOnWaitingList: false, AdmittedAt: null })
         {
             registration.AdmittedAt = dateTimeProvider.Now;
         }

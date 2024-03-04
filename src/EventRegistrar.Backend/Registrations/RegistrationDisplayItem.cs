@@ -34,6 +34,9 @@ public class RegistrationDisplayItem
     public bool WillPayAtCheckin { get; set; }
     public bool? FallbackToPartyPass { get; set; }
     public string? InternalNotes { get; set; }
+    public Role? DefaultRole { get; set; }
+    public bool CanSwitchRole { get; set; }
+
     public IEnumerable<Guid> PricePackageIds_ManualFallback { get; set; } = null!;
 
     public IEnumerable<SpotDisplayItem>? Spots { get; set; }

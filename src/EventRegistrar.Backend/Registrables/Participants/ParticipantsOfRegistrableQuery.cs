@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Spots;
+﻿using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrables.Participants;
 
@@ -40,7 +41,8 @@ public class ParticipantsOfRegistrableQueryHandler(IQueryable<Registrable> regis
                                                                              Email = spot.Registration.RespondentEmail,
                                                                              State = spot.Registration.State,
                                                                              FirstName = spot.Registration.RespondentFirstName,
-                                                                             LastName = spot.Registration.RespondentLastName
+                                                                             LastName = spot.Registration.RespondentLastName,
+                                                                             Switched = spot.Registration.DefaultRole == Role.Follower
                                                                          },
                                                           Follower = spot.RegistrationId_Follower == null
                                                                          ? null
@@ -49,10 +51,9 @@ public class ParticipantsOfRegistrableQueryHandler(IQueryable<Registrable> regis
                                                                                Id = spot.Registration_Follower!.Id,
                                                                                Email = spot.Registration_Follower.RespondentEmail,
                                                                                State = spot.Registration_Follower.State,
-                                                                               FirstName = spot.Registration_Follower
-                                                                                               .RespondentFirstName,
-                                                                               LastName = spot.Registration_Follower
-                                                                                              .RespondentLastName
+                                                                               FirstName = spot.Registration_Follower.RespondentFirstName,
+                                                                               LastName = spot.Registration_Follower.RespondentLastName,
+                                                                               Switched = spot.Registration_Follower.DefaultRole == Role.Leader
                                                                            },
                                                           PlaceholderPartner = spot.IsPartnerSpot && (spot.RegistrationId == null || spot.RegistrationId_Follower == null)
                                                                                    ? spot.PartnerEmail

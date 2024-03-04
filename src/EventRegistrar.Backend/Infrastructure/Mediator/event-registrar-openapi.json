@@ -5307,6 +5307,7 @@
           "Language",
           "RoleLeader",
           "RoleFollower",
+          "CanSwitchRole",
           "HostingOffer",
           "HostingRequest",
           "HostingRequest_ShareOkWithPartner",
@@ -5321,6 +5322,7 @@
           5,
           7,
           8,
+          9,
           21,
           31,
           32,
@@ -7792,6 +7794,9 @@
           },
           "state": {
             "$ref": "#/components/schemas/RegistrationState"
+          },
+          "switched": {
+            "type": "boolean"
           }
         }
       },
@@ -9758,6 +9763,17 @@
             "type": "string",
             "nullable": true
           },
+          "defaultRole": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Role"
+              }
+            ]
+          },
+          "canSwitchRole": {
+            "type": "boolean"
+          },
           "pricePackageIds_ManualFallback": {
             "type": "array",
             "items": {
@@ -9801,6 +9817,18 @@
             }
           }
         }
+      },
+      "Role": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Leader",
+          "Follower"
+        ],
+        "enum": [
+          1,
+          2
+        ]
       },
       "SpotDisplayItem": {
         "type": "object",

@@ -67,6 +67,8 @@ public class Registration : Entity
     public RegistrationState State { get; set; }
     public bool WillPayAtCheckin { get; set; }
     public string? InternalNotes { get; set; }
+    public Role? DefaultRole { get; set; }
+    public bool CanSwitchRole { get; set; }
 
     [Obsolete]
     public Guid? PricePackageId_ManualFallback { get; set; }

@@ -2111,6 +2111,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kann switchen.
+        /// </summary>
+        internal static string MappingType_CanSwitchRole {
+            get {
+                return ResourceManager.GetString("MappingType_CanSwitchRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bietet Hosting.
         /// </summary>
         internal static string MappingType_HostingOffer {

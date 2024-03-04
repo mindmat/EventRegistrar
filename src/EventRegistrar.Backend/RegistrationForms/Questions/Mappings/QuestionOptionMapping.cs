@@ -39,6 +39,7 @@ public enum MappingType
     Language = 5,
     RoleLeader = 7,
     RoleFollower = 8,
+    CanSwitchRole = 9,
     HostingOffer = 21,
     HostingRequest = 31,
     HostingRequest_ShareOkWithPartner = 32,

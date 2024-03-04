@@ -88,6 +88,12 @@ public class AvailableQuestionOptionMappingsQueryHandler(IQueryable<Registrable>
                        Name = $"{Properties.Resources.Role}: {Properties.Resources.Follower}"
                    });
 
+        result.Add(new AvailableQuestionOptionMapping
+                   {
+                       Type = MappingType.CanSwitchRole,
+                       Name = Properties.Resources.MappingType_CanSwitchRole
+                   });
+
         // Hosting
         result.Add(new AvailableQuestionOptionMapping
                    {

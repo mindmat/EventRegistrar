@@ -699,6 +699,9 @@
   <data name="MappingDirection_TrackToForm" xml:space="preserve">
     <value>Tracks -&gt; Form</value>
   </data>
+  <data name="MappingType_CanSwitchRole" xml:space="preserve">
+    <value>Can switch</value>
+  </data>
   <data name="MappingType_HostingOffer" xml:space="preserve">
     <value>Hosting Offer</value>
   </data>

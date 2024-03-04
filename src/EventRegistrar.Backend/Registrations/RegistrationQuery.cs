@@ -76,6 +76,8 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                               ? null
                                                                               : $"{reg.Registration_Partner!.RespondentFirstName} {reg.Registration_Partner.RespondentLastName}",
                                                             PartnerId = reg.RegistrationId_Partner,
+                                                            DefaultRole = reg.DefaultRole,
+                                                            CanSwitchRole = reg.CanSwitchRole,
                                                             WillPayAtCheckin = reg.WillPayAtCheckin,
                                                             InternalNotes = reg.InternalNotes,
                                                             PricePackageIds_ManualFallback = reg.PricePackageIds_ManualFallback ?? Enumerable.Empty<Guid>(),
@@ -230,7 +232,7 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned(IDateTimeProvider dat
 
     public IEnumerable<IRequest> Translate(OutgoingPaymentAssigned e)
     {
-        if (e.EventId != null && e.RegistrationId != null)
+        if (e is { EventId: not null, RegistrationId: not null })
         {
             yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId!.Value);
         }
@@ -238,7 +240,7 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned(IDateTimeProvider dat
 
     public IEnumerable<IRequest> Translate(OutgoingPaymentUnassigned e)
     {
-        if (e.EventId != null && e.RegistrationId != null)
+        if (e is { EventId: not null, RegistrationId: not null })
         {
             yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId!.Value);
         }
@@ -246,7 +248,7 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned(IDateTimeProvider dat
 
     public IEnumerable<IRequest> Translate(IncomingPaymentUnassigned e)
     {
-        if (e.EventId != null && e.RegistrationId != null)
+        if (e is { EventId: not null, RegistrationId: not null })
         {
             yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId!.Value);
         }
@@ -254,7 +256,7 @@ public class UpdateRegistrationWhenOutgoingPaymentAssigned(IDateTimeProvider dat
 
     public IEnumerable<IRequest> Translate(IncomingPaymentAssigned e)
     {
-        if (e.EventId != null && e.RegistrationId != null)
+        if (e is { EventId: not null, RegistrationId: not null })
         {
             yield return CreateUpdateCommand(e.EventId!.Value, e.RegistrationId!.Value);
         }
