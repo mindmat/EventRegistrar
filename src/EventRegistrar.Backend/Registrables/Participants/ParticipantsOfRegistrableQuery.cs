@@ -42,7 +42,11 @@ public class ParticipantsOfRegistrableQueryHandler(IQueryable<Registrable> regis
                                                                              State = spot.Registration.State,
                                                                              FirstName = spot.Registration.RespondentFirstName,
                                                                              LastName = spot.Registration.RespondentLastName,
-                                                                             Switched = spot.Registration.DefaultRole == Role.Follower
+                                                                             Switched = spot.Registrable!.Type == RegistrableType.Double
+                                                                                     && spot.Registration.DefaultRole == Role.Follower,
+                                                                             CanSwitch = spot.Registrable!.Type == RegistrableType.Double
+                                                                                      && spot.Registration.CanSwitchRole
+                                                                                      && spot.Registration.DefaultRole == Role.Leader
                                                                          },
                                                           Follower = spot.RegistrationId_Follower == null
                                                                          ? null
@@ -53,7 +57,9 @@ public class ParticipantsOfRegistrableQueryHandler(IQueryable<Registrable> regis
                                                                                State = spot.Registration_Follower.State,
                                                                                FirstName = spot.Registration_Follower.RespondentFirstName,
                                                                                LastName = spot.Registration_Follower.RespondentLastName,
-                                                                               Switched = spot.Registration_Follower.DefaultRole == Role.Leader
+                                                                               Switched = spot.Registration_Follower.DefaultRole == Role.Leader,
+                                                                               CanSwitch = spot.Registration_Follower.CanSwitchRole
+                                                                                        && spot.Registration_Follower.DefaultRole == Role.Follower
                                                                            },
                                                           PlaceholderPartner = spot.IsPartnerSpot && (spot.RegistrationId == null || spot.RegistrationId_Follower == null)
                                                                                    ? spot.PartnerEmail

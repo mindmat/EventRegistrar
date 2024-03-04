@@ -1,6 +1,7 @@
 <div *ngIf="registration"
     class="flex flex-col w-72 h-16 items-start mb-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card hover:underline"
-    [ngClass]="{'bg-gray-400': registration.switched}">
+    [ngClass]="{'bg-amber-200': registration.switched,
+                'border-amber-200 border-4': registration.canSwitch}">
     <!-- Cover image -->
     <!-- <ng-container *ngIf="card.coverImage">
                                             <div class="-mx-5 -mt-5 mb-2">

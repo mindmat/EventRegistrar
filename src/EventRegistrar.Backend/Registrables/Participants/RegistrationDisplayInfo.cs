@@ -10,4 +10,5 @@ public class RegistrationDisplayInfo
     public string? Email { get; set; }
     public RegistrationState State { get; set; }
     public bool Switched { get; set; }
+    public bool CanSwitch { get; set; }
 }

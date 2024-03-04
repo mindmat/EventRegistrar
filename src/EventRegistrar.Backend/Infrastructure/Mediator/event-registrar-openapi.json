@@ -7797,6 +7797,9 @@
           },
           "switched": {
             "type": "boolean"
+          },
+          "canSwitch": {
+            "type": "boolean"
           }
         }
       },

@@ -8968,6 +8968,7 @@ export interface RegistrationDisplayInfo {
     email?: string | null;
     state?: RegistrationState;
     switched?: boolean;
+    canSwitch?: boolean;
 }
 
 export interface ParticipantsOfRegistrableQuery {
