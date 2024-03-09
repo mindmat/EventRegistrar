@@ -398,8 +398,8 @@ public class MailComposer(
 
             // Package content
             foreach (var matchingPackageSpot in package.Spots
-                                                       .Where(spt => spt is { SortKey: not null, PriceAdjustment: null or 0m })
-                                                       .OrderBy(spt => spt.SortKey))
+                                                       .Where(spt => spt is { PriceAdjustment: null or 0m })
+                                                       .OrderBy(spt => spt.SortKey ?? int.MaxValue))
             {
                 result.AppendLine("<tr>");
                 result.AppendLine($"<td>- {matchingPackageSpot.Name}</td>");

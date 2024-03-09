@@ -43,7 +43,8 @@ public class SavePricingCommandHandler(
                        ?? packages.InsertObjectTree(new PricePackage
                                                     {
                                                         Id = packageToSave.Id,
-                                                        EventId = command.EventId
+                                                        EventId = command.EventId,
+                                                        Parts = []
                                                     });
 
             package.Name = packageToSave.Name ?? string.Empty;
@@ -61,7 +62,7 @@ public class SavePricingCommandHandler(
                 package.Parts!.Remove(removedPart);
             }
 
-            foreach (var partToSave in packageToSave.Parts ?? Enumerable.Empty<PricePackagePartDto>())
+            foreach (var partToSave in packageToSave.Parts ?? [])
             {
                 var part = package.Parts?.FirstOrDefault(ppp => ppp.Id == partToSave.Id)
                         ?? parts.InsertObjectTree(new PricePackagePart
