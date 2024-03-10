@@ -1,37 +1,40 @@
 <div *ngIf="registration"
-    class="flex flex-col w-72 h-16 items-start mb-3 p-5 space-y-3 shadow rounded-lg overflow-hidden bg-card hover:underline"
+    class="flex flex-row w-72 h-16 items-start mb-3 p-5 shadow rounded-lg overflow-hidden bg-card hover:underline"
     [ngClass]="{'bg-amber-200': registration.switched,
                 'border-amber-200 border-4': registration.canSwitch}">
+
     <!-- Cover image -->
     <!-- <ng-container *ngIf="card.coverImage">
                                             <div class="-mx-5 -mt-5 mb-2">
                                                 <img class="w-full object-cover" [src]="card.coverImage">
                                             </div>
                                         </ng-container> -->
-    <!-- Title -->
-    <a class="text-lg font-medium leading-5" [routerLink]="navigator.getRegistrationUrl(registration.id)">{{
+
+    <!-- Name -->
+    <a class="text-lg font-medium" [routerLink]="navigator.getRegistrationUrl(registration.id)">{{
         registration.firstName }} {{ registration.lastName }}</a>
-    <!-- Labels -->
-    <!-- <ng-container *ngIf="card.labels.length">
-                                            <div>
-                                                <div class="flex flex-wrap -mx-1 -mb-2">
-                                                    <ng-container *ngFor="let label of card.labels; trackBy: trackByFn">
-                                                        <div class="mx-1 mb-2 py-0.5 px-3 rounded-full text-sm font-medium text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700">
-                                                            {{label.title}}
-                                                        </div>
-                                                    </ng-container>
-                                                </div>
-                                            </div>
-                                        </ng-container> -->
-    <!-- Due date -->
-    <!-- <ng-container *ngIf="card.dueDate">
-                                            <div class="flex items-center rounded text-sm font-medium leading-5 text-secondary" [ngClass]="{'text-red-600': isOverdue(card.dueDate)}">
-                                                <mat-icon class="icon-size-4 text-current" [svgIcon]="'heroicons_outline:clock'"></mat-icon>
-                                                <div class="ml-1">
-                                                    {{card.dueDate | date: 'longDate'}}
-                                                </div>
-                                            </div>
-                                        </ng-container> -->
+
+    <!-- context menu -->
+    <div *ngIf="registration.canSwitch && !registration.switched && !!role" class="flex items-center ml-auto">
+        <button mat-icon-button [matMenuTriggerFor]="participantMenu">
+            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+        </button>
+        <mat-menu #participantMenu="matMenu">
+            <button *ngIf="role===Role.Leader" mat-menu-item (click)="emitSwitchRole(registration.id, Role.Follower)">
+                <span class="flex items-center">
+                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_outline:switch_left'"></mat-icon>
+                    <span>{{ 'SwitchToFollower' | translate }}</span>
+                </span>
+            </button>
+            <button *ngIf="role===Role.Follower" mat-menu-item (click)="emitSwitchRole(registration.id, Role.Leader)">
+                <span class="flex items-center">
+                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_outline:switch_right'"></mat-icon>
+                    <span>{{ 'SwitchToLeader' | translate }}</span>
+                </span>
+            </button>
+        </mat-menu>
+    </div>
+
 </div>
 
 <!-- waiting for partner -->

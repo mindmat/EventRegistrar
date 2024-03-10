@@ -4183,6 +4183,31 @@
         }
       }
     },
+    "/api/SwitchRoleOfParticipantCommand": {
+      "post": {
+        "tags": [
+          "SwitchRoleOfParticipant"
+        ],
+        "operationId": "SwitchRoleOfParticipant_Command",
+        "requestBody": {
+          "x-name": "SwitchRoleOfParticipantCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwitchRoleOfParticipantCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/TranslationQuery": {
       "post": {
         "tags": [
@@ -10839,6 +10864,27 @@
           "registrationId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "SwitchRoleOfParticipantCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrableId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "toRole": {
+            "$ref": "#/components/schemas/Role"
           }
         }
       },

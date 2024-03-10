@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ParticipantsService } from '../participants.service';
 import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
-import { RegistrableDisplayInfo, RegistrationDisplayInfo, SpotDisplayInfo } from 'app/api/api';
+import { RegistrableDisplayInfo, RegistrationDisplayInfo, Role, SpotDisplayInfo } from 'app/api/api';
 
 @Component({
   selector: 'app-participants-double',
@@ -14,6 +14,7 @@ export class ParticipantsDoubleComponent implements OnInit
   dragOverParticipants: boolean;
   canDefrag: boolean;
   private unsubscribeAll: Subject<any> = new Subject<any>();
+  Role = Role;
 
   constructor(private service: ParticipantsService,
     private changeDetectorRef: ChangeDetectorRef) { }
@@ -46,6 +47,11 @@ export class ParticipantsDoubleComponent implements OnInit
     {
       this.service.triggerMoveUp(this.registrable.id);
     }
+  }
+
+  switchRole(registrationId: string, toRole: Role)
+  {
+    this.service.switchRole(this.registrable.id, registrationId, toRole);
   }
 
   drop(dragData: SpotDisplayInfo | RegistrationDisplayInfo): void

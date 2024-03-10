@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, RegistrableDisplayInfo } from 'app/api/api';
+import { Api, RegistrableDisplayInfo, Role } from 'app/api/api';
 import { Observable, Subscription } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { FetchService } from '../infrastructure/fetchService';
@@ -30,6 +30,12 @@ export class ParticipantsService extends FetchService<RegistrableDisplayInfo>
   triggerMoveUp(registrableId: string): Subscription
   {
     return this.api.triggerMoveUpFromWaitingList_Command({ eventId: this.eventService.selectedId, registrableId })
+      .subscribe();
+  }
+
+  switchRole(registrableId: string, registrationId: string, toRole: Role): Subscription
+  {
+    return this.api.switchRoleOfParticipant_Command({ eventId: this.eventService.selectedId, registrableId, registrationId, toRole })
       .subscribe();
   }
 

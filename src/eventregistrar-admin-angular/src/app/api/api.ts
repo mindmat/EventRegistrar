@@ -7059,6 +7059,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    switchRoleOfParticipant_Command(switchRoleOfParticipantCommand: SwitchRoleOfParticipantCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/SwitchRoleOfParticipantCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(switchRoleOfParticipantCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSwitchRoleOfParticipant_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSwitchRoleOfParticipant_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processSwitchRoleOfParticipant_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     translation_Query(translationQuery: TranslationQuery | undefined): Observable<{ [key: string]: string; }> {
         let url_ = this.baseUrl + "/api/TranslationQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -9921,6 +9969,13 @@ export interface StartUpdateReadModelsOfEventCommand {
 export interface SwapFirstLastNameCommand {
     eventId?: string;
     registrationId?: string;
+}
+
+export interface SwitchRoleOfParticipantCommand {
+    eventId?: string;
+    registrableId?: string;
+    registrationId?: string;
+    toRole?: Role;
 }
 
 export interface TranslationQuery {
