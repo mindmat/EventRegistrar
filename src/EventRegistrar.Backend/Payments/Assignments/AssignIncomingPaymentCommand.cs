@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Payments.Files;
+using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
 
@@ -80,5 +81,7 @@ public class AssignIncomingPaymentCommandHandler(IQueryable<Registration> regist
 
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
         changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
+        changeTrigger.QueryChanged<PaymentsByDayQuery>(registration.EventId);
+        changeTrigger.QueryChanged<PaymentAssignmentsQuery>(registration.EventId, incomingPayment.Id);
     }
 }
