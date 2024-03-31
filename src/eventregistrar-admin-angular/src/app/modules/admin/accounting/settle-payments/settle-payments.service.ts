@@ -10,7 +10,7 @@ import { NotificationService } from '../../infrastructure/notification.service';
 })
 export class SettlePaymentsService extends FetchService<BookingsOfDay[]>
 {
-  constructor(private api: Api, private eventService: EventService, private notificationService: NotificationService)
+  constructor(private api: Api, private eventService: EventService, notificationService: NotificationService)
   {
     super('PaymentsByDayQuery', notificationService);
   }
