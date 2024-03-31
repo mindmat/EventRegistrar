@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Infrastructure.DomainEvents;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Payments.Files;
 
@@ -9,7 +10,9 @@ public class CheckIfIncomingPaymentIsSettledCommand : IRequest
     public Guid IncomingPaymentId { get; set; }
 }
 
-public class CheckIfIncomingPaymentIsSettledCommandHandler(IRepository<IncomingPayment> incomingPayments) : IRequestHandler<CheckIfIncomingPaymentIsSettledCommand>
+public class CheckIfIncomingPaymentIsSettledCommandHandler(IRepository<IncomingPayment> incomingPayments,
+                                                           ChangeTrigger changeTrigger)
+    : IRequestHandler<CheckIfIncomingPaymentIsSettledCommand>
 {
     public async Task Handle(CheckIfIncomingPaymentIsSettledCommand command, CancellationToken cancellationToken)
     {
@@ -23,7 +26,16 @@ public class CheckIfIncomingPaymentIsSettledCommandHandler(IRepository<IncomingP
                                                                   ? asn.Amount
                                                                   : -asn.Amount);
         //+ incomingPayment.RepaymentAssignments!.Sum(asn => asn.Amount);
-        incomingPayment.Payment.Settled = balance == 0m;
+        var settled = balance == 0m;
+        if (settled != incomingPayment.Payment.Settled)
+        {
+            incomingPayment.Payment.Settled = settled;
+            var eventId = incomingPayment.Payment?.EventId;
+            if (eventId != null)
+            {
+                changeTrigger.QueryChanged<PaymentsByDayQuery>(eventId.Value);
+            }
+        }
     }
 }
 
