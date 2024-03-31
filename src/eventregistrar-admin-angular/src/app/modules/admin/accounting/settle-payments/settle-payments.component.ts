@@ -3,6 +3,8 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { PaymentDisplayItem2, BookingsOfDay, CreditDebit } from 'app/api/api';
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
 import { SettlePaymentsService } from './settle-payments.service';
+import { Router } from '@angular/router';
+import { NavigatorService } from '../../navigator.service';
 
 @Component({
   selector: 'app-settle-payments',
@@ -14,8 +16,6 @@ export class SettlePaymentsComponent implements OnInit
   daysWithBookings: BookingsOfDay[];
   CreditDebit = CreditDebit;
   selectedBooking: PaymentDisplayItem2;
-
-  // candidates: AssignmentCandidate[];
 
   filters: {
     query$: BehaviorSubject<string>;
@@ -31,7 +31,7 @@ export class SettlePaymentsComponent implements OnInit
       hideIgnored$: new BehaviorSubject(true),
     };
 
-  constructor(private service: SettlePaymentsService, private changeDetectorRef: ChangeDetectorRef) { }
+  constructor(private service: SettlePaymentsService, private navigator: NavigatorService, private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit(): void
   {
@@ -44,20 +44,24 @@ export class SettlePaymentsComponent implements OnInit
         {
           this.selectBooking(daysWithBookings[0].bookings[0]);
         }
+        else if (!!this.selectedBooking)
+        {
+          let selectedItemInNewList = daysWithBookings.flatMap(d => d.bookings).find(b => b.id === this.selectedBooking.id);
+          if (!selectedItemInNewList)
+          {
+            // previously selected item is not in the current list anymore -> select another
+            this.selectBooking(daysWithBookings[0].bookings[0]);
+          }
+          else
+          {
+            // select again - at the initial selection the list might not have been present yet
+            this.selectBooking(selectedItemInNewList);
+          }
+        }
 
         // Mark for check
         this.changeDetectorRef.markForCheck();
       });
-
-    // this.service.candidates$
-    //   .pipe(takeUntil(this.unsubscribeAll))
-    //   .subscribe((candidates: AssignmentCandidate[]) =>
-    //   {
-    //     this.candidates = candidates;
-
-    //     // Mark for check
-    //     this.changeDetectorRef.markForCheck();
-    //   });
 
     // Filter
     combineLatest([this.filters.query$, this.filters.hideIncoming$, this.filters.hideOutgoing$, this.filters.hideSettled$, this.filters.hideIgnored$]).pipe(debounceTime(200))
@@ -71,6 +75,7 @@ export class SettlePaymentsComponent implements OnInit
   selectBooking(booking: PaymentDisplayItem2)
   {
     this.selectedBooking = booking;
+    this.navigator.goToSettlePaymentUrl(booking.id);
 
     // Mark for check
     this.changeDetectorRef.markForCheck();

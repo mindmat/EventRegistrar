@@ -16,7 +16,8 @@
         <mat-drawer-content class="flex overflow-hidden">
 
             <!-- Bookings list -->
-            <div class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100 bg-card dark:bg-transparent">
+            <div
+                class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100 bg-card dark:bg-transparent">
 
                 <!-- Header -->
                 <div class="flex flex-col flex-0 py-4 px-8 border-b bg-gray-50 dark:bg-transparent">
@@ -27,26 +28,33 @@
                     </div> -->
                     <!-- Search -->
                     <div class="mt-4 space-x-4">
-                        <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full" [floatLabel]="'always'">
+                        <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full"
+                            [floatLabel]="'always'">
                             <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                            <input matInput [autocomplete]="'off'" placeholder="{{ 'SearchByNameIbanMessage' | translate }}" (input)="filterByQuery(searchField.value)" #searchField>
+                            <input matInput [autocomplete]="'off'"
+                                placeholder="{{ 'SearchByNameIbanMessage' | translate }}"
+                                (input)="filterByQuery(searchField.value)" #searchField>
                         </mat-form-field>
 
                         <h2 class="my-2">{{ 'Hide' | translate }}</h2>
                         <!-- <div class="flex flex-col"> -->
-                        <mat-checkbox class="mt-8 sm:mt-0 sm:ml-auto text-left" [color]="'primary'" [checked]="filters.hideIncoming$.value" (change)="toggleIncoming($event)">
+                        <mat-checkbox class="mt-8 sm:mt-0 sm:ml-auto text-left" [color]="'primary'"
+                            [checked]="filters.hideIncoming$.value" (change)="toggleIncoming($event)">
                             {{ 'Deposits' | translate }}
                         </mat-checkbox>
 
-                        <mat-checkbox class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" [checked]="filters.hideOutgoing$.value" (change)="toggleOutgoing($event)">
+                        <mat-checkbox class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'"
+                            [checked]="filters.hideOutgoing$.value" (change)="toggleOutgoing($event)">
                             {{ 'Payouts' | translate }}
                         </mat-checkbox>
 
-                        <mat-checkbox class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" [checked]="filters.hideSettled$.value" (change)="toggleSettled($event)">
+                        <mat-checkbox class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'"
+                            [checked]="filters.hideSettled$.value" (change)="toggleSettled($event)">
                             {{ 'Settled' | translate }}
                         </mat-checkbox>
 
-                        <mat-checkbox class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'" [checked]="filters.hideIgnored$.value" (change)="toggleIgnored($event)">
+                        <mat-checkbox class="mt-8 sm:mt-0 sm:ml-auto" [color]="'primary'"
+                            [checked]="filters.hideIgnored$.value" (change)="toggleIgnored($event)">
                             {{ 'Ignored' | translate }}
                         </mat-checkbox>
                         <!-- </div> -->
@@ -65,8 +73,10 @@
                                 <div class="flex-auto border-b"></div>
                             </div>
                             <ng-container *ngFor="let booking of dayWithBookings.bookings">
-                                <div class="z-20 flex items-center py-5 px-4 cursor-pointer border-t border-b" [routerLink]="[booking.id]" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedBooking || selectedBooking.id !== booking.id,
-                                                'bg-primary-50 dark:bg-hover': selectedBooking && selectedBooking.id === booking.id}" (click)="selectBooking(booking)">
+                                <div class="z-20 flex items-center py-5 px-4 cursor-pointer border-t border-b"
+                                    [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedBooking || selectedBooking.id !== booking.id,
+                                                'bg-primary-50 dark:bg-hover': selectedBooking && selectedBooking.id === booking.id}"
+                                    (click)="selectBooking(booking)">
                                     <div class="flex flex-col pl-2">
                                         <!-- <div class="relative flex flex-0 items-center justify-center w-10 h-10">
                                         <ng-container *ngIf="booking.unreadCount > 0">
@@ -85,15 +95,23 @@
 
                                         <div class="min-w-0">
                                             <div class="flex flex-row">
-                                                <div class="font-medium leading-5 truncate">{{ booking.amount | number: '1.2-2' }}</div>
-                                                <div *ngIf="!!booking.charges" class="text-secondary leading-5 truncate ml-2">+{{ booking.charges | number: '1.2-2' }}</div>
+                                                <div class="font-medium leading-5 truncate">{{ booking.amount | number:
+                                                    '1.2-2' }}</div>
+                                                <div *ngIf="!!booking.charges"
+                                                    class="text-secondary leading-5 truncate ml-2">+{{ booking.charges |
+                                                    number: '1.2-2' }}</div>
                                             </div>
-                                            <div class="leading-5 truncate text-secondary" [class.text-primary]="!booking.settled" [class.dark:text-primary-500]="booking.settled">
-                                                <div *ngIf="booking.typ === CreditDebit.CRDT">{{ 'PaymentFrom' | translate : {debitor: booking.debitorName ?? '?'} }}</div>
-                                                <div *ngIf="booking.typ === CreditDebit.DBIT">{{ 'PaymentTo' | translate : {creditor: booking.creditorName ?? '?'} }}</div>
+                                            <div class="leading-5 truncate text-secondary"
+                                                [class.text-primary]="!booking.settled"
+                                                [class.dark:text-primary-500]="booking.settled">
+                                                <div *ngIf="booking.typ === CreditDebit.CRDT">{{ 'PaymentFrom' |
+                                                    translate : {debitor: booking.debitorName ?? '?'} }}</div>
+                                                <div *ngIf="booking.typ === CreditDebit.DBIT">{{ 'PaymentTo' | translate
+                                                    : {creditor: booking.creditorName ?? '?'} }}</div>
                                             </div>
                                         </div>
-                                        <div *ngIf="selectedBooking && selectedBooking.id === booking.id && booking.message" class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
+                                        <div *ngIf="selectedBooking && selectedBooking.id === booking.id && booking.message"
+                                            class="p-2 border-2 rounded-lg -mx-1 m-2 bg-gray-100">
                                             <span class="leading-none">{{ booking.message }}</span>
                                         </div>
                                     </div>
@@ -101,7 +119,8 @@
                                     <!-- Ignored -->
                                     <div class="flex flex-col items-center ml-auto pl-2">
                                         <ng-container *ngIf="booking.ignore">
-                                            <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
+                                            <mat-icon class="icon-size-5 text-hint"
+                                                [svgIcon]="'heroicons_solid:eye-off'"></mat-icon>
                                         </ng-container>
                                     </div>
                                 </div>
@@ -112,7 +131,7 @@
 
             </div>
 
-            <!-- No bookings template -->
+            <!-- No payments template -->
             <ng-template #noBookings>
                 <div class="flex flex-auto flex-col items-center justify-center h-full">
                     <mat-icon class="icon-size-24" [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
@@ -120,7 +139,7 @@
                 </div>
             </ng-template>
 
-            <!-- Conversation -->
+            <!-- candidates for settlement -->
             <ng-container *ngIf="daysWithBookings && daysWithBookings.length > 0">
                 <div class="flex-auto border-l" [ngClass]="{'z-20 absolute inset-0 lg:static lg:inset-auto flex': selectedBooking && selectedBooking.id,
                                 'hidden lg:flex': !selectedBooking || !selectedBooking.id}">

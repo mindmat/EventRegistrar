@@ -238,20 +238,20 @@ public class PaymentAssignmentsQueryHandler(IQueryable<Registration> _registrati
                                            IReadOnlySet<string>? wordsInPayment,
                                            string? otherParty)
     {
-        if (wordsInPayment == null)
-        {
-            return 0;
-        }
-
-        // names can contain multiple words, e.g. 'de Luca'
+        var score = 0;
         var nameWords = (reg.FirstName?.Split(' ') ?? Enumerable.Empty<string>())
                         .Union(reg.LastName?.Split(' ') ?? Enumerable.Empty<string>())
                         .Select(nmw => nmw.ToLowerInvariant())
                         .ToList();
-        var score = nameWords.Sum(nmw => wordsInPayment.Count(wrd => wrd == nmw));
-        if (reg.Email != null)
+
+        if (wordsInPayment != null)
         {
-            score += wordsInPayment.Contains(reg.Email) ? 5 : 0;
+            // names can contain multiple words, e.g. 'de Luca'
+            score = nameWords.Sum(nmw => wordsInPayment.Count(wrd => wrd == nmw));
+            if (reg.Email != null)
+            {
+                score += wordsInPayment.Contains(reg.Email) ? 5 : 0;
+            }
         }
 
         if (otherParty != null)

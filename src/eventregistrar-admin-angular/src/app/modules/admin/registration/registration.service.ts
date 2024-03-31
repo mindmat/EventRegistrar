@@ -106,6 +106,7 @@ export class RegistrationService
 
   recalculateReadModel(registrationId: string): Subscription
   {
+    this.api.recalculatePriceAndWaitingList_Command({ registrationId }).subscribe();
     return this.api.updateReadModel_Command({ eventId: this.eventService.selectedId, queryName: 'RegistrationQuery', rowId: registrationId })
       .subscribe();
   }
