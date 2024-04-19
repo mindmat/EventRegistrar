@@ -20,6 +20,7 @@ public class Participant
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
     public string? Email { get; set; }
+    public string? Phone { get; set; }
     public string? PricePackageAdmitted { get; set; }
     public bool IsOnWaitingList { get; set; }
     public RegistrationState State { get; set; }
@@ -87,13 +88,14 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                                FirstName = reg.FirstName,
                                                LastName = reg.LastName,
                                                Email = reg.Email,
+                                               Phone = reg.PhoneNormalized,
                                                AmountOutstanding = (reg.Price ?? 0m) - reg.Paid,
                                                State = reg.Status,
                                                StateText = enumTranslator.Translate(reg.Status),
                                                IsOnWaitingList = reg.IsWaitingList == true,
                                                CoreSpots = reg.Spots!
                                                               .Where(spt => !spt.IsWaitingList && registrableIds.Contains(spt.RegistrableId))
-                                                              .Select(spt => new[] { spt.RegistrableName, spt.RegistrableNameSecondary }.StringJoinNullable(" - "))
+                                                              .Select(spt => GetSpotText(spt.RegistrableName, spt.RegistrableNameSecondary, spt.RoleText))
                                                               .StringJoin(),
                                                IsVolunteer = reg.Spots!.Any(spt => volunteerIds.Contains(spt.RegistrableId)),
                                                PricePackageAdmitted = GetPricePackageText(registrationIds.First(r => r.Id == reg.Id).PricePackageIds_Admitted, packages),
@@ -102,6 +104,17 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                             .OrderBy(reg => reg.FirstName)
                             .ThenBy(reg => reg.LastName)
                             .ToList();
+    }
+
+    private static string GetSpotText(string registrableName, string? registrableNameSecondary, string? roleText)
+    {
+        var text = new[] { registrableName, registrableNameSecondary }.StringJoinNullable(" - ")!;
+        if (roleText != null)
+        {
+            text += $" ({roleText})";
+        }
+
+        return text;
     }
 
     private static string? GetPricePackageText(IEnumerable<Guid>? pricePackageIds, IReadOnlyDictionary<Guid, string> packages)
