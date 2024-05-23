@@ -2534,6 +2534,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bitte bezahle die ausstehenden {0:F2}{1} am Checkin..
+        /// </summary>
+        internal static string PleasePayRemainingAmountAtCheckin {
+            get {
+                return ResourceManager.GetString("PleasePayRemainingAmountAtCheckin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Port.
         /// </summary>
         internal static string Port {

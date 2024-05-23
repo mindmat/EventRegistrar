@@ -37,7 +37,8 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
 
         var registrationsOfEvent = await registrations.Where(reg => reg.EventId == command.EventId
                                                                  && reg.State != RegistrationState.Cancelled
-                                                                 && !reg.Mails!.Any(mail => mail.Mail!.BulkMailKey == command.BulkMailKey))
+                                                                 && !reg.Mails!.Any(mail => mail.Mail!.BulkMailKey == command.BulkMailKey
+                                                                                         && !mail.Mail.Discarded))
                                                       .Include(reg => reg.Seats_AsLeader)
                                                       .Include(reg => reg.Seats_AsFollower)
                                                       .ToListAsync(cancellationToken);

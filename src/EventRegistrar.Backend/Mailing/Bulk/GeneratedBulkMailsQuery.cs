@@ -16,7 +16,8 @@ public class GeneratedBulkMailsQueryHandler(IQueryable<Mail> mails) : IRequestHa
         }
 
         var data = await mails.Where(mail => mail.BulkMailKey == query.BulkMailKey
-                                          && mail.EventId == query.EventId)
+                                          && mail.EventId == query.EventId
+                                          && !mail.Discarded)
                               .GroupBy(mail => new { mail.Sent, mail.State })
                               .Select(grp => new
                                              {

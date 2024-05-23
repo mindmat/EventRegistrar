@@ -937,6 +937,9 @@
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>
   </data>
+  <data name="PleasePayRemainingAmountAtCheckin" xml:space="preserve">
+    <value>Bitte bezahle die ausstehenden {0:F2}{1} am Checkin.</value>
+  </data>
   <data name="Port" xml:space="preserve">
     <value>Port</value>
   </data>
