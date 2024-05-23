@@ -1,8 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrations;
@@ -23,8 +21,7 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
                                            MailConfiguration configuration,
                                            MailComposer mailComposer,
                                            IDateTimeProvider dateTimeProvider,
-                                           IEventBus eventBus,
-                                           CommandQueue commandQueue)
+                                           ChangeTrigger changeTrigger)
     : IRequestHandler<CreateBulkMailsCommand>
 {
     private const int ChunkSize = 100;
@@ -110,24 +107,22 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
             foreach (var registration in receivers)
             {
                 await CreateMail(mailTemplate, registration, cancellationToken);
+                changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
             }
 
             remainingChunkSize -= receivers.Count;
         }
 
-        eventBus.Publish(new QueryChanged
-                         {
-                             EventId = command.EventId,
-                             QueryName = nameof(GeneratedBulkMailsQuery)
-                         });
+        changeTrigger.QueryChanged<GeneratedBulkMailsQuery>(command.EventId);
+
         if (remainingChunkSize <= 0)
         {
             // enqueue next chunk
-            commandQueue.EnqueueCommand(new CreateBulkMailsCommand
-                                        {
-                                            EventId = command.EventId,
-                                            BulkMailKey = command.BulkMailKey
-                                        });
+            changeTrigger.EnqueueCommand(new CreateBulkMailsCommand
+                                         {
+                                             EventId = command.EventId,
+                                             BulkMailKey = command.BulkMailKey
+                                         });
         }
     }
 
