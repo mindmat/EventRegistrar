@@ -827,7 +827,7 @@
     <value>Mitteilung</value>
   </data>
   <data name="MissingAmount" xml:space="preserve">
-    <value>Fehlbetrag</value>
+    <value>Ausstehender Betrag</value>
   </data>
   <data name="MultiMappings" xml:space="preserve">
     <value>Mehrfach-Zuordnungen</value>

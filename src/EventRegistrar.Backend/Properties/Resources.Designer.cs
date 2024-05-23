@@ -2201,7 +2201,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Fehlbetrag.
+        ///   Looks up a localized string similar to Ausstehender Betrag.
         /// </summary>
         internal static string MissingAmount {
             get {

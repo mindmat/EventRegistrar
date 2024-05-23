@@ -730,7 +730,7 @@
     <value>Message</value>
   </data>
   <data name="MissingAmount" xml:space="preserve">
-    <value>Missing amount</value>
+    <value>Outstanding amount</value>
   </data>
   <data name="MultiMappings" xml:space="preserve">
     <value>Multi mappings</value>

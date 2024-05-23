@@ -322,15 +322,15 @@ public class MailComposer(
                 result.AppendLine($"<td>{Resources.Paid}</td>");
                 result.AppendLine($"<td style=\"text-align: right;\">{paid.ToString("F2")}</td>");
                 result.AppendLine("</tr>");
+            }
 
-                if (paid < priceAdmittedAndReduced)
-                {
-                    // remaining amount
-                    result.AppendLine("<tr>");
-                    result.AppendLine($"<td>{Resources.MissingAmount}</td>");
-                    result.AppendLine($"<td style=\"text-align: right;\">{(priceAdmittedAndReduced - paid).ToString("F2")}</td>");
-                    result.AppendLine("</tr>");
-                }
+            if (paid < priceAdmittedAndReduced)
+            {
+                // remaining amount
+                result.AppendLine("<tr>");
+                result.AppendLine($"<td>{Resources.MissingAmount}</td>");
+                result.AppendLine($"<td style=\"text-align: right;\">{(priceAdmittedAndReduced - paid).ToString("F2")}</td>");
+                result.AppendLine("</tr>");
             }
 
             result.AppendLine("</tbody>");
