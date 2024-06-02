@@ -136,6 +136,9 @@
   <data name="AccessRights" xml:space="preserve">
     <value>Berechtigungen</value>
   </data>
+  <data name="AccountHolder" xml:space="preserve">
+    <value>Kontoinhaber</value>
+  </data>
   <data name="Accounting" xml:space="preserve">
     <value>Buchhaltung</value>
   </data>
@@ -214,6 +217,9 @@
   <data name="Balance" xml:space="preserve">
     <value>Kontostand</value>
   </data>
+  <data name="BankAccountConfigExplanation" xml:space="preserve">
+    <value>Bankkonto hinterlegen, das für den QR-Code verwendet wird</value>
+  </data>
   <data name="BankStatement" xml:space="preserve">
     <value>Kontobewegungen</value>
   </data>
@@ -270,6 +276,9 @@
   </data>
   <data name="CopyRegistrables" xml:space="preserve">
     <value>Aktivitäten kopieren</value>
+  </data>
+  <data name="CountryCode" xml:space="preserve">
+    <value>Land (ISO2)</value>
   </data>
   <data name="CountTotalShared" xml:space="preserve">
     <value>Plätze total / geteilt</value>
@@ -516,6 +525,12 @@
   </data>
   <data name="HostingRequests" xml:space="preserve">
     <value>Sucht Hosting</value>
+  </data>
+  <data name="HouseNo" xml:space="preserve">
+    <value>Hausnr.</value>
+  </data>
+  <data name="Iban" xml:space="preserve">
+    <value>IBAN</value>
   </data>
   <data name="Ignore" xml:space="preserve">
     <value>Ignorieren</value>
@@ -940,6 +955,9 @@
   <data name="PleasePayRemainingAmountAtCheckin" xml:space="preserve">
     <value>Bitte bezahle die ausstehenden {0:F2}{1} am Checkin.</value>
   </data>
+  <data name="Plz" xml:space="preserve">
+    <value>PLZ</value>
+  </data>
   <data name="Port" xml:space="preserve">
     <value>Port</value>
   </data>
@@ -1258,6 +1276,9 @@
   </data>
   <data name="Spots" xml:space="preserve">
     <value>Plätze</value>
+  </data>
+  <data name="Street" xml:space="preserve">
+    <value>Strasse</value>
   </data>
   <data name="subject" xml:space="preserve">
     <value>Betreff</value>

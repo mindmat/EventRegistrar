@@ -115,6 +115,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kontoinhaber.
+        /// </summary>
+        internal static string AccountHolder {
+            get {
+                return ResourceManager.GetString("AccountHolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Buchhaltung.
         /// </summary>
         internal static string Accounting {
@@ -349,6 +358,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bankkonto hinterlegen, das für den QR-Code verwendet wird.
+        /// </summary>
+        internal static string BankAccountConfigExplanation {
+            get {
+                return ResourceManager.GetString("BankAccountConfigExplanation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Kontobewegungen.
         /// </summary>
         internal static string BankStatement {
@@ -516,6 +534,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string CopyRegistrables {
             get {
                 return ResourceManager.GetString("CopyRegistrables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Land (ISO2).
+        /// </summary>
+        internal static string CountryCode {
+            get {
+                return ResourceManager.GetString("CountryCode", resourceCulture);
             }
         }
         
@@ -1270,6 +1297,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string HostingRequests {
             get {
                 return ResourceManager.GetString("HostingRequests", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hausnr..
+        /// </summary>
+        internal static string HouseNo {
+            get {
+                return ResourceManager.GetString("HouseNo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IBAN.
+        /// </summary>
+        internal static string Iban {
+            get {
+                return ResourceManager.GetString("Iban", resourceCulture);
             }
         }
         
@@ -2543,6 +2588,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to PLZ.
+        /// </summary>
+        internal static string Plz {
+            get {
+                return ResourceManager.GetString("Plz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Port.
         /// </summary>
         internal static string Port {
@@ -3493,6 +3547,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Spots {
             get {
                 return ResourceManager.GetString("Spots", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Strasse.
+        /// </summary>
+        internal static string Street {
+            get {
+                return ResourceManager.GetString("Street", resourceCulture);
             }
         }
         
