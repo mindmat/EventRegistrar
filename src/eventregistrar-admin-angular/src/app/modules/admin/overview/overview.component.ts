@@ -204,6 +204,11 @@ export class OverviewComponent implements OnInit, OnDestroy
         this.registrableService.deleteRegistrable(registrableId);
     }
 
+    updateView()
+    {
+        this.overviewService.triggerUpdate();
+    }
+
     trackByFn(index: number, item: any): any
     {
         return item.id || index;

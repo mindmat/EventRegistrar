@@ -11,7 +11,8 @@
                     <div class="flex flex-col p-6 pb-4">
                         <div class="flex items-center justify-between">
                             <div class="flex flex-col">
-                                <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">{{ 'PaymentOverview' | translate }}</div>
+                                <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">{{
+                                    'PaymentOverview' | translate }}</div>
                                 <!-- <div class="text-secondary font-medium">Monthly balance growth and avg. monthly income</div> -->
                             </div>
                             <!-- <div class="ml-2">
@@ -28,20 +29,26 @@
                         </div>
                         <div class="flex items-start mt-6 mr-2">
                             <div class="flex flex-col">
-                                <div class="font-semibold text-3xl md:text-5xl tracking-tighter">{{ paymentOverview.paidAmount | number: '1.2-2' }}</div>
-                                <div class="font-medium text-sm text-secondary leading-none">{{ 'TotalReceived' | translate: { paidRegistrationCount:paymentOverview.paidRegistrationsCount } }}</div>
+                                <div class="font-semibold text-3xl md:text-5xl tracking-tighter">{{
+                                    paymentOverview.paidAmount | number: '1.2-2' }}</div>
+                                <div class="font-medium text-sm text-secondary leading-none">{{ 'TotalReceived' |
+                                    translate: { paidRegistrationCount:paymentOverview.paidRegistrationsCount } }}</div>
                             </div>
                             <div class="flex flex-col ml-8 md:ml-16">
-                                <div class="font-semibold text-3xl md:text-5xl tracking-tighter">{{ paymentOverview.outstandingAmount | number: '1.2-2' }}</div>
-                                <a class="font-medium text-sm text-secondary leading-none hover:underline" [routerLink]="navigator.getDuePaymentUrl()">{{ 'OutstandingPayments' | translate: {
+                                <div class="font-semibold text-3xl md:text-5xl tracking-tighter">{{
+                                    paymentOverview.outstandingAmount | number: '1.2-2' }}</div>
+                                <a class="font-medium text-sm text-secondary leading-none hover:underline"
+                                    [routerLink]="navigator.getDuePaymentUrl()">{{ 'OutstandingPayments' | translate: {
                                     dueRegistrationCount: paymentOverview.notFullyPaidRegistrations } }}
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="flex flex-col flex-auto">
-                        <apx-chart class="flex-auto w-full max-h-24" [chart]="accountBalanceOptions.chart" [colors]="accountBalanceOptions.colors" [fill]="accountBalanceOptions.fill"
-                            [series]="accountBalanceOptions.series" [stroke]="accountBalanceOptions.stroke" [tooltip]="accountBalanceOptions.tooltip" [xaxis]="accountBalanceOptions.xaxis"></apx-chart>
+                        <apx-chart class="flex-auto w-full max-h-24" [chart]="accountBalanceOptions.chart"
+                            [colors]="accountBalanceOptions.colors" [fill]="accountBalanceOptions.fill"
+                            [series]="accountBalanceOptions.series" [stroke]="accountBalanceOptions.stroke"
+                            [tooltip]="accountBalanceOptions.tooltip" [xaxis]="accountBalanceOptions.xaxis"></apx-chart>
                     </div>
                 </div>
 
@@ -49,7 +56,8 @@
                 <div *ngIf="pricePackageOverview" class="flex flex-col ml-6 p-6 bg-card rounded-2xl shadow">
                     <div class="flex items-center">
                         <div class="flex flex-col">
-                            <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">{{ 'Registrations' | translate }}</div>
+                            <div class="mr-4 text-lg font-medium tracking-tight leading-6 truncate">{{ 'Registrations' |
+                                translate }}</div>
                             <div class="text-secondary font-medium">{{ 'DistributionByPricePackage' | translate }}</div>
                         </div>
                     </div>
@@ -82,9 +90,11 @@
                 <div class="flex flex-col ml-auto self-start mt-1">
                     <div class="flex flex-row items-baseline">
                         <!-- Filter -->
-                        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+                        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4"
+                            [floatLabel]="'always'">
                             <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-                            <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByName' | translate" matInput #query>
+                            <input (input)="filterByQuery(query.value)" [placeholder]="'SearchByName' | translate"
+                                matInput #query>
                         </mat-form-field>
 
                         <!-- context menu -->
@@ -95,20 +105,32 @@
                             <mat-menu #registrableMenu="matMenu">
                                 <button mat-menu-item (click)="addRegistrable()">
                                     <span class="flex items-center">
-                                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                                        <mat-icon class="icon-size-5 mr-3"
+                                            [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
                                         <span>{{ 'AddTrack' | translate }}</span>
                                     </span>
                                 </button>
-                                <button *ngIf="(eventService.selected$ | async).state === EventState.Setup" mat-menu-item (click)="openRegistration()">
+                                <button *ngIf="(eventService.selected$ | async).state === EventState.Setup"
+                                    mat-menu-item (click)="openRegistration()">
                                     <span class="flex items-center">
-                                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_outline:play_arrow'"></mat-icon>
+                                        <mat-icon class="icon-size-5 mr-3"
+                                            [svgIcon]="'mat_outline:play_arrow'"></mat-icon>
                                         <span>{{ 'OpenRegistrationDeleteTestData' | translate }}</span>
                                     </span>
                                 </button>
-                                <button *ngIf="(eventService.selected$ | async).state === EventState.Setup" mat-menu-item (click)="deleteTestData()">
+                                <button *ngIf="(eventService.selected$ | async).state === EventState.Setup"
+                                    mat-menu-item (click)="deleteTestData()">
                                     <span class="flex items-center">
-                                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                        <mat-icon class="icon-size-5 mr-3"
+                                            [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                                         <span>{{ 'DeleteTestData' | translate }}</span>
+                                    </span>
+                                </button>
+                                <button mat-menu-item (click)="updateView()">
+                                    <span class="flex items-center">
+                                        <mat-icon class="icon-size-5 mr-3"
+                                            [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+                                        <span>{{ 'Recalculate' | translate }}</span>
                                     </span>
                                 </button>
                             </mat-menu>
@@ -137,8 +159,10 @@
                             <div class="flex flex-col p-6 -mt-2">
                                 <div class="flex items-center justify-between">
                                     <!-- Registrable tags -->
-                                    <ng-container *ngIf="(doubleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
-                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
+                                    <ng-container
+                                        *ngIf="(doubleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
+                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold"
+                                            [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
                                                         'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.sortKey === 2,
                                                         'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.sortKey === 3,
                                                         'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.sortKey === 4,
@@ -149,18 +173,21 @@
                                     <!-- context menu -->
                                     <div class="flex items-center ml-auto">
                                         <button mat-icon-button [matMenuTriggerFor]="registrableMenu">
-                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                                            <mat-icon class="icon-size-5"
+                                                [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                                         </button>
                                         <mat-menu #registrableMenu="matMenu">
                                             <button mat-menu-item (click)="changeDoubleRegistrable(doubleRegistrable)">
                                                 <span class="flex items-center">
-                                                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+                                                    <mat-icon class="icon-size-5 mr-3"
+                                                        [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
                                                     <span>{{ 'EditRegistrable' | translate }}</span>
                                                 </span>
                                             </button>
                                             <button mat-menu-item (click)="deleteRegistrable(doubleRegistrable.id)">
                                                 <span class="flex items-center">
-                                                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                                    <mat-icon class="icon-size-5 mr-3"
+                                                        [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                                                     <span>{{ 'Delete' | translate }}</span>
                                                 </span>
                                             </button>
@@ -169,21 +196,25 @@
                                 </div>
 
                                 <!-- Registrable title & description -->
-                                <a class="mt-2 hover:underline" [routerLink]="[doubleRegistrable.id, 'double', 'participants']">
+                                <a class="mt-2 hover:underline"
+                                    [routerLink]="[doubleRegistrable.id, 'double', 'participants']">
                                     <div class="text-lg font-medium ">{{ doubleRegistrable.name }}</div>
-                                    <div class="mt-0.5 line-clamp-2 text-secondary">{{ doubleRegistrable.nameSecondary }}</div>
+                                    <div class="mt-0.5 line-clamp-2 text-secondary">{{ doubleRegistrable.nameSecondary
+                                        }}</div>
                                 </a>
                                 <div class="w-12 h-1 my-2 border-t-2"></div>
 
                                 <!-- Class -->
                                 <div class="flex items-center mt-2 leading-5 text-md text-secondary">
-                                    <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:check-circle'"
-                                        [matTooltip]="'Accepted: L' + doubleRegistrable.leadersAccepted + ' F' + doubleRegistrable.followersAccepted" [matTooltipPosition]="'above'"
-                                        [matTooltipClass]="'mb-1'">
+                                    <mat-icon class="icon-size-5 text-hint mr-2"
+                                        [svgIcon]="'heroicons_solid:check-circle'"
+                                        [matTooltip]="'Accepted: L' + doubleRegistrable.leadersAccepted + ' F' + doubleRegistrable.followersAccepted"
+                                        [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                         >
                                     </mat-icon>
                                     <div class="flex flex-wrap">
-                                        <ng-container *ngFor="let spotState of doubleRegistrable.class; let i = index; trackBy: trackByFn">
+                                        <ng-container
+                                            *ngFor="let spotState of doubleRegistrable.class; let i = index; trackBy: trackByFn">
                                             <div class="flex flex-col pb-1 ml-0.5 w-1 rounded overflow-hidden">
                                                 <!-- Leader: available -->
                                                 <div class="h-4 bg-gray-200" *ngIf="spotState.leader === 1">
@@ -209,29 +240,35 @@
                                                 <div class="h-4 bg-warn-400 rounded-b" *ngIf="spotState.follower === 2">
                                                 </div>
                                                 <!-- Follower: registered -->
-                                                <div class="h-4 bg-primary-400 rounded-b" *ngIf="spotState.follower === 3">
+                                                <div class="h-4 bg-primary-400 rounded-b"
+                                                    *ngIf="spotState.follower === 3">
                                                 </div>
                                                 <!-- Follower: paid -->
-                                                <div class="h-4 bg-primary-600 rounded-b" *ngIf="spotState.follower === 4">
+                                                <div class="h-4 bg-primary-600 rounded-b"
+                                                    *ngIf="spotState.follower === 4">
                                                 </div>
                                             </div>
 
-                                            <div class="-mt-0.5 ml-1 mr-0.5 mb-0.5 w-0.5 h-9 bg-gray-600 " *ngIf="doubleRegistrable.spotsAvailable === i + 1"
-                                                [matTooltip]="'max: ' + doubleRegistrable.spotsAvailable" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
+                                            <div class="-mt-0.5 ml-1 mr-0.5 mb-0.5 w-0.5 h-9 bg-gray-600 "
+                                                *ngIf="doubleRegistrable.spotsAvailable === i + 1"
+                                                [matTooltip]="'max: ' + doubleRegistrable.spotsAvailable"
+                                                [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                             </div>
                                         </ng-container>
                                     </div>
                                 </div>
 
                                 <!-- Waiting List -->
-                                <div class="flex items-center mt-2 leading-5 text-md text-secondary" *ngIf="doubleRegistrable.hasWaitingList">
+                                <div class="flex items-center mt-2 leading-5 text-md text-secondary"
+                                    *ngIf="doubleRegistrable.hasWaitingList">
                                     <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:clock'"
-                                        [matTooltip]="'Waiting list: L' + doubleRegistrable.leadersOnWaitingList + ' F' + doubleRegistrable.followersOnWaitingList" [matTooltipPosition]="'above'"
-                                        [matTooltipClass]="'mb-1'">
+                                        [matTooltip]="'Waiting list: L' + doubleRegistrable.leadersOnWaitingList + ' F' + doubleRegistrable.followersOnWaitingList"
+                                        [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                         >
                                     </mat-icon>
                                     <div class="flex flex-wrap">
-                                        <ng-container *ngFor="let spotState of doubleRegistrable.waitingList; let i = index; trackBy: trackByFn">
+                                        <ng-container
+                                            *ngFor="let spotState of doubleRegistrable.waitingList; let i = index; trackBy: trackByFn">
 
                                             <div class="flex flex-col pb-1 ml-0.5 w-1 rounded overflow-hidden">
                                                 <!-- Leader: available -->
@@ -258,10 +295,12 @@
                                                 <div class="h-4 bg-warn-400 rounded-b" *ngIf="spotState.follower === 2">
                                                 </div>
                                                 <!-- Follower: registered -->
-                                                <div class="h-4 bg-primary-400 rounded-b" *ngIf="spotState.follower === 3">
+                                                <div class="h-4 bg-primary-400 rounded-b"
+                                                    *ngIf="spotState.follower === 3">
                                                 </div>
                                                 <!-- Follower: paid -->
-                                                <div class="h-4 bg-primary-600 rounded-b" *ngIf="spotState.follower === 4">
+                                                <div class="h-4 bg-primary-600 rounded-b"
+                                                    *ngIf="spotState.follower === 4">
                                                 </div>
 
                                             </div>
@@ -277,16 +316,19 @@
                                     <div class="z-10 absolute inset-x-0 h-6 -mt-3"
                                         [matTooltip]="(doubleRegistrable.leadersAccepted + doubleRegistrable.followersAccepted) / (doubleRegistrable.spotsAvailable * 2) | percent"
                                         [matTooltipPosition]="'above'" [matTooltipClass]="'-mb-0.5'"></div>
-                                    <mat-progress-bar class="h-0.5" [value]="100 * (doubleRegistrable.leadersAccepted + doubleRegistrable.followersAccepted) / (doubleRegistrable.spotsAvailable * 2)">
+                                    <mat-progress-bar class="h-0.5"
+                                        [value]="100 * (doubleRegistrable.leadersAccepted + doubleRegistrable.followersAccepted) / (doubleRegistrable.spotsAvailable * 2)">
                                     </mat-progress-bar>
                                 </div>
 
                                 <!-- Show details -->
                                 <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                    <button mat-stroked-button [routerLink]="[doubleRegistrable.id, 'double', 'participants']">
+                                    <button mat-stroked-button
+                                        [routerLink]="[doubleRegistrable.id, 'double', 'participants']">
                                         <span class="inline-flex items-center">
                                             Details
-                                            <mat-icon class="ml-1.5 icon-size-5" [svgIcon]="'heroicons_solid:arrow-sm-right'"></mat-icon>
+                                            <mat-icon class="ml-1.5 icon-size-5"
+                                                [svgIcon]="'heroicons_solid:arrow-sm-right'"></mat-icon>
                                         </span>
                                     </button>
                                 </div>
@@ -303,8 +345,10 @@
                             <div class="flex flex-col p-6 -mt-2">
                                 <div class="flex items-center justify-between">
                                     <!-- Registrable tags -->
-                                    <ng-container *ngIf="(singleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
-                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
+                                    <ng-container
+                                        *ngIf="(singleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
+                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold"
+                                            [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
                                                                                         'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.sortKey === 2,
                                                                                         'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.sortKey === 3,
                                                                                         'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.sortKey === 4}">
@@ -314,18 +358,21 @@
                                     <!-- context menu -->
                                     <div class="flex items-center ml-auto">
                                         <button mat-icon-button [matMenuTriggerFor]="registrableMenu">
-                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
+                                            <mat-icon class="icon-size-5"
+                                                [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                                         </button>
                                         <mat-menu #registrableMenu="matMenu">
                                             <button mat-menu-item (click)="changeSingleRegistrable(singleRegistrable)">
                                                 <span class="flex items-center">
-                                                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+                                                    <mat-icon class="icon-size-5 mr-3"
+                                                        [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
                                                     <span>{{ 'EditRegistrable' | translate }}</span>
                                                 </span>
                                             </button>
                                             <button mat-menu-item (click)="deleteRegistrable(singleRegistrable.id)">
                                                 <span class="flex items-center">
-                                                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                                    <mat-icon class="icon-size-5 mr-3"
+                                                        [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                                                     <span>{{ 'Delete' | translate }}</span>
                                                 </span>
                                             </button>
@@ -334,63 +381,83 @@
                                 </div>
 
                                 <!-- Registrable title & description -->
-                                <a class="mt-4 hover:underline" [routerLink]="[singleRegistrable.id, 'single', 'participants']">
+                                <a class="mt-4 hover:underline"
+                                    [routerLink]="[singleRegistrable.id, 'single', 'participants']">
                                     <div class="text-lg font-medium">{{ singleRegistrable.name }}</div>
-                                    <div class="mt-0.5 line-clamp-2 text-secondary">{{ singleRegistrable.nameSecondary }}</div>
+                                    <div class="mt-0.5 line-clamp-2 text-secondary">{{ singleRegistrable.nameSecondary
+                                        }}</div>
                                 </a>
 
                                 <div class="w-12 h-1 my-2 border-t-2"></div>
 
                                 <!-- Class -->
                                 <div class="flex items-center mt-2 leading-5 text-md text-secondary">
-                                    <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:check-circle'" [matTooltip]="'Accepted: ' + singleRegistrable.accepted"
+                                    <mat-icon class="icon-size-5 text-hint mr-2"
+                                        [svgIcon]="'heroicons_solid:check-circle'"
+                                        [matTooltip]="'Accepted: ' + singleRegistrable.accepted"
                                         [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                         >
                                     </mat-icon>
 
-                                    <div class="flex flex-wrap gap-x-0.5 gap-y-1" [ngClass]="{'gap-x-0' : singleRegistrable.class.length + singleRegistrable.waitingList.length > 100}">
-                                        <ng-container *ngFor="let spotState of singleRegistrable.class; let i=index;trackBy: trackByFn">
-                                            <div class="flex flex-col w-1" [ngClass]="{'w-0.5' : singleRegistrable.class.length > 200}">
+                                    <div class="flex flex-wrap gap-x-0.5 gap-y-1"
+                                        [ngClass]="{'gap-x-0' : singleRegistrable.class.length + singleRegistrable.waitingList.length > 100}">
+                                        <ng-container
+                                            *ngFor="let spotState of singleRegistrable.class; let i=index;trackBy: trackByFn">
+                                            <div class="flex flex-col w-1"
+                                                [ngClass]="{'w-0.5' : singleRegistrable.class.length > 200}">
                                                 <!-- Leader: available -->
-                                                <div class="h-4 bg-gray-200 rounded overflow-hidden" *ngIf="spotState === 1">
+                                                <div class="h-4 bg-gray-200 rounded overflow-hidden"
+                                                    *ngIf="spotState === 1">
                                                 </div>
                                                 <!-- Leader: reserved -->
-                                                <div class="h-4 bg-warn-400 rounded overflow-hidden" *ngIf="spotState === 2">
+                                                <div class="h-4 bg-warn-400 rounded overflow-hidden"
+                                                    *ngIf="spotState === 2">
                                                 </div>
                                                 <!-- Leader: registered -->
-                                                <div class="h-4 bg-primary-400 rounded overflow-hidden" *ngIf="spotState === 3">
+                                                <div class="h-4 bg-primary-400 rounded overflow-hidden"
+                                                    *ngIf="spotState === 3">
                                                 </div>
                                                 <!-- Leader: paid -->
-                                                <div class="h-4 bg-primary-600 rounded overflow-hidden" *ngIf="spotState === 4">
+                                                <div class="h-4 bg-primary-600 rounded overflow-hidden"
+                                                    *ngIf="spotState === 4">
                                                 </div>
                                             </div>
 
-                                            <div class="flex ml-1 mr-0.5 mb-1 w-0.5 h-5 -mt-0.5 bg-gray-600 rounded overflow-hidden" *ngIf="singleRegistrable.spotsAvailable === i + 1"
-                                                [matTooltip]="'max: ' + singleRegistrable.spotsAvailable" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
+                                            <div class="flex ml-1 mr-0.5 mb-1 w-0.5 h-5 -mt-0.5 bg-gray-600 rounded overflow-hidden"
+                                                *ngIf="singleRegistrable.spotsAvailable === i + 1"
+                                                [matTooltip]="'max: ' + singleRegistrable.spotsAvailable"
+                                                [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                             </div>
                                         </ng-container>
                                     </div>
                                 </div>
 
                                 <!-- Waiting List -->
-                                <div class="flex items-center mt-2 leading-5 text-md text-secondary" *ngIf="singleRegistrable.hasWaitingList">
-                                    <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:clock'" [matTooltip]="'Waiting list: ' + singleRegistrable.onWaitingList"
+                                <div class="flex items-center mt-2 leading-5 text-md text-secondary"
+                                    *ngIf="singleRegistrable.hasWaitingList">
+                                    <mat-icon class="icon-size-5 text-hint mr-2" [svgIcon]="'heroicons_solid:clock'"
+                                        [matTooltip]="'Waiting list: ' + singleRegistrable.onWaitingList"
                                         [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                     </mat-icon>
                                     <div class="flex flex-wrap">
-                                        <ng-container *ngFor="let spotState of singleRegistrable.waitingList; trackBy: trackByFn">
+                                        <ng-container
+                                            *ngFor="let spotState of singleRegistrable.waitingList; trackBy: trackByFn">
                                             <div class="flex flex-col ml-0.5 w-1 pt-0.5 pb-0.5">
                                                 <!-- Leader: available -->
-                                                <div class="h-4 bg-gray-200 rounded overflow-hidden" *ngIf="spotState === 1">
+                                                <div class="h-4 bg-gray-200 rounded overflow-hidden"
+                                                    *ngIf="spotState === 1">
                                                 </div>
                                                 <!-- Leader: reserved -->
-                                                <div class="h-4 bg-warn-400 rounded overflow-hidden" *ngIf="spotState === 2">
+                                                <div class="h-4 bg-warn-400 rounded overflow-hidden"
+                                                    *ngIf="spotState === 2">
                                                 </div>
                                                 <!-- Leader: registered -->
-                                                <div class="h-4 bg-primary-400 rounded overflow-hidden" *ngIf="spotState === 3">
+                                                <div class="h-4 bg-primary-400 rounded overflow-hidden"
+                                                    *ngIf="spotState === 3">
                                                 </div>
                                                 <!-- Leader: paid -->
-                                                <div class="h-4 bg-primary-600 rounded overflow-hidden" *ngIf="spotState === 4">
+                                                <div class="h-4 bg-primary-600 rounded overflow-hidden"
+                                                    *ngIf="spotState === 4">
                                                 </div>
                                             </div>
                                         </ng-container>
@@ -402,18 +469,22 @@
                             <div class="flex flex-col w-full mt-auto">
                                 <!-- Registrable completion -->
                                 <div class="relative h-0.5" *ngIf="singleRegistrable.spotsAvailable > 0">
-                                    <div class="z-10 absolute inset-x-0 h-6 -mt-3" [matTooltip]="singleRegistrable.accepted / singleRegistrable.spotsAvailable | percent" [matTooltipPosition]="'above'"
-                                        [matTooltipClass]="'-mb-0.5'"></div>
-                                    <mat-progress-bar class="h-0.5" [value]="100 * singleRegistrable.accepted / singleRegistrable.spotsAvailable">
+                                    <div class="z-10 absolute inset-x-0 h-6 -mt-3"
+                                        [matTooltip]="singleRegistrable.accepted / singleRegistrable.spotsAvailable | percent"
+                                        [matTooltipPosition]="'above'" [matTooltipClass]="'-mb-0.5'"></div>
+                                    <mat-progress-bar class="h-0.5"
+                                        [value]="100 * singleRegistrable.accepted / singleRegistrable.spotsAvailable">
                                     </mat-progress-bar>
                                 </div>
 
                                 <!-- Course launch button -->
                                 <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
-                                    <button mat-stroked-button [routerLink]="[singleRegistrable.id, 'single', 'participants']">
+                                    <button mat-stroked-button
+                                        [routerLink]="[singleRegistrable.id, 'single', 'participants']">
                                         <span class="inline-flex items-center">
                                             Details
-                                            <mat-icon class="ml-1.5 icon-size-5" [svgIcon]="'heroicons_solid:arrow-sm-right'">
+                                            <mat-icon class="ml-1.5 icon-size-5"
+                                                [svgIcon]="'heroicons_solid:arrow-sm-right'">
                                             </mat-icon>
                                         </span>
                                     </button>
@@ -424,7 +495,8 @@
                 </ng-container>
 
                 <!-- Add track -->
-                <button *ngIf="(eventService.selected$ | async).state === EventState.Setup" class="flex flex-col h-96 shadow rounded-2xl overflow-hidden bg-card items-center justify-center"
+                <button *ngIf="(eventService.selected$ | async).state === EventState.Setup"
+                    class="flex flex-col h-96 shadow rounded-2xl overflow-hidden bg-card items-center justify-center"
                     (click)="addRegistrable()">
                     <mat-icon class="icon-size-16" [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
                 </button>
