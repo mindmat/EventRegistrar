@@ -115,6 +115,7 @@ import { GoogleChartsModule } from 'angular-google-charts';
 import { SetupEventComponent } from './modules/admin/setup-event/setup-event.component';
 import { EventSettingsComponent } from './modules/admin/event-settings/event-settings.component';
 import { MailConfigComponent } from './modules/admin/event-settings/mail-config/mail-config.component';
+import { AccountConfigComponent } from './modules/admin/event-settings/account-config/account-config.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -172,7 +173,8 @@ const routerConfig: ExtraOptions = {
         ChangeNameComponent,
         SetupEventComponent,
         EventSettingsComponent,
-        MailConfigComponent
+        MailConfigComponent,
+        AccountConfigComponent
     ],
     providers: [
         AuthServiceFuse,

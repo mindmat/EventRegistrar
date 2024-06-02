@@ -1,0 +1,72 @@
+<div class="text-secondary">{{ 'ImapConfigExplanation' | translate }}</div>
+
+<div class="w-full max-w-3xl">
+
+    <!-- Form -->
+    <form class="mt-2 rounded-xl bg-card dark:bg-transparent dark:border p-6 space-y-3" [formGroup]="configForm">
+
+        <!-- Section -->
+        <div class="grid sm:grid-cols-4 gap-6 w-full">
+
+            <!-- IBAN -->
+            <div class="sm:col-span-3">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'Iban' | translate }}</mat-label>
+                    <input [formControlName]="'iban'" matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- Account Holder -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'AccountHolder' | translate }}</mat-label>
+                    <input [formControlName]="'accountHolderName'" matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- Street -->
+            <div class="sm:col-span-3">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'Street' | translate }}</mat-label>
+                    <input [formControlName]="'accountHolderStreet'" matInput>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-1">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'HouseNo' | translate }}</mat-label>
+                    <input [formControlName]="'accountHolderHouseNo'" matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- Town -->
+            <div class="sm:col-span-1">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'Plz' | translate }}</mat-label>
+                    <input [formControlName]="'accountHolderPostalCode'" matInput>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-3">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'Town' | translate }}</mat-label>
+                    <input [formControlName]="'accountHolderTown'" matInput>
+                </mat-form-field>
+            </div>
+            <div class="sm:col-span-1">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'CountryCode' | translate }}</mat-label>
+                    <input [formControlName]="'accountHolderCountryCode'" matInput>
+                </mat-form-field>
+            </div>
+
+
+        </div>
+
+    </form>
+
+    <!-- Actions -->
+    <div class="flex items-center justify-end mt-4">
+        <button class="ml-4" mat-flat-button type="button" [color]="'primary'" (click)="save()"
+            [disabled]="!submittable">{{ 'Save' | translate }}</button>
+    </div>
+
+</div>

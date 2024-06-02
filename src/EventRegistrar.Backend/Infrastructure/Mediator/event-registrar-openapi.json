@@ -470,6 +470,38 @@
         }
       }
     },
+    "/api/BankAccountConfigurationQuery": {
+      "post": {
+        "tags": [
+          "BankAccountConfiguration"
+        ],
+        "operationId": "BankAccountConfiguration_Query",
+        "requestBody": {
+          "x-name": "BankAccountConfigurationQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BankAccountConfigurationQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BankAccountConfiguration"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/BookingsByStateQuery": {
       "post": {
         "tags": [
@@ -3543,6 +3575,31 @@
         }
       }
     },
+    "/api/SaveBankAccountConfigurationCommand": {
+      "post": {
+        "tags": [
+          "SaveBankAccountConfiguration"
+        ],
+        "operationId": "SaveBankAccountConfiguration_Command",
+        "requestBody": {
+          "x-name": "SaveBankAccountConfigurationCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveBankAccountConfigurationCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/SaveDomainEventCommand": {
       "post": {
         "tags": [
@@ -5356,6 +5413,50 @@
         ]
       },
       "AvailableQuestionOptionMappingsQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "BankAccountConfiguration": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "iban": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountHolderName": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountHolderStreet": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountHolderHouseNo": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountHolderPostalCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountHolderTown": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountHolderCountryCode": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "BankAccountConfigurationQuery": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -7633,6 +7734,10 @@
             "nullable": true
           },
           "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
             "type": "string",
             "nullable": true
           },
@@ -10184,6 +10289,24 @@
           "eventId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "SaveBankAccountConfigurationCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "config": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BankAccountConfiguration"
+              }
+            ]
           }
         }
       },

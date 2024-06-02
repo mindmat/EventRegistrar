@@ -5,6 +5,7 @@ import { UserAccessRequestsService } from './user-access/user-access-requests.se
 import { UserAccessService } from './user-access/user-access.service';
 import { UserRolesService } from './user-access/user-roles.service';
 import { MailConfigService } from './mail-config/mail-config.service';
+import { AccountConfigService } from './account-config/account-config.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class EventSettingsResolver implements Resolve<boolean>
   constructor(private userAccessService: UserAccessService,
     private accessRequestService: UserAccessRequestsService,
     private userRolesService: UserRolesService,
-    private mailConfigService: MailConfigService) { }
+    private mailConfigService: MailConfigService,
+    private accountConfigService: AccountConfigService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
   {
@@ -22,6 +24,7 @@ export class EventSettingsResolver implements Resolve<boolean>
       this.userAccessService.fetchUsersOfEvent(),
       this.accessRequestService.fetchRequestOfEvent(),
       this.userRolesService.fetchRoles(),
-      this.mailConfigService.fetchMailConfigs());
+      this.mailConfigService.fetchMailConfigs(),
+      this.accountConfigService.fetchConfig());
   }
 }

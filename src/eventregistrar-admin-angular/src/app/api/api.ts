@@ -775,6 +775,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    bankAccountConfiguration_Query(bankAccountConfigurationQuery: BankAccountConfigurationQuery | undefined): Observable<BankAccountConfiguration> {
+        let url_ = this.baseUrl + "/api/BankAccountConfigurationQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(bankAccountConfigurationQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processBankAccountConfiguration_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processBankAccountConfiguration_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<BankAccountConfiguration>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<BankAccountConfiguration>;
+        }));
+    }
+
+    protected processBankAccountConfiguration_Query(response: HttpResponseBase): Observable<BankAccountConfiguration> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BankAccountConfiguration;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     bookingsByState_Query(bookingsByStateQuery: BookingsByStateQuery | undefined): Observable<PaymentDisplayItem[]> {
         let url_ = this.baseUrl + "/api/BookingsByStateQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -5895,6 +5946,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    saveBankAccountConfiguration_Command(saveBankAccountConfigurationCommand: SaveBankAccountConfigurationCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/SaveBankAccountConfigurationCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(saveBankAccountConfigurationCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveBankAccountConfiguration_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveBankAccountConfiguration_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processSaveBankAccountConfiguration_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     saveDomainEvent_Command(saveDomainEventCommand: SaveDomainEventCommand | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/SaveDomainEventCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -8222,6 +8321,20 @@ export interface AvailableQuestionOptionMappingsQuery {
     eventId?: string;
 }
 
+export interface BankAccountConfiguration {
+    iban?: string | null;
+    accountHolderName?: string | null;
+    accountHolderStreet?: string | null;
+    accountHolderHouseNo?: string | null;
+    accountHolderPostalCode?: string | null;
+    accountHolderTown?: string | null;
+    accountHolderCountryCode?: string | null;
+}
+
+export interface BankAccountConfigurationQuery {
+    eventId?: string;
+}
+
 export interface PaymentDisplayItem {
     id?: string;
     typ?: CreditDebit | null;
@@ -8965,6 +9078,7 @@ export interface Participant {
     firstName?: string | null;
     lastName?: string | null;
     email?: string | null;
+    phone?: string | null;
     pricePackageAdmitted?: string | null;
     isOnWaitingList?: boolean;
     state?: RegistrationState;
@@ -9755,6 +9869,11 @@ export enum RequestResponse {
 
 export interface RightsOfUserInEventQuery {
     eventId?: string;
+}
+
+export interface SaveBankAccountConfigurationCommand {
+    eventId?: string;
+    config?: BankAccountConfiguration | null;
 }
 
 export interface SaveDomainEventCommand {

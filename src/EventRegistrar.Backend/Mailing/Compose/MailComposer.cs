@@ -4,7 +4,7 @@ using System.Text;
 using Codecrete.SwissQRBill.Generator;
 
 using EventRegistrar.Backend.Mailing.Templates;
-using EventRegistrar.Backend.Payments;
+using EventRegistrar.Backend.Payments.Account;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Properties;
 using EventRegistrar.Backend.Registrations;
@@ -19,7 +19,7 @@ public class MailComposer(
     PaidAmountSummarizer paidAmountSummarizer,
     DuePaymentConfiguration duePaymentConfiguration,
     PriceCalculator priceCalculator,
-    QrBillConfiguration qrBillConfiguration)
+    BankAccountConfiguration bankAccountConfiguration)
 {
     private const string DateFormat = "dd.MM.yy";
     private const string PrefixFollower = "FOLLOWER";
@@ -233,15 +233,15 @@ public class MailComposer(
             var bill = new Bill
                        {
                            // creditor data
-                           Account = qrBillConfiguration.Iban,
+                           Account = bankAccountConfiguration.Iban,
                            Creditor = new Address
                                       {
-                                          Name = qrBillConfiguration.AccountHolderName,
-                                          Street = qrBillConfiguration.AccountHolderStreet,
-                                          HouseNo = qrBillConfiguration.AccountHolderHouseNo,
-                                          PostalCode = qrBillConfiguration.AccountHolderPostalCode,
-                                          Town = qrBillConfiguration.AccountHolderTown,
-                                          CountryCode = qrBillConfiguration.AccountHolderCountryCode
+                                          Name = bankAccountConfiguration.AccountHolderName,
+                                          Street = bankAccountConfiguration.AccountHolderStreet,
+                                          HouseNo = bankAccountConfiguration.AccountHolderHouseNo,
+                                          PostalCode = bankAccountConfiguration.AccountHolderPostalCode,
+                                          Town = bankAccountConfiguration.AccountHolderTown,
+                                          CountryCode = bankAccountConfiguration.AccountHolderCountryCode
                                       },
 
                            // payment data

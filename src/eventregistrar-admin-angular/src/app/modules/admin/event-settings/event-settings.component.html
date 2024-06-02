@@ -3,7 +3,8 @@
     <mat-drawer-container class="flex-auto sm:h-full">
 
         <!-- Drawer -->
-        <mat-drawer class="sm:w-96 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened" #drawer>
+        <mat-drawer class="sm:w-96 dark:bg-gray-900" [autoFocus]="false" [mode]="drawerMode" [opened]="drawerOpened"
+            #drawer>
             <!-- Header -->
             <div class="flex items-center justify-between m-8 mr-6 sm:my-10">
                 <!-- Title -->
@@ -19,11 +20,15 @@
             <div class="flex flex-col divide-y border-t border-b">
                 <ng-container *ngFor="let panel of panels; trackBy: trackByFn">
                     <div class="flex px-8 py-5 cursor-pointer" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedPanel || selectedPanel !== panel.id,
-                                    'bg-primary-50 dark:bg-hover': selectedPanel && selectedPanel === panel.id}" (click)="goToPanel(panel.id)">
-                        <mat-icon [ngClass]="{'text-hint': !selectedPanel || selectedPanel !== panel.id,
-                                        'text-primary dark:text-primary-500': selectedPanel && selectedPanel === panel.id}" [svgIcon]="panel.icon"></mat-icon>
+                                    'bg-primary-50 dark:bg-hover': selectedPanel && selectedPanel === panel.id}"
+                        (click)="goToPanel(panel.id)">
+                        <mat-icon
+                            [ngClass]="{'text-hint': !selectedPanel || selectedPanel !== panel.id,
+                                        'text-primary dark:text-primary-500': selectedPanel && selectedPanel === panel.id}"
+                            [svgIcon]="panel.icon"></mat-icon>
                         <div class="ml-3">
-                            <div class="font-medium leading-6" [ngClass]="{'text-primary dark:text-primary-500': selectedPanel && selectedPanel === panel.id}">
+                            <div class="font-medium leading-6"
+                                [ngClass]="{'text-primary dark:text-primary-500': selectedPanel && selectedPanel === panel.id}">
                                 {{panel.title}}
                             </div>
                             <div class="mt-0.5 text-secondary">
@@ -63,9 +68,9 @@
                             <app-mail-config></app-mail-config>
                         </ng-container>
                         <!-- Security -->
-                        <!-- <ng-container *ngSwitchCase="'security'">
-                            <settings-security></settings-security>
-                        </ng-container> -->
+                        <ng-container *ngSwitchCase="'bank-account'">
+                            <app-account-config></app-account-config>
+                        </ng-container>
                         <!-- Plan & Billing -->
                         <!-- <ng-container *ngSwitchCase="'plan-billing'">
                             <settings-plan-billing></settings-plan-billing>

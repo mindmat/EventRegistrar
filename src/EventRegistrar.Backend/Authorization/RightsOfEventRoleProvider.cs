@@ -13,6 +13,7 @@ using EventRegistrar.Backend.Mailing.InvalidAddresses;
 using EventRegistrar.Backend.Mailing.ManualTrigger;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments;
+using EventRegistrar.Backend.Payments.Account;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Payments.Differences;
 using EventRegistrar.Backend.Payments.Due;
@@ -202,6 +203,8 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(GoogleFormsScriptQuery);
             yield return nameof(ExternalMailConfigurationQuery);
             yield return nameof(SaveExternalMailConfigurationCommand);
+            yield return nameof(BankAccountConfigurationQuery);
+            yield return nameof(SaveBankAccountConfigurationCommand);
         }
     }
 }

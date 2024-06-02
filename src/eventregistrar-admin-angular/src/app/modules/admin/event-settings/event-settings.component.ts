@@ -45,12 +45,12 @@ export class EventSettingsComponent implements OnInit, OnDestroy
                 title: 'Mailing',
                 description: 'Configure IMAP access to import mails from an external mail address'
             },
-            // {
-            //     id: 'security',
-            //     icon: 'heroicons_outline:lock-closed',
-            //     title: 'Security',
-            //     description: 'Manage your password and 2-step verification preferences'
-            // },
+            {
+                id: 'bank-account',
+                icon: 'heroicons_outline:credit-card',
+                title: 'Bank Account',
+                description: 'Configure the bank account used to generate the QR Code for e-Banking'
+            },
             // {
             //     id: 'plan-billing',
             //     icon: 'heroicons_outline:credit-card',
