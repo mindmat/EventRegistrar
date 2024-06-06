@@ -101,6 +101,7 @@ public class ComposeAndSendAutoMailCommandHandler(
         var registrations_Recipients = new List<Registration> { registration };
         if (registration.RegistrationId_Partner != null
          && partnerRegistration != null
+         && command.MailType != MailType.RegistrationReceived
          && command.MailType != MailType.OptionsForRegistrationsOnWaitingList
          && command.MailType != MailType.RegistrationCancelled)
         {
