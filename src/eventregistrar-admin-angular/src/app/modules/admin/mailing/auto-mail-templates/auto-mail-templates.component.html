@@ -89,6 +89,27 @@
                                 </ng-container>
                             </button>
 
+                            <!-- Use received mail -->
+                            <button class="pr-4 pl-3.5" mat-button (click)="toggleReceivedMail()">
+
+                                <!-- Mark as complete -->
+                                <ng-container *ngIf="!configForm.get('sendRegistrationReceivedMail').value">
+                                    <div class="flex items-center justify-center">
+                                        <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
+                                        <span class="ml-2 font-semibold">{{ 'DontSendReceivedMail' | translate }}</span>
+                                    </div>
+                                </ng-container>
+
+                                <!-- Mark as incomplete -->
+                                <ng-container *ngIf="configForm.get('sendRegistrationReceivedMail').value">
+                                    <div class="flex items-center justify-center">
+                                        <mat-icon class="text-primary"
+                                            [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                                        <span class="ml-2 font-semibold">{{ 'SendReceivedMail' | translate }}</span>
+                                    </div>
+                                </ng-container>
+                            </button>
+
                             <!-- Languages -->
                             <div class="sm:col-span-4">
                                 <mat-label>{{ 'AngeboteneSprachen' | translate }}</mat-label>
@@ -235,7 +256,8 @@
 <ng-template let-template #flagImage>
     <span class="relative w-6 shadow rounded-sm overflow-hidden">
         <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
-        <img class="w-full" [ngClass]="{'opacity-25': template.id===null}" [src]="'assets/images/flags/' + flagCodes[template.language]?.toUpperCase() + '.svg'"
+        <img class="w-full" [ngClass]="{'opacity-25': template.id===null}"
+            [src]="'assets/images/flags/' + flagCodes[template.language]?.toUpperCase() + '.svg'"
             [alt]="'Flag image for ' + template.language">
     </span>
 </ng-template>

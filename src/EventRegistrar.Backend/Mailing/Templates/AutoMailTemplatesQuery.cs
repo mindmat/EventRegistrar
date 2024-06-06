@@ -27,6 +27,7 @@ public class AutoMailTemplatesQueryHandler(IQueryable<AutoMailTemplate> mailTemp
                    AvailableLanguages = config.AvailableLanguages,
                    SingleRegistrationPossible = config.SingleRegistrationPossible,
                    PartnerRegistrationPossible = config.PartnerRegistrationPossible,
+                   SendRegistrationReceivedMail = config.SendRegistrationReceivedMail,
                    MailSender = config.MailSender,
                    SmtpHost = config.SmtpConfiguration?.Host,
                    SmtpPort = config.SmtpConfiguration?.Port,
@@ -38,7 +39,7 @@ public class AutoMailTemplatesQueryHandler(IQueryable<AutoMailTemplate> mailTemp
                                 {
                                     Name = Resources.MailTypeGroup_Received,
                                     Types = Enumerable.Empty<AutoMailTemplateMetadataType>()
-                                                      .Append(CreateType(MailType.RegistrationReceived, existingTemplates))
+                                                      .AppendIf(config.SendRegistrationReceivedMail, () => CreateType(MailType.RegistrationReceived, existingTemplates))
                                                       .Append(CreateType(MailType.SoldOut, existingTemplates))
                                                       .AppendIf(config.SingleRegistrationPossible, () => CreateType(MailType.SingleRegistrationAccepted, existingTemplates))
                                                       .AppendIf(config.PartnerRegistrationPossible, () => CreateType(MailType.PartnerRegistrationFirstPartnerAccepted, existingTemplates))
@@ -115,6 +116,7 @@ public class AutoMailTemplates
     public IEnumerable<string> AvailableLanguages { get; set; } = null!;
     public bool SingleRegistrationPossible { get; set; }
     public bool PartnerRegistrationPossible { get; set; }
+    public bool SendRegistrationReceivedMail { get; set; }
     public MailSender MailSender { get; set; }
 
     public string? SmtpHost { get; set; }

@@ -727,6 +727,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &quot;Anmeldung erhalten&quot; nicht senden.
+        /// </summary>
+        internal static string DontSendReceivedMail {
+            get {
+                return ResourceManager.GetString("DontSendReceivedMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Herunterladen.
         /// </summary>
         internal static string Download {
@@ -3313,6 +3322,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string SendPleasePayDifferenceMail {
             get {
                 return ResourceManager.GetString("SendPleasePayDifferenceMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &quot;Anmeldung erhalten&quot; senden.
+        /// </summary>
+        internal static string SendReceivedMail {
+            get {
+                return ResourceManager.GetString("SendReceivedMail", resourceCulture);
             }
         }
         

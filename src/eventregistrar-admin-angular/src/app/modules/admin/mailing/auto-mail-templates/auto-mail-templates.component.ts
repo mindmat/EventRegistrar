@@ -26,6 +26,7 @@ export class AutoMailTemplatesComponent implements OnInit
     senderMail: '',
     singleRegistrationPossible: false,
     partnerRegistrationPossible: false,
+    sendRegistrationReceivedMail: false,
     mailSender: MailSender.Smtp,
     smtpHost: null as string,
     smtpPort: null as number,
@@ -62,6 +63,7 @@ export class AutoMailTemplatesComponent implements OnInit
           senderMail: templates.senderMail,
           singleRegistrationPossible: templates.singleRegistrationPossible,
           partnerRegistrationPossible: templates.partnerRegistrationPossible,
+          sendRegistrationReceivedMail: templates.sendRegistrationReceivedMail,
           mailSender: templates.mailSender,
           smtpHost: templates.smtpHost,
           smtpPort: templates.smtpPort,
@@ -113,6 +115,13 @@ export class AutoMailTemplatesComponent implements OnInit
     this.service.setReleaseMail(type.type, type.releaseImmediately);
   }
 
+  toggleReceivedMail(): void
+  {
+    this.configForm.patchValue({
+      sendRegistrationReceivedMail: !this.configForm.value.sendRegistrationReceivedMail
+    });
+  }
+
   selectTemplate(template: AutoMailTemplateMetadataLanguage, type: AutoMailTemplateMetadataType): void
   {
     this.selectedTemplate = template;
@@ -139,6 +148,7 @@ export class AutoMailTemplatesComponent implements OnInit
       this.configForm.value.availableLanguages,
       this.configForm.value.singleRegistrationPossible,
       this.configForm.value.partnerRegistrationPossible,
+      this.configForm.value.sendRegistrationReceivedMail,
       this.configForm.value.mailSender,
       this.configForm.value.smtpHost,
       this.configForm.value.smtpPort,

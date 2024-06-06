@@ -333,6 +333,9 @@
   <data name="DistributionByPricePackage" xml:space="preserve">
     <value>Distribution by price package</value>
   </data>
+  <data name="DontSendReceivedMail" xml:space="preserve">
+    <value>Don't send "registration received"</value>
+  </data>
   <data name="Download" xml:space="preserve">
     <value>Download</value>
   </data>
@@ -1085,6 +1088,9 @@
   </data>
   <data name="SendPleasePayDifferenceMail" xml:space="preserve">
     <value>Send E-mail</value>
+  </data>
+  <data name="SendReceivedMail" xml:space="preserve">
+    <value>Send "registration received"</value>
   </data>
   <data name="SendReminderMail" xml:space="preserve">
     <value>Send reminder E-mail</value>

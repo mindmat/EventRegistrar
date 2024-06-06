@@ -13,6 +13,7 @@ public class MailConfiguration : IConfigurationItem
     public string? FallbackLanguage { get; set; }
     public MailSender MailSender { get; set; }
     public SmtpConfiguration? SmtpConfiguration { get; set; }
+    public bool SendRegistrationReceivedMail { get; set; }
 }
 
 public class SmtpConfiguration

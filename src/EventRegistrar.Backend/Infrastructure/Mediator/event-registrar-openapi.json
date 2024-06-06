@@ -5180,6 +5180,9 @@
           "partnerRegistrationPossible": {
             "type": "boolean"
           },
+          "sendRegistrationReceivedMail": {
+            "type": "boolean"
+          },
           "mailSender": {
             "$ref": "#/components/schemas/MailSender"
           },
@@ -11262,6 +11265,9 @@
             "type": "boolean"
           },
           "partnerRegistrationPossible": {
+            "type": "boolean"
+          },
+          "sendRegistrationReceivedMail": {
             "type": "boolean"
           },
           "availableLanguages": {

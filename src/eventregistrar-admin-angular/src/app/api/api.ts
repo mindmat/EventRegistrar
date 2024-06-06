@@ -8228,6 +8228,7 @@ export interface AutoMailTemplates {
     availableLanguages?: string[];
     singleRegistrationPossible?: boolean;
     partnerRegistrationPossible?: boolean;
+    sendRegistrationReceivedMail?: boolean;
     mailSender?: MailSender;
     smtpHost?: string | null;
     smtpPort?: number | null;
@@ -10176,6 +10177,7 @@ export interface UpdateAutoMailConfigurationCommand {
     senderMail?: string | null;
     singleRegistrationPossible?: boolean;
     partnerRegistrationPossible?: boolean;
+    sendRegistrationReceivedMail?: boolean;
     availableLanguages?: string[] | null;
     mailSender?: MailSender | null;
     smtpHost?: string | null;

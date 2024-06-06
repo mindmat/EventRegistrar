@@ -6,7 +6,7 @@ using EventRegistrar.Backend.Registrations.Register;
 
 namespace EventRegistrar.Backend.Registrations.ReceivedConfirmation;
 
-internal class SendRegistrationReceivedConfirmationMailWhenProcessed(MailReleaseConfiguration configuration,
+internal class SendRegistrationReceivedConfirmationMailWhenProcessed(MailConfiguration configuration,
                                                                      EventContext eventContext)
     : IEventToCommandTranslation<RegistrationProcessed>
 {

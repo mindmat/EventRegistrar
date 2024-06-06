@@ -41,4 +41,4 @@ public enum MailType
     OptionsForRegistrationsOnWaitingList = 101
 }
 
-public class PartnerMailTypeAttribute : Attribute { }
+public class PartnerMailTypeAttribute : Attribute;

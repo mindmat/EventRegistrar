@@ -11,6 +11,7 @@ public class UpdateAutoMailConfigurationCommand : IRequest, IEventBoundRequest
     public string? SenderMail { get; set; }
     public bool SingleRegistrationPossible { get; set; }
     public bool PartnerRegistrationPossible { get; set; }
+    public bool SendRegistrationReceivedMail { get; set; }
     public IEnumerable<string>? AvailableLanguages { get; set; }
     public MailSender? MailSender { get; set; }
 
@@ -35,6 +36,7 @@ public class UpdateAutoMailConfigurationCommandHandler(ConfigurationRegistry con
 
         config.SingleRegistrationPossible = command.SingleRegistrationPossible;
         config.PartnerRegistrationPossible = command.PartnerRegistrationPossible;
+        config.SendRegistrationReceivedMail = command.SendRegistrationReceivedMail;
 
         if (command.AvailableLanguages?.Any() == true)
         {
