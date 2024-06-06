@@ -574,6 +574,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mailvorlagen erstellen.
+        /// </summary>
+        internal static string CreateAutoMailTemplates {
+            get {
+                return ResourceManager.GetString("CreateAutoMailTemplates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Individuelle Reduktion erstellen.
         /// </summary>
         internal static string CreateIndividualReduction {

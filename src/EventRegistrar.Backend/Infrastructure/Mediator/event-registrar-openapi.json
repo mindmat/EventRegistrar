@@ -6635,6 +6635,9 @@
           "pricePackagesDefined": {
             "type": "boolean"
           },
+          "autoMailTemplatesDefined": {
+            "type": "boolean"
+          },
           "registrationsReceived": {
             "type": "integer",
             "format": "int32"

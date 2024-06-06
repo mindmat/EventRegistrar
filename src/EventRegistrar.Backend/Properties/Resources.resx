@@ -289,6 +289,9 @@
   <data name="CreateAndAddIncomingPayment" xml:space="preserve">
     <value>Manuelle Zahlung erfassen...</value>
   </data>
+  <data name="CreateAutoMailTemplates" xml:space="preserve">
+    <value>Mailvorlagen erstellen</value>
+  </data>
   <data name="CreateIndividualReduction" xml:space="preserve">
     <value>Individuelle Reduktion erstellen</value>
   </data>

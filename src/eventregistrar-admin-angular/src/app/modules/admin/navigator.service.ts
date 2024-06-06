@@ -60,4 +60,9 @@ export class NavigatorService
   {
     return `/${this.eventService.selected.acronym}/admin/pricing`;
   }
+
+  getAutoMailTemplatesUrl(): string
+  {
+    return `/${this.eventService.selected.acronym}/mailing/auto-mail-templates`;
+  }
 }

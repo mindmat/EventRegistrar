@@ -8712,6 +8712,7 @@ export interface EventSetupState {
     tracksDefined?: boolean;
     formMapped?: boolean;
     pricePackagesDefined?: boolean;
+    autoMailTemplatesDefined?: boolean;
     registrationsReceived?: number;
     registrationsProcessed?: number;
     processingErrors?: string[];
