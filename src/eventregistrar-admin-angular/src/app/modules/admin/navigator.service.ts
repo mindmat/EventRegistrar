@@ -55,4 +55,9 @@ export class NavigatorService
   {
     return `/${this.eventService.selected.acronym}/accounting/settle-payments/${paymentId}`;
   }
+
+  getPricingUrl(): string
+  {
+    return `/${this.eventService.selected.acronym}/admin/pricing`;
+  }
 }

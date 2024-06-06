@@ -1208,6 +1208,9 @@
   <data name="SetFallbackPackage" xml:space="preserve">
     <value>Anderes Paket aktivieren</value>
   </data>
+  <data name="SetPricing" xml:space="preserve">
+    <value>Preise festlegen</value>
+  </data>
   <data name="Settings" xml:space="preserve">
     <value>Einstellungen</value>
   </data>

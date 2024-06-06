@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.RegistrationForms;
+﻿using EventRegistrar.Backend.Registrables.Pricing;
+using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
 using EventRegistrar.Backend.Registrations.Raw;
 
@@ -15,6 +16,7 @@ public class EventSetupState
     public bool FormImported { get; set; }
     public bool TracksDefined { get; set; }
     public bool FormMapped { get; set; }
+    public bool PricePackagesDefined { get; set; }
     public int RegistrationsReceived { get; set; }
     public int RegistrationsProcessed { get; set; }
     public IEnumerable<string> ProcessingErrors { get; set; } = null!;
@@ -23,7 +25,8 @@ public class EventSetupState
 public class EventSetupStateQueryHandler(IQueryable<Event> events,
                                          IQueryable<RawRegistrationForm> rawRegistrationForms,
                                          IQueryable<RegistrationForm> registrationForms,
-                                         IQueryable<RawRegistration> rawRegistrations)
+                                         IQueryable<RawRegistration> rawRegistrations,
+                                         IQueryable<PricePackage> pricePackages)
     : IRequestHandler<EventSetupStateQuery, EventSetupState>
 {
     public async Task<EventSetupState> Handle(EventSetupStateQuery query, CancellationToken cancellationToken)
@@ -59,14 +62,17 @@ public class EventSetupStateQueryHandler(IQueryable<Event> events,
                                                                          })
                                                           .FirstOrDefaultAsync(cancellationToken);
 
+        var pricePackagesDefined = await pricePackages.AnyAsync(ppk => ppk.Parts!.Any(), cancellationToken);
+
         return new EventSetupState
                {
                    FormSent = formSent,
                    FormImported = form != null,
                    TracksDefined = @event.AnyTracks,
                    FormMapped = form?.Mapped == true,
+                   PricePackagesDefined = pricePackagesDefined,
                    RegistrationsReceived = rawRegistrationCounts?.Received ?? 0,
-                   ProcessingErrors = rawRegistrationCounts?.ProcessionErrors ?? Enumerable.Empty<string>(),
+                   ProcessingErrors = rawRegistrationCounts?.ProcessionErrors ?? [],
                    RegistrationsProcessed = rawRegistrationCounts?.Processed ?? 0
                };
     }

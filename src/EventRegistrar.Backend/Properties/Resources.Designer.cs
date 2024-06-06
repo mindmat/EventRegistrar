@@ -3344,6 +3344,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Preise festlegen.
+        /// </summary>
+        internal static string SetPricing {
+            get {
+                return ResourceManager.GetString("SetPricing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einstellungen.
         /// </summary>
         internal static string Settings {

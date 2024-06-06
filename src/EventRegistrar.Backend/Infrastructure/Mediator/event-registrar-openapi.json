@@ -6632,6 +6632,9 @@
           "formMapped": {
             "type": "boolean"
           },
+          "pricePackagesDefined": {
+            "type": "boolean"
+          },
           "registrationsReceived": {
             "type": "integer",
             "format": "int32"

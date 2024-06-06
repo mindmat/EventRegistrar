@@ -8711,6 +8711,7 @@ export interface EventSetupState {
     formImported?: boolean;
     tracksDefined?: boolean;
     formMapped?: boolean;
+    pricePackagesDefined?: boolean;
     registrationsReceived?: number;
     registrationsProcessed?: number;
     processingErrors?: string[];
