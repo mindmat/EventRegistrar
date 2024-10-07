@@ -8,7 +8,6 @@ using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrables;
-using EventRegistrar.Backend.Registrables.Compositions;
 using EventRegistrar.Backend.RegistrationForms;
 
 namespace EventRegistrar.Backend.Events;
@@ -27,7 +26,6 @@ public class CreateEventCommand : IRequest
 }
 
 public class CreateEventCommandHandler(IRepository<Event> events,
-                                       IRepository<RegistrableComposition> registrableCompositions,
                                        AuthenticatedUserId authenticatedUserId,
                                        AuthenticatedUser authenticatedUser,
                                        ChangeTrigger changeTrigger,
@@ -86,11 +84,9 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                                           .Include(evt => evt.Users)
                                           .Include(evt => evt.Configurations)
                                           .Include(evt => evt.Registrables!)
-                                          .ThenInclude(rbl => rbl.Reductions)
-                                          .Include(evt => evt.Registrables!)
-                                          .ThenInclude(rbl => rbl.Compositions)
                                           .Include(evt => evt.AutoMailTemplates)
                                           .Include(evt => evt.BulkMailTemplates)
+                                          .AsSplitQuery()
                                           .FirstAsync(cancellationToken);
 
             var isUserAdminInOtherEvent = sourceEvent.Users!.Any(uie => uie.UserId == userId);
@@ -172,26 +168,6 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                                                });
 
                     registrableMap.Add(sourceRegistrable.Id, newRegistrableId);
-                }
-
-                foreach (var registrableOfSourceEvent in sourceEvent.Registrables!)
-                {
-                    var newRegistrableId = registrableMap[registrableOfSourceEvent.Id];
-
-                    // copy compositions
-                    foreach (var composition in registrableOfSourceEvent.Compositions!)
-                    {
-                        var mappedRegistrableId_Contains = registrableMap.Lookup(composition.RegistrableId_Contains);
-                        if (mappedRegistrableId_Contains != null)
-                        {
-                            registrableCompositions.InsertObjectTree(new RegistrableComposition
-                                                                     {
-                                                                         Id = Guid.NewGuid(),
-                                                                         RegistrableId = newRegistrableId,
-                                                                         RegistrableId_Contains = mappedRegistrableId_Contains.Value
-                                                                     });
-                        }
-                    }
                 }
             }
 

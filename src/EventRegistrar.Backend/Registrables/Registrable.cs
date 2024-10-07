@@ -1,6 +1,4 @@
 ﻿using EventRegistrar.Backend.Events;
-using EventRegistrar.Backend.Registrables.Compositions;
-using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 using EventRegistrar.Backend.Spots;
 
@@ -12,9 +10,7 @@ public class Registrable : Entity
 {
     public Guid EventId { get; set; }
     public Event? Event { get; set; }
-    public ICollection<RegistrableComposition>? Compositions { get; set; }
     public ICollection<QuestionOptionMapping>? QuestionOptionMappings { get; set; }
-    public ICollection<Reduction>? Reductions { get; set; }
     public ICollection<Seat>? Spots { get; set; }
 
     public string Name { get; set; } = null!;

@@ -29,7 +29,6 @@ using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.Registrables.Pricing;
-using EventRegistrar.Backend.Registrables.Reductions;
 using EventRegistrar.Backend.Registrables.Tags;
 using EventRegistrar.Backend.Registrables.WaitingList.MoveUp;
 using EventRegistrar.Backend.RegistrationForms.GoogleForms;
@@ -90,7 +89,6 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(PaymentSlipImageQuery);
             yield return nameof(HostingQuery);
             yield return nameof(InvalidAddressesQuery);
-            yield return nameof(PartyOverviewQuery);
             yield return nameof(PossibleMailTypesQuery);
             yield return nameof(UnassignedIncomingPaymentsQuery);
             yield return nameof(NotReceivedMailsQuery);
@@ -158,8 +156,6 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(WillPayAtCheckinCommand);
             yield return nameof(DeleteRegistrableCommand);
             yield return nameof(DeleteBulkMailTemplateCommand);
-            yield return nameof(SaveReductionCommand);
-            yield return nameof(DeleteReductionCommand);
             yield return nameof(SetRegistrablesPricesCommand);
             yield return nameof(ActivateAutomaticPromotionCommand);
             yield return nameof(DeactivateAutomaticPromotionCommand);

@@ -69,13 +69,4 @@ public class OverviewController(IMediator mediator,
 
         return File(stream, "application/octet-stream");
     }
-
-    [HttpGet("api/events/{eventAcronym}/partyOverview")]
-    public async Task<IEnumerable<PartyItem>> GetPartyOverview(string eventAcronym)
-    {
-        return await mediator.Send(new PartyOverviewQuery
-                                   {
-                                       EventId = await eventAcronymResolver.GetEventIdFromAcronym(eventAcronym)
-                                   });
-    }
 }
