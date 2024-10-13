@@ -58,6 +58,8 @@ public enum PricePackagePartSelectionType
     AnyOne = 1,
     AnyTwo = 2,
     AnyThree = 3,
+    AnyFour= 4,
+    AnyFive = 5,
     All = 10,
     Optional = 11
 }

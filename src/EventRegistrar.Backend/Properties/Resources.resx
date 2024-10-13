@@ -982,6 +982,12 @@
   <data name="PricePackagePartSelectionType_All" xml:space="preserve">
     <value>Alle</value>
   </data>
+  <data name="PricePackagePartSelectionType_AnyFive" xml:space="preserve">
+    <value>Fünf aus der Auswahl</value>
+  </data>
+  <data name="PricePackagePartSelectionType_AnyFour" xml:space="preserve">
+    <value>Vier aus der Auswahl</value>
+  </data>
   <data name="PricePackagePartSelectionType_AnyOne" xml:space="preserve">
     <value>Eines aus der Auswahl</value>
   </data>

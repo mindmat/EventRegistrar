@@ -879,14 +879,20 @@
   <data name="PricePackagePartSelectionType_All" xml:space="preserve">
     <value>All</value>
   </data>
+  <data name="PricePackagePartSelectionType_AnyFive" xml:space="preserve">
+    <value>Five of the selection</value>
+  </data>
+  <data name="PricePackagePartSelectionType_AnyFour" xml:space="preserve">
+    <value>Four of the selection</value>
+  </data>
   <data name="PricePackagePartSelectionType_AnyOne" xml:space="preserve">
     <value>One of the selection</value>
   </data>
   <data name="PricePackagePartSelectionType_AnyThree" xml:space="preserve">
-    <value>Two of the selection</value>
+    <value>Three of the selection</value>
   </data>
   <data name="PricePackagePartSelectionType_AnyTwo" xml:space="preserve">
-    <value>Three of the selection</value>
+    <value>Two of the selection</value>
   </data>
   <data name="PricePackagePartSelectionType_Optional" xml:space="preserve">
     <value>Optional</value>

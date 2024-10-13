@@ -296,6 +296,8 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             PricePackagePartSelectionType.AnyOne   => matchingRegistrableIds.Count == 1,
             PricePackagePartSelectionType.AnyTwo   => matchingRegistrableIds.Count == 2,
             PricePackagePartSelectionType.AnyThree => matchingRegistrableIds.Count == 3,
+            PricePackagePartSelectionType.AnyFour  => matchingRegistrableIds.Count == 4,
+            PricePackagePartSelectionType.AnyFive  => matchingRegistrableIds.Count == 5,
             PricePackagePartSelectionType.Optional => matchingRegistrableIds.Count > 0,
             _                                      => false
         };
