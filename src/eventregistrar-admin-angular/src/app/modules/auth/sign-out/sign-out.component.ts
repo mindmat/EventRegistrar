@@ -33,7 +33,7 @@ export class AuthSignOutComponent implements OnInit, OnDestroy
     ngOnInit(): void
     {
         // Sign out
-        this._authService.logout({ returnTo: document.location.origin + '/sign-in' });
+        this._authService.logout({ returnTo: document.location.origin });
     }
 
     /**
