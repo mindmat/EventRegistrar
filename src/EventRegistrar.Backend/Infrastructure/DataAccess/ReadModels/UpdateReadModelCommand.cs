@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.MenuNodes;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 
@@ -14,15 +14,15 @@ public class UpdateReadModelCommand : IRequest
 
 public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> calculators,
                                            DbContext dbContext,
-                                           IEventBus eventBus,
-                                           IDateTimeProvider dateTimeProvider)
+                                           ChangeTrigger changeTrigger,
+                                           IDateTimeProvider dateTimeProvider,
+                                           IRepository<MenuNodeReadModel> menuNodes)
     : IRequestHandler<UpdateReadModelCommand>
 {
     private static readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerDefaults.Web);
 
     public async Task Handle(UpdateReadModelCommand command, CancellationToken cancellationToken)
     {
-        var now = dateTimeProvider.Now;
         var updater = calculators.First(rmu => rmu.QueryName == command.QueryName);
 
         var readModels = dbContext.Set<ReadModel>();
@@ -40,39 +40,80 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
 
         var result = await updater.Calculate(command.EventId, command.RowId, cancellationToken);
 
-        var contentJson = JsonSerializer.Serialize(result, _serializerOptions);
+        UpsertReadModel(command, result.ReadModel, readModel, readModels);
 
-        if (readModel == null)
+        if (result.MenuNode != null)
         {
-            readModel = new ReadModel
-                        {
-                            QueryName = command.QueryName,
-                            EventId = command.EventId,
-                            RowId = command.RowId,
-                            ContentJson = contentJson,
-                            LastUpdate = now
-                        };
-            var entry = readModels.Attach(readModel);
+            await UpsertMenuNode(command.EventId, result.MenuNode);
+        }
+    }
+
+    private void UpsertReadModel(UpdateReadModelCommand command,
+                                 object calculated,
+                                 ReadModel? existing,
+                                 DbSet<ReadModel> readModels)
+    {
+        var contentJson = JsonSerializer.Serialize(calculated, _serializerOptions);
+
+        if (existing == null)
+        {
+            var node = new ReadModel
+                       {
+                           QueryName = command.QueryName,
+                           EventId = command.EventId,
+                           RowId = command.RowId,
+                           ContentJson = contentJson,
+                           LastUpdate = dateTimeProvider.Now
+                       };
+            var entry = readModels.Attach(node);
             entry.State = EntityState.Added;
-            eventBus.Publish(new QueryChanged
-                             {
-                                 QueryName = command.QueryName,
-                                 EventId = command.EventId,
-                                 RowId = command.RowId
-                             });
+            changeTrigger.QueryChanged(command.QueryName,
+                                       command.EventId,
+                                       command.RowId);
         }
         else
         {
-            readModel.ContentJson = contentJson;
-            if (dbContext.Entry(readModel).State == EntityState.Modified)
+            existing.ContentJson = contentJson;
+            if (dbContext.Entry(existing).State == EntityState.Modified)
             {
-                eventBus.Publish(new QueryChanged
-                                 {
-                                     QueryName = command.QueryName,
-                                     EventId = command.EventId,
-                                     RowId = command.RowId
-                                 });
+                changeTrigger.QueryChanged(command.QueryName,
+                                           command.EventId,
+                                           command.RowId);
             }
+        }
+    }
+
+    private async Task UpsertMenuNode(Guid eventId, MenuNodeCalculation menuNodeCalculation)
+    {
+        var node = await menuNodes.AsTracking()
+                                  .FirstOrDefaultAsync(mnr => mnr.EventId == eventId
+                                                           && mnr.Key == menuNodeCalculation.Key);
+        var anythingChanged = false;
+        if (node == null)
+        {
+            anythingChanged = true;
+            menuNodes.InsertObjectTree(new MenuNodeReadModel
+                                       {
+                                           Id = Guid.NewGuid(),
+                                           EventId = eventId,
+                                           Key = menuNodeCalculation.Key,
+                                           Content = menuNodeCalculation.Content,
+                                           Hidden = menuNodeCalculation.Hidden
+                                       });
+        }
+        else if (node.Content != menuNodeCalculation.Content
+              || node.Style != menuNodeCalculation.Style
+              || node.Hidden != menuNodeCalculation.Hidden)
+        {
+            anythingChanged = true;
+            node.Content = menuNodeCalculation.Content;
+            node.Style = menuNodeCalculation.Style;
+            node.Hidden = menuNodeCalculation.Hidden;
+        }
+
+        if (anythingChanged)
+        {
+            changeTrigger.QueryChanged<MenuNodesQuery>(eventId);
         }
     }
 }
@@ -81,7 +122,7 @@ public interface IReadModelCalculator
 {
     string QueryName { get; }
     bool IsDateDependent { get; }
-    Task<object> Calculate(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
+    Task<(object ReadModel, MenuNodeCalculation? MenuNode)> Calculate(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
 }
 
 public abstract class ReadModelCalculator<T> : IReadModelCalculator
@@ -90,10 +131,18 @@ public abstract class ReadModelCalculator<T> : IReadModelCalculator
     public abstract string QueryName { get; }
     public abstract bool IsDateDependent { get; }
 
-    public async Task<object> Calculate(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
+    public async Task<(object ReadModel, MenuNodeCalculation? MenuNode)> Calculate(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
     {
         return await CalculateTyped(eventId, rowId, cancellationToken);
     }
 
-    public abstract Task<T> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
+    protected abstract Task<(T ReadModel, MenuNodeCalculation? MenuNode)> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
+}
+
+public class MenuNodeCalculation
+{
+    public required MenuNodeKey Key { get; set; }
+    public string? Content { get; set; }
+    public MenuNodeStyle? Style { get; set; }
+    public bool Hidden { get; set; }
 }

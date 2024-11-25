@@ -73,11 +73,10 @@ export class AuthSignInComponent implements OnInit
         this.showAlert = false;
 
         // Sign in
-        this._authService.loginWithRedirect()
+        this._authService.loginWithRedirect({ prompt: 'select_account' })
             .subscribe(
                 () =>
                 {
-
                     // Set the redirect url.
                     // The '/signed-in-redirect' is a dummy url to catch the request and redirect the user
                     // to the correct page after a successful sign in. This way, that url can be set via
@@ -87,24 +86,6 @@ export class AuthSignInComponent implements OnInit
                     // Navigate to the redirect url
                     this._router.navigateByUrl(redirectURL);
 
-                },
-                (response) =>
-                {
-
-                    // Re-enable the form
-                    this.signInForm.enable();
-
-                    // Reset the form
-                    this.signInNgForm.resetForm();
-
-                    // Set the alert
-                    this.alert = {
-                        type   : 'error',
-                        message: 'Wrong email or password'
-                    };
-
-                    // Show the alert
-                    this.showAlert = true;
                 }
             );
     }

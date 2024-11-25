@@ -2,6 +2,7 @@
 
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.MenuNodes;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrations;
@@ -13,20 +14,20 @@ public class DuePaymentsCalculator(IQueryable<Registration> registrations,
                                    DuePaymentConfiguration duePaymentConfiguration)
     : ReadModelCalculator<IEnumerable<DuePaymentItem>>
 {
-    public static readonly ImmutableHashSet<MailType?> MailTypes_Accepted =
+    static readonly ImmutableHashSet<MailType?> MailTypes_Accepted =
         new HashSet<MailType?> { MailType.PartnerRegistrationMatchedAndAccepted, MailType.SingleRegistrationAccepted }.ToImmutableHashSet();
 
-    public static readonly ImmutableHashSet<MailType?> MailTypes_Reminder1 =
+    static readonly ImmutableHashSet<MailType?> MailTypes_Reminder1 =
         new HashSet<MailType?> { MailType.PartnerRegistrationFirstReminder, MailType.SingleRegistrationFirstReminder }.ToImmutableHashSet();
 
-    public static readonly ImmutableHashSet<MailType?> MailTypes_Reminder2 =
+    static readonly ImmutableHashSet<MailType?> MailTypes_Reminder2 =
         new HashSet<MailType?> { MailType.PartnerRegistrationSecondReminder, MailType.SingleRegistrationSecondReminder }.ToImmutableHashSet();
 
 
     public override string QueryName => nameof(DuePaymentsQuery);
     public override bool IsDateDependent => true;
 
-    public override async Task<IEnumerable<DuePaymentItem>> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
+    protected override async Task<(IEnumerable<DuePaymentItem> ReadModel, MenuNodeCalculation? MenuNode)> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
     {
         var now = dateTimeProvider.Now;
         var reminderDueFrom = now.AddDays(-duePaymentConfiguration.PaymentGracePeriod);
@@ -147,21 +148,44 @@ public class DuePaymentsCalculator(IQueryable<Registration> registrations,
             }
         });
 
-        return result.OrderByDescending(dpi => dpi.WillPayAtCheckin)
-                     .ThenByDescending(dpi => dpi.DaysSinceLastNotification ?? 0);
+        var ordered = result.OrderByDescending(dpi => dpi.WillPayAtCheckin)
+                            .ThenByDescending(dpi => dpi.DaysSinceLastNotification ?? 0)
+                            .ToList();
+        var node = CalculateNode(ordered);
+
+        return (ordered, node);
+    }
+
+    private static MenuNodeCalculation CalculateNode(List<DuePaymentItem> duePayments)
+    {
+        var node = new MenuNodeCalculation
+                   {
+                       Key = MenuNodeKey.DuePayments
+                   };
+        var remindersPossible = duePayments.Count(dpi => dpi.ReminderMailPossible);
+        if (remindersPossible > 0)
+        {
+            node.Content = $"{remindersPossible}/{duePayments.Count}";
+        }
+        else
+        {
+            node.Hidden = true;
+        }
+
+        return node;
     }
 
     private static (DateTimeOffset Date, string Type)? GetLastNotification(DuePaymentItem dpi)
     {
         var lastNotification = new[]
-                               {
-                                   (Date: dpi.ReminderSmsSent, Type: Properties.Resources.SMS),
-                                   (Date: dpi.Reminder2Mail?.Sent, Type: Properties.Resources.ReminderMail1),
-                                   (Date: dpi.Reminder1Mail?.Sent, Type: Properties.Resources.ReminderMail2),
-                                   (Date: dpi.AcceptedMail?.Sent, Type: Properties.Resources.AcceptedMail)
-                               }.Where(ntf => ntf.Date != null)
-                                .DefaultIfEmpty((Date: null, Type: string.Empty))
-                                .MaxBy(ntf => ntf.Date);
+            {
+                (Date: dpi.ReminderSmsSent, Type: Properties.Resources.SMS),
+                (Date: dpi.Reminder2Mail?.Sent, Type: Properties.Resources.ReminderMail1),
+                (Date: dpi.Reminder1Mail?.Sent, Type: Properties.Resources.ReminderMail2),
+                (Date: dpi.AcceptedMail?.Sent, Type: Properties.Resources.AcceptedMail)
+            }.Where(ntf => ntf.Date != null)
+             .DefaultIfEmpty((Date: null, Type: string.Empty))
+             .MaxBy(ntf => ntf.Date);
         return lastNotification.Date == null ? null : (Date: lastNotification.Date!.Value, lastNotification.Type);
     }
 }

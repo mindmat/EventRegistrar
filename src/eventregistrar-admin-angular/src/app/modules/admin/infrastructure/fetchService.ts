@@ -23,6 +23,10 @@ export class FetchService<TItem>
 
     refresh(): void
     {
+        if (!this.fetch)
+        {
+            return;
+        }
         this.fetch.subscribe(result => this.result.next(result));
     }
 

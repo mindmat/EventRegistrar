@@ -39,7 +39,7 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
     public override string QueryName => nameof(RegistrationQuery);
     public override bool IsDateDependent => false;
 
-    public override async Task<RegistrationDisplayItem> CalculateTyped(Guid eventId, Guid? registrationId, CancellationToken cancellationToken)
+    protected override async Task<(RegistrationDisplayItem ReadModel, MenuNodeCalculation? MenuNode)> CalculateTyped(Guid eventId, Guid? registrationId, CancellationToken cancellationToken)
     {
         var content = await registrations.Where(reg => reg.EventId == eventId
                                                     && reg.Id == registrationId)
@@ -183,7 +183,7 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                                     BookingDate = ass.BookingDate_Outgoing!.Value
                                                                                 }))
                                           .ToList();
-        return content;
+        return (content, null);
     }
 }
 

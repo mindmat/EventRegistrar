@@ -152,11 +152,8 @@ public class ComposeAndSendAutoMailCommandHandler(
 
         registrations_Recipients.ForEach(reg => changeTrigger.TriggerUpdate<RegistrationCalculator>(reg.Id, reg.EventId));
         changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
-        eventBus.Publish(new QueryChanged
-                         {
-                             EventId = command.EventId,
-                             QueryName = nameof(PendingMailsQuery)
-                         });
+        changeTrigger.TriggerUpdate<PendingMailsCalculator>(null, command.EventId);
+        //changeTrigger.QueryChanged<PendingMailsQuery>(command.EventId);
 
         // ToDo
         //foreach (var registrable in registrablesToCheckWaitingList)

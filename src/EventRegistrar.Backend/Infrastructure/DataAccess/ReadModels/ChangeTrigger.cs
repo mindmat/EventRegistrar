@@ -42,6 +42,17 @@ public class ChangeTrigger(CommandQueue commandQueue,
                          });
     }
 
+    public void QueryChanged(string queryName, Guid eventId, Guid? rowId = null)
+    {
+        eventBus.Publish(new QueryChanged
+                         {
+                             EventId = eventId,
+                             QueryName = queryName,
+                             RowId = rowId
+                         });
+    }
+
+
     public void PublishEvent<TEvent>(TEvent @event)
         where TEvent : DomainEvent
     {

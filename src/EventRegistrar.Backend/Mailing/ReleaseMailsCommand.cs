@@ -51,10 +51,6 @@ public class ReleaseMailsCommandHandler(IRepository<Mail> mails,
             withheldMail.Registrations!.ForEach(reg => changeTrigger.TriggerUpdate<RegistrationCalculator>(reg.RegistrationId, command.EventId));
         }
 
-        eventBus.Publish(new QueryChanged
-                         {
-                             EventId = command.EventId,
-                             QueryName = nameof(PendingMailsQuery)
-                         });
+        changeTrigger.TriggerUpdate<PendingMailsCalculator>(null, command.EventId);
     }
 }

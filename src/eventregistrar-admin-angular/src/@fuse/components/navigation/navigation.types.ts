@@ -1,8 +1,10 @@
 import { IsActiveMatchOptions, Params, QueryParamsHandling } from '@angular/router';
+import { MenuNodeKey } from 'app/api/api';
 
 export interface FuseNavigationItem
 {
     id?: string;
+    key?: MenuNodeKey;
     title?: string;
     subtitle?: string;
     type:

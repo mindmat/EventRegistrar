@@ -14,6 +14,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ErrorHandling;
 using EventRegistrar.Backend.Infrastructure.Mediator;
+using EventRegistrar.Backend.Infrastructure.MenuNodes;
 using EventRegistrar.Backend.Infrastructure.ReadableIds;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Payments.Files;
@@ -197,6 +198,7 @@ container.Register<IEventBus, EventBus>();
 container.Register<SourceQueueProvider>();
 container.Register<ReadableIdProvider>();
 container.Register(typeof(IEventToUserTranslation<>), assemblies);
+
 container.Verify();
 
 container.GetInstance<MessageQueueReceiver>().StartReceiveLoop();
@@ -240,7 +242,7 @@ app.UseEndpoints(endpoints =>
 
 app.MapGet("/", () => container.GetInstance<HomeController>().Index()).AllowAnonymous();
 
-app.MapPost("api/events/{eventAcronym}/paymentfiles/upload", (string eventAcronym, IFormFile file) => container.GetInstance<PaymentFileController>().UploadFile(eventAcronym, file))
+app.MapPost("api/events/{eventAcronym}/paymentfiles/upload", UploadPaymentFile)
    .DisableAntiforgery();
 
 app.Run();
@@ -258,7 +260,21 @@ static object GetSingletonConfig(Container container, Type featureConfigType)
     using (new EnsureExecutionScope(container))
     {
         var singletonConfigurationFeatureType = typeof(SingletonConfigurationFeature<>).MakeGenericType(featureConfigType);
-        var constructor = singletonConfigurationFeatureType.GetConstructor(new[] { featureConfigType });
-        return constructor?.Invoke(new[] { container.GetInstance(featureConfigType) })!;
+        var constructor = singletonConfigurationFeatureType.GetConstructor([featureConfigType]);
+        return constructor?.Invoke([container.GetInstance(featureConfigType)])!;
     }
+}
+
+async Task UploadPaymentFile(string eventAcronym, IFormFile file)
+{
+    var stream = new MemoryStream((int)file.Length);
+    await file.CopyToAsync(stream);
+    await container.GetInstance<IMediator>()
+                   .Send(new SavePaymentFileCommand
+                         {
+                             EventId = await container.GetInstance<IEventAcronymResolver>().GetEventIdFromAcronym(eventAcronym),
+                             FileStream = stream,
+                             Filename = file.FileName,
+                             ContentType = file.ContentType
+                         });
 }

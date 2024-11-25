@@ -18,7 +18,8 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
     public override string QueryName => nameof(RegistrablesOverviewQuery);
     public override bool IsDateDependent => false;
 
-    public override async Task<RegistrablesOverview> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
+    protected override async Task<(RegistrablesOverview ReadModel, MenuNodeCalculation? MenuNode)>
+        CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
     {
         var registrables = await _registrables.Where(rbl => rbl.EventId == eventId)
                                               .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
@@ -38,7 +39,7 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                               .ToDictionaryAsync(tag => tag.Tag,
                                                  tag => tag.SortKey,
                                                  cancellationToken);
-        return new RegistrablesOverview
+        var readModel =  new RegistrablesOverview
                {
                    SingleRegistrables = registrables.Where(rbl => rbl.MaximumDoubleSeats == null)
                                                     .OrderBy(rbl => rbl.Tag != null && tags.TryGetValue(rbl.Tag, out var sortKey) ? sortKey : int.MaxValue)
@@ -115,6 +116,7 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                    })
                                                     .ToList()
                };
+        return (readModel, null);
     }
 
     private static SpotState GetSpotState(Seat spot)

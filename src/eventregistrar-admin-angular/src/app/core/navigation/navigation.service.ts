@@ -4,6 +4,8 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 import { FuseNavigationItem } from '@fuse/components/navigation';
 import { EventService } from 'app/modules/admin/events/event.service';
 import { TranslateService } from '@ngx-translate/core';
+import { Api, MenuNodeContent, MenuNodeKey, MenuNodeStyle } from 'app/api/api';
+import { MenuService } from './menu.service';
 
 @Injectable({
     providedIn: 'root'
@@ -27,9 +29,11 @@ export class NavigationService
      * Constructor
      */
     constructor(eventService: EventService,
-        translateService: TranslateService)
+        translateService: TranslateService,
+        menuService: MenuService)
     {
-        combineLatest([translateService.onLangChange.asObservable().pipe(map(e => e.lang), startWith(translateService.currentLang)), eventService.selected$])
+        combineLatest([translateService.onLangChange.asObservable().pipe(map(e => e.lang), startWith(translateService.currentLang)),
+        eventService.selected$])
             .pipe(
                 filter(([_, e]) => e?.acronym != null),
                 tap(([_, e]) =>
@@ -37,10 +41,10 @@ export class NavigationService
                     this.menu.next([
                         {
                             id: 'select-event',
-                            title: translateService.instant('SelectEvent'),
+                            title: e.acronym, // translateService.instant('SelectEvent'),
                             type: 'basic',
                             icon: 'heroicons_outline:clipboard-check',
-                            link: `/select-event`,
+                            link: `/select-event`
                         },
                         {
                             id: 'registrations',
@@ -56,18 +60,19 @@ export class NavigationService
                                 },
                                 {
                                     id: 'release-mails',
+                                    key: MenuNodeKey.PendingMails,
                                     title: translateService.instant('ReleaseMails'),
                                     type: 'basic',
                                     icon: 'mat_outline:mail',
-                                    link: `/${e.acronym}/mailing/release-mails`,
+                                    link: `/${e.acronym}/mailing/release-mails`
                                 },
-                                {
-                                    id: 'search-registration',
-                                    title: translateService.instant('SearchRegistration'),
-                                    type: 'basic',
-                                    icon: 'heroicons_outline:user',
-                                    link: `/${e.acronym}/registrations/search-registration`,
-                                },
+                                // {
+                                //     id: 'search-registration',
+                                //     title: translateService.instant('SearchRegistration'),
+                                //     type: 'basic',
+                                //     icon: 'heroicons_outline:user',
+                                //     link: `/${e.acronym}/registrations/search-registration`,
+                                // },
                                 {
                                     id: 'match-partners',
                                     title: translateService.instant('MatchPartners'),
@@ -213,6 +218,58 @@ export class NavigationService
                     ]);
                 }))
             .subscribe();
+
+        eventService.selected$.pipe(
+            tap(_ => { menuService.refresh(); })
+        ).subscribe();
+
+        menuService.nodeContents$.pipe(
+            tap(nct => { this.updateBadges(nct, this.menu.value); })
+        ).subscribe();
+
+        menuService.fetchMenuItems().subscribe();
+    }
+
+    updateBadges(contents: MenuNodeContent[], menu: FuseNavigationItem[])
+    {
+        if (!contents || !menu)
+        {
+            return;
+        }
+        menu.forEach((element) =>
+        {
+            var content = contents.find(nct => nct.key === element.key);
+            element.badge = this.getBadge(content);
+            element.hidden = _ => content?.hidden;
+            if (element.children)
+            {
+                this.updateBadges(contents, element.children);
+            }
+        });
+        console.log('menu updated');
+        this.menu.next([...menu]);
+    }
+
+    private getBadge(content: MenuNodeContent)
+    {
+        if (!content)
+        {
+            return null;
+        }
+        return {
+            title: content.content,
+            classes: this.getBadgeStyle(content.style)
+        };
+    }
+
+    getBadgeStyle(style: MenuNodeStyle): string | null
+    {
+        switch (style)
+        {
+            case MenuNodeStyle.Info: return 'px-2 bg-sky-600 text-black rounded-full';
+            case MenuNodeStyle.ToDo: return 'px-2 bg-yellow-500 text-black rounded-full';
+            default: return null;
+        }
     }
 
     // -----------------------------------------------------------------------------------------------------

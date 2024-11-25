@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
@@ -26,6 +27,11 @@ public class StartUpdateReadModelsOfEventCommandHandler(IQueryable<Event> events
             if (command.QueryNames?.Contains(nameof(RegistrablesOverviewQuery)) != false)
             {
                 changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, eventId);
+            }
+
+            if (command.QueryNames?.Contains(nameof(PendingMailsQuery)) != false)
+            {
+                changeTrigger.TriggerUpdate<PendingMailsCalculator>(null, eventId);
             }
 
             if (command.QueryNames?.Contains(nameof(DuePaymentsQuery)) != false)

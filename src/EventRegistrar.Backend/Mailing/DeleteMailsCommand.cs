@@ -30,10 +30,6 @@ public class DeleteMailsCommandHandler(IRepository<Mail> mails,
             }
         }
 
-        eventBus.Publish(new QueryChanged
-                         {
-                             EventId = command.EventId,
-                             QueryName = nameof(PendingMailsQuery)
-                         });
+        changeTrigger.TriggerUpdate<PendingMailsCalculator>(null, command.EventId);
     }
 }

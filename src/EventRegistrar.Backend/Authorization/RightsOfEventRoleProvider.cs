@@ -5,6 +5,7 @@ using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Hosting;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.MenuNodes;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Compose;
@@ -123,6 +124,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(MailDeliverySuccessQuery);
             yield return nameof(EventSetupStateQuery);
             yield return nameof(RegistrationFormsQuery);
+            yield return nameof(MenuNodesQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
