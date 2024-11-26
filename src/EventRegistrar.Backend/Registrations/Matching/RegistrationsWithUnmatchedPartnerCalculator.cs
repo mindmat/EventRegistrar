@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.MenuNodes;
-using EventRegistrar.Backend.Mailing;
 
 namespace EventRegistrar.Backend.Registrations.Matching;
 

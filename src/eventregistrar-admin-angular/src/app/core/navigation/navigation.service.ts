@@ -152,6 +152,7 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'mat_outline:hourglass_bottom',
                                     link: `/${e.acronym}/accounting/due-payments`,
+                                    badge: this.getBadge(nodes, MenuNodeKey.DuePayments)
                                 },
                                 {
                                     id: 'payment-differences',
