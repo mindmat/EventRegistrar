@@ -12,6 +12,7 @@ using EventRegistrar.Backend.Registrations.Matching;
 using EventRegistrar.Backend.Registrations.Overview;
 using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.Raw;
+using EventRegistrar.Backend.Registrations.Remarks;
 using EventRegistrar.Backend.Registrations.Responses;
 
 using Microsoft.Data.SqlClient;
@@ -167,6 +168,11 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
             if (registration is { PartnerNormalized: not null, RegistrationId_Partner: null } || registration.RegistrationId_Partner != null)
             {
                 changeTrigger.TriggerUpdate<RegistrationsWithUnmatchedPartnerCalculator>(null, form.EventId);
+            }
+
+            if (!string.IsNullOrWhiteSpace(registration.Remarks))
+            {
+                changeTrigger.TriggerUpdate<RemarksOverviewCalculator>(null, registration.EventId);
             }
 
             changeTrigger.EnqueueCommand(new RecalculatePriceAndWaitingListCommand { RegistrationId = registration.Id });

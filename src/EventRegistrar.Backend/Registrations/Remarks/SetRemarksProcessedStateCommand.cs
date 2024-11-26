@@ -22,7 +22,7 @@ public class SetRemarksProcessedStateCommandHandler(IRepository<Registration> re
                                                               && reg.EventId == command.EventId, cancellationToken);
         registration.RemarksProcessed = command.NewProcessedState;
 
-        changeTrigger.QueryChanged<RemarksOverviewQuery>(command.EventId);
+        changeTrigger.TriggerUpdate<RemarksOverviewCalculator>(null, registration.EventId);
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
     }
 }

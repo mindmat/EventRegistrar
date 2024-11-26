@@ -249,7 +249,7 @@ export class NavigationService
         {
             case MenuNodeStyle.Info: return 'px-2 bg-sky-600 text-black rounded-full';
             case MenuNodeStyle.ToDo: return 'px-2 bg-yellow-500 text-black rounded-full';
-            default: return null;
+            default: return 'px-2 bg-sky-600 text-black rounded-full';
         }
     }
 
