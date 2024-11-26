@@ -142,23 +142,9 @@ public class MatchPartnerRegistrationsCommandHandler(IRepository<Registration> r
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registration1.Id, command.EventId);
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registration2.Id, command.EventId);
         changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        changeTrigger.TriggerUpdate<RegistrationsWithUnmatchedPartnerCalculator>(null, command.EventId);
 
-        eventBus.Publish(new QueryChanged
-                         {
-                             EventId = command.EventId,
-                             QueryName = nameof(RegistrationsWithUnmatchedPartnerQuery)
-                         });
-        eventBus.Publish(new QueryChanged
-                         {
-                             EventId = command.EventId,
-                             QueryName = nameof(PotentialPartnersQuery),
-                             RowId = registration1.Id
-                         });
-        eventBus.Publish(new QueryChanged
-                         {
-                             EventId = command.EventId,
-                             QueryName = nameof(PotentialPartnersQuery),
-                             RowId = registration2.Id
-                         });
+        changeTrigger.QueryChanged<PotentialPartnersQuery>(command.EventId, registration1.Id);
+        changeTrigger.QueryChanged<PotentialPartnersQuery>(command.EventId, registration2.Id);
     }
 }

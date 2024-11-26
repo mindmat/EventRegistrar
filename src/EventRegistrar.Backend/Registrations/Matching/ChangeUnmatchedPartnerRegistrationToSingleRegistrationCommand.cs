@@ -62,7 +62,7 @@ public class ChangeUnmatchedPartnerRegistrationToSingleRegistrationCommandHandle
         registration.PartnerOriginal = null;
         registration.PartnerNormalized = null;
 
-        changeTrigger.QueryChanged<RegistrationsWithUnmatchedPartnerQuery>(command.EventId);
+        changeTrigger.TriggerUpdate<RegistrationsWithUnmatchedPartnerCalculator>(null, command.EventId);
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, command.EventId);
     }
 }

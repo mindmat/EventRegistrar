@@ -33,10 +33,11 @@ export class NavigationService
         menuService: MenuService)
     {
         combineLatest([translateService.onLangChange.asObservable().pipe(map(e => e.lang), startWith(translateService.currentLang)),
-        eventService.selected$])
+        eventService.selected$,
+        menuService.nodeContents$])
             .pipe(
-                filter(([_, e]) => e?.acronym != null),
-                tap(([_, e]) =>
+                filter(([_, e, __]) => e?.acronym != null),
+                tap(([_, e, nodes]) =>
                 {
                     this.menu.next([
                         {
@@ -64,7 +65,8 @@ export class NavigationService
                                     title: translateService.instant('ReleaseMails'),
                                     type: 'basic',
                                     icon: 'mat_outline:mail',
-                                    link: `/${e.acronym}/mailing/release-mails`
+                                    link: `/${e.acronym}/mailing/release-mails`,
+                                    badge: this.getBadge(nodes, MenuNodeKey.PendingMails)
                                 },
                                 // {
                                 //     id: 'search-registration',
@@ -79,6 +81,7 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'heroicons_outline:users',
                                     link: `/${e.acronym}/registrations/match-partners`,
+                                    badge: this.getBadge(nodes, MenuNodeKey.AssignPartners)
                                 },
                                 {
                                     id: 'problematic-emails',
@@ -223,35 +226,12 @@ export class NavigationService
             tap(_ => { menuService.refresh(); })
         ).subscribe();
 
-        menuService.nodeContents$.pipe(
-            tap(nct => { this.updateBadges(nct, this.menu.value); })
-        ).subscribe();
-
         menuService.fetchMenuItems().subscribe();
     }
 
-    updateBadges(contents: MenuNodeContent[], menu: FuseNavigationItem[])
+    private getBadge(contents: MenuNodeContent[] | null, key: MenuNodeKey): { title: string, classes: string; } | null
     {
-        if (!contents || !menu)
-        {
-            return;
-        }
-        menu.forEach((element) =>
-        {
-            var content = contents.find(nct => nct.key === element.key);
-            element.badge = this.getBadge(content);
-            element.hidden = _ => content?.hidden;
-            if (element.children)
-            {
-                this.updateBadges(contents, element.children);
-            }
-        });
-        console.log('menu updated');
-        this.menu.next([...menu]);
-    }
-
-    private getBadge(content: MenuNodeContent)
-    {
+        var content = contents?.find(nct => nct.key === key);
         if (!content)
         {
             return null;

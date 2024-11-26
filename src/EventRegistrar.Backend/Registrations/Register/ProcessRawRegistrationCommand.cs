@@ -166,7 +166,7 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
 
             if (registration is { PartnerNormalized: not null, RegistrationId_Partner: null } || registration.RegistrationId_Partner != null)
             {
-                changeTrigger.QueryChanged<RegistrationsWithUnmatchedPartnerQuery>(form.EventId);
+                changeTrigger.TriggerUpdate<RegistrationsWithUnmatchedPartnerCalculator>(null, form.EventId);
             }
 
             changeTrigger.EnqueueCommand(new RecalculatePriceAndWaitingListCommand { RegistrationId = registration.Id });

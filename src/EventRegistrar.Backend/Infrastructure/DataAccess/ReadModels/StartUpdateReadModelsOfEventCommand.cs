@@ -3,6 +3,7 @@ using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
+using EventRegistrar.Backend.Registrations.Matching;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 
@@ -32,6 +33,11 @@ public class StartUpdateReadModelsOfEventCommandHandler(IQueryable<Event> events
             if (command.QueryNames?.Contains(nameof(PendingMailsQuery)) != false)
             {
                 changeTrigger.TriggerUpdate<PendingMailsCalculator>(null, eventId);
+            }
+
+            if (command.QueryNames?.Contains(nameof(RegistrationsWithUnmatchedPartnerQuery)) != false)
+            {
+                changeTrigger.TriggerUpdate<RegistrationsWithUnmatchedPartnerCalculator>(null, eventId);
             }
 
             if (command.QueryNames?.Contains(nameof(DuePaymentsQuery)) != false)
