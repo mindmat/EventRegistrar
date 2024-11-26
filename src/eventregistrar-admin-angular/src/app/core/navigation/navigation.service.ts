@@ -96,6 +96,7 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'heroicons_outline:chat-alt',
                                     link: `/${e.acronym}/registrations/remarks-overview`,
+                                    badge: this.getBadge(nodes, MenuNodeKey.Remarks)
                                 },
                                 {
                                     id: 'notes-overview',
@@ -239,13 +240,18 @@ export class NavigationService
         }
         return {
             title: content.content,
-            classes: this.getBadgeStyle(content.style)
+            classes: this.getBadgeStyle(content)
         };
     }
 
-    getBadgeStyle(style: MenuNodeStyle): string | null
+    getBadgeStyle(content: MenuNodeContent): string | null
     {
-        switch (style)
+        if (!content.content)
+        {
+            // avoid empty badge
+            return null;
+        }
+        switch (content.style)
         {
             case MenuNodeStyle.Info: return 'px-2 bg-sky-600 text-black rounded-full';
             case MenuNodeStyle.ToDo: return 'px-2 bg-yellow-500 text-black rounded-full';

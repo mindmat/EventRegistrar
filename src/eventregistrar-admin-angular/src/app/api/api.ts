@@ -9748,7 +9748,6 @@ export interface RemarksDisplayItem {
 
 export interface RemarksOverviewQuery {
     eventId?: string;
-    onlyUnprocessed?: boolean;
 }
 
 export interface RemoveIndividualReductionCommand {

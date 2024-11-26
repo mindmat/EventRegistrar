@@ -10143,9 +10143,6 @@
           "eventId": {
             "type": "string",
             "format": "guid"
-          },
-          "onlyUnprocessed": {
-            "type": "boolean"
           }
         }
       },
