@@ -42,7 +42,7 @@ export class NavigationService
                     this.menu.next([
                         {
                             id: 'select-event',
-                            title: e.acronym, // translateService.instant('SelectEvent'),
+                            title: e.name, // translateService.instant('SelectEvent'),
                             type: 'basic',
                             icon: 'heroicons_outline:clipboard-check',
                             link: `/select-event`
