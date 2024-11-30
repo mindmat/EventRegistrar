@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Api, EventDetails } from 'app/api/api';
-import { BehaviorSubject, Observable, filter, of, tap } from 'rxjs';
+import { BehaviorSubject, Observable, filter, of, shareReplay, tap } from 'rxjs';
 import { NotificationService } from '../infrastructure/notification.service';
 
 @Injectable({
@@ -11,6 +11,8 @@ export class EventService
   private selectedEventIdSubject: BehaviorSubject<string | null> = new BehaviorSubject(null);
   private selectedEventSubject: BehaviorSubject<EventDetails | null> = new BehaviorSubject(null);
   private cache = new Map<string, EventDetails>();
+  public selectedId$: Observable<string> = this.selectedEventIdSubject.pipe(shareReplay(1));
+  public selected$: Observable<EventDetails> = this.selectedEventSubject.pipe(shareReplay(1));
 
   constructor(private notificationService: NotificationService, private api: Api)
   {
@@ -21,19 +23,11 @@ export class EventService
     ).subscribe(_ => this.refresh());
   }
 
-  get selected$(): Observable<EventDetails>
-  {
-    return this.selectedEventSubject.asObservable();
-  }
   get selected(): EventDetails | null
   {
     return this.selectedEventSubject.value;
   }
 
-  get selectedId$(): Observable<string>
-  {
-    return this.selectedEventIdSubject.asObservable();
-  }
   get selectedId(): string | null
   {
     return this.selectedEventIdSubject.value;

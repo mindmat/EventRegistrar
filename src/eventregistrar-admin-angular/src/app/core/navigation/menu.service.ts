@@ -11,10 +11,11 @@ import { Observable } from 'rxjs';
 export class MenuService extends FetchService<MenuNodeContent[]>
 {
     constructor(private api: Api,
-        private eventService: EventService,
+        eventService: EventService,
         notificationService: NotificationService)
     {
         super('MenuNodesQuery', notificationService);
+        eventService.selectedId$.subscribe(id => this.fetchMenuItems(id));
     }
 
     get nodeContents$(): Observable<MenuNodeContent[]>
@@ -22,8 +23,9 @@ export class MenuService extends FetchService<MenuNodeContent[]>
         return this.result$;
     }
 
-    fetchMenuItems()
+    private fetchMenuItems(eventId?: string)
     {
-        return this.fetchItems(this.api.menuNodes_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
+        return this.fetchItems(this.api.menuNodes_Query({ eventId }), null, eventId)
+            .subscribe();
     }
 }

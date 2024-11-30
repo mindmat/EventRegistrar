@@ -223,12 +223,6 @@ export class NavigationService
                     ]);
                 }))
             .subscribe();
-
-        eventService.selected$.pipe(
-            tap(_ => { menuService.refresh(); })
-        ).subscribe();
-
-        menuService.fetchMenuItems().subscribe();
     }
 
     private getBadge(contents: MenuNodeContent[] | null, key: MenuNodeKey): { title: string, classes: string; } | null
