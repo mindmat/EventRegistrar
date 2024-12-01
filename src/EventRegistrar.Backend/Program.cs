@@ -14,7 +14,6 @@ using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.ErrorHandling;
 using EventRegistrar.Backend.Infrastructure.Mediator;
-using EventRegistrar.Backend.Infrastructure.MenuNodes;
 using EventRegistrar.Backend.Infrastructure.ReadableIds;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Payments.Files;
@@ -93,7 +92,7 @@ builder.Services.AddApplicationInsightsTelemetry(options =>
     options.ConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
     options.DeveloperMode = builder.Environment.IsDevelopment();
 });
-builder.Services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) => { module.EnableSqlCommandTextInstrumentation = true; });
+builder.Services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, _) => { module.EnableSqlCommandTextInstrumentation = true; });
 
 var app = builder.Build();
 
@@ -218,7 +217,7 @@ else
 
 
 app.UseOpenApi();
-app.UseSwaggerUi3();
+app.UseSwaggerUi();
 
 app.UseRequestLocalization();
 app.UseMiddleware<ExceptionMiddleware>(container);
