@@ -93,7 +93,8 @@ public class MailComposer(
 
             if (Enum.TryParse<MailPlaceholder>(parts.key, true, out var placeholderKey)
              || parts.key?.ToUpperInvariant() == "SEATLIST"
-             || parts.key?.ToUpperInvariant() == "PARTNER")
+             || parts.key?.ToUpperInvariant() == "PARTNER"
+             || parts.key?.ToUpperInvariant() == "CITY")
             {
                 if (placeholderKey == MailPlaceholder.FirstName)
                 {
@@ -107,7 +108,8 @@ public class MailComposer(
                 {
                     templateFiller[key] = registrationForPrefix?.Phone;
                 }
-                else if (placeholderKey == MailPlaceholder.Location)
+                else if (placeholderKey == MailPlaceholder.Location
+                      || parts.key.ToUpperInvariant() == "CITY")
                 {
                     templateFiller[key] = registrationForPrefix?.Location;
                 }
