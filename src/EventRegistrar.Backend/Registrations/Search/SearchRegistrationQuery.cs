@@ -18,7 +18,7 @@ public class SearchRegistrationQueryHandler(IQueryable<Registration> _registrati
     {
         var allowedStates = query.States?.Any() == true
                                 ? query.States
-                                : new[] { RegistrationState.Received, RegistrationState.Paid };
+                                : [RegistrationState.Received, RegistrationState.Paid];
         var searchParts = query.SearchString?.Split(" ", StringSplitOptions.RemoveEmptyEntries);
 
         var queryable = _registrations.Where(reg => reg.EventId == query.EventId);
@@ -29,7 +29,8 @@ public class SearchRegistrationQueryHandler(IQueryable<Registration> _registrati
                 queryable = queryable.Where(reg => reg.RespondentFirstName!.Contains(searchPart)
                                                 || reg.RespondentLastName!.Contains(searchPart)
                                                 || reg.RespondentEmail!.Contains(searchPart)
-                                                || reg.PhoneNormalized!.Contains(searchPart));
+                                                || reg.PhoneNormalized!.Contains(searchPart)
+                                                || reg.ReadableIdentifier ==searchPart);
             }
         }
 
