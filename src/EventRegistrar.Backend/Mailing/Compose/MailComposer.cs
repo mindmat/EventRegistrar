@@ -107,6 +107,10 @@ public class MailComposer(
                 {
                     templateFiller[key] = registrationForPrefix?.Phone;
                 }
+                else if (placeholderKey == MailPlaceholder.Location)
+                {
+                    templateFiller[key] = registrationForPrefix?.Location;
+                }
                 else if ((placeholderKey == MailPlaceholder.SpotList
                        || parts.key.ToUpperInvariant() == "SEATLIST")
                       && registrationForPrefix != null)

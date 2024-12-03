@@ -65,7 +65,10 @@ public enum MailPlaceholder
     ReadableId = 17,
 
     [PartnerPlaceholder]
-    QrCode = 18
+    QrCode = 18,
+
+    [PartnerPlaceholder]
+    Location = 19
 }
 
 public class AutoMailPlaceholderQueryHandler(EnumTranslator enumTranslator) : IRequestHandler<AutoMailPlaceholderQuery, IEnumerable<PlaceholderDescription>>

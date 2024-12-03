@@ -3,7 +3,7 @@ using EventRegistrar.Backend.Mailing.Templates;
 
 namespace EventRegistrar.Backend.Mailing.Bulk;
 
-public class BulkMailPlaceholderQuery : IRequest<IEnumerable<PlaceholderDescription>> { }
+public class BulkMailPlaceholderQuery : IRequest<IEnumerable<PlaceholderDescription>>;
 
 public class BulkMailPlaceholderQueryHandler(EnumTranslator enumTranslator) : IRequestHandler<BulkMailPlaceholderQuery, IEnumerable<PlaceholderDescription>>
 {

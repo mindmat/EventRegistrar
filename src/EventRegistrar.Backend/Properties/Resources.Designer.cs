@@ -1706,6 +1706,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ort.
+        /// </summary>
+        internal static string MailPlaceholder_Location {
+            get {
+                return ResourceManager.GetString("MailPlaceholder_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zu viel bezahlter Betrag.
         /// </summary>
         internal static string MailPlaceholder_OverpaidAmount {
@@ -2665,6 +2674,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string PricePackagePartSelectionType_All {
             get {
                 return ResourceManager.GetString("PricePackagePartSelectionType_All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fünf aus der Auswahl.
+        /// </summary>
+        internal static string PricePackagePartSelectionType_AnyFive {
+            get {
+                return ResourceManager.GetString("PricePackagePartSelectionType_AnyFive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vier aus der Auswahl.
+        /// </summary>
+        internal static string PricePackagePartSelectionType_AnyFour {
+            get {
+                return ResourceManager.GetString("PricePackagePartSelectionType_AnyFour", resourceCulture);
             }
         }
         

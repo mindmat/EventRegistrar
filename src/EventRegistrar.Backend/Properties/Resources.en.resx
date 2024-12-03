@@ -564,6 +564,9 @@
   <data name="MailPlaceholder_LastName" xml:space="preserve">
     <value>Last Name</value>
   </data>
+  <data name="MailPlaceholder_Location" xml:space="preserve">
+    <value>Location</value>
+  </data>
   <data name="MailPlaceholder_OverpaidAmount" xml:space="preserve">
     <value>Overpaid Amount</value>
   </data>
