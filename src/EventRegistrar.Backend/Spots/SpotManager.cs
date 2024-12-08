@@ -75,13 +75,13 @@ public class SpotManager(IRepository<Seat> _spots,
     public async Task<Seat?> ReserveSinglePartOfPartnerSpot(Guid eventId,
                                                             Guid registrableId,
                                                             Guid registrationId,
-                                                            RegistrationIdentification ownIdentification,
-                                                            string? partner,
+                                                            RegistrationIdentification ourIdentification,
+                                                            string? partnerText,
                                                             Guid? registrationId_Partner,
-                                                            Role? role,
+                                                            Role? ourRole,
                                                             bool initialProcessing)
     {
-        Seat seat;
+        Seat spot;
         var registrable = await registrables.Where(rbl => rbl.Id == registrableId)
                                             .Include(rbl => rbl.Spots)
                                             .FirstAsync();
@@ -91,13 +91,13 @@ public class SpotManager(IRepository<Seat> _spots,
         {
             var waitingList = spots.Any(spot => spot.IsWaitingList);
             var spotAvailable = !waitingList && spots.Count < registrable.MaximumSingleSeats.Value;
-            logger.LogInformation($"Registrable {registrable.DisplayName}, Seat count {spots.Count}, MaximumSingleSeats {registrable.MaximumSingleSeats}, seat available {spotAvailable}");
+            logger.LogInformation($"Registrable {registrable.DisplayName}, spot count {spots.Count}, MaximumSingleSeats {registrable.MaximumSingleSeats}, seat available {spotAvailable}");
             if (!spotAvailable && !registrable.HasWaitingList)
             {
                 return null;
             }
 
-            seat = new Seat
+            spot = new Seat
                    {
                        FirstPartnerJoined = dateTimeProvider.Now,
                        RegistrationId = registrationId,
@@ -107,23 +107,21 @@ public class SpotManager(IRepository<Seat> _spots,
         }
         else if (registrable.MaximumDoubleSeats != null)
         {
-            if (role == null)
-            {
-                throw new Exception("No role found");
-            }
-
-            var isPartnerRegistration = !string.IsNullOrEmpty(partner) || registrationId_Partner != null;
-            var ownRole = role.Value;
+            var isPartnerRegistration = !string.IsNullOrEmpty(partnerText) || registrationId_Partner != null;
             var waitingList = spots.Where(st => st.IsWaitingList).ToList();
             if (isPartnerRegistration)
             {
                 // complement existing partner seat
-                var existingPartnerSeat = await FindPartnerSeat(eventId, ownIdentification, partner, registrationId_Partner, ownRole,
+                var existingPartnerSeat = await FindPartnerSpot(eventId,
+                                                                ourIdentification,
+                                                                partnerText,
+                                                                registrationId_Partner,
+                                                                ourRole,
                                                                 spots);
 
                 if (existingPartnerSeat != null)
                 {
-                    ComplementExistingSeat(registrationId, ownRole, existingPartnerSeat);
+                    ComplementExistingSeat(registrationId, ourRole, existingPartnerSeat);
                     eventBus.Publish(new SpotAdded
                                      {
                                          Id = Guid.NewGuid(),
@@ -139,48 +137,57 @@ public class SpotManager(IRepository<Seat> _spots,
 
                 // create new partner seat
                 var waitingListForPartnerRegistrations = waitingList.Any(st => !string.IsNullOrEmpty(st.PartnerEmail));
-                var seatAvailable = !waitingListForPartnerRegistrations && spots.Count < registrable.MaximumDoubleSeats.Value;
-                if (!seatAvailable && !registrable.HasWaitingList)
+                var spotsAvailable = !waitingListForPartnerRegistrations
+                                  && spots.Count < registrable.MaximumDoubleSeats.Value;
+                if (!spotsAvailable && !registrable.HasWaitingList)
                 {
                     return null;
                 }
 
-                seat = new Seat
+                spot = new Seat
                        {
                            FirstPartnerJoined = dateTimeProvider.Now,
-                           PartnerEmail = partner?.ToLowerInvariant(),
-                           RegistrationId = ownRole == Role.Leader ? registrationId : null,
-                           RegistrationId_Follower = ownRole == Role.Follower ? registrationId : null,
+                           PartnerEmail = partnerText?.ToLowerInvariant(),
                            RegistrableId = registrable.Id,
-                           IsWaitingList = !seatAvailable,
+                           IsWaitingList = ourRole != null,
                            IsPartnerSpot = true
                        };
+                if (ourRole == Role.Follower)
+                {
+                    spot.RegistrationId_Follower = registrationId;
+                }
+                else
+                {
+                    // also fallback for missing role
+                    spot.RegistrationId = registrationId;
+                }
             }
             else
             {
                 // single registration
-                var waitingListForSingleLeaders = waitingList.Any(spot => string.IsNullOrEmpty(spot.PartnerEmail)
-                                                                       && spot.RegistrationId.HasValue);
-                var waitingListForSingleFollowers = waitingList.Any(spot => string.IsNullOrEmpty(spot.PartnerEmail)
-                                                                         && spot.RegistrationId_Follower.HasValue);
+                var waitingListForSingleLeaders = waitingList.Any(spt => string.IsNullOrEmpty(spt.PartnerEmail)
+                                                                      && spt.RegistrationId.HasValue);
+                var waitingListForSingleFollowers = waitingList.Any(spt => string.IsNullOrEmpty(spt.PartnerEmail)
+                                                                        && spt.RegistrationId_Follower.HasValue);
 
-                var waitingListForOwnRole = (ownRole == Role.Leader && waitingListForSingleLeaders)
-                                         || (ownRole == Role.Follower && waitingListForSingleFollowers);
-                var matchingSingleSeat = FindMatchingSingleSeat(spots, ownRole);
+                var waitingListForOwnRole = (ourRole == Role.Leader && waitingListForSingleLeaders)
+                                         || (ourRole == Role.Follower && waitingListForSingleFollowers)
+                                         || ourRole == null;
+                var matchingSingleSeat = FindMatchingSingleSeat(spots, ourRole);
                 var seatAvailable = !waitingListForOwnRole
-                                 && (imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(
+                                 && (imbalanceManager.CanAddNewDoubleSpotForSingleRegistration(
                                          registrable.MaximumDoubleSeats.Value,
                                          registrable.MaximumAllowedImbalance ?? 0,
                                          spots,
-                                         ownRole)
+                                         ourRole)
                                   || matchingSingleSeat != null);
                 if (!seatAvailable && !registrable.HasWaitingList)
                 {
                     return null;
                 }
 
-                if ((ownRole == Role.Leader && waitingListForSingleFollowers)
-                 || (ownRole == Role.Follower && waitingListForSingleLeaders))
+                if ((ourRole == Role.Leader && waitingListForSingleFollowers)
+                 || (ourRole == Role.Follower && waitingListForSingleLeaders))
                 {
                     // ToDo: check waiting list
                     //registrableId_CheckWaitingList = registrable.Id;
@@ -188,7 +195,7 @@ public class SpotManager(IRepository<Seat> _spots,
 
                 if (!waitingListForOwnRole && matchingSingleSeat != null)
                 {
-                    ComplementExistingSeat(registrationId, ownRole, matchingSingleSeat);
+                    ComplementExistingSeat(registrationId, ourRole, matchingSingleSeat);
                     eventBus.Publish(new SpotAdded
                                      {
                                          Id = Guid.NewGuid(),
@@ -202,20 +209,29 @@ public class SpotManager(IRepository<Seat> _spots,
                     return matchingSingleSeat;
                 }
 
-                seat = new Seat
+                spot = new Seat
                        {
                            FirstPartnerJoined = dateTimeProvider.Now,
-                           RegistrationId = ownRole == Role.Leader ? registrationId : null,
-                           RegistrationId_Follower = ownRole == Role.Follower ? registrationId : null,
                            RegistrableId = registrable.Id,
                            IsWaitingList = !seatAvailable
-                       };
+                                           && ourRole != null
+                };
+
+                if (ourRole == Role.Follower)
+                {
+                    spot.RegistrationId_Follower = registrationId;
+                }
+                else
+                {
+                    // also fallback for missing role
+                    spot.RegistrationId = registrationId;
+                }
             }
         }
         else
         {
             // no limit
-            seat = new Seat
+            spot = new Seat
                    {
                        RegistrationId = registrationId,
                        RegistrableId = registrable.Id,
@@ -223,8 +239,8 @@ public class SpotManager(IRepository<Seat> _spots,
                    };
         }
 
-        seat.Id = Guid.NewGuid();
-        _spots.InsertObjectTree(seat);
+        spot.Id = Guid.NewGuid();
+        _spots.InsertObjectTree(spot);
         eventBus.Publish(new SpotAdded
                          {
                              Id = Guid.NewGuid(),
@@ -233,10 +249,10 @@ public class SpotManager(IRepository<Seat> _spots,
                              Registrable = registrable.DisplayName,
                              RegistrationId = registrationId,
                              IsInitialProcessing = initialProcessing,
-                             IsWaitingList = seat.IsWaitingList
+                             IsWaitingList = spot.IsWaitingList
                          });
 
-        return seat;
+        return spot;
     }
 
     public async Task<Seat?> ReserveSingleSpot(Guid? eventId,
@@ -336,13 +352,15 @@ public class SpotManager(IRepository<Seat> _spots,
                          });
     }
 
-    private static void ComplementExistingSeat(Guid registrationId, Role ownRole, Seat existingSeat)
+    private static void ComplementExistingSeat(Guid registrationId, Role? ownRole, Seat existingSeat)
     {
-        if (ownRole == Role.Leader && !existingSeat.RegistrationId.HasValue)
+        if (existingSeat.RegistrationId == null
+         && ownRole != Role.Follower)
         {
             existingSeat.RegistrationId = registrationId;
         }
-        else if (ownRole == Role.Follower && !existingSeat.RegistrationId_Follower.HasValue)
+        else if (existingSeat.RegistrationId_Follower == null
+              && ownRole != Role.Leader)
         {
             existingSeat.RegistrationId_Follower = registrationId;
         }
@@ -353,61 +371,75 @@ public class SpotManager(IRepository<Seat> _spots,
         }
     }
 
-    private static Seat? FindMatchingSingleSeat(IEnumerable<Seat> seats, Role ownRole)
+    private static Seat? FindMatchingSingleSeat(IEnumerable<Seat> spots, Role? ownRole)
     {
-        return seats?.FirstOrDefault(seat => string.IsNullOrEmpty(seat.PartnerEmail)
-                                          && !seat.IsWaitingList
-                                          && ((ownRole == Role.Leader && !seat.RegistrationId.HasValue) || (ownRole == Role.Follower && !seat.RegistrationId_Follower.HasValue)));
+        if (ownRole == null)
+        {
+            return null;
+        }
+
+        return spots?.FirstOrDefault(spt => string.IsNullOrEmpty(spt.PartnerEmail)
+                                         && !spt.IsWaitingList
+                                         && ((ownRole == Role.Leader && !spt.RegistrationId.HasValue)
+                                          || (ownRole == Role.Follower && !spt.RegistrationId_Follower.HasValue)));
     }
 
-    private async Task<Seat?> FindPartnerSeat(Guid eventId,
+    private async Task<Seat?> FindPartnerSpot(Guid eventId,
                                               RegistrationIdentification ownIdentification,
                                               string? partner,
                                               Guid? registrationId_Partner,
-                                              Role ownRole,
-                                              ICollection<Seat> existingSeats)
+                                              Role? ownRole,
+                                              ICollection<Seat> existingSpots)
     {
-        var potentialPartnerSeats = existingSeats.Where(seat => seat.IsPartnerSpot
-                                                                // own part still available
-                                                             && ((ownRole == Role.Leader && seat.RegistrationId == null)
-                                                              || (ownRole == Role.Follower && seat.RegistrationId_Follower == null)))
+        var potentialPartnerSpots = existingSpots.Where(spt => spt.IsPartnerSpot
+                                                               // open partner spot
+                                                            && (spt.RegistrationId == null || spt.RegistrationId_Follower == null))
                                                  .ToList();
-        var partnerSeats = potentialPartnerSeats.Where(seat => seat.PartnerEmail == ownIdentification.Email)
+        var partnerSpots = potentialPartnerSpots.Where(spt => spt.PartnerEmail == ownIdentification.Email)
                                                 .ToList();
-        if (!partnerSeats.Any())
+        if (partnerSpots.Count == 0)
         {
-            partnerSeats = potentialPartnerSeats.Where(seat => $" {seat.PartnerEmail} ".Contains($" {ownIdentification.FirstName} ")
-                                                            && $" {seat.PartnerEmail} ".Contains($" {ownIdentification.LastName} "))
+            partnerSpots = potentialPartnerSpots.Where(spt => $" {spt.PartnerEmail} ".Contains($" {ownIdentification.FirstName} ")
+                                                           && $" {spt.PartnerEmail} ".Contains($" {ownIdentification.LastName} "))
                                                 .ToList();
-            if (!partnerSeats.Any())
+            if (partnerSpots.Count == 0)
             {
                 return null;
             }
         }
 
-        logger.LogInformation($"partner seats ids: {string.Join(", ", partnerSeats.Select(seat => seat.Id))}");
+        foreach (var partnerSpot in partnerSpots)
+        {
+            if (ownRole == Role.Leader && partnerSpot.RegistrationId != null
+             || ownRole == Role.Follower && partnerSpot.RegistrationId_Follower != null)
+            {
+                // role mismatch
+                continue;
+            }
 
-        var otherRole = ownRole == Role.Leader ? Role.Follower : Role.Leader;
-        var partnerRegistrationIds = partnerSeats
-                                     .Select(seat => otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower)
-                                     .ToList();
-        var registrationsThatReferenceOwnRegistration = await registrations.Where(reg => reg.RegistrationForm!.EventId == eventId
-                                                                                      && (reg.RegistrationId_Partner == null || reg.RegistrationId_Partner == ownIdentification.Id)
-                                                                                      && partnerRegistrationIds.Contains(reg.Id))
-                                                                           .ToListAsync();
-        logger.LogInformation(
-            $"Partner registrations with this partner mail: {string.Join(", ", registrationsThatReferenceOwnRegistration.Select(reg => $"{reg.Id} ({reg.RespondentFirstName} {reg.RespondentLastName} - {reg.RespondentEmail})"))}");
+            var otherRegistrationId = partnerSpot.RegistrationId
+                                   ?? partnerSpot.RegistrationId_Follower;
+            if (registrationId_Partner != null
+             && registrationId_Partner != otherRegistrationId)
+            {
+                // partner mismatch
+                continue;
+            }
 
-        registrationId_Partner ??= registrationsThatReferenceOwnRegistration.FirstOrDefault(reg => string.Equals(reg.RespondentEmail,
-                                                                                                                 partner,
-                                                                                                                 StringComparison.InvariantCultureIgnoreCase))
-                                                                            ?.Id
-                                ?? registrationsThatReferenceOwnRegistration.FirstOrDefault(reg => $" {partner} ".Contains($" {reg.RespondentFirstName} ",
-                                                                                                                           StringComparison.InvariantCultureIgnoreCase)
-                                                                                                && $" {partner} ".Contains($" {reg.RespondentLastName} ",
-                                                                                                                           StringComparison.InvariantCultureIgnoreCase))
-                                                                            ?.Id;
+            var otherRegistration = await registrations.FirstOrDefaultAsync(reg => reg.RegistrationForm!.EventId == eventId
+                                                                                && reg.Id == otherRegistrationId);
+            if (otherRegistration.IsAlreadyMatchedToOtherThan(ownIdentification.Id))
+            {
+                // other registration is already has a different partner
+                continue;
+            }
 
-        return partnerSeats.FirstOrDefault(seat => registrationId_Partner == (otherRole == Role.Leader ? seat.RegistrationId : seat.RegistrationId_Follower));
+            if (otherRegistration.MatchesPartnerText(partner))
+            {
+                return partnerSpot;
+            }
+        }
+
+        return null;
     }
 }

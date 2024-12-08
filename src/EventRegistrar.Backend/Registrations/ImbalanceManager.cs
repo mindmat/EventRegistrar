@@ -4,28 +4,29 @@ namespace EventRegistrar.Backend.Registrations;
 
 public class ImbalanceManager
 {
-    public bool CanAddNewDoubleSeatForSingleRegistration(int maximumDoubleSeat,
+    public bool CanAddNewDoubleSpotForSingleRegistration(int maximumDoubleSeat,
                                                          int maximumAllowedImbalance,
                                                          IList<Seat> spots,
-                                                         Role ownRole)
+                                                         Role? role)
     {
         // check overall
-        if (spots.Count(seat => !seat.IsWaitingList && !seat.IsCancelled) >= maximumDoubleSeat) return false;
+        if (spots.Count(seat => seat is { IsWaitingList: false, IsCancelled: false }) >= maximumDoubleSeat)
+        {
+            return false;
+        }
 
         // check imbalance
-        if (ownRole == Role.Leader)
+        if (role == Role.Leader)
         {
-            var acceptedSingleLeaderCount = spots.Count(spt => !spt.IsWaitingList
-                                                            && !spt.IsCancelled
+            var acceptedSingleLeaderCount = spots.Count(spt => spt is { IsWaitingList: false, IsCancelled: false }
                                                             && string.IsNullOrEmpty(spt.PartnerEmail)
                                                             && spt.RegistrationId_Follower == null);
             return acceptedSingleLeaderCount < maximumAllowedImbalance;
         }
 
-        if (ownRole == Role.Follower)
+        if (role == Role.Follower)
         {
-            var acceptedSingleFollowerCount = spots.Count(spt => !spt.IsWaitingList
-                                                              && !spt.IsCancelled
+            var acceptedSingleFollowerCount = spots.Count(spt => spt is { IsWaitingList: false, IsCancelled: false }
                                                               && string.IsNullOrEmpty(spt.PartnerEmail)
                                                               && spt.RegistrationId == null);
             return acceptedSingleFollowerCount < maximumAllowedImbalance;

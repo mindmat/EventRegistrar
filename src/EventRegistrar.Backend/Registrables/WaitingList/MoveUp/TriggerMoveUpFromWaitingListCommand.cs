@@ -96,7 +96,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler(IQueryable<Registrable> 
                 {
                     if (nextPartnerRegistration == null)
                     {
-                        if (!imbalanceManager.CanAddNewDoubleSeatForSingleRegistration(
+                        if (!imbalanceManager.CanAddNewDoubleSpotForSingleRegistration(
                                 registrableToCheck.MaximumDoubleSeats.Value,
                                 registrableToCheck.MaximumAllowedImbalance ?? 0,
                                 spots,

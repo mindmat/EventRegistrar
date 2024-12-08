@@ -165,11 +165,14 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                 var trackNames = await registrables.Where(rbl => requestsWithoutRole.Select(rwr => rwr.RegistrableId).Contains(rbl.Id))
                                                    .Select(rbl => rbl.DisplayName)
                                                    .ToListAsync();
-                throw new InvalidOperationException(
-                    $"Invalid mapping configuration: Mappings to partner registrable {trackNames.StringJoin()} but no role defined");
+                registration.InternalNotes = $"Mappings to partner tracks {trackNames.StringJoin()} but no role defined.";
+                //throw new InvalidOperationException(
+                //    $"Invalid mapping configuration: Mappings to partner registrable {trackNames.StringJoin()} but no role defined");
             }
-
-            requestsWithoutRole.ForEach(rwr => rwr.Role = defaultRole);
+            else
+            {
+                requestsWithoutRole.ForEach(rwr => rwr.Role = defaultRole);
+            }
         }
 
         registration.DefaultRole = defaultRole;
