@@ -18,9 +18,9 @@ public class EventBus(Container container,
                       IHubContext<NotificationHub, INotificationConsumer> hub)
     : IEventBus
 {
-    private readonly IList<QueryChanged> _notifications = new List<QueryChanged>();
+    private readonly List<(QueryChanged Event, bool PublishAnyway)> _notifications = [];
 
-    public void Publish<TEvent>(TEvent @event)
+    public void Publish<TEvent>(TEvent @event, bool publishEvenWhenDbCommitFails = false)
         where TEvent : DomainEvent
     {
         // try to fill out missing data
@@ -40,7 +40,7 @@ public class EventBus(Container container,
 
         if (@event is QueryChanged queryChangedEvent)
         {
-            _notifications.Add(queryChangedEvent);
+            _notifications.Add((queryChangedEvent, publishEvenWhenDbCommitFails));
         }
         else
         {
@@ -55,18 +55,18 @@ public class EventBus(Container container,
         }
     }
 
-    public void Release()
+    public void Release(bool dbCommitSucceeded)
     {
-        foreach (var notification in _notifications)
+        foreach (var notification in _notifications.Where(ntf => dbCommitSucceeded || ntf.PublishAnyway))
         {
-            if (notification.EventId != null)
+            if (notification.Event.EventId != null)
             {
-                hub.Clients.Group(notification.EventId!.ToString()!)
-                   .Process(notification.EventId!.Value, notification.QueryName, notification.RowId);
+                hub.Clients.Group(notification.Event.EventId!.ToString()!)
+                   .Process(notification.Event.EventId!.Value, notification.Event.QueryName, notification.Event.RowId);
             }
             else
             {
-                hub.Clients.All.Process(null, notification.QueryName, notification.RowId);
+                hub.Clients.All.Process(null, notification.Event.QueryName, notification.Event.RowId);
             }
         }
     }

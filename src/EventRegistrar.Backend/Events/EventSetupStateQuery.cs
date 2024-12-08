@@ -22,7 +22,7 @@ public class EventSetupState
     public bool AutoMailTemplatesDefined { get; set; }
     public int RegistrationsReceived { get; set; }
     public int RegistrationsProcessed { get; set; }
-    public IEnumerable<string> ProcessingErrors { get; set; } = null!;
+    public int ProcessingErrors { get; set; }
 }
 
 public class EventSetupStateQueryHandler(IQueryable<Event> events,
@@ -58,11 +58,7 @@ public class EventSetupStateQueryHandler(IQueryable<Event> events,
                                                           .Select(grp => new
                                                                          {
                                                                              Received = grp.Count(),
-                                                                             Processed = grp.Count(rrg => rrg.Processed != null),
-                                                                             ProcessionErrors = grp.Where(rrg => rrg.Processed == null
-                                                                                                              && rrg.LastProcessingError != null)
-                                                                                                   .Select(rrg => rrg.LastProcessingError!)
-                                                                                                   .Distinct()
+                                                                             Processed = grp.Count(rrg => rrg.Processed != null)
                                                                          })
                                                           .FirstOrDefaultAsync(cancellationToken);
 
@@ -89,8 +85,9 @@ public class EventSetupStateQueryHandler(IQueryable<Event> events,
                    PricePackagesDefined = pricePackagesDefined,
                    AutoMailTemplatesDefined = autoMailTemplatesDefined,
                    RegistrationsReceived = rawRegistrationCounts?.Received ?? 0,
-                   ProcessingErrors = rawRegistrationCounts?.ProcessionErrors ?? [],
-                   RegistrationsProcessed = rawRegistrationCounts?.Processed ?? 0
+                   RegistrationsProcessed = rawRegistrationCounts?.Processed ?? 0,
+                   ProcessingErrors = (rawRegistrationCounts?.Received ?? 0)
+                                    - (rawRegistrationCounts?.Processed ?? 0)
                };
     }
 }

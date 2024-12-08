@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v13.20.0.0 (NJsonSchema v10.9.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "My Title",
@@ -1646,6 +1646,31 @@
         }
       }
     },
+    "/api/FixMissingRoleCommand": {
+      "post": {
+        "tags": [
+          "FixMissingRole"
+        ],
+        "operationId": "FixMissingRole_Command",
+        "requestBody": {
+          "x-name": "FixMissingRoleCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FixMissingRoleCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/FormPathsQuery": {
       "post": {
         "tags": [
@@ -2794,6 +2819,41 @@
         "responses": {
           "204": {
             "description": ""
+          }
+        }
+      }
+    },
+    "/api/ProcessingErrorsQuery": {
+      "post": {
+        "tags": [
+          "ProcessingErrors"
+        ],
+        "operationId": "ProcessingErrors_Query",
+        "requestBody": {
+          "x-name": "ProcessingErrorsQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProcessingErrorsQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProcessingError"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -6582,10 +6642,8 @@
             "format": "int32"
           },
           "processingErrors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -6778,6 +6836,35 @@
             "format": "guid"
           }
         }
+      },
+      "FixMissingRoleCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "rawRegistrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          }
+        }
+      },
+      "Role": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Leader",
+          "Follower"
+        ],
+        "enum": [
+          1,
+          2
+        ]
       },
       "RegistrationFormGroup": {
         "type": "object",
@@ -7581,6 +7668,7 @@
           "Cancellations",
           "Hosting",
           "Participants",
+          "FixRawProcessing",
           "BankStatements",
           "AssignBankStatements",
           "DuePayments",
@@ -7603,6 +7691,7 @@
           7,
           8,
           9,
+          10,
           11,
           12,
           13,
@@ -7622,12 +7711,14 @@
         "x-enumNames": [
           "None",
           "Info",
-          "ToDo"
+          "ToDo",
+          "Important"
         ],
         "enum": [
           0,
           1,
-          2
+          2,
+          3
         ]
       },
       "MenuNodesQuery": {
@@ -9186,6 +9277,61 @@
           }
         }
       },
+      "ProcessingError": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "rawRegistrationId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "created": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastProcessingError": {
+            "type": "string",
+            "nullable": true
+          },
+          "firstName": {
+            "type": "string",
+            "nullable": true
+          },
+          "lastName": {
+            "type": "string",
+            "nullable": true
+          },
+          "mail": {
+            "type": "string",
+            "nullable": true
+          },
+          "phone": {
+            "type": "string",
+            "nullable": true
+          },
+          "roleMissing": {
+            "type": "boolean"
+          },
+          "roleOverride": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Role"
+              }
+            ]
+          }
+        }
+      },
+      "ProcessingErrorsQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "ProcessMailEventsCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -9917,18 +10063,6 @@
           }
         }
       },
-      "Role": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Leader",
-          "Follower"
-        ],
-        "enum": [
-          1,
-          2
-        ]
-      },
       "SpotDisplayItem": {
         "type": "object",
         "additionalProperties": false,
@@ -10410,8 +10544,25 @@
             "x-abstract": true,
             "additionalProperties": false,
             "properties": {
+              "canRead": {
+                "type": "boolean"
+              },
+              "canWrite": {
+                "type": "boolean"
+              },
+              "canSeek": {
+                "type": "boolean"
+              },
               "canTimeout": {
                 "type": "boolean"
+              },
+              "length": {
+                "type": "integer",
+                "format": "int64"
+              },
+              "position": {
+                "type": "integer",
+                "format": "int64"
               },
               "readTimeout": {
                 "type": "integer",

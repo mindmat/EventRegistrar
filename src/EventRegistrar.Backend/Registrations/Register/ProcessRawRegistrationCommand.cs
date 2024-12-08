@@ -51,18 +51,22 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
         try
         {
             var googleRegistration = JsonConvert.DeserializeObject<GoogleRegistration>(rawRegistration.ReceivedMessage);
+            if (googleRegistration?.Responses == null)
+            {
+                throw new InvalidOperationException($"Can't deserialize registration from google forms: {rawRegistration.ReceivedMessage}");
+            }
 
             var form = await forms.Where(frm => frm.ExternalIdentifier == rawRegistration.FormExternalIdentifier)
                                   .Include(frm => frm.Questions!)
                                   .ThenInclude(qst => qst.QuestionOptions)
                                   .FirstOrDefaultAsync(cancellationToken);
-            if (form == null)
+            if (form?.Questions == null)
             {
                 throw new KeyNotFoundException($"No form found with id '{rawRegistration.FormExternalIdentifier}'");
             }
 
             eventId = form.EventId;
-            logger.LogInformation($"Questions: {form.Questions?.Count}, Options: {form.Questions?.Sum(qst => qst.QuestionOptions?.Count)}");
+            logger.LogInformation($"Questions: {form.Questions.Count}, Options: {form.Questions.Sum(qst => qst.QuestionOptions?.Count)}");
 
             // check form state
             if (form.State == EventState.RegistrationClosed)
@@ -113,9 +117,9 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
             foreach (var rawResponse in googleRegistration.Responses)
             {
                 var responseLookup = LookupResponse(rawResponse, form.Questions);
-                if (responseLookup.questionOptionId.Any())
+                if (responseLookup.QuestionOptionId.Any())
                 {
-                    foreach (var questionOptionId in responseLookup.questionOptionId)
+                    foreach (var questionOptionId in responseLookup.QuestionOptionId)
                     {
                         var response = new Response
                                        {
@@ -124,7 +128,7 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
                                            ResponseString = string.IsNullOrEmpty(rawResponse.Response)
                                                                 ? string.Join(", ", rawResponse.Responses)
                                                                 : rawResponse.Response.Trim(),
-                                           QuestionId = responseLookup.questionId,
+                                           QuestionId = responseLookup.QuestionId,
                                            QuestionOptionId = questionOptionId
                                        };
                         registration.Responses.Add(response);
@@ -140,14 +144,34 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
                                        ResponseString = string.IsNullOrEmpty(rawResponse.Response)
                                                             ? rawResponse.Responses.StringJoin()
                                                             : rawResponse.Response,
-                                       QuestionId = responseLookup.questionId
+                                       QuestionId = responseLookup.QuestionId
                                    };
                     registration.Responses.Add(response);
                     responses.InsertObjectTree(response);
+
+                    if (responseLookup.Mapping == QuestionMappingType.FirstName)
+                    {
+                        rawRegistration.FirstName = response.ResponseString;
+                    }
+
+                    if (responseLookup.Mapping == QuestionMappingType.LastName)
+                    {
+                        rawRegistration.LastName = response.ResponseString;
+                    }
+
+                    if (responseLookup.Mapping == QuestionMappingType.EMail)
+                    {
+                        rawRegistration.Mail = response.ResponseString;
+                    }
+
+                    if (responseLookup.Mapping == QuestionMappingType.Phone)
+                    {
+                        rawRegistration.Phone = response.ResponseString;
+                    }
                 }
             }
 
-            var spots = (await registrationProcessorDelegator.Process(registration)).ToList();
+            var spots = (await registrationProcessorDelegator.Process(registration, rawRegistration.RoleOverride)).ToList();
 
             changeTrigger.PublishEvent(new RegistrationProcessed
                                        {
@@ -181,33 +205,60 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
             changeTrigger.QueryChanged<ParticipantsOfEventQuery>(form.EventId);
             changeTrigger.QueryChanged<EventSetupStateQuery>(form.EventId);
             rawRegistration.Processed = dateTimeProvider.Now;
+            if (rawRegistration.LastProcessingError != null)
+            {
+                changeTrigger.TriggerUpdate<ProcessingErrorsCalculator>(null, eventId.Value, publishEvenWhenDbCommitFails: true);
+            }
         }
         catch (Exception ex)
         {
+            var roleMissing = ex is RoleMissingException;
+
             // Update through Dapper as EF transaction will be rolled back
-            await dbConnection.ExecuteAsync("UPDATE dbo.RawRegistrations SET LastProcessingError = @Error WHERE Id = @Id", new { Error = ex.Message, Id = command.RawRegistrationId });
-            //rawRegistration.LastProcessingError = ex.Message;
+            await dbConnection.ExecuteAsync("""
+                                            UPDATE dbo.RawRegistrations 
+                                            SET LastProcessingError = @Error,
+                                                RoleMissing = @RoleMissing,
+                                                FirstName = @FirstName,
+                                                LastName = @LastName,
+                                                Mail = @Mail,
+                                                Phone = @Phone
+                                            WHERE Id = @Id
+                                            """,
+                                            new
+                                            {
+                                                Id = command.RawRegistrationId,
+                                                Error = ex.Message,
+                                                RoleMissing = roleMissing,
+                                                rawRegistration.FirstName,
+                                                rawRegistration.LastName,
+                                                rawRegistration.Mail,
+                                                rawRegistration.Phone
+                                            });
             if (eventId != null)
             {
-                changeTrigger.QueryChanged<EventSetupStateQuery>(eventId.Value);
+                changeTrigger.QueryChanged<EventSetupStateQuery>(eventId.Value, publishEvenWhenDbCommitFails: true);
+                changeTrigger.TriggerUpdate<ProcessingErrorsCalculator>(null, eventId.Value, publishEvenWhenDbCommitFails: true);
             }
+
+            throw;
         }
     }
 
-    private static (Guid? questionId, IEnumerable<Guid> questionOptionId) LookupResponse(
+    private static (Guid? QuestionId, IEnumerable<Guid> QuestionOptionId, QuestionMappingType? Mapping) LookupResponse(
         ResponseData response,
         IEnumerable<Question> questions)
     {
         var question = questions?.FirstOrDefault(qst => qst.ExternalId == response.QuestionExternalId);
-        if (question?.Type == QuestionType.Checkbox && response.Responses.Any())
+        if (question?.Type == QuestionType.Checkbox && response.Responses?.Any() == true)
         {
             var optionIds = question.QuestionOptions?.Where(qop => response.Responses.Any(rsp => rsp == qop.Answer))
                                     .Select(qop => qop.Id)
                                     .ToList();
-            return (question.Id, optionIds);
+            return (question.Id, optionIds ?? [], null);
         }
 
         var optionId = question?.QuestionOptions?.Where(qop => qop.Answer == response.Response).FirstOrDefault()?.Id;
-        return (question?.Id, optionId.HasValue ? new[] { optionId.Value } : Array.Empty<Guid>());
+        return (question?.Id, optionId.HasValue ? [optionId.Value] : [], question?.Mapping);
     }
 }

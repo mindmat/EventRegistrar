@@ -2264,6 +2264,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Import-Fehler.
+        /// </summary>
+        internal static string MenuNodeKey_FixRawProcessing {
+            get {
+                return ResourceManager.GetString("MenuNodeKey_FixRawProcessing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mitteilung.
         /// </summary>
         internal static string Message {

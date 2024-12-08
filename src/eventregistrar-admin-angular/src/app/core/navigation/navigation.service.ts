@@ -84,6 +84,15 @@ export class NavigationService
                                     badge: this.getBadge(nodes, MenuNodeKey.AssignPartners)
                                 },
                                 {
+                                    id: 'fix-raw-processing',
+                                    title: translateService.instant('MenuNodeKey_FixRawProcessing'),
+                                    type: 'basic',
+                                    icon: 'mat_outline:error_outline',
+                                    link: `/${e.acronym}/registrations/fix-raw-processing`,
+                                    badge: this.getBadge(nodes, MenuNodeKey.FixRawProcessing),
+                                    hidden: _ => this.isHidden(nodes, MenuNodeKey.FixRawProcessing)
+                                },
+                                {
                                     id: 'problematic-emails',
                                     title: translateService.instant('MailMonitor'),
                                     type: 'basic',
@@ -238,6 +247,16 @@ export class NavigationService
         };
     }
 
+    private isHidden(contents: MenuNodeContent[] | null, key: MenuNodeKey): boolean 
+    {
+        var content = contents?.find(nct => nct.key === key);
+        if (!content)
+        {
+            return false;
+        }
+        return content.hidden === true;
+    }
+
     getBadgeStyle(content: MenuNodeContent): string | null
     {
         if (!content.content)
@@ -249,6 +268,7 @@ export class NavigationService
         {
             case MenuNodeStyle.Info: return 'px-2 bg-sky-600 text-black rounded-full';
             case MenuNodeStyle.ToDo: return 'px-2 bg-yellow-500 text-black rounded-full';
+            case MenuNodeStyle.Important: return 'px-2 bg-red-500 text-black rounded-full';
             default: return 'px-2 bg-sky-600 text-black rounded-full';
         }
     }

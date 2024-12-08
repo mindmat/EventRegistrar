@@ -22,7 +22,7 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                          IDateTimeProvider dateTimeProvider,
                                          ReadableIdProvider readableIdProvider)
 {
-    public async Task<IEnumerable<Seat>> Process(Registration registration)
+    public async Task<IEnumerable<Seat>> Process(Registration registration, Role? roleFallback = null)
     {
         var form = await forms.Where(frm => frm.Id == registration.RegistrationFormId)
                               .Include(frm => frm.Questions!)
@@ -162,11 +162,18 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
         {
             if (defaultRole == null)
             {
-                var trackNames = await registrables.Where(rbl => requestsWithoutRole.Select(rwr => rwr.RegistrableId).Contains(rbl.Id))
-                                                   .Select(rbl => rbl.DisplayName)
-                                                   .ToListAsync();
-                throw new InvalidOperationException(
-                    $"Invalid mapping configuration: Mappings to partner registrable {trackNames.StringJoin()} but no role defined");
+                if (roleFallback != null)
+                {
+                    defaultRole = roleFallback;
+                }
+                else
+                {
+                    var trackNames = await registrables.Where(rbl => requestsWithoutRole.Select(rwr => rwr.RegistrableId).Contains(rbl.Id))
+                                                       .Select(rbl => rbl.DisplayName)
+                                                       .ToListAsync();
+                    throw new RoleMissingException(
+                        $"Registration for partner tracks {trackNames.StringJoin()} but no role defined");
+                }
             }
 
             requestsWithoutRole.ForEach(rwr => rwr.Role = defaultRole);

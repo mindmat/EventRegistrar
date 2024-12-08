@@ -2797,6 +2797,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    fixMissingRole_Command(fixMissingRoleCommand: FixMissingRoleCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/FixMissingRoleCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(fixMissingRoleCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processFixMissingRole_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processFixMissingRole_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processFixMissingRole_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     formPaths_Query(formPathsQuery: FormPathsQuery | undefined): Observable<RegistrationFormGroup[]> {
         let url_ = this.baseUrl + "/api/FormPathsQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -4608,6 +4656,57 @@ export class Api {
         if (status === 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    processingErrors_Query(processingErrorsQuery: ProcessingErrorsQuery | undefined): Observable<ProcessingError[]> {
+        let url_ = this.baseUrl + "/api/ProcessingErrorsQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(processingErrorsQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProcessingErrors_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProcessingErrors_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ProcessingError[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ProcessingError[]>;
+        }));
+    }
+
+    protected processProcessingErrors_Query(response: HttpResponseBase): Observable<ProcessingError[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ProcessingError[];
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -8614,7 +8713,7 @@ export interface EventSetupState {
     autoMailTemplatesDefined?: boolean;
     registrationsReceived?: number;
     registrationsProcessed?: number;
-    processingErrors?: string[];
+    processingErrors?: number;
 }
 
 export interface EventSetupStateQuery {
@@ -8681,6 +8780,17 @@ export interface FixInvalidAddressCommand {
     newEmailAddress?: string | null;
     oldEmailAddress?: string | null;
     registrationId?: string;
+}
+
+export interface FixMissingRoleCommand {
+    eventId?: string;
+    rawRegistrationId?: string;
+    role?: Role;
+}
+
+export enum Role {
+    Leader = 1,
+    Follower = 2,
 }
 
 export interface RegistrationFormGroup {
@@ -8955,6 +9065,7 @@ export enum MenuNodeKey {
     Cancellations = 7,
     Hosting = 8,
     Participants = 9,
+    FixRawProcessing = 10,
     BankStatements = 11,
     AssignBankStatements = 12,
     DuePayments = 13,
@@ -8972,6 +9083,7 @@ export enum MenuNodeStyle {
     None = 0,
     Info = 1,
     ToDo = 2,
+    Important = 3,
 }
 
 export interface MenuNodesQuery {
@@ -9446,6 +9558,22 @@ export interface ProcessFetchedBankStatementsFileCommand {
     eventId?: string;
 }
 
+export interface ProcessingError {
+    rawRegistrationId?: string;
+    created?: Date;
+    lastProcessingError?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    mail?: string | null;
+    phone?: string | null;
+    roleMissing?: boolean;
+    roleOverride?: Role | null;
+}
+
+export interface ProcessingErrorsQuery {
+    eventId?: string;
+}
+
 export interface ProcessMailEventsCommand {
     rawMailEventsId?: string;
 }
@@ -9673,11 +9801,6 @@ export interface RegistrationDisplayItem {
     reductions?: IndividualReductionDisplayItem[] | null;
 }
 
-export enum Role {
-    Leader = 1,
-    Follower = 2,
-}
-
 export interface SpotDisplayItem {
     firstPartnerJoined?: Date;
     id?: string;
@@ -9828,7 +9951,12 @@ export interface MarshalByRefObject {
 }
 
 export interface Stream extends MarshalByRefObject {
+    canRead?: boolean;
+    canWrite?: boolean;
+    canSeek?: boolean;
     canTimeout?: boolean;
+    length?: number;
+    position?: number;
     readTimeout?: number;
     writeTimeout?: number;
 }

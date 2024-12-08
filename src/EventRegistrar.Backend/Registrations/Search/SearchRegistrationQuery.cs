@@ -30,7 +30,7 @@ public class SearchRegistrationQueryHandler(IQueryable<Registration> _registrati
                                                 || reg.RespondentLastName!.Contains(searchPart)
                                                 || reg.RespondentEmail!.Contains(searchPart)
                                                 || reg.PhoneNormalized!.Contains(searchPart)
-                                                || reg.ReadableIdentifier ==searchPart);
+                                                || reg.ReadableIdentifier == searchPart);
             }
         }
 

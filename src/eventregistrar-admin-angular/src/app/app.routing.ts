@@ -68,6 +68,8 @@ import { AllParticipantsResolver } from './modules/admin/registrations/all-parti
 import { SetupEventComponent } from './modules/admin/setup-event/setup-event.component';
 import { SetupEventResolver } from './modules/admin/setup-event/setup-event.resolver';
 import { EventSettingsComponent } from './modules/admin/event-settings/event-settings.component';
+import { FixRawProcessingComponent } from './modules/admin/registration/fix-raw-processing/fix-raw-processing.component';
+import { FixRawProcessingResolver } from './modules/admin/registration/fix-raw-processing/fix-raw-processing.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -260,6 +262,12 @@ export const appRoutes: Route[] =
                                     component: MatchPartnerComponent
                                 }
                             ]
+                        },
+                        {
+                            path: 'fix-raw-processing',
+                            canActivate: [AuthGuard],
+                            component: FixRawProcessingComponent,
+                            resolve: { initialData: FixRawProcessingResolver }
                         },
                         {
                             path: 'remarks-overview',

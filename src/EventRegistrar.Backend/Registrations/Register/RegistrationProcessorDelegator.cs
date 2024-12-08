@@ -11,9 +11,9 @@ public class RegistrationProcessorDelegator(SingleRegistrationProcessor singleRe
 {
     private readonly PartnerRegistrationProcessor _partnerRegistrationProcessor = partnerRegistrationProcessor;
 
-    public Task<IEnumerable<Seat>> Process(Registration registration)
+    public Task<IEnumerable<Seat>> Process(Registration registration, Role? roleFallback = null)
     {
-        return singleRegistrationProcessor.Process(registration);
+        return singleRegistrationProcessor.Process(registration, roleFallback);
 
         //var processConfigurations = await GetConfigurations(registrationFormId);
         //var spots = new List<Seat>();

@@ -20,6 +20,7 @@ public enum MenuNodeKey
     Overview = 1,
     PendingMails = 2,
     AssignPartners = 3,
+    FixRawProcessing = 10,
     MailTracking = 4,
     Remarks = 5,
     InternalNotes = 6,
@@ -45,7 +46,8 @@ public enum MenuNodeStyle
 {
     None = 0,
     Info = 1,
-    ToDo = 2
+    ToDo = 2,
+    Important = 3
 }
 
 public class MenuNodeReadModelMap : EntityMap<MenuNodeReadModel>

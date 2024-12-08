@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { NotesDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
@@ -9,7 +9,7 @@ import { NotesOverviewService } from './notes-overview.service';
   templateUrl: './notes-overview.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotesOverviewComponent implements OnInit
+export class NotesOverviewComponent implements OnInit, OnDestroy
 {
   notesList: NotesDisplayItem[];
   private unsubscribeAll: Subject<any> = new Subject<any>();
@@ -28,5 +28,12 @@ export class NotesOverviewComponent implements OnInit
 
         this.changeDetectorRef.markForCheck();
       });
+  }
+
+  ngOnDestroy(): void
+  {
+    // Unsubscribe from all subscriptions
+    this.unsubscribeAll.next(null);
+    this.unsubscribeAll.complete();
   }
 }

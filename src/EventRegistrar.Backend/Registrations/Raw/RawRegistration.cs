@@ -11,6 +11,13 @@ public class RawRegistration : Entity
     public string RegistrationExternalIdentifier { get; set; } = null!;
     public string? LastProcessingError { get; set; }
     public DateTimeOffset? Processed { get; set; }
+
+    public string? FirstName { get; set; }
+    public string? LastName { get; set; }
+    public string? Mail { get; set; }
+    public string? Phone { get; set; }
+    public bool RoleMissing { get; set; }
+    public Role? RoleOverride { get; set; }
 }
 
 public class RawRegistrationMap : EntityMap<RawRegistration>
@@ -25,6 +32,14 @@ public class RawRegistrationMap : EntityMap<RawRegistration>
                .HasMaxLength(500);
         builder.Property(rrg => rrg.RegistrationExternalIdentifier)
                .HasMaxLength(500);
+        builder.Property(rrg => rrg.FirstName)
+               .HasMaxLength(100);
+        builder.Property(rrg => rrg.LastName)
+               .HasMaxLength(100);
+        builder.Property(rrg => rrg.Mail)
+               .HasMaxLength(200);
+        builder.Property(rrg => rrg.Phone)
+               .HasMaxLength(100);
 
         builder.HasIndex(rrg => rrg.EventAcronym); // Performance
     }

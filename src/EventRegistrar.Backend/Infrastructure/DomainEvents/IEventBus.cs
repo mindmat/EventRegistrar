@@ -2,6 +2,6 @@
 
 public interface IEventBus
 {
-    void Publish<TEvent>(TEvent @event)
+    void Publish<TEvent>(TEvent @event, bool publishEvenWhenDbCommitFails = false)
         where TEvent : DomainEvent;
 }

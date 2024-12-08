@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Matching;
+using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Registrations.Remarks;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
@@ -39,6 +40,11 @@ public class StartUpdateReadModelsOfEventCommandHandler(IQueryable<Event> events
             if (command.QueryNames?.Contains(nameof(RegistrationsWithUnmatchedPartnerQuery)) != false)
             {
                 changeTrigger.TriggerUpdate<RegistrationsWithUnmatchedPartnerCalculator>(null, eventId);
+            }
+
+            if (command.QueryNames?.Contains(nameof(ProcessingErrorsQuery)) != false)
+            {
+                changeTrigger.TriggerUpdate<ProcessingErrorsCalculator>(null, eventId);
             }
 
             if (command.QueryNames?.Contains(nameof(RemarksOverviewQuery)) != false)

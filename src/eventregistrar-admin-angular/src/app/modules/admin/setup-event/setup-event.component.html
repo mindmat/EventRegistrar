@@ -370,18 +370,9 @@
                                     </a>
                                 </div>
 
-                                <div *ngIf="state.processingErrors?.length > 0"
+                                <div *ngIf="state.processingErrors > 0"
                                     class="mt-4 py-4 px-5 min-w-128 rounded-lg bg-warn-200 dark:bg-gray-800">
-                                    <a>Fehler bei der Verarbeitung:</a>
-                                    <ul class="list-decimal list-inside space-y-2">
-                                        <li *ngFor="let error of state.processingErrors">
-                                            <a>{{ error }}</a>
-                                        </li>
-                                    </ul>
-                                    <button class="ml-auto" mat-button [color]="'primary'"
-                                        (click)="startProcessAllPendingRawRegistrationsCommand()">
-                                        {{ 'Import' | translate }}
-                                    </button>
+                                    <a>Fehler bei der Verarbeitung: {{state.processingErrors}}</a>
                                 </div>
                             </div>
                         </div>

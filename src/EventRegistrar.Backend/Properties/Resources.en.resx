@@ -750,6 +750,9 @@
   <data name="MaxAllowedImbalanceSecondary" xml:space="preserve">
     <value>between leaders and followers</value>
   </data>
+  <data name="MenuNodeKey_FixRawProcessing" xml:space="preserve">
+    <value>Import errors</value>
+  </data>
   <data name="Message" xml:space="preserve">
     <value>Message</value>
   </data>

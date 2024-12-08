@@ -847,6 +847,9 @@
   <data name="MaxAllowedImbalanceSecondary" xml:space="preserve">
     <value>zwischen Leadern und Followern</value>
   </data>
+  <data name="MenuNodeKey_FixRawProcessing" xml:space="preserve">
+    <value>Import-Fehler</value>
+  </data>
   <data name="Message" xml:space="preserve">
     <value>Mitteilung</value>
   </data>

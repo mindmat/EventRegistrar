@@ -10,7 +10,7 @@ public class ChangeTrigger(CommandQueue commandQueue,
                            IEnumerable<IReadModelCalculator> calculators,
                            IEventBus eventBus)
 {
-    public void TriggerUpdate<T>(Guid? rowId = null, Guid? eventId = null)
+    public void TriggerUpdate<T>(Guid? rowId = null, Guid? eventId = null, bool publishEvenWhenDbCommitFails = false)
         where T : IReadModelCalculator
     {
         eventId ??= eventContext.EventId;
@@ -28,10 +28,11 @@ public class ChangeTrigger(CommandQueue commandQueue,
                                         EventId = eventId.Value,
                                         RowId = rowId,
                                         DirtyMoment = dateTimeProvider.Now
-                                    });
+                                    },
+                                    publishEvenWhenDbCommitFails);
     }
 
-    public void QueryChanged<TQuery>(Guid eventId, Guid? rowId = null)
+    public void QueryChanged<TQuery>(Guid eventId, Guid? rowId = null, bool publishEvenWhenDbCommitFails = false)
         where TQuery : IEventBoundRequest
     {
         eventBus.Publish(new QueryChanged
@@ -39,17 +40,22 @@ public class ChangeTrigger(CommandQueue commandQueue,
                              EventId = eventId,
                              QueryName = typeof(TQuery).Name,
                              RowId = rowId
-                         });
+                         },
+                         publishEvenWhenDbCommitFails);
     }
 
-    public void QueryChanged(string queryName, Guid eventId, Guid? rowId = null)
+    public void QueryChanged(string queryName,
+                             Guid eventId,
+                             Guid? rowId = null,
+                             bool publishEvenWhenDbCommitFails = false)
     {
         eventBus.Publish(new QueryChanged
                          {
                              EventId = eventId,
                              QueryName = queryName,
                              RowId = rowId
-                         });
+                         },
+                         publishEvenWhenDbCommitFails);
     }
 
 

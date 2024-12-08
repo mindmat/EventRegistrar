@@ -116,6 +116,7 @@ import { SetupEventComponent } from './modules/admin/setup-event/setup-event.com
 import { EventSettingsComponent } from './modules/admin/event-settings/event-settings.component';
 import { MailConfigComponent } from './modules/admin/event-settings/mail-config/mail-config.component';
 import { AccountConfigComponent } from './modules/admin/event-settings/account-config/account-config.component';
+import { FixRawProcessingComponent } from './modules/admin/registration/fix-raw-processing/fix-raw-processing.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -174,7 +175,8 @@ const routerConfig: ExtraOptions = {
         SetupEventComponent,
         EventSettingsComponent,
         MailConfigComponent,
-        AccountConfigComponent
+        AccountConfigComponent,
+        FixRawProcessingComponent
     ],
     providers: [
         AuthServiceFuse,

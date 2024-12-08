@@ -13,17 +13,25 @@ public class CommitUnitOfWorkDecorator<TRequest, TResponse>(DbContext dbContext,
                                         RequestHandlerDelegate<TResponse> next,
                                         CancellationToken cancellationToken)
     {
-        var response = await next();
-        dbContext.ChangeTracker.DetectChanges();
-        if (dbContext.ChangeTracker.HasChanges())
+        try
         {
-            await dbContext.SaveChangesAsync(cancellationToken);
+            var response = await next();
+            dbContext.ChangeTracker.DetectChanges();
+            if (dbContext.ChangeTracker.HasChanges())
+            {
+                await dbContext.SaveChangesAsync(cancellationToken);
+            }
+
+            // "transaction": only release messages to event bus if db commit succeeds
+            await commandQueue.Release(true);
+            eventBus.Release(true);
+            return response;
         }
-
-        // "transaction": only release messages to event bus if db commit succeeds
-        await commandQueue.Release();
-        eventBus.Release();
-
-        return response;
+        catch
+        {
+            await commandQueue.Release(false);
+            eventBus.Release(false);
+            throw;
+        }
     }
 }
