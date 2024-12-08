@@ -12,6 +12,8 @@ public class MailConfiguration : IConfigurationItem
     public IEnumerable<string> AvailableLanguages { get; set; } = null!;
     public string? FallbackLanguage { get; set; }
     public MailSender MailSender { get; set; }
+    public MailSenderTokenKey? MailSenderTokenKey { get; set; }
+
     public SmtpConfiguration? SmtpConfiguration { get; set; }
     public bool SendRegistrationReceivedMail { get; set; }
 }
@@ -28,13 +30,13 @@ public class DefaultMailConfiguration : MailConfiguration, IDefaultConfiguration
 {
     public DefaultMailConfiguration()
     {
-        AvailableLanguages = new[] { Language.German, Language.English };
+        AvailableLanguages = [Language.English];
         SingleRegistrationPossible = true;
-        PartnerRegistrationPossible = true;
-        SenderMail = "registration@leapinlindy.ch";
-        SenderName = "Leapin' Lindy";
+        PartnerRegistrationPossible = false;
+        SenderMail = "";
+        SenderName = null;
         FallbackLanguage = Language.English;
-        MailSender = MailSender.SendGrid;
+        MailSender = MailSender.Smtp;
     }
 }
 
@@ -43,4 +45,11 @@ public enum MailSender
     Smtp = 1,
     SendGrid = 2,
     Postmark = 3
+}
+
+public enum MailSenderTokenKey
+{
+    PostmarkToken = 1,
+    SendGridApiKey = 2,
+    PostmarkTokenSwima = 3
 }

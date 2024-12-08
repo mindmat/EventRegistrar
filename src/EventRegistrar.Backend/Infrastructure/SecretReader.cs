@@ -5,6 +5,7 @@ using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 
 using EventRegistrar.Backend.Infrastructure.ErrorHandling;
+using EventRegistrar.Backend.Mailing;
 
 namespace EventRegistrar.Backend.Infrastructure;
 
@@ -14,6 +15,8 @@ public class SecretReader
     private readonly ILogger _logger;
     private readonly Lazy<SecretClient> _secretClient;
     private readonly IDictionary<string, string> _cache = new ConcurrentDictionary<string, string>();
+    const string SendGridApiKey = "SendGridApiKey";
+    const string PostmarkTokenKey = "PostmarkToken";
 
     public SecretReader(IConfiguration configuration,
                         ILogger logger)
@@ -35,16 +38,14 @@ public class SecretReader
         return secret;
     }
 
-    public Task<string?> GetSendGridApiKey(CancellationToken cancellationToken = default)
+    public Task<string?> GetSendGridApiKey(MailSenderTokenKey? key, CancellationToken cancellationToken = default)
     {
-        const string SendGridApiKey = "SendGridApiKey";
-        return GetSecret(SendGridApiKey, cancellationToken);
+        return GetSecret(key?.ToString() ?? SendGridApiKey, cancellationToken);
     }
 
-    public Task<string?> GetPostmarkToken(CancellationToken cancellationToken = default)
+    public Task<string?> GetPostmarkToken(MailSenderTokenKey? key, CancellationToken cancellationToken = default)
     {
-        const string PostmarkTokenKey = "PostmarkToken";
-        return GetSecret(PostmarkTokenKey, cancellationToken);
+        return GetSecret(key?.ToString() ?? PostmarkTokenKey, cancellationToken);
     }
 
     private SecretClient CreateSecretClient(IConfiguration configuration)

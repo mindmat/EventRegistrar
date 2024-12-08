@@ -12,12 +12,12 @@ public class AvailableMailersQueryHandler(SecretReader secretReader) : IRequestH
     public async Task<IEnumerable<MailSender>> Handle(AvailableMailersQuery query, CancellationToken cancellationToken)
     {
         var availableMailers = new List<MailSender> { MailSender.Smtp };
-        if (await secretReader.GetSendGridApiKey(cancellationToken) != null)
+        //if (await secretReader.GetSendGridApiKey(cancellationToken) != null)
         {
             availableMailers.Add(MailSender.SendGrid);
         }
 
-        if (await secretReader.GetPostmarkToken(cancellationToken) != null)
+        //if (await secretReader.GetPostmarkToken(cancellationToken) != null)
         {
             availableMailers.Add(MailSender.Postmark);
         }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Api, AutoMailTemplates, MailSender, MailType } from 'app/api/api';
+import { Api, AutoMailTemplates, MailSender, MailSenderTokenKey, MailType } from 'app/api/api';
 import { Observable } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { FetchService } from '../../infrastructure/fetchService';
@@ -41,6 +41,7 @@ export class AutoMailTemplatesService extends FetchService<AutoMailTemplates>
     partnerRegistrationPossible: boolean,
     sendRegistrationReceivedMail: boolean,
     mailSender: MailSender,
+    mailSenderTokenKey: MailSenderTokenKey,
     smtpHost: string,
     smtpPort: number,
     smtpUsername?: string,
@@ -56,6 +57,7 @@ export class AutoMailTemplatesService extends FetchService<AutoMailTemplates>
         partnerRegistrationPossible,
         sendRegistrationReceivedMail,
         mailSender,
+        mailSenderTokenKey,
         smtpHost,
         smtpPort,
         smtpUsername,

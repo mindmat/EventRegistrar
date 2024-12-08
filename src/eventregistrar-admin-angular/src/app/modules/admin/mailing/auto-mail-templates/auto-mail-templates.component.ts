@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AutoMailTemplates, AutoMailTemplateMetadataLanguage, AutoMailTemplateMetadataType, MailSender } from 'app/api/api';
+import { AutoMailTemplates, AutoMailTemplateMetadataLanguage, AutoMailTemplateMetadataType, MailSender, MailSenderTokenKey } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { AutoMailTemplatesService } from './auto-mail-templates.service';
 
@@ -12,6 +12,7 @@ import { AutoMailTemplatesService } from './auto-mail-templates.service';
 })
 export class AutoMailTemplatesComponent implements OnInit
 {
+  MailSenderTokenKey = MailSenderTokenKey;
   templates: AutoMailTemplates;
   selectedTemplate: AutoMailTemplateMetadataLanguage;
   flagCodes: any;
@@ -19,6 +20,7 @@ export class AutoMailTemplatesComponent implements OnInit
     { id: 'de', label: 'Deutsch' },
     { id: 'en', label: 'English' }
   ];
+  mailTokenKeys: MailSenderTokenKey[] = [MailSenderTokenKey.PostmarkToken, MailSenderTokenKey.PostmarkTokenSwima, MailSenderTokenKey.SendGridApiKey];
 
   configForm = this.fb.group({
     eventId: '',
@@ -28,6 +30,7 @@ export class AutoMailTemplatesComponent implements OnInit
     partnerRegistrationPossible: false,
     sendRegistrationReceivedMail: false,
     mailSender: MailSender.Smtp,
+    mailSenderTokenKey: null as MailSenderTokenKey,
     smtpHost: null as string,
     smtpPort: null as number,
     smtpUsername: null as string,
@@ -65,6 +68,7 @@ export class AutoMailTemplatesComponent implements OnInit
           partnerRegistrationPossible: templates.partnerRegistrationPossible,
           sendRegistrationReceivedMail: templates.sendRegistrationReceivedMail,
           mailSender: templates.mailSender,
+          mailSenderTokenKey: templates.mailSenderTokenKey,
           smtpHost: templates.smtpHost,
           smtpPort: templates.smtpPort,
           smtpUsername: templates.smtpUsername,
@@ -150,6 +154,7 @@ export class AutoMailTemplatesComponent implements OnInit
       this.configForm.value.partnerRegistrationPossible,
       this.configForm.value.sendRegistrationReceivedMail,
       this.configForm.value.mailSender,
+      this.configForm.value.mailSenderTokenKey,
       this.configForm.value.smtpHost,
       this.configForm.value.smtpPort,
       this.configForm.value.smtpUsername,

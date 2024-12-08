@@ -8233,6 +8233,7 @@ export interface AutoMailTemplates {
     partnerRegistrationPossible?: boolean;
     sendRegistrationReceivedMail?: boolean;
     mailSender?: MailSender;
+    mailSenderTokenKey?: MailSenderTokenKey | null;
     smtpHost?: string | null;
     smtpPort?: number | null;
     smtpUsername?: string | null;
@@ -8261,6 +8262,12 @@ export enum MailSender {
     Smtp = 1,
     SendGrid = 2,
     Postmark = 3,
+}
+
+export enum MailSenderTokenKey {
+    PostmarkToken = 1,
+    SendGridApiKey = 2,
+    PostmarkTokenSwima = 3,
 }
 
 export interface AutoMailTemplatesQuery {
@@ -10215,6 +10222,7 @@ export interface UpdateAutoMailConfigurationCommand {
     sendRegistrationReceivedMail?: boolean;
     availableLanguages?: string[] | null;
     mailSender?: MailSender | null;
+    mailSenderTokenKey?: MailSenderTokenKey | null;
     smtpHost?: string | null;
     smtpPort?: number | null;
     smtpUsername?: string | null;

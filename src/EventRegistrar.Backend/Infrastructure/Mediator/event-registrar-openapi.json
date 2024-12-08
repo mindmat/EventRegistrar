@@ -5196,6 +5196,14 @@
           "mailSender": {
             "$ref": "#/components/schemas/MailSender"
           },
+          "mailSenderTokenKey": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MailSenderTokenKey"
+              }
+            ]
+          },
           "smtpHost": {
             "type": "string",
             "nullable": true
@@ -5281,6 +5289,20 @@
           "Smtp",
           "SendGrid",
           "Postmark"
+        ],
+        "enum": [
+          1,
+          2,
+          3
+        ]
+      },
+      "MailSenderTokenKey": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "PostmarkToken",
+          "SendGridApiKey",
+          "PostmarkTokenSwima"
         ],
         "enum": [
           1,
@@ -11355,6 +11377,14 @@
             "oneOf": [
               {
                 "$ref": "#/components/schemas/MailSender"
+              }
+            ]
+          },
+          "mailSenderTokenKey": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/MailSenderTokenKey"
               }
             ]
           },

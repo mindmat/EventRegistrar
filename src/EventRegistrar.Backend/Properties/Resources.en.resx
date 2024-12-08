@@ -606,6 +606,18 @@
   <data name="MailSender" xml:space="preserve">
     <value>Mail Service</value>
   </data>
+  <data name="MailSenderTokenKey" xml:space="preserve">
+    <value>API token</value>
+  </data>
+  <data name="MailSenderTokenKey_PostmarkToken" xml:space="preserve">
+    <value>Postmark</value>
+  </data>
+  <data name="MailSenderTokenKey_PostmarkTokenSwima" xml:space="preserve">
+    <value>Postmark (Swima)</value>
+  </data>
+  <data name="MailSenderTokenKey_SendGridApiKey" xml:space="preserve">
+    <value>SendGrid</value>
+  </data>
   <data name="MailSender_Postmark" xml:space="preserve">
     <value>Postmark</value>
   </data>

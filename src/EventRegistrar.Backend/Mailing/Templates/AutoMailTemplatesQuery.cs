@@ -29,6 +29,7 @@ public class AutoMailTemplatesQueryHandler(IQueryable<AutoMailTemplate> mailTemp
                    PartnerRegistrationPossible = config.PartnerRegistrationPossible,
                    SendRegistrationReceivedMail = config.SendRegistrationReceivedMail,
                    MailSender = config.MailSender,
+                   MailSenderTokenKey = config.MailSenderTokenKey,
                    SmtpHost = config.SmtpConfiguration?.Host,
                    SmtpPort = config.SmtpConfiguration?.Port,
                    SmtpUsername = config.SmtpConfiguration?.Username,
@@ -118,6 +119,7 @@ public class AutoMailTemplates
     public bool PartnerRegistrationPossible { get; set; }
     public bool SendRegistrationReceivedMail { get; set; }
     public MailSender MailSender { get; set; }
+    public MailSenderTokenKey? MailSenderTokenKey { get; set; }
 
     public string? SmtpHost { get; set; }
     public int? SmtpPort { get; set; }

@@ -137,7 +137,18 @@
                                 <mat-form-field class="w-full  pt-2" [subscriptSizing]="'dynamic'">
                                     <mat-label>{{ 'MailSender' | translate }}</mat-label>
                                     <mat-select [formControlName]="'mailSender'">
-                                        <mat-option *ngFor="let mailer of mailers" [value]="mailer">{{ mailer | translateEnum: MailSender : 'MailSender' }}</mat-option>
+                                        <mat-option *ngFor="let mailer of mailers" [value]="mailer">
+                                            {{ mailer | translateEnum: MailSender : 'MailSender' }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <!-- Mail token key -->
+                                <mat-form-field class="w-full  pt-2" [subscriptSizing]="'dynamic'">
+                                    <mat-label>{{ 'MailSenderTokenKey' | translate }}</mat-label>
+                                    <mat-select [formControlName]="'mailSenderTokenKey'">
+                                        <mat-option *ngFor="let mailTokenKey of mailTokenKeys" [value]="mailTokenKey">
+                                            {{ mailTokenKey | translateEnum: MailSenderTokenKey : 'MailSenderTokenKey'}}
+                                        </mat-option>
                                     </mat-select>
                                 </mat-form-field>
 
@@ -203,29 +214,35 @@
                                         <!-- templates (per language) -->
                                         <div class="flex flex-row items-start">
                                             <ng-container *ngFor="let template of type.templates">
-                                                <button (click)="selectTemplate(template, type)" class="ml-2" [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
+                                                <button (click)="selectTemplate(template, type)" class="ml-2"
+                                                    [ngClass]="{'hover:bg-gray-100 dark:hover:bg-hover': !selectedTemplate || selectedTemplate.id !== template.id,
                                                 'bg-primary-50 dark:bg-hover': selectedTemplate && selectedTemplate.id === template.id}">
                                                     <span class="flex items-center">
-                                                        <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: template}"></ng-container>
+                                                        <ng-container
+                                                            *ngTemplateOutlet="flagImage; context: {$implicit: template}"></ng-container>
                                                     </span>
                                                 </button>
                                             </ng-container>
                                         </div>
 
                                         <!-- Release immediately? -->
-                                        <button *ngIf="type.releaseImmediately !== null" class="ml-auto" mat-button (click)="toggleRelease(type)">
+                                        <button *ngIf="type.releaseImmediately !== null" class="ml-auto" mat-button
+                                            (click)="toggleRelease(type)">
                                             <!-- Release immediately -->
                                             <ng-container *ngIf="type.releaseImmediately">
                                                 <div class="flex items-center justify-center">
-                                                    <mat-icon class="text-primary" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
-                                                    <span class="ml-2 font-semibold">{{ 'ReleaseImmediately' | translate }}</span>
+                                                    <mat-icon class="text-primary"
+                                                        [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                                                    <span class="ml-2 font-semibold">{{ 'ReleaseImmediately' | translate
+                                                        }}</span>
                                                 </div>
                                             </ng-container>
                                             <!-- Hold back -->
                                             <ng-container *ngIf="!type.releaseImmediately">
                                                 <div class="flex items-center justify-center">
                                                     <mat-icon [svgIcon]="'heroicons_outline:x-circle'"></mat-icon>
-                                                    <span class="ml-2 font-semibold">{{ 'HoldMailBack' | translate }}</span>
+                                                    <span class="ml-2 font-semibold">{{ 'HoldMailBack' | translate
+                                                        }}</span>
                                                 </div>
                                             </ng-container>
                                         </button>

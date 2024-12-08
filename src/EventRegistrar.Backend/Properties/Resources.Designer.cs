@@ -1859,6 +1859,42 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to API-Token.
+        /// </summary>
+        internal static string MailSenderTokenKey {
+            get {
+                return ResourceManager.GetString("MailSenderTokenKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Postmark.
+        /// </summary>
+        internal static string MailSenderTokenKey_PostmarkToken {
+            get {
+                return ResourceManager.GetString("MailSenderTokenKey_PostmarkToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Postmark (Swima).
+        /// </summary>
+        internal static string MailSenderTokenKey_PostmarkTokenSwima {
+            get {
+                return ResourceManager.GetString("MailSenderTokenKey_PostmarkTokenSwima", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to SendGrid.
+        /// </summary>
+        internal static string MailSenderTokenKey_SendGridApiKey {
+            get {
+                return ResourceManager.GetString("MailSenderTokenKey_SendGridApiKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bounce.
         /// </summary>
         internal static string MailState_Bounce {

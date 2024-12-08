@@ -14,6 +14,7 @@ public class UpdateAutoMailConfigurationCommand : IRequest, IEventBoundRequest
     public bool SendRegistrationReceivedMail { get; set; }
     public IEnumerable<string>? AvailableLanguages { get; set; }
     public MailSender? MailSender { get; set; }
+    public MailSenderTokenKey? MailSenderTokenKey { get; set; }
 
     public string? SmtpHost { get; set; }
     public int? SmtpPort { get; set; }
@@ -46,6 +47,7 @@ public class UpdateAutoMailConfigurationCommandHandler(ConfigurationRegistry con
         if (command.MailSender != null)
         {
             config.MailSender = command.MailSender.Value;
+            config.MailSenderTokenKey = command.MailSenderTokenKey;
 
             if (command.MailSender == MailSender.Smtp)
             {
