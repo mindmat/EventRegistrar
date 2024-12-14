@@ -77,13 +77,15 @@ public class MatchPartnerRegistrationsCommandHandler(IRepository<Registration> r
 
         var partnerSpotsOfLeader = registrationLeader.Seats_AsLeader!.ToList();
         var partnerSpotsOfFollower = registrationFollower.Seats_AsFollower!.ToList();
-
-        if (partnerSpotsOfLeader.Any(spt => spt.RegistrationId_Follower != null))
+        Guid?[] allowedRegistrationIds = [command.RegistrationId1, command.RegistrationId2, null];
+        if (partnerSpotsOfLeader.Any(spt => !allowedRegistrationIds.Contains(spt.RegistrationId)
+                                         && !allowedRegistrationIds.Contains(spt.RegistrationId_Follower)))
         {
             throw new ArgumentException($"Unexpected situation: leader registration {registrationLeader.Id} has partner spot with a follower set");
         }
 
-        if (partnerSpotsOfFollower.Any(spt => spt.RegistrationId != null))
+        if (partnerSpotsOfFollower.Any(spt => !allowedRegistrationIds.Contains(spt.RegistrationId)
+                                           && !allowedRegistrationIds.Contains(spt.RegistrationId_Follower)))
         {
             throw new ArgumentException($"Unexpected situation: follower registration {registrationFollower.Id} has partner spot with a leader set");
         }
@@ -92,16 +94,21 @@ public class MatchPartnerRegistrationsCommandHandler(IRepository<Registration> r
         registrationLeader.RegistrationId_Partner = registrationFollower.Id;
         registrationFollower.RegistrationId_Partner = registrationLeader.Id;
 
-        var registrableIdsToMerge = partnerSpotsOfLeader.Select(spt => spt.RegistrableId)
-                                                        .Intersect(partnerSpotsOfFollower.Select(spt => spt.RegistrableId))
-                                                        .Distinct()
-                                                        .ToList();
+        var registrableIdsToMerge = Enumerable.Intersect(partnerSpotsOfLeader.Select(spt => spt.RegistrableId), 
+                                                         partnerSpotsOfFollower.Select(spt => spt.RegistrableId))
+                                              .Distinct()
+                                              .ToList();
 
         var isWaitingList = false;
         foreach (var registrableId in registrableIdsToMerge)
         {
             var leaderSpot = partnerSpotsOfLeader.Single(spt => spt.RegistrableId == registrableId);
             var followerSpot = partnerSpotsOfFollower.Single(spt => spt.RegistrableId == registrableId);
+            if (leaderSpot.Id == followerSpot.Id)
+            {
+                // already merged
+                continue;
+            }
             Seat mergedSpot;
             Seat spotToCancel;
             if (leaderSpot.FirstPartnerJoined < followerSpot.FirstPartnerJoined || (!leaderSpot.IsWaitingList && followerSpot.IsWaitingList))

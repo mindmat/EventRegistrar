@@ -39,15 +39,16 @@ public class PotentialPartnersQueryHandler(IQueryable<Registration> registration
         var ownPartnerTrackIds = ownPartnerTracks.Select(trk => trk.Id)
                                                  .ToList();
 
-        var searchParts = (query.SearchString ?? ownRegistration.PartnerNormalized)?.Split(" ");
+        var searchParts = (query.SearchString ?? ownRegistration.PartnerNormalized)?.Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         if (searchParts == null || searchParts.Length == 0)
         {
             throw new ArgumentException("No search string");
         }
 
-        var partnerRegistrableId = ownRegistration.PartnerRegistrableAsLeader.FirstOrDefault()?.Id
-                                ?? ownRegistration.PartnerRegistrableAsFollower.FirstOrDefault()?.Id;
-        if (partnerRegistrableId == null)
+        var partnerRegistrableId_AsLeader = ownRegistration.PartnerRegistrableAsLeader.Select(rbl => rbl.Id).ToList();
+        var partnerRegistrableId_AsFollower = ownRegistration.PartnerRegistrableAsFollower.Select(rbl => rbl.Id).ToList();
+        if (!partnerRegistrableId_AsLeader.Any()
+         && !partnerRegistrableId_AsFollower.Any())
         {
             return new PotentialPartners
                    {
@@ -62,14 +63,12 @@ public class PotentialPartnersQueryHandler(IQueryable<Registration> registration
                    };
         }
 
-        var otherRole = ownRegistration.PartnerRegistrableAsLeader.FirstOrDefault() != null
-                            ? Role.Follower
-                            : Role.Leader;
-
         var queryable = registrations.Where(reg => reg.EventId == query.EventId
                                                 && reg.Id != ownRegistration.Id)
-                                     .WhereIf(otherRole == Role.Leader, reg => reg.Seats_AsLeader!.Any(spt => !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
-                                     .WhereIf(otherRole == Role.Follower, reg => reg.Seats_AsFollower!.Any(spt => !spt.IsCancelled && spt.RegistrableId == partnerRegistrableId))
+                                     .WhereIf(partnerRegistrableId_AsFollower.Any(), reg => reg.Seats_AsLeader!.Any(spt => !spt.IsCancelled 
+                                                                                                                        && partnerRegistrableId_AsFollower.Contains(spt.RegistrableId)))
+                                     .WhereIf(partnerRegistrableId_AsLeader.Any(), reg => reg.Seats_AsFollower!.Any(spt => !spt.IsCancelled
+                                                                                                                        && partnerRegistrableId_AsLeader.Contains(spt.RegistrableId)))
                                      .Select(reg => new
                                                     {
                                                         RegistrationId = reg.Id,
