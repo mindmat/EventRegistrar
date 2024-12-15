@@ -13,7 +13,12 @@
                     <mat-icon class="ml-1 icon-size-5 text-hint" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
                 </ng-container>
             </div>
-            <div class="text-lg text-secondary">{{ candidates?.tracks.join(', ') }}</div>
+            <div class="flex flex-row items-baseline gap-x-1">
+                <div *ngFor="let track of candidates?.tracks" class="py-0.5 px-3 rounded-full text-lg text-secondary text-center bg-gray-200 border-0 border-gray-400">
+                    {{ track }}
+                </div>
+            </div>
+
             <button mat-stroked-button class="mt-2" (click)="transformToSingle()">{{ 'TransformToSingle' | translate }}</button>
         </div>
 
@@ -46,8 +51,9 @@
                     {{ 'Assigned' | translate }}: {{ candidate.matchedPartner }}</a>
                 <div class="flex flex-row items-baseline gap-x-1">
                     <div *ngFor="let track of candidate?.tracks" class="flex flex-row items-baseline gap-x-2">
-                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold text-center" [ngClass]="{'border-gray-200 border-2': track.match === 1,
-                                         'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': track.match === 2 || track.match === 3}">
+                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold text-center border-2" [ngClass]="{
+                                    'border-gray-200 border-2': track.match === 1,
+                                    'bg-green-200 border-green-600 dark:text-green-50 dark:bg-green-500': track.match === 2 || track.match === 3}">
                             {{ track.name }}
                         </div>
                     </div>
