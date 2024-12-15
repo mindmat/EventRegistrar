@@ -16,7 +16,7 @@ export class MatchPartnerComponent implements OnInit
   private registrationId$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   private searchQuery$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
   candidates: PotentialPartners;
-  @ViewChild('query', { static: true }) searchElement: ElementRef;
+  @ViewChild('query', { static: true }) searchElement: ElementRef | null;
 
   constructor(private service: MatchPartnerService,
     public navigator: NavigatorService,
@@ -35,7 +35,8 @@ export class MatchPartnerComponent implements OnInit
           return;
         }
 
-        if (this.candidates?.registrationId !== candidates?.registrationId)
+        if (this.candidates?.registrationId !== candidates?.registrationId
+          && !!this.searchElement)
         {
           this.searchElement.nativeElement.value = candidates?.declaredPartner;
         }
