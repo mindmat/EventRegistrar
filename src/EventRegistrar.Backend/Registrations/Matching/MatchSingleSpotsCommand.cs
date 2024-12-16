@@ -26,7 +26,6 @@ public class MatchSingleSpotsCommandHandler(IRepository<Seat> spots,
         var spotFollower = spotsToMatch.Single(spt => spt.Id == command.SpotId_Follower);
         if (spotLeader.RegistrationId == null
          || spotLeader.RegistrationId_Follower != null
-         || spotLeader.IsPartnerSpot
          || spotLeader.IsCancelled)
         {
             throw new ArgumentException("Leader spot is not valid");
@@ -34,7 +33,6 @@ public class MatchSingleSpotsCommandHandler(IRepository<Seat> spots,
 
         if (spotFollower.RegistrationId != null
          || spotFollower.RegistrationId_Follower == null
-         || spotFollower.IsPartnerSpot
          || spotFollower.IsCancelled)
         {
             throw new ArgumentException("Leader spot is not valid");
