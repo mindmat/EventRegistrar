@@ -84,7 +84,7 @@ public class MatchSingleSpotsCommandHandler(IRepository<Seat> spots,
             spotLeader.IsPartnerSpot = true;
         }
         
-        changeTrigger.QueryChanged<ParticipantsOfRegistrableQuery>(spotLeader.RegistrableId, command.EventId);
+        changeTrigger.QueryChanged<ParticipantsOfRegistrableQuery>(command.EventId, spotLeader.RegistrableId);
         changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId_Leader, command.EventId);
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId_Follower, command.EventId);
