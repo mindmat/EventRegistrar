@@ -135,6 +135,11 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                                    : null,
                                                        FirstPartnerJoined = spot.FirstPartnerJoined,
                                                        IsCore = spot.Registrable.IsCore,
+                                                       Role = spot.Registrable.Type == RegistrableType.Double
+                                                                  ? spot.RegistrationId == registrationId
+                                                                        ? Role.Leader
+                                                                        : Role.Follower
+                                                                  : null,
                                                        RoleText = spot.Registrable.Type == RegistrableType.Double
                                                                       ? enumTranslator.Translate(spot.RegistrationId == registrationId
                                                                                                      ? Role.Leader
@@ -187,16 +192,17 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
     }
 }
 
-public class UpdateRegistrationWhenOutgoingPaymentAssigned(IDateTimeProvider dateTimeProvider) : IEventToCommandTranslation<RegistrationProcessed>,
-                                                                                                 IEventToCommandTranslation<RegistrationCancelled>,
-                                                                                                 IEventToCommandTranslation<SpotRemoved>,
-                                                                                                 IEventToCommandTranslation<SpotAdded>,
-                                                                                                 IEventToCommandTranslation<OutgoingPaymentAssigned>,
-                                                                                                 IEventToCommandTranslation<OutgoingPaymentUnassigned>,
-                                                                                                 IEventToCommandTranslation<IncomingPaymentUnassigned>,
-                                                                                                 IEventToCommandTranslation<IncomingPaymentAssigned>,
-                                                                                                 IEventToCommandTranslation<PriceChanged>,
-                                                                                                 IEventToCommandTranslation<ImportedMailAssigned>
+public class UpdateRegistrationWhenOutgoingPaymentAssigned(IDateTimeProvider dateTimeProvider) :
+    IEventToCommandTranslation<RegistrationProcessed>,
+    IEventToCommandTranslation<RegistrationCancelled>,
+    IEventToCommandTranslation<SpotRemoved>,
+    IEventToCommandTranslation<SpotAdded>,
+    IEventToCommandTranslation<OutgoingPaymentAssigned>,
+    IEventToCommandTranslation<OutgoingPaymentUnassigned>,
+    IEventToCommandTranslation<IncomingPaymentUnassigned>,
+    IEventToCommandTranslation<IncomingPaymentAssigned>,
+    IEventToCommandTranslation<PriceChanged>,
+    IEventToCommandTranslation<ImportedMailAssigned>
 {
     public IEnumerable<IRequest> Translate(RegistrationProcessed e)
     {

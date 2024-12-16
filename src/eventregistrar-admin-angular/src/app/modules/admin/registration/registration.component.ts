@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { FallbackPricePackage, IndividualReductionType, MailDisplayType, MailMetadata, MailState, MailTypeItem, RegistrationDisplayItem, RegistrationState, SpotDisplayItem } from 'app/api/api';
+import { FallbackPricePackage, IndividualReductionType, MailDisplayType, MailMetadata, MailState, MailTypeItem, RegistrableType, RegistrationDisplayItem, RegistrationState, Role, SpotDisplayItem } from 'app/api/api';
 import { BehaviorSubject, debounceTime, filter, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { MailService } from '../mailing/mails/mail-view/mail.service';
@@ -16,6 +16,7 @@ import { FallbackPackagesService } from '../pricing/fallback-packages.service';
 import { CreateAssignPaymentComponent } from './create-assign-payment/create-assign-payment.component';
 import { ChangeNameComponent } from './change-name/change-name.component';
 import { MatchPartnerService } from '../registrations/match-partner/match-partner.service';
+import { MatchSingleSpotsComponent } from './match-single-spots/match-single-spots.component';
 
 @Component({
   selector: 'app-registration',
@@ -226,6 +227,21 @@ export class RegistrationComponent implements OnInit
   unbindPartnerRegistrations(): void
   {
     this.registrationService.unbindPartnerRegistrations(this.registration.id);
+  }
+
+  matchSpotWithPartner(spot: SpotDisplayItem)
+  {
+    if (!!spot.partnerRegistrationId
+      || !spot.registrableId
+      || spot.type !== RegistrableType.Double)
+    {
+      return;
+    }
+    var role = spot.role === Role.Leader ? 'Follower' : 'Leader';
+    this.matDialog.open(MatchSingleSpotsComponent, {
+      autoFocus: true,
+      data: { context: { registrableId: spot.registrableId, role }, spotId: spot.id, partnerName: spot.partnerName }
+    });
   }
 
   setWillPayAtCheckin(willPayAtCheckin: boolean): void

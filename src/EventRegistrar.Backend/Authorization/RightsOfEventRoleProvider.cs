@@ -126,6 +126,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(RegistrationFormsQuery);
             yield return nameof(MenuNodesQuery);
             yield return nameof(ProcessingErrorsQuery);
+            yield return nameof(SpotMatchCandidatesQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
@@ -185,6 +186,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(DefragRegistrableCommand);
             yield return nameof(SwitchRoleOfParticipantCommand);
             yield return nameof(FixMissingRoleCommand);
+            yield return nameof(MatchSingleSpotsCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

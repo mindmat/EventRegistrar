@@ -3646,6 +3646,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    matchSingleSpots_Command(matchSingleSpotsCommand: MatchSingleSpotsCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/MatchSingleSpotsCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(matchSingleSpotsCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMatchSingleSpots_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMatchSingleSpots_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processMatchSingleSpots_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     menuNodes_Query(menuNodesQuery: MenuNodesQuery | undefined): Observable<MenuNodeContent[]> {
         let url_ = this.baseUrl + "/api/MenuNodesQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -6966,6 +7014,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    spotMatchCandidates_Query(spotMatchCandidatesQuery: SpotMatchCandidatesQuery | undefined): Observable<SpotMatchCandidates> {
+        let url_ = this.baseUrl + "/api/SpotMatchCandidatesQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(spotMatchCandidatesQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSpotMatchCandidates_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSpotMatchCandidates_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<SpotMatchCandidates>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<SpotMatchCandidates>;
+        }));
+    }
+
+    protected processSpotMatchCandidates_Query(response: HttpResponseBase): Observable<SpotMatchCandidates> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as SpotMatchCandidates;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     spotsOfRegistration_Query(spotsOfRegistrationQuery: SpotsOfRegistrationQuery | undefined): Observable<SpotDisplayItem[]> {
         let url_ = this.baseUrl + "/api/SpotsOfRegistrationQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -9055,6 +9154,12 @@ export interface MatchPartnerRegistrationsCommand {
     registrationId2?: string;
 }
 
+export interface MatchSingleSpotsCommand {
+    eventId?: string;
+    spotId_Leader?: string;
+    spotId_Follower?: string;
+}
+
 export interface MenuNodeContent {
     key?: MenuNodeKey;
     content?: string | null;
@@ -9819,6 +9924,7 @@ export interface SpotDisplayItem {
     registrableNameSecondary?: string | null;
     registrableId?: string;
     type?: RegistrableType;
+    role?: Role | null;
     roleText?: string | null;
 }
 
@@ -10114,6 +10220,25 @@ export interface SmsDisplayItem {
 export interface SmsConversationQuery {
     eventId?: string;
     registrationId?: string;
+}
+
+export interface SpotMatchCandidates {
+    registrableId?: string;
+    role?: Role;
+    candidates?: SpotMatchCandidate[];
+}
+
+export interface SpotMatchCandidate {
+    spotId?: string;
+    name?: string;
+    registrationId?: string;
+}
+
+export interface SpotMatchCandidatesQuery {
+    eventId?: string;
+    registrableId?: string;
+    role?: Role;
+    searchString?: string | null;
 }
 
 export interface SpotsOfRegistrationQuery {

@@ -2,6 +2,7 @@
 using System.Data;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using ClosedXML.Excel;
 using ClosedXML.Graphics;
@@ -13,7 +14,12 @@ namespace EventRegistrar.Backend.Infrastructure.Mediator;
 
 public static class EndpointRouteBuilderExtensions
 {
-    private static readonly JsonSerializerOptions _jsonSettings = new(JsonSerializerDefaults.Web);
+    static EndpointRouteBuilderExtensions()
+    {
+        _jsonSettings = new(JsonSerializerDefaults.Web);
+        _jsonSettings.Converters.Add(new JsonStringEnumConverter());
+    }
+    private static readonly JsonSerializerOptions _jsonSettings;
 
     public static void MapRequests(this IEndpointRouteBuilder endpointsBuilder, Container container)
     {
@@ -208,7 +214,7 @@ public static class EndpointRouteBuilderExtensions
     {
         if (data is IEnumerable enumerable)
         {
-            return new[] { ("List", (IEnumerable?)enumerable, data.GetType().GetGenericArguments()[0]) };
+            return [("List", (IEnumerable?)enumerable, data.GetType().GetGenericArguments()[0])];
         }
 
         return data?.GetType()

@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Spots;
 
@@ -14,5 +15,6 @@ public class SpotDisplayItem
     public string? RegistrableNameSecondary { get; set; }
     public Guid RegistrableId { get; set; }
     public RegistrableType Type { get; set; }
+    public Role? Role { get; set; }
     public string? RoleText { get; set; }
 }

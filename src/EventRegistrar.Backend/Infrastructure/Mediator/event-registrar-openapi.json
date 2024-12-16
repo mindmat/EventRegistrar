@@ -2160,6 +2160,31 @@
         }
       }
     },
+    "/api/MatchSingleSpotsCommand": {
+      "post": {
+        "tags": [
+          "MatchSingleSpots"
+        ],
+        "operationId": "MatchSingleSpots_Command",
+        "requestBody": {
+          "x-name": "MatchSingleSpotsCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MatchSingleSpotsCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/MenuNodesQuery": {
       "post": {
         "tags": [
@@ -4133,6 +4158,38 @@
                   "items": {
                     "$ref": "#/components/schemas/SmsDisplayItem"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SpotMatchCandidatesQuery": {
+      "post": {
+        "tags": [
+          "SpotMatchCandidates"
+        ],
+        "operationId": "SpotMatchCandidates_Query",
+        "requestBody": {
+          "x-name": "SpotMatchCandidatesQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpotMatchCandidatesQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpotMatchCandidates"
                 }
               }
             }
@@ -7653,6 +7710,24 @@
           }
         }
       },
+      "MatchSingleSpotsCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "spotId_Leader": {
+            "type": "string",
+            "format": "guid"
+          },
+          "spotId_Follower": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "MenuNodeContent": {
         "type": "object",
         "additionalProperties": false,
@@ -10126,6 +10201,14 @@
           "type": {
             "$ref": "#/components/schemas/RegistrableType"
           },
+          "role": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Role"
+              }
+            ]
+          },
           "roleText": {
             "type": "string",
             "nullable": true
@@ -11035,6 +11118,63 @@
           "registrationId": {
             "type": "string",
             "format": "guid"
+          }
+        }
+      },
+      "SpotMatchCandidates": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "registrableId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "candidates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SpotMatchCandidate"
+            }
+          }
+        }
+      },
+      "SpotMatchCandidate": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "spotId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "SpotMatchCandidatesQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrableId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "searchString": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
