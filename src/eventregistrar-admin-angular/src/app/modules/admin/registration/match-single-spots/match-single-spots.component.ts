@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NavigatorService } from '../../navigator.service';
 import { SpotMatchCandidate, SpotMatchCandidates, Role, Api } from 'app/api/api';
 import { Subject, BehaviorSubject, takeUntil, debounce, interval, switchMap } from 'rxjs';
 import { EventService } from '../../events/event.service';
+import { CreateEventComponent } from '../../events/select-event/create-event/create-event.component';
 
 @Component({
   selector: 'app-match-single-spots',
@@ -21,7 +22,8 @@ export class MatchSingleSpotsComponent implements OnInit
     @Inject(MAT_DIALOG_DATA) public data: { context: SpotMatchContext, spotId: string, partnerName: string; },
     public navigator: NavigatorService,
     private api: Api,
-    private eventService: EventService) { }
+    private eventService: EventService,
+    public matDialogRef: MatDialogRef<CreateEventComponent>) { }
 
   ngOnInit(): void
   {
@@ -60,7 +62,11 @@ export class MatchSingleSpotsComponent implements OnInit
     }
 
     this.api.matchSingleSpots_Command({ eventId: this.eventService.selectedId, spotId_Leader, spotId_Follower })
-      .subscribe(x => console.log(x));
+      .subscribe(_ =>
+      {
+        // Close the dialog
+        this.matDialogRef.close();
+      });
   }
 
   searchCandidates(query: string)

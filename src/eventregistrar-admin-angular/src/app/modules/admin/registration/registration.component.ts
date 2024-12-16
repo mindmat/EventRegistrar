@@ -249,7 +249,6 @@ export class RegistrationComponent implements OnInit
     this.registrationService.setWillPayAtCheckin(this.registration.id, willPayAtCheckin);
   }
 
-
   toggleManualFallbackPackage(pricePackageId: string, remove: boolean): void
   {
     let newFallbackPackages = this.registration.pricePackageIds_ManualFallback ?? [];
