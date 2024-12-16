@@ -50,7 +50,7 @@ public class MatchSingleSpotsCommandHandler(IRepository<Seat> spots,
 
         if (spotLeader.RegistrationId_Follower == null)
         {
-            spotLeader.RegistrationId = registrationId_Follower;
+            spotLeader.RegistrationId_Follower = registrationId_Follower;
             spotLeader.IsPartnerSpot = true;
         }
 
