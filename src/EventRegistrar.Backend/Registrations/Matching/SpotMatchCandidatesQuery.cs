@@ -17,10 +17,8 @@ public class SpotMatchCandidatesQueryHandler(IQueryable<Seat> spots) : IRequestH
     {
         var queryable = spots.Where(spt => spt.RegistrableId == query.RegistrableId
                                         && !spt.IsCancelled)
-                             .WhereIf(query.Role == Role.Leader, spt => spt.RegistrationId != null
-                                                                     && spt.RegistrationId_Follower == null)
-                             .WhereIf(query.Role == Role.Follower, spt => spt.RegistrationId == null
-                                                                       && spt.RegistrationId_Follower != null);
+                             .WhereIf(query.Role == Role.Leader, spt => spt.RegistrationId != null)
+                             .WhereIf(query.Role == Role.Follower, spt => spt.RegistrationId_Follower != null);
 
         var searchParts = query.SearchString?.Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         if (searchParts?.Length > 0)
@@ -45,17 +43,23 @@ public class SpotMatchCandidatesQueryHandler(IQueryable<Seat> spots) : IRequestH
         List<SpotMatchCandidate> candidates;
         if (query.Role == Role.Leader)
         {
-            candidates = await queryable.Select(spt => new SpotMatchCandidate
+            candidates = await queryable.Where(spt => spt.RegistrationId != null
+                                                   && (!spt.IsPartnerSpot
+                                                    || spt.RegistrationId_Follower == null))
+                                        .Select(spt => new SpotMatchCandidate
                                                        {
                                                            SpotId = spt.Id,
                                                            RegistrationId = spt.RegistrationId!.Value,
-                                                           Name =  $"{spt.Registration!.RespondentFirstName} {spt.Registration!.RespondentLastName}"
+                                                           Name = $"{spt.Registration!.RespondentFirstName} {spt.Registration!.RespondentLastName}"
                                                        })
                                         .ToListAsync(cancellationToken);
         }
         else
         {
-            candidates = await queryable.Select(spt => new SpotMatchCandidate
+            candidates = await queryable.Where(spt => spt.RegistrationId_Follower != null
+                                                   && (!spt.IsPartnerSpot
+                                                    || spt.RegistrationId == null))
+                                        .Select(spt => new SpotMatchCandidate
                                                        {
                                                            SpotId = spt.Id,
                                                            RegistrationId = spt.RegistrationId_Follower!.Value,

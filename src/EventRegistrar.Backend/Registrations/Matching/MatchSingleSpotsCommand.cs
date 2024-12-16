@@ -25,14 +25,12 @@ public class MatchSingleSpotsCommandHandler(IRepository<Seat> spots,
         var spotLeader = spotsToMatch.Single(spt => spt.Id == command.SpotId_Leader);
         var spotFollower = spotsToMatch.Single(spt => spt.Id == command.SpotId_Follower);
         if (spotLeader.RegistrationId == null
-         || spotLeader.RegistrationId_Follower != null
          || spotLeader.IsCancelled)
         {
             throw new ArgumentException("Leader spot is not valid");
         }
 
-        if (spotFollower.RegistrationId != null
-         || spotFollower.RegistrationId_Follower == null
+        if (spotFollower.RegistrationId_Follower == null
          || spotFollower.IsCancelled)
         {
             throw new ArgumentException("Leader spot is not valid");
@@ -46,21 +44,46 @@ public class MatchSingleSpotsCommandHandler(IRepository<Seat> spots,
             throw new ArgumentException("Spots are not in the same track");
         }
 
-        if (spotLeader.RegistrationId_Follower == null)
+        if (spotLeader.Id == spotFollower.Id)
         {
-            spotLeader.RegistrationId_Follower = registrationId_Follower;
+            // coincidentally registrations to match could already be in the same partner spot
             spotLeader.IsPartnerSpot = true;
         }
-
-        if (spotFollower.RegistrationId != null)
+        else if (spotLeader.RegistrationId_Follower == null)
         {
+            // move follower to leader spot
+            spotLeader.RegistrationId_Follower = spotFollower.RegistrationId_Follower;
+            spotLeader.IsPartnerSpot = true;
+
             spotFollower.RegistrationId_Follower = null;
+            if (spotFollower.RegistrationId == null)
+            {
+                // nobody left in spot
+                spotFollower.IsCancelled = true;
+            }
+        }
+        else if (spotFollower.RegistrationId == null)
+        {
+            // move leader to follower spot
+            spotFollower.RegistrationId = spotLeader.RegistrationId;
+            spotFollower.IsPartnerSpot = true;
+
+            spotLeader.RegistrationId = null;
+            if (spotLeader.RegistrationId_Follower == null)
+            {
+                // nobody left in spot
+                spotLeader.IsCancelled = true;
+            }
         }
         else
         {
-            spotFollower.IsCancelled = true;
+            // both spots have other partners -> just swap around
+            // move other follower to follower spot
+            spotFollower.RegistrationId_Follower = spotLeader.RegistrationId_Follower;
+            spotLeader.RegistrationId_Follower = registrationId_Follower;
+            spotLeader.IsPartnerSpot = true;
         }
-
+        
         changeTrigger.QueryChanged<ParticipantsOfRegistrableQuery>(spotLeader.RegistrableId, command.EventId);
         changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId_Leader, command.EventId);
