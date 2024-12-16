@@ -34,8 +34,7 @@ public class ComposeAndSendAutoMailCommandHandler(
     IDateTimeProvider dateTimeProvider,
     ILogger log,
     ChangeTrigger changeTrigger,
-    DirtyTagger dirtyTagger,
-    IEventBus eventBus)
+    DirtyTagger dirtyTagger)
     : IRequestHandler<ComposeAndSendAutoMailCommand>
 {
     public const string FallbackLanguage = Language.English;

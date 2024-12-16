@@ -14,12 +14,17 @@ namespace EventRegistrar.Backend.Infrastructure.Mediator;
 
 public static class EndpointRouteBuilderExtensions
 {
+    private static readonly JsonSerializerOptions _jsonSettings;
+    private static readonly JsonSerializerOptions _jsonDeserializeSettings;
+
     static EndpointRouteBuilderExtensions()
     {
+        // frontend expects enums as int, but sends enums as strings
+        // -> use different settings
         _jsonSettings = new(JsonSerializerDefaults.Web);
-        _jsonSettings.Converters.Add(new JsonStringEnumConverter());
+        _jsonDeserializeSettings = new(JsonSerializerDefaults.Web);
+        _jsonDeserializeSettings.Converters.Add(new JsonStringEnumConverter());
     }
-    private static readonly JsonSerializerOptions _jsonSettings;
 
     public static void MapRequests(this IEndpointRouteBuilder endpointsBuilder, Container container)
     {
@@ -40,7 +45,7 @@ public static class EndpointRouteBuilderExtensions
         var openGenericMethod = typeof(EndpointRouteBuilderExtensions).GetMethod(nameof(CreateProcessRequestGeneric),
                                                                                  BindingFlags.Static | BindingFlags.NonPublic)!;
         var genericMethod = openGenericMethod.MakeGenericMethod(requestType);
-        return (RequestDelegate)genericMethod.Invoke(null, new object?[] { container })!;
+        return (RequestDelegate)genericMethod.Invoke(null, [container])!;
     }
 
     private static RequestDelegate CreateProcessRequestGeneric<TRequest>(Container container)
@@ -61,7 +66,7 @@ public static class EndpointRouteBuilderExtensions
         {
             //try
             {
-                request = await JsonSerializer.DeserializeAsync<TRequest>(context.Request.Body, _jsonSettings, context.RequestAborted);
+                request = await JsonSerializer.DeserializeAsync<TRequest>(context.Request.Body, _jsonDeserializeSettings, context.RequestAborted);
                 //MapRouteData(requestMetadata, context.GetRouteData(), model);
             }
             //catch (JsonException exception)
