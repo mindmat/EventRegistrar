@@ -16,8 +16,7 @@ public class SpotMatchCandidatesQueryHandler(IQueryable<Seat> spots) : IRequestH
     public async Task<SpotMatchCandidates> Handle(SpotMatchCandidatesQuery query, CancellationToken cancellationToken)
     {
         var queryable = spots.Where(spt => spt.RegistrableId == query.RegistrableId
-                                        && !spt.IsCancelled
-                                        && !spt.IsPartnerSpot)
+                                        && !spt.IsCancelled)
                              .WhereIf(query.Role == Role.Leader, spt => spt.RegistrationId != null
                                                                      && spt.RegistrationId_Follower == null)
                              .WhereIf(query.Role == Role.Follower, spt => spt.RegistrationId == null
