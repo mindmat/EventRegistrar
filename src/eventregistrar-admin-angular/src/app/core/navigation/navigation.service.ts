@@ -98,6 +98,7 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'mat_outline:mail',
                                     link: `/${e.acronym}/mailing/problematic-emails`,
+                                    badge: this.getBadge(nodes, MenuNodeKey.MailTracking)
                                 },
                                 {
                                     id: 'remarks-overview',

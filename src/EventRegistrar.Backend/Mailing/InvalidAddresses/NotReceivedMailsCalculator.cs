@@ -97,7 +97,7 @@ public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
         var someSucceededCount = problems.Count - noneSucceededCount;
         var node = new MenuNodeCalculation
                    {
-                       Key = MenuNodeKey.PendingMails,
+                       Key = MenuNodeKey.MailTracking,
                        Style = MenuNodeStyle.None,
                        Content = $"{noneSucceededCount} | {someSucceededCount}"
                    };
