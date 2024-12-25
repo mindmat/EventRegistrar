@@ -1427,6 +1427,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to inkl. Warteliste.
+        /// </summary>
+        internal static string IncludeWaitingList {
+            get {
+                return ResourceManager.GetString("IncludeWaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Einzahlungen.
         /// </summary>
         internal static string IncomingPayments {

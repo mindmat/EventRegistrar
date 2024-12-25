@@ -20,19 +20,24 @@ export class AllParticipantsService
     return this.list.asObservable();
   }
 
-  fetchItemsOf(searchString: string): Observable<Participant[]>
+  fetchItemsOf(searchString: string, includeWaitingList: boolean): Observable<Participant[]>
   {
-    return this.api.participantsOfEvent_Query({ eventId: this.eventService.selectedId, searchString, states: [RegistrationState.Received, RegistrationState.Paid] })
+    return this.api.participantsOfEvent_Query({
+      eventId: this.eventService.selectedId,
+      searchString,
+      includeWaitingList,
+      states: [RegistrationState.Received, RegistrationState.Paid]
+    })
       .pipe(
         tap(newItems => this.list.next(newItems))
       );
   }
 
-  downloadXlsx()
+  downloadXlsx(includeWaitingList: boolean)
   {
     const url = this.baseUrl + "/api/ParticipantsOfEventQuery";
     const formatXlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    this.http.post(url, { eventId: this.eventService.selectedId }, { responseType: "blob", headers: { 'Accept': formatXlsx } }).subscribe((file: Blob) =>
+    this.http.post(url, { eventId: this.eventService.selectedId, includeWaitingList }, { responseType: "blob", headers: { 'Accept': formatXlsx } }).subscribe((file: Blob) =>
     {
       const blob = new Blob([file], { type: formatXlsx });
       const anchor = window.document.createElement('a');

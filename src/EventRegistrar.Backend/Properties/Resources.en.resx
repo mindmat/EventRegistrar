@@ -477,6 +477,9 @@
   <data name="ImportNewVersion" xml:space="preserve">
     <value>Import new version</value>
   </data>
+  <data name="IncludeWaitingList" xml:space="preserve">
+    <value>incl. waiting list</value>
+  </data>
   <data name="IncomingPayments" xml:space="preserve">
     <value>Incoming payments</value>
   </data>

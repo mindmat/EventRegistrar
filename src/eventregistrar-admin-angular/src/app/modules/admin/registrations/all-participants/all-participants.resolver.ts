@@ -6,11 +6,12 @@ import { AllParticipantsService } from './all-participants.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AllParticipantsResolver implements Resolve<boolean> {
+export class AllParticipantsResolver implements Resolve<boolean>
+{
   constructor(private service: AllParticipantsService) { }
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
   {
-    return this.service.fetchItemsOf('');
+    return this.service.fetchItemsOf('', false);
   }
 }

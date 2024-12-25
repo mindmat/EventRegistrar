@@ -48,7 +48,7 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                           .ToDictionaryAsync(pkg => pkg.Id, pkg => pkg.Name, cancellationToken);
 
         var queryable = _registrations.Where(reg => reg.EventId == query.EventId);
-        if (searchParts != null)
+        if (searchParts?.Any() == true)
         {
             foreach (var searchPart in searchParts)
             {
@@ -59,8 +59,8 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
             }
         }
 
-        var registrationIds = await queryable.Where(reg => allowedStates.Contains(reg.State)
-                                                        && reg.IsOnWaitingList == query.IncludeWaitingList)
+        var registrationIds = await queryable.Where(reg => allowedStates.Contains(reg.State))
+                                             .WhereIf(!query.IncludeWaitingList, reg => reg.IsOnWaitingList == false)
                                              .OrderBy(reg => reg.RespondentFirstName)
                                              .ThenBy(reg => reg.RespondentLastName)
                                              .Select(reg => new { reg.Id, reg.PricePackageIds_Admitted })

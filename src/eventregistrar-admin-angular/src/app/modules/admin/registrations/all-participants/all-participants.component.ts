@@ -1,10 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Participant, RegistrationMatch, UnprocessedRawRegistrationsInfo } from 'app/api/api';
+import { Participant } from 'app/api/api';
 import { Subject, BehaviorSubject, takeUntil, combineLatest, debounceTime } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
-import { SearchRegistrationService } from '../search-registration/search-registration.service';
-import { UnprocessedRawRegistrationsService } from '../unprocessed-raw-registrations.service';
 import { AllParticipantsService } from './all-participants.service';
 
 @Component({
@@ -17,6 +15,7 @@ export class AllParticipantsComponent implements OnInit
   private unsubscribeAll: Subject<any> = new Subject<any>();
   matches: Participant[];
   searchString$: BehaviorSubject<string> = new BehaviorSubject('');
+  includeWaitingList$: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   constructor(private service: AllParticipantsService,
     public navigator: NavigatorService,
@@ -44,17 +43,17 @@ export class AllParticipantsComponent implements OnInit
       });
 
     // Filter
-    combineLatest([this.searchString$]).pipe(debounceTime(200))
-      .subscribe(([searchString]) =>
+    combineLatest([this.searchString$, this.includeWaitingList$]).pipe(debounceTime(200))
+      .subscribe(([searchString, includeWaitingList]) =>
       {
         searchString = searchString.toLowerCase();
-        this.service.fetchItemsOf(searchString).subscribe();
+        this.service.fetchItemsOf(searchString, includeWaitingList).subscribe();
       });
   }
 
   download()
   {
-    this.service.downloadXlsx();
+    this.service.downloadXlsx(this.includeWaitingList$.value);
   }
 
   filterByQuery(searchString: string): void
@@ -68,5 +67,10 @@ export class AllParticipantsComponent implements OnInit
         queryParams: { search: searchString },
         queryParamsHandling: 'merge'
       });
+  }
+
+  toggleIncludeWaitingList(checked: boolean)
+  {
+    this.includeWaitingList$.next(checked);
   }
 }
