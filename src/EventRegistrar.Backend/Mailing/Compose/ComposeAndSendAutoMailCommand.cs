@@ -37,7 +37,7 @@ public class ComposeAndSendAutoMailCommandHandler(
     DirtyTagger dirtyTagger)
     : IRequestHandler<ComposeAndSendAutoMailCommand>
 {
-    public const string FallbackLanguage = Language.English;
+    private const string FallbackLanguage = Language.English;
 
     public async Task Handle(ComposeAndSendAutoMailCommand command, CancellationToken cancellationToken)
     {
@@ -47,12 +47,8 @@ public class ComposeAndSendAutoMailCommandHandler(
         string? dataJson = null;
         if (command.Data != null)
         {
-            try
-            {
-                dataTypeFullName = command.Data.GetType().FullName!;
-                dataJson = JsonConvert.SerializeObject(command.Data);
-            }
-            finally { }
+            dataTypeFullName = command.Data.GetType().FullName!;
+            dataJson = JsonConvert.SerializeObject(command.Data);
         }
 
         if (!command.AllowDuplicate)
@@ -152,7 +148,6 @@ public class ComposeAndSendAutoMailCommandHandler(
         registrations_Recipients.ForEach(reg => changeTrigger.TriggerUpdate<RegistrationCalculator>(reg.Id, reg.EventId));
         changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, command.EventId);
         changeTrigger.TriggerUpdate<PendingMailsCalculator>(null, command.EventId);
-        //changeTrigger.QueryChanged<PendingMailsQuery>(command.EventId);
 
         // ToDo
         //foreach (var registrable in registrablesToCheckWaitingList)

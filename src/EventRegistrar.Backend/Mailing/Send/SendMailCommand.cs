@@ -33,6 +33,7 @@ public class SendMailCommandHandler(ILogger logger,
     : IRequestHandler<SendMailCommand>
 {
     private const string MessageIdHeader = "X-Message-Id";
+    private readonly TimeSpan _updateDelay = TimeSpan.FromSeconds(5);
 
     public async Task Handle(SendMailCommand command, CancellationToken cancellationToken)
     {
@@ -161,6 +162,7 @@ public class SendMailCommandHandler(ILogger logger,
         {
             changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, mail.EventId);
             changeTrigger.QueryChanged<MailDeliverySuccessQuery>(mail.EventId.Value);
+            changeTrigger.TriggerUpdate<NotReceivedMailsCalculator>(null, mail.EventId, delay: _updateDelay);
         }
     }
 }

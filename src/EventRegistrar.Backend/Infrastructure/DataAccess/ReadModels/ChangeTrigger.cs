@@ -10,14 +10,14 @@ public class ChangeTrigger(CommandQueue commandQueue,
                            IEnumerable<IReadModelCalculator> calculators,
                            IEventBus eventBus)
 {
-    public void TriggerUpdate<T>(Guid? rowId = null, Guid? eventId = null, bool publishEvenWhenDbCommitFails = false)
+    public void TriggerUpdate<T>(Guid? rowId = null,
+                                 Guid? eventId = null,
+                                 bool publishEvenWhenDbCommitFails = false,
+                                 TimeSpan? delay = null)
         where T : IReadModelCalculator
     {
-        eventId ??= eventContext.EventId;
-        if (eventId == null)
-        {
-            throw new ArgumentNullException(nameof(eventId));
-        }
+        eventId ??= eventContext.EventId
+                 ?? throw new ArgumentNullException(nameof(eventId));
 
         var queryName = calculators.First(cal => cal.GetType() == typeof(T))
                                    .QueryName;
@@ -29,9 +29,10 @@ public class ChangeTrigger(CommandQueue commandQueue,
                                         RowId = rowId,
                                         DirtyMoment = dateTimeProvider.Now
                                     },
-                                    publishEvenWhenDbCommitFails);
+                                    publishEvenWhenDbCommitFails,
+                                    delay);
     }
-
+    
     public void QueryChanged<TQuery>(Guid eventId, Guid? rowId = null, bool publishEvenWhenDbCommitFails = false)
         where TQuery : IEventBoundRequest
     {

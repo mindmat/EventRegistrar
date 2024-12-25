@@ -21,6 +21,8 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
                                              ChangeTrigger changeTrigger)
     : IRequestHandler<ProcessMailEventsCommand>
 {
+    readonly TimeSpan UpdateDelay = TimeSpan.FromSeconds(5);
+
     public async Task Handle(ProcessMailEventsCommand command, CancellationToken cancellationToken)
     {
         var rawMailEvents = await _rawMailEvents.FirstAsync(mev => mev.Id == command.RawMailEventsId, cancellationToken);
@@ -31,10 +33,10 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
         }
 
         Guid? eventId = null;
-        if (rawMailEvents.MailSender == MailSender.SendGrid || rawMailEvents.MailSender == null)
+        if (rawMailEvents.MailSender is MailSender.SendGrid or null)
         {
             var events = JsonConvert.DeserializeObject<IEnumerable<SendGridEvent>>(rawMailEvents.Body)
-                      ?? Enumerable.Empty<SendGridEvent>();
+                      ?? [];
             foreach (var sendGridEvent in events)
             {
                 var mail = await GetMail(sendGridEvent);
@@ -257,6 +259,7 @@ public class ProcessMailEventsCommandHandler(IRepository<RawMailEvent> _rawMailE
         if (eventId != null)
         {
             changeTrigger.QueryChanged<MailDeliverySuccessQuery>(eventId.Value);
+            changeTrigger.TriggerUpdate<NotReceivedMailsCalculator>(null, eventId.Value, delay: UpdateDelay);
         }
     }
 

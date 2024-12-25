@@ -145,6 +145,7 @@ container.Register<IAuthenticatedUserProvider, AuthenticatedUserProvider>();
 container.Register<IRightsOfEventRoleProvider, RightsOfEventRoleProvider>();
 
 container.RegisterSingleton<IDateTimeProvider, DateTimeProvider>();
+container.Register<RequestDateTimeProvider>();
 
 container.RegisterSingleton(() =>
 {

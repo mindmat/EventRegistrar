@@ -12,8 +12,15 @@ public class DirtyTagger(CommandQueue commandQueue,
     public void UpdateSegment<TSegment>(Guid entityId)
         where TSegment : IDirtySegment
     {
+        MarkDirty<TSegment>(entityId);
         var dirtySegment = dirtySegments.First(dys => dys.GetType() == typeof(TSegment));
         dirtySegment.EnqueueCommand(commandQueue, entityId);
+    }
+
+    public void MarkDirty<TSegment>(Guid entityId)
+        where TSegment : IDirtySegment
+    {
+        var dirtySegment = dirtySegments.First(dys => dys.GetType() == typeof(TSegment));
         var dirtyTags = dbContext.Set<DirtyTag>();
         dirtyTags.Add(new DirtyTag
                       {
@@ -24,21 +31,19 @@ public class DirtyTagger(CommandQueue commandQueue,
                       });
     }
 
-    public async Task<IEnumerable<DirtyTag>> IsDirty<TSegment>(Guid entityId)
+    public async Task<bool> RemoveDirtyTags<TSegment>(Guid entityId)
         where TSegment : IDirtySegment
     {
         var dirtySegment = dirtySegments.First(dys => dys.GetType() == typeof(TSegment));
-        return await dbContext.Set<DirtyTag>()
-                              .Where(dyt => dyt.Entity == dirtySegment.Entity
-                                         && dyt.EntityId == entityId
-                                         && dyt.Segment == dirtySegment.Name)
-                              .ToListAsync();
-    }
-
-    public void RemoveDirtyTags(IEnumerable<DirtyTag> dirtyTags)
-    {
+        var dirtyTags = await dbContext.Set<DirtyTag>()
+                                       .Where(dyt => dyt.Entity == dirtySegment.Entity
+                                                  && dyt.EntityId == entityId
+                                                  && dyt.Segment == dirtySegment.Name)
+                                       .ToListAsync();
+        var hasTags = dirtyTags.Any();
         dbContext.Set<DirtyTag>()
                  .RemoveRange(dirtyTags);
+        return hasTags;
     }
 
     public async Task WaitForRemovedTags(Guid entityId, params Type[] segmentNames)

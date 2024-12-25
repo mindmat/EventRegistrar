@@ -2,6 +2,7 @@
 
 public class CommandMessage
 {
-    public string? CommandSerialized { get; set; }
-    public string? CommandType { get; set; }
+    public string? CommandSerialized { get; init; }
+    public string? CommandType { get; init; }
+    public TimeSpan? Delay { get; init; }
 }

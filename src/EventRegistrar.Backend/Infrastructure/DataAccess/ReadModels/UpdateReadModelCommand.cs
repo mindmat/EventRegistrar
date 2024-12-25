@@ -15,7 +15,7 @@ public class UpdateReadModelCommand : IRequest
 public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> calculators,
                                            DbContext dbContext,
                                            ChangeTrigger changeTrigger,
-                                           IDateTimeProvider dateTimeProvider,
+                                           RequestDateTimeProvider dateTimeProvider,
                                            IRepository<MenuNodeReadModel> menuNodes)
     : IRequestHandler<UpdateReadModelCommand>
 {
@@ -26,7 +26,6 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
         var updater = calculators.First(rmu => rmu.QueryName == command.QueryName);
 
         var readModels = dbContext.Set<ReadModel>();
-
         var readModel = await readModels.AsTracking()
                                         .Where(rdm => rdm.QueryName == command.QueryName
                                                    && rdm.EventId == command.EventId
@@ -34,7 +33,7 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
                                         .FirstOrDefaultAsync(cancellationToken);
         if (readModel?.LastUpdate >= command.DirtyMoment)
         {
-            // Not perfect (time vs row version)
+            // Not perfect (time vs row version), but still servers as debouncing
             return;
         }
 
@@ -63,7 +62,7 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
                            EventId = command.EventId,
                            RowId = command.RowId,
                            ContentJson = contentJson,
-                           LastUpdate = dateTimeProvider.Now
+                           LastUpdate = dateTimeProvider.RequestNow
                        };
             var entry = readModels.Attach(node);
             entry.State = EntityState.Added;
@@ -74,12 +73,14 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
         else
         {
             existing.ContentJson = contentJson;
-            if (dbContext.Entry(existing).State == EntityState.Modified)
+            var contentHasChanged = dbContext.Entry(existing).State == EntityState.Modified;
+            if (contentHasChanged)
             {
                 changeTrigger.QueryChanged(command.QueryName,
                                            command.EventId,
                                            command.RowId);
             }
+            existing.LastUpdate = dateTimeProvider.RequestNow;
         }
     }
 

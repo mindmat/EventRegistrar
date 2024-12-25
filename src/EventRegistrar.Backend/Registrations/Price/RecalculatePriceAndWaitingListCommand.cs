@@ -27,7 +27,7 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
 {
     public async Task Handle(RecalculatePriceAndWaitingListCommand command, CancellationToken cancellationToken)
     {
-        var dirtyTags = await dirtyTagger.IsDirty<RegistrationPriceAndWaitingListSegment>(command.RegistrationId);
+        var isDirty =  await dirtyTagger.RemoveDirtyTags<RegistrationPriceAndWaitingListSegment>(command.RegistrationId);
         var registration = await registrations.AsTracking()
                                               .Include(reg => reg.Seats_AsLeader!)
                                               .ThenInclude(spt => spt.Registrable)
@@ -96,8 +96,6 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
             changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, registration.EventId);
             changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
         }
-
-        dirtyTagger.RemoveDirtyTags(dirtyTags);
     }
 }
 
