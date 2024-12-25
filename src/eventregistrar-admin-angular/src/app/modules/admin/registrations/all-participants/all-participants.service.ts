@@ -37,7 +37,7 @@ export class AllParticipantsService
   {
     const url = this.baseUrl + "/api/ParticipantsOfEventQuery";
     const formatXlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
-    this.http.post(url, { eventId: this.eventService.selectedId, includeWaitingList }, { responseType: "blob", headers: { 'Accept': formatXlsx } }).subscribe((file: Blob) =>
+    this.http.post(url, { eventId: this.eventService.selectedId, includeWaitingList, addDetails: true }, { responseType: "blob", headers: { 'Accept': formatXlsx } }).subscribe((file: Blob) =>
     {
       const blob = new Blob([file], { type: formatXlsx });
       const anchor = window.document.createElement('a');

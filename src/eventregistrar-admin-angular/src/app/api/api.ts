@@ -9252,6 +9252,7 @@ export interface Participant {
     amountOutstanding?: number;
     isVolunteer?: boolean;
     location?: string | null;
+    dynamicColumns?: { [key: string]: string; } | null;
 }
 
 export interface ParticipantsOfEventQuery {
@@ -9260,6 +9261,7 @@ export interface ParticipantsOfEventQuery {
     tag?: string | null;
     includeWaitingList?: boolean;
     states?: RegistrationState[] | null;
+    addDetails?: boolean;
 }
 
 export interface RegistrableDisplayInfo {

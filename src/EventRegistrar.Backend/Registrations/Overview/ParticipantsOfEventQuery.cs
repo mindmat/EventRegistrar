@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.Mediator;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Pricing;
 
@@ -12,9 +13,10 @@ public class ParticipantsOfEventQuery : IRequest<IEnumerable<Participant>>, IEve
     public string? Tag { get; set; }
     public bool IncludeWaitingList { get; set; }
     public IEnumerable<RegistrationState>? States { get; set; }
+    public bool AddDetails { get; set; }
 }
 
-public class Participant
+public class Participant : IDynamicColumns
 {
     public Guid RegistrationId { get; set; }
     public string? FirstName { get; set; }
@@ -29,10 +31,12 @@ public class Participant
     public decimal AmountOutstanding { get; set; }
     public bool IsVolunteer { get; set; }
     public string? Location { get; set; }
+    public IDictionary<string, string>? DynamicColumns { get; set; }
 }
 
 public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrations,
                                              IQueryable<PricePackage> pricePackages,
+                                             IQueryable<Registrable> _registrables,
                                              EnumTranslator enumTranslator,
                                              ReadModelReader readModelReader,
                                              IQueryable<Registrable> tracks)
@@ -40,6 +44,16 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
 {
     public async Task<IEnumerable<Participant>> Handle(ParticipantsOfEventQuery query, CancellationToken cancellationToken)
     {
+        var dynamicColumns = query.AddDetails
+                                 ? (await _registrables.Where(rbl => rbl.EventId == query.EventId
+                                                                  && rbl.CheckinListColumn != null)
+                                                       .Select(rbl => new { rbl.Id, rbl.DisplayName, rbl.CheckinListColumn })
+                                                       .ToListAsync(cancellationToken))
+                                   .GroupBy(rbl => rbl.CheckinListColumn!)
+                                   .ToDictionary(grp => grp.Key,
+                                                 grp => grp.Select(rbl => new { rbl.Id, rbl.DisplayName }))
+                                 : null;
+
         var allowedStates = query.States?.Any() == true
                                 ? query.States
                                 : [RegistrationState.Received, RegistrationState.Paid];
@@ -71,17 +85,13 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                        .Select(trk => new
                                                       {
                                                           trk.Id,
-                                                          IsCoreTrack = trk.IsCore && trk.CheckinListColumn == "Tracks",
-                                                          IsVolunteer = trk.WellDefined == WellDefinedRegistrable.Volunteer
+                                                          IsCoreTrack = trk.IsCore && trk.CheckinListColumn == "Tracks"
                                                       })
-                                       .Where(trk => trk.IsCoreTrack || trk.IsVolunteer)
+                                       .Where(trk => trk.IsCoreTrack)
                                        .ToListAsync(cancellationToken);
         var registrableIds = registrables.Where(trk => trk.IsCoreTrack)
                                          .Select(trk => trk.Id)
                                          .ToList();
-        var volunteerIds = registrables.Where(trk => trk.IsVolunteer)
-                                       .Select(trk => trk.Id)
-                                       .ToList();
         return registrations.Select(reg => new Participant
                                            {
                                                RegistrationId = reg.Id,
@@ -97,9 +107,12 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                                               .Where(spt => !spt.IsWaitingList && registrableIds.Contains(spt.RegistrableId))
                                                               .Select(spt => GetSpotText(spt.RegistrableName, spt.RegistrableNameSecondary, spt.RoleText))
                                                               .StringJoin(),
-                                               IsVolunteer = reg.Spots!.Any(spt => volunteerIds.Contains(spt.RegistrableId)),
                                                PricePackageAdmitted = GetPricePackageText(registrationIds.First(r => r.Id == reg.Id).PricePackageIds_Admitted, packages),
-                                               Location = reg.Location
+                                               Location = reg.Location,
+                                               DynamicColumns = dynamicColumns?.ToDictionary(col => col.Key,
+                                                                                             col => col.Value.Where(rbl => reg.Spots!.Any(spt => spt.RegistrableId == rbl.Id))
+                                                                                                       .Select(rbl => rbl.DisplayName)
+                                                                                                       .StringJoin())
                                            })
                             .OrderBy(reg => reg.FirstName)
                             .ThenBy(reg => reg.LastName)

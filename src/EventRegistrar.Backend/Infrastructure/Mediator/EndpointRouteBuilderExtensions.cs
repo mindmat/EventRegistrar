@@ -161,8 +161,21 @@ public static class EndpointRouteBuilderExtensions
                 continue;
             }
 
+            var isFirstRow = true;
             foreach (var dataRow in values)
             {
+                if (isFirstRow)
+                {
+                    isFirstRow = false;
+                    if (dataRow is IDynamicColumns firstRowWithDynamicColumns)
+                    {
+                        foreach (var dynamicColumn in firstRowWithDynamicColumns.DynamicColumns!)
+                        {
+                            mappings.Add((dynamicColumn.Key, (row => ((IDynamicColumns)row).DynamicColumns?[dynamicColumn.Key])));
+                            dataTable.Columns.Add(dynamicColumn.Key);
+                        }
+                    }
+                }
                 var tableRow = dataTable.NewRow();
                 foreach (var (title, getValue) in mappings)
                 {

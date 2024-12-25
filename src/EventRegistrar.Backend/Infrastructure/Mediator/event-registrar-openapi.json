@@ -7992,6 +7992,13 @@
           "location": {
             "type": "string",
             "nullable": true
+          },
+          "dynamicColumns": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "string"
+            }
           }
         }
       },
@@ -8020,6 +8027,9 @@
             "items": {
               "$ref": "#/components/schemas/RegistrationState"
             }
+          },
+          "addDetails": {
+            "type": "boolean"
           }
         }
       },
