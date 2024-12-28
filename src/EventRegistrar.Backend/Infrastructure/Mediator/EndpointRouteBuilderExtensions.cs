@@ -7,6 +7,8 @@ using System.Text.Json.Serialization;
 using ClosedXML.Excel;
 using ClosedXML.Graphics;
 
+using EventRegistrar.Backend.Properties;
+
 using SimpleInjector;
 
 
@@ -16,6 +18,7 @@ public static class EndpointRouteBuilderExtensions
 {
     private static readonly JsonSerializerOptions _jsonSettings;
     private static readonly JsonSerializerOptions _jsonDeserializeSettings;
+    private static readonly Type[] _exportableDataTypes = [typeof(string), typeof(int), typeof(int?), typeof(bool), typeof(bool?), typeof(decimal), typeof(decimal?)];
 
     static EndpointRouteBuilderExtensions()
     {
@@ -145,15 +148,13 @@ public static class EndpointRouteBuilderExtensions
         var workbook = new XLWorkbook();
         foreach (var (name, values, rowType) in GetEnumerableProperties(response))
         {
-            var mappings = GetExportableProperties(rowType)
-                           .Select(prp => (prp.Name, (Func<object, object?>)prp.GetValue))
-                           .ToList();
+            var mappings = GetExportableProperties(rowType).ToList();
 
             var dataTable = new DataTable(name);
 
-            foreach (var (title, _) in mappings)
+            foreach (var mapping in mappings)
             {
-                dataTable.Columns.Add(title);
+                dataTable.Columns.Add(new DataColumn(mapping.Name, mapping.GetValue.Method.ReturnType) { Caption = mapping.Caption });
             }
 
             if (values is null)
@@ -171,15 +172,16 @@ public static class EndpointRouteBuilderExtensions
                     {
                         foreach (var dynamicColumn in firstRowWithDynamicColumns.DynamicColumns!)
                         {
-                            mappings.Add((dynamicColumn.Key, (row => ((IDynamicColumns)row).DynamicColumns?[dynamicColumn.Key])));
+                            mappings.Add(new ExportableProperty(dynamicColumn.Key, dynamicColumn.Key, (row => ((IDynamicColumns)row).DynamicColumns?[dynamicColumn.Key])));
                             dataTable.Columns.Add(dynamicColumn.Key);
                         }
                     }
                 }
+
                 var tableRow = dataTable.NewRow();
-                foreach (var (title, getValue) in mappings)
+                foreach (var mapping in mappings)
                 {
-                    tableRow[title] = FormatValue(getValue(dataRow));
+                    tableRow[mapping.Name] = FormatValue(mapping.GetValue(dataRow));
                 }
 
                 dataTable.Rows.Add(tableRow);
@@ -219,14 +221,19 @@ public static class EndpointRouteBuilderExtensions
         return value;
     }
 
-    private static IEnumerable<PropertyInfo> GetExportableProperties(Type type)
+    private static IEnumerable<ExportableProperty> GetExportableProperties(Type type)
     {
         return type.GetProperties()
-                   .Where(prp => prp.PropertyType == typeof(string)
-                              || prp.PropertyType == typeof(int)
-                              || prp.PropertyType == typeof(bool)
-                              || prp.PropertyType == typeof(decimal));
+                   .Where(prp => _exportableDataTypes.Contains(prp.PropertyType))
+                   .Select(prp => new ExportableProperty(prp.Name, GetTranslation(type.Name, prp.Name) ?? prp.Name, prp.GetValue));
     }
+
+    private static string? GetTranslation(string typeName, string propertyName)
+    {
+        return Resources.ResourceManager.GetString($"{typeName}_{propertyName}");
+    }
+
+    private record ExportableProperty(string Name, string Caption, Func<object, object?> GetValue);
 
     private static IEnumerable<(string Name, IEnumerable? Values, Type)> GetEnumerableProperties(object? data)
     {

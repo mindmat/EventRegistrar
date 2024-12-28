@@ -2525,6 +2525,96 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ausstehender Betrag.
+        /// </summary>
+        internal static string Participant_AmountOutstanding {
+            get {
+                return ResourceManager.GetString("Participant_AmountOutstanding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Haupt-Tracks.
+        /// </summary>
+        internal static string Participant_CoreSpots {
+            get {
+                return ResourceManager.GetString("Participant_CoreSpots", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to E-Mail.
+        /// </summary>
+        internal static string Participant_Email {
+            get {
+                return ResourceManager.GetString("Participant_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Vorname.
+        /// </summary>
+        internal static string Participant_FirstName {
+            get {
+                return ResourceManager.GetString("Participant_FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Warteliste.
+        /// </summary>
+        internal static string Participant_IsOnWaitingList {
+            get {
+                return ResourceManager.GetString("Participant_IsOnWaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nachname.
+        /// </summary>
+        internal static string Participant_LastName {
+            get {
+                return ResourceManager.GetString("Participant_LastName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wohnort.
+        /// </summary>
+        internal static string Participant_Location {
+            get {
+                return ResourceManager.GetString("Participant_Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Telefon.
+        /// </summary>
+        internal static string Participant_Phone {
+            get {
+                return ResourceManager.GetString("Participant_Phone", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bestätigte Preispakete.
+        /// </summary>
+        internal static string Participant_PricePackageAdmitted {
+            get {
+                return ResourceManager.GetString("Participant_PricePackageAdmitted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        internal static string Participant_StateText {
+            get {
+                return ResourceManager.GetString("Participant_StateText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Teilnehmer.
         /// </summary>
         internal static string Participants {

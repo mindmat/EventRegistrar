@@ -28,8 +28,7 @@ public class Participant : IDynamicColumns
     public RegistrationState State { get; set; }
     public string CoreSpots { get; set; } = null!;
     public string StateText { get; set; } = null!;
-    public decimal AmountOutstanding { get; set; }
-    public bool IsVolunteer { get; set; }
+    public decimal? AmountOutstanding { get; set; }
     public string? Location { get; set; }
     public IDictionary<string, string>? DynamicColumns { get; set; }
 }
@@ -99,7 +98,7 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                                LastName = reg.LastName,
                                                Email = reg.Email,
                                                Phone = reg.PhoneNormalized,
-                                               AmountOutstanding = (reg.Price ?? 0m) - reg.Paid,
+                                               AmountOutstanding = GetOutstandingAmount(reg.Price, reg.Paid),
                                                State = reg.Status,
                                                StateText = enumTranslator.Translate(reg.Status),
                                                IsOnWaitingList = reg.IsWaitingList == true,
@@ -133,5 +132,13 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
     private static string? GetPricePackageText(IEnumerable<Guid>? pricePackageIds, IReadOnlyDictionary<Guid, string> packages)
     {
         return pricePackageIds?.Select(packages.GetValueOrDefault).StringJoinNullable();
+    }
+
+    private static decimal? GetOutstandingAmount(decimal? total, decimal paid)
+    {
+        var outstanding = (total ?? 0m) - paid;
+        return outstanding == 0m
+                   ? null
+                   : outstanding;
     }
 }

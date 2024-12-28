@@ -937,6 +937,36 @@
   <data name="Participants" xml:space="preserve">
     <value>Teilnehmer</value>
   </data>
+  <data name="Participant_AmountOutstanding" xml:space="preserve">
+    <value>Ausstehender Betrag</value>
+  </data>
+  <data name="Participant_CoreSpots" xml:space="preserve">
+    <value>Haupt-Tracks</value>
+  </data>
+  <data name="Participant_Email" xml:space="preserve">
+    <value>E-Mail</value>
+  </data>
+  <data name="Participant_FirstName" xml:space="preserve">
+    <value>Vorname</value>
+  </data>
+  <data name="Participant_IsOnWaitingList" xml:space="preserve">
+    <value>Warteliste</value>
+  </data>
+  <data name="Participant_LastName" xml:space="preserve">
+    <value>Nachname</value>
+  </data>
+  <data name="Participant_Location" xml:space="preserve">
+    <value>Wohnort</value>
+  </data>
+  <data name="Participant_Phone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="Participant_PricePackageAdmitted" xml:space="preserve">
+    <value>Bestätigte Preispakete</value>
+  </data>
+  <data name="Participant_StateText" xml:space="preserve">
+    <value>Status</value>
+  </data>
   <data name="Partner" xml:space="preserve">
     <value>Partner</value>
   </data>
