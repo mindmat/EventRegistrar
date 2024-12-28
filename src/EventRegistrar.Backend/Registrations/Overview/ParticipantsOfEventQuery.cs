@@ -31,6 +31,8 @@ public class Participant : IDynamicColumns
     public decimal? AmountOutstanding { get; set; }
     public string? Location { get; set; }
     public IDictionary<string, string>? DynamicColumns { get; set; }
+    public string? InternalNotes { get; set; }
+    public string? Remarks { get; set; }
 }
 
 public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrations,
@@ -108,6 +110,12 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                                               .StringJoin(),
                                                PricePackageAdmitted = GetPricePackageText(registrationIds.First(r => r.Id == reg.Id).PricePackageIds_Admitted, packages),
                                                Location = reg.Location,
+                                               InternalNotes = query.AddDetails
+                                                                   ? reg.InternalNotes
+                                                                   : null,
+                                               Remarks = query.AddDetails
+                                                             ? reg.Remarks
+                                                             : null,
                                                DynamicColumns = dynamicColumns?.ToDictionary(col => col.Key,
                                                                                              col => col.Value.Where(rbl => reg.Spots!.Any(spt => spt.RegistrableId == rbl.Id))
                                                                                                        .Select(rbl => rbl.DisplayName)

@@ -846,6 +846,9 @@
   <data name="Participant_FirstName" xml:space="preserve">
     <value>First name</value>
   </data>
+  <data name="Participant_InternalNotes" xml:space="preserve">
+    <value>Internal notes</value>
+  </data>
   <data name="Participant_IsOnWaitingList" xml:space="preserve">
     <value>Waiting list</value>
   </data>
@@ -860,6 +863,9 @@
   </data>
   <data name="Participant_PricePackageAdmitted" xml:space="preserve">
     <value>Confirmed price packages</value>
+  </data>
+  <data name="Participant_Remarks" xml:space="preserve">
+    <value>Remarks</value>
   </data>
   <data name="Participant_StateText" xml:space="preserve">
     <value>State</value>

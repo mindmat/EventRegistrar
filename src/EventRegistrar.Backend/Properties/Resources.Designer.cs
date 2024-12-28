@@ -2561,6 +2561,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Interne Notizen.
+        /// </summary>
+        internal static string Participant_InternalNotes {
+            get {
+                return ResourceManager.GetString("Participant_InternalNotes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Warteliste.
         /// </summary>
         internal static string Participant_IsOnWaitingList {
@@ -2602,6 +2611,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Participant_PricePackageAdmitted {
             get {
                 return ResourceManager.GetString("Participant_PricePackageAdmitted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bemerkungen.
+        /// </summary>
+        internal static string Participant_Remarks {
+            get {
+                return ResourceManager.GetString("Participant_Remarks", resourceCulture);
             }
         }
         
