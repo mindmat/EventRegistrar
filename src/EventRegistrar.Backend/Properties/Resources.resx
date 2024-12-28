@@ -1211,6 +1211,9 @@
   <data name="Repayments" xml:space="preserve">
     <value>Rückzahlungen</value>
   </data>
+  <data name="ReprocessQuestionOption" xml:space="preserve">
+    <value>Antwort neu importieren</value>
+  </data>
   <data name="RequestAccess" xml:space="preserve">
     <value>Zugriff beantragen</value>
   </data>

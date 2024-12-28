@@ -24,6 +24,6 @@ public class RemoveSpotCommandHandler(IQueryable<Registration> registrations,
                                                         || seat.RegistrationId_Follower == registration.Id),
                                                   cancellationToken);
 
-        spotManager.RemoveSpot(spotToRemove, registration.Id, RemoveSpotReason.Modification);
+        spotManager.RemoveSpot(spotToRemove, registration.Id, RemoveSpotReason.Modification, registration.EventId);
     }
 }

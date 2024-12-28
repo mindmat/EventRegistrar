@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
@@ -12,6 +13,7 @@ public class SpotManager(IRepository<Seat> _spots,
                          IQueryable<Registration> registrations,
                          IQueryable<Registrable> registrables,
                          IEventBus eventBus,
+                         ChangeTrigger changeTrigger,
                          IDateTimeProvider dateTimeProvider)
 {
     public async Task<Seat?> ReservePartnerSpot(Guid eventId,
@@ -289,7 +291,7 @@ public class SpotManager(IRepository<Seat> _spots,
         return seat;
     }
 
-    public void RemoveSpot(Seat spot, Guid registrationId, RemoveSpotReason reason)
+    public void RemoveSpot(Seat spot, Guid registrationId, RemoveSpotReason reason, Guid eventId)
     {
         if (spot.RegistrationId == registrationId)
         {
@@ -334,6 +336,7 @@ public class SpotManager(IRepository<Seat> _spots,
                              Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}",
                              Registrable = registrable.DisplayName
                          });
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId, eventId);
     }
 
     private static void ComplementExistingSeat(Guid registrationId, Role ownRole, Seat existingSeat)

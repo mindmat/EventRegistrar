@@ -65,7 +65,7 @@ public class CancelRegistrationCommandHandler(IQueryable<Registration> registrat
                                 .ToListAsync(cancellationToken);
         foreach (var spot in spots)
         {
-            spotManager.RemoveSpot(spot, command.RegistrationId, RemoveSpotReason.CancellationOfRegistration);
+            spotManager.RemoveSpot(spot, command.RegistrationId, RemoveSpotReason.CancellationOfRegistration, registration.EventId);
         }
 
         // discard unsent mails

@@ -3517,6 +3517,31 @@
         }
       }
     },
+    "/api/ReprocessQuestionOptionCommand": {
+      "post": {
+        "tags": [
+          "ReprocessQuestionOption"
+        ],
+        "operationId": "ReprocessQuestionOption_Command",
+        "requestBody": {
+          "x-name": "ReprocessQuestionOptionCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReprocessQuestionOptionCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/RequestAccessCommand": {
       "post": {
         "tags": [
@@ -7984,10 +8009,8 @@
           },
           "amountOutstanding": {
             "type": "number",
-            "format": "decimal"
-          },
-          "isVolunteer": {
-            "type": "boolean"
+            "format": "decimal",
+            "nullable": true
           },
           "location": {
             "type": "string",
@@ -7999,6 +8022,14 @@
             "additionalProperties": {
               "type": "string"
             }
+          },
+          "internalNotes": {
+            "type": "string",
+            "nullable": true
+          },
+          "remarks": {
+            "type": "string",
+            "nullable": true
           }
         }
       },
@@ -10436,6 +10467,20 @@
             "format": "guid"
           },
           "userId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "ReprocessQuestionOptionCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "questionOptionId": {
             "type": "string",
             "format": "guid"
           }

@@ -5847,6 +5847,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    reprocessQuestionOption_Command(reprocessQuestionOptionCommand: ReprocessQuestionOptionCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/ReprocessQuestionOptionCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(reprocessQuestionOptionCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processReprocessQuestionOption_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processReprocessQuestionOption_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processReprocessQuestionOption_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     requestAccess_Command(requestAccessCommand: RequestAccessCommand | undefined): Observable<string> {
         let url_ = this.baseUrl + "/api/RequestAccessCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -9249,10 +9297,11 @@ export interface Participant {
     state?: RegistrationState;
     coreSpots?: string;
     stateText?: string;
-    amountOutstanding?: number;
-    isVolunteer?: boolean;
+    amountOutstanding?: number | null;
     location?: string | null;
     dynamicColumns?: { [key: string]: string; } | null;
+    internalNotes?: string | null;
+    remarks?: string | null;
 }
 
 export interface ParticipantsOfEventQuery {
@@ -10002,6 +10051,11 @@ export interface RemoveSpotCommand {
 export interface RemoveUserFromEventCommand {
     eventId?: string;
     userId?: string;
+}
+
+export interface ReprocessQuestionOptionCommand {
+    eventId?: string;
+    questionOptionId?: string;
 }
 
 export interface RequestAccessCommand {

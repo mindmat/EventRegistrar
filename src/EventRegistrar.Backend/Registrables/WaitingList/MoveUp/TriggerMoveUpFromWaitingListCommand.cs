@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
@@ -17,7 +16,6 @@ public class TriggerMoveUpFromWaitingListCommandHandler(IQueryable<Registrable> 
                                                         IQueryable<Registration> registrations,
                                                         IRepository<Seat> _spots,
                                                         ImbalanceManager imbalanceManager,
-                                                        IEventBus eventBus,
                                                         ILogger log,
                                                         ChangeTrigger changeTrigger)
     : IRequestHandler<TriggerMoveUpFromWaitingListCommand>
@@ -140,12 +138,7 @@ public class TriggerMoveUpFromWaitingListCommandHandler(IQueryable<Registrable> 
         }
 
         changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
-        eventBus.Publish(new QueryChanged
-                         {
-                             EventId = command.EventId,
-                             QueryName = nameof(ParticipantsOfRegistrableQuery),
-                             RowId = command.RegistrableId
-                         });
+        changeTrigger.QueryChanged<ParticipantsOfRegistrableQuery>(command.EventId, command.RegistrableId);
     }
 
     private static DateTimeOffset GetAverage(DateTimeOffset dateTime1, DateTimeOffset dateTime2)
@@ -211,14 +204,14 @@ public class TriggerMoveUpFromWaitingListCommandHandler(IQueryable<Registrable> 
     {
         var registrable = registrables.First(rbl => rbl.Id == registrableId);
         var registration = registrations.First(reg => reg.Id == registrationId);
-        eventBus.Publish(new SingleSpotMovedUpFromWaitingList
-                         {
-                             Id = Guid.NewGuid(),
-                             RegistrableId = registrableId,
-                             Registrable = registrable.DisplayName,
-                             RegistrationId = registrationId,
-                             Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}"
-                         });
+        changeTrigger.PublishEvent(new SingleSpotMovedUpFromWaitingList
+                                   {
+                                       Id = Guid.NewGuid(),
+                                       RegistrableId = registrableId,
+                                       Registrable = registrable.DisplayName,
+                                       RegistrationId = registrationId,
+                                       Participant = $"{registration.RespondentFirstName} {registration.RespondentLastName}"
+                                   });
     }
 
     private async Task PromoteSpotFromWaitingList(Seat spot,
@@ -238,13 +231,13 @@ public class TriggerMoveUpFromWaitingListCommandHandler(IQueryable<Registrable> 
 
         if (spot.IsPartnerSpot)
         {
-            eventBus.Publish(new PartnerSpotMovedUpFromWaitingList
-                             {
-                                 Id = Guid.NewGuid(),
-                                 RegistrableId = spot.RegistrableId,
-                                 RegistrationId = spot.RegistrationId,
-                                 RegistrationId_Follower = spot.RegistrationId_Follower
-                             });
+            changeTrigger.PublishEvent(new PartnerSpotMovedUpFromWaitingList
+                                       {
+                                           Id = Guid.NewGuid(),
+                                           RegistrableId = spot.RegistrableId,
+                                           RegistrationId = spot.RegistrationId,
+                                           RegistrationId_Follower = spot.RegistrationId_Follower
+                                       });
         }
         else
         {

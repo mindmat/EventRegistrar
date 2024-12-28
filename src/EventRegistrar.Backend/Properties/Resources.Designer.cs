@@ -3353,6 +3353,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Antwort neu importieren.
+        /// </summary>
+        internal static string ReprocessQuestionOption {
+            get {
+                return ResourceManager.GetString("ReprocessQuestionOption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zugriff beantragen.
         /// </summary>
         internal static string RequestAccess {

@@ -207,6 +207,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SaveExternalMailConfigurationCommand);
             yield return nameof(BankAccountConfigurationQuery);
             yield return nameof(SaveBankAccountConfigurationCommand);
+            yield return nameof(ReprocessQuestionOptionCommand);
         }
     }
 }

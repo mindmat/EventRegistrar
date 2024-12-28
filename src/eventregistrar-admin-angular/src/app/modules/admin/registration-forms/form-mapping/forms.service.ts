@@ -38,4 +38,10 @@ export class FormsService extends FetchService<RegistrationFormItem[]>
     this.api.saveRegistrationFormMappings_Command({ eventId: this.eventService.selectedId, formId, sections, multiMappings })
       .subscribe();
   }
+
+  reprocessQuestionOption(questionOptionId: string): void
+  {
+    this.api.reprocessQuestionOption_Command({ eventId: this.eventService.selectedId, questionOptionId })
+      .subscribe();
+  }
 }
