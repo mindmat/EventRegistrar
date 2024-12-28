@@ -8,6 +8,7 @@ using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Hosting;
 using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.AuditLog;
 using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess.DirtyTags;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
@@ -117,6 +118,7 @@ container.Register<EventContext>();
 container.Collection.Register(typeof(IPipelineBehavior<,>), new[]
                                                             {
                                                                 typeof(ExtractEventIdDecorator<,>),
+                                                                typeof(AuditLogger<,>),
                                                                 typeof(CommitUnitOfWorkDecorator<,>)
                                                             });
 
@@ -128,6 +130,11 @@ SetDbOptions(optionsBuilder);
 container.RegisterInstance(optionsBuilder);
 container.RegisterInstance(optionsBuilder.Options);
 container.Register<DbContext, EventRegistratorDbContext>();
+
+var optionsBuilderAuditLog = new DbContextOptionsBuilder<AuditLogDbContext>();
+SetDbOptions(optionsBuilderAuditLog);
+container.Register(()=>new AuditLogDbContext(optionsBuilderAuditLog.Options));
+
 
 container.Register<IIdentityProvider, Auth0IdentityProvider>();
 container.RegisterSingleton<Auth0TokenProvider>();

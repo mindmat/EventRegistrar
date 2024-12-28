@@ -28,5 +28,21 @@ public class AuthenticatedUser
     public string? Email { get; }
     public string? AvatarUrl { get; }
 
+    public string GetText()
+    {
+        if (!string.IsNullOrWhiteSpace(FirstName)
+         || !string.IsNullOrWhiteSpace(LastName))
+        {
+            return $"{FirstName} {LastName}";
+        }
+
+        if (!string.IsNullOrWhiteSpace(Email))
+        {
+            return Email;
+        }
+
+        return IdentityProviderUserIdentifier;
+    }
+
     public static AuthenticatedUser None => new();
 }
