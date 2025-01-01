@@ -17,8 +17,7 @@ namespace EventRegistrar.Backend.Infrastructure.AuditLog
     {
         public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
         {
-            var isCommand = request is IRequest;
-            if (!isCommand)
+            if (request is not IRequest command)
             {
                 return await next();
             }
@@ -48,7 +47,7 @@ namespace EventRegistrar.Backend.Infrastructure.AuditLog
                         Id = requestAuditId,
                         RequestType = request.GetType().Name,
                         RequestJson = jsonHelper.TrySerialize(request) ?? "Error",
-                        EventId = eventContext.EventId,
+                        EventId = eventContext.EventId ?? TryGetEventId(command),
                         UserId = userId.UserId,
                         When = startTime,
                         UserDisplayText = user.GetText(),
@@ -62,6 +61,18 @@ namespace EventRegistrar.Backend.Infrastructure.AuditLog
                 {
                     // ignored
                 }
+            }
+        }
+
+        private static Guid? TryGetEventId(dynamic command)
+        {
+            try
+            {
+                return command.EventId as Guid?;
+            }
+            catch
+            {
+                return null;
             }
         }
     }

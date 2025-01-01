@@ -1,7 +1,7 @@
 import { Inject, Injectable, NgZone } from '@angular/core';
-import { HttpTransportType, HubConnection, HubConnectionBuilder, LogLevel } from '@microsoft/signalr';
+import { HttpTransportType, HubConnection, HubConnectionBuilder, HubConnectionState, LogLevel } from '@microsoft/signalr';
 import { API_BASE_URL } from 'app/api/api';
-import { filter, map, mergeMap, Observable, ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, filter, map, mergeMap, Observable, ReplaySubject, Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService
@@ -12,7 +12,7 @@ export class NotificationService
     private subscription$ = new ReplaySubject<string>();
     private subscribedEventId: string;
     private zone = new NgZone({ enableLongStackTrace: false });
-    private _isConnected$ = new Subject<boolean>();
+    private _isConnected$ = new BehaviorSubject<boolean>(false);
 
     constructor(@Inject(API_BASE_URL) baseUrl?: string)
     {
@@ -32,7 +32,7 @@ export class NotificationService
                 queryName,
                 rowId
             } as QueryChanged;
-            console.log(notification);
+            // console.log(notification);
             // this.serverEvents$.next(notification);
             this.zone.run(() =>
             {
@@ -81,12 +81,21 @@ export class NotificationService
         );
     }
 
+    public reconnect()
+    {
+        if (this.hubConnection.state === HubConnectionState.Disconnected)
+        {
+            this.startConnection();
+        }
+    }
+
     private startConnection()
     {
         this.hubConnection
             .start()
             .then(() =>
             {
+                this._isConnected$.next(true);
                 this.connectionEstablished$.next(true);
             })
             .catch(err =>

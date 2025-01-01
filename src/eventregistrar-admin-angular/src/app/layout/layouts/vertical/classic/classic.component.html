@@ -25,12 +25,15 @@
             <mat-icon [svgIcon]="'heroicons_outline:menu'"></mat-icon>
         </button>
 
-        <div class="flex justify-end flex-auto h-12">
-            <search class="object-contain max-w-100" [appearance]="'basic'"></search>
+        <div class="flex justify-end ml-auto h-12">
+            <search class="object-contain max-w-200" [appearance]="'basic'"></search>
         </div>
 
         <!-- Components -->
-        <div class="flex flex-none items-center pl-2 space-x-0.5 sm:space-x-2">
+        <div class="flex ml-auto items-center pl-2 space-x-0.5 sm:space-x-2">
+            <button *ngIf="!isConnected" mat-icon-button (click)="triggerReconnect()" class="flex-none" matTooltip="Verbindung unterbrochen">
+                <mat-icon svgIcon="link_off" class="fill-warn-400"></mat-icon>
+            </button>
             <languages></languages>
             <fuse-fullscreen class="hidden md:block"></fuse-fullscreen>
             <!-- <shortcuts></shortcuts>

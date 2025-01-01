@@ -1,20 +1,23 @@
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
 import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
+import { NotificationService } from 'app/modules/admin/infrastructure/notification.service';
 
 @Component({
-    selector     : 'classic-layout',
-    templateUrl  : './classic.component.html',
-    encapsulation: ViewEncapsulation.None
+    selector: 'classic-layout',
+    templateUrl: './classic.component.html',
+    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ClassicLayoutComponent implements OnInit, OnDestroy
 {
     isScreenSmall: boolean;
     navigation: Navigation;
+    public isConnected: boolean;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     /**
@@ -25,7 +28,9 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy
         private _router: Router,
         private _navigationService: NavigationService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _fuseNavigationService: FuseNavigationService
+        private _fuseNavigationService: FuseNavigationService,
+        private _notificationService: NotificationService,
+        private _changeDetectorRef: ChangeDetectorRef
     )
     {
     }
@@ -54,18 +59,34 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy
         // Subscribe to navigation data
         this._navigationService.navigation$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((navigation: Navigation) => {
+            .subscribe((navigation: Navigation) =>
+            {
                 this.navigation = navigation;
             });
 
         // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe(({matchingAliases}) => {
+            .subscribe(({ matchingAliases }) =>
+            {
 
                 // Check if the screen is small
                 this.isScreenSmall = !matchingAliases.includes('md');
             });
+
+        this._notificationService.isConnected$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(isConnected =>
+            {
+                this.isConnected = isConnected;
+                this._changeDetectorRef.markForCheck();
+                console.log(`isConnected: ${isConnected}`);
+            });
+    }
+
+    triggerReconnect()
+    {
+        this._notificationService.reconnect();
     }
 
     /**
@@ -92,7 +113,7 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy
         // Get the navigation
         const navigation = this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>(name);
 
-        if ( navigation )
+        if (navigation)
         {
             // Toggle the opened status
             navigation.toggle();

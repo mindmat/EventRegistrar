@@ -265,6 +265,9 @@
   <data name="ClickToUpload" xml:space="preserve">
     <value>Klicken zum Hochladen</value>
   </data>
+  <data name="ConnectionInterrupted" xml:space="preserve">
+    <value>Verbindung unterbrochen</value>
+  </data>
   <data name="CopyAccessRights" xml:space="preserve">
     <value>Zugriffsrechte kopieren</value>
   </data>

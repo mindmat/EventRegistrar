@@ -258,6 +258,9 @@
   <data name="ClickToUpload" xml:space="preserve">
     <value>Click to upload</value>
   </data>
+  <data name="ConnectionInterrupted" xml:space="preserve">
+    <value>Connection interrupted</value>
+  </data>
   <data name="CopyAccessRights" xml:space="preserve">
     <value>Copy access rights</value>
   </data>

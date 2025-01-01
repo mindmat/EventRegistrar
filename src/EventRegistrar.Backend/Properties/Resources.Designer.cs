@@ -502,6 +502,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Verbindung unterbrochen.
+        /// </summary>
+        internal static string ConnectionInterrupted {
+            get {
+                return ResourceManager.GetString("ConnectionInterrupted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zugriffsrechte kopieren.
         /// </summary>
         internal static string CopyAccessRights {
