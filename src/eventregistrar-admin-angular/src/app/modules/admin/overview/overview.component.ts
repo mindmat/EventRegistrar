@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { OverviewService } from './overview.service';
 import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDisplayItem';
-import { DoubleRegistrableDisplayItem, EventState, PaymentOverview, PricePackageOverview, RegistrablesOverview, SingleRegistrableDisplayItem } from 'app/api/api';
+import { DoubleRegistrableDisplayItem, EventState, PaymentOverview, PricePackageOverview, RegistrablesOverview, RegistrationsPerDay, SingleRegistrableDisplayItem } from 'app/api/api';
 import { MatSelectChange } from '@angular/material/select';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { NavigatorService } from '../navigator.service';
 import { PricePackagesOverviewService } from './price-packages-overview.service';
 import { EventService } from '../events/event.service';
+import { RegistrationsPerDayService } from './registrations-per-day.service';
 
 @Component({
     selector: 'app-overview',
@@ -31,6 +32,7 @@ export class OverviewComponent implements OnInit, OnDestroy
     filteredSingleRegistrables: SingleRegistrableDisplayItem[];
     filteredDoubleRegistrables: DoubleRegistrableDisplayItem[];
     paymentOverview: PaymentOverview;
+    registrationsPerDay: RegistrationsPerDay[];
     accountBalanceOptions: ApexOptions;
     pricePackageOverview: PricePackageOverview;
 
@@ -49,6 +51,7 @@ export class OverviewComponent implements OnInit, OnDestroy
     constructor(private changeDetectorRef: ChangeDetectorRef,
         private overviewService: OverviewService,
         private paymentOverviewService: PaymentOverviewService,
+        private registrationsPerDayService: RegistrationsPerDayService,
         private pricePackagesOverviewService: PricePackagesOverviewService,
         private registrableService: RegistrablesService,
         private matDialog: MatDialog,
@@ -83,22 +86,33 @@ export class OverviewComponent implements OnInit, OnDestroy
                 this.changeDetectorRef.markForCheck();
             });
 
-        this.paymentOverviewService.paymentOverview$
+        combineLatest([this.paymentOverviewService.paymentOverview$, this.registrationsPerDayService.registrationsPerDay$])
             .pipe(takeUntil(this.unsubscribeAll))
-            .subscribe((paymentOverview: PaymentOverview) =>
+            .subscribe(([paymentOverview, days]) =>
             {
                 this.paymentOverview = paymentOverview;
+                this.registrationsPerDay = days;
                 this.accountBalanceOptions.series = [{
                     name: this.translateService.instant('Balance'),
+                    type: 'area',
                     data: paymentOverview.balanceHistory.map(blc =>
                     ({
                         x: blc.date,
                         y: blc.balance
                     }))
-                }],
-
-                    // Mark for check
-                    this.changeDetectorRef.markForCheck();
+                },
+                {
+                    name: this.translateService.instant('Registrations'),
+                    type: 'column',
+                    data: days.map(blc =>
+                    ({
+                        x: blc.date,
+                        y: blc.countActive + blc.countCancelled
+                    }))
+                }];
+                console.log(this.accountBalanceOptions.series);
+                // Mark for check
+                this.changeDetectorRef.markForCheck();
             });
 
         this.pricePackagesOverviewService.pricePackageOverview$
@@ -236,9 +250,9 @@ export class OverviewComponent implements OnInit, OnDestroy
                     enabled: true
                 }
             },
-            colors: ['#A3BFFA', '#667EEA'],
+            colors: ['#A3BFFA', '#00E396'],
             fill: {
-                colors: ['#CED9FB', '#AECDFD'],
+                colors: ['#CED9FB', '#00E396'],
                 opacity: 0.5,
                 type: 'solid'
             },
@@ -256,9 +270,32 @@ export class OverviewComponent implements OnInit, OnDestroy
                     formatter: (value): string => value.toLocaleString()
                 }
             },
+
             xaxis: {
-                type: 'datetime'
-            }
+                type: 'datetime',
+                tooltip: { enabled: false }
+            },
+            yaxis: [{
+                // title: {
+                //     text: this.translateService.instant('Balance')
+                // },
+                seriesName: this.translateService.instant('Balance')
+            },
+            {
+                // title: {
+                //     text: this.translateService.instant('Registrations')
+                // },
+                opposite: true,
+                seriesName: this.translateService.instant('Registrations')
+            }],
+            // dataLabels: {
+            //     enabled: true,
+            //     enabledOnSeries: [1],
+            //     background: {
+            //         borderWidth: 0,
+            //     },
+            // },
+
         };
     }
 }

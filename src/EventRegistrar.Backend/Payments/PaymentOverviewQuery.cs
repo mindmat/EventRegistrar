@@ -22,13 +22,13 @@ public class PaymentOverviewQueryHandler(IQueryable<PaymentsFile> paymentFiles,
     {
         var balances = await paymentFiles.Where(pmf => pmf.EventId == query.EventId
                                                     && pmf.BookingsTo >= dateTimeProvider.Now.AddMonths(-BalanceHistoryMonthsBack))
-                                         .OrderByDescending(pmf => pmf.BookingsTo ?? DateTime.MinValue)
+                                         .OrderBy(pmf => pmf.BookingsTo)
                                          .Select(pmf => new
                                                         {
                                                             pmf.AccountIban,
                                                             pmf.Balance,
                                                             pmf.Currency,
-                                                            Date = pmf.BookingsTo
+                                                            Date = pmf.BookingsTo!.Value
                                                         })
                                          .ToListAsync(cancellationToken);
         var latestBalance = balances.FirstOrDefault();
@@ -75,7 +75,7 @@ public class PaymentOverviewQueryHandler(IQueryable<PaymentsFile> paymentFiles,
                                        Balance = latestBalance.Balance,
                                        Currency = latestBalance.Currency,
                                        AccountIban = latestBalance.AccountIban,
-                                       Date = latestBalance.Date?.Date
+                                       Date = latestBalance.Date
                                    },
                    PaidAmount = activeRegistrations.Sum(reg => reg.Paid ?? 0m),
                    PaidRegistrationsCount = activeRegistrations.Count(reg => reg.State == RegistrationState.Paid),
@@ -86,7 +86,7 @@ public class PaymentOverviewQueryHandler(IQueryable<PaymentsFile> paymentFiles,
                                                                Balance = blc.Balance,
                                                                Currency = blc.Currency,
                                                                AccountIban = blc.AccountIban,
-                                                               Date = blc.Date?.Date
+                                                               Date = blc.Date
                                                            }),
                    NotFullyPaidRegistrations = activeRegistrations.Count(reg => reg.State == RegistrationState.Received),
                    PotentialOfOpenSpots = registrables.Select(rbl => new OpenSpotsPotential

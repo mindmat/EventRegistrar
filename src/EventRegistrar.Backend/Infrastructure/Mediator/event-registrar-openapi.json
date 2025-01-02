@@ -3297,6 +3297,41 @@
         }
       }
     },
+    "/api/RegistrationsPerDayQuery": {
+      "post": {
+        "tags": [
+          "RegistrationsPerDay"
+        ],
+        "operationId": "RegistrationsPerDay_Query",
+        "requestBody": {
+          "x-name": "RegistrationsPerDayQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationsPerDayQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RegistrationsPerDay"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/RegistrationsWithUnmatchedPartnerQuery": {
       "post": {
         "tags": [
@@ -10337,6 +10372,34 @@
             "format": "guid"
           },
           "registrationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
+      "RegistrationsPerDay": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "countActive": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "countCancelled": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RegistrationsPerDayQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
             "type": "string",
             "format": "guid"
           }

@@ -4,6 +4,7 @@ import { Observable, zip } from 'rxjs';
 import { OverviewService } from './overview.service';
 import { PaymentOverviewService } from './payment-overview.service';
 import { PricePackagesOverviewService } from './price-packages-overview.service';
+import { RegistrationsPerDayService } from './registrations-per-day.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +13,8 @@ export class OverviewResolver implements Resolve<any>
 {
     constructor(private overviewService: OverviewService,
         private paymentOverviewService: PaymentOverviewService,
-        private pricePackagesOverviewService: PricePackagesOverviewService) { }
+        private pricePackagesOverviewService: PricePackagesOverviewService,
+        private registrationsPerDayService: RegistrationsPerDayService) { }
 
     resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any>
     {
@@ -20,7 +22,8 @@ export class OverviewResolver implements Resolve<any>
             this.overviewService.fetchRegistrableTags(),
             this.overviewService.fetchRegistrables(),
             this.paymentOverviewService.fetchData(),
-            this.pricePackagesOverviewService.fetchData()
+            this.pricePackagesOverviewService.fetchData(),
+            this.registrationsPerDayService.fetchData()
         );
     }
 }
