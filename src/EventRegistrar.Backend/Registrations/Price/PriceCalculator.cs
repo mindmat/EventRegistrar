@@ -186,12 +186,12 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                     var matchingSpotsOfPart = partMatches.MatchingRequiredRegistrableIds.Select(mtc =>
                                                          {
                                                              var (name, sortKey) = GetRegistrable(registrationId, mtc, part.Registrables!, spots);
-                                                             return new MatchingPackageSpot(name, null, part.ShowInMailSpotList ? sortKey : null);
+                                                             return new MatchingPackageSpot(name, null, part.ShowInMailSpotList ? sortKey : null, part.ShowInMailSpotList);
                                                          })
                                                          .Concat(partMatches.MatchingOptionalRegistrableIds.Select(mtc =>
                                                          {
                                                              var (name, sortKey) = GetRegistrable(registrationId, mtc, part.Registrables!, spots);
-                                                             return new MatchingPackageSpot(name, null, part.ShowInMailSpotList ? sortKey : null);
+                                                             return new MatchingPackageSpot(name, null, part.ShowInMailSpotList ? sortKey : null, part.ShowInMailSpotList);
                                                          }))
                                                          .ToList();
                     if (part is { PriceAdjustment: not null, SelectionType: PricePackagePartSelectionType.Optional })
@@ -272,10 +272,40 @@ public class PriceCalculator(IQueryable<Seat> _spots,
         if (registrable.Registrable!.Type == RegistrableType.Double)
         {
             var spot = spots.First(spt => spt.RegistrableId == registrableId);
-            var role = spot.RegistrationId_Follower == registrationId
-                           ? Role.Follower
-                           : Role.Leader;
-            return ($"{registrable.Registrable.DisplayName} ({enumTranslator.Translate(role)})", registrable.Registrable.ShowInMailListOrder);
+            Role ownRole;
+            Guid? registrationId_Other;
+            if (spot.RegistrationId_Follower == registrationId)
+            {
+                ownRole = Role.Follower;
+                registrationId_Other = spot.RegistrationId;
+            }
+            else
+            {
+                ownRole = Role.Leader;
+                registrationId_Other = spot.RegistrationId_Follower;
+            }
+
+            var text = registrable.Registrable.DisplayName;
+            string? partnerName = null;
+            if (spot.IsPartnerSpot)
+            {
+                partnerName = registrationId_Other == null
+                                  ? spot.PartnerEmail
+                                  : registrations.Where(reg => reg.Id == registrationId_Other)
+                                                 .Select(reg => $"{reg.RespondentFirstName} {reg.RespondentLastName}")
+                                                 .FirstOrDefault();
+            }
+
+            if (partnerName != null)
+            {
+                text += $" ({enumTranslator.Translate(ownRole)}, {Resources.Partner} {partnerName})";
+            }
+            else
+            {
+                text += $" ({enumTranslator.Translate(ownRole)})";
+            }
+
+            return (text, registrable.Registrable.ShowInMailListOrder);
         }
 
         return (registrable.Registrable.DisplayName, registrable.Registrable.ShowInMailListOrder);
@@ -326,7 +356,8 @@ public record struct MatchingPackageResult(Guid? Id,
 
 public record MatchingPackageSpot(string Name,
                                   decimal? PriceAdjustment = null,
-                                  int? SortKey = int.MaxValue)
+                                  int? SortKey = int.MaxValue,
+                                  bool ShowInMailSpotList = false)
 {
     public decimal? PriceAdjustment { get; set; } = PriceAdjustment;
 }

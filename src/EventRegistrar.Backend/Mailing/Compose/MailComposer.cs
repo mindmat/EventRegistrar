@@ -387,7 +387,7 @@ public class MailComposer(
             result.AppendLine($"<td><strong>{package.Name}</strong></td>");
             result.AppendLine($"<td style=\"text-align: right;\">{package.Price}</td>");
 
-            if (package.OriginalPrice != package.Price && !package.IsReductionsPackage)
+            if (package.OriginalPrice > package.Price && !package.IsReductionsPackage)
             {
                 var text = GetReductionText(package.OriginalPrice, package.Price);
                 //result.AppendLine($"<td><img src=\"data:image/png;base64,{ImgReductionBinary}\" style=\"width: 20px;\" class=\"fr-fic fr-dib\" title=\"{text}\" alt=\"{text}\" /></td>");
@@ -402,12 +402,13 @@ public class MailComposer(
 
             // Package content
             foreach (var matchingPackageSpot in package.Spots
-                                                       .Where(spt => spt is { PriceAdjustment: null or 0m })
+                                                       .Where(spt => spt.ShowInMailSpotList)
                                                        .OrderBy(spt => spt.SortKey ?? int.MaxValue))
             {
                 result.AppendLine("<tr>");
                 result.AppendLine($"<td>- {matchingPackageSpot.Name}</td>");
-                result.AppendLine($"<td style=\"text-align: right;\">{matchingPackageSpot.PriceAdjustment?.ToString("F2")}</td>");
+                //result.AppendLine($"<td style=\"text-align: right;\">{matchingPackageSpot.PriceAdjustment?.ToString("F2")}</td>");
+                result.AppendLine("<td></td>");
                 result.AppendLine("<td></td>");
                 result.AppendLine("</tr>");
             }
