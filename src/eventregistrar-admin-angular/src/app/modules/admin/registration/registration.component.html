@@ -251,8 +251,8 @@
                             <div *ngIf="spot.partnerName" class="flex items-center mt-4">
                                 <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
                                 <span class="leading-none">
-                                    <a *ngIf="registration.partnerId" class="hover:underline" [routerLink]="navigator.getRegistrationUrl(spot.partnerRegistrationId)">{{ spot.partnerName }}</a>
-                                    <span *ngIf="!registration.partnerId" class="italic">{{ spot.partnerName }}</span>
+                                    <a *ngIf="spot.partnerRegistrationId" class="hover:underline" [routerLink]="navigator.getRegistrationUrl(spot.partnerRegistrationId)">{{ spot.partnerName }}</a>
+                                    <span *ngIf="!spot.partnerRegistrationId" class="italic">{{ spot.partnerName }}</span>
                                 </span>
                             </div>
                             <!-- <div class="text-md leading-none text-secondary mt-2">{{spot.firstPartnerJoined | date: 'dd.MM.yy HH:mm:ss'}}</div> -->
