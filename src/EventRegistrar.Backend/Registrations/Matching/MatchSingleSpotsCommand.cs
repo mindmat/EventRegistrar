@@ -83,10 +83,20 @@ public class MatchSingleSpotsCommandHandler(IRepository<Seat> spots,
             spotLeader.RegistrationId_Follower = registrationId_Follower;
             spotLeader.IsPartnerSpot = true;
         }
-        
+
         changeTrigger.QueryChanged<ParticipantsOfRegistrableQuery>(command.EventId, spotLeader.RegistrableId);
         changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId_Leader, command.EventId);
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registrationId_Follower, command.EventId);
+        changeTrigger.EnqueueCommand(new CheckIfRegistrationHasMultiplePartnersCommand
+                                     {
+                                         EventId = command.EventId,
+                                         RegistrationId = registrationId_Leader
+                                     });
+        changeTrigger.EnqueueCommand(new CheckIfRegistrationHasMultiplePartnersCommand
+                                     {
+                                         EventId = command.EventId,
+                                         RegistrationId = registrationId_Follower
+                                     });
     }
 }

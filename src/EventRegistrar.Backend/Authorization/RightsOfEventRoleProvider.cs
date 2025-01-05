@@ -188,6 +188,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SwitchRoleOfParticipantCommand);
             yield return nameof(FixMissingRoleCommand);
             yield return nameof(MatchSingleSpotsCommand);
+            yield return nameof(CheckIfRegistrationHasMultiplePartnersCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))
