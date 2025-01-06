@@ -143,28 +143,21 @@ public class MailComposer(
                 }
                 else if (placeholderKey is MailPlaceholder.DueAmount or MailPlaceholder.OverpaidAmount)
                 {
-                    decimal price;
-                    decimal paid;
+                    decimal difference;
                     if (parts.prefix == null)
                     {
                         // sum of both registrations
-                        price = registration.Price_AdmittedAndReduced;
-                        paid = await paidAmountSummarizer.GetPaidAmount(registration.Id);
-                        if (partnerRegistration != null)
-                        {
-                            price += partnerRegistration.Price_AdmittedAndReduced;
-                            paid += await paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id);
-                        }
+                        difference = await GetUnpaidAmount(registration, partnerRegistration);
                     }
                     else
                     {
                         // only for prefix
                         var reg = registrationForPrefix ?? registration;
-                        price = reg.Price_AdmittedAndReduced;
-                        paid = await paidAmountSummarizer.GetPaidAmount(reg.Id);
+                        var price = reg.Price_AdmittedAndReduced;
+                        var paid = await paidAmountSummarizer.GetPaidAmount(reg.Id);
+                        difference = price - paid;
                     }
 
-                    var difference = price - paid;
                     if (placeholderKey == MailPlaceholder.OverpaidAmount)
                     {
                         difference = -difference;
@@ -241,11 +234,15 @@ public class MailComposer(
 
     private async Task<decimal> GetUnpaidAmount(Registration registration, Registration? partnerRegistration)
     {
-        return registration.Price_AdmittedAndReduced
-             - await paidAmountSummarizer.GetPaidAmount(registration.Id)
-             + (partnerRegistration == null
-                    ? 0m
-                    : partnerRegistration.Price_AdmittedAndReduced - await paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id));
+        var price = registration.Price_AdmittedAndReduced;
+        var paid = await paidAmountSummarizer.GetPaidAmount(registration.Id);
+        if (partnerRegistration != null)
+        {
+            price += partnerRegistration.Price_AdmittedAndReduced;
+            paid += await paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id);
+        }
+        var difference = price - paid;
+        return difference;
     }
 
     private async Task<string?> GenerateQrCode(Registration registration)
