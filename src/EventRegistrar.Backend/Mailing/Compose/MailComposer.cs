@@ -143,10 +143,27 @@ public class MailComposer(
                 }
                 else if (placeholderKey is MailPlaceholder.DueAmount or MailPlaceholder.OverpaidAmount)
                 {
-                    var paid = await paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id);
-                    var price = parts.prefix == null
-                                    ? registration.Price_AdmittedAndReduced + (partnerRegistration?.Price_AdmittedAndReduced ?? 0m)
-                                    : (registrationForPrefix ?? registration).Price_AdmittedAndReduced;
+                    decimal price;
+                    decimal paid;
+                    if (parts.prefix == null)
+                    {
+                        // sum of both registrations
+                        price = registration.Price_AdmittedAndReduced;
+                        paid = await paidAmountSummarizer.GetPaidAmount(registration.Id);
+                        if (partnerRegistration != null)
+                        {
+                            price += partnerRegistration.Price_AdmittedAndReduced;
+                            paid += await paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id);
+                        }
+                    }
+                    else
+                    {
+                        // only for prefix
+                        var reg = registrationForPrefix ?? registration;
+                        price = reg.Price_AdmittedAndReduced;
+                        paid = await paidAmountSummarizer.GetPaidAmount(reg.Id);
+                    }
+
                     var difference = price - paid;
                     if (placeholderKey == MailPlaceholder.OverpaidAmount)
                     {
