@@ -86,10 +86,11 @@ public class ComposeAndSendBulkMailCommandHandler(IQueryable<BulkMailTemplate> t
                                                                                 cancellationToken)
                                       : null;
 
-        var content = await mailComposer.Compose(command.RegistrationId,
-                                                 template.ContentHtml,
-                                                 language,
-                                                 cancellationToken);
+        var composedMail = await mailComposer.Compose(command.RegistrationId,
+                                                      template.ContentHtml,
+                                                      language,
+                                                      template.AddIcs,
+                                                      cancellationToken);
 
         var mappings = new List<Registration> { registration };
         if (registration.RegistrationId_Partner != null
@@ -114,7 +115,8 @@ public class ComposeAndSendBulkMailCommandHandler(IQueryable<BulkMailTemplate> t
                        Recipients = mappings.Select(reg => reg.RespondentEmail?.ToLowerInvariant())
                                             .Distinct()
                                             .StringJoin(";"),
-                       ContentHtml = content,
+                       ContentHtml = composedMail.Content,
+                       Attachments = composedMail.Attachments,
                        Withhold = command.Withhold,
                        Created = dateTimeProvider.Now
                    };

@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure.DataAccess;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EventRegistrar.Backend.Migrations
 {
     [DbContext(typeof(EventRegistratorDbContext))]
-    partial class EventRegistratorDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250120003121_AddAddIcs")]
+    partial class AddAddIcs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1627,51 +1630,6 @@ namespace EventRegistrar.Backend.Migrations
                     b.ToTable("Sms");
                 });
 
-            modelBuilder.Entity("EventRegistrar.Backend.Registrables.Calendar.RegistrableIcs", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("AddToCalendar")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("ContentHtml")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("End")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Location")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<byte[]>("RowVersion")
-                        .IsConcurrencyToken()
-                        .IsRequired()
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("rowversion");
-
-                    b.Property<int>("Sequence")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Sequence"));
-
-                    b.Property<DateTime>("Start")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    SqlServerKeyBuilderExtensions.IsClustered(b.HasKey("Id"), false);
-
-                    b.HasIndex("Sequence")
-                        .IsUnique();
-
-                    SqlServerIndexBuilderExtensions.IsClustered(b.HasIndex("Sequence"));
-
-                    b.ToTable("RegistrablesIcs", (string)null);
-                });
-
             modelBuilder.Entity("EventRegistrar.Backend.Registrables.Pricing.PricePackage", b =>
                 {
                     b.Property<Guid>("Id")
@@ -3115,17 +3073,6 @@ namespace EventRegistrar.Backend.Migrations
                     b.Navigation("Registration");
                 });
 
-            modelBuilder.Entity("EventRegistrar.Backend.Registrables.Calendar.RegistrableIcs", b =>
-                {
-                    b.HasOne("EventRegistrar.Backend.Registrables.Registrable", "Registrable")
-                        .WithOne("Ics")
-                        .HasForeignKey("EventRegistrar.Backend.Registrables.Calendar.RegistrableIcs", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Registrable");
-                });
-
             modelBuilder.Entity("EventRegistrar.Backend.Registrables.Pricing.PricePackage", b =>
                 {
                     b.HasOne("EventRegistrar.Backend.Events.Event", "Event")
@@ -3453,8 +3400,6 @@ namespace EventRegistrar.Backend.Migrations
 
             modelBuilder.Entity("EventRegistrar.Backend.Registrables.Registrable", b =>
                 {
-                    b.Navigation("Ics");
-
                     b.Navigation("QuestionOptionMappings");
 
                     b.Navigation("Spots");

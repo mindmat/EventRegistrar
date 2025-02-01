@@ -19,6 +19,7 @@ public class Mail : Entity
 
     public ICollection<MailEvent>? Events { get; set; }
     public ICollection<MailToRegistration>? Registrations { get; set; }
+    public ICollection<MailAttachment>? Attachments { get; set; }
 
     public string? SenderMail { get; set; }
     public string? SenderName { get; set; }

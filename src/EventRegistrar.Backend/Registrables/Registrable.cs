@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Registrables.Calendar;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 using EventRegistrar.Backend.Spots;
 
@@ -34,6 +35,7 @@ public class Registrable : Entity
     public string? Tag { get; set; }
     public RegistrableType Type { get; set; }
     public WellDefinedRegistrable? WellDefined { get; set; }
+    public RegistrableIcs? Ics { get; set; }
 }
 
 public enum WellDefinedRegistrable

@@ -19,16 +19,18 @@ public class MailComposer(
     PaidAmountSummarizer paidAmountSummarizer,
     DuePaymentConfiguration duePaymentConfiguration,
     PriceCalculator priceCalculator,
-    BankAccountConfiguration bankAccountConfiguration)
+    BankAccountConfiguration bankAccountConfiguration,
+    IcsCreator icsCreator)
 {
     private const string DateFormat = "dd.MM.yy";
     private const string PrefixFollower = "FOLLOWER";
     private const string PrefixLeader = "LEADER";
 
-    public async Task<string> Compose(Guid registrationId,
-                                      string template,
-                                      string language,
-                                      CancellationToken cancellationToken)
+    public async Task<ComposedMail> Compose(Guid registrationId,
+                                            string template,
+                                            string language,
+                                            bool addIcs,
+                                            CancellationToken cancellationToken)
     {
         var cultureInfoBefore = CultureInfo.CurrentUICulture;
         CultureInfo.CurrentUICulture = new CultureInfo(language);
@@ -228,8 +230,33 @@ public class MailComposer(
         }
 
         var content = templateFiller.Fill();
+        var attachments = new List<MailAttachment>();
+        if (addIcs)
+        {
+            var calendarName = $"{registration.Event!.Name} - {registration.RespondentFirstName} {registration.RespondentLastName}";
+            var ics = await icsCreator.Create(registrationId,
+                                              calendarName, 
+                                              cancellationToken);
+            if (ics != null)
+            {
+                attachments.Add(ics);
+            }
+
+            if (partnerRegistration != null)
+            {
+                calendarName = $"{registration.Event!.Name} - {partnerRegistration.RespondentFirstName} {partnerRegistration.RespondentLastName}";
+                var icsPartner = await icsCreator.Create(partnerRegistration.Id, 
+                                                         calendarName, 
+                                                         cancellationToken);
+                if (icsPartner != null)
+                {
+                    attachments.Add(icsPartner);
+                }
+            }
+        }
+
         CultureInfo.CurrentUICulture = cultureInfoBefore;
-        return content;
+        return new ComposedMail(content, attachments);
     }
 
     private async Task<decimal> GetUnpaidAmount(Registration registration, Registration? partnerRegistration)
@@ -434,3 +461,5 @@ public class MailComposer(
         return string.Format(Resources.ReductionText, originalPrice, reducedPrice);
     }
 }
+
+public record ComposedMail(string Content, List<MailAttachment>? Attachments = null);

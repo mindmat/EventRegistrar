@@ -118,6 +118,8 @@ import { MailConfigComponent } from './modules/admin/event-settings/mail-config/
 import { AccountConfigComponent } from './modules/admin/event-settings/account-config/account-config.component';
 import { FixRawProcessingComponent } from './modules/admin/registration/fix-raw-processing/fix-raw-processing.component';
 import { MatchSingleSpotsComponent } from './modules/admin/registration/match-single-spots/match-single-spots.component';
+import { RegistrableIcsComponent } from './modules/admin/registrables/registrable-ics/registrable-ics.component';
+import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -178,7 +180,8 @@ const routerConfig: ExtraOptions = {
         MailConfigComponent,
         AccountConfigComponent,
         FixRawProcessingComponent,
-        MatchSingleSpotsComponent
+        MatchSingleSpotsComponent,
+        RegistrableIcsComponent
     ],
     providers: [
         AuthServiceFuse,
@@ -241,6 +244,10 @@ const routerConfig: ExtraOptions = {
         MatOptionModule,
         MatDatepickerModule,
         MatExpansionModule,
+
+        NgxMatDatetimePickerModule,
+        NgxMatTimepickerModule,
+        NgxMatNativeDateModule,
 
         FroalaEditorModule.forRoot(),
         FroalaViewModule.forRoot(),

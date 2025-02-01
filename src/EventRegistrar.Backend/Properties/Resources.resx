@@ -256,6 +256,9 @@
   <data name="ChangeName" xml:space="preserve">
     <value>Name ändern</value>
   </data>
+  <data name="ChangeRegistrableIcs" xml:space="preserve">
+    <value>Kalender bearbeiten</value>
+  </data>
   <data name="ChangeSpots" xml:space="preserve">
     <value>Plätze ändern</value>
   </data>
@@ -540,6 +543,27 @@
   </data>
   <data name="Iban" xml:space="preserve">
     <value>IBAN</value>
+  </data>
+  <data name="IcsAdd" xml:space="preserve">
+    <value>Zu .ics hinzufügen</value>
+  </data>
+  <data name="IcsChange" xml:space="preserve">
+    <value>.ics ändern</value>
+  </data>
+  <data name="IcsContent" xml:space="preserve">
+    <value>Inhalt</value>
+  </data>
+  <data name="IcsContentSecondary" xml:space="preserve">
+    <value>Inhalt des Termins, z.B. Karte mit Anfahrt</value>
+  </data>
+  <data name="IcsEnd" xml:space="preserve">
+    <value>Ende</value>
+  </data>
+  <data name="IcsLocation" xml:space="preserve">
+    <value>Ort</value>
+  </data>
+  <data name="IcsStart" xml:space="preserve">
+    <value>Beginn</value>
   </data>
   <data name="Ignore" xml:space="preserve">
     <value>Ignorieren</value>

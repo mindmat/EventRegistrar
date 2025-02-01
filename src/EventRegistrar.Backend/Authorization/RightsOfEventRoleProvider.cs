@@ -28,6 +28,7 @@ using EventRegistrar.Backend.Payments.Statements;
 using EventRegistrar.Backend.Payments.Unassigned;
 using EventRegistrar.Backend.PhoneMessages;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrables.Calendar;
 using EventRegistrar.Backend.Registrables.Participants;
 using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.Registrables.Tags;
@@ -128,6 +129,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(ProcessingErrorsQuery);
             yield return nameof(SpotMatchCandidatesQuery);
             yield return nameof(RegistrationsPerDayQuery);
+            yield return nameof(RegistrableIcsQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
@@ -189,6 +191,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(FixMissingRoleCommand);
             yield return nameof(MatchSingleSpotsCommand);
             yield return nameof(CheckIfRegistrationHasMultiplePartnersCommand);
+            yield return nameof(SaveRegistrableIcsCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

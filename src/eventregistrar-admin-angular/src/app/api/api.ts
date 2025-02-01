@@ -1468,6 +1468,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    checkIfRegistrationHasMultiplePartners_Command(checkIfRegistrationHasMultiplePartnersCommand: CheckIfRegistrationHasMultiplePartnersCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/CheckIfRegistrationHasMultiplePartnersCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(checkIfRegistrationHasMultiplePartnersCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCheckIfRegistrationHasMultiplePartners_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCheckIfRegistrationHasMultiplePartners_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processCheckIfRegistrationHasMultiplePartners_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     checkIn_Query(checkInQuery: CheckInQuery | undefined): Observable<CheckInView> {
         let url_ = this.baseUrl + "/api/CheckInQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -5100,6 +5148,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    registrableIcs_Query(registrableIcsQuery: RegistrableIcsQuery | undefined): Observable<RegistrableIcsItem> {
+        let url_ = this.baseUrl + "/api/RegistrableIcsQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(registrableIcsQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRegistrableIcs_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRegistrableIcs_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<RegistrableIcsItem>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<RegistrableIcsItem>;
+        }));
+    }
+
+    protected processRegistrableIcs_Query(response: HttpResponseBase): Observable<RegistrableIcsItem> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as RegistrableIcsItem;
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     registrablesOverview_Query(registrablesOverviewQuery: RegistrablesOverviewQuery | undefined): Observable<RegistrablesOverview> {
         let url_ = this.baseUrl + "/api/RegistrablesOverviewQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -6414,6 +6513,54 @@ export class Api {
     }
 
     protected processSaveRegistrable_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    saveRegistrableIcs_Command(saveRegistrableIcsCommand: SaveRegistrableIcsCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/SaveRegistrableIcsCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(saveRegistrableIcsCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processSaveRegistrableIcs_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processSaveRegistrableIcs_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processSaveRegistrableIcs_Command(response: HttpResponseBase): Observable<void> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -8695,6 +8842,11 @@ export interface CheckIfPayoutIsConfirmedCommand {
     payoutRequestId?: string;
 }
 
+export interface CheckIfRegistrationHasMultiplePartnersCommand {
+    eventId?: string;
+    registrationId?: string;
+}
+
 export interface CheckInView {
     dynamicHeaders?: string[];
     items?: CheckInViewItem[];
@@ -9213,6 +9365,18 @@ export interface MailsOfRegistrationQuery {
 export interface MailTemplatePreview {
     subject?: string | null;
     contentHtml?: string | null;
+    attachments?: MailAttachment[] | null;
+}
+
+export interface Entity {
+    id?: string;
+    rowVersion?: string;
+}
+
+export interface MailAttachment extends Entity {
+    content?: string;
+    name?: string;
+    contentType?: string | null;
 }
 
 export interface MailTemplatePreviewQuery {
@@ -9507,7 +9671,7 @@ export interface BalanceDto {
     accountIban?: string | null;
     balance?: number | null;
     currency?: string | null;
-    date?: Date | null;
+    date?: Date;
 }
 
 export interface OpenSpotsPotential {
@@ -9838,6 +10002,20 @@ export interface RefundDifferenceCommand {
     registrationId?: string;
     eventId?: string;
     reason?: string | null;
+}
+
+export interface RegistrableIcsItem {
+    registrableId?: string;
+    addToCalendar?: boolean;
+    location?: string | null;
+    start?: Date;
+    end?: Date;
+    contentHtml?: string | null;
+}
+
+export interface RegistrableIcsQuery {
+    eventId?: string;
+    registrableId?: string;
 }
 
 export interface RegistrablesOverview {
@@ -10220,6 +10398,11 @@ export interface SaveRegistrableCommand {
     checkinListColumn?: string | null;
 }
 
+export interface SaveRegistrableIcsCommand {
+    eventId?: string;
+    registrableIcsItem?: RegistrableIcsItem | null;
+}
+
 export interface SaveRegistrationFormMappingsCommand {
     eventId?: string;
     formId?: string;
@@ -10440,6 +10623,7 @@ export interface UnassignPaymentCommand {
 export interface UnbindPartnerRegistrationCommand {
     eventId?: string;
     registrationId?: string;
+    leavePartnerSpots?: boolean;
 }
 
 export interface UnprocessedRawRegistrationsInfo {

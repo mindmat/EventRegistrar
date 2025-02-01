@@ -1,0 +1,34 @@
+﻿namespace EventRegistrar.Backend.Registrables.Calendar;
+
+public record RegistrableIcsItem(Guid RegistrableId,
+                                 bool AddToCalendar,
+                                 string? Location,
+                                 DateTime Start,
+                                 DateTime End,
+                                 string? ContentHtml);
+
+public class RegistrableIcsQuery : IEventBoundRequest, IRequest<RegistrableIcsItem?>
+{
+    public Guid EventId { get; set; }
+    public Guid RegistrableId { get; set; }
+}
+
+public class RegistrableIcsQueryHandler(IQueryable<RegistrableIcs> registrablesIcs) : IRequestHandler<RegistrableIcsQuery, RegistrableIcsItem?>
+{
+    public async Task<RegistrableIcsItem?> Handle(RegistrableIcsQuery query,
+                                                  CancellationToken cancellationToken)
+    {
+        return await registrablesIcs.Where(rbl => rbl.Registrable!.EventId == query.EventId
+                                               && rbl.Id == query.RegistrableId)
+                                    .Select(rbl => new RegistrableIcsItem
+                                            (
+                                                rbl.Id,
+                                                rbl.AddToCalendar,
+                                                rbl.Location,
+                                                rbl.Start,
+                                                rbl.End,
+                                                rbl.ContentHtml
+                                            ))
+                                    .FirstOrDefaultAsync(cancellationToken);
+    }
+}

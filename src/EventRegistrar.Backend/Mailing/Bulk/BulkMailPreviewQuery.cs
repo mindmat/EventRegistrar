@@ -28,10 +28,11 @@ public class BulkMailPreviewQueryHandler(IQueryable<BulkMailTemplate> mailTempla
 
         var content = query.RegistrationId == null
                           ? template.ContentHtml
-                          : await mailComposer.Compose(query.RegistrationId.Value,
+                          : (await mailComposer.Compose(query.RegistrationId.Value,
                                                        template.ContentHtml ?? string.Empty,
                                                        template.Language,
-                                                       cancellationToken);
+                                                       template.AddIcs,
+                                                       cancellationToken)).Content;
         return new BulkMailPreview
                {
                    Subject = template.Subject,

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Security;
 
+using Azure.Core;
 using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 
@@ -52,8 +54,10 @@ public class SecretReader
     {
         var keyVaultUri = configuration.GetValue<string>(_keyVaultConfigKey)
                        ?? throw new ConfigurationException(_keyVaultConfigKey);
-
-        var client = new SecretClient(new Uri(keyVaultUri), new DefaultAzureCredential());
+        TokenCredential credentials = Debugger.IsAttached
+                              ? new InteractiveBrowserCredential()
+                              : new DefaultAzureCredential();
+        var client = new SecretClient(new Uri(keyVaultUri), credentials);
 
         try
         {

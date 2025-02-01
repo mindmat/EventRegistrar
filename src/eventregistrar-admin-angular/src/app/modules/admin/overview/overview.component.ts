@@ -16,6 +16,7 @@ import { NavigatorService } from '../navigator.service';
 import { PricePackagesOverviewService } from './price-packages-overview.service';
 import { EventService } from '../events/event.service';
 import { RegistrationsPerDayService } from './registrations-per-day.service';
+import { RegistrableIcsComponent } from '../registrables/registrable-ics/registrable-ics.component';
 
 @Component({
     selector: 'app-overview',
@@ -200,6 +201,14 @@ export class OverviewComponent implements OnInit, OnDestroy
         this.matDialog.open(RegistrableDetailComponent, {
             autoFocus: true,
             data: { singleRegistrable, doubleRegistrable: null }
+        });
+    }
+
+    changeRegistrableIcs(registrableId: string, name: string)
+    {
+        this.matDialog.open(RegistrableIcsComponent, {
+            autoFocus: true,
+            data: { registrableId, name }
         });
     }
 

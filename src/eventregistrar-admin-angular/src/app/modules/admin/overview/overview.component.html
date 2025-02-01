@@ -170,6 +170,12 @@
                                                     <span>{{ 'EditRegistrable' | translate }}</span>
                                                 </span>
                                             </button>
+                                            <button mat-menu-item (click)="changeRegistrableIcs(doubleRegistrable.id, doubleRegistrable.name)">
+                                                <span class="flex items-center">
+                                                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                                                    <span>{{ 'ChangeRegistrableIcs' | translate }}</span>
+                                                </span>
+                                            </button>
                                             <button mat-menu-item (click)="deleteRegistrable(doubleRegistrable.id)">
                                                 <span class="flex items-center">
                                                     <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
@@ -334,6 +340,12 @@
                                                 <span class="flex items-center">
                                                     <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
                                                     <span>{{ 'EditRegistrable' | translate }}</span>
+                                                </span>
+                                            </button>
+                                            <button mat-menu-item (click)="changeRegistrableIcs(singleRegistrable.id, singleRegistrable.name)">
+                                                <span class="flex items-center">
+                                                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                                                    <span>{{ 'ChangeRegistrableIcs' | translate }}</span>
                                                 </span>
                                             </button>
                                             <button mat-menu-item (click)="deleteRegistrable(singleRegistrable.id)">

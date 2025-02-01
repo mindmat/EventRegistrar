@@ -1,0 +1,90 @@
+<div class="flex flex-col flex-auto md:w-160 md:min-w-160 max-h-3/4 -m-6 overflow-y-auto" *ngIf="registrableForm">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">{{ 'IcsChange' | translate }}</div>
+        <button mat-icon-button (click)="matDialogRef.close()" [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="registrableForm" (ngSubmit)="onSubmit()" class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto">
+
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Add to calendar -->
+            <div class="col-span-3 items-center flex flex-row">
+                <div class="cursor-pointer" (click)="addToCalendar.toggle()">
+                    <div class="leading-6 font-medium">{{ 'IcsAdd' | translate }}</div>
+                    <!-- <div class="text-md text-secondary">{{ 'HasWaitingListSecondary' | translate }}</div> -->
+                </div>
+                <mat-slide-toggle class="ml-auto" [color]="'primary'" [formControlName]="'addToCalendar'" #addToCalendar>
+                </mat-slide-toggle>
+            </div>
+
+            <!-- Location -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'IcsLocation' | translate }}</mat-label>
+                    <input [formControlName]="'location'" matInput>
+                </mat-form-field>
+            </div>
+
+            <!-- Start -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'IcsStart' | translate }}</mat-label>
+
+                    <input matInput [ngxMatDatetimePicker]="pickerStart" placeholder="Choose a date" [formControlName]="'start'">
+                    <ngx-mat-datepicker-toggle matSuffix [for]="pickerStart"></ngx-mat-datepicker-toggle>
+                    <ngx-mat-datetime-picker #pickerStart [showSeconds]="false" [stepHour]="1" [stepMinute]="15" [disableMinute]="false">
+                    </ngx-mat-datetime-picker>
+
+                    <!-- <input matInput [matDatepicker]="calendarStartPicker" [formControlName]="'start'">
+                        <mat-datepicker-toggle matSuffix [for]="calendarStartPicker"></mat-datepicker-toggle>
+                        <mat-datepicker #calendarStartPicker></mat-datepicker> -->
+                </mat-form-field>
+            </div>
+
+            <!-- <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'Time' | translate }}</mat-label>
+                    <input [formControlName]="'startTime'" matInput>
+                </mat-form-field>
+            </div> -->
+
+            <!-- End -->
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'IcsEnd' | translate }}</mat-label>
+
+                    <input matInput [ngxMatDatetimePicker]="pickerEnd" placeholder="Choose a date" [formControlName]="'end'">
+                    <ngx-mat-datepicker-toggle matSuffix [for]="pickerEnd"></ngx-mat-datepicker-toggle>
+                    <ngx-mat-datetime-picker #pickerEnd [showSeconds]="false" [stepHour]="1" [stepMinute]="15">
+                    </ngx-mat-datetime-picker>
+                </mat-form-field>
+            </div>
+            <!-- 
+            <div class="sm:col-span-2">
+                <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'Time' | translate }}</mat-label>
+                    <input [formControlName]="'endTime'" matInput>
+                </mat-form-field>
+            </div> -->
+
+            <div class="sm:col-span-4">
+                <mat-label>{{ 'IcsContent' | translate }}</mat-label>
+                <div class="text-md text-secondary">{{ 'IcsContentSecondary' | translate }}</div>
+
+                <div class="mt-2" [froalaEditor]="options" #editor [formControlName]="'contentHtml'"></div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button mat-stroked-button type="button" [matDialogClose]="'cancelled'"> {{ 'Cancel' | translate }} </button>
+            <button class="ml-4" mat-flat-button type="submit" [color]="'primary'" [matDialogClose]="'confirmed'">{{ 'Save' | translate }} </button>
+        </div>
+    </form>
+
+</div>

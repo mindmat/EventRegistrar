@@ -1,6 +1,6 @@
 ﻿CLI:
-dotnet ef migrations add {name}
+dotnet ef migrations add {name} --context EventRegistratorDbContext
 dotnet ef migrations remove -f
 
 dotnet ef database update
-dotnet ef database update --connection
+dotnet ef database update --context EventRegistratorDbContext --connection

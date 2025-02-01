@@ -91,7 +91,11 @@ public class ComposeAndSendAutoMailCommandHandler(
                                                                                 cancellationToken)
                                       : null;
 
-        var content = await mailComposer.Compose(command.RegistrationId, template.ContentHtml, language, cancellationToken);
+        var composedMail = await mailComposer.Compose(command.RegistrationId,
+                                                      template.ContentHtml,
+                                                      language,
+                                                      template.AddIcs,
+                                                      cancellationToken);
 
         var registrations_Recipients = new List<Registration> { registration };
         if (registration.RegistrationId_Partner != null
@@ -119,7 +123,8 @@ public class ComposeAndSendAutoMailCommandHandler(
                                                             .StringJoinNullable(";"),
                        Withhold = withhold,
                        Created = dateTimeProvider.Now,
-                       ContentHtml = content
+                       ContentHtml = composedMail.Content,
+                       Attachments = composedMail.Attachments
                    };
 
         mails.InsertObjectTree(mail);

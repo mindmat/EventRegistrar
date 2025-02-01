@@ -475,6 +475,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kalender bearbeiten.
+        /// </summary>
+        internal static string ChangeRegistrableIcs {
+            get {
+                return ResourceManager.GetString("ChangeRegistrableIcs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Plätze ändern.
         /// </summary>
         internal static string ChangeSpots {
@@ -1342,6 +1351,69 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Iban {
             get {
                 return ResourceManager.GetString("Iban", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zu .ics hinzufügen.
+        /// </summary>
+        internal static string IcsAdd {
+            get {
+                return ResourceManager.GetString("IcsAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .ics ändern.
+        /// </summary>
+        internal static string IcsChange {
+            get {
+                return ResourceManager.GetString("IcsChange", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inhalt.
+        /// </summary>
+        internal static string IcsContent {
+            get {
+                return ResourceManager.GetString("IcsContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Inhalt des Termins, z.B. Karte mit Anfahrt.
+        /// </summary>
+        internal static string IcsContentSecondary {
+            get {
+                return ResourceManager.GetString("IcsContentSecondary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ende.
+        /// </summary>
+        internal static string IcsEnd {
+            get {
+                return ResourceManager.GetString("IcsEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ort.
+        /// </summary>
+        internal static string IcsLocation {
+            get {
+                return ResourceManager.GetString("IcsLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Beginn.
+        /// </summary>
+        internal static string IcsStart {
+            get {
+                return ResourceManager.GetString("IcsStart", resourceCulture);
             }
         }
         

@@ -21,6 +21,7 @@ public class BulkMailTemplate : Entity
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
     public bool Discarded { get; set; }
+    public bool AddIcs { get; set; }
 
     public ICollection<Mail>? Mails { get; set; }
 }

@@ -878,6 +878,31 @@
         }
       }
     },
+    "/api/CheckIfRegistrationHasMultiplePartnersCommand": {
+      "post": {
+        "tags": [
+          "CheckIfRegistrationHasMultiplePartners"
+        ],
+        "operationId": "CheckIfRegistrationHasMultiplePartners_Command",
+        "requestBody": {
+          "x-name": "CheckIfRegistrationHasMultiplePartnersCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckIfRegistrationHasMultiplePartnersCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/CheckInQuery": {
       "post": {
         "tags": [
@@ -3058,6 +3083,38 @@
         }
       }
     },
+    "/api/RegistrableIcsQuery": {
+      "post": {
+        "tags": [
+          "RegistrableIcs"
+        ],
+        "operationId": "RegistrableIcs_Query",
+        "requestBody": {
+          "x-name": "RegistrableIcsQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrableIcsQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrableIcsItem"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/RegistrablesOverviewQuery": {
       "post": {
         "tags": [
@@ -3833,6 +3890,31 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SaveRegistrableCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/SaveRegistrableIcsCommand": {
+      "post": {
+        "tags": [
+          "SaveRegistrableIcs"
+        ],
+        "operationId": "SaveRegistrableIcs_Command",
+        "requestBody": {
+          "x-name": "SaveRegistrableIcsCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveRegistrableIcsCommand"
               }
             }
           },
@@ -6093,6 +6175,20 @@
           }
         }
       },
+      "CheckIfRegistrationHasMultiplePartnersCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "CheckInView": {
         "type": "object",
         "additionalProperties": false,
@@ -7650,6 +7746,52 @@
           "contentHtml": {
             "type": "string",
             "nullable": true
+          },
+          "attachments": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/MailAttachment"
+            }
+          }
+        }
+      },
+      "MailAttachment": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Entity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "content": {
+                "type": "string",
+                "format": "byte"
+              },
+              "name": {
+                "type": "string"
+              },
+              "contentType": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "Entity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "rowVersion": {
+            "type": "string",
+            "format": "byte"
           }
         }
       },
@@ -8619,8 +8761,7 @@
           },
           "date": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           }
         }
       },
@@ -9642,6 +9783,49 @@
           "reason": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "RegistrableIcsItem": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "registrableId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "addToCalendar": {
+            "type": "boolean"
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "contentHtml": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RegistrableIcsQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrableId": {
+            "type": "string",
+            "format": "guid"
           }
         }
       },
@@ -10875,6 +11059,24 @@
           }
         }
       },
+      "SaveRegistrableIcsCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrableIcsItem": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/RegistrableIcsItem"
+              }
+            ]
+          }
+        }
+      },
       "SaveRegistrationFormMappingsCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -11549,6 +11751,9 @@
           "registrationId": {
             "type": "string",
             "format": "guid"
+          },
+          "leavePartnerSpots": {
+            "type": "boolean"
           }
         }
       },

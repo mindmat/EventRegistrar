@@ -14,6 +14,7 @@ public class MailTemplatePreview
 {
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
+    public IEnumerable<MailAttachment>? Attachments { get; set; }
 }
 
 public class AutoMailPreviewQueryHandler(IQueryable<AutoMailTemplate> autoAutoMailTemplates,
@@ -26,6 +27,7 @@ public class AutoMailPreviewQueryHandler(IQueryable<AutoMailTemplate> autoAutoMa
         string? subject;
         string? contentHtml;
         string? language;
+        var  addIcs = false;
         var template = await autoAutoMailTemplates.Where(mtp => mtp.EventId == query.EventId
                                                              && mtp.Id == query.MailTemplateId)
                                                   .FirstOrDefaultAsync(cancellationToken);
@@ -34,6 +36,7 @@ public class AutoMailPreviewQueryHandler(IQueryable<AutoMailTemplate> autoAutoMa
             subject = template.Subject;
             contentHtml = template.ContentHtml;
             language = template.Language;
+            addIcs = template.AddIcs;
         }
         else
         {
@@ -43,19 +46,28 @@ public class AutoMailPreviewQueryHandler(IQueryable<AutoMailTemplate> autoAutoMa
             subject = bulkTemplate.Subject;
             contentHtml = bulkTemplate.ContentHtml;
             language = bulkTemplate.Language;
+            addIcs = bulkTemplate.AddIcs;
         }
 
 
-        var content = query.RegistrationId == null
-                          ? contentHtml
-                          : await mailComposer.Compose(query.RegistrationId.Value,
-                                                       contentHtml ?? string.Empty,
-                                                       language,
-                                                       cancellationToken);
+        if (query.RegistrationId != null)
+        {
+            var composedMail = await mailComposer.Compose(query.RegistrationId.Value,
+                                                          contentHtml ?? string.Empty,
+                                                          language,
+                                                          addIcs,
+                                                          cancellationToken);
+            return new MailTemplatePreview
+                   {
+                       Subject = subject,
+                       ContentHtml = composedMail.Content,
+                       Attachments = composedMail.Attachments
+                   };
+        }
         return new MailTemplatePreview
                {
                    Subject = subject,
-                   ContentHtml = content
-               };
+                   ContentHtml = contentHtml
+};
     }
 }

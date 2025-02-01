@@ -130,10 +130,11 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
                                   Registration registration,
                                   CancellationToken cancellationToken)
     {
-        var content = await mailComposer.Compose(registration.Id,
-                                                 mailTemplate.ContentHtml,
-                                                 mailTemplate.Language,
-                                                 cancellationToken);
+        var composedMail = await mailComposer.Compose(registration.Id,
+                                                      mailTemplate.ContentHtml,
+                                                      mailTemplate.Language,
+                                                      mailTemplate.AddIcs,
+                                                      cancellationToken);
         var mail = new Mail
                    {
                        Id = Guid.NewGuid(),
@@ -144,8 +145,9 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
                        Subject = mailTemplate.Subject,
                        Withhold = true,
                        BulkMailKey = mailTemplate.BulkMailKey,
-                       ContentHtml = content,
-                       EventId = mailTemplate.EventId
+                       ContentHtml = composedMail.Content,
+                       EventId = mailTemplate.EventId,
+                       Attachments = composedMail.Attachments
                        //MailTemplateId = mailTemplate.Id //ToDo
                    };
         mails.InsertObjectTree(mail);

@@ -40,6 +40,7 @@ public class SendMailCommandHandler(ILogger logger,
         var mail = await mails.AsTracking()
                               .Include(mail => mail.Registrations!)
                               .ThenInclude(map => map.Registration)
+                              .Include(mail => mail.Attachments)
                               .FirstAsync(mil => mil.Id == command.MailId, cancellationToken);
 
         var recipients = mail.Registrations!
@@ -141,9 +142,11 @@ public class SendMailCommandHandler(ILogger logger,
                               Subject = mail.Subject,
                               TextBody = mail.ContentPlainText,
                               HtmlBody = mail.ContentHtml,
-                              Headers = new HeaderCollection { new(nameof(SendGridEvent.MailId), mail.Id.ToString()) }
+                              Headers = [new MailHeader(nameof(SendGridEvent.MailId), mail.Id.ToString())],
+                              Attachments = mail.Attachments
+                                                !.Select(att => new PostmarkMessageAttachment(att.Content, att.Name, att.ContentType))
+                                                .ToList()
                           };
-
             var client = new PostmarkClient(postmarkToken);
             var sendResult = await client.SendMessageAsync(message);
             if (sendResult.Status != PostmarkStatus.Success)
