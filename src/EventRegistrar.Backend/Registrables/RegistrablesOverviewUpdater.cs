@@ -39,83 +39,84 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                               .ToDictionaryAsync(tag => tag.Tag,
                                                  tag => tag.SortKey,
                                                  cancellationToken);
-        var readModel =  new RegistrablesOverview
-               {
-                   SingleRegistrables = registrables.Where(rbl => rbl.MaximumDoubleSeats == null)
-                                                    .OrderBy(rbl => rbl.Tag != null && tags.TryGetValue(rbl.Tag, out var sortKey) ? sortKey : int.MaxValue)
-                                                    .ThenBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
-                                                    .Select(rbl => new SingleRegistrableDisplayItem
-                                                                   {
-                                                                       Id = rbl.Id,
-                                                                       Name = rbl.Name,
-                                                                       NameSecondary = rbl.NameSecondary,
-                                                                       Tag = rbl.Tag,
-                                                                       SpotsAvailable = rbl.MaximumSingleSeats,
-                                                                       HasWaitingList = rbl.HasWaitingList,
-                                                                       AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,
-                                                                       IsCore = rbl.IsCore,
-                                                                       CheckinListColumn = rbl.CheckinListColumn,
-                                                                       Accepted = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: false }
-                                                                                                       && !registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty)),
-                                                                       OnWaitingList = rbl.Spots!.Count(spt => !spt.IsCancelled
-                                                                                                            && (spt.IsWaitingList
-                                                                                                             || registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty))),
-                                                                       IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
-                                                                                  && userCanDeleteRegistrable
-                                                                                  && rbl.Event!.State == RegistrationForms.EventState.Setup,
-                                                                       Class = rbl.Spots!.Where(spt => !spt.IsWaitingList
-                                                                                                    && spt.Registration?.IsOnWaitingList != true)
-                                                                                  .Select(GetSpotState)
-                                                                                  .FillUpIf(rbl.MaximumSingleSeats, () => SpotState.Available)
-                                                                                  .ToList(),
-                                                                       WaitingList = rbl.Spots!.Where(spt => spt.IsWaitingList
-                                                                                                          || spt.Registration?.IsOnWaitingList == true)
-                                                                                        .Select(GetSpotState)
-                                                                                        .ToList()
-                                                                   }),
-                   DoubleRegistrables = registrables.Where(rbl => rbl.MaximumDoubleSeats != null)
-                                                    .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
-                                                    .Select(rbl => new DoubleRegistrableDisplayItem
-                                                                   {
-                                                                       Id = rbl.Id,
-                                                                       Name = rbl.Name,
-                                                                       NameSecondary = rbl.NameSecondary,
-                                                                       Tag = rbl.Tag,
-                                                                       SpotsAvailable = rbl.MaximumDoubleSeats,
-                                                                       HasWaitingList = rbl.HasWaitingList,
-                                                                       AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,
-                                                                       MaximumAllowedImbalance = rbl.MaximumAllowedImbalance,
-                                                                       IsCore = rbl.IsCore,
-                                                                       CheckinListColumn = rbl.CheckinListColumn,
-                                                                       LeadersAccepted = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: false, RegistrationId: not null }),
-                                                                       FollowersAccepted = rbl.Spots!.Count(
-                                                                           spt => spt is { IsCancelled: false, IsWaitingList: false, RegistrationId_Follower: not null }),
-                                                                       LeadersOnWaitingList = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: true }
-                                                                                                                   && spt.IsSingleLeaderSpot()),
-                                                                       FollowersOnWaitingList = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: true }
-                                                                                                                     && spt.IsSingleFollowerSpot()),
-                                                                       CouplesOnWaitingList = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: true }
-                                                                                                                   && (spt.IsUnmatchedPartnerSpot() || spt.IsMatchedPartnerSpot())),
-                                                                       IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
-                                                                                  && userCanDeleteRegistrable
-                                                                                  && rbl.Event!.State == RegistrationForms.EventState.Setup,
-                                                                       Class = rbl.Spots!.Where(spt => !spt.IsWaitingList
-                                                                                                    && spt.Registration?.IsOnWaitingList != true
-                                                                                                    && spt.Registration_Follower?.IsOnWaitingList != true)
-                                                                                  .OrderBy(spt => spt.FirstPartnerJoined)
-                                                                                  .Select(GetDoubleSpotState)
-                                                                                  .FillUpIf(rbl.MaximumDoubleSeats,
-                                                                                            () => new DoubleSpotState { Leader = SpotState.Available, Follower = SpotState.Available })
-                                                                                  .ToList(),
-                                                                       WaitingList = rbl.Spots!.Where(spt => spt.IsWaitingList
-                                                                                                          || spt.Registration?.IsOnWaitingList == true
-                                                                                                          || spt.Registration_Follower?.IsOnWaitingList == true)
-                                                                                        .OrderBy(spt => spt.FirstPartnerJoined)
-                                                                                        .Select(GetDoubleSpotState)
-                                                                                        .ToList()
-                                                                   })
-                                                    .ToList()
-               };
+        var readModel = new RegistrablesOverview
+                        {
+                            SingleRegistrables = registrables.Where(rbl => rbl.MaximumDoubleSeats == null)
+                                                             .OrderBy(rbl => rbl.Tag != null && tags.TryGetValue(rbl.Tag, out var sortKey) ? sortKey : int.MaxValue)
+                                                             .ThenBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
+                                                             .Select(rbl => new SingleRegistrableDisplayItem
+                                                                            {
+                                                                                Id = rbl.Id,
+                                                                                Name = rbl.Name,
+                                                                                NameSecondary = rbl.NameSecondary,
+                                                                                Tag = rbl.Tag,
+                                                                                SpotsAvailable = rbl.MaximumSingleSeats,
+                                                                                HasWaitingList = rbl.HasWaitingList,
+                                                                                AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,
+                                                                                IsCore = rbl.IsCore,
+                                                                                CheckinListColumn = rbl.CheckinListColumn,
+                                                                                Accepted = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: false }
+                                                                                                                && !registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty)),
+                                                                                OnWaitingList = rbl.Spots!.Count(spt => !spt.IsCancelled
+                                                                                                                     && (spt.IsWaitingList
+                                                                                                                      || registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty))),
+                                                                                IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
+                                                                                           && userCanDeleteRegistrable
+                                                                                           && rbl.Event!.State == RegistrationForms.EventState.Setup,
+                                                                                HasIcs = rbl.Ics?.AddToCalendar == true,
+                                                                                Class = rbl.Spots!.Where(spt => !spt.IsWaitingList
+                                                                                                             && spt.Registration?.IsOnWaitingList != true)
+                                                                                           .Select(GetSpotState)
+                                                                                           .FillUpIf(rbl.MaximumSingleSeats, () => SpotState.Available)
+                                                                                           .ToList(),
+                                                                                WaitingList = rbl.Spots!.Where(spt => spt.IsWaitingList
+                                                                                                                   || spt.Registration?.IsOnWaitingList == true)
+                                                                                                 .Select(GetSpotState)
+                                                                                                 .ToList()
+                                                                            }),
+                            DoubleRegistrables = registrables.Where(rbl => rbl.MaximumDoubleSeats != null)
+                                                             .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
+                                                             .Select(rbl => new DoubleRegistrableDisplayItem
+                                                                            {
+                                                                                Id = rbl.Id,
+                                                                                Name = rbl.Name,
+                                                                                NameSecondary = rbl.NameSecondary,
+                                                                                Tag = rbl.Tag,
+                                                                                SpotsAvailable = rbl.MaximumDoubleSeats,
+                                                                                HasWaitingList = rbl.HasWaitingList,
+                                                                                AutomaticPromotionFromWaitingList = rbl.AutomaticPromotionFromWaitingList,
+                                                                                MaximumAllowedImbalance = rbl.MaximumAllowedImbalance,
+                                                                                IsCore = rbl.IsCore,
+                                                                                CheckinListColumn = rbl.CheckinListColumn,
+                                                                                LeadersAccepted = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: false, RegistrationId: not null }),
+                                                                                FollowersAccepted = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: false, RegistrationId_Follower: not null }),
+                                                                                LeadersOnWaitingList = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: true }
+                                                                                                                            && spt.IsSingleLeaderSpot()),
+                                                                                FollowersOnWaitingList = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: true }
+                                                                                                                              && spt.IsSingleFollowerSpot()),
+                                                                                CouplesOnWaitingList = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: true }
+                                                                                                                            && (spt.IsUnmatchedPartnerSpot() || spt.IsMatchedPartnerSpot())),
+                                                                                IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
+                                                                                           && userCanDeleteRegistrable
+                                                                                           && rbl.Event!.State == RegistrationForms.EventState.Setup,
+                                                                                HasIcs = rbl.Ics?.AddToCalendar == true,
+                                                                                Class = rbl.Spots!.Where(spt => !spt.IsWaitingList
+                                                                                                             && spt.Registration?.IsOnWaitingList != true
+                                                                                                             && spt.Registration_Follower?.IsOnWaitingList != true)
+                                                                                           .OrderBy(spt => spt.FirstPartnerJoined)
+                                                                                           .Select(GetDoubleSpotState)
+                                                                                           .FillUpIf(rbl.MaximumDoubleSeats,
+                                                                                                     () => new DoubleSpotState { Leader = SpotState.Available, Follower = SpotState.Available })
+                                                                                           .ToList(),
+                                                                                WaitingList = rbl.Spots!.Where(spt => spt.IsWaitingList
+                                                                                                                   || spt.Registration?.IsOnWaitingList == true
+                                                                                                                   || spt.Registration_Follower?.IsOnWaitingList == true)
+                                                                                                 .OrderBy(spt => spt.FirstPartnerJoined)
+                                                                                                 .Select(GetDoubleSpotState)
+                                                                                                 .ToList()
+                                                                            })
+                                                             .ToList()
+                        };
         return (readModel, null);
     }
 
@@ -214,6 +215,7 @@ public class SingleRegistrableDisplayItem
     public bool AutomaticPromotionFromWaitingList { get; set; }
     public bool IsCore { get; set; }
     public string? CheckinListColumn { get; set; }
+    public bool HasIcs { get; set; }
     public IEnumerable<SpotState> Class { get; set; } = null!;
     public IEnumerable<SpotState> WaitingList { get; set; } = null!;
 }
@@ -236,6 +238,7 @@ public record DoubleRegistrableDisplayItem
     public bool AutomaticPromotionFromWaitingList { get; set; }
     public bool IsCore { get; set; }
     public string? CheckinListColumn { get; set; }
+    public bool HasIcs { get; set; }
     public IEnumerable<DoubleSpotState> Class { get; set; } = null!;
     public IEnumerable<DoubleSpotState> WaitingList { get; set; } = null!;
 }
