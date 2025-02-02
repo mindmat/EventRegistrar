@@ -1,4 +1,6 @@
-﻿using EventRegistrar.Backend.Registrables.Calendar;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrables.Calendar;
 
 namespace EventRegistrar.Backend.Registrables.Calendar
 {
@@ -9,7 +11,8 @@ namespace EventRegistrar.Backend.Registrables.Calendar
     }
 }
 
-public class SaveRegistrableIcsCommandHandler(IRepository<RegistrableIcs> registrablesIcs) : IRequestHandler<SaveRegistrableIcsCommand>
+public class SaveRegistrableIcsCommandHandler(IRepository<RegistrableIcs> registrablesIcs,
+                                              ChangeTrigger changeTrigger) : IRequestHandler<SaveRegistrableIcsCommand>
 {
     public async Task Handle(SaveRegistrableIcsCommand command, CancellationToken cancellationToken)
     {
@@ -29,5 +32,7 @@ public class SaveRegistrableIcsCommandHandler(IRepository<RegistrableIcs> regist
         ics.Start = command.RegistrableIcsItem.Start;
         ics.End = command.RegistrableIcsItem.End;
         ics.ContentHtml = command.RegistrableIcsItem.ContentHtml;
+
+        changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
     }
 }

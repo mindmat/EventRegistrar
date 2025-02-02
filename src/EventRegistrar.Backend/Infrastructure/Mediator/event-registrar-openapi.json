@@ -9896,6 +9896,9 @@
             "type": "string",
             "nullable": true
           },
+          "hasIcs": {
+            "type": "boolean"
+          },
           "class": {
             "type": "array",
             "items": {
@@ -9990,6 +9993,9 @@
           "checkinListColumn": {
             "type": "string",
             "nullable": true
+          },
+          "hasIcs": {
+            "type": "boolean"
           },
           "class": {
             "type": "array",

@@ -10036,6 +10036,7 @@ export interface SingleRegistrableDisplayItem {
     automaticPromotionFromWaitingList?: boolean;
     isCore?: boolean;
     checkinListColumn?: string | null;
+    hasIcs?: boolean;
     class?: SpotState[];
     waitingList?: SpotState[];
 }
@@ -10064,6 +10065,7 @@ export interface DoubleRegistrableDisplayItem {
     automaticPromotionFromWaitingList?: boolean;
     isCore?: boolean;
     checkinListColumn?: string | null;
+    hasIcs?: boolean;
     class?: DoubleSpotState[];
     waitingList?: DoubleSpotState[];
 }
