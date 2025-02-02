@@ -28,6 +28,7 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                               .Include(rbl => rbl.Spots!.Where(spt => !spt.IsCancelled))
                                               .ThenInclude(spt => spt.Registration_Follower)
                                               .Include(rbl => rbl.Event)
+                                              .Include(rbl => rbl.Ics)
                                               .ToListAsync(cancellationToken);
 
         var registrationsOnWaitingList = new HashSet<Guid>(registrations.Where(reg => reg.EventId == eventId
