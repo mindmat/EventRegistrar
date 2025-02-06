@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ExternalMailConfigurationDisplayItem, ExternalMailConfigurationUpdateItem, PricePackageDto } from 'app/api/api';
+import { ExternalMailConfigurationDisplayItem, ExternalMailConfigurationUpdateItem } from 'app/api/api';
 import { Subject, merge, takeUntil } from 'rxjs';
 import { MailConfigService } from './mail-config.service';
 import { v4 as createUuid } from 'uuid';
