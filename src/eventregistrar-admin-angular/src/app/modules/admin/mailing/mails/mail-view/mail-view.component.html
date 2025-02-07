@@ -31,6 +31,10 @@
                         <mat-icon [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                         <span>{{ 'Delete' | translate }}</span>
                     </button>
+                    <button mat-menu-item (click)="addIcs(mail.id)">
+                        <mat-icon [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                        <span>{{ 'AddIcs' | translate }}</span>
+                    </button>
                 </mat-menu>
             </div>
         </div>
@@ -95,6 +99,10 @@
                                     </div>
                                 </ng-template>
 
+                                <ng-container *ngFor="let attachment of mail.attachments">
+                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'" [matTooltip]="attachment.filename"></mat-icon>
+                                    <!-- <div class="ml-1">({{ mail.recipients.length }})</div> -->
+                                </ng-container>
                             </div>
 
                         </div>

@@ -115,4 +115,10 @@ export class MailViewComponent implements OnInit
   {
     this.service.deleteMail(mailId);
   }
+
+  addIcs(mailId: string)
+  {
+    this.service.addIcs(mailId);
+  }
+
 }

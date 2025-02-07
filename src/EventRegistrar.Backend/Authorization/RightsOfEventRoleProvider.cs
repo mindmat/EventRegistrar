@@ -192,6 +192,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(MatchSingleSpotsCommand);
             yield return nameof(CheckIfRegistrationHasMultiplePartnersCommand);
             yield return nameof(SaveRegistrableIcsCommand);
+            yield return nameof(AddIcsToMailCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

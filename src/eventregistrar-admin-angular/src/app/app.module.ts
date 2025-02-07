@@ -83,7 +83,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import { MatOptionModule } from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatOptionModule } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SharedModule } from './shared/shared.module';
 import { FileUploadComponent } from './modules/admin/infrastructure/file-upload/file-upload.component';
@@ -119,13 +119,37 @@ import { AccountConfigComponent } from './modules/admin/event-settings/account-c
 import { FixRawProcessingComponent } from './modules/admin/registration/fix-raw-processing/fix-raw-processing.component';
 import { MatchSingleSpotsComponent } from './modules/admin/registration/match-single-spots/match-single-spots.component';
 import { RegistrableIcsComponent } from './modules/admin/registrables/registrable-ics/registrable-ics.component';
-import { NgxMatDatetimePickerModule, NgxMatNativeDateModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { NGX_MAT_DATE_FORMATS, NgxMatDateAdapter, NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
+import { NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS, NgxMatMomentModule } from '@angular-material-components/moment-adapter';
+import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
     scrollPositionRestoration: 'enabled'
 };
 
+export const DE_FORMATS = {
+    parse: {
+        dateInput: 'DD.MM.YYYY',
+    },
+    display: {
+        dateInput: 'DD.MM.YYYY',
+        monthYearLabel: 'DD.MM.YYYY',
+        dateA11yLabel: 'DD.MM.YYYY',
+        monthYearA11yLabel: 'DD.MM.YYYY',
+    },
+};
+export const DE_FORMATS_TIME = {
+    parse: {
+        dateInput: 'DD.MM.YYYY HH:mm',
+    },
+    display: {
+        dateInput: 'DD.MM.YYYY HH:mm',
+        monthYearLabel: 'DD.MM.YYYY',
+        dateA11yLabel: 'DD.MM.YYYY',
+        monthYearA11yLabel: 'DD.MM.YYYY HH:mm',
+    },
+};
 @NgModule({
     declarations: [
         AppComponent,
@@ -190,7 +214,11 @@ const routerConfig: ExtraOptions = {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthHttpInterceptor,
             multi: true
-        }
+        },
+        { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS] },
+        { provide: MAT_DATE_FORMATS, useValue: DE_FORMATS },
+        { provide: NgxMatDateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS] },
+        { provide: NGX_MAT_DATE_FORMATS, useValue: DE_FORMATS_TIME },
     ],
     imports: [
         BrowserModule,
@@ -247,7 +275,7 @@ const routerConfig: ExtraOptions = {
 
         NgxMatDatetimePickerModule,
         NgxMatTimepickerModule,
-        NgxMatNativeDateModule,
+        NgxMatMomentModule,
 
         FroalaEditorModule.forRoot(),
         FroalaViewModule.forRoot(),

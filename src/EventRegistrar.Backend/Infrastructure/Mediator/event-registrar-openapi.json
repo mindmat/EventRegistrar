@@ -71,6 +71,31 @@
         }
       }
     },
+    "/api/AddIcsToMailCommand": {
+      "post": {
+        "tags": [
+          "AddIcsToMail"
+        ],
+        "operationId": "AddIcsToMail_Command",
+        "requestBody": {
+          "x-name": "AddIcsToMailCommand",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddIcsToMailCommand"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/AddIndividualReductionCommand": {
       "post": {
         "tags": [
@@ -5055,6 +5080,20 @@
           }
         }
       },
+      "AddIcsToMailCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "mailId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "AddIndividualReductionCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -7751,47 +7790,21 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "$ref": "#/components/schemas/MailAttachment"
+              "$ref": "#/components/schemas/MailAttachmentMetadata"
             }
           }
         }
       },
-      "MailAttachment": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Entity"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "content": {
-                "type": "string",
-                "format": "byte"
-              },
-              "name": {
-                "type": "string"
-              },
-              "contentType": {
-                "type": "string",
-                "nullable": true
-              }
-            }
-          }
-        ]
-      },
-      "Entity": {
+      "MailAttachmentMetadata": {
         "type": "object",
-        "x-abstract": true,
         "additionalProperties": false,
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "guid"
+          "filename": {
+            "type": "string"
           },
-          "rowVersion": {
+          "contentType": {
             "type": "string",
-            "format": "byte"
+            "nullable": true
           }
         }
       },
@@ -7850,6 +7863,13 @@
             "nullable": true,
             "items": {
               "$ref": "#/components/schemas/MailRecipient"
+            }
+          },
+          "attachments": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/MailAttachmentMetadata"
             }
           }
         }

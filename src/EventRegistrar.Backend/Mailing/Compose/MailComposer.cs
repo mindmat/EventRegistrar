@@ -233,10 +233,7 @@ public class MailComposer(
         var attachments = new List<MailAttachment>();
         if (addIcs)
         {
-            var calendarName = $"{registration.Event!.Name} - {registration.RespondentFirstName} {registration.RespondentLastName}";
-            var ics = await icsCreator.Create(registrationId,
-                                              calendarName, 
-                                              cancellationToken);
+            var ics = await icsCreator.Create(registrationId, cancellationToken);
             if (ics != null)
             {
                 attachments.Add(ics);
@@ -244,10 +241,7 @@ public class MailComposer(
 
             if (partnerRegistration != null)
             {
-                calendarName = $"{registration.Event!.Name} - {partnerRegistration.RespondentFirstName} {partnerRegistration.RespondentLastName}";
-                var icsPartner = await icsCreator.Create(partnerRegistration.Id, 
-                                                         calendarName, 
-                                                         cancellationToken);
+                var icsPartner = await icsCreator.Create(partnerRegistration.Id, cancellationToken);
                 if (icsPartner != null)
                 {
                     attachments.Add(icsPartner);

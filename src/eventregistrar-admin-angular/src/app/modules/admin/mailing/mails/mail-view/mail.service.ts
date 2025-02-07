@@ -38,4 +38,10 @@ export class MailService extends FetchService<MailView>
     this.api.deleteMails_Command({ eventId: this.eventService.selectedId, mailIds: [mailId] })
       .subscribe();
   }
+
+  addIcs(mailId: string)
+  {
+    this.api.addIcsToMail_Command({ eventId: this.eventService.selectedId, mailId: mailId })
+      .subscribe();
+  }
 }

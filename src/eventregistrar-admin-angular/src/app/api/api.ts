@@ -127,6 +127,54 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    addIcsToMail_Command(addIcsToMailCommand: AddIcsToMailCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/AddIcsToMailCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(addIcsToMailCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processAddIcsToMail_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processAddIcsToMail_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processAddIcsToMail_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     addIndividualReduction_Command(addIndividualReductionCommand: AddIndividualReductionCommand | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/AddIndividualReductionCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -8461,6 +8509,11 @@ export interface ActivateAutomaticPromotionCommand {
     registrableId?: string;
 }
 
+export interface AddIcsToMailCommand {
+    eventId?: string;
+    mailId?: string;
+}
+
 export interface AddIndividualReductionCommand {
     eventId?: string;
     reductionId?: string;
@@ -9365,17 +9418,11 @@ export interface MailsOfRegistrationQuery {
 export interface MailTemplatePreview {
     subject?: string | null;
     contentHtml?: string | null;
-    attachments?: MailAttachment[] | null;
+    attachments?: MailAttachmentMetadata[] | null;
 }
 
-export interface Entity {
-    id?: string;
-    rowVersion?: string;
-}
-
-export interface MailAttachment extends Entity {
-    content?: string;
-    name?: string;
+export interface MailAttachmentMetadata {
+    filename?: string;
     contentType?: string | null;
 }
 
@@ -9394,6 +9441,7 @@ export interface MailView {
     from?: EmailAddress;
     created?: Date;
     recipients?: MailRecipient[] | null;
+    attachments?: MailAttachmentMetadata[] | null;
 }
 
 export interface EmailAddress {

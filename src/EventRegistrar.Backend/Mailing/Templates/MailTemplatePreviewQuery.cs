@@ -14,7 +14,7 @@ public class MailTemplatePreview
 {
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
-    public IEnumerable<MailAttachment>? Attachments { get; set; }
+    public IEnumerable<MailAttachmentMetadata>? Attachments { get; set; }
 }
 
 public class AutoMailPreviewQueryHandler(IQueryable<AutoMailTemplate> autoAutoMailTemplates,
@@ -27,7 +27,7 @@ public class AutoMailPreviewQueryHandler(IQueryable<AutoMailTemplate> autoAutoMa
         string? subject;
         string? contentHtml;
         string? language;
-        var  addIcs = false;
+        var addIcs = false;
         var template = await autoAutoMailTemplates.Where(mtp => mtp.EventId == query.EventId
                                                              && mtp.Id == query.MailTemplateId)
                                                   .FirstOrDefaultAsync(cancellationToken);
@@ -61,13 +61,14 @@ public class AutoMailPreviewQueryHandler(IQueryable<AutoMailTemplate> autoAutoMa
                    {
                        Subject = subject,
                        ContentHtml = composedMail.Content,
-                       Attachments = composedMail.Attachments
+                       Attachments = composedMail.Attachments?.Select(mat => new MailAttachmentMetadata(mat.Name, mat.ContentType))
                    };
         }
+
         return new MailTemplatePreview
                {
                    Subject = subject,
                    ContentHtml = contentHtml
-};
+               };
     }
 }

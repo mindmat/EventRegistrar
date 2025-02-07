@@ -1,5 +1,6 @@
 ﻿using System.Text;
 
+using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
 
 using Ical.Net;
@@ -11,9 +12,10 @@ using NodaTime;
 
 namespace EventRegistrar.Backend.Mailing.Compose
 {
-    public class IcsCreator(IQueryable<Seat> spots)
+    public class IcsCreator(IQueryable<Seat> spots,
+                            IQueryable<Registration> registrations)
     {
-        public async Task<MailAttachment?> Create(Guid registrationId, string calendarName, CancellationToken cancellationToken)
+        public async Task<MailAttachment?> Create(Guid registrationId, CancellationToken cancellationToken)
         {
             var tracks = await spots.Where(spt => spt.RegistrationId == registrationId
                                                || spt.RegistrationId_Follower == registrationId)
@@ -37,11 +39,19 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 return null;
             }
 
+            var registration = await registrations.Where(reg => reg.Id == registrationId)
+                                                  .Select(reg => new
+                                                                 {
+                                                                     reg.RespondentFirstName,
+                                                                     reg.RespondentLastName,
+                                                                     EventName = reg.Event!.Name,
+                                                                 })
+                                                  .FirstAsync(cancellationToken);
+            var calendarName = $"{registration.EventName} - {registration.RespondentFirstName} {registration.RespondentLastName}";
+
             var calendar = new Calendar { Name = calendarName };
             foreach (var track in tracks)
             {
-                var date = new CalDateTime(2025, 3, 13, 15, 0,
-                                           0);
                 var calendarEvent = new CalendarEvent
                                     {
                                         Uid = track.RegistrableId.ToString(),
@@ -50,7 +60,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                         Location = track.Location,
                                         Description = track.ContentHtml
                                     };
-                var tzId = DateTimeZoneProviders.Tzdb.GetZoneOrNull("Europe/Zurich").Id;
+                var tzId = DateTimeZoneProviders.Tzdb.GetZoneOrNull("Europe/Zurich")!.Id;
                 calendarEvent.Start = new CalDateTime(track.Start, tzId);
                 calendarEvent.End = new CalDateTime(track.End, tzId);
 
@@ -63,7 +73,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
             var attachment = new MailAttachment
                              {
                                  Id = Guid.NewGuid(),
-                                 Name = "Calendar",
+                                 Name = calendarName,
                                  Content = ms.ToArray(),
                                  ContentType = "text/calendar"
                              };
