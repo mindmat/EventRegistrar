@@ -73,7 +73,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
             var attachment = new MailAttachment
                              {
                                  Id = Guid.NewGuid(),
-                                 Name = calendarName,
+                                 Name = $"{calendarName}.ics",
                                  Content = ms.ToArray(),
                                  ContentType = "text/calendar"
                              };
