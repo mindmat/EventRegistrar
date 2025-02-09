@@ -1,5 +1,6 @@
 ﻿using System.Text;
 
+using EventRegistrar.Backend.Registrables.Calendar;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
 
@@ -13,7 +14,8 @@ using NodaTime;
 namespace EventRegistrar.Backend.Mailing.Compose
 {
     public class IcsCreator(IQueryable<Seat> spots,
-                            IQueryable<Registration> registrations)
+                            IQueryable<Registration> registrations,
+                            CalendarConfiguration calendarConfiguration)
     {
         public async Task<MailAttachment?> Create(Guid registrationId, CancellationToken cancellationToken)
         {
@@ -60,7 +62,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                         Location = track.Location,
                                         Description = track.ContentHtml
                                     };
-                var tzId = DateTimeZoneProviders.Tzdb.GetZoneOrNull("Europe/Zurich")!.Id;
+                var tzId = DateTimeZoneProviders.Tzdb.GetZoneOrNull(calendarConfiguration.TimeZone)!.Id;
                 calendarEvent.Start = new CalDateTime(track.Start, tzId);
                 calendarEvent.End = new CalDateTime(track.End, tzId);
 

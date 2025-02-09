@@ -12,7 +12,8 @@ namespace EventRegistrar.Backend.Registrables.Calendar
 }
 
 public class SaveRegistrableIcsCommandHandler(IRepository<RegistrableIcs> registrablesIcs,
-                                              ChangeTrigger changeTrigger) : IRequestHandler<SaveRegistrableIcsCommand>
+                                              ChangeTrigger changeTrigger,
+                                              CalendarConfiguration configuration) : IRequestHandler<SaveRegistrableIcsCommand>
 {
     public async Task Handle(SaveRegistrableIcsCommand command, CancellationToken cancellationToken)
     {
@@ -29,10 +30,26 @@ public class SaveRegistrableIcsCommandHandler(IRepository<RegistrableIcs> regist
 
         ics.AddToCalendar = command.RegistrableIcsItem.AddToCalendar;
         ics.Location = command.RegistrableIcsItem.Location;
-        ics.Start = command.RegistrableIcsItem.Start;
-        ics.End = command.RegistrableIcsItem.End;
+        ics.Start = ConvertUtcToEventTime(command.RegistrableIcsItem.Start);
+        ics.End = ConvertUtcToEventTime(command.RegistrableIcsItem.End);
         ics.ContentHtml = command.RegistrableIcsItem.ContentHtml;
 
         changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+    }
+
+    private DateTime ConvertUtcToEventTime(DateTimeOffset dateTime)
+    {
+        try
+        {
+            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, configuration.TimeZone).LocalDateTime;
+        }
+        catch
+        {
+            if (configuration.FallbackOffset != null)
+            {
+                return dateTime.Add(configuration.FallbackOffset.Value).LocalDateTime;
+            }
+            return dateTime.LocalDateTime;
+        }
     }
 }

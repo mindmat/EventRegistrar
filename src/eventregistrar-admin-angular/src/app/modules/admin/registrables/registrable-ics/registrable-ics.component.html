@@ -11,9 +11,9 @@
     <!-- Form -->
     <form [formGroup]="registrableForm" (ngSubmit)="onSubmit()" class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto">
 
-        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
             <!-- Add to calendar -->
-            <div class="col-span-3 items-center flex flex-row">
+            <div class="col-span-6 items-center flex flex-row">
                 <div class="cursor-pointer" (click)="addToCalendar.toggle()">
                     <div class="leading-6 font-medium">{{ 'IcsAdd' | translate }}</div>
                     <!-- <div class="text-md text-secondary">{{ 'HasWaitingListSecondary' | translate }}</div> -->
@@ -23,7 +23,7 @@
             </div>
 
             <!-- Location -->
-            <div class="sm:col-span-4">
+            <div class="sm:col-span-6">
                 <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
                     <mat-label>{{ 'IcsLocation' | translate }}</mat-label>
                     <input [formControlName]="'location'" matInput>
@@ -32,47 +32,37 @@
 
             <!-- Start -->
             <div class="sm:col-span-2">
+                <mat-label>{{ 'IcsStart' | translate }}</mat-label>
                 <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
-                    <mat-label>{{ 'IcsStart' | translate }}</mat-label>
-
-                    <input matInput [ngxMatDatetimePicker]="pickerStart" placeholder="Choose a date" [formControlName]="'start'">
-                    <ngx-mat-datepicker-toggle matSuffix [for]="pickerStart"></ngx-mat-datepicker-toggle>
-                    <ngx-mat-datetime-picker #pickerStart [showSeconds]="false" [stepHour]="1" [stepMinute]="15" [disableMinute]="false">
-                    </ngx-mat-datetime-picker>
-
-                    <!-- <input matInput [matDatepicker]="calendarStartPicker" [formControlName]="'start'">
-                        <mat-datepicker-toggle matSuffix [for]="calendarStartPicker"></mat-datepicker-toggle>
-                        <mat-datepicker #calendarStartPicker></mat-datepicker> -->
+                    <input matInput [matDatepicker]="calendarStartPicker" [formControlName]="'start'">
+                    <mat-datepicker-toggle matSuffix [for]="calendarStartPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #calendarStartPicker></mat-datepicker>
                 </mat-form-field>
             </div>
-
-            <!-- <div class="sm:col-span-2">
+            <div class="sm:col-span-1">
+                <mat-label>{{ 'IcsStart' | translate }}</mat-label>
                 <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
-                    <mat-label>{{ 'Time' | translate }}</mat-label>
-                    <input [formControlName]="'startTime'" matInput>
+                    <input matInput type="time" [formControlName]="'startTime'">
                 </mat-form-field>
-            </div> -->
+            </div>
 
             <!-- End -->
             <div class="sm:col-span-2">
+                <mat-label>{{ 'IcsEnd' | translate }}</mat-label>
                 <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
-                    <mat-label>{{ 'IcsEnd' | translate }}</mat-label>
-
-                    <input matInput [ngxMatDatetimePicker]="pickerEnd" placeholder="Choose a date" [formControlName]="'end'">
-                    <ngx-mat-datepicker-toggle matSuffix [for]="pickerEnd"></ngx-mat-datepicker-toggle>
-                    <ngx-mat-datetime-picker #pickerEnd [showSeconds]="false" [stepHour]="1" [stepMinute]="15">
-                    </ngx-mat-datetime-picker>
+                    <input matInput [matDatepicker]="calendarEndPicker" [formControlName]="'end'">
+                    <mat-datepicker-toggle matSuffix [for]="calendarEndPicker"></mat-datepicker-toggle>
+                    <mat-datepicker #calendarEndPicker></mat-datepicker>
                 </mat-form-field>
             </div>
-            <!-- 
-            <div class="sm:col-span-2">
+            <div class="sm:col-span-1">
+                <mat-label>{{ 'IcsEnd' | translate }}</mat-label>
                 <mat-form-field class="fuse-mat-emphasized-affix w-full" [subscriptSizing]="'dynamic'">
-                    <mat-label>{{ 'Time' | translate }}</mat-label>
-                    <input [formControlName]="'endTime'" matInput>
+                    <input matInput type="time" [formControlName]="'endTime'">
                 </mat-form-field>
-            </div> -->
+            </div>
 
-            <div class="sm:col-span-4">
+            <div class="sm:col-span-6">
                 <mat-label>{{ 'IcsContent' | translate }}</mat-label>
                 <div class="text-md text-secondary">{{ 'IcsContentSecondary' | translate }}</div>
 

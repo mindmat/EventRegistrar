@@ -7,6 +7,7 @@ import { RegistrableIcsService } from './registrable-ics.service';
 
 import FroalaEditor from "froala-editor";
 import { TranslateService } from '@ngx-translate/core';
+import { Time } from '@angular/common';
 
 @Component({
   selector: 'app-registrable-ics',
@@ -42,7 +43,13 @@ export class RegistrableIcsComponent implements OnInit
           end: new Date(),
           contentHtml: ''
         };
-        this.registrableForm = this.fb.group<RegistrableIcsItem>(ics);
+
+        var formContent = {
+          ...ics,
+          startTime: this.getTime(ics.start),
+          endTime: this.getTime(ics.end)
+        };
+        this.registrableForm = this.fb.group<RegistrableIcsItem & { startTime: string, endTime: string; }>(formContent);
 
         this.changeDetectorRef.markForCheck();
       });
@@ -93,6 +100,29 @@ export class RegistrableIcsComponent implements OnInit
 
   onSubmit(): void
   {
-    this.registrablesService.saveRegistrableIcs(this.registrableForm.value);
+    let ics = this.registrableForm.value;
+
+    var start = new Date(ics.start);
+    var startTimeParts = ics.startTime.split(':');
+    start.setHours(parseInt(startTimeParts[0]), parseInt(startTimeParts[1]));
+    ics.start = start;
+
+    var end = new Date(ics.end);
+    var endTimeParts = ics.endTime.split(':');
+    end.setHours(parseInt(endTimeParts[0]), parseInt(endTimeParts[1]));
+    ics.end = end;
+
+    this.registrablesService.saveRegistrableIcs(ics);
+  }
+
+  getTime(date: Date | null): string
+  {
+    if (date == null)
+    {
+      return '00:00';
+    }
+    var dateSafe = new Date(date);
+    return `${dateSafe.getHours().toString().padStart(2, '0')}:${dateSafe.getMinutes().toString().padStart(2, '0')}`;
   }
 }
+

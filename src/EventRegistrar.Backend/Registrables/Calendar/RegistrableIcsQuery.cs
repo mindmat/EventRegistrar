@@ -3,8 +3,8 @@
 public record RegistrableIcsItem(Guid RegistrableId,
                                  bool AddToCalendar,
                                  string? Location,
-                                 DateTime Start,
-                                 DateTime End,
+                                 DateTimeOffset Start,
+                                 DateTimeOffset End,
                                  string? ContentHtml);
 
 public class RegistrableIcsQuery : IEventBoundRequest, IRequest<RegistrableIcsItem?>
