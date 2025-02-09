@@ -7,8 +7,8 @@ namespace EventRegistrar.Backend.Registrables.Calendar
         public Registrable? Registrable { get; set; }
         public bool AddToCalendar { get; set; }
         public string? Location { get; set; }
-        public DateTime Start { get; set; }
-        public DateTime End { get; set; }
+        public DateTimeOffset Start { get; set; }
+        public DateTimeOffset End { get; set; }
         public string? ContentHtml { get; set; }
 
     }

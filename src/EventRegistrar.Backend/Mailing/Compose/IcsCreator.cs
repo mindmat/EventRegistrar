@@ -1,5 +1,6 @@
 ﻿using System.Text;
 
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrables.Calendar;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
@@ -15,7 +16,8 @@ namespace EventRegistrar.Backend.Mailing.Compose
 {
     public class IcsCreator(IQueryable<Seat> spots,
                             IQueryable<Registration> registrations,
-                            CalendarConfiguration calendarConfiguration)
+                            CalendarConfiguration calendarConfiguration,
+                            IDateTimeProvider dateTimeProvider)
     {
         public async Task<MailAttachment?> Create(Guid registrationId, CancellationToken cancellationToken)
         {
@@ -24,16 +26,8 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                     .Where(spt => !spt.IsCancelled
                                                && !spt.IsWaitingList)
                                     .Where(spt => spt.Registrable!.Ics!.AddToCalendar)
-                                    .Select(spt => new
-                                                   {
-                                                       spt.RegistrableId,
-                                                       spt.Registrable!.DisplayName,
-                                                       spt.Registrable.NameSecondary,
-                                                       spt.Registrable.Ics!.Location,
-                                                       spt.Registrable.Ics!.Start,
-                                                       spt.Registrable.Ics!.End,
-                                                       spt.Registrable.Ics!.ContentHtml
-                                                   })
+                                    .Include(spt=>spt.Registrable!.Ics!.Registrable)
+                                    .Select(spt => spt.Registrable!.Ics!)
                                     .ToListAsync(cancellationToken);
 
             if (!tracks.Any())
@@ -51,35 +45,91 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                                   .FirstAsync(cancellationToken);
             var calendarName = $"{registration.EventName} - {registration.RespondentFirstName} {registration.RespondentLastName}";
 
-            var calendar = new Calendar { Name = calendarName };
-            foreach (var track in tracks)
-            {
-                var calendarEvent = new CalendarEvent
-                                    {
-                                        Uid = track.RegistrableId.ToString(),
-                                        // If Name property is used, it MUST be RFC 5545 compliant
-                                        Summary = track.DisplayName, // Should always be present
-                                        Location = track.Location,
-                                        Description = track.ContentHtml
-                                    };
-                var tzId = DateTimeZoneProviders.Tzdb.GetZoneOrNull(calendarConfiguration.TimeZone)!.Id;
-                calendarEvent.Start = new CalDateTime(track.Start, tzId);
-                calendarEvent.End = new CalDateTime(track.End, tzId);
-
-                calendar.Events.Add(calendarEvent);
-            }
-
-            var serializer = new CalendarSerializer(calendar);
-            using var ms = new MemoryStream();
-            serializer.Serialize(calendar, ms, Encoding.ASCII);
+            //var serialized = ComposeWithLibrary(registration.EventName, calendarName, tracks);
+            var serialized = ComposeManually(registration.EventName, calendarName, tracks);
             var attachment = new MailAttachment
                              {
                                  Id = Guid.NewGuid(),
                                  Name = $"{calendarName}.ics",
-                                 Content = ms.ToArray(),
+                                 Content = serialized,
                                  ContentType = "text/calendar"
                              };
             return attachment;
+        }
+
+        private byte[] ComposeManually(string eventName, string calendarName, List<RegistrableIcs> tracks)
+        {
+            var now = dateTimeProvider.Now;
+            var sb = new StringBuilder(1000);
+            sb.AppendLine("BEGIN:VCALENDAR");
+            sb.AppendLine("VERSION:2.0");
+            sb.AppendLine($"PRODID:-//EventRegistrar//{eventName}//DE");
+            sb.AppendLine($"TIMEZONE:{calendarConfiguration.TimeZone}");
+            sb.AppendLine($"X-WR-TIMEZONE:{calendarConfiguration.TimeZone}");
+            sb.AppendLine($"NAME:{calendarName}");
+            sb.AppendLine($"X-WR-CALNAME:{calendarName}");
+
+            for (var i = 0; i < tracks.Count; i++)
+            {
+                var track = tracks[i];
+                sb.AppendLine("BEGIN:VEVENT");
+                sb.AppendLine($"UID:{track.Id}");
+                sb.AppendLine($"SEQUENCE:{i}");
+                sb.AppendLine($"DTSTART:{FormatDateTime(track.Start)}");
+                sb.AppendLine($"DTEND:{FormatDateTime(track.End)}");
+                sb.AppendLine($"DTSTAMP:{FormatDateTime(now)}");
+                sb.AppendLine($"SUMMARY:{track.Registrable!.DisplayName}");
+                sb.AppendLine($"LOCATION:{track.Location}");
+                sb.AppendLine($"DESCRIPTION:{track.ContentHtml}");
+                sb.AppendLine("END:VEVENT");
+            }
+            
+            sb.AppendLine("END:VCALENDAR");
+
+            return Encoding.ASCII.GetBytes(sb.ToString());
+        }
+
+        private string FormatDateTime(DateTimeOffset dateTime)
+        {
+            return dateTime.ToString("yyyyMMdd'T'HHmmss");
+        }
+
+        private byte[] ComposeWithLibrary(string eventName, string calendarName, List<RegistrableIcs> tracks)
+        {
+            MemoryStream? ms = null;
+            try
+            {
+                var calendar = new Calendar();
+                var tzId = DateTimeZoneProviders.Tzdb.GetZoneOrNull(calendarConfiguration.TimeZone)!.Id;
+                calendar.AddTimeZone(tzId);
+                calendar.ProductId = $"EventRegistrar//{eventName}";
+                calendar.Name = calendarName;
+                foreach (var track in tracks)
+                {
+                    var calendarEvent = new CalendarEvent
+                                        {
+                                            Uid = track.Registrable!.Id.ToString(),
+                                            // If Name property is used, it MUST be RFC 5545 compliant
+                                            Summary = track.Registrable!.DisplayName, // Should always be present
+                                            Location = track.Location,
+                                            Description = track.ContentHtml,
+                                            Start = new CalDateTime(track.Start.LocalDateTime),
+                                            End = new CalDateTime(track.End.LocalDateTime)
+                                        };
+
+                    calendar.Events.Add(calendarEvent);
+                }
+
+                var serializer = new CalendarSerializer(calendar);
+                ms = new MemoryStream();
+                serializer.Serialize(calendar, ms, Encoding.ASCII);
+                return ms.ToArray();
+            }
+            catch
+            {
+                ms?.Dispose();
+                throw;
+            }
         }
     }
 }
