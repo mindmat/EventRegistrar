@@ -160,6 +160,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ics hinzufügen.
+        /// </summary>
+        internal static string AddIcs {
+            get {
+                return ResourceManager.GetString("AddIcs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mail-Import hinzufügen.
         /// </summary>
         internal static string AddImap {

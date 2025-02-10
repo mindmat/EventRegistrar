@@ -151,6 +151,9 @@
   <data name="Add" xml:space="preserve">
     <value>Hinzufügen</value>
   </data>
+  <data name="AddIcs" xml:space="preserve">
+    <value>ics hinzufügen</value>
+  </data>
   <data name="AddImap" xml:space="preserve">
     <value>Mail-Import hinzufügen</value>
   </data>
