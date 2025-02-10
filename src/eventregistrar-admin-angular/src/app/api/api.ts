@@ -10053,6 +10053,7 @@ export interface RefundDifferenceCommand {
 }
 
 export interface RegistrableIcsItem {
+    id?: string;
     registrableId?: string;
     addToCalendar?: boolean;
     location?: string | null;
@@ -10064,6 +10065,7 @@ export interface RegistrableIcsItem {
 export interface RegistrableIcsQuery {
     eventId?: string;
     registrableId?: string;
+    registrableIcsId?: string;
 }
 
 export interface RegistrablesOverview {
@@ -10084,7 +10086,7 @@ export interface SingleRegistrableDisplayItem {
     automaticPromotionFromWaitingList?: boolean;
     isCore?: boolean;
     checkinListColumn?: string | null;
-    hasIcs?: boolean;
+    icsIds?: string[];
     class?: SpotState[];
     waitingList?: SpotState[];
 }
@@ -10113,7 +10115,7 @@ export interface DoubleRegistrableDisplayItem {
     automaticPromotionFromWaitingList?: boolean;
     isCore?: boolean;
     checkinListColumn?: string | null;
-    hasIcs?: boolean;
+    icsIds?: string[];
     class?: DoubleSpotState[];
     waitingList?: DoubleSpotState[];
 }

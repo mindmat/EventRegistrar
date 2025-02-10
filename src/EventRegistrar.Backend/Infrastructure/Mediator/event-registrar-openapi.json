@@ -9810,6 +9810,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
           "registrableId": {
             "type": "string",
             "format": "guid"
@@ -9844,6 +9848,10 @@
             "format": "guid"
           },
           "registrableId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrableIcsId": {
             "type": "string",
             "format": "guid"
           }
@@ -9916,8 +9924,12 @@
             "type": "string",
             "nullable": true
           },
-          "hasIcs": {
-            "type": "boolean"
+          "icsIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
           },
           "class": {
             "type": "array",
@@ -10014,8 +10026,12 @@
             "type": "string",
             "nullable": true
           },
-          "hasIcs": {
-            "type": "boolean"
+          "icsIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
           },
           "class": {
             "type": "array",

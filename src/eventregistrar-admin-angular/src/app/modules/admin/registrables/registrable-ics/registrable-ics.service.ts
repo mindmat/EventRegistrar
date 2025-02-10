@@ -11,14 +11,14 @@ export class RegistrableIcsService
   constructor(private api: Api,
     private eventService: EventService) { }
 
-  getRegistrableIcs(registrableId: string): Observable<RegistrableIcsItem | null>
+  getRegistrableIcs(registrableId: string, registrableIcsId: string): Observable<RegistrableIcsItem>
   {
-    return this.api.registrableIcs_Query({ eventId: this.eventService.selectedId, registrableId });
+    return this.api.registrableIcs_Query({ eventId: this.eventService.selectedId, registrableId, registrableIcsId });
   }
 
-  saveRegistrableIcs(values: RegistrableIcsItem): void
+  saveRegistrableIcs(registrableId: string, values: RegistrableIcsItem): void
   {
-    var command = { eventId: this.eventService.selectedId, registrableIcsItem: values } as SaveRegistrableIcsCommand;
+    var command = { eventId: this.eventService.selectedId, registrableId, registrableIcsItem: values } as SaveRegistrableIcsCommand;
     this.api.saveRegistrableIcs_Command(command)
       .subscribe();
   }

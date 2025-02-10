@@ -204,7 +204,15 @@ export class OverviewComponent implements OnInit, OnDestroy
         });
     }
 
-    changeRegistrableIcs(registrableId: string, name: string)
+    changeRegistrableIcs(icsId: string, registrableId: string, name: string)
+    {
+        this.matDialog.open(RegistrableIcsComponent, {
+            autoFocus: true,
+            data: { icsId, registrableId, name }
+        });
+    }
+
+    addRegistrableIcs(registrableId: string, name: string)
     {
         this.matDialog.open(RegistrableIcsComponent, {
             autoFocus: true,

@@ -35,7 +35,7 @@ public class Registrable : Entity
     public string? Tag { get; set; }
     public RegistrableType Type { get; set; }
     public WellDefinedRegistrable? WellDefined { get; set; }
-    public RegistrableIcs? Ics { get; set; }
+    public ICollection<RegistrableIcs>? Ics { get; set; }
 }
 
 public enum WellDefinedRegistrable

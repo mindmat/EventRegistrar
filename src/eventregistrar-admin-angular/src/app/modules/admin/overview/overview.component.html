@@ -160,7 +160,9 @@
                                     </ng-container>
                                     <!-- context menu -->
                                     <div class="flex items-center ml-auto">
-                                        <mat-icon *ngIf="doubleRegistrable.hasIcs" class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                                        <button *ngFor="let icsId of doubleRegistrable.icsIds" mat-icon-button (click)="changeRegistrableIcs(icsId, doubleRegistrable.id, doubleRegistrable.name)">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                                        </button>
                                         <button mat-icon-button [matMenuTriggerFor]="registrableMenu">
                                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                                         </button>
@@ -171,10 +173,10 @@
                                                     <span>{{ 'EditRegistrable' | translate }}</span>
                                                 </span>
                                             </button>
-                                            <button mat-menu-item (click)="changeRegistrableIcs(doubleRegistrable.id, doubleRegistrable.name)">
+                                            <button mat-menu-item (click)="addRegistrableIcs(doubleRegistrable.id, doubleRegistrable.name)">
                                                 <span class="flex items-center">
                                                     <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
-                                                    <span>{{ 'ChangeRegistrableIcs' | translate }}</span>
+                                                    <span>{{ 'AddRegistrableIcs' | translate }}</span>
                                                 </span>
                                             </button>
                                             <button mat-menu-item (click)="deleteRegistrable(doubleRegistrable.id)">
@@ -333,7 +335,9 @@
                                     </ng-container>
                                     <!-- context menu -->
                                     <div class="flex items-center ml-auto">
-                                        <mat-icon *ngIf="singleRegistrable.hasIcs" class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                                        <button *ngFor="let icsId of singleRegistrable.icsIds" mat-icon-button (click)="changeRegistrableIcs(icsId, singleRegistrable.id, singleRegistrable.name)">
+                                            <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                                        </button>
                                         <button mat-icon-button [matMenuTriggerFor]="registrableMenu">
                                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:dots-vertical'"></mat-icon>
                                         </button>
@@ -344,10 +348,10 @@
                                                     <span>{{ 'EditRegistrable' | translate }}</span>
                                                 </span>
                                             </button>
-                                            <button mat-menu-item (click)="changeRegistrableIcs(singleRegistrable.id, singleRegistrable.name)">
+                                            <button mat-menu-item (click)="addRegistrableIcs(singleRegistrable.id, singleRegistrable.name)">
                                                 <span class="flex items-center">
                                                     <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
-                                                    <span>{{ 'ChangeRegistrableIcs' | translate }}</span>
+                                                    <span>{{ 'AddRegistrableIcs' | translate }}</span>
                                                 </span>
                                             </button>
                                             <button mat-menu-item (click)="deleteRegistrable(singleRegistrable.id)">

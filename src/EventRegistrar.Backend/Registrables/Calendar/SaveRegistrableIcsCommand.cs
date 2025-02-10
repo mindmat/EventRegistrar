@@ -1,14 +1,11 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Registrables;
-using EventRegistrar.Backend.Registrables.Calendar;
 
-namespace EventRegistrar.Backend.Registrables.Calendar
+namespace EventRegistrar.Backend.Registrables.Calendar;
+
+public class SaveRegistrableIcsCommand : IRequest, IEventBoundRequest
 {
-    public class SaveRegistrableIcsCommand : IRequest, IEventBoundRequest
-    {
-        public Guid EventId { get; set; }
-        public RegistrableIcsItem? RegistrableIcsItem { get; set; }
-    }
+    public Guid EventId { get; set; }
+    public RegistrableIcsItem? RegistrableIcsItem { get; set; }
 }
 
 public class SaveRegistrableIcsCommandHandler(IRepository<RegistrableIcs> registrablesIcs,
@@ -22,17 +19,23 @@ public class SaveRegistrableIcsCommandHandler(IRepository<RegistrableIcs> regist
             throw new ArgumentNullException(nameof(SaveRegistrableIcsCommand.RegistrableIcsItem));
         }
 
+        var saveItem = command.RegistrableIcsItem;
         var ics = await registrablesIcs.AsTracking()
-                                       .FirstOrDefaultAsync(rbl => rbl.Id == command.RegistrableIcsItem.RegistrableId,
-                                                            cancellationToken)
-               ?? registrablesIcs.InsertObjectTree(new RegistrableIcs { Id = command.RegistrableIcsItem.RegistrableId });
+                                       .Where(rbl => rbl.Id == saveItem.Id
+                                                  && rbl.RegistrableId == saveItem.RegistrableId
+                                                  && rbl.Registrable!.EventId == command.EventId)
+                                       .FirstOrDefaultAsync(cancellationToken)
+               ?? registrablesIcs.InsertObjectTree(new RegistrableIcs
+                                                   {
+                                                       Id = saveItem.Id,
+                                                       RegistrableId = saveItem.RegistrableId
+                                                   });
 
-
-        ics.AddToCalendar = command.RegistrableIcsItem.AddToCalendar;
-        ics.Location = command.RegistrableIcsItem.Location;
-        ics.Start = ConvertUtcToEventTime(command.RegistrableIcsItem.Start);
-        ics.End = ConvertUtcToEventTime(command.RegistrableIcsItem.End);
-        ics.ContentHtml = command.RegistrableIcsItem.ContentHtml;
+        ics.AddToCalendar = saveItem.AddToCalendar;
+        ics.Location = saveItem.Location;
+        ics.Start = ConvertUtcToEventTime(saveItem.Start);
+        ics.End = ConvertUtcToEventTime(saveItem.End);
+        ics.ContentHtml = saveItem.ContentHtml;
 
         changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
     }
@@ -49,6 +52,7 @@ public class SaveRegistrableIcsCommandHandler(IRepository<RegistrableIcs> regist
             {
                 return dateTime.Add(configuration.FallbackOffset.Value).LocalDateTime;
             }
+
             return dateTime.LocalDateTime;
         }
     }

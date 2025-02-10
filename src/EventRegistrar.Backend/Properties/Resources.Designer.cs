@@ -196,6 +196,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Neuen Kalendereintrag erstellen.
+        /// </summary>
+        internal static string AddRegistrableIcs {
+            get {
+                return ResourceManager.GetString("AddRegistrableIcs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Neuen Track erstellen.
         /// </summary>
         internal static string AddTrack {

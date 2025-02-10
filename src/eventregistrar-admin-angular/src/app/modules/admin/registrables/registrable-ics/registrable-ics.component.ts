@@ -4,10 +4,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Api, RegistrableIcsItem } from 'app/api/api';
 import { RegistrableDetailComponent } from '../../overview/registrable-detail/registrable-detail.component';
 import { RegistrableIcsService } from './registrable-ics.service';
+import { v4 as createUuid } from 'uuid';
 
 import FroalaEditor from "froala-editor";
 import { TranslateService } from '@ngx-translate/core';
-import { Time } from '@angular/common';
+import { EventService } from '../../events/event.service';
 
 @Component({
   selector: 'app-registrable-ics',
@@ -23,7 +24,7 @@ export class RegistrableIcsComponent implements OnInit
   registrableForm: FormGroup;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) private data: { registrableId: string, name: string; },
+    @Inject(MAT_DIALOG_DATA) private data: { icsId: string | null, registrableId: string, name: string; },
     private registrablesService: RegistrableIcsService,
     public matDialogRef: MatDialogRef<RegistrableDetailComponent>,
     private fb: FormBuilder,
@@ -32,27 +33,42 @@ export class RegistrableIcsComponent implements OnInit
 
   ngOnInit(): void
   {
-    this.registrablesService.getRegistrableIcs(this.data.registrableId)
-      .subscribe(ics =>
-      {
-        ics ??= {
-          registrableId: this.data.registrableId,
-          addToCalendar: false,
-          location: '',
-          start: new Date(),
-          end: new Date(),
-          contentHtml: ''
-        };
+    if (!this.data.icsId) 
+    {
+      let ics = {
+        id: createUuid(),
+        registrableId: this.data.registrableId,
+        addToCalendar: false,
+        location: '',
+        start: new Date(),
+        end: new Date(),
+        contentHtml: ''
+      } as RegistrableIcsItem;
 
-        var formContent = {
-          ...ics,
-          startTime: this.getTime(ics.start),
-          endTime: this.getTime(ics.end)
-        };
-        this.registrableForm = this.fb.group<RegistrableIcsItem & { startTime: string, endTime: string; }>(formContent);
+      let formContent = {
+        ...ics,
+        startTime: this.getTime(ics.start),
+        endTime: this.getTime(ics.end)
+      };
+      this.registrableForm = this.fb.group<RegistrableIcsItem & { startTime: string, endTime: string; }>(formContent);
 
-        this.changeDetectorRef.markForCheck();
-      });
+      this.changeDetectorRef.markForCheck();
+    }
+    else
+    {
+      this.registrablesService.getRegistrableIcs(this.data.registrableId, this.data.icsId)
+        .subscribe(ics =>
+        {
+          let formContent = {
+            ...ics,
+            startTime: this.getTime(ics.start),
+            endTime: this.getTime(ics.end)
+          };
+          this.registrableForm = this.fb.group<RegistrableIcsItem & { startTime: string, endTime: string; }>(formContent);
+
+          this.changeDetectorRef.markForCheck();
+        });
+    }
 
     this.api.froalaKey_Query({}).subscribe(key =>
     {
@@ -112,7 +128,7 @@ export class RegistrableIcsComponent implements OnInit
     end.setHours(parseInt(endTimeParts[0]), parseInt(endTimeParts[1]));
     ics.end = end;
 
-    this.registrablesService.saveRegistrableIcs(ics);
+    this.registrablesService.saveRegistrableIcs(this.data.registrableId, ics);
   }
 
   getTime(date: Date | null): string

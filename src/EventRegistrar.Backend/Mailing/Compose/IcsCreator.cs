@@ -25,9 +25,8 @@ namespace EventRegistrar.Backend.Mailing.Compose
                                                || spt.RegistrationId_Follower == registrationId)
                                     .Where(spt => !spt.IsCancelled
                                                && !spt.IsWaitingList)
-                                    .Where(spt => spt.Registrable!.Ics!.AddToCalendar)
-                                    .Include(spt=>spt.Registrable!.Ics!.Registrable)
-                                    .Select(spt => spt.Registrable!.Ics!)
+                                    .SelectMany(spt => spt.Registrable!.Ics!)
+                                    .Include(ics => ics.Registrable)
                                     .ToListAsync(cancellationToken);
 
             if (!tracks.Any())
@@ -83,13 +82,13 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 sb.AppendLine($"DESCRIPTION:{track.ContentHtml}");
                 sb.AppendLine("END:VEVENT");
             }
-            
+
             sb.AppendLine("END:VCALENDAR");
 
             return Encoding.ASCII.GetBytes(sb.ToString());
         }
 
-        private string FormatDateTime(DateTimeOffset dateTime)
+        private static string FormatDateTime(DateTimeOffset dateTime)
         {
             return dateTime.ToString("yyyyMMdd'T'HHmmss");
         }

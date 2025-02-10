@@ -4,6 +4,7 @@ namespace EventRegistrar.Backend.Registrables.Calendar
 {
     public class RegistrableIcs : Entity
     {
+        public Guid RegistrableId { get; set; }
         public Registrable? Registrable { get; set; }
         public bool AddToCalendar { get; set; }
         public string? Location { get; set; }
@@ -20,8 +21,8 @@ namespace EventRegistrar.Backend.Registrables.Calendar
             builder.ToTable("RegistrablesIcs");
 
             builder.HasOne(rbc => rbc.Registrable)
-                   .WithOne(rbl => rbl.Ics)
-                   .HasForeignKey<RegistrableIcs>(rbc => rbc.Id);
+                   .WithMany(rbl => rbl.Ics)
+                   .HasForeignKey(rbc => rbc.RegistrableId);
 
             builder.Property(rbl => rbl.Location)
                    .HasMaxLength(500);
