@@ -12,6 +12,7 @@ public class AutoMailTemplateDisplayItem
     public MailType Type { get; set; }
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
+    public bool AddIcs { get; set; }
 }
 
 public class AutoMailTemplateQueryHandler(IQueryable<AutoMailTemplate> mailTemplates) : IRequestHandler<AutoMailTemplateQuery, AutoMailTemplateDisplayItem>
@@ -25,6 +26,7 @@ public class AutoMailTemplateQueryHandler(IQueryable<AutoMailTemplate> mailTempl
                                                      Id = mtp.Id,
                                                      Type = mtp.Type,
                                                      Subject = mtp.Subject,
+                                                     AddIcs = mtp.AddIcs,
                                                      ContentHtml = mtp.ContentHtml
                                                  })
                                   .FirstAsync(cancellationToken);

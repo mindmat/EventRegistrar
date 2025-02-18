@@ -5376,6 +5376,9 @@
           "contentHtml": {
             "type": "string",
             "nullable": true
+          },
+          "addIcs": {
+            "type": "boolean"
           }
         }
       },
@@ -5928,6 +5931,9 @@
             "nullable": true
           },
           "discarded": {
+            "type": "boolean"
+          },
+          "addIcs": {
             "type": "boolean"
           }
         }
@@ -11931,6 +11937,9 @@
           "contentHtml": {
             "type": "string",
             "nullable": true
+          },
+          "addIcs": {
+            "type": "boolean"
           }
         }
       },
@@ -11973,6 +11982,9 @@
             "type": "string",
             "format": "guid",
             "nullable": true
+          },
+          "addIcs": {
+            "type": "boolean"
           }
         }
       },

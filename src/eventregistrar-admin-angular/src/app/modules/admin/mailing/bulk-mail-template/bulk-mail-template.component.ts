@@ -30,7 +30,8 @@ export class BulkMailTemplateComponent implements OnInit
     senderName: '',
     senderMail: '',
     subject: '',
-    contentHtml: ''
+    contentHtml: '',
+    addIcs: false,
   });
   public options = null;
 
@@ -152,7 +153,8 @@ export class BulkMailTemplateComponent implements OnInit
       subject: this.templateForm.value.subject,
       contentHtml: html,
       audiences: this.selectedAudiences,
-      registrableId: this.registrableId
+      registrableId: this.registrableId,
+      addIcs: this.templateForm.value.addIcs
     })
       .subscribe();
   }

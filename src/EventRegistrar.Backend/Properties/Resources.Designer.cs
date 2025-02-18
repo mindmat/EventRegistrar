@@ -169,6 +169,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ics als Anhang ans Mail anhängen.
+        /// </summary>
+        internal static string AddIcsAsAttachment {
+            get {
+                return ResourceManager.GetString("AddIcsAsAttachment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mail-Import hinzufügen.
         /// </summary>
         internal static string AddImap {

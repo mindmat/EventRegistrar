@@ -27,7 +27,8 @@ export class AutoMailTemplateComponent implements OnInit
   templateForm = this.fb.group<AutoMailTemplateDisplayItem>({
     id: '',
     subject: '',
-    contentHtml: ''
+    contentHtml: '',
+    addIcs: false,
   });
 
   private tribute = new Tribute(
@@ -169,6 +170,7 @@ export class AutoMailTemplateComponent implements OnInit
       eventId: this.eventService.selectedId,
       templateId: this.templateForm.value.id,
       subject: this.templateForm.value.subject,
+      addIcs: this.templateForm.value.addIcs,
       contentHtml: html
     })
       .subscribe();

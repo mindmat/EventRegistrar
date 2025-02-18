@@ -9,6 +9,7 @@ public class UpdateAutoMailTemplateCommand : IRequest, IEventBoundRequest
     public Guid TemplateId { get; set; }
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
+    public bool AddIcs { get; set; }
 }
 
 public class UpdateAutoMailTemplateCommandHandler(IRepository<AutoMailTemplate> autoMailTemplates,
@@ -22,6 +23,7 @@ public class UpdateAutoMailTemplateCommandHandler(IRepository<AutoMailTemplate> 
                                                               && mtp.Id == command.TemplateId,
                                                           cancellationToken);
         template.Subject = command.Subject;
+        template.AddIcs = command.AddIcs;
         if (!string.IsNullOrWhiteSpace(command.ContentHtml))
         {
             template.ContentHtml = command.ContentHtml;

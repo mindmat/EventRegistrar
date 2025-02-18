@@ -15,6 +15,7 @@ public class UpdateBulkMailTemplateCommand : IRequest, IEventBoundRequest
     public string? ContentHtml { get; set; }
     public IEnumerable<MailingAudience>? Audiences { get; set; }
     public Guid? RegistrableId { get; set; }
+    public bool AddIcs { get; set; }
 }
 
 public class UpdateBulkMailTemplateCommandHandler(IRepository<BulkMailTemplate> bulkMailTemplates,
@@ -30,6 +31,7 @@ public class UpdateBulkMailTemplateCommandHandler(IRepository<BulkMailTemplate> 
         template.SenderMail = command.SenderMail;
         template.SenderName = command.SenderName;
         template.Subject = command.Subject;
+        template.AddIcs = command.AddIcs;
         if (!string.IsNullOrWhiteSpace(command.ContentHtml))
         {
             template.ContentHtml = command.ContentHtml;

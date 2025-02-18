@@ -8614,6 +8614,7 @@ export interface AutoMailTemplateDisplayItem {
     type?: MailType;
     subject?: string | null;
     contentHtml?: string | null;
+    addIcs?: boolean;
 }
 
 export interface AutoMailTemplateQuery {
@@ -8801,6 +8802,7 @@ export interface BulkMailTemplateDisplayItem {
     audiences?: MailingAudience[] | null;
     registrableId?: string | null;
     discarded?: boolean;
+    addIcs?: boolean;
 }
 
 export enum MailingAudience {
@@ -10712,6 +10714,7 @@ export interface UpdateAutoMailTemplateCommand {
     templateId?: string;
     subject?: string | null;
     contentHtml?: string | null;
+    addIcs?: boolean;
 }
 
 export interface UpdateBulkMailTemplateCommand {
@@ -10723,6 +10726,7 @@ export interface UpdateBulkMailTemplateCommand {
     contentHtml?: string | null;
     audiences?: MailingAudience[] | null;
     registrableId?: string | null;
+    addIcs?: boolean;
 }
 
 export interface UpdateInternalNotesCommand {
