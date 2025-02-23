@@ -1445,6 +1445,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Titel.
+        /// </summary>
+        internal static string IcsTitle {
+            get {
+                return ResourceManager.GetString("IcsTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ignorieren.
         /// </summary>
         internal static string Ignore {

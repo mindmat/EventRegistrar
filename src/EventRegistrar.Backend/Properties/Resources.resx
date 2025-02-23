@@ -574,6 +574,9 @@
   <data name="IcsStart" xml:space="preserve">
     <value>Beginn</value>
   </data>
+  <data name="IcsTitle" xml:space="preserve">
+    <value>Titel</value>
+  </data>
   <data name="Ignore" xml:space="preserve">
     <value>Ignorieren</value>
   </data>

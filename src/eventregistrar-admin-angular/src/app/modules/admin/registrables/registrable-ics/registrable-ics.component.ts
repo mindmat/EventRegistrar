@@ -8,7 +8,6 @@ import { v4 as createUuid } from 'uuid';
 
 import FroalaEditor from "froala-editor";
 import { TranslateService } from '@ngx-translate/core';
-import { EventService } from '../../events/event.service';
 
 @Component({
   selector: 'app-registrable-ics',
@@ -39,6 +38,7 @@ export class RegistrableIcsComponent implements OnInit
         id: createUuid(),
         registrableId: this.data.registrableId,
         addToCalendar: false,
+        title: null,
         location: '',
         start: new Date(),
         end: new Date(),

@@ -22,6 +22,14 @@
                 </mat-slide-toggle>
             </div>
 
+            <!-- Title -->
+            <div class="sm:col-span-6">
+                <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
+                    <mat-label>{{ 'IcsTitle' | translate }}</mat-label>
+                    <input [formControlName]="'title'" matInput>
+                </mat-form-field>
+            </div>
+
             <!-- Location -->
             <div class="sm:col-span-6">
                 <mat-form-field class="w-full" [subscriptSizing]="'dynamic'">
