@@ -354,6 +354,9 @@
   <data name="Download" xml:space="preserve">
     <value>Download</value>
   </data>
+  <data name="DownloadIcs" xml:space="preserve">
+    <value>Download calendar</value>
+  </data>
   <data name="DuePayments" xml:space="preserve">
     <value>Due payments</value>
   </data>

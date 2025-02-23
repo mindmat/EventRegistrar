@@ -1,6 +1,7 @@
-﻿using System.Buffers;
-using System.Collections;
+﻿using System.Collections;
 using System.Data;
+using System.Net;
+using System.Net.Mime;
 using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -123,6 +124,12 @@ public static class EndpointRouteBuilderExtensions
             {
                 context.Response.ContentType = download.ContentType;
                 context.Response.StatusCode = 200;
+                if (download.Filename != null)
+                {
+                    var filenameEncoded = WebUtility.UrlEncode(download.Filename);
+                    context.Response.Headers.ContentDisposition = new ContentDisposition("attachment") { FileName = filenameEncoded }.ToString();
+                }
+
                 await context.Response.BodyWriter.WriteAsync(download.Content, context.RequestAborted);
                 await context.Response.BodyWriter.FlushAsync(context.RequestAborted);
             }
@@ -151,7 +158,7 @@ public static class EndpointRouteBuilderExtensions
     private static async Task SerializeAsXlsx(HttpContext context, object? response, ILogger logger)
     {
         // try to serialize as xlsx
-        context.Response.Headers["content-type"] = "application/octet-stream";
+        context.Response.Headers.ContentType = "application/octet-stream";
         LoadOptions.DefaultGraphicEngine = new DefaultGraphicEngine("DejaVu Sans");
         var workbook = new XLWorkbook();
         foreach (var (name, values, rowType) in GetEnumerableProperties(response))

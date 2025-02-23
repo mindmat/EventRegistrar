@@ -3,6 +3,7 @@ import { Api, MailType, MailTypeItem, RegistrationDisplayItem } from 'app/api/ap
 import { BehaviorSubject, filter, map, Observable, Subscription } from 'rxjs';
 import { EventService } from '../events/event.service';
 import { NotificationService } from '../infrastructure/notification.service';
+import { DownloadService } from '../infrastructure/download.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class RegistrationService
   constructor(
     private api: Api,
     private eventService: EventService,
-    notificationService: NotificationService)
+    notificationService: NotificationService,
+    private downloadService: DownloadService)
   {
     notificationService.subscribe('RegistrationQuery').pipe(
       filter(e => e.rowId === this.registrationId),
@@ -109,5 +111,10 @@ export class RegistrationService
     this.api.recalculatePriceAndWaitingList_Command({ registrationId }).subscribe();
     return this.api.updateReadModel_Command({ eventId: this.eventService.selectedId, queryName: 'RegistrationQuery', rowId: registrationId })
       .subscribe();
+  }
+
+  downloadIcs(registrationId: string)
+  {
+    this.downloadService.download('DownloadIcsPreviewQuery', { eventId: this.eventService.selectedId, registrationId }, 'calendar.ics', 'text/calendar');
   }
 }

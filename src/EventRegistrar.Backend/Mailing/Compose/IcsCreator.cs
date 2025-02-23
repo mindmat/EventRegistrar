@@ -1,7 +1,6 @@
 ﻿using System.Text;
 
 using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Calendar;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;

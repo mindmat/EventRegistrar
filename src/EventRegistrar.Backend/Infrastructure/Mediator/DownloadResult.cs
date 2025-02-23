@@ -3,5 +3,6 @@
 public class DownloadResult
 {
     public required string ContentType { get; set; }
-    public ReadOnlyMemory<byte> Content { get; set; }
+    public required ReadOnlyMemory<byte> Content { get; set; }
+    public string? Filename { get; set; }
 }

@@ -217,6 +217,7 @@
                         <mat-menu #spotsMenu="matMenu">
                             <button mat-menu-item (click)="changeSpots()">{{ 'Change' | translate }}</button>
                             <button mat-menu-item [matMenuTriggerFor]="fallbackPackagesMenu">{{ 'SetFallbackPackage' | translate }}</button>
+                            <button mat-menu-item (click)="downloadIcs()">{{ 'DownloadIcs' | translate }}</button>
                         </mat-menu>
                         <mat-menu #fallbackPackagesMenu>
                             <button *ngFor="let package of possibleFallbackPricePackages" mat-menu-item

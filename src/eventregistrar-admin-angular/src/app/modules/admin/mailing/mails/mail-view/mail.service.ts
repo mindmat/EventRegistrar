@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, Optional } from '@angular/core';
 import { Api, API_BASE_URL, MailAttachmentMetadata, MailView } from 'app/api/api';
 import { EventService } from 'app/modules/admin/events/event.service';
+import { DownloadService } from 'app/modules/admin/infrastructure/download.service';
 import { FetchService } from 'app/modules/admin/infrastructure/fetchService';
 import { NotificationService } from 'app/modules/admin/infrastructure/notification.service';
 import { Observable } from 'rxjs';
@@ -14,8 +15,7 @@ export class MailService extends FetchService<MailView>
   constructor(private api: Api,
     private eventService: EventService,
     notificationService: NotificationService,
-    @Inject(HttpClient) private http: HttpClient,
-    @Optional() @Inject(API_BASE_URL) private baseUrl?: string)
+    private downloadService: DownloadService)
   {
     super('MailViewQuery', notificationService);
   }
@@ -50,17 +50,6 @@ export class MailService extends FetchService<MailView>
 
   downloadAttachment(attachment: MailAttachmentMetadata)
   {
-    const url = this.baseUrl + "/api/DownloadMailAttachmentQuery";
-    this.http.post(url, { eventId: this.eventService.selectedId, mailAttachmentId: attachment.id }, { responseType: "blob" }).subscribe((file: Blob) =>
-    {
-      const blob = new Blob([file], { type: attachment.contentType });
-      const anchor = window.document.createElement('a');
-      anchor.href = window.URL.createObjectURL(blob);
-      anchor.download = attachment.filename ?? 'attachment';
-      document.body.appendChild(anchor);
-      anchor.click();
-      document.body.removeChild(anchor);
-      window.URL.revokeObjectURL(anchor.href);
-    });
+    this.downloadService.download('DownloadMailAttachmentQuery', { eventId: this.eventService.selectedId, mailAttachmentId: attachment.id }, attachment.filename, attachment.contentType);
   }
 }

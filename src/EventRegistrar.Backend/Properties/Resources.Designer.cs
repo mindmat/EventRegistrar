@@ -790,6 +790,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Kalender herunterladen.
+        /// </summary>
+        internal static string DownloadIcs {
+            get {
+                return ResourceManager.GetString("DownloadIcs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ausstehende Zahlungen.
         /// </summary>
         internal static string DuePayments {

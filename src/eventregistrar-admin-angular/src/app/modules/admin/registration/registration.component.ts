@@ -276,4 +276,9 @@ export class RegistrationComponent implements OnInit
   {
     this.registrationService.recalculateReadModel(this.registration.id);
   }
+
+  downloadIcs()
+  {
+    this.registrationService.downloadIcs(this.registration.id);
+  }
 }
