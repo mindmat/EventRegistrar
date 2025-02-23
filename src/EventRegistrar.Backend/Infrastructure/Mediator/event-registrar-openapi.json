@@ -1448,6 +1448,39 @@
         }
       }
     },
+    "/api/DownloadIcsPreviewQuery": {
+      "post": {
+        "tags": [
+          "DownloadIcsPreview"
+        ],
+        "operationId": "DownloadIcsPreview_Query",
+        "requestBody": {
+          "x-name": "DownloadIcsPreviewQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DownloadIcsPreviewQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/DownloadMailAttachmentQuery": {
       "post": {
         "tags": [
@@ -6748,6 +6781,20 @@
           }
         }
       },
+      "DownloadIcsPreviewQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "registrationId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "DownloadMailAttachmentQuery": {
         "type": "object",
         "additionalProperties": false,
@@ -9992,6 +10039,12 @@
               "format": "guid"
             }
           },
+          "ics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IcsMetadata"
+            }
+          },
           "class": {
             "type": "array",
             "items": {
@@ -10003,6 +10056,24 @@
             "items": {
               "$ref": "#/components/schemas/SpotState"
             }
+          }
+        }
+      },
+      "IcsMetadata": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -10092,6 +10163,12 @@
             "items": {
               "type": "string",
               "format": "guid"
+            }
+          },
+          "ics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IcsMetadata"
             }
           },
           "class": {

@@ -160,7 +160,8 @@
                                     </ng-container>
                                     <!-- context menu -->
                                     <div class="flex items-center ml-auto">
-                                        <button *ngFor="let icsId of doubleRegistrable.icsIds" mat-icon-button (click)="changeRegistrableIcs(icsId, doubleRegistrable.id, doubleRegistrable.name)">
+                                        <button *ngFor="let ics of doubleRegistrable.ics" mat-icon-button (click)="changeRegistrableIcs(ics.id, doubleRegistrable.id, doubleRegistrable.name)"
+                                            matTooltip="{{ics.title}} - {{ics.start| date: 'EEEEEE HH:mm' }}">
                                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
                                         </button>
                                         <button mat-icon-button [matMenuTriggerFor]="registrableMenu">
@@ -335,7 +336,8 @@
                                     </ng-container>
                                     <!-- context menu -->
                                     <div class="flex items-center ml-auto">
-                                        <button *ngFor="let icsId of singleRegistrable.icsIds" mat-icon-button (click)="changeRegistrableIcs(icsId, singleRegistrable.id, singleRegistrable.name)">
+                                        <button *ngFor="let ics of singleRegistrable.ics" mat-icon-button (click)="changeRegistrableIcs(ics.id, singleRegistrable.id, singleRegistrable.name)"
+                                            matTooltip="{{ics.title}} - {{ics.start| date: 'EEEEEE HH:mm' }}">
                                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
                                         </button>
                                         <button mat-icon-button [matMenuTriggerFor]="registrableMenu">

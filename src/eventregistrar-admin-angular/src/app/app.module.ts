@@ -18,10 +18,10 @@ import 'froala-editor/js/plugins/code_beautifier.min.js';
 import 'froala-editor/js/plugins/help.min.js';
 import 'froala-editor/js/languages/de.js';
 
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CommonModule } from '@angular/common';
+import { CommonModule, registerLocaleData } from '@angular/common';
 import { ExtraOptions, PreloadAllModules, RouterModule } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 import { FuseModule } from '@fuse';
@@ -122,6 +122,8 @@ import { RegistrableIcsComponent } from './modules/admin/registrables/registrabl
 import { NGX_MAT_DATE_FORMATS, NgxMatDateAdapter, NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS, NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import localeDe from '@angular/common/locales/de-CH';
+import localeDeExtra from '@angular/common/locales/extra/de-CH';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -215,6 +217,7 @@ export const DE_FORMATS_TIME = {
             useClass: AuthHttpInterceptor,
             multi: true
         },
+        { provide: LOCALE_ID, useValue: 'de-CH' },
         { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS] },
         { provide: MAT_DATE_FORMATS, useValue: DE_FORMATS },
         { provide: NgxMatDateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS] },
@@ -340,6 +343,10 @@ export const DE_FORMATS_TIME = {
 })
 export class AppModule
 {
+    constructor()
+    {
+        registerLocaleData(localeDe, 'de-CH', localeDeExtra);
+    }
 }
 
 export function TranslationLoaderFactory(service: TranslationLoaderService): TranslateLoader

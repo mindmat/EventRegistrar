@@ -65,6 +65,7 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                                            && userCanDeleteRegistrable
                                                                                            && rbl.Event!.State == RegistrationForms.EventState.Setup,
                                                                                 IcsIds = rbl.Ics!.Select(ics => ics.Id),
+                                                                                Ics = rbl.Ics!.Select(ics => new IcsMetadata(ics.Id, ics.Title, ics.Start)),
                                                                                 Class = rbl.Spots!.Where(spt => !spt.IsWaitingList
                                                                                                              && spt.Registration?.IsOnWaitingList != true)
                                                                                            .Select(GetSpotState)
@@ -101,6 +102,7 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                                            && userCanDeleteRegistrable
                                                                                            && rbl.Event!.State == RegistrationForms.EventState.Setup,
                                                                                 IcsIds = rbl.Ics!.Select(ics => ics.Id),
+                                                                                Ics = rbl.Ics!.Select(ics => new IcsMetadata(ics.Id, ics.Title, ics.Start)),
                                                                                 Class = rbl.Spots!.Where(spt => !spt.IsWaitingList
                                                                                                              && spt.Registration?.IsOnWaitingList != true
                                                                                                              && spt.Registration_Follower?.IsOnWaitingList != true)
@@ -217,6 +219,7 @@ public class SingleRegistrableDisplayItem
     public bool IsCore { get; set; }
     public string? CheckinListColumn { get; set; }
     public IEnumerable<Guid> IcsIds { get; set; } = null!;
+    public IEnumerable<IcsMetadata> Ics { get; set; } = null!;
     public IEnumerable<SpotState> Class { get; set; } = null!;
     public IEnumerable<SpotState> WaitingList { get; set; } = null!;
 }
@@ -240,6 +243,7 @@ public record DoubleRegistrableDisplayItem
     public bool IsCore { get; set; }
     public string? CheckinListColumn { get; set; }
     public IEnumerable<Guid> IcsIds { get; set; } = null!;
+    public IEnumerable<IcsMetadata> Ics { get; set; } = null!;
     public IEnumerable<DoubleSpotState> Class { get; set; } = null!;
     public IEnumerable<DoubleSpotState> WaitingList { get; set; } = null!;
 }
@@ -258,3 +262,5 @@ public record DoubleSpotState
     public SpotState Follower { get; set; }
     public bool Linked { get; set; }
 }
+
+public record IcsMetadata(Guid Id, string? Title, DateTimeOffset Start);
