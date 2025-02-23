@@ -1,6 +1,7 @@
 ﻿using System.Text;
 
 using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Calendar;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
@@ -77,7 +78,7 @@ namespace EventRegistrar.Backend.Mailing.Compose
                 sb.AppendLine($"DTSTART:{FormatDateTime(track.Start)}");
                 sb.AppendLine($"DTEND:{FormatDateTime(track.End)}");
                 sb.AppendLine($"DTSTAMP:{FormatDateTime(now)}");
-                sb.AppendLine($"SUMMARY:{track.Registrable!.DisplayName}");
+                sb.AppendLine($"SUMMARY:{GetName(track)}");
                 sb.AppendLine($"LOCATION:{track.Location}");
                 sb.AppendLine($"DESCRIPTION:{track.ContentHtml}");
                 sb.AppendLine("END:VEVENT");
@@ -86,6 +87,13 @@ namespace EventRegistrar.Backend.Mailing.Compose
             sb.AppendLine("END:VCALENDAR");
 
             return Encoding.ASCII.GetBytes(sb.ToString());
+        }
+
+        private string GetName(RegistrableIcs track)
+        {
+            return string.IsNullOrWhiteSpace(track.Title)
+                       ? track.Registrable!.DisplayName
+                       : track.Title;
         }
 
         private static string FormatDateTime(DateTimeOffset dateTime)

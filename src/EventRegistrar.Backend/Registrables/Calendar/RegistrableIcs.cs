@@ -6,6 +6,7 @@ namespace EventRegistrar.Backend.Registrables.Calendar
     {
         public Guid RegistrableId { get; set; }
         public Registrable? Registrable { get; set; }
+        public string? Title { get; set; }
         public bool AddToCalendar { get; set; }
         public string? Location { get; set; }
         public DateTimeOffset Start { get; set; }
@@ -24,6 +25,8 @@ namespace EventRegistrar.Backend.Registrables.Calendar
                    .WithMany(rbl => rbl.Ics)
                    .HasForeignKey(rbc => rbc.RegistrableId);
 
+            builder.Property(rbl => rbl.Title)
+                   .HasMaxLength(1000);
             builder.Property(rbl => rbl.Location)
                    .HasMaxLength(500);
         }

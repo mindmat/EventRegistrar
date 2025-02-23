@@ -32,6 +32,9 @@ public class SaveRegistrableIcsCommandHandler(IRepository<RegistrableIcs> regist
                                                    });
 
         ics.AddToCalendar = saveItem.AddToCalendar;
+        ics.Title = string.IsNullOrWhiteSpace(saveItem.Title)
+                        ? null
+                        : saveItem.Title;
         ics.Location = saveItem.Location;
         ics.Start = ConvertUtcToEventTime(saveItem.Start);
         ics.End = ConvertUtcToEventTime(saveItem.End);
