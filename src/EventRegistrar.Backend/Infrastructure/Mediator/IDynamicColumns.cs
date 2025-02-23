@@ -1,7 +1,6 @@
-﻿namespace EventRegistrar.Backend.Infrastructure.Mediator
+﻿namespace EventRegistrar.Backend.Infrastructure.Mediator;
+
+public interface IDynamicColumns
 {
-    public interface IDynamicColumns
-    {
-        IDictionary<string, string>? DynamicColumns { get; set; }
-    }
+    IDictionary<string, string>? DynamicColumns { get; set; }
 }
