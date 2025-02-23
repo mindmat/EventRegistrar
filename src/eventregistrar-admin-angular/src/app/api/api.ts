@@ -2491,6 +2491,62 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    downloadMailAttachment_Query(downloadMailAttachmentQuery: DownloadMailAttachmentQuery | undefined): Observable<FileResponse> {
+        let url_ = this.baseUrl + "/api/DownloadMailAttachmentQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(downloadMailAttachmentQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/octet-stream"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processDownloadMailAttachment_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processDownloadMailAttachment_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<FileResponse>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<FileResponse>;
+        }));
+    }
+
+    protected processDownloadMailAttachment_Query(response: HttpResponseBase): Observable<FileResponse> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200 || status === 206) {
+            const contentDisposition = response.headers ? response.headers.get("content-disposition") : undefined;
+            let fileNameMatch = contentDisposition ? /filename\*=(?:(\\?['"])(.*?)\1|(?:[^\s]+'.*?')?([^;\n]*))/g.exec(contentDisposition) : undefined;
+            let fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[3] || fileNameMatch[2] : undefined;
+            if (fileName) {
+                fileName = decodeURIComponent(fileName);
+            } else {
+                fileNameMatch = contentDisposition ? /filename="?([^"]*?)"?(;|$)/g.exec(contentDisposition) : undefined;
+                fileName = fileNameMatch && fileNameMatch.length > 1 ? fileNameMatch[1] : undefined;
+            }
+            return _observableOf({ fileName: fileName, data: responseBlob as any, status: status, headers: _headers });
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     duePayments_Query(duePaymentsQuery: DuePaymentsQuery | undefined): Observable<DuePaymentItem[]> {
         let url_ = this.baseUrl + "/api/DuePaymentsQuery";
         url_ = url_.replace(/[?&]$/, "");
@@ -9062,6 +9118,11 @@ export interface DomainEventsQuery {
     types?: string[];
 }
 
+export interface DownloadMailAttachmentQuery {
+    eventId?: string;
+    mailAttachmentId?: string;
+}
+
 export interface DuePaymentItem {
     acceptedMail?: SentMailDto | null;
     email?: string | null;
@@ -9424,6 +9485,7 @@ export interface MailTemplatePreview {
 }
 
 export interface MailAttachmentMetadata {
+    id?: string;
     filename?: string;
     contentType?: string | null;
 }
@@ -10058,6 +10120,7 @@ export interface RegistrableIcsItem {
     id?: string;
     registrableId?: string;
     addToCalendar?: boolean;
+    title?: string | null;
     location?: string | null;
     start?: Date;
     end?: Date;

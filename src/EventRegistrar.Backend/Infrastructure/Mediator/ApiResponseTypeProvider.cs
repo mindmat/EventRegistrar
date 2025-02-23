@@ -16,6 +16,10 @@ internal class ApiResponseTypeProvider
             declaredReturnType = declaredReturnType!.GetGenericArguments()[0];
         }
 
+        if (declaredReturnType == typeof(DownloadResult))
+        {
+            declaredReturnType = null;
+        }
         return GetApiResponseTypes(declaredReturnType);
     }
 
@@ -79,7 +83,7 @@ internal class ApiResponseTypeProvider
             {
                 continue;
             }
-
+            
             foreach (var contentType in declaredContentTypes)
             {
                 apiResponse.ApiResponseFormats.Add(new ApiResponseFormat { MediaType = "application/json" });

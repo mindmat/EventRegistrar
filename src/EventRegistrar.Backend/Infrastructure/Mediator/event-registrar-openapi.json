@@ -1448,6 +1448,39 @@
         }
       }
     },
+    "/api/DownloadMailAttachmentQuery": {
+      "post": {
+        "tags": [
+          "DownloadMailAttachment"
+        ],
+        "operationId": "DownloadMailAttachment_Query",
+        "requestBody": {
+          "x-name": "DownloadMailAttachmentQuery",
+          "description": "",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DownloadMailAttachmentQuery"
+              }
+            }
+          },
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/DuePaymentsQuery": {
       "post": {
         "tags": [
@@ -6715,6 +6748,20 @@
           }
         }
       },
+      "DownloadMailAttachmentQuery": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "eventId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "mailAttachmentId": {
+            "type": "string",
+            "format": "guid"
+          }
+        }
+      },
       "DuePaymentItem": {
         "type": "object",
         "additionalProperties": false,
@@ -7805,6 +7852,10 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
           "filename": {
             "type": "string"
           },
@@ -9826,6 +9877,10 @@
           },
           "addToCalendar": {
             "type": "boolean"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
           },
           "location": {
             "type": "string",

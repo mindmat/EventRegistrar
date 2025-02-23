@@ -2,7 +2,7 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
 import { MatButton } from '@angular/material/button';
-import { MailView } from 'app/api/api';
+import { MailAttachmentMetadata, MailView } from 'app/api/api';
 import { NavigatorService } from 'app/modules/admin/navigator.service';
 import { Subject, takeUntil } from 'rxjs';
 import { MailService } from './mail.service';
@@ -121,4 +121,8 @@ export class MailViewComponent implements OnInit
     this.service.addIcs(mailId);
   }
 
+  downloadAttachment(attachment: MailAttachmentMetadata)
+  {
+    this.service.downloadAttachment(attachment);
+  }
 }

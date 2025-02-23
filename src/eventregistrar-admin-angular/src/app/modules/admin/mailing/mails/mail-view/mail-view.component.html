@@ -100,7 +100,9 @@
                                 </ng-template>
 
                                 <ng-container *ngFor="let attachment of mail.attachments">
-                                    <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'" [matTooltip]="attachment.filename"></mat-icon>
+                                    <button class="w-5 h-5 min-h-5 ml-1" mat-icon-button (click)="downloadAttachment(attachment)" [matTooltip]="attachment.filename">
+                                        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                                    </button>
                                     <!-- <div class="ml-1">({{ mail.recipients.length }})</div> -->
                                 </ng-container>
                             </div>

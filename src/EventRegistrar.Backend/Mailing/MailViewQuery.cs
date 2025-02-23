@@ -35,7 +35,7 @@ public class MailViewQueryHandler(IQueryable<Mail> mails,
                                                                                              }),
                                               Subject = mail.Subject,
                                               Content = mail.ContentHtml,
-                                              Attachments = mail.Attachments!.Select(mat => new MailAttachmentMetadata(mat.Name, mat.ContentType)),
+                                              Attachments = mail.Attachments!.Select(mat => new MailAttachmentMetadata(mat.Id, mat.Name, mat.ContentType)),
                                               Created = mail.Created
                                           })
                           .FirstOrDefaultAsync(cancellationToken)
@@ -65,7 +65,7 @@ public class MailViewQueryHandler(IQueryable<Mail> mails,
     }
 }
 
-public record MailAttachmentMetadata(string Filename, string? ContentType);
+public record MailAttachmentMetadata(Guid Id, string Filename, string? ContentType);
 
 public class MailView
 {

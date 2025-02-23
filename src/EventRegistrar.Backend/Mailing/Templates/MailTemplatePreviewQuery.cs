@@ -61,7 +61,7 @@ public class AutoMailPreviewQueryHandler(IQueryable<AutoMailTemplate> autoAutoMa
                    {
                        Subject = subject,
                        ContentHtml = composedMail.Content,
-                       Attachments = composedMail.Attachments?.Select(mat => new MailAttachmentMetadata(mat.Name, mat.ContentType))
+                       Attachments = composedMail.Attachments?.Select(mat => new MailAttachmentMetadata(mat.Id, mat.Name, mat.ContentType))
                    };
         }
 

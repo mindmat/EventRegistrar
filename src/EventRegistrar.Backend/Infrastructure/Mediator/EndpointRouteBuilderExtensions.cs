@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Buffers;
+using System.Collections;
 using System.Data;
 using System.Reflection;
 using System.Text.Json;
@@ -108,7 +109,7 @@ public static class EndpointRouteBuilderExtensions
         }
         else if (context.Request.Headers.Accept == "text/plain" && response is string textResponse)
         {
-            context.Response.Headers["content-type"] = "text/plain";
+            context.Response.Headers.ContentType = "text/plain";
             await context.Response.WriteAsync(textResponse, context.RequestAborted);
         }
         else
@@ -116,14 +117,21 @@ public static class EndpointRouteBuilderExtensions
             if (response is Unit)
             {
                 context.Response.StatusCode = 204;
+                await context.Response.Body.FlushAsync(context.RequestAborted);
+            }
+            else if(response is DownloadResult download)
+            {
+                context.Response.ContentType = download.ContentType;
+                context.Response.StatusCode = 200;
+                await context.Response.BodyWriter.WriteAsync(download.Content, context.RequestAborted);
+                await context.Response.BodyWriter.FlushAsync(context.RequestAborted);
             }
             else
             {
                 await SerializeAsJson(context, response, requestType);
+                await context.Response.Body.FlushAsync(context.RequestAborted);
             }
         }
-
-        await context.Response.Body.FlushAsync(context.RequestAborted);
     }
 
     private static async Task SerializeAsJson(HttpContext context, object? response, Type requestType)
