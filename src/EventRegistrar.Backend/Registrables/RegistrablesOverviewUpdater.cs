@@ -65,7 +65,9 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                                            && userCanDeleteRegistrable
                                                                                            && rbl.Event!.State == RegistrationForms.EventState.Setup,
                                                                                 IcsIds = rbl.Ics!.Select(ics => ics.Id),
-                                                                                Ics = rbl.Ics!.Select(ics => new IcsMetadata(ics.Id, ics.Title, ics.Start)),
+                                                                                Ics = rbl.Ics!
+                                                                                         .OrderBy(ics => ics.Start)
+                                                                                         .Select(ics => new IcsMetadata(ics.Id, ics.Title ?? rbl.DisplayName, ics.Start)),
                                                                                 Class = rbl.Spots!.Where(spt => !spt.IsWaitingList
                                                                                                              && spt.Registration?.IsOnWaitingList != true)
                                                                                            .Select(GetSpotState)
@@ -102,7 +104,9 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                                            && userCanDeleteRegistrable
                                                                                            && rbl.Event!.State == RegistrationForms.EventState.Setup,
                                                                                 IcsIds = rbl.Ics!.Select(ics => ics.Id),
-                                                                                Ics = rbl.Ics!.Select(ics => new IcsMetadata(ics.Id, ics.Title, ics.Start)),
+                                                                                Ics = rbl.Ics!
+                                                                                         .OrderBy(ics => ics.Start)
+                                                                                         .Select(ics => new IcsMetadata(ics.Id, ics.Title ?? rbl.DisplayName, ics.Start)),
                                                                                 Class = rbl.Spots!.Where(spt => !spt.IsWaitingList
                                                                                                              && spt.Registration?.IsOnWaitingList != true
                                                                                                              && spt.Registration_Follower?.IsOnWaitingList != true)
