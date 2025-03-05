@@ -36,27 +36,10 @@ public class SaveRegistrableIcsCommandHandler(IRepository<RegistrableIcs> regist
                         ? null
                         : saveItem.Title;
         ics.Location = saveItem.Location;
-        ics.Start = ConvertUtcToEventTime(saveItem.Start);
-        ics.End = ConvertUtcToEventTime(saveItem.End);
+        ics.Start = configuration.ConvertToEventTime(saveItem.Start);
+        ics.End = configuration.ConvertToEventTime(saveItem.End);
         ics.ContentHtml = saveItem.ContentHtml;
 
         changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
-    }
-
-    private DateTime ConvertUtcToEventTime(DateTimeOffset dateTime)
-    {
-        try
-        {
-            return TimeZoneInfo.ConvertTimeBySystemTimeZoneId(dateTime, configuration.TimeZone).LocalDateTime;
-        }
-        catch
-        {
-            if (configuration.FallbackOffset != null)
-            {
-                return dateTime.Add(configuration.FallbackOffset.Value).LocalDateTime;
-            }
-
-            return dateTime.LocalDateTime;
-        }
     }
 }

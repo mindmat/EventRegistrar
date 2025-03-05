@@ -90,7 +90,7 @@ public class IcsCreator(IQueryable<Seat> spots,
 
         sb.AppendLine("END:VCALENDAR");
 
-        return Encoding.ASCII.GetBytes(sb.ToString());
+        return Encoding.UTF8.GetBytes(sb.ToString());
     }
 
     private string GetName(RegistrableIcs track)
@@ -100,9 +100,10 @@ public class IcsCreator(IQueryable<Seat> spots,
                    : track.Title;
     }
 
-    private static string FormatDateTime(DateTimeOffset dateTime)
+    private string FormatDateTime(DateTimeOffset dateTime)
     {
-        return dateTime.ToString("yyyyMMdd'T'HHmmss");
+        var eventDateTime = calendarConfiguration.ConvertToEventTime(dateTime).DateTime;
+        return eventDateTime.ToString("yyyyMMdd'T'HHmmss");
     }
 
     private byte[] ComposeWithLibrary(string eventName, string calendarName, List<RegistrableIcs> tracks)
