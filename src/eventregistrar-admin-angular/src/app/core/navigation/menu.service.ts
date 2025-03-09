@@ -25,6 +25,10 @@ export class MenuService extends FetchService<MenuNodeContent[]>
 
     private fetchMenuItems(eventId?: string)
     {
+        if (!eventId)
+        {
+            return;
+        }
         return this.fetchItems(this.api.menuNodes_Query({ eventId }), null, eventId)
             .subscribe();
     }

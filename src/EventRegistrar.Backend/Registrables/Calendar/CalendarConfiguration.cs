@@ -1,6 +1,4 @@
-﻿using System.Configuration;
-
-using EventRegistrar.Backend.Infrastructure.Configuration;
+﻿using EventRegistrar.Backend.Infrastructure.Configuration;
 
 namespace EventRegistrar.Backend.Registrables.Calendar;
 

@@ -124,6 +124,8 @@ import { NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS, NgxMatMomentModule } from '@angula
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
 import localeDe from '@angular/common/locales/de-CH';
 import localeDeExtra from '@angular/common/locales/extra/de-CH';
+import { ErrorHandlingInterceptor } from './api/errorhandling.interceptor';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -217,6 +219,11 @@ export const DE_FORMATS_TIME = {
             useClass: AuthHttpInterceptor,
             multi: true
         },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ErrorHandlingInterceptor,
+            multi: true
+        },
         { provide: LOCALE_ID, useValue: 'de-CH' },
         { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS] },
         { provide: MAT_DATE_FORMATS, useValue: DE_FORMATS },
@@ -275,6 +282,7 @@ export const DE_FORMATS_TIME = {
         MatOptionModule,
         MatDatepickerModule,
         MatExpansionModule,
+        MatSnackBarModule,
 
         NgxMatDatetimePickerModule,
         NgxMatTimepickerModule,
