@@ -115,6 +115,7 @@ export class RegistrationService
 
   downloadIcs(registrationId: string)
   {
-    this.downloadService.download('DownloadIcsPreviewQuery', { eventId: this.eventService.selectedId, registrationId }, 'calendar.ics', 'text/calendar');
+    const filename = `${this.eventService.selected.name} - ${this.registration.value?.firstName} ${this.registration.value?.lastName}.ics`;
+    this.downloadService.download('DownloadIcsPreviewQuery', { eventId: this.eventService.selectedId, registrationId }, filename, 'text/calendar');
   }
 }
