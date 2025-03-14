@@ -266,6 +266,21 @@
 
         <!-- Column -->
         <div class="flex flex-col items-start space-y-4">
+            <!-- Notes -->
+            <fuse-card class="flex flex-col w-80 rounded-2xl">
+                <div class="flex flex-col w-80 px-8 pt-6 pb-8 rounded-2xl">
+                    <div class="flex items-center justify-between">
+                        <div class="text-2xl font-semibold leading-tight">{{ 'InternalNotes' | translate }}</div>
+                    </div>
+                    <hr *ngIf="!lastSentNotes" class="w-full border-t my-6">
+                    <mat-progress-bar *ngIf="!!lastSentNotes" mode="indeterminate"
+                        class="w-full h-1 my-6"></mat-progress-bar>
+                    <mat-form-field [subscriptSizing]="'dynamic'">
+                        <textarea class="textarea whitespace-pre-wrap" matInput #notesInput [rows]="4" [ngModel]="notes"
+                            (ngModelChange)="notesChanged(notesInput.value)"></textarea>
+                    </mat-form-field>
+                </div>
+            </fuse-card>
 
             <!-- Mails -->
             <fuse-card class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
@@ -316,20 +331,6 @@
                             </div>
                         </div>
                     </ng-container>
-                </div>
-            </fuse-card>
-
-            <!-- Notes -->
-            <fuse-card class="flex flex-col w-80 rounded-2xl">
-                <div class="flex flex-col w-80 px-8 pt-6 pb-8 rounded-2xl">
-                    <div class="flex items-center justify-between">
-                        <div class="text-2xl font-semibold leading-tight">{{ 'InternalNotes' | translate }}</div>
-                    </div>
-                    <hr *ngIf="!lastSentNotes" class="w-full border-t my-6">
-                    <mat-progress-bar *ngIf="!!lastSentNotes" mode="indeterminate" class="w-full h-1 my-6"></mat-progress-bar>
-                    <mat-form-field [subscriptSizing]="'dynamic'">
-                        <textarea class="textarea whitespace-pre-wrap" matInput #notesInput [rows]="4" [ngModel]="notes" (ngModelChange)="notesChanged(notesInput.value)"></textarea>
-                    </mat-form-field>
                 </div>
             </fuse-card>
 
