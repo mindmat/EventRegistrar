@@ -45,6 +45,7 @@ public class Auth0TokenProvider(SingletonConfigurationFeature<Auth0Configuration
             _expires = contentToken == null
                            ? null
                            : DateTimeOffset.Now.AddSeconds(contentToken.expires_in);
+            return _token;
         }
 
         return null;

@@ -50,7 +50,7 @@ public class ImportMailsFromImapCommandHandler(ExternalMailConfigurations config
             {
                 var message = await inbox.GetMessageAsync(i, cancellationToken);
                 if (message.Date < minDate
-                 && await importedMails.AnyAsync(iml => iml.EventId == command.EventId
+                 || await importedMails.AnyAsync(iml => iml.EventId == command.EventId
                                                      && iml.MessageIdentifier == message.MessageId, cancellationToken))
                     // mail has been imported earlier
                 {
