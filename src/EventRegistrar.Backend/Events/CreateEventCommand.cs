@@ -189,6 +189,8 @@ public class CreateEventCommandHandler(IRepository<Event> events,
         changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, newEventId);
         changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, newEventId);
 
+        changeTrigger.EnqueueCommand(new StartUpdateReadModelsOfEventCommand { EventId = newEventId });
+
         eventBus.Publish(new QueryChanged { QueryName = nameof(EventsOfUserQuery) });
         eventBus.Publish(new QueryChanged { QueryName = nameof(SearchEventQuery) });
     }
