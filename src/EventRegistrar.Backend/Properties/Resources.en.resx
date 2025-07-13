@@ -171,6 +171,9 @@
   <data name="AddRegistrableIcs" xml:space="preserve">
     <value>Add new calendar entry</value>
   </data>
+  <data name="AddScreenshot" xml:space="preserve">
+    <value>Add screenshot</value>
+  </data>
   <data name="AddTrack" xml:space="preserve">
     <value>Create new track</value>
   </data>
@@ -392,6 +395,15 @@
   </data>
   <data name="ExistingAssignments" xml:space="preserve">
     <value>Existing assignments</value>
+  </data>
+  <data name="Feedback" xml:space="preserve">
+    <value>Feedback</value>
+  </data>
+  <data name="FeedbackSuccess" xml:space="preserve">
+    <value>Thank you for your feedback!</value>
+  </data>
+  <data name="FeedbackTitle" xml:space="preserve">
+    <value>Send feedback</value>
   </data>
   <data name="FindPartnerOf" xml:space="preserve">
     <value>Find partner of {{name}}</value>
@@ -1134,6 +1146,9 @@
   <data name="RemoveLink" xml:space="preserve">
     <value>Remove link</value>
   </data>
+  <data name="RemoveScreenshot" xml:space="preserve">
+    <value>Remove screenshot</value>
+  </data>
   <data name="Repaid" xml:space="preserve">
     <value>Repaid</value>
   </data>
@@ -1145,6 +1160,9 @@
   </data>
   <data name="RequestAccess" xml:space="preserve">
     <value>Request access</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>(required)</value>
   </data>
   <data name="Role" xml:space="preserve">
     <value>Role</value>
@@ -1289,6 +1307,9 @@
   </data>
   <data name="subject" xml:space="preserve">
     <value>subject</value>
+  </data>
+  <data name="Submit" xml:space="preserve">
+    <value>Submit</value>
   </data>
   <data name="Tag" xml:space="preserve">
     <value>Tag</value>

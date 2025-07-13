@@ -273,11 +273,9 @@
                         <div class="text-2xl font-semibold leading-tight">{{ 'InternalNotes' | translate }}</div>
                     </div>
                     <hr *ngIf="!lastSentNotes" class="w-full border-t my-6">
-                    <mat-progress-bar *ngIf="!!lastSentNotes" mode="indeterminate"
-                        class="w-full h-1 my-6"></mat-progress-bar>
+                    <mat-progress-bar *ngIf="!!lastSentNotes" mode="indeterminate" class="w-full h-1 my-6"></mat-progress-bar>
                     <mat-form-field [subscriptSizing]="'dynamic'">
-                        <textarea class="textarea whitespace-pre-wrap" matInput #notesInput [rows]="4" [ngModel]="notes"
-                            (ngModelChange)="notesChanged(notesInput.value)"></textarea>
+                        <textarea class="textarea whitespace-pre-wrap" matInput #notesInput [rows]="4" [ngModel]="notes" (ngModelChange)="notesChanged(notesInput.value)"></textarea>
                     </mat-form-field>
                 </div>
             </fuse-card>

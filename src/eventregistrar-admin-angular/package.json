@@ -32,6 +32,7 @@
         "@microsoft/signalr": "^7.0.0",
         "@ngneat/transloco": "^4.1.1",
         "@ngx-translate/core": "^14.0.0",
+        "@sentry/angular": "^9.38.0",
         "angular-froala-wysiwyg": "^4.0.15",
         "angular-google-charts": "^2.2.3",
         "apexcharts": "3.36.3",

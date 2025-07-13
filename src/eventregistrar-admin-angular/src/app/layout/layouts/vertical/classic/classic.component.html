@@ -42,6 +42,9 @@
             <!-- <button class="lg:hidden" mat-icon-button (click)="quickChat.toggle()">
                 <mat-icon [svgIcon]="'heroicons_outline:chat-alt-2'"></mat-icon>
             </button> -->
+            <button mat-icon-button (click)="sendFeedback()" class="flex-none" matTooltip="{{ 'FeedbackTitle' | translate }}">
+                <mat-icon svgIcon="heroicons_outline:chat-alt-2"></mat-icon>
+            </button>
             <user></user>
         </div>
     </div>

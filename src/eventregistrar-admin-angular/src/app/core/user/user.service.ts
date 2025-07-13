@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, Observable, ReplaySubject, tap } from 'rxjs';
 import { User } from 'app/core/user/user.types';
 import { AuthService } from '@auth0/auth0-angular';
+import * as Sentry from "@sentry/angular";
 
 @Injectable({
     providedIn: 'root'
@@ -17,6 +18,7 @@ export class UserService
     constructor(private _httpClient: HttpClient,
         private _authService: AuthService)
     {
+        this._authService.user$.subscribe((user) => { Sentry.setUser({ username: user.name, email: user.email }); });
     }
 
     // -----------------------------------------------------------------------------------------------------

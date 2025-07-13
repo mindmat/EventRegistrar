@@ -18,11 +18,11 @@ import 'froala-editor/js/plugins/code_beautifier.min.js';
 import 'froala-editor/js/plugins/help.min.js';
 import 'froala-editor/js/languages/de.js';
 
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { APP_INITIALIZER, ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule, registerLocaleData } from '@angular/common';
-import { ExtraOptions, PreloadAllModules, RouterModule } from '@angular/router';
+import { ExtraOptions, PreloadAllModules, Router, RouterModule } from '@angular/router';
 import { MarkdownModule } from 'ngx-markdown';
 import { FuseModule } from '@fuse';
 import { FuseConfigModule } from '@fuse/services/config';
@@ -126,6 +126,7 @@ import localeDe from '@angular/common/locales/de-CH';
 import localeDeExtra from '@angular/common/locales/extra/de-CH';
 import { ErrorHandlingInterceptor } from './api/errorhandling.interceptor';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import * as Sentry from "@sentry/angular";
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -229,6 +230,20 @@ export const DE_FORMATS_TIME = {
         { provide: MAT_DATE_FORMATS, useValue: DE_FORMATS },
         { provide: NgxMatDateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS] },
         { provide: NGX_MAT_DATE_FORMATS, useValue: DE_FORMATS_TIME },
+        {
+            provide: ErrorHandler,
+            useValue: Sentry.createErrorHandler()
+        },
+        { provide: Sentry.TraceService, deps: [Router] },
+        {
+            provide: APP_INITIALIZER,
+            useFactory: () => () => { },
+            deps: [Sentry.TraceService],
+            multi: true
+        },
+        { provide: MAT_DATE_LOCALE, useValue: 'de-CH' },
+        { provide: NGX_MAT_DATE_FORMATS, useValue: DE_FORMATS_TIME },
+        { provide: NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { strict: true } }
     ],
     imports: [
         BrowserModule,

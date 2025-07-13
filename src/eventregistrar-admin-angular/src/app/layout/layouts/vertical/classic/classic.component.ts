@@ -6,6 +6,9 @@ import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/co
 import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 import { NotificationService } from 'app/modules/admin/infrastructure/notification.service';
+import * as Sentry from "@sentry/angular";
+import { UserService } from 'app/core/user/user.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'classic-layout',
@@ -30,7 +33,9 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy
         private _fuseMediaWatcherService: FuseMediaWatcherService,
         private _fuseNavigationService: FuseNavigationService,
         private _notificationService: NotificationService,
-        private _changeDetectorRef: ChangeDetectorRef
+        private _changeDetectorRef: ChangeDetectorRef,
+        private _userService: UserService,
+        private _translateService: TranslateService
     )
     {
     }
@@ -87,6 +92,31 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy
     triggerReconnect()
     {
         this._notificationService.reconnect();
+    }
+
+    async sendFeedback()
+    {
+        const feedback = Sentry.getFeedback();
+        const form = await feedback?.createForm({
+            showName: false,
+            showEmail: false,
+            messageLabel: this._translateService.instant('Feedback'),
+            isRequiredLabel: this._translateService.instant('Required'),
+            addScreenshotButtonLabel: this._translateService.instant('AddScreenshot'),
+            removeScreenshotButtonLabel: this._translateService.instant('RemoveScreenshot'),
+            triggerLabel: this._translateService.instant('Trigger'),
+            cancelButtonLabel: this._translateService.instant('Cancel'),
+            submitButtonLabel: this._translateService.instant('Submit'),
+            messagePlaceholder: '',// this._translateService.instant('FeedbackPlaceholder'),
+            formTitle: this._translateService.instant('FeedbackTitle'),
+
+
+            showBranding: false,
+            colorScheme: 'light',
+            useSentryUser: { name: 'username', email: 'email' },
+        });
+        form.appendToDom();
+        form.open();
     }
 
     /**

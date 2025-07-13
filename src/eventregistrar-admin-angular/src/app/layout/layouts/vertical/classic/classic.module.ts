@@ -18,6 +18,7 @@ import { UserModule } from 'app/layout/common/user/user.module';
 import { SharedModule } from 'app/shared/shared.module';
 import { ClassicLayoutComponent } from 'app/layout/layouts/vertical/classic/classic.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     declarations: [
@@ -41,7 +42,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         ShortcutsModule,
         UserModule,
         SharedModule,
-        MatTooltipModule
+        MatTooltipModule,
+        TranslateModule
     ],
     exports: [
         ClassicLayoutComponent

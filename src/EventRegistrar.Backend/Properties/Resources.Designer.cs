@@ -223,6 +223,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Screenshot hinzufügen.
+        /// </summary>
+        internal static string AddScreenshot {
+            get {
+                return ResourceManager.GetString("AddScreenshot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Neuen Track erstellen.
         /// </summary>
         internal static string AddTrack {
@@ -1142,6 +1151,33 @@ namespace EventRegistrar.Backend.Properties {
         internal static string ExistingAssignments {
             get {
                 return ResourceManager.GetString("ExistingAssignments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feedback.
+        /// </summary>
+        internal static string Feedback {
+            get {
+                return ResourceManager.GetString("Feedback", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Danke fürs Feedback!.
+        /// </summary>
+        internal static string FeedbackSuccess {
+            get {
+                return ResourceManager.GetString("FeedbackSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Feedback senden.
+        /// </summary>
+        internal static string FeedbackTitle {
+            get {
+                return ResourceManager.GetString("FeedbackTitle", resourceCulture);
             }
         }
         
@@ -3461,6 +3497,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Screenshot entfernen.
+        /// </summary>
+        internal static string RemoveScreenshot {
+            get {
+                return ResourceManager.GetString("RemoveScreenshot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zurückbezahlt.
         /// </summary>
         internal static string Repaid {
@@ -3493,6 +3538,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string RequestAccess {
             get {
                 return ResourceManager.GetString("RequestAccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (erforderlich).
+        /// </summary>
+        internal static string Required {
+            get {
+                return ResourceManager.GetString("Required", resourceCulture);
             }
         }
         
@@ -3925,6 +3979,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string subject {
             get {
                 return ResourceManager.GetString("subject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Senden.
+        /// </summary>
+        internal static string Submit {
+            get {
+                return ResourceManager.GetString("Submit", resourceCulture);
             }
         }
         
