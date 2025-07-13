@@ -109,7 +109,7 @@ export class ClassicLayoutComponent implements OnInit, OnDestroy
             submitButtonLabel: this._translateService.instant('Submit'),
             messagePlaceholder: '',// this._translateService.instant('FeedbackPlaceholder'),
             formTitle: this._translateService.instant('FeedbackTitle'),
-
+            successMessageText: this._translateService.instant('FeedbackSuccess'),
 
             showBranding: false,
             colorScheme: 'light',
