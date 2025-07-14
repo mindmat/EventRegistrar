@@ -15,7 +15,8 @@ Sentry.init({
             showBranding: false,
             colorScheme: 'light',
             showName: false,
-            showEmail: false
+            showEmail: false,
+            triggerLabel: 'Feedback'
         }),
         Sentry.replayIntegration({
             maskAllText: false,

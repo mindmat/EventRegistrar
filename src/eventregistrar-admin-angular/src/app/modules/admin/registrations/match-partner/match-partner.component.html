@@ -1,10 +1,11 @@
 <div class="flex flex-col w-full min-w-0 overflow-hidden">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-8 sm:px-10 border-b bg-card dark:bg-transparent">
+    <div class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between p-6 sm:py-6 sm:px-6 border-b bg-card dark:bg-transparent">
         <!-- Title -->
         <div *ngIf="candidates" class="flex-1 min-w-0">
             <div class="text-4xl font-extrabold tracking-tight leading-none">
                 {{ 'FindPartnerOf' | translate: { name: candidates?.name } }}
+                <button mat-stroked-button class="ml-2 -mt-2" (click)="transformToSingle()">{{ 'TransformToSingle' | translate }}</button>
             </div>
             <div class="mt-1.5 flex flex-row">
                 <a class="hover:underline text-lg text-secondary" [routerLink]="navigator.getRegistrationUrl(candidates.registrationId)">
@@ -13,21 +14,21 @@
                     <mat-icon class="ml-1 icon-size-5 text-hint" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
                 </ng-container>
             </div>
-            <div class="flex flex-row items-baseline gap-x-1">
-                <div *ngFor="let track of candidates?.tracks" class="py-0.5 px-3 rounded-full text-lg text-secondary text-center bg-gray-200 border-0 border-gray-400">
+            <div class="flex flex-row items-baseline mt-2 gap-x-1">
+                <div *ngFor="let track of candidates?.tracks" class="py-0.5 px-3 rounded-xl text-lg text-secondary text-center bg-gray-200 border-0 border-gray-400">
                     {{ track }}
                 </div>
             </div>
 
-            <button mat-stroked-button class="mt-2" (click)="transformToSingle()">{{ 'TransformToSingle' | translate }}</button>
         </div>
-
-        <!-- Filters -->
-        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
-            <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
-            <input (input)="searchCandidates(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query>
-        </mat-form-field>
     </div>
+
+    <!-- Filters -->
+    <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 m-4" [floatLabel]="'always'">
+        <mat-label>{{ 'Partner' | translate }}</mat-label>
+        <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+        <input (input)="searchCandidates(query.value)" [placeholder]="'SearchByNameMailPhone' | translate" matInput #query>
+    </mat-form-field>
 
     <div *ngIf="candidates?.matches?.length > 0" class="flex flex-wrap gap-4 m-4 bg-default">
 
@@ -51,7 +52,7 @@
                     {{ 'Assigned' | translate }}: {{ candidate.matchedPartner }}</a>
                 <div class="flex flex-row items-baseline gap-x-1">
                     <div *ngFor="let track of candidate?.tracks" class="flex flex-row items-baseline gap-x-2">
-                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold text-center border-2" [ngClass]="{
+                        <div class="py-0.5 px-3 rounded-xl text-sm font-semibold text-center border-2" [ngClass]="{
                                     'border-gray-200 border-2': track.match === 1,
                                     'bg-green-200 border-green-600 dark:text-green-50 dark:bg-green-500': track.match === 2 || track.match === 3}">
                             {{ track.name }}

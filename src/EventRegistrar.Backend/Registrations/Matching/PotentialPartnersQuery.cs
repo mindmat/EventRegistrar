@@ -40,15 +40,12 @@ public class PotentialPartnersQueryHandler(IQueryable<Registration> registration
                                                  .ToList();
 
         var searchParts = (query.SearchString ?? ownRegistration.PartnerNormalized)?.Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        if (searchParts == null || searchParts.Length == 0)
-        {
-            throw new ArgumentException("No search string");
-        }
 
         var partnerRegistrableId_AsLeader = ownRegistration.PartnerRegistrableAsLeader.Select(rbl => rbl.Id).ToList();
         var partnerRegistrableId_AsFollower = ownRegistration.PartnerRegistrableAsFollower.Select(rbl => rbl.Id).ToList();
         if (!partnerRegistrableId_AsLeader.Any()
-         && !partnerRegistrableId_AsFollower.Any())
+         && !partnerRegistrableId_AsFollower.Any()
+            || searchParts == null || searchParts.Length == 0)
         {
             return new PotentialPartners
                    {
@@ -59,7 +56,7 @@ public class PotentialPartnersQueryHandler(IQueryable<Registration> registration
                        DeclaredPartner = ownRegistration.PartnerOriginal,
                        State = ownRegistration.State,
                        Tracks = ownPartnerTracks.Select(trk => trk.DisplayName).ToList(),
-                       Matches = null
+                       Matches = []
                    };
         }
 
