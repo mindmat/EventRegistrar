@@ -61,7 +61,7 @@ export class RegistrationComponent implements OnInit
       .subscribe((registration: RegistrationDisplayItem) =>
       {
         this.registration = registration;
-        if (!!this.changeSpotsDialog)
+        if (!!this.changeSpotsDialog?.componentInstance)
         {
           this.changeSpotsDialog.componentInstance.updateSpots(this.registration.spots);
         }
