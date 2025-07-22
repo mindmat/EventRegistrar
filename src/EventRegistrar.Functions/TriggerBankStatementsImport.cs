@@ -20,8 +20,8 @@ public static class TriggerBankStatementsImport
         await using var connection = new SqlConnection(connectionString);
         var eventIds = (await connection.QueryAsync<Guid>(@"
                    SELECT CFG.EventId
-                   FROM dbo.EventConfiguration CFG
-                     INNER JOIN dbo.[Events]   EVT ON EVT.Id = CFG.EventId
+                   FROM dbo.EventConfigurations CFG
+                     INNER JOIN dbo.[Events]    EVT ON EVT.Id = CFG.EventId
                    WHERE CFG.[Type] = 'EventRegistrar.Backend.Payments.Files.Fetch.FetchBankStatementsFilesConfiguration'
                      AND EVT.[State] IN (1,2)")).AsList();
 
