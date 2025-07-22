@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpErrorResponse, HttpEvent, HttpEventType, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { catchError, Observable, tap } from 'rxjs';
+import { catchError, Observable, tap, throwError } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
@@ -16,15 +16,22 @@ export class ErrorHandlingInterceptor implements HttpInterceptor
             {
                 if (err instanceof HttpErrorResponse)
                 {
-                    this.showToast(err.error);
+                    this.showToast(err);
                 }
-                throw err;
+                return throwError(() => err);
             }));
     }
 
-    async showToast(blob: Blob)
+    async showToast(response: HttpErrorResponse)
     {
-        const message = `Fehler: ${await blob.text()}`;
-        this._snackBar.open(message, 'OK', { duration: 10000 });
+        try
+        {
+            const message = `Fehler: ${response.message}`;
+            this._snackBar.open(message, 'OK', { duration: 10000 });
+        }
+        catch (e)
+        {
+            console.error('Error displaying toast message:', e, response);
+        }
     }
 }
