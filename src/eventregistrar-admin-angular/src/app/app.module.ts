@@ -313,9 +313,11 @@ export const DE_FORMATS_TIME = {
             domain: 'eventregistrar.eu.auth0.com',
             clientId: 'yoCfBbd0zLWvoA6qg0FzNPtHxEHu4YH3',
 
-            // Request this audience at user authentication time
-            audience: 'https://eventregistrar.azurewebsites.net/api',
-
+            authorizationParams: {
+                // Request this audience at user authentication time
+                audience: 'https://eventregistrar.azurewebsites.net/api',
+                redirect_uri: window.location.origin
+            },
             // Request this scope at user authentication time
             // scope: 'read:current_user',
 
@@ -326,9 +328,11 @@ export const DE_FORMATS_TIME = {
                         // Match any request that starts {uri} (note the asterisk)
                         uri: 'https://eventregistrar.azurewebsites.net/api/*',
                         tokenOptions: {
-                            // The attached token should target this audience
-                            audience: 'https://eventregistrar.azurewebsites.net/api',
-
+                            authorizationParams: {
+                                // The attached token should target this audience
+                                audience: 'https://eventregistrar.azurewebsites.net/api',
+                                redirect_uri: window.location.origin
+                            }
                             // The attached token should have these scopes
                             // scope: 'read:current_user'
                         }
@@ -337,9 +341,11 @@ export const DE_FORMATS_TIME = {
                         // Match any request that starts {uri} (note the asterisk)
                         uri: 'https://event-admin-backend.azurewebsites.net/api/*',
                         tokenOptions: {
-                            // The attached token should target this audience
-                            audience: 'https://eventregistrar.azurewebsites.net/api',
-
+                            authorizationParams: {
+                                // The attached token should target this audience
+                                audience: 'https://eventregistrar.azurewebsites.net/api',
+                                redirect_uri: window.location.origin
+                            }
                             // The attached token should have these scopes
                             // scope: 'read:current_user'
                         }
@@ -348,9 +354,11 @@ export const DE_FORMATS_TIME = {
                         // Match any request that starts {uri} (note the asterisk)
                         uri: 'https://localhost:5001/api/*',
                         tokenOptions: {
-                            // The attached token should target this audience
-                            audience: 'https://eventregistrar.azurewebsites.net/api',
-
+                            authorizationParams: {
+                                // The attached token should target this audience
+                                audience: 'https://eventregistrar.azurewebsites.net/api',
+                                redirect_uri: window.location.origin
+                            }
                             // The attached token should have these scopes
                             // scope: 'read:current_user'
 

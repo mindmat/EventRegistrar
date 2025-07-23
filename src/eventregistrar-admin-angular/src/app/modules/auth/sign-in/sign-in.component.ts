@@ -73,7 +73,7 @@ export class AuthSignInComponent implements OnInit
         this.showAlert = false;
 
         // Sign in
-        this._authService.loginWithRedirect({ prompt: 'select_account' })
+        this._authService.loginWithRedirect()
             .subscribe(
                 () =>
                 {
