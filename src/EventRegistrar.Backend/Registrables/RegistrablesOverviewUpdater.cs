@@ -43,8 +43,11 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
         var readModel = new RegistrablesOverview
                         {
                             SingleRegistrables = registrables.Where(rbl => rbl.MaximumDoubleSeats == null)
-                                                             .OrderBy(rbl => rbl.Tag != null && tags.TryGetValue(rbl.Tag, out var sortKey) ? sortKey : int.MaxValue)
+                                                             .OrderBy(rbl => rbl.Tag != null && tags.TryGetValue(rbl.Tag, out var sortKey) 
+                                                                                 ? sortKey 
+                                                                                 : int.MaxValue)
                                                              .ThenBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
+                                                             .ThenBy(rbl => rbl.Ics!.Min(ics => ics.Start))
                                                              .Select(rbl => new SingleRegistrableDisplayItem
                                                                             {
                                                                                 Id = rbl.Id,
@@ -61,7 +64,7 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                                 OnWaitingList = rbl.Spots!.Count(spt => !spt.IsCancelled
                                                                                                                      && (spt.IsWaitingList
                                                                                                                       || registrationsOnWaitingList.Contains(spt.RegistrationId ?? Guid.Empty))),
-                                                                                IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
+                                                                                IsDeletable = rbl.Spots!.All(spt => spt.IsCancelled)
                                                                                            && userCanDeleteRegistrable
                                                                                            && rbl.Event!.State == RegistrationForms.EventState.Setup,
                                                                                 IcsIds = rbl.Ics!.Select(ics => ics.Id),
@@ -79,7 +82,11 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                                                  .ToList()
                                                                             }),
                             DoubleRegistrables = registrables.Where(rbl => rbl.MaximumDoubleSeats != null)
-                                                             .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
+                                                             .OrderBy(rbl => rbl.Tag != null && tags.TryGetValue(rbl.Tag, out var sortKey)
+                                                                                 ? sortKey
+                                                                                 : int.MaxValue)
+                                                             .ThenBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
+                                                             .ThenBy(rbl => rbl.Ics!.Min(ics=>ics.Start))
                                                              .Select(rbl => new DoubleRegistrableDisplayItem
                                                                             {
                                                                                 Id = rbl.Id,
