@@ -47,7 +47,9 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                                  ? sortKey 
                                                                                  : int.MaxValue)
                                                              .ThenBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
-                                                             .ThenBy(rbl => rbl.Ics!.Min(ics => ics.Start))
+                                                             .ThenBy(rbl => rbl.Ics!.Select(ics => ics.Start)
+                                                                               .DefaultIfEmpty(DateTimeOffset.MaxValue)
+                                                                               .Min())
                                                              .Select(rbl => new SingleRegistrableDisplayItem
                                                                             {
                                                                                 Id = rbl.Id,
@@ -86,7 +88,9 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                                  ? sortKey
                                                                                  : int.MaxValue)
                                                              .ThenBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
-                                                             .ThenBy(rbl => rbl.Ics!.Min(ics=>ics.Start))
+                                                             .ThenBy(rbl => rbl.Ics!.Select(ics => ics.Start)
+                                                                               .DefaultIfEmpty(DateTimeOffset.MaxValue)
+                                                                               .Min())
                                                              .Select(rbl => new DoubleRegistrableDisplayItem
                                                                             {
                                                                                 Id = rbl.Id,
