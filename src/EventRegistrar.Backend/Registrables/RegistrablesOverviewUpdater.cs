@@ -107,7 +107,7 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
                                                                                                                               && spt.IsSingleFollowerSpot()),
                                                                                 CouplesOnWaitingList = rbl.Spots!.Count(spt => spt is { IsCancelled: false, IsWaitingList: true }
                                                                                                                             && (spt.IsUnmatchedPartnerSpot() || spt.IsMatchedPartnerSpot())),
-                                                                                IsDeletable = !rbl.Spots!.Any(spt => !spt.IsCancelled)
+                                                                                IsDeletable = rbl.Spots!.All(spt => spt.IsCancelled)
                                                                                            && userCanDeleteRegistrable
                                                                                            && rbl.Event!.State == RegistrationForms.EventState.Setup,
                                                                                 IcsIds = rbl.Ics!.Select(ics => ics.Id),
