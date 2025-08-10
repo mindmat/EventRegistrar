@@ -44,7 +44,7 @@ export class NavigationService
                             id: 'select-event',
                             title: e.name, // translateService.instant('SelectEvent'),
                             type: 'basic',
-                            icon: 'heroicons_outline:clipboard-check',
+                            icon: 'heroicons_outline:arrow-path',
                             link: `/select-event`
                         },
                         {
@@ -56,7 +56,7 @@ export class NavigationService
                                     id: 'overview',
                                     title: translateService.instant('Overview'),
                                     type: 'basic',
-                                    icon: 'heroicons_outline:clipboard-check',
+                                    icon: 'heroicons_outline:clipboard-document-list',
                                     link: `/${e.acronym}/overview`,
                                 },
                                 {
@@ -104,7 +104,7 @@ export class NavigationService
                                     id: 'remarks-overview',
                                     title: translateService.instant('Remarks'),
                                     type: 'basic',
-                                    icon: 'heroicons_outline:chat-alt',
+                                    icon: 'heroicons_outline:chat-bubble-left-ellipsis',
                                     link: `/${e.acronym}/registrations/remarks-overview`,
                                     badge: this.getBadge(nodes, MenuNodeKey.Remarks)
                                 },
@@ -169,7 +169,7 @@ export class NavigationService
                                     id: 'payment-differences',
                                     title: translateService.instant('PaymentDifferences'),
                                     type: 'basic',
-                                    icon: 'heroicons_outline:switch-vertical',
+                                    icon: 'heroicons_outline:arrows-up-down',
                                     link: `/${e.acronym}/accounting/payment-differences`,
                                 },
                                 {
@@ -218,14 +218,14 @@ export class NavigationService
                                     id: 'form-mapping',
                                     title: translateService.instant('Forms'),
                                     type: 'basic',
-                                    icon: 'heroicons_outline:clipboard-list',
+                                    icon: 'heroicons_outline:document-text',
                                     link: `/${e.acronym}/admin/form-mapping`,
                                 },
                                 {
                                     id: 'pricing',
                                     title: translateService.instant('Pricing'),
                                     type: 'basic',
-                                    icon: 'heroicons_outline:cash',
+                                    icon: 'heroicons_outline:currency-euro',
                                     link: `/${e.acronym}/admin/pricing`,
                                 },
                             ]
