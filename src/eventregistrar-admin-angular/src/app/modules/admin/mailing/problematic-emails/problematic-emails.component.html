@@ -80,7 +80,7 @@
             <div class="grow flex-col w-full">
                 <div class="line-clamp-2 text-secondary">{{ email.email }}</div>
                 <!-- Registrable title & description -->
-                <div *ngFor="let registration of email.registrations" class="text-lg font-medium hover:underline" [routerLink]="navigator.getRegistrationUrl(registration.id)">
+                <div *ngFor="let registration of email.registrations" class="text-lg font-medium hover:underline cursor-pointer" [routerLink]="navigator.getRegistrationUrl(registration.id)">
                     {{ registration.name }}
                 </div>
                 <!-- <div class="w-12 h-1 my-6 border-t-2"></div> -->
