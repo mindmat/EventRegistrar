@@ -9640,11 +9640,15 @@ export interface MenuNodesQuery {
 
 export interface ProblematicEmail {
     email?: string;
-    registrationId?: string;
+    registrationIds?: string[];
+    registrations?: RegistrationLink[];
     mails?: NotReceivedMail[];
-    participantFirstName?: string | null;
-    participantLastName?: string | null;
     severity?: MailDeliverySeverity;
+}
+
+export interface RegistrationLink {
+    id?: string;
+    name?: string;
 }
 
 export interface NotReceivedMail {

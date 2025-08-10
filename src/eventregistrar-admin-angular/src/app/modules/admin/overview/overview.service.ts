@@ -60,5 +60,4 @@ export class OverviewService extends FetchService<RegistrablesOverview | null>
     this.api.updateReadModel_Command({ eventId: this.eventService.selectedId, queryName: 'RegistrablesOverviewQuery' })
       .subscribe();
   }
-
 }

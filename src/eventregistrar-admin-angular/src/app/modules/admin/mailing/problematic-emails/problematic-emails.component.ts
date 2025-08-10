@@ -92,4 +92,9 @@ export class ProblematicEmailsComponent implements OnInit
     //     queryParamsHandling: 'merge'
     //   });
   }
+
+  updateView()
+  {
+    this.service.triggerUpdate();
+  }
 }

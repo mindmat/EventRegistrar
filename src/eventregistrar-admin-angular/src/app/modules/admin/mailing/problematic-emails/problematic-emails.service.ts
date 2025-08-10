@@ -24,4 +24,10 @@ export class ProblematicEmailsService
         tap(newItems => this.list.next(newItems))
       );
   }
+
+  triggerUpdate(): void
+  {
+    this.api.updateReadModel_Command({ eventId: this.eventService.selectedId, queryName: 'NotReceivedMailsQuery' })
+      .subscribe();
+  }
 }

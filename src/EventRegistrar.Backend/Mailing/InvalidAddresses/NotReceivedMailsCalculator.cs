@@ -6,6 +6,7 @@ using EventRegistrar.Backend.Registrations;
 namespace EventRegistrar.Backend.Mailing.InvalidAddresses;
 
 public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
+                                        IQueryable<Registration> registrations,
                                         EnumTranslator enumTranslator)
     : IReadModelCalculator
 {
@@ -24,14 +25,12 @@ public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
                                             && ml.Email != null)
                                   .GroupBy(ml => ml.Email)
                                   .Select(grp => new ProblematicEmail
-                                                 {
-                                                     RegistrationId = grp.First().RegistrationId,
-                                                     ParticipantFirstName = grp.First().Registration!.RespondentFirstName,
-                                                     ParticipantLastName = grp.First().Registration!.RespondentLastName,
+{
                                                      Email = grp.Key!,
                                                      Severity = MailDeliverySeverity.NoneSucceeded,
-                                                     Mails = grp.OrderByDescending(mtr => mtr.Mail!.Created)
-                                                                .Select(mtr => new NotReceivedMail
+                                                     RegistrationIds = grp.Select(mail => mail.RegistrationId)
+                                                                          .Distinct(),
+                                                     Mails = grp.Select(mtr => new NotReceivedMail
                                                                                {
                                                                                    MailId = mtr.MailId,
                                                                                    RegistrationId = mtr.RegistrationId,
@@ -47,7 +46,10 @@ public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
                                   .Take(maxCount + 1)
                                   .ToListAsync(cancellationToken);
 
-        var succeededMails = await mails.Where(mtr => problems.Select(pml => pml.RegistrationId).Contains(mtr.RegistrationId)
+        var registrationIds = problems.SelectMany(pml => pml.RegistrationIds)
+                                      .ToList();
+
+        var succeededMails = await mails.Where(mtr => registrationIds.Contains(mtr.RegistrationId)
                                                    && mtr.Registration!.EventId == eventId
                                                    && !mtr.Mail!.Discarded
                                                    && !mtr.Mail!.Withhold
@@ -72,9 +74,22 @@ public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
                                                        })
                                         .ToListAsync(cancellationToken);
 
+        var names = await registrations.Where(reg => registrationIds.Contains(reg.Id))
+                                        .ToDictionaryAsync(reg => reg.Id,
+                                                           reg => $"{reg.RespondentFirstName} {reg.RespondentLastName}", 
+                                                           cancellationToken);
+
         foreach (var problematicEmail in problems)
         {
-            var succeeded = succeededMails.FirstOrDefault(mls => mls.RegistrationId == problematicEmail.RegistrationId);
+            problematicEmail.Registrations = problematicEmail.RegistrationIds
+                                                             .Distinct()
+                                                             .Select(rid => new RegistrationLink
+                                                                            {
+                                                                                Id = rid,
+                                                                                Name = names.GetValueOrDefault(rid, "?")
+                                                                            })
+                                                             .ToList();
+            var succeeded = succeededMails.FirstOrDefault(mls => problematicEmail.RegistrationIds.Contains(mls.RegistrationId));
             if (succeeded != null)
             {
                 problematicEmail.Mails = problematicEmail.Mails
@@ -117,11 +132,16 @@ public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
 public class ProblematicEmail
 {
     public string Email { get; set; } = null!;
-    public Guid RegistrationId { get; set; }
+    public IEnumerable<Guid> RegistrationIds { get; set; }
+    public IEnumerable<RegistrationLink> Registrations { get; set; }
     public IEnumerable<NotReceivedMail> Mails { get; set; } = null!;
-    public string? ParticipantFirstName { get; set; }
-    public string? ParticipantLastName { get; set; }
     public MailDeliverySeverity Severity { get; set; }
+}
+
+public record RegistrationLink
+{
+    public required Guid Id { get; set; }
+    public required string Name { get; set; }
 }
 
 public enum MailDeliverySeverity

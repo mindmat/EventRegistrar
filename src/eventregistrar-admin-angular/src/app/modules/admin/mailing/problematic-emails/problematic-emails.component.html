@@ -7,6 +7,9 @@
             <div class="text-4xl font-extrabold tracking-tight leading-none">{{ 'MailMonitor' | translate }}</div>
             <div *ngIf="emails?.length > 0 && emails?.length <= 100" class="mt-1.5 text-lg text-secondary">({{emails.length}})</div>
             <div *ngIf="emails?.length > 100" class="mt-1.5 text-lg text-secondary">(> 100)</div>
+            <button class="ml-2" mat-icon-button (click)="updateView()" [matTooltip]="'Recalculate' | translate">
+                <mat-icon svgIcon="mat_outline:refresh"></mat-icon>
+            </button>
         </div>
 
         <!-- Filters -->
@@ -72,29 +75,17 @@
 
 <!-- Page result template -->
 <ng-template #problematicemail let-email>
-    <a class="flex flex-col min-h-64 shadow rounded-2xl overflow-hidden bg-card" [routerLink]="navigator.getRegistrationUrl(email.registrationId)">
+    <a class="flex flex-col min-h-64 shadow rounded-2xl overflow-hidden bg-card">
         <div class="flex m-4">
-            <div class="grow flex-col w-full hover:underline">
-                <!-- <div class="flex items-center justify-between">
-                                    
-                                    <ng-container *ngIf="(doubleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
-                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
-                                                                                        'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.sortKey === 2,
-                                                                                        'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.sortKey === 3,
-                                                                                        'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.sortKey === 4}">
-                                            {{category.text}}
-                                        </div>
-                                    </ng-container>
-                                </div> -->
-
-                <!-- Registrable title & description -->
-                <div class="text-lg font-medium">{{ email.participantFirstName }} {{ email.participantLastName }}</div>
+            <div class="grow flex-col w-full">
                 <div class="line-clamp-2 text-secondary">{{ email.email }}</div>
+                <!-- Registrable title & description -->
+                <div *ngFor="let registration of email.registrations" class="text-lg font-medium hover:underline" [routerLink]="navigator.getRegistrationUrl(registration.id)">
+                    {{ registration.name }}
+                </div>
                 <!-- <div class="w-12 h-1 my-6 border-t-2"></div> -->
-
             </div>
             <!-- <mat-icon class="none icon-size-5 justify-middle" *ngIf="match.isWaitingList" [svgIcon]="'heroicons_solid:clock'" matTooltip="Warteliste"></mat-icon> -->
-
         </div>
 
         <!-- payment completion -->
