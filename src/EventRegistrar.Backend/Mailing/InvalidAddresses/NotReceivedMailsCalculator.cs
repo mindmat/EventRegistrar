@@ -7,6 +7,7 @@ namespace EventRegistrar.Backend.Mailing.InvalidAddresses;
 
 public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
                                         IQueryable<Registration> registrations,
+                                        MailConfiguration configuration,
                                         EnumTranslator enumTranslator)
     : IReadModelCalculator
 {
@@ -15,9 +16,13 @@ public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
 
     public async Task<(object ReadModel, MenuNodeCalculation? MenuNode)> Calculate(Guid eventId, Guid? rowId, CancellationToken cancellationToken)
     {
-        const int maxCount = 100;
-        var successStates = new MailState?[] { MailState.Delivered, MailState.Open, MailState.Click };
-        var problems = await mails.Where(ml => ml.Registration!.EventId == eventId
+        var hasFeedback = configuration.MailSender != MailSender.Smtp;
+        List<ProblematicEmail> problems = [];
+        if (hasFeedback)
+        {
+            const int maxCount = 100;
+            var successStates = new MailState?[] { MailState.Delivered, MailState.Open, MailState.Click };
+            problems = await mails.Where(ml => ml.Registration!.EventId == eventId
                                             && !ml.Mail!.Discarded
                                             && !ml.Mail!.Withhold
                                             && ml.Registration.State != RegistrationState.Cancelled
@@ -25,7 +30,7 @@ public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
                                             && ml.Email != null)
                                   .GroupBy(ml => ml.Email)
                                   .Select(grp => new ProblematicEmail
-{
+                                                 {
                                                      Email = grp.Key!,
                                                      Severity = MailDeliverySeverity.NoneSucceeded,
                                                      RegistrationIds = grp.Select(mail => mail.RegistrationId)
@@ -46,67 +51,68 @@ public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
                                   .Take(maxCount + 1)
                                   .ToListAsync(cancellationToken);
 
-        var registrationIds = problems.SelectMany(pml => pml.RegistrationIds)
-                                      .ToList();
+            var registrationIds = problems.SelectMany(pml => pml.RegistrationIds)
+                                          .ToList();
 
-        var succeededMails = await mails.Where(mtr => registrationIds.Contains(mtr.RegistrationId)
-                                                   && mtr.Registration!.EventId == eventId
-                                                   && !mtr.Mail!.Discarded
-                                                   && !mtr.Mail!.Withhold
-                                                   && mtr.Registration.State != RegistrationState.Cancelled
-                                                   && mtr.Email != null
-                                                   && successStates.Contains(mtr.State))
-                                        .GroupBy(mtr => mtr.RegistrationId)
-                                        .Select(grp => new
-                                                       {
-                                                           RegistrationId = grp.Key,
-                                                           Mails = grp.Select(mtr => new NotReceivedMail
-                                                                                     {
-                                                                                         MailId = mtr.MailId,
-                                                                                         RegistrationId = mtr.RegistrationId,
-                                                                                         State = mtr.State,
-                                                                                         StateText = enumTranslator.Translate(mtr.State),
-                                                                                         Created = mtr.Mail!.Created,
-                                                                                         Recipient = mtr.Email,
-                                                                                         Sent = mtr.Mail.Sent,
-                                                                                         Subject = mtr.Mail.Subject
-                                                                                     })
-                                                       })
-                                        .ToListAsync(cancellationToken);
+            var succeededMails = await mails.Where(mtr => registrationIds.Contains(mtr.RegistrationId)
+                                                       && mtr.Registration!.EventId == eventId
+                                                       && !mtr.Mail!.Discarded
+                                                       && !mtr.Mail!.Withhold
+                                                       && mtr.Registration.State != RegistrationState.Cancelled
+                                                       && mtr.Email != null
+                                                       && successStates.Contains(mtr.State))
+                                            .GroupBy(mtr => mtr.RegistrationId)
+                                            .Select(grp => new
+                                                           {
+                                                               RegistrationId = grp.Key,
+                                                               Mails = grp.Select(mtr => new NotReceivedMail
+                                                                                         {
+                                                                                             MailId = mtr.MailId,
+                                                                                             RegistrationId = mtr.RegistrationId,
+                                                                                             State = mtr.State,
+                                                                                             StateText = enumTranslator.Translate(mtr.State),
+                                                                                             Created = mtr.Mail!.Created,
+                                                                                             Recipient = mtr.Email,
+                                                                                             Sent = mtr.Mail.Sent,
+                                                                                             Subject = mtr.Mail.Subject
+                                                                                         })
+                                                           })
+                                            .ToListAsync(cancellationToken);
 
-        var names = await registrations.Where(reg => registrationIds.Contains(reg.Id))
-                                        .ToDictionaryAsync(reg => reg.Id,
-                                                           reg => $"{reg.RespondentFirstName} {reg.RespondentLastName}", 
-                                                           cancellationToken);
+            var names = await registrations.Where(reg => registrationIds.Contains(reg.Id))
+                                           .ToDictionaryAsync(reg => reg.Id,
+                                                              reg => $"{reg.RespondentFirstName} {reg.RespondentLastName}",
+                                                              cancellationToken);
 
-        foreach (var problematicEmail in problems)
-        {
-            problematicEmail.Registrations = problematicEmail.RegistrationIds
-                                                             .Distinct()
-                                                             .Select(rid => new RegistrationLink
-                                                                            {
-                                                                                Id = rid,
-                                                                                Name = names.GetValueOrDefault(rid, "?")
-                                                                            })
-                                                             .ToList();
-            var succeeded = succeededMails.FirstOrDefault(mls => problematicEmail.RegistrationIds.Contains(mls.RegistrationId));
-            if (succeeded != null)
+            foreach (var problematicEmail in problems)
             {
-                problematicEmail.Mails = problematicEmail.Mails
-                                                         .Concat(succeeded.Mails)
-                                                         .OrderByDescending(mtr => mtr.Sent ?? mtr.Created)
-                                                         .ToList();
-                problematicEmail.Severity = successStates.Contains(problematicEmail.Mails.First().State)
-                                                ? MailDeliverySeverity.LastSucceeded
-                                                : MailDeliverySeverity.SomeSucceeded;
+                problematicEmail.Registrations = problematicEmail.RegistrationIds
+                                                                 .Distinct()
+                                                                 .Select(rid => new RegistrationLink
+                                                                                {
+                                                                                    Id = rid,
+                                                                                    Name = names.GetValueOrDefault(rid, "?")
+                                                                                })
+                                                                 .ToList();
+                var succeeded = succeededMails.FirstOrDefault(mls => problematicEmail.RegistrationIds.Contains(mls.RegistrationId));
+                if (succeeded != null)
+                {
+                    problematicEmail.Mails = problematicEmail.Mails
+                                                             .Concat(succeeded.Mails)
+                                                             .OrderByDescending(mtr => mtr.Sent ?? mtr.Created)
+                                                             .ToList();
+                    problematicEmail.Severity = successStates.Contains(problematicEmail.Mails.First().State)
+                                                    ? MailDeliverySeverity.LastSucceeded
+                                                    : MailDeliverySeverity.SomeSucceeded;
+                }
             }
         }
 
-        var node = CalculateNode(problems);
+        var node = CalculateNode(problems, hasFeedback);
         return (problems, node);
     }
 
-    private MenuNodeCalculation CalculateNode(List<ProblematicEmail> problems)
+    private MenuNodeCalculation CalculateNode(List<ProblematicEmail> problems, bool hasFeedback)
     {
         var noneSucceededCount = problems.Count(prm => prm.Severity == MailDeliverySeverity.NoneSucceeded);
         var someSucceededCount = problems.Count - noneSucceededCount;
@@ -114,8 +120,9 @@ public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
                    {
                        Key = MenuNodeKey.MailTracking,
                        Style = MenuNodeStyle.None,
-                       Content = $"{noneSucceededCount} | {someSucceededCount}"
-                   };
+                       Content = $"{noneSucceededCount} | {someSucceededCount}",
+                       Hidden = !hasFeedback
+                   }; 
         if (noneSucceededCount > 0)
         {
             node.Style = MenuNodeStyle.Important;
