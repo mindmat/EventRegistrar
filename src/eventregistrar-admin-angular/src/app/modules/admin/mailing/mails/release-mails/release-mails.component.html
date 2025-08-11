@@ -29,7 +29,7 @@
                                         <div class="ml-2 font-semibold uppercase">{{ 'PendingMails' | translate }}</div>
                                     </div>
                                     <button class="ml-auto -mr-4" mat-icon-button [matMenuTriggerFor]="mailsHeaderMenu">
-                                        <mat-icon [svgIcon]="'heroicons_outline:dots-vertical'"></mat-icon>
+                                        <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
                                         <mat-menu #mailsHeaderMenu>
                                             <button mat-menu-item (click)="releaseAll()">
                                                 <mat-icon [svgIcon]="'mat_solid:send'"></mat-icon>

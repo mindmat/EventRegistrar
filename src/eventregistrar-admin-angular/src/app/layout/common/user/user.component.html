@@ -24,16 +24,16 @@
         <span>Profile</span>
     </button>
     <button mat-menu-item>
-        <mat-icon [svgIcon]="'heroicons_outline:cog'"></mat-icon>
+        <mat-icon [svgIcon]="'heroicons_outline:cog-6-tooth'"></mat-icon>
         <span>Settings</span>
     </button>
     <button mat-menu-item [matMenuTriggerFor]="userStatus">
-        <mat-icon [svgIcon]="'heroicons_outline:dots-circle-horizontal'"></mat-icon>
+        <mat-icon [svgIcon]="'heroicons_outline:ellipsis-horizontal-circle'"></mat-icon>
         <span>Status</span>
     </button>
     <mat-divider class="my-2"></mat-divider>
     <button mat-menu-item (click)="signOut()">
-        <mat-icon [svgIcon]="'heroicons_outline:logout'"></mat-icon>
+        <mat-icon [svgIcon]="'mat_outline:logout'"></mat-icon>
         <span>Sign out</span>
     </button>
 </mat-menu>

@@ -191,7 +191,7 @@ export class NavigationService
                                     id: 'event-settings',
                                     title: translateService.instant('Settings'),
                                     type: 'basic',
-                                    icon: 'heroicons_outline:cog-8-tooth',
+                                    icon: 'heroicons_outline:cog-6-tooth',
                                     link: `/${e.acronym}/admin/event-settings`,
                                 },
                                 {

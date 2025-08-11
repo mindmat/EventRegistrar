@@ -4,9 +4,7 @@
     [class.lg:right-16]="config.layout !== 'centered' && config.layout !== 'material'"
     style="top: 275px"
     (click)="settingsDrawer.toggle()">
-    <mat-icon
-        class="icon-size-5 text-white animate-spin-slow"
-        [svgIcon]="'heroicons_solid:cog'"></mat-icon>
+    <mat-icon class="icon-size-5 text-white animate-spin-slow" [svgIcon]="'heroicons_solid:cog-6-tooth'"></mat-icon>
 </div>
 
 <fuse-drawer
@@ -19,9 +17,7 @@
 
     <div class="flex flex-col w-full overflow-auto bg-card">
         <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary">
-            <mat-icon
-                class="icon-size-7 text-current"
-                [svgIcon]="'heroicons_solid:cog'"></mat-icon>
+            <mat-icon class="icon-size-7 text-current" [svgIcon]="'heroicons_solid:cog-6-tooth'"></mat-icon>
             <div class="ml-3 text-2xl font-semibold tracking-tight">Settings</div>
             <button
                 class="ml-auto"
