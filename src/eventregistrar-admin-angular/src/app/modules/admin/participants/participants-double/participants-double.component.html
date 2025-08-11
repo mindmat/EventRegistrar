@@ -34,7 +34,7 @@
                         <!-- context menu -->
                         <div *ngIf="canDefrag || registrable.waitingList.length > 0" class="flex items-center ml-auto">
                             <button mat-icon-button [matMenuTriggerFor]="registrableMenu">
-                                <mat-icon class="icon-size-5" svgIcon="heroicons_solid:dots-vertical"></mat-icon>
+                                <mat-icon class="icon-size-5" svgIcon="heroicons_solid:ellipsis-vertical"></mat-icon>
                             </button>
                             <mat-menu #registrableMenu="matMenu">
                                 <button *ngIf="canDefrag" mat-menu-item (click)="defrag()">
