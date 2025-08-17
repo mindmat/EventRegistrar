@@ -54,12 +54,12 @@
             <button class="flex items-center mt-5 pl-4 pr-3 py-0.5 rounded-full cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
                 *ngIf="finishedEventsInList && (showFinishedEvents$ | async)" (click)="hideFinishedEvents()">
                 <span class="text-sm font-medium text-secondary">{{ 'HideFinished' | translate }}</span>
-                <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-narrow-up'"></mat-icon>
+                <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-long-up'"></mat-icon>
             </button>
             <button class="flex items-center mt-5 pl-4 pr-3 py-0.5 rounded-full cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
                 *ngIf="finishedEventsInList && !(showFinishedEvents$ | async)" (click)="showFinishedEvents()">
                 <span class="text-sm font-medium text-secondary">{{ 'ShowFinished' | translate }}</span>
-                <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon>
+                <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-long-down'"></mat-icon>
             </button>
         </div>
 
@@ -141,12 +141,12 @@
             <button class="flex items-center mt-5 pl-4 pr-3 py-0.5 rounded-full cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
                 *ngIf="finishedOtherEventsInList && (showOtherFinishedEvents$ | async)" (click)="hideOtherFinishedEvents()">
                 <span class="text-sm font-medium text-secondary">{{ 'HideFinished' | translate }}</span>
-                <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-narrow-up'"></mat-icon>
+                <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-long-up'"></mat-icon>
             </button>
             <button class="flex items-center mt-5 pl-4 pr-3 py-0.5 rounded-full cursor-pointer bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:hover:bg-gray-700"
                 *ngIf="finishedOtherEventsInList && !(showOtherFinishedEvents$ | async)" (click)="showOtherFinishedEvents()">
                 <span class="text-sm font-medium text-secondary">{{ 'ShowFinished' | translate }}</span>
-                <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-narrow-down'"></mat-icon>
+                <mat-icon class="ml-2 icon-size-5" [svgIcon]="'heroicons_solid:arrow-long-down'"></mat-icon>
             </button>
         </div>
     </div>
