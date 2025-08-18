@@ -20,7 +20,7 @@ export class NavigationService
                 id: 'select-event',
                 title: 'Event auswählen',
                 type: 'basic',
-                icon: 'heroicons_outline:clipboard-check',
+                icon: 'heroicons_outline:arrow-path',
                 link: `/select-event`,
             }
         ]);
