@@ -91,7 +91,7 @@ public class MailComposer(
                 PrefixLeader   => leaderRegistration,
                 PrefixFollower => followerRegistration,
                 _              => registration
-            };
+            } ?? registration;
 
             if (Enum.TryParse<MailPlaceholder>(parts.key, true, out var placeholderKey)
              || parts.key?.ToUpperInvariant() == "SEATLIST"
@@ -100,47 +100,46 @@ public class MailComposer(
             {
                 if (placeholderKey == MailPlaceholder.FirstName)
                 {
-                    templateFiller[key] = registrationForPrefix?.RespondentFirstName;
+                    templateFiller[key] = registrationForPrefix.RespondentFirstName;
                 }
                 else if (placeholderKey == MailPlaceholder.LastName)
                 {
-                    templateFiller[key] = registrationForPrefix?.RespondentLastName;
+                    templateFiller[key] = registrationForPrefix.RespondentLastName;
                 }
                 else if (placeholderKey == MailPlaceholder.Phone)
                 {
-                    templateFiller[key] = registrationForPrefix?.Phone;
+                    templateFiller[key] = registrationForPrefix.Phone;
                 }
                 else if (placeholderKey == MailPlaceholder.Location
                       || parts.key.ToUpperInvariant() == "CITY")
                 {
-                    templateFiller[key] = registrationForPrefix?.Location;
+                    templateFiller[key] = registrationForPrefix.Location;
                 }
                 else if ((placeholderKey == MailPlaceholder.SpotList
-                       || parts.key.ToUpperInvariant() == "SEATLIST")
-                      && registrationForPrefix != null)
+                       || parts.key.ToUpperInvariant() == "SEATLIST"))
                 {
                     templateFiller[key] = await GetSpotList(registrationForPrefix.Id, registrationForPrefix.SoldOutMessage);
                 }
                 else if (placeholderKey == MailPlaceholder.PartnerName
                       || parts.key?.ToUpperInvariant() == "PARTNER")
                 {
-                    templateFiller[key] = registrationForPrefix?.PartnerOriginal;
+                    templateFiller[key] = registrationForPrefix.PartnerOriginal;
                 }
                 else if (placeholderKey == MailPlaceholder.Comments)
                 {
-                    templateFiller[key] = registrationForPrefix?.Remarks?.ReplaceLineEndings("<br/>") ?? string.Empty;
+                    templateFiller[key] = registrationForPrefix.Remarks?.ReplaceLineEndings("<br/>") ?? string.Empty;
                 }
                 else if (placeholderKey == MailPlaceholder.Price)
                 {
                     var price = parts.prefix == null
                                     ? registration.Price_AdmittedAndReduced + (partnerRegistration?.Price_AdmittedAndReduced ?? 0m)
-                                    : (registrationForPrefix ?? registration).Price_AdmittedAndReduced;
+                                    : registrationForPrefix.Price_AdmittedAndReduced;
 
                     templateFiller[key] = price.ToString("F2"); // HACK: format hardcoded
                 }
                 else if (placeholderKey == MailPlaceholder.PaidAmount)
                 {
-                    templateFiller[key] = (await paidAmountSummarizer.GetPaidAmount((registrationForPrefix ?? registration).Id))
+                    templateFiller[key] = (await paidAmountSummarizer.GetPaidAmount((registrationForPrefix).Id))
                         .ToString("F2"); // HACK: format hardcoded
                 }
                 else if (placeholderKey is MailPlaceholder.DueAmount or MailPlaceholder.OverpaidAmount)
@@ -154,7 +153,7 @@ public class MailComposer(
                     else
                     {
                         // only for prefix
-                        var reg = registrationForPrefix ?? registration;
+                        var reg = registrationForPrefix;
                         var price = reg.Price_AdmittedAndReduced;
                         var paid = await paidAmountSummarizer.GetPaidAmount(reg.Id);
                         difference = price - paid;
@@ -178,7 +177,7 @@ public class MailComposer(
                 }
                 else if (placeholderKey == MailPlaceholder.CancellationReason)
                 {
-                    var cancellation = registration.Cancellations!.FirstOrDefault();
+                    var cancellation = registrationForPrefix.Cancellations!.FirstOrDefault();
 
                     if (cancellation != null)
                     {
@@ -187,29 +186,29 @@ public class MailComposer(
                 }
                 else if (placeholderKey == MailPlaceholder.FormsTimestamp)
                 {
-                    templateFiller[key] = registration.ExternalTimestamp.ToString(DateFormat);
+                    templateFiller[key] = registrationForPrefix.ExternalTimestamp.ToString(DateFormat);
                 }
                 else if (placeholderKey == MailPlaceholder.ReceivedAt)
                 {
-                    templateFiller[key] = registration.ReceivedAt.ToString(DateFormat);
+                    templateFiller[key] = registrationForPrefix.ReceivedAt.ToString(DateFormat);
                 }
-                else if (placeholderKey == MailPlaceholder.AcceptedDate && registration.AdmittedAt != null)
+                else if (placeholderKey == MailPlaceholder.AcceptedDate && registrationForPrefix.AdmittedAt != null)
                 {
-                    templateFiller[key] = registration.AdmittedAt.Value.ToString(DateFormat);
+                    templateFiller[key] = registrationForPrefix.AdmittedAt.Value.ToString(DateFormat);
                 }
                 else if (placeholderKey == MailPlaceholder.ReadableId)
                 {
-                    templateFiller[key] = registration.ReadableIdentifier;
+                    templateFiller[key] = registrationForPrefix.ReadableIdentifier;
                 }
                 else if (placeholderKey == MailPlaceholder.Reminder1Date)
                 {
-                    var reminder1Date = registration.Mails!
-                                                    .Where(map => map.Mail!.Type != null
-                                                               && duePaymentConfiguration.MailTypes_Reminder1.Contains(
-                                                                      map.Mail.Type.Value)
-                                                               && map.Mail.Sent.HasValue)
-                                                    .Select(map => map.Mail!.Sent)
-                                                    .FirstOrDefault();
+                    var reminder1Date = registrationForPrefix.Mails!
+                                                             .Where(map => map.Mail!.Type != null
+                                                                        && duePaymentConfiguration.MailTypes_Reminder1.Contains(
+                                                                               map.Mail.Type.Value)
+                                                                        && map.Mail.Sent.HasValue)
+                                                             .Select(map => map.Mail!.Sent)
+                                                             .FirstOrDefault();
                     if (reminder1Date.HasValue)
                     {
                         templateFiller[key] = reminder1Date.Value.ToString(DateFormat);
@@ -217,7 +216,7 @@ public class MailComposer(
                 }
                 else if (placeholderKey == MailPlaceholder.QrCode)
                 {
-                    templateFiller[key] = await GenerateQrCode(registration);
+                    templateFiller[key] = await GenerateQrCode(registrationForPrefix);
                 }
             }
             else if (parts.key != null && key != null && registrationForPrefix?.Responses != null)
