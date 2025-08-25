@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Properties;
 using EventRegistrar.Backend.Registrables.Tags;
 
 namespace EventRegistrar.Backend.Registrables;
@@ -65,13 +66,13 @@ public class SaveRegistrableCommandHandler(IRepository<Registrable> registrables
                 var hasSpots = registrable.Spots?.Any(spt => !spt.IsCancelled) == true;
                 if (hasSpots)
                 {
-                    throw new Exception($"To change the type of a track, there must not be any registrations in it, but there are {registrable.Spots?.Count}");
+                    throw new Exception(string.Format(Resources.TrackWithRegistrationsTypeLocked, registrable.Spots?.Count));
                 }
 
                 var hasSpotsOnWaitingList = registrable.Spots?.Any(spt => spt is { IsCancelled: false, IsWaitingList: true }) == true;
                 if (registrable.HasWaitingList && !command.HasWaitingList && hasSpotsOnWaitingList)
                 {
-                    throw new Exception("Waiting list cannot be removed because there are spots on the waiting list");
+                    throw new Exception(Resources.WaitingListLockedWhenPopulated);
                 }
 
 

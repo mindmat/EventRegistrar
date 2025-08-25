@@ -1,8 +1,10 @@
 ﻿using System.Net;
 
+using Microsoft.ApplicationInsights;
+
 namespace EventRegistrar.Backend.Infrastructure.ErrorHandling;
 
-public class ExceptionMiddleware(ExceptionTranslator exceptionTranslator) : IMiddleware
+public class ExceptionMiddleware(ExceptionTranslator exceptionTranslator, TelemetryClient telemetryClient) : IMiddleware
 {
     private const string TranslatedExceptionKey = "TranslatedException";
 
@@ -29,7 +31,7 @@ public class ExceptionMiddleware(ExceptionTranslator exceptionTranslator) : IMid
                          .StringJoin(Environment.NewLine);
             context.Response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
             await context.Response.WriteAsync(errors).ConfigureAwait(false);
-            //_telemetryClient.TrackException(exception, new Dictionary<string, string> { { TranslatedExceptionKey, errors } });
+            telemetryClient.TrackException(exception, new Dictionary<string, string> { { TranslatedExceptionKey, errors } });
         }
         else
         {
@@ -40,7 +42,10 @@ public class ExceptionMiddleware(ExceptionTranslator exceptionTranslator) : IMid
                 case string msg:
                     context.Response.ContentType = System.Net.Mime.MediaTypeNames.Text.Plain;
                     await context.Response.WriteAsync(msg).ConfigureAwait(false);
-                    //_telemetryClient.TrackException(exception, new Dictionary<string, string> { { TranslatedExceptionKey, msg } });
+                    telemetryClient.TrackException(exception, new Dictionary<string, string> { { TranslatedExceptionKey, msg } });
+                    break;
+                default:
+                    telemetryClient.TrackException(exception);
                     break;
             }
         }

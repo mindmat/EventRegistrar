@@ -26,10 +26,31 @@ export class ErrorHandlingInterceptor implements HttpInterceptor
     {
         try
         {
-            const message = `Fehler: ${response.message}`;
+            let message = '';
+            if (response.error instanceof Blob)
+            {
+                // Read Blob as text and parse JSON if possible
+                const text = await response.error.text();
+                try
+                {
+                    const json = JSON.parse(text);
+                    message = json.message || text;
+                } catch
+                {
+                    message = text;
+                }
+            } else if (response.error && typeof response.error === 'object')
+            {
+                message = response.error.message || response.error.toString();
+            } else if (response.error)
+            {
+                message = response.error;
+            } else
+            {
+                message = response.message || 'Unbekannter Fehler';
+            }
             this._snackBar.open(message, 'OK', { duration: 10000 });
-        }
-        catch (e)
+        } catch (e)
         {
             console.error('Error displaying toast message:', e, response);
         }

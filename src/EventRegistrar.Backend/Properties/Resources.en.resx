@@ -1332,6 +1332,9 @@
   <data name="Tracks" xml:space="preserve">
     <value>Tracks</value>
   </data>
+  <data name="TrackWithRegistrationsTypeLocked" xml:space="preserve">
+    <value>To change the type of a track, there must not be any registrations in it, but there are {0}.</value>
+  </data>
   <data name="TransformToSingle" xml:space="preserve">
     <value>Transform to single registration</value>
   </data>

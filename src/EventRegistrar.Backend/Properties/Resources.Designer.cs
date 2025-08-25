@@ -4055,6 +4055,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Der Typ eines Tracks kann nur geändert werden, wenn noch keine Registrierungen vorhanden sind. Es gibt aber {0}..
+        /// </summary>
+        internal static string TrackWithRegistrationsTypeLocked {
+            get {
+                return ResourceManager.GetString("TrackWithRegistrationsTypeLocked", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zu Einzelanmeldung umwandeln.
         /// </summary>
         internal static string TransformToSingle {
@@ -4198,6 +4207,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string WaitingList {
             get {
                 return ResourceManager.GetString("WaitingList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Waiting list cannot be removed because there are spots on the waiting list.
+        /// </summary>
+        internal static string WaitingListLockedWhenPopulated {
+            get {
+                return ResourceManager.GetString("WaitingListLockedWhenPopulated", resourceCulture);
             }
         }
         

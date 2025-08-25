@@ -1445,6 +1445,9 @@
   <data name="Tracks" xml:space="preserve">
     <value>Tracks</value>
   </data>
+  <data name="TrackWithRegistrationsTypeLocked" xml:space="preserve">
+      <value>Der Typ eines Tracks kann nur geändert werden, wenn noch keine Registrierungen vorhanden sind. Es gibt aber {0}.</value>
+  </data>
   <data name="TransformToSingle" xml:space="preserve">
     <value>Zu Einzelanmeldung umwandeln</value>
   </data>
@@ -1495,6 +1498,9 @@
   </data>
   <data name="WaitingList" xml:space="preserve">
     <value>Warteliste</value>
+  </data>
+  <data name="WaitingListLockedWhenPopulated" xml:space="preserve">
+      <value>Waiting list cannot be removed because there are spots on the waiting list</value>
   </data>
   <data name="WillPayAtCheckin" xml:space="preserve">
     <value>Bezahlt am Checkin</value>
