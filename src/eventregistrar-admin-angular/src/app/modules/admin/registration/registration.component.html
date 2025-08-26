@@ -136,6 +136,13 @@
                             <span *ngIf="!registration.partnerId" class="italic">{{ registration.partnerOriginal }}</span>
                         </span>
                     </div>
+                    <div *ngIf="registration.language" class="flex items-center mt-4">
+                        <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_outline:language'"></mat-icon>
+                        <span class="relative w-6 shadow rounded-sm overflow-hidden">
+                            <span class="absolute inset-0 ring-1 ring-inset ring-black ring-opacity-10"></span>
+                            <img class="w-full" [src]="'assets/images/flags/' + flagCodes[registration.language]?.toUpperCase() + '.svg'" [alt]="'Flag image for ' + registration.language">
+                        </span>
+                    </div>
                 </div>
             </fuse-card>
 

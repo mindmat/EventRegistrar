@@ -33,7 +33,10 @@ export class RegistrationComponent implements OnInit
   changeSpotsDialog: MatDialogRef<ChangeSpotsComponent> | null;
   public lastSentNotes: string | null;
   notesToSave$: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
-
+  public flagCodes = {
+    'de': 'de',
+    'en': 'us'
+  };
   IndividualReductionType = IndividualReductionType;
   MailState = MailState;
   RegistrationState = RegistrationState;
