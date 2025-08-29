@@ -32,6 +32,10 @@ public class SaveExternalMailConfigurationCommandHandler(ConfigurationRegistry c
                                 .Select(nwc =>
                                 {
                                     var existing = existingConfigs?.FirstOrDefault(exc => exc.Id == nwc.Id);
+                                    if (nwc.Id == Guid.Empty)
+                                    {
+                                        nwc.Id = Guid.NewGuid();
+                                    }
                                     var config = new ExternalMailConfiguration
                                                  {
                                                      Id = nwc.Id,
@@ -61,7 +65,7 @@ public class SaveExternalMailConfigurationCommandHandler(ConfigurationRegistry c
 
         changeTrigger.QueryChanged<ExternalMailConfigurationQuery>(command.EventId);
         foreach (var config in newConfigs?.Where(cfg => cfg is { ImapHost: not null, Username: not null })
-                            ?? Enumerable.Empty<ExternalMailConfiguration>())
+                            ?? [])
         {
             changeTrigger.EnqueueCommand(new CheckExternalMailConfigurationCommand
                                          {

@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Infrastructure.Configuration;
+﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 
 using MailKit.Net.Imap;
@@ -9,7 +10,7 @@ namespace EventRegistrar.Backend.Mailing.Import;
 public class CheckExternalMailConfigurationCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
-    public Guid ExternalMailConfigurationId { get; set; }
+    public Guid? ExternalMailConfigurationId { get; set; }
 }
 
 public class CheckExternalMailConfigurationCommandHandler(ConfigurationRegistry configurationRegistry,
@@ -18,53 +19,55 @@ public class CheckExternalMailConfigurationCommandHandler(ConfigurationRegistry 
     public async Task Handle(CheckExternalMailConfigurationCommand command, CancellationToken cancellationToken)
     {
         var mailConfigurations = configurationRegistry.GetConfiguration<ExternalMailConfigurations>(command.EventId);
-        var config = mailConfigurations.MailConfigurations?.FirstOrDefault(cfg => cfg.Id == command.ExternalMailConfigurationId);
-        if (config == null)
-        {
-            return;
-        }
+        var configs = mailConfigurations.MailConfigurations?
+                                        .WhereIf(command.ExternalMailConfigurationId != null,
+                                                 cfg => cfg.Id == command.ExternalMailConfigurationId)
+                                        .ToList() ?? [];
 
-        using var client = new ImapClient();
-        client.ServerCertificateValidationCallback = (sender,
-                                                      certificate,
-                                                      chain,
-                                                      errors) => true;
-        try
+        foreach (var config in configs)
         {
-            await client.ConnectAsync(config.ImapHost, config.ImapPort, true, cancellationToken);
+            using var client = new ImapClient();
+            client.ServerCertificateValidationCallback = (sender,
+                                                          certificate,
+                                                          chain,
+                                                          errors) => true;
             try
             {
-                await client.AuthenticateAsync(config.Username, config.Password, cancellationToken);
+                await client.ConnectAsync(config.ImapHost, config.ImapPort, true, cancellationToken);
                 try
                 {
-                    // The Inbox folder is always available on all IMAP servers
-                    await client.Inbox.OpenAsync(FolderAccess.ReadOnly, cancellationToken);
-                    config.CheckSuccessful = true;
-                    config.CheckError = null;
+                    await client.AuthenticateAsync(config.Username, config.Password, cancellationToken);
+                    try
+                    {
+                        // The Inbox folder is always available on all IMAP servers
+                        await client.Inbox.OpenAsync(FolderAccess.ReadOnly, cancellationToken);
+                        config.CheckSuccessful = true;
+                        config.CheckError = null;
+                    }
+                    catch (Exception ex)
+                    {
+                        config.CheckSuccessful = false;
+                        config.CheckError = $"Could not open inbox. Error: {ex.Message}";
+                        await configurationRegistry.UpdateConfiguration(command.EventId, mailConfigurations);
+                    }
                 }
                 catch (Exception ex)
                 {
                     config.CheckSuccessful = false;
-                    config.CheckError = $"Could not open inbox. Error: {ex.Message}";
+                    config.CheckError = $"Could not authenticate user {config.Username}. Error: {ex.Message}";
                     await configurationRegistry.UpdateConfiguration(command.EventId, mailConfigurations);
                 }
             }
             catch (Exception ex)
             {
                 config.CheckSuccessful = false;
-                config.CheckError = $"Could not authenticate user {config.Username}. Error: {ex.Message}";
+                config.CheckError = $"Could not connect to {config.ImapHost}:{config.ImapPort}. Error: {ex.Message}";
                 await configurationRegistry.UpdateConfiguration(command.EventId, mailConfigurations);
             }
-        }
-        catch (Exception ex)
-        {
-            config.CheckSuccessful = false;
-            config.CheckError = $"Could not connect to {config.ImapHost}:{config.ImapPort}. Error: {ex.Message}";
+
             await configurationRegistry.UpdateConfiguration(command.EventId, mailConfigurations);
+
+            changeTrigger.QueryChanged<ExternalMailConfigurationQuery>(command.EventId);
         }
-
-        await configurationRegistry.UpdateConfiguration(command.EventId, mailConfigurations);
-
-        changeTrigger.QueryChanged<ExternalMailConfigurationQuery>(command.EventId);
     }
 }
