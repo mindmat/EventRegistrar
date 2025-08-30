@@ -17,6 +17,7 @@ using EventRegistrar.Backend.Infrastructure.ErrorHandling;
 using EventRegistrar.Backend.Infrastructure.Mediator;
 using EventRegistrar.Backend.Infrastructure.ReadableIds;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using EventRegistrar.Backend.Mailing.Templates.Validation;
 using EventRegistrar.Backend.Payments.Files;
 
 using Microsoft.ApplicationInsights.DependencyCollector;
@@ -205,6 +206,8 @@ container.Register<IEventBus, EventBus>();
 container.Register<SourceQueueProvider>();
 container.Register<ReadableIdProvider>();
 container.Register(typeof(IEventToUserTranslation<>), assemblies);
+
+container.Collection.Register<IAutoMailTemplateExpectedPlaceholders>(assemblies, Lifestyle.Singleton);
 
 container.Verify();
 

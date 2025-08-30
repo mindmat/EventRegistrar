@@ -82,7 +82,7 @@ public class MessageQueueReceiver : IAsyncDisposable
         }
 
         var typedMethod = _typedProcessMethod.MakeGenericMethod(commandType);
-        if (typedMethod.Invoke(this, new object?[] { commandMessage.CommandSerialized, CommandQueue.CommandQueueName, arg.CancellationToken }) is Task task)
+        if (typedMethod.Invoke(this, [commandMessage.CommandSerialized, CommandQueue.CommandQueueName, arg.CancellationToken]) is Task task)
         {
             await task;
         }

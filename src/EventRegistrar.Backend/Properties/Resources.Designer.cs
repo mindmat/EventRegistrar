@@ -412,6 +412,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bei Partner-Anmeldungen sollten beide Partner angesprochen werden, z.B. &apos;Hallo {{{0}}} &amp; {{{1}}}&apos;.
+        /// </summary>
+        internal static string BothNamesExpectedInPartnerMail {
+            get {
+                return ResourceManager.GetString("BothNamesExpectedInPartnerMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Massenmails.
         /// </summary>
         internal static string BulkMailTemplates {

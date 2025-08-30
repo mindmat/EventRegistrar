@@ -13,6 +13,7 @@ using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Mailing.InvalidAddresses;
 using EventRegistrar.Backend.Mailing.ManualTrigger;
 using EventRegistrar.Backend.Mailing.Templates;
+using EventRegistrar.Backend.Mailing.Templates.Validation;
 using EventRegistrar.Backend.Payments;
 using EventRegistrar.Backend.Payments.Account;
 using EventRegistrar.Backend.Payments.Assignments;
@@ -132,6 +133,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(RegistrableIcsQuery);
             yield return nameof(DownloadMailAttachmentQuery);
             yield return nameof(DownloadIcsPreviewQuery);
+            yield return nameof(ValidateAutoMailTemplatesCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)

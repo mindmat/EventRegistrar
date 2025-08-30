@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.RegistrationForms.FormPaths;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -17,6 +18,7 @@ public class AutoMailTemplate : Entity
     public bool AddIcs { get; set; }
 
     public ICollection<Mail>? Mails { get; set; }
+    public ICollection<string>? FailedPlaceholderChecks { get; set; }
 }
 
 public class AutoMailTemplateMap : EntityMap<AutoMailTemplate>
@@ -34,5 +36,8 @@ public class AutoMailTemplateMap : EntityMap<AutoMailTemplate>
 
         builder.Property(mtp => mtp.Subject)
                .HasMaxLength(1000);
+
+        builder.Property(mtp => mtp.FailedPlaceholderChecks)
+               .IsJsonColumn();
     }
 }

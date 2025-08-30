@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Mailing.Import;
+using EventRegistrar.Backend.Mailing.Templates.Validation;
 using EventRegistrar.Backend.RegistrationForms;
 
 namespace EventRegistrar.Backend.Infrastructure;
@@ -19,6 +20,7 @@ public class TriggerNightlyJobsCommandHandler(IQueryable<Event> events,
         foreach (var eventId in activeEventIds)
         {
             changeTrigger.EnqueueCommand(new CheckExternalMailConfigurationCommand { EventId = eventId });
+            changeTrigger.EnqueueCommand(new ValidateAutoMailTemplatesCommand { EventId = eventId });
         }
 
         return Task.CompletedTask;
