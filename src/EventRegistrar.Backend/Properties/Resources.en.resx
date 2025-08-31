@@ -228,6 +228,9 @@
   <data name="BankStatement" xml:space="preserve">
     <value>Bank statements</value>
   </data>
+  <data name="BothNamesExpectedInPartnerMail" xml:space="preserve">
+    <value>In partner registrations both partners should be addressed, e.g. 'Hello {0} &amp; {1}'</value>
+  </data>
   <data name="BulkMailTemplates" xml:space="preserve">
     <value>Bulk mails</value>
   </data>

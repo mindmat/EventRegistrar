@@ -66,11 +66,18 @@ public class BothNamesExpectedInPartnerMail : IAutoMailTemplateExpectedPlacehold
 
     public bool MissesPlaceholder(string content)
     {
-        return !content.Contains($"{Role.Leader}.{MailPlaceholder.FirstName}") && !content.Contains($"{Role.Leader}.{MailPlaceholder.LastName}")
-            || !content.Contains($"{Role.Follower}.{MailPlaceholder.FirstName}") && !content.Contains($"{Role.Follower}.{MailPlaceholder.LastName}");
+        return !content.Contains(GetPlaceholder(Role.Leader, MailPlaceholder.FirstName)) && !content.Contains(GetPlaceholder(Role.Leader, MailPlaceholder.LastName))
+            || !content.Contains(GetPlaceholder(Role.Follower, MailPlaceholder.FirstName)) && !content.Contains(GetPlaceholder(Role.Follower, MailPlaceholder.LastName));
     }
 
     public string ErrorMessage { get; } = string.Format(Resources.BothNamesExpectedInPartnerMail,
-                                                        $"{Role.Leader}.{MailPlaceholder.FirstName}",
-                                                        $"{Role.Follower}.{MailPlaceholder.FirstName}");
+                                                        GetPlaceholder(Role.Leader, MailPlaceholder.FirstName),
+                                                        GetPlaceholder(Role.Follower, MailPlaceholder.FirstName));
+
+    private static string GetPlaceholder(Role? role, MailPlaceholder placeholder)
+    {
+        return role == null 
+                   ? $"{{{{{placeholder}}}}}" 
+                   : $"{{{{{role}.{placeholder}}}}}";
+    }
 }
