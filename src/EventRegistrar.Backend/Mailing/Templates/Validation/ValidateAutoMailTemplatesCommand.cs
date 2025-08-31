@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.MenuNodes;
 using EventRegistrar.Backend.Properties;
 using EventRegistrar.Backend.Registrations;
 
@@ -13,18 +14,10 @@ public class ValidateAutoMailTemplatesCommand : IRequest
 
 public class ValidateAutoMailTemplatesCommandHandler(IQueryable<AutoMailTemplate> templates,
                                                      IEnumerable<IAutoMailTemplateExpectedPlaceholders> expectedPlaceholders,
+                                                     IRepository<MenuNodeReadModel> menuNodes,
                                                      ChangeTrigger changeTrigger)
     : IRequestHandler<ValidateAutoMailTemplatesCommand>
 {
-    //private static Dictionary<MailType, string[][]> expectedPlaceholders = new()
-    //{
-    //    { MailType.PartnerRegistrationMatchedAndAccepted, [
-    //        [$"{Role.Leader}.{MailPlaceholder.FirstName}", $"{Role.Leader}.{MailPlaceholder.LastName}"],
-    //        [$"{Role.Follower}.{MailPlaceholder.FirstName}", $"{Role.Follower}.{MailPlaceholder.LastName}"],
-    //        [$"{Role.Leader}.{MailPlaceholder.DueAmount}", $"{Role.Leader}.{MailPlaceholder.QrCode}"],
-    //        [$"{Role.Follower}.{MailPlaceholder.DueAmount}", $"{Role.Follower}.{MailPlaceholder.QrCode}"],
-    //    ] },
-    //};
     public async Task Handle(ValidateAutoMailTemplatesCommand command, CancellationToken cancellationToken)
     {
         var mailTypesToCheck = expectedPlaceholders.SelectMany(eph => eph.AppliesTo);
@@ -37,12 +30,53 @@ public class ValidateAutoMailTemplatesCommandHandler(IQueryable<AutoMailTemplate
         {
             var content = template.ContentHtml ?? string.Empty;
             template.FailedPlaceholderChecks = expectedPlaceholders.Where(eph => eph.AppliesTo.Contains(template.Type))
-                                                   .Where(eph => eph.MissesPlaceholder(content))
-                                                   .Select(eph => eph.GetType().Name)
-                                                   .ToList();
+                                                                   .Where(eph => eph.MissesPlaceholder(content))
+                                                                   .Select(eph => eph.GetType().Name)
+                                                                   .ToList();
         }
 
-        //changeTrigger.TriggerUpdate<>();
+        var totalWarningCount = templatesToCheck.Sum(amt => amt.FailedPlaceholderChecks?.Count ?? 0);
+        var menuNode = new MenuNodeCalculation { Key = MenuNodeKey.MailTemplates };
+        if (totalWarningCount > 0)
+        {
+            menuNode.Content = $"{totalWarningCount}";
+            menuNode.Style = MenuNodeStyle.ToDo;
+        }
+        await UpsertMenuNode(command.EventId, menuNode);
+    }
+
+    private async Task UpsertMenuNode(Guid eventId, MenuNodeCalculation menuNodeCalculation)
+    {
+        var node = await menuNodes.AsTracking()
+                                  .FirstOrDefaultAsync(mnr => mnr.EventId == eventId
+                                                           && mnr.Key == menuNodeCalculation.Key);
+        var anythingChanged = false;
+        if (node == null)
+        {
+            anythingChanged = true;
+            menuNodes.InsertObjectTree(new MenuNodeReadModel
+                                       {
+                                           Id = Guid.NewGuid(),
+                                           EventId = eventId,
+                                           Key = menuNodeCalculation.Key,
+                                           Content = menuNodeCalculation.Content,
+                                           Hidden = menuNodeCalculation.Hidden
+                                       });
+        }
+        else if (node.Content != menuNodeCalculation.Content
+              || node.Style != menuNodeCalculation.Style
+              || node.Hidden != menuNodeCalculation.Hidden)
+        {
+            anythingChanged = true;
+            node.Content = menuNodeCalculation.Content;
+            node.Style = menuNodeCalculation.Style;
+            node.Hidden = menuNodeCalculation.Hidden;
+        }
+
+        if (anythingChanged)
+        {
+            changeTrigger.QueryChanged<MenuNodesQuery>(eventId);
+        }
     }
 }
 

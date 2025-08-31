@@ -207,6 +207,7 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'mat_outline:mail',
                                     link: `/${e.acronym}/mailing/auto-mail-templates`,
+                                    badge: this.getBadge(nodes, MenuNodeKey.MailTemplates)
                                 },
                                 {
                                     id: 'bulk-mail-templates',
