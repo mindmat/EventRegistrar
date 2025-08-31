@@ -4625,6 +4625,31 @@
                 }
             }
         },
+        "/api/TriggerNightlyJobsCommand": {
+            "post": {
+                "tags": [
+                    "TriggerNightlyJobs"
+                ],
+                "operationId": "TriggerNightlyJobs_Command",
+                "requestBody": {
+                    "x-name": "TriggerNightlyJobsCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TriggerNightlyJobsCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/TryAssignImportedMailCommand": {
             "post": {
                 "tags": [
@@ -5054,6 +5079,31 @@
                 }
             }
         },
+        "/api/ValidateAutoMailTemplatesCommand": {
+            "post": {
+                "tags": [
+                    "ValidateAutoMailTemplates"
+                ],
+                "operationId": "ValidateAutoMailTemplates_Command",
+                "requestBody": {
+                    "x-name": "ValidateAutoMailTemplatesCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ValidateAutoMailTemplatesCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/WillPayAtCheckinCommand": {
             "post": {
                 "tags": [
@@ -5445,6 +5495,10 @@
                     },
                     "addIcs": {
                         "type": "boolean"
+                    },
+                    "warnings": {
+                        "type": "string",
+                        "nullable": true
                     }
                 }
             },
@@ -5567,6 +5621,9 @@
                     "typeText": {
                         "type": "string",
                         "nullable": true
+                    },
+                    "hasWarning": {
+                        "type": "boolean"
                     }
                 }
             },
@@ -6252,7 +6309,8 @@
                     },
                     "externalMailConfigurationId": {
                         "type": "string",
-                        "format": "guid"
+                        "format": "guid",
+                        "nullable": true
                     }
                 }
             },
@@ -11798,6 +11856,10 @@
                     }
                 }
             },
+            "TriggerNightlyJobsCommand": {
+                "type": "object",
+                "additionalProperties": false
+            },
             "TryAssignImportedMailCommand": {
                 "type": "object",
                 "additionalProperties": false,
@@ -12259,6 +12321,21 @@
                     "eventId": {
                         "type": "string",
                         "format": "guid"
+                    }
+                }
+            },
+            "ValidateAutoMailTemplatesCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "autoMailTemplateId": {
+                        "type": "string",
+                        "format": "guid",
+                        "nullable": true
                     }
                 }
             },

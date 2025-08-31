@@ -93,7 +93,8 @@ public class AutoMailTemplatesQueryHandler(IQueryable<AutoMailTemplate> mailTemp
                    Type = mailType,
                    TypeText = enumTranslator.Translate(mailType),
                    ReleaseImmediately = existing.FirstOrDefault()?.ReleaseImmediately,
-                   Templates = config.AvailableLanguages.Select(lng => CreateTemplate(lng, existing.FirstOrDefault(mtp => mtp.Language == lng)))
+                   Templates = config.AvailableLanguages.Select(lng => CreateTemplate(lng, existing.FirstOrDefault(mtp => mtp.Language == lng))),
+                   HasWarning = existing.Any(amt=>amt.FailedPlaceholderChecks?.Any()==true)
                };
     }
 
@@ -139,6 +140,7 @@ public class AutoMailTemplateMetadataType
     public bool? ReleaseImmediately { get; set; }
     public IEnumerable<AutoMailTemplateMetadataLanguage>? Templates { get; set; }
     public string? TypeText { get; set; }
+    public bool HasWarning { get; set; }
 }
 
 public class AutoMailTemplateMetadataLanguage

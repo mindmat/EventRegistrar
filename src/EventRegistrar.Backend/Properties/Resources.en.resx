@@ -828,6 +828,9 @@
   <data name="MissingAmount" xml:space="preserve">
     <value>Outstanding amount</value>
   </data>
+  <data name="MissingPlaceholders" xml:space="preserve">
+    <value>Expected placeholders are not present</value>
+  </data>
   <data name="MultiMappings" xml:space="preserve">
     <value>Multi mappings</value>
   </data>

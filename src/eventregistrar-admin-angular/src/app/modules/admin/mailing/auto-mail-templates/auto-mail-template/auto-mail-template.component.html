@@ -19,6 +19,10 @@
             <div class="sm:col-span-4" *ngIf="options">
                 <mat-label>{{ 'MailTemplate' | translate }}</mat-label>
                 <button mat-stroked-button type="button" [color]="'primary'" class="ml-2" (click)="openPreview()">{{ 'Preview' | translate }}</button>
+                <fuse-alert class="m-2" *ngIf="!!templateForm.get('warnings').value" [type]="'warning'">
+                    <span fuseAlertTitle>{{'MissingPlaceholders' | translate}}</span>
+                    {{ templateForm.get('warnings').value }}
+                </fuse-alert>
                 <div class="mt-2" [froalaEditor]="options" #editor></div>
             </div>
 

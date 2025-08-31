@@ -236,7 +236,7 @@
     <value>Kontobewegungen</value>
   </data>
   <data name="BothNamesExpectedInPartnerMail" xml:space="preserve">
-      <value>Bei Partner-Anmeldungen sollten beide Partner angesprochen werden, z.B. 'Hallo {{{0}}} &amp; {{{1}}}'</value>
+      <value>Bei Partner-Anmeldungen sollten beide Partner angesprochen werden, z.B. 'Hallo {{{{{0}}}}} &amp; {{{{{1}}}}}'</value>
   </data>
   <data name="BulkMailTemplates" xml:space="preserve">
     <value>Massenmails</value>
@@ -927,6 +927,9 @@
   </data>
   <data name="MissingAmount" xml:space="preserve">
     <value>Ausstehender Betrag</value>
+  </data>
+  <data name="MissingPlaceholders" xml:space="preserve">
+    <value>Erwartetet Platzhalter sind nicht vorhanden</value>
   </data>
   <data name="MultiMappings" xml:space="preserve">
     <value>Mehrfach-Zuordnungen</value>

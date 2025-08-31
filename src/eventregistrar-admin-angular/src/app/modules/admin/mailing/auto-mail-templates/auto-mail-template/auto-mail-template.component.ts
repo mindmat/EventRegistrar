@@ -29,6 +29,7 @@ export class AutoMailTemplateComponent implements OnInit
     subject: '',
     contentHtml: '',
     addIcs: false,
+    warnings: null
   });
 
   private tribute = new Tribute(
