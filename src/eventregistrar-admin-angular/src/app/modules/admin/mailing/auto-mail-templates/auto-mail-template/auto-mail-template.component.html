@@ -2,7 +2,7 @@
     <!-- Form -->
     <form [formGroup]="templateForm">
 
-        <div class="grid grid-cols-4 gap-6 w-full mt-8 items-baseline">
+        <div class="grid grid-cols-4 gap-6 w-full p-1 items-baseline">
             <!-- Name -->
             <div class="col-span-3">
                 <mat-form-field class="fuse-mat-no-subscript w-full">
@@ -19,7 +19,7 @@
             <div class="sm:col-span-4" *ngIf="options">
                 <mat-label>{{ 'MailTemplate' | translate }}</mat-label>
                 <button mat-stroked-button type="button" [color]="'primary'" class="ml-2" (click)="openPreview()">{{ 'Preview' | translate }}</button>
-                <fuse-alert class="m-2" *ngIf="!!templateForm.get('warnings').value" [type]="'warning'">
+                <fuse-alert class="my-2" *ngIf="!!templateForm.get('warnings').value" [type]="'warning'" [appearance]="'outline'">
                     <span fuseAlertTitle>{{'MissingPlaceholders' | translate}}</span>
                     {{ templateForm.get('warnings').value }}
                 </fuse-alert>
