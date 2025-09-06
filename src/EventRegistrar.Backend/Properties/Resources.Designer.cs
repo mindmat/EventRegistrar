@@ -412,7 +412,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Bei Partner-Anmeldungen sollten beide Partner angesprochen werden, z.B. &apos;Hallo {{{0}}} &amp; {{{1}}}&apos;.
+        ///   Looks up a localized string similar to Bei Partner-Anmeldungen sollten beide Partner angesprochen werden, z.B. &apos;Hallo {0} &amp; {1}&apos;.
         /// </summary>
         internal static string BothNamesExpectedInPartnerMail {
             get {
@@ -2507,6 +2507,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Erwartetet Platzhalter sind nicht vorhanden.
+        /// </summary>
+        internal static string MissingPlaceholders {
+            get {
+                return ResourceManager.GetString("MissingPlaceholders", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mehrfach-Zuordnungen.
         /// </summary>
         internal static string MultiMappings {
@@ -3997,6 +4006,24 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Submit {
             get {
                 return ResourceManager.GetString("Submit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zu Follower switchen.
+        /// </summary>
+        internal static string SwitchToFollower {
+            get {
+                return ResourceManager.GetString("SwitchToFollower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zu Leader switchen.
+        /// </summary>
+        internal static string SwitchToLeader {
+            get {
+                return ResourceManager.GetString("SwitchToLeader", resourceCulture);
             }
         }
         

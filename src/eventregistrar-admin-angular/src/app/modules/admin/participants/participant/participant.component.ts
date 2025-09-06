@@ -12,6 +12,7 @@ export class ParticipantComponent implements OnInit
   @Input() registration?: RegistrationDisplayInfo;
   @Input() placeholderPartner?: string;
   @Input() role?: Role;
+  @Input() isPartnerSpot?: boolean;
   @Output() switchRoleEvent = new EventEmitter<SwitchRoleRequest>();
 
   Role = Role;

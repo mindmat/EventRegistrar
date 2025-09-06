@@ -46,7 +46,6 @@ public class ParticipantsOfRegistrableQueryHandler(IQueryable<Registrable> regis
                                                                                      && spot.Registration.DefaultRole == Role.Follower,
                                                                              CanSwitch = spot.Registrable!.Type == RegistrableType.Double
                                                                                       && spot.Registration.CanSwitchRole
-                                                                                      && spot.Registration.DefaultRole == Role.Leader
                                                                          },
                                                           Follower = spot.RegistrationId_Follower == null
                                                                          ? null
@@ -59,7 +58,6 @@ public class ParticipantsOfRegistrableQueryHandler(IQueryable<Registrable> regis
                                                                                LastName = spot.Registration_Follower.RespondentLastName,
                                                                                Switched = spot.Registration_Follower.DefaultRole == Role.Leader,
                                                                                CanSwitch = spot.Registration_Follower.CanSwitchRole
-                                                                                        && spot.Registration_Follower.DefaultRole == Role.Follower
                                                                            },
                                                           PlaceholderPartner = spot.IsPartnerSpot && (spot.RegistrationId == null || spot.RegistrationId_Follower == null)
                                                                                    ? spot.PartnerEmail

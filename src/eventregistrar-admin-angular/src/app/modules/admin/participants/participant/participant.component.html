@@ -1,6 +1,4 @@
-<div *ngIf="registration"
-    class="flex flex-row w-72 h-16 items-start mb-3 p-5 shadow rounded-lg overflow-hidden bg-card hover:underline"
-    [ngClass]="{'bg-amber-200': registration.switched,
+<div *ngIf="registration" class="flex flex-row w-72 h-16 items-start mb-3 p-5 shadow rounded-lg overflow-hidden bg-card hover:underline" [ngClass]="{'bg-amber-200': registration.switched,
                 'border-amber-200 border-4': registration.canSwitch}">
 
     <!-- Cover image -->
@@ -15,7 +13,7 @@
         registration.firstName }} {{ registration.lastName }}</a>
 
     <!-- context menu -->
-    <div *ngIf="registration.canSwitch && !registration.switched && !!role" class="flex items-center ml-auto">
+    <div *ngIf="registration.canSwitch && !!role && !isPartnerSpot" class="flex items-center ml-auto">
         <button mat-icon-button [matMenuTriggerFor]="participantMenu">
             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
         </button>
@@ -38,12 +36,10 @@
 </div>
 
 <!-- waiting for partner -->
-<div *ngIf="!registration && placeholderPartner"
-    class="flex flex-col w-72 h-16 items-start mb-3 p-5 space-y-3 border border-warn-400 shadow rounded-lg overflow-hidden bg-warn-200">
+<div *ngIf="!registration && placeholderPartner" class="flex flex-col w-72 h-16 items-start mb-3 p-5 space-y-3 border border-warn-400 shadow rounded-lg overflow-hidden bg-warn-200">
     <div class="text-lg font-medium leading-5 ">{{ placeholderPartner }}</div>
 </div>
 <!-- available -->
-<div *ngIf="!registration && !placeholderPartner"
-    class="flex flex-col w-72 h-16 items-start mb-3 p-5 space-y-3 border border-gray-400 shadow rounded-lg overflow-hidden bg-gray-200">
+<div *ngIf="!registration && !placeholderPartner" class="flex flex-col w-72 h-16 items-start mb-3 p-5 space-y-3 border border-gray-400 shadow rounded-lg overflow-hidden bg-gray-200">
     <mat-icon class="self-center" svgIcon="heroicons_solid:question-mark-circle"></mat-icon>
 </div>

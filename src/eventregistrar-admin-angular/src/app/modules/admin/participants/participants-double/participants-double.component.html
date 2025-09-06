@@ -75,11 +75,11 @@
                             <!-- Spot -->
                             <ng-container *ngFor="let spot of registrable.participants; trackBy: trackByFn">
                                 <div class="flex flex-row items-center">
-                                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Leader"
+                                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Leader" [isPartnerSpot]="spot.isPartnerRegistration"
                                         (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
                                     <div *ngIf="spot.isPartnerRegistration" class="w-4 h-6 mb-2 z-10 overflow-hidden bg-card"></div>
                                     <div *ngIf="!spot.isPartnerRegistration" class="w-4"></div>
-                                    <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Follower"
+                                    <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Follower" [isPartnerSpot]="spot.isPartnerRegistration"
                                         (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
                                 </div>
                             </ng-container>

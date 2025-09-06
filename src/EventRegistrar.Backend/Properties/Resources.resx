@@ -1430,6 +1430,12 @@
   <data name="Submit" xml:space="preserve">
     <value>Senden</value>
   </data>
+  <data name="SwitchToFollower" xml:space="preserve">
+    <value>Zu Follower switchen</value>
+  </data>
+  <data name="SwitchToLeader" xml:space="preserve">
+    <value>Zu Leader switchen</value>
+  </data>
   <data name="Tag" xml:space="preserve">
     <value>Tag</value>
   </data>

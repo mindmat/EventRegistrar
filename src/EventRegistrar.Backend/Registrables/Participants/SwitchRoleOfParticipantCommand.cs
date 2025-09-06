@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
 
@@ -12,7 +13,9 @@ public class SwitchRoleOfParticipantCommand : IRequest, IEventBoundRequest
     public Role ToRole { get; set; }
 }
 
-public class SwitchRoleOfParticipantCommandHandler(IRepository<Seat> spots) : IRequestHandler<SwitchRoleOfParticipantCommand>
+public class SwitchRoleOfParticipantCommandHandler(IRepository<Seat> spots,
+                                                   ChangeTrigger changeTrigger) 
+    : IRequestHandler<SwitchRoleOfParticipantCommand>
 {
     public async Task Handle(SwitchRoleOfParticipantCommand command, CancellationToken cancellationToken)
     {
@@ -79,5 +82,9 @@ public class SwitchRoleOfParticipantCommandHandler(IRepository<Seat> spots) : IR
                 spot.RegistrationId_Follower = null;
                 break;
         }
+
+        changeTrigger.QueryChanged<ParticipantsOfRegistrableQuery>(command.EventId, command.RegistrableId);
+        changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(command.RegistrationId, command.EventId);
     }
 }

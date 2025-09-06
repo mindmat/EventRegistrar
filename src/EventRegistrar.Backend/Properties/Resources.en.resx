@@ -1317,6 +1317,12 @@
   <data name="Submit" xml:space="preserve">
     <value>Submit</value>
   </data>
+  <data name="SwitchToFollower" xml:space="preserve">
+    <value>Switch to follower</value>
+  </data>
+  <data name="SwitchToLeader" xml:space="preserve">
+    <value>Switch to leader</value>
+  </data>
   <data name="Tag" xml:space="preserve">
     <value>Tag</value>
   </data>
