@@ -25,7 +25,7 @@ public class SpotManager(IRepository<Seat> _spots,
         var seats = registrable.Spots!.Where(st => !st.IsCancelled).ToList();
         if (registrable.MaximumSingleSeats.HasValue)
         {
-            throw new InvalidOperationException("Unexpected: Attempt to reserve single spot as partner spot");
+            throw new InvalidOperationException("Unexpected: Attempt to reserve a partner spot in a single track.");
         }
 
         var seat = new Seat
@@ -254,7 +254,7 @@ public class SpotManager(IRepository<Seat> _spots,
                                .ToList();
         if (registrable.MaximumDoubleSeats != null)
         {
-            throw new InvalidOperationException("Unexpected: Attempt to reserve single spot as partner spot");
+            throw new InvalidOperationException("Unexpected: Attempt to reserve a single spot in a partner track.");
         }
 
         var seat = new Seat

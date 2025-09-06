@@ -21,7 +21,7 @@ public class SaveRegistrationFormMappingsCommandHandler(IRepository<Registration
     public async Task Handle(SaveRegistrationFormMappingsCommand command, CancellationToken cancellationToken)
     {
         var sectionsToSave = command.Sections;
-        var multiMappingsToSave = (command.MultiMappings ?? Enumerable.Empty<MultiMapping>()).ToList();
+        var multiMappingsToSave = (command.MultiMappings ?? []).ToList();
         if (sectionsToSave == null)
         {
             return;
@@ -46,7 +46,7 @@ public class SaveRegistrationFormMappingsCommandHandler(IRepository<Registration
 
             question.Mapping = questionToSave.Mapping;
             question.TemplateKey = questionToSave.MailTemplateKey;
-            foreach (var optionToSave in questionToSave.Options ?? Enumerable.Empty<QuestionOptionMappingDisplayItem>())
+            foreach (var optionToSave in questionToSave.Options ?? [])
             {
                 var option = question?.QuestionOptions!.FirstOrDefault(qop => qop.Id == optionToSave.Id);
                 if (option == null)
@@ -54,9 +54,9 @@ public class SaveRegistrationFormMappingsCommandHandler(IRepository<Registration
                     continue;
                 }
 
-                var existingMappings = new List<QuestionOptionMapping>(option.Mappings ?? Enumerable.Empty<QuestionOptionMapping>());
+                var existingMappings = new List<QuestionOptionMapping>(option.Mappings ?? []);
 
-                foreach (var mapping in optionToSave.MappedRegistrableCombinedIds?.Select(cid => new CombinedMappingId(cid)) ?? Enumerable.Empty<CombinedMappingId>())
+                foreach (var mapping in optionToSave.MappedRegistrableCombinedIds?.Select(cid => new CombinedMappingId(cid)) ?? [])
                 {
                     var existingMapping = existingMappings.FirstOrDefault(map => map.Type == mapping.Type
                                                                               && map.RegistrableId == mapping.Id
