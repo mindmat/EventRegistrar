@@ -194,6 +194,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(SwitchRoleOfParticipantCommand);
             yield return nameof(FixMissingRoleCommand);
             yield return nameof(MatchSingleSpotsCommand);
+            yield return nameof(UnbindPartnerSpotCommand);
             yield return nameof(CheckIfRegistrationHasMultiplePartnersCommand);
             yield return nameof(SaveRegistrableIcsCommand);
             yield return nameof(AddIcsToMailCommand);

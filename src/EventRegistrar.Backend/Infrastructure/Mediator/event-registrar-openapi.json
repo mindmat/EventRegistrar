@@ -4820,6 +4820,31 @@
                 }
             }
         },
+        "/api/UnbindPartnerSpotCommand": {
+            "post": {
+                "tags": [
+                    "UnbindPartnerSpot"
+                ],
+                "operationId": "UnbindPartnerSpot_Command",
+                "requestBody": {
+                    "x-name": "UnbindPartnerSpotCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UnbindPartnerSpotCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/UnprocessedRawRegistrationCountQuery": {
             "post": {
                 "tags": [
@@ -12010,6 +12035,20 @@
                     },
                     "leavePartnerSpots": {
                         "type": "boolean"
+                    }
+                }
+            },
+            "UnbindPartnerSpotCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "spotId": {
+                        "type": "string",
+                        "format": "guid"
                     }
                 }
             },

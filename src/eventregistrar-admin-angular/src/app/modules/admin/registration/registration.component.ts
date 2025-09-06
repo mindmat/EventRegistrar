@@ -247,6 +247,14 @@ export class RegistrationComponent implements OnInit
     });
   }
 
+  unbindPartnerSpot(spot: SpotDisplayItem)
+  {
+    if (spot.partnerRegistrationId)
+    {
+      this.matchPartnerService.unbindPartnerSpot(spot.id);
+    }
+  }
+
   setWillPayAtCheckin(willPayAtCheckin: boolean): void
   {
     this.registrationService.setWillPayAtCheckin(this.registration.id, willPayAtCheckin);

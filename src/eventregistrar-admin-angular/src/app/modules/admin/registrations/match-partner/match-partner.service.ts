@@ -41,4 +41,11 @@ export class MatchPartnerService extends FetchService<PotentialPartners>
     this.api.changeUnmatchedPartnerRegistrationToSingleRegistration_Command({ eventId: this.eventService.selectedId, registrationId })
       .subscribe(x => console.log(x));
   }
+
+
+  unbindPartnerSpot(spotId: string)
+  {
+    this.api.unbindPartnerSpot_Command({ eventId: this.eventService.selectedId, spotId })
+      .subscribe(x => console.log(x));
+  }
 }

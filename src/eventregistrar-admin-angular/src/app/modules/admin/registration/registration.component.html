@@ -253,7 +253,7 @@
                                 <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:user'"></mat-icon>
                                 <div>{{ spot.roleText }}</div>
                                 <button *ngIf="!spot.partnerRegistrationId" class="ml-auto -mt-2" mat-icon-button (click)="matchSpotWithPartner(spot)">
-                                    <mat-icon [svgIcon]="'heroicons_outline:link'"></mat-icon>
+                                    <mat-icon [svgIcon]="'mat_outline:add_link'"></mat-icon>
                                 </button>
                             </div>
                             <div *ngIf="spot.partnerName" class="flex items-center mt-4">
@@ -262,6 +262,9 @@
                                     <a *ngIf="spot.partnerRegistrationId" class="hover:underline" [routerLink]="navigator.getRegistrationUrl(spot.partnerRegistrationId)">{{ spot.partnerName }}</a>
                                     <span *ngIf="!spot.partnerRegistrationId" class="italic">{{ spot.partnerName }}</span>
                                 </span>
+                                <button *ngIf="spot.partnerRegistrationId" class="ml-auto -mt-2" mat-icon-button (click)="unbindPartnerSpot(spot)">
+                                    <mat-icon [svgIcon]="'mat_outline:link_off'"></mat-icon>
+                                </button>
                             </div>
                             <!-- <div class="text-md leading-none text-secondary mt-2">{{spot.firstPartnerJoined | date: 'dd.MM.yy HH:mm:ss'}}</div> -->
                         </div>
