@@ -225,7 +225,7 @@
   <data name="BankAccountConfigExplanation" xml:space="preserve">
     <value>Configure the bank account used to generate the QR Code for e-Banking</value>
   </data>
-  <data name="BankStatement" xml:space="preserve">
+  <data name="BankStatements" xml:space="preserve">
     <value>Bank statements</value>
   </data>
   <data name="BothNamesExpectedInPartnerMail" xml:space="preserve">

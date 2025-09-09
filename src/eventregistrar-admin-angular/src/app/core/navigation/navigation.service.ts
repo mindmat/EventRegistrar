@@ -146,7 +146,7 @@ export class NavigationService
                             children: [
                                 {
                                     id: 'bank-statements',
-                                    title: translateService.instant('BankStatement'),
+                                    title: translateService.instant('BankStatements'),
                                     type: 'basic',
                                     icon: 'heroicons_outline:currency-dollar',
                                     link: `/${e.acronym}/accounting/bank-statements`,

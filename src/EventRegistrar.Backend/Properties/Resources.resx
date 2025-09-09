@@ -232,7 +232,7 @@
   <data name="BankAccountConfigExplanation" xml:space="preserve">
     <value>Bankkonto hinterlegen, das für den QR-Code verwendet wird</value>
   </data>
-  <data name="BankStatement" xml:space="preserve">
+  <data name="BankStatements" xml:space="preserve">
     <value>Kontobewegungen</value>
   </data>
   <data name="BothNamesExpectedInPartnerMail" xml:space="preserve">

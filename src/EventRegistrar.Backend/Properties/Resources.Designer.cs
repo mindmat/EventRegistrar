@@ -405,9 +405,9 @@ namespace EventRegistrar.Backend.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Kontobewegungen.
         /// </summary>
-        internal static string BankStatement {
+        internal static string BankStatements {
             get {
-                return ResourceManager.GetString("BankStatement", resourceCulture);
+                return ResourceManager.GetString("BankStatements", resourceCulture);
             }
         }
         
