@@ -222,6 +222,7 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'heroicons_outline:document-text',
                                     link: `/${e.acronym}/admin/form-mapping`,
+                                    badge: this.getBadge(nodes, MenuNodeKey.Forms)
                                 },
                                 {
                                     id: 'pricing',

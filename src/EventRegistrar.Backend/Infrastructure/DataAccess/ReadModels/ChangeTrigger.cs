@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.MenuNodes;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
@@ -70,5 +71,18 @@ public class ChangeTrigger(CommandQueue commandQueue,
         where T : IRequest
     {
         commandQueue.EnqueueCommand(command);
+    }
+
+    public void UpdateMenuNode(MenuNodeKey key,
+                               Guid? eventId=null)
+    {
+        eventId ??= eventContext.EventId
+                 ?? throw new ArgumentNullException(nameof(eventId));
+
+        commandQueue.EnqueueCommand(new UpdateMenuNodeCommand
+                                    {
+                                        Key = MenuNodeKey.Forms,
+                                        EventId = eventId.Value
+                                    });
     }
 }

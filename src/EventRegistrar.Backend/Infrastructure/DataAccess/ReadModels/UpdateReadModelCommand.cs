@@ -140,10 +140,3 @@ public abstract class ReadModelCalculator<T> : IReadModelCalculator
     protected abstract Task<(T ReadModel, MenuNodeCalculation? MenuNode)> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
 }
 
-public class MenuNodeCalculation
-{
-    public required MenuNodeKey Key { get; set; }
-    public string? Content { get; set; }
-    public MenuNodeStyle? Style { get; set; }
-    public bool Hidden { get; set; }
-}

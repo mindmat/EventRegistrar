@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.MenuNodes;
 
 namespace EventRegistrar.Backend.RegistrationForms.GoogleForms;
 
@@ -18,6 +19,7 @@ internal class ProcessRawRegistrationFormReceivedCommandHandler(IQueryable<RawRe
         var eventId = await GetEventIdOfRawRegistrationForm(command.RawRegistrationFormId, cancellationToken);
         changeTrigger.QueryChanged<EventSetupStateQuery>(eventId);
         changeTrigger.QueryChanged<RegistrationFormsQuery>(eventId);
+        changeTrigger.UpdateMenuNode(MenuNodeKey.Forms, eventId);
     }
 
     private async Task<Guid> GetEventIdOfRawRegistrationForm(Guid rawRegistrationFormId, CancellationToken cancellationToken)

@@ -2,6 +2,7 @@
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.Mediator;
+using EventRegistrar.Backend.Infrastructure.MenuNodes;
 using EventRegistrar.Backend.Mailing.Import;
 using EventRegistrar.Backend.Payments.Assignments;
 using EventRegistrar.Backend.Payments;

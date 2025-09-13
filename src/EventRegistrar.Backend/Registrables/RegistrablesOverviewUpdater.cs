@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Infrastructure.MenuNodes;
 using EventRegistrar.Backend.Registrables.Tags;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Registrations.Cancel;
