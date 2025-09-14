@@ -260,9 +260,9 @@
                                 <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'"></mat-icon>
                                 <span class="leading-none">
                                     <a *ngIf="spot.partnerRegistrationId" class="hover:underline" [routerLink]="navigator.getRegistrationUrl(spot.partnerRegistrationId)">{{ spot.partnerName }}</a>
-                                    <span *ngIf="!spot.partnerRegistrationId" class="italic">{{ spot.partnerName }}</span>
+                                    <span *ngIf="!spot.partnerRegistrationId" class="italic">{{ registration.partnerOriginal }}</span>
                                 </span>
-                                <button *ngIf="spot.partnerRegistrationId" class="ml-auto -mt-2" mat-icon-button (click)="unbindPartnerSpot(spot)">
+                                <button *ngIf="spot.partnerRegistrationId || !!spot.partnerName" class="ml-auto -mt-2" mat-icon-button (click)="unbindPartnerSpot(spot)">
                                     <mat-icon [svgIcon]="'mat_outline:link_off'"></mat-icon>
                                 </button>
                             </div>

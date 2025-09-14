@@ -249,7 +249,7 @@ export class RegistrationComponent implements OnInit
 
   unbindPartnerSpot(spot: SpotDisplayItem)
   {
-    if (spot.partnerRegistrationId)
+    if (spot.partnerRegistrationId || !!spot.partnerName)
     {
       this.matchPartnerService.unbindPartnerSpot(spot.id);
     }

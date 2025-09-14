@@ -26,7 +26,14 @@ public class UnbindPartnerSpotCommandHandler(IRepository<Seat> spots,
 
         changeTrigger.QueryChanged<ParticipantsOfRegistrableQuery>(command.EventId, spotToUnbind.RegistrableId);
         changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
-        changeTrigger.TriggerUpdate<RegistrationCalculator>(spotToUnbind.RegistrationId, command.EventId);
-        changeTrigger.TriggerUpdate<RegistrationCalculator>(spotToUnbind.RegistrationId_Follower, command.EventId);
+        if (spotToUnbind.RegistrationId != null)
+        {
+            changeTrigger.TriggerUpdate<RegistrationCalculator>(spotToUnbind.RegistrationId, command.EventId);
+        }
+
+        if (spotToUnbind.RegistrationId_Follower != null)
+        {
+            changeTrigger.TriggerUpdate<RegistrationCalculator>(spotToUnbind.RegistrationId_Follower, command.EventId);
+        }
     }
 }

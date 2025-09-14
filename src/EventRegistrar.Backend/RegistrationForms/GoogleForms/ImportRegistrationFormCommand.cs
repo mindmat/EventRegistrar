@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.MenuNodes;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.Registrations.Responses;
 
@@ -157,5 +158,6 @@ public class ImportRegistrationFormCommandHandler(IRepository<RegistrationForm> 
         rawForm.Processed = dateTimeProvider.Now;
         changeTrigger.QueryChanged<RegistrationFormsQuery>(command.EventId);
         changeTrigger.QueryChanged<EventSetupStateQuery>(command.EventId);
+        changeTrigger.UpdateMenuNode(MenuNodeKey.Forms, command.EventId);
     }
 }
