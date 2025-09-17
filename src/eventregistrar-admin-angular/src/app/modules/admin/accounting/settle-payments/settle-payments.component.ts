@@ -64,7 +64,7 @@ export class SettlePaymentsComponent implements OnInit
 
     // Filter
     combineLatest([this.filters.query$, this.filters.hideIncoming$, this.filters.hideOutgoing$, this.filters.hideSettled$, this.filters.hideIgnored$])
-      .pipe(debounceTime(1000),
+      .pipe(debounceTime(200),
         takeUntil(this.unsubscribeAll),
         distinctUntilChanged(),
         // tap(([query, hideIncoming, hideOutgoing, hideSettled, hideIgnored]) => console.log(query)),
