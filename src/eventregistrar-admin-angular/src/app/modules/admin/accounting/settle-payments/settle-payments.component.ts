@@ -1,9 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { PaymentDisplayItem2, BookingsOfDay, CreditDebit } from 'app/api/api';
-import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil } from 'rxjs';
 import { SettlePaymentsService } from './settle-payments.service';
-import { Router } from '@angular/router';
 import { NavigatorService } from '../../navigator.service';
 
 @Component({
@@ -64,12 +63,14 @@ export class SettlePaymentsComponent implements OnInit
       });
 
     // Filter
-    combineLatest([this.filters.query$, this.filters.hideIncoming$, this.filters.hideOutgoing$, this.filters.hideSettled$, this.filters.hideIgnored$]).pipe(debounceTime(200))
-      .subscribe(([query, hideIncoming, hideOutgoing, hideSettled, hideIgnored]) =>
-      {
-        query = query.toLowerCase();
-        this.service.fetchBankStatements(query, hideIncoming, hideOutgoing, hideSettled, hideIgnored).subscribe();
-      });
+    combineLatest([this.filters.query$, this.filters.hideIncoming$, this.filters.hideOutgoing$, this.filters.hideSettled$, this.filters.hideIgnored$])
+      .pipe(debounceTime(1000),
+        takeUntil(this.unsubscribeAll),
+        distinctUntilChanged(),
+        // tap(([query, hideIncoming, hideOutgoing, hideSettled, hideIgnored]) => console.log(query)),
+        switchMap(([query, hideIncoming, hideOutgoing, hideSettled, hideIgnored]) => this.service.fetchBankStatements(query, hideIncoming, hideOutgoing, hideSettled, hideIgnored))
+      )
+      .subscribe();
   }
 
   selectBooking(booking: PaymentDisplayItem2)
