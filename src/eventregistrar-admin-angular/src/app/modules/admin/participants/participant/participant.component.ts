@@ -23,7 +23,7 @@ export class ParticipantComponent implements OnInit
   {
   }
 
-  emitSwitchRole(registrationId: string, toRole: Role)
+  emitSwitchRole(registrationId: string, toRole: Role): void
   {
     this.switchRoleEvent.emit({ registrationId, toRole } as SwitchRoleRequest);
   }

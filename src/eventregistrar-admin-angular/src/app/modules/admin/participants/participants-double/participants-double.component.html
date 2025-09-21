@@ -117,9 +117,11 @@
                             <ng-container *ngFor="let spot of registrable.waitingList; trackBy: trackByFn">
                                 <!-- Single registrations -->
                                 <div class="flex flex-row items-center" *ngIf="!spot.isPartnerRegistration">
-                                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" cdkDrag [cdkDragData]="spot.leader"></app-participant>
+                                    <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Leader" cdkDrag [cdkDragData]="spot.leader"
+                                        (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
                                     <div class="w-4 h-6 mb-2"></div>
-                                    <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner" cdkDrag [cdkDragData]="spot.follower"></app-participant>
+                                    <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Follower" cdkDrag [cdkDragData]="spot.follower"
+                                        (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
                                 </div>
                                 <!-- Partner registration -->
                                 <div class="flex flex-row items-center" *ngIf="spot.isPartnerRegistration" cdkDrag [cdkDragData]="spot">
