@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Registrables.WaitingList.MoveUp;
 using EventRegistrar.Backend.Registrations;
 using EventRegistrar.Backend.Spots;
 
@@ -81,6 +82,11 @@ public class SwitchRoleOfParticipantCommandHandler(IRepository<Seat> spots,
                                        });
                 spot.RegistrationId_Follower = null;
                 break;
+        }
+
+        if (spot.IsWaitingList)
+        {
+            changeTrigger.EnqueueCommand(new TriggerMoveUpFromWaitingListCommand { EventId = command.EventId, RegistrableId = command.RegistrableId });
         }
 
         changeTrigger.QueryChanged<ParticipantsOfRegistrableQuery>(command.EventId, command.RegistrableId);
