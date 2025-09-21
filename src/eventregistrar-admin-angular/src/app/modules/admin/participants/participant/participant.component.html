@@ -1,4 +1,4 @@
-<div *ngIf="registration" class="flex flex-row w-72 h-16 items-stretch mb-3 p-5 shadow rounded-lg overflow-hidden bg-card hover:underline" [ngClass]="{'bg-amber-200': registration.switched,
+<div *ngIf="registration" class="flex flex-row w-72 h-16 items-stretch mb-3 p-5 shadow rounded-lg overflow-hidden bg-card" [ngClass]="{'bg-amber-200': registration.switched,
                  'border-amber-200 border-4': registration.canSwitch}">
 
     <!-- Cover image -->
@@ -9,7 +9,7 @@
                                         </ng-container> -->
 
     <!-- Name -->
-    <a class="text-lg font-medium" [routerLink]="navigator.getRegistrationUrl(registration.id)">{{
+    <a class="text-lg font-medium hover:underline" [routerLink]="navigator.getRegistrationUrl(registration.id)">{{
         registration.firstName }} {{ registration.lastName }}</a>
 
     <!-- context menu -->
