@@ -4127,6 +4127,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zuordnung zurücknehmen.
+        /// </summary>
+        internal static string UnassignPayment {
+            get {
+                return ResourceManager.GetString("UnassignPayment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Nicht zugeordnete Anmeldungen.
         /// </summary>
         internal static string UnmatchedRegistrations {

@@ -1,5 +1,5 @@
 {
-    "x-generator": "NSwag v14.2.0.0 (NJsonSchema v11.1.0.0 (Newtonsoft.Json v13.0.0.0))",
+    "x-generator": "NSwag v14.5.0.0 (NJsonSchema v11.4.0.0 (Newtonsoft.Json v13.0.0.0))",
     "openapi": "3.0.0",
     "info": {
         "title": "My Title",
@@ -4984,6 +4984,31 @@
                 }
             }
         },
+        "/api/UpdateMenuNodeCommand": {
+            "post": {
+                "tags": [
+                    "UpdateMenuNode"
+                ],
+                "operationId": "UpdateMenuNode_Command",
+                "requestBody": {
+                    "x-name": "UpdateMenuNodeCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateMenuNodeCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/UpdateReadModelCommand": {
             "post": {
                 "tags": [
@@ -5267,9 +5292,25 @@
             "IndividualReductionType": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Reduction",
+                    "OverwritePrice"
+                ],
+                "x-enum-varnames": [
+                    "Reduction",
+                    "OverwritePrice"
+                ],
                 "x-enumNames": [
                     "Reduction",
                     "OverwritePrice"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -5326,6 +5367,14 @@
                     "paymentAssignmentId": {
                         "type": "string",
                         "format": "guid"
+                    },
+                    "debitorName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "creditorName": {
+                        "type": "string",
+                        "nullable": true
                     }
                 }
             },
@@ -5456,6 +5505,48 @@
             "MailType": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "SingleRegistrationAccepted",
+                    "SingleRegistrationOnWaitingList",
+                    "RegistrationReceived",
+                    "PartnerRegistrationFirstPartnerAccepted",
+                    "PartnerRegistrationMatchedAndAccepted",
+                    "PartnerRegistrationFirstPartnerOnWaitingList",
+                    "PartnerRegistrationMatchedOnWaitingList",
+                    "SoldOut",
+                    "MoneyOwed",
+                    "TooMuchPaid",
+                    "RegistrationCancelled",
+                    "SingleRegistrationFullyPaid",
+                    "PartnerRegistrationFirstPaid",
+                    "PartnerRegistrationFullyPaid",
+                    "SingleRegistrationFirstReminder",
+                    "SingleRegistrationSecondReminder",
+                    "PartnerRegistrationFirstReminder",
+                    "PartnerRegistrationSecondReminder",
+                    "OptionsForRegistrationsOnWaitingList"
+                ],
+                "x-enum-varnames": [
+                    "SingleRegistrationAccepted",
+                    "SingleRegistrationOnWaitingList",
+                    "RegistrationReceived",
+                    "PartnerRegistrationFirstPartnerAccepted",
+                    "PartnerRegistrationMatchedAndAccepted",
+                    "PartnerRegistrationFirstPartnerOnWaitingList",
+                    "PartnerRegistrationMatchedOnWaitingList",
+                    "SoldOut",
+                    "MoneyOwed",
+                    "TooMuchPaid",
+                    "RegistrationCancelled",
+                    "SingleRegistrationFullyPaid",
+                    "PartnerRegistrationFirstPaid",
+                    "PartnerRegistrationFullyPaid",
+                    "SingleRegistrationFirstReminder",
+                    "SingleRegistrationSecondReminder",
+                    "PartnerRegistrationFirstReminder",
+                    "PartnerRegistrationSecondReminder",
+                    "OptionsForRegistrationsOnWaitingList"
+                ],
                 "x-enumNames": [
                     "SingleRegistrationAccepted",
                     "SingleRegistrationOnWaitingList",
@@ -5476,6 +5567,48 @@
                     "PartnerRegistrationFirstReminder",
                     "PartnerRegistrationSecondReminder",
                     "OptionsForRegistrationsOnWaitingList"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -5674,10 +5807,30 @@
             "MailSender": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Smtp",
+                    "SendGrid",
+                    "Postmark"
+                ],
+                "x-enum-varnames": [
+                    "Smtp",
+                    "SendGrid",
+                    "Postmark"
+                ],
                 "x-enumNames": [
                     "Smtp",
                     "SendGrid",
                     "Postmark"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -5688,10 +5841,30 @@
             "MailSenderTokenKey": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "PostmarkToken",
+                    "SendGridApiKey",
+                    "PostmarkTokenSwima"
+                ],
+                "x-enum-varnames": [
+                    "PostmarkToken",
+                    "SendGridApiKey",
+                    "PostmarkTokenSwima"
+                ],
                 "x-enumNames": [
                     "PostmarkToken",
                     "SendGridApiKey",
                     "PostmarkTokenSwima"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -5734,6 +5907,38 @@
             "QuestionMappingType": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "FirstName",
+                    "LastName",
+                    "EMail",
+                    "Phone",
+                    "Location",
+                    "Remarks",
+                    "Iban",
+                    "Partner",
+                    "HostingOffer_Location",
+                    "HostingOffer_CountTotal",
+                    "HostingOffer_CountShared",
+                    "HostingOffer_Comment",
+                    "HostingRequest_Comment",
+                    "HostingRequest_Partner"
+                ],
+                "x-enum-varnames": [
+                    "FirstName",
+                    "LastName",
+                    "EMail",
+                    "Phone",
+                    "Location",
+                    "Remarks",
+                    "Iban",
+                    "Partner",
+                    "HostingOffer_Location",
+                    "HostingOffer_CountTotal",
+                    "HostingOffer_CountShared",
+                    "HostingOffer_Comment",
+                    "HostingRequest_Comment",
+                    "HostingRequest_Partner"
+                ],
                 "x-enumNames": [
                     "FirstName",
                     "LastName",
@@ -5749,6 +5954,38 @@
                     "HostingOffer_Comment",
                     "HostingRequest_Comment",
                     "HostingRequest_Partner"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -5805,6 +6042,36 @@
             "MappingType": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "SingleRegistrable",
+                    "PartnerRegistrable",
+                    "PartnerRegistrableLeader",
+                    "PartnerRegistrableFollower",
+                    "Language",
+                    "RoleLeader",
+                    "RoleFollower",
+                    "CanSwitchRole",
+                    "HostingOffer",
+                    "HostingRequest",
+                    "HostingRequest_ShareOkWithPartner",
+                    "HostingRequest_ShareOkWithRandom",
+                    "HostingRequest_TravelByCar"
+                ],
+                "x-enum-varnames": [
+                    "SingleRegistrable",
+                    "PartnerRegistrable",
+                    "PartnerRegistrableLeader",
+                    "PartnerRegistrableFollower",
+                    "Language",
+                    "RoleLeader",
+                    "RoleFollower",
+                    "CanSwitchRole",
+                    "HostingOffer",
+                    "HostingRequest",
+                    "HostingRequest_ShareOkWithPartner",
+                    "HostingRequest_ShareOkWithRandom",
+                    "HostingRequest_TravelByCar"
+                ],
                 "x-enumNames": [
                     "SingleRegistrable",
                     "PartnerRegistrable",
@@ -5819,6 +6086,36 @@
                     "HostingRequest_ShareOkWithPartner",
                     "HostingRequest_ShareOkWithRandom",
                     "HostingRequest_TravelByCar"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -5968,9 +6265,25 @@
             "CreditDebit": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "CRDT",
+                    "DBIT"
+                ],
+                "x-enum-varnames": [
+                    "CRDT",
+                    "DBIT"
+                ],
                 "x-enumNames": [
                     "CRDT",
                     "DBIT"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -6090,12 +6403,40 @@
                 "type": "integer",
                 "description": "",
                 "x-enumFlags": true,
+                "x-enum-names": [
+                    "Paid",
+                    "Unpaid",
+                    "WaitingList",
+                    "PredecessorEvent",
+                    "PrePredecessorEvent"
+                ],
+                "x-enum-varnames": [
+                    "Paid",
+                    "Unpaid",
+                    "WaitingList",
+                    "PredecessorEvent",
+                    "PrePredecessorEvent"
+                ],
                 "x-enumNames": [
                     "Paid",
                     "Unpaid",
                     "WaitingList",
                     "PredecessorEvent",
                     "PrePredecessorEvent"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -6789,10 +7130,30 @@
             "RegistrationState": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Received",
+                    "Paid",
+                    "Cancelled"
+                ],
+                "x-enum-varnames": [
+                    "Received",
+                    "Paid",
+                    "Cancelled"
+                ],
                 "x-enumNames": [
                     "Received",
                     "Paid",
                     "Cancelled"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -7035,11 +7396,35 @@
             "EventState": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Setup",
+                    "RegistrationOpen",
+                    "RegistrationClosed",
+                    "Finished"
+                ],
+                "x-enum-varnames": [
+                    "Setup",
+                    "RegistrationOpen",
+                    "RegistrationClosed",
+                    "Finished"
+                ],
                 "x-enumNames": [
                     "Setup",
                     "RegistrationOpen",
                     "RegistrationClosed",
                     "Finished"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -7163,11 +7548,35 @@
             "UserInEventRole": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "None",
+                    "Reader",
+                    "Writer",
+                    "Admin"
+                ],
+                "x-enum-varnames": [
+                    "None",
+                    "Reader",
+                    "Writer",
+                    "Admin"
+                ],
                 "x-enumNames": [
                     "None",
                     "Reader",
                     "Writer",
                     "Admin"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     0,
@@ -7314,9 +7723,25 @@
             "Role": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Leader",
+                    "Follower"
+                ],
+                "x-enum-varnames": [
+                    "Leader",
+                    "Follower"
+                ],
                 "x-enumNames": [
                     "Leader",
                     "Follower"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -7415,6 +7840,40 @@
             "QuestionType": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Checkbox",
+                    "CheckboxGrid",
+                    "Date",
+                    "Datetime",
+                    "Duration",
+                    "Grid",
+                    "Image",
+                    "List",
+                    "MultipleChoice",
+                    "PageBreak",
+                    "ParagraphText",
+                    "Scale",
+                    "SectionHeader",
+                    "Text",
+                    "Time"
+                ],
+                "x-enum-varnames": [
+                    "Checkbox",
+                    "CheckboxGrid",
+                    "Date",
+                    "Datetime",
+                    "Duration",
+                    "Grid",
+                    "Image",
+                    "List",
+                    "MultipleChoice",
+                    "PageBreak",
+                    "ParagraphText",
+                    "Scale",
+                    "SectionHeader",
+                    "Text",
+                    "Time"
+                ],
                 "x-enumNames": [
                     "Checkbox",
                     "CheckboxGrid",
@@ -7431,6 +7890,40 @@
                     "SectionHeader",
                     "Text",
                     "Time"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -7914,6 +8407,34 @@
             "MailState": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Unknown",
+                    "Processed",
+                    "Dropped",
+                    "Delivered",
+                    "Deferred",
+                    "Bounce",
+                    "Open",
+                    "Click",
+                    "SpamReport",
+                    "Unsubscribe",
+                    "GroupUnsubscribe",
+                    "GroupResubscribe"
+                ],
+                "x-enum-varnames": [
+                    "Unknown",
+                    "Processed",
+                    "Dropped",
+                    "Delivered",
+                    "Deferred",
+                    "Bounce",
+                    "Open",
+                    "Click",
+                    "SpamReport",
+                    "Unsubscribe",
+                    "GroupUnsubscribe",
+                    "GroupResubscribe"
+                ],
                 "x-enumNames": [
                     "Unknown",
                     "Processed",
@@ -7927,6 +8448,34 @@
                     "Unsubscribe",
                     "GroupUnsubscribe",
                     "GroupResubscribe"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     0,
@@ -8164,6 +8713,52 @@
             "MenuNodeKey": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Overview",
+                    "PendingMails",
+                    "AssignPartners",
+                    "MailTracking",
+                    "Remarks",
+                    "InternalNotes",
+                    "Cancellations",
+                    "Hosting",
+                    "Participants",
+                    "FixRawProcessing",
+                    "BankStatements",
+                    "AssignBankStatements",
+                    "DuePayments",
+                    "PaymentDifferences",
+                    "Repayments",
+                    "Settings",
+                    "PrepareEvent",
+                    "MailTemplates",
+                    "BulkMailTemplates",
+                    "Forms",
+                    "Pricing"
+                ],
+                "x-enum-varnames": [
+                    "Overview",
+                    "PendingMails",
+                    "AssignPartners",
+                    "MailTracking",
+                    "Remarks",
+                    "InternalNotes",
+                    "Cancellations",
+                    "Hosting",
+                    "Participants",
+                    "FixRawProcessing",
+                    "BankStatements",
+                    "AssignBankStatements",
+                    "DuePayments",
+                    "PaymentDifferences",
+                    "Repayments",
+                    "Settings",
+                    "PrepareEvent",
+                    "MailTemplates",
+                    "BulkMailTemplates",
+                    "Forms",
+                    "Pricing"
+                ],
                 "x-enumNames": [
                     "Overview",
                     "PendingMails",
@@ -8186,6 +8781,52 @@
                     "BulkMailTemplates",
                     "Forms",
                     "Pricing"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -8214,11 +8855,35 @@
             "MenuNodeStyle": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "None",
+                    "Info",
+                    "ToDo",
+                    "Important"
+                ],
+                "x-enum-varnames": [
+                    "None",
+                    "Info",
+                    "ToDo",
+                    "Important"
+                ],
                 "x-enumNames": [
                     "None",
                     "Info",
                     "ToDo",
                     "Important"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     0,
@@ -8327,10 +8992,30 @@
             "MailDeliverySeverity": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "NoneSucceeded",
+                    "SomeSucceeded",
+                    "LastSucceeded"
+                ],
+                "x-enum-varnames": [
+                    "NoneSucceeded",
+                    "SomeSucceeded",
+                    "LastSucceeded"
+                ],
                 "x-enumNames": [
                     "NoneSucceeded",
                     "SomeSucceeded",
                     "LastSucceeded"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -8672,9 +9357,25 @@
             "PaymentType": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Incoming",
+                    "Outgoing"
+                ],
+                "x-enum-varnames": [
+                    "Incoming",
+                    "Outgoing"
+                ],
                 "x-enumNames": [
                     "Incoming",
                     "Outgoing"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -9288,10 +9989,30 @@
             "PayoutState": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Requested",
+                    "Sent",
+                    "Confirmed"
+                ],
+                "x-enum-varnames": [
+                    "Requested",
+                    "Sent",
+                    "Confirmed"
+                ],
                 "x-enumNames": [
                     "Requested",
                     "Sent",
                     "Confirmed"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -9610,10 +10331,30 @@
             "TracksMatch": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "None",
+                    "Some",
+                    "All"
+                ],
+                "x-enum-varnames": [
+                    "None",
+                    "Some",
+                    "All"
+                ],
                 "x-enumNames": [
                     "None",
                     "Some",
                     "All"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -9693,6 +10434,24 @@
             "PricePackagePartSelectionType": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "AnyOne",
+                    "AnyTwo",
+                    "AnyThree",
+                    "AnyFour",
+                    "AnyFive",
+                    "All",
+                    "Optional"
+                ],
+                "x-enum-varnames": [
+                    "AnyOne",
+                    "AnyTwo",
+                    "AnyThree",
+                    "AnyFour",
+                    "AnyFive",
+                    "All",
+                    "Optional"
+                ],
                 "x-enumNames": [
                     "AnyOne",
                     "AnyTwo",
@@ -9701,6 +10460,24 @@
                     "AnyFive",
                     "All",
                     "Optional"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -10177,11 +10954,35 @@
             "SpotState": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Available",
+                    "Reserved",
+                    "Registered",
+                    "Paid"
+                ],
+                "x-enum-varnames": [
+                    "Available",
+                    "Reserved",
+                    "Registered",
+                    "Paid"
+                ],
                 "x-enumNames": [
                     "Available",
                     "Reserved",
                     "Registered",
                     "Paid"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -10398,9 +11199,25 @@
             "RegistrableType": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Single",
+                    "Double"
+                ],
+                "x-enum-varnames": [
+                    "Single",
+                    "Double"
+                ],
                 "x-enumNames": [
                     "Single",
                     "Double"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -10520,9 +11337,25 @@
             "FormPathType": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Single",
+                    "Partner"
+                ],
+                "x-enum-varnames": [
+                    "Single",
+                    "Partner"
+                ],
                 "x-enumNames": [
                     "Single",
                     "Partner"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -10792,10 +11625,30 @@
             "MailDisplayType": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Auto",
+                    "Bulk",
+                    "Imported"
+                ],
+                "x-enum-varnames": [
+                    "Auto",
+                    "Bulk",
+                    "Imported"
+                ],
                 "x-enumNames": [
                     "Auto",
                     "Bulk",
                     "Imported"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -11054,9 +11907,25 @@
             "RequestResponse": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Granted",
+                    "Denied"
+                ],
+                "x-enum-varnames": [
+                    "Granted",
+                    "Denied"
+                ],
                 "x-enumNames": [
                     "Granted",
                     "Denied"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null
                 ],
                 "enum": [
                     1,
@@ -12253,6 +13122,19 @@
                     }
                 }
             },
+            "UpdateMenuNodeCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "key": {
+                        "$ref": "#/components/schemas/MenuNodeKey"
+                    }
+                }
+            },
             "UpdateReadModelCommand": {
                 "type": "object",
                 "additionalProperties": false,
@@ -12292,10 +13174,30 @@
             "IdentityProvider": {
                 "type": "integer",
                 "description": "",
+                "x-enum-names": [
+                    "Google",
+                    "Microsoft",
+                    "Auth0"
+                ],
+                "x-enum-varnames": [
+                    "Google",
+                    "Microsoft",
+                    "Auth0"
+                ],
                 "x-enumNames": [
                     "Google",
                     "Microsoft",
                     "Auth0"
+                ],
+                "x-enum-descriptions": [
+                    null,
+                    null,
+                    null
+                ],
+                "x-enumDescriptions": [
+                    null,
+                    null,
+                    null
                 ],
                 "enum": [
                     1,

@@ -168,7 +168,9 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                   Currency_Incoming = ass.IncomingPayment!.Payment!.Currency,
                                                                   BookingDate_Incoming = (DateTime?)ass.IncomingPayment.Payment.BookingDate,
                                                                   Currency_Outgoing = ass.OutgoingPayment!.Payment!.Currency,
-                                                                  BookingDate_Outgoing = (DateTime?)ass.OutgoingPayment.Payment.BookingDate
+                                                                  BookingDate_Outgoing = (DateTime?)ass.OutgoingPayment.Payment.BookingDate,
+                                                                  ass.IncomingPayment.DebitorName,
+                                                                  ass.OutgoingPayment.CreditorName
                                                               })
                                                .ToListAsync(cancellationToken);
 
@@ -178,7 +180,8 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                              PaymentAssignmentId = ass.Id,
                                                              Amount = ass.Amount,
                                                              Currency = ass.Currency_Incoming,
-                                                             BookingDate = ass.BookingDate_Incoming!.Value
+                                                             BookingDate = ass.BookingDate_Incoming!.Value,
+                                                             DebitorName = ass.DebitorName
                                                          })
                                           .Concat(dataAssignments.Where(ass => ass.OutgoingPaymentId != null)
                                                                  .Select(ass => new AssignedPaymentDisplayItem
@@ -186,7 +189,8 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                                     PaymentAssignmentId = ass.Id,
                                                                                     Amount = -ass.Amount,
                                                                                     Currency = ass.Currency_Outgoing,
-                                                                                    BookingDate = ass.BookingDate_Outgoing!.Value
+                                                                                    BookingDate = ass.BookingDate_Outgoing!.Value,
+                                                                                    CreditorName = ass.CreditorName
                                                                                 }))
                                           .ToList();
         return (content, null);

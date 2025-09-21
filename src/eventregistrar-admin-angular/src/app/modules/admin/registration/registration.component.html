@@ -173,8 +173,12 @@
                                     <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
                                 </button>
                                 <mat-menu #paymentMenu="matMenu">
-                                    <button mat-menu-item (click)="unassignPayment(payment.paymentAssignmentId)">{{ 'Delete' | translate }}</button>
+                                    <button mat-menu-item (click)="unassignPayment(payment.paymentAssignmentId)">{{ 'UnassignPayment' | translate }}</button>
                                 </mat-menu>
+                            </div>
+                            <div class="text-sm text-secondary -mt-1">
+                                <div *ngIf="payment.debitorName">{{ 'PaymentFrom' | translate : {debitor: payment.debitorName??'?'} }}</div>
+                                <div *ngIf="payment.creditorName">{{ 'PaymentTo' | translate : {creditor: payment.creditorName??'?'} }}</div>
                             </div>
                         </div>
                     </ng-container>

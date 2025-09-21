@@ -1356,6 +1356,9 @@
   <data name="TriggerMoveUp" xml:space="preserve">
     <value>Trigger move up</value>
   </data>
+  <data name="UnassignPayment" xml:space="preserve">
+    <value>Remove assignment</value>
+  </data>
   <data name="UnmatchedRegistrations" xml:space="preserve">
     <value>Unmatched partners</value>
   </data>

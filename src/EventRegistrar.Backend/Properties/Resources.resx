@@ -1469,6 +1469,9 @@
   <data name="TriggerMoveUp" xml:space="preserve">
     <value>Nachrücken auslösen</value>
   </data>
+  <data name="UnassignPayment" xml:space="preserve">
+    <value>Zuordnung zurücknehmen</value>
+  </data>
   <data name="UnmatchedRegistrations" xml:space="preserve">
     <value>Nicht zugeordnete Anmeldungen</value>
   </data>

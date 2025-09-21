@@ -52,4 +52,6 @@ public class AssignedPaymentDisplayItem
     public DateTime BookingDate { get; set; }
     public string? Currency { get; set; }
     public Guid PaymentAssignmentId { get; set; }
+    public string? DebitorName { get; set; }
+    public string? CreditorName { get; set; }
 }
