@@ -21,7 +21,9 @@ export class CreateEventComponent implements OnInit
     copyAccessRights: true,
     copyRegistrables: true,
     copyAutoMailTemplates: true,
-    copyConfigurations: true
+    copyConfigurations: true,
+    copyBulkMailTemplates: true,
+    copyPricing: true
   });
   public title: string;
 
@@ -52,7 +54,7 @@ export class CreateEventComponent implements OnInit
   {
   }
 
-  create()
+  create(): void
   {
     this.service.createEvent(this.createEventForm.value);
 

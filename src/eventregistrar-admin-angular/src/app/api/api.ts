@@ -9289,6 +9289,7 @@ export interface CreateEventCommand {
     copyAutoMailTemplates?: boolean;
     copyBulkMailTemplates?: boolean;
     copyConfigurations?: boolean;
+    copyPricing?: boolean;
 }
 
 export interface DeactivateAutomaticPromotionCommand {

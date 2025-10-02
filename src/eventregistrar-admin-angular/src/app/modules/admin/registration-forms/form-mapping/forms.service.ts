@@ -24,7 +24,7 @@ export class FormsService extends FetchService<RegistrationFormItem[]>
 
   fetchForms(): Observable<any>
   {
-    return this.fetchItems(this.api.registrationForms_Query({ eventId: this.eventService.selectedId }));
+    return this.fetchItems(this.api.registrationForms_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
 
   importForm(formExternalIdentifier: string): void

@@ -292,8 +292,14 @@
   <data name="CopyAutoMailTemplates" xml:space="preserve">
     <value>Mailvorlagen kopieren</value>
   </data>
+  <data name="CopyBulkMailTemplates" xml:space="preserve">
+    <value>Massenmails kopieren</value>
+  </data>
   <data name="CopyConfigurations" xml:space="preserve">
     <value>Konfigurationen kopieren</value>
+  </data>
+  <data name="CopyPricing" xml:space="preserve">
+    <value>Preispakete kopieren</value>
   </data>
   <data name="CopyRegistrables" xml:space="preserve">
     <value>Aktivitäten kopieren</value>

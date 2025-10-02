@@ -37,7 +37,7 @@ public class PricePackageMap : EntityMap<PricePackage>
                .HasMaxLength(500);
 
         builder.HasOne(ppg => ppg.Event)
-               .WithMany()
+               .WithMany(evt => evt.PricePackages)
                .HasForeignKey(ppg => ppg.EventId);
     }
 }

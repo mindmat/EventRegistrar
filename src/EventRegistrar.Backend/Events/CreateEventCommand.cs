@@ -8,6 +8,7 @@ using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments.Due;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.RegistrationForms;
 
 namespace EventRegistrar.Backend.Events;
@@ -23,6 +24,7 @@ public class CreateEventCommand : IRequest
     public bool CopyAutoMailTemplates { get; set; }
     public bool CopyBulkMailTemplates { get; set; }
     public bool CopyConfigurations { get; set; }
+    public bool CopyPricing { get; set; }
 }
 
 public class CreateEventCommandHandler(IRepository<Event> events,
@@ -63,16 +65,16 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                            State = EventState.Setup,
                            Name = command.Name,
                            PredecessorEventId = command.EventId_Predecessor,
-                           Users = new List<UserInEvent>(new[]
-                                                         {
-                                                             // make creator admin
-                                                             new UserInEvent
-                                                             {
-                                                                 Id = newEventId,
-                                                                 Role = UserInEventRole.Admin,
-                                                                 UserId = userId
-                                                             }
-                                                         }),
+                           Users =
+                           [
+                               // make creator admin
+                               new UserInEvent
+                               {
+                                   Id = newEventId,
+                                   Role = UserInEventRole.Admin,
+                                   UserId = userId
+                               }
+                           ],
                            Registrables = new List<Registrable>()
                        };
 
@@ -86,6 +88,9 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                                           .Include(evt => evt.Registrables!)
                                           .Include(evt => evt.AutoMailTemplates)
                                           .Include(evt => evt.BulkMailTemplates)
+                                          .Include(evt => evt.PricePackages!)
+                                          .ThenInclude(ppk => ppk.Parts!)
+                                          .ThenInclude(ppp => ppp.Registrables)
                                           .AsSplitQuery()
                                           .FirstAsync(cancellationToken);
 
@@ -119,14 +124,16 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                                                                            Language = amt.Language,
                                                                            Subject = amt.Subject,
                                                                            ContentHtml = amt.ContentHtml,
-                                                                           ReleaseImmediately = amt.ReleaseImmediately
-                                                                       })
+                                                                           ReleaseImmediately = amt.ReleaseImmediately,
+                                                                           AddIcs = amt.AddIcs
+                                                        })
                                                         .ToList();
             }
 
             if (command.CopyBulkMailTemplates)
             {
                 newEvent.BulkMailTemplates = sourceEvent.BulkMailTemplates!
+                                                        .Where(bmt => !bmt.Discarded)
                                                         .Select(bmt => new BulkMailTemplate
                                                                        {
                                                                            Id = Guid.NewGuid(),
@@ -135,8 +142,11 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                                                                            Subject = bmt.Subject,
                                                                            ContentHtml = bmt.ContentHtml,
                                                                            MailingAudience = bmt.MailingAudience,
-                                                                           RegistrableId = bmt.RegistrableId
-                                                                       })
+                                                                           RegistrableId = bmt.RegistrableId,
+                                                                           AddIcs = bmt.AddIcs,
+                                                                           SenderMail = bmt.SenderMail,
+                                                                           SenderName = bmt.SenderName
+                                                        })
                                                         .ToList();
             }
 
@@ -168,6 +178,40 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                                                });
 
                     registrableMap.Add(sourceRegistrable.Id, newRegistrableId);
+                }
+
+                if(command.CopyPricing)
+                {
+                    newEvent.PricePackages = sourceEvent.PricePackages!
+                                                        .Select(ppk => new PricePackage
+                                                                       {
+                                                                           Id = Guid.NewGuid(),
+                                                                           EventId = newEventId,
+                                                                           Name = ppk.Name,
+                                                                           IsCorePackage = ppk.IsCorePackage,
+                                                                           Price = ppk.Price,
+                                                                           AllowAsAutomaticFallback = ppk.AllowAsAutomaticFallback,
+                                                                           AllowAsManualFallback = ppk.AllowAsManualFallback,
+                                                                           FallbackPriority = ppk.FallbackPriority,
+                                                                           ShowInOverview = ppk.ShowInOverview,
+                                                                           SortKey = ppk.SortKey,
+                                                                           Parts = ppk.Parts!.Select(part => new PricePackagePart
+                                                                                                             {
+                                                                                                                 Id = Guid.NewGuid(),
+                                                                                                                 SelectionType = part.SelectionType,
+                                                                                                                 PriceAdjustment = part.PriceAdjustment,
+                                                                                                                 SortKey = part.SortKey,
+                                                                                                                 ShowInMailSpotList = part.ShowInMailSpotList,
+                                                                                                                 Registrables = part.Registrables!.Select(rip => new RegistrableInPricePackagePart
+                                                                                                                                                                 {
+                                                                                                                                                                     Id = Guid.NewGuid(),
+                                                                                                                                                                     RegistrableId = registrableMap[rip.RegistrableId]
+                                                                                                                                                                 })
+                                                                                                                                                  .ToList()
+                                                                                                             })
+                                                                                                .ToList()
+                                                                       })
+                                                        .ToList();
                 }
             }
 

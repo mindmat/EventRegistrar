@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Infrastructure.Configuration;
 using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.Registrables.Pricing;
 using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.Registrations;
 
@@ -23,6 +24,7 @@ public class Event : Entity
     public ICollection<UserInEvent>? Users { get; set; }
     public ICollection<AutoMailTemplate>? AutoMailTemplates { get; set; }
     public ICollection<BulkMailTemplate>? BulkMailTemplates { get; set; }
+    public ICollection<PricePackage>? PricePackages { get; set; }
 
     public string Name { get; set; } = null!;
     public EventState State { get; set; }

@@ -6976,6 +6976,9 @@
                     },
                     "copyConfigurations": {
                         "type": "boolean"
+                    },
+                    "copyPricing": {
+                        "type": "boolean"
                     }
                 }
             },

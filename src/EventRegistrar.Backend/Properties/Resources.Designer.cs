@@ -583,11 +583,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Massenmails kopieren.
+        /// </summary>
+        internal static string CopyBulkMailTemplates {
+            get {
+                return ResourceManager.GetString("CopyBulkMailTemplates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Konfigurationen kopieren.
         /// </summary>
         internal static string CopyConfigurations {
             get {
                 return ResourceManager.GetString("CopyConfigurations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preispakete kopieren.
+        /// </summary>
+        internal static string CopyPricing {
+            get {
+                return ResourceManager.GetString("CopyPricing", resourceCulture);
             }
         }
         
