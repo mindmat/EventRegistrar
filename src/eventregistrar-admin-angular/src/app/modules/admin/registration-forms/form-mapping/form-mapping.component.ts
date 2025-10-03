@@ -96,7 +96,7 @@ export class FormMappingComponent implements OnInit
     this.formsService.saveMappings(form.registrationFormId, form.sections, form.multiMappings);
   }
 
-  reprocessQuestionOption(questionOptionId: string)
+  reprocessQuestionOption(questionOptionId: string): void
   {
     this.formsService.reprocessQuestionOption(questionOptionId);
   }

@@ -22,6 +22,12 @@
         <div class="mt-2 rounded-xl bg-gray-400 bg-opacity-12 dark:bg-transparent dark:border">
 
             <div *ngFor="let form of forms" class="flex flex-col p-6">
+                <div class="fixed top-1/2 right-4 transform -translate-y-1/2 z-50 flex flex-col space-y-2" *ngIf="form.sections">
+                    <button mat-fab [color]="'primary'" class="shadow-lg" (click)="saveMappings(form)" [matTooltip]="'Save' | translate" matTooltipPosition="left">
+                        <mat-icon [svgIcon]="'heroicons_outline:check'"></mat-icon>
+                    </button>
+                </div>
+
                 <!-- Form header -->
                 <div class="flex items-center justify-between space-y-3">
                     <div>
@@ -153,14 +159,6 @@
                     </button>
 
                 </div>
-
-                <!-- </ng-container> -->
-
-
-                <!-- Save -->
-                <button *ngIf="form.sections" mat-flat-button [color]="'primary'" class="mt-3" (click)="saveMappings(form)">
-                    {{ 'Save' | translate }}
-                </button>
             </div>
         </div>
     </div>
