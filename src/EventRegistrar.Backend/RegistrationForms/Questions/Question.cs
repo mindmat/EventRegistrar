@@ -21,6 +21,7 @@ public class Question : Entity
     public string? TemplateKey { get; set; }
 
     public ICollection<Response>? Responses { get; set; }
+    public Guid? QuestionId_Partner { get; set; }
 }
 
 public class QuestionMap : EntityMap<Question>

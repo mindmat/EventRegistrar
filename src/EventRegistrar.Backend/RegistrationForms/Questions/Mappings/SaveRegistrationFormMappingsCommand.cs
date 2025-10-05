@@ -46,6 +46,7 @@ public class SaveRegistrationFormMappingsCommandHandler(IRepository<Registration
 
             question.Mapping = questionToSave.Mapping;
             question.TemplateKey = questionToSave.MailTemplateKey;
+            question.QuestionId_Partner = questionToSave.QuestionId_Partner;
             foreach (var optionToSave in questionToSave.Options ?? [])
             {
                 var option = question?.QuestionOptions!.FirstOrDefault(qop => qop.Id == optionToSave.Id);

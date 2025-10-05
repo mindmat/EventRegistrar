@@ -7785,9 +7785,21 @@
                     },
                     "questions": {
                         "type": "array",
+                        "nullable": true,
                         "items": {
                             "$ref": "#/components/schemas/QuestionMappingDisplayItem"
                         }
+                    },
+                    "potentialPartnerQuestionIds": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                            "type": "string",
+                            "format": "guid"
+                        }
+                    },
+                    "isAnyQuestionMappedToPartnerTrack": {
+                        "type": "boolean"
                     }
                 }
             },
@@ -7837,6 +7849,14 @@
                                 "$ref": "#/components/schemas/QuestionMappingType"
                             }
                         ]
+                    },
+                    "isMappedToPartnerTrack": {
+                        "type": "boolean"
+                    },
+                    "questionId_Partner": {
+                        "type": "string",
+                        "format": "guid",
+                        "nullable": true
                     }
                 }
             },

@@ -196,6 +196,9 @@
   <data name="AllowAsManualFallbackExplanation" xml:space="preserve">
     <value>Damit kann dieses Paket manuell einem:r Teilnehmer:in zugeordnet werden, wenn ein geplantes Paket (noch) nicht verfügbar ist und dieses Paket einen Teil der Anmeldung abdeckt.</value>
   </data>
+  <data name="AlternativePartnerForThisSpot" xml:space="preserve">
+    <value>Alternative:r Partner:in für diesen Kurs</value>
+  </data>
   <data name="Amount" xml:space="preserve">
     <value>Betrag</value>
   </data>
@@ -1128,6 +1131,9 @@
   </data>
   <data name="Processed" xml:space="preserve">
     <value>Verarbeitet</value>
+  </data>
+  <data name="Question" xml:space="preserve">
+    <value>Frage</value>
   </data>
   <data name="QuestionMappingType_Email" xml:space="preserve">
     <value>E-Mail</value>

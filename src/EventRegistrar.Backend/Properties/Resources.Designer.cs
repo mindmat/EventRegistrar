@@ -295,6 +295,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Alternative:r Partner:in für diesen Kurs.
+        /// </summary>
+        internal static string AlternativePartnerForThisSpot {
+            get {
+                return ResourceManager.GetString("AlternativePartnerForThisSpot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Betrag.
         /// </summary>
         internal static string Amount {
@@ -3106,6 +3115,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Processed {
             get {
                 return ResourceManager.GetString("Processed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Frage.
+        /// </summary>
+        internal static string Question {
+            get {
+                return ResourceManager.GetString("Question", resourceCulture);
             }
         }
         

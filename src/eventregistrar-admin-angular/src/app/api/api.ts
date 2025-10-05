@@ -9532,7 +9532,9 @@ export interface RegistrationFormGroup {
 export interface FormSection {
     name?: string | null;
     sortKey?: number;
-    questions?: QuestionMappingDisplayItem[];
+    questions?: QuestionMappingDisplayItem[] | null;
+    potentialPartnerQuestionIds?: string[] | null;
+    isAnyQuestionMappedToPartnerTrack?: boolean;
 }
 
 export interface QuestionMappingDisplayItem {
@@ -9546,6 +9548,8 @@ export interface QuestionMappingDisplayItem {
     sortKey?: number;
     mappable?: boolean;
     mapping?: QuestionMappingType | null;
+    isMappedToPartnerTrack?: boolean;
+    questionId_Partner?: string | null;
 }
 
 export enum QuestionType {

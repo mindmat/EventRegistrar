@@ -37,11 +37,15 @@ public class QuestionMappingDisplayItem
     public int SortKey { get; set; }
     public bool Mappable { get; set; }
     public QuestionMappingType? Mapping { get; set; }
+    public bool IsMappedToPartnerTrack { get; set; }
+    public Guid? QuestionId_Partner { get; set; }
 }
 
 public class FormSection
 {
     public string? Name { get; set; }
     public int SortKey { get; set; }
-    public IEnumerable<QuestionMappingDisplayItem> Questions { get; set; }
+    public IEnumerable<QuestionMappingDisplayItem>? Questions { get; set; }
+    public IEnumerable<Guid>? PotentialPartnerQuestionIds { get; set; }
+    public bool IsAnyQuestionMappedToPartnerTrack { get; set; }
 }

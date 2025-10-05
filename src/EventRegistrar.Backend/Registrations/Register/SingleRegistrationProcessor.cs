@@ -111,11 +111,14 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                 else if (response.QuestionOptionId != null)
                 {
                     var questionOption = question.QuestionOptions!.FirstOrDefault(qop => qop.Id == response.QuestionOptionId);
-                    if (questionOption?.Mappings == null)
+                    if (questionOption?.Mappings?.Any() != true)
                     {
                         continue;
                     }
 
+                    var partnerForThisSpot = question.QuestionId_Partner != null
+                                                 ? registration.Responses!.FirstOrDefault(rsp => rsp.QuestionId == question.QuestionId_Partner)?.ResponseString
+                                                 : null;
                     foreach (var questionOptionMapping in questionOption.Mappings)
                     {
                         var role = await ProcessCombinedRegistrableId(registration,
@@ -124,7 +127,8 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                                                       questionOptionMapping.Language,
                                                                       soldOutRegistrableIds,
                                                                       spots,
-                                                                      partnerRegistrableRequests);
+                                                                      partnerRegistrableRequests,
+                                                                      partnerForThisSpot);
                         defaultRole ??= role;
 
                         if (questionOptionMapping.Type == MappingType.CanSwitchRole)
@@ -189,7 +193,9 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                                                         partnerRegistrableRequest.RegistrableId,
                                                                         registration.Id,
                                                                         ownIdentification,
-                                                                        registration.PartnerNormalized,
+                                                                        !string.IsNullOrWhiteSpace(partnerRegistrableRequest.PartnerForThisSpot)
+                                                                            ? partnerRegistrableRequest.PartnerForThisSpot
+                                                                            : registration.PartnerNormalized,
                                                                         null,
                                                                         partnerRegistrableRequest.Role,
                                                                         true);
@@ -301,7 +307,8 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                                            string? language,
                                                            ICollection<Guid> soldOutRegistrableIds,
                                                            ICollection<Seat> spots,
-                                                           ICollection<PartnerRegistrableRequest> partnerRegistrableRequests)
+                                                           ICollection<PartnerRegistrableRequest> partnerRegistrableRequests,
+                                                           string? partnerForThisSpot = null)
     {
         Role? defaultRole = null;
         switch (mappingType)
@@ -333,7 +340,8 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                         partnerRegistrableRequests.Add(new PartnerRegistrableRequest
                                                        {
                                                            RegistrableId = registrableId.Value,
-                                                           Role = Role.Leader
+                                                           Role = Role.Leader,
+                                                           PartnerForThisSpot = partnerForThisSpot
                                                        });
                     }
 
@@ -347,7 +355,8 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                         partnerRegistrableRequests.Add(new PartnerRegistrableRequest
                                                        {
                                                            RegistrableId = registrableId.Value,
-                                                           Role = Role.Follower
+                                                           Role = Role.Follower,
+                                                           PartnerForThisSpot = partnerForThisSpot
                                                        });
                     }
 
@@ -360,7 +369,8 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                     {
                         partnerRegistrableRequests.Add(new PartnerRegistrableRequest
                                                        {
-                                                           RegistrableId = registrableId.Value
+                                                           RegistrableId = registrableId.Value,
+                                                           PartnerForThisSpot = partnerForThisSpot
                                                        });
                     }
 
@@ -394,4 +404,5 @@ internal class PartnerRegistrableRequest
 {
     public Guid RegistrableId { get; set; }
     public Role? Role { get; set; }
+    public string? PartnerForThisSpot { get; set; }
 }

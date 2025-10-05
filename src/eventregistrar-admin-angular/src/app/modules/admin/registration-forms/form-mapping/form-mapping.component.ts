@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { AvailableQuestionMapping, AvailableQuestionOptionMapping, MappingType, MultiMapping, RegistrationFormItem } from 'app/api/api';
+import { AvailableQuestionMapping, AvailableQuestionOptionMapping, FormSection, MappingType, MultiMapping, QuestionMappingDisplayItem, QuestionType, RegistrationFormItem } from 'app/api/api';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
 import { FormsService } from './forms.service';
 import { QuestionMappingService } from './question-mapping.service';
@@ -20,6 +20,7 @@ export class FormMappingComponent implements OnInit
   MappingDirection = MappingDirection;
   availableTracks: AvailableQuestionOptionMapping[];
   allQuestionOptions: QuestionOption[];
+  stringQuestions: any[];
   private unsubscribeAll: Subject<any> = new Subject<any>();
 
   constructor(private formsService: FormsService,
@@ -35,6 +36,10 @@ export class FormMappingComponent implements OnInit
       {
         this.forms = forms;
         this.allQuestionOptions = forms.flatMap(frm => frm.sections.flatMap(fsc => fsc.questions.flatMap(fqs => fqs.options.map(fop => (fop as QuestionOption)))));
+        this.stringQuestions = forms
+          .flatMap(frm => frm.sections.flatMap(fsc => fsc.questions
+            .filter(fop => fop.type === QuestionType.Text)
+            .map(fop => ({ id: fop.id, label: `${fop.question} | ${fsc.name}` }))));
 
         // Mark for check
         this.changeDetectorRef.markForCheck();
@@ -99,6 +104,17 @@ export class FormMappingComponent implements OnInit
   reprocessQuestionOption(questionOptionId: string): void
   {
     this.formsService.reprocessQuestionOption(questionOptionId);
+  }
+
+  getPotentialPartnerQuestions(potentialPartnerQuestionIds: string[]): any
+  {
+    return this.stringQuestions.filter(option => potentialPartnerQuestionIds.includes(option.id));
+  }
+
+  isPotentialPartnerQuestion(section: FormSection, question: QuestionMappingDisplayItem): boolean
+  {
+    return section.isAnyQuestionMappedToPartnerTrack
+      && section.potentialPartnerQuestionIds?.includes(question.id) === true;
   }
 }
 

@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 
@@ -11,7 +12,8 @@ public class RegistrationFormsQuery : IRequest<IEnumerable<RegistrationFormItem>
 
 public class RegistrationFormsQueryHandler(IQueryable<RawRegistrationForm> _rawForms,
                                            IQueryable<RegistrationForm> _forms,
-                                           IQueryable<Event> events)
+                                           IQueryable<Event> events,
+                                           IQueryable<Registrable> registrables)
     : IRequestHandler<RegistrationFormsQuery, IEnumerable<RegistrationFormItem>>
 {
     public async Task<IEnumerable<RegistrationFormItem>> Handle(RegistrationFormsQuery query,
@@ -21,6 +23,11 @@ public class RegistrationFormsQueryHandler(IQueryable<RawRegistrationForm> _rawF
         var rawFormsData = await _rawForms.Where(frm => frm.EventAcronym == @event.Acronym)
                                           .Select(frm => new { frm.FormExternalIdentifier, frm.Processed, frm.Created, frm.Id })
                                           .ToListAsync(cancellationToken);
+
+        var registrableIds_Partner = await registrables.Where(rbl => rbl.EventId == @event.Id
+                                                                  && rbl.Type == RegistrableType.Double)
+                                                       .Select(rbl => rbl.Id)
+                                                       .ToListAsync(cancellationToken);
 
         var rawForms = rawFormsData.GroupBy(frm => frm.FormExternalIdentifier)
                                    .Select(grp => new
@@ -52,6 +59,7 @@ public class RegistrationFormsQueryHandler(IQueryable<RawRegistrationForm> _rawF
                                                                                          qst.Type,
                                                                                          qst.Mapping,
                                                                                          qst.TemplateKey,
+                                                                                         qst.QuestionId_Partner,
                                                                                          Options = qst.QuestionOptions!
                                                                                                       .Select(qop => new
                                                                                                                      {
@@ -94,6 +102,15 @@ public class RegistrationFormsQueryHandler(IQueryable<RawRegistrationForm> _rawF
                                                                          {
                                                                              Name = grp.Key,
                                                                              SortKey = grp.Min(qst => qst.Index),
+                                                                             PotentialPartnerQuestionIds = grp.Where(q => q.Type == QuestionType.Text
+                                                                                                                       && q.Title.Contains(
+                                                                                                                              "partner", StringComparison.InvariantCultureIgnoreCase)) // client eval
+                                                                                                              .Select(q => q.Id),
+                                                                             IsAnyQuestionMappedToPartnerTrack = grp.Any(qst => qst.Options.Any(
+                                                                                                                             qop => qop.MappedRegistrables.Any(map =>
+                                                                                                                                     map.RegistrableId != null
+                                                                                                                                  && registrableIds_Partner.Contains(map.RegistrableId.Value)))),
+
                                                                              Questions = grp.Where(qst => qst.Type != QuestionType.SectionHeader
                                                                                                        && qst.Type != QuestionType.PageBreak)
                                                                                             .Select(qst => new QuestionMappingDisplayItem
@@ -121,7 +138,12 @@ public class RegistrationFormsQueryHandler(IQueryable<RawRegistrationForm> _rawF
                                                                                                                                        map.Type,
                                                                                                                                        map.RegistrableId,
                                                                                                                                        map.Language).ToString())
-                                                                                                                       })
+                                                                                                                       }),
+                                                                                                               IsMappedToPartnerTrack = qst.Options.Any(
+                                                                                                                   qop => qop.MappedRegistrables.Any(map =>
+                                                                                                                           map.RegistrableId != null
+                                                                                                                        && registrableIds_Partner.Contains(map.RegistrableId.Value))),
+                                                                                                               QuestionId_Partner = qst.QuestionId_Partner
                                                                                                            })
                                                                                             .OrderBy(qst => qst.SortKey)
                                                                          })

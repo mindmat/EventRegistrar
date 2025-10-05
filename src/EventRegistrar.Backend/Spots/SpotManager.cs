@@ -120,7 +120,11 @@ public class SpotManager(IRepository<Seat> _spots,
             if (isPartnerRegistration)
             {
                 // complement existing partner seat
-                var existingPartnerSeat = await FindPartnerSeat(eventId, ownIdentification, partner, registrationId_Partner, ownRole,
+                var existingPartnerSeat = await FindPartnerSeat(eventId,
+                                                                ownIdentification,
+                                                                partner,
+                                                                registrationId_Partner,
+                                                                ownRole,
                                                                 spots);
 
                 if (existingPartnerSeat != null)
@@ -291,7 +295,10 @@ public class SpotManager(IRepository<Seat> _spots,
         return seat;
     }
 
-    public void RemoveSpot(Seat spot, Guid registrationId, RemoveSpotReason reason, Guid eventId)
+    public void RemoveSpot(Seat spot,
+                           Guid registrationId,
+                           RemoveSpotReason reason,
+                           Guid eventId)
     {
         if (spot.RegistrationId == registrationId)
         {
