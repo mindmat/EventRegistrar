@@ -8,7 +8,8 @@ import { NotificationService } from '../infrastructure/notification.service';
 @Injectable({
   providedIn: 'root'
 })
-export class UnprocessedRawRegistrationsService extends FetchService<UnprocessedRawRegistrationsInfo> {
+export class UnprocessedRawRegistrationsService extends FetchService<UnprocessedRawRegistrationsInfo>
+{
 
   constructor(private api: Api, private eventService: EventService, notificationService: NotificationService)
   {
@@ -25,7 +26,7 @@ export class UnprocessedRawRegistrationsService extends FetchService<Unprocessed
     return this.fetchItems(this.api.unprocessedRawRegistrationCount_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
 
-  startProcessAllPendingRawRegistrationsCommand()
+  startProcessAllPendingRawRegistrationsCommand(): void
   {
     this.api.startProcessAllPendingRawRegistrations_Command({ eventId: this.eventService.selectedId })
       .subscribe();

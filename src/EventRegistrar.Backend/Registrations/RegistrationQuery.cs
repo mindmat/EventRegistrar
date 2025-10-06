@@ -147,9 +147,7 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                                                      : Role.Follower)
                                                                       : null,
                                                        PartnerName = spot.IsPartnerSpot
-                                                                         ? spot.RegistrationId == registrationId
-                                                                               ? $"{spot.Registration_Follower!.RespondentFirstName} {spot.Registration_Follower.RespondentLastName}"
-                                                                               : $"{spot.Registration!.RespondentFirstName} {spot.Registration.RespondentLastName}"
+                                                                         ? GetPartnerName(registrationId, spot)
                                                                          : null,
                                                        IsWaitingList = spot.IsWaitingList,
                                                        Type = spot.Registrable.Type
@@ -194,6 +192,24 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                                 }))
                                           .ToList();
         return (content, null);
+    }
+
+    private static string? GetPartnerName(Guid? registrationId, Seat spot)
+    {
+        if (spot.RegistrationId == registrationId)
+        {
+            // Leader
+            return spot.Registration_Follower != null
+                       ? $"{spot.Registration_Follower!.RespondentFirstName} {spot.Registration_Follower.RespondentLastName}"
+                       : spot.PartnerEmail;
+        }
+        else
+        {
+            // Follower
+            return spot.Registration != null
+                       ? $"{spot.Registration!.RespondentFirstName} {spot.Registration.RespondentLastName}"
+                       : spot.PartnerEmail;
+        }
     }
 }
 
