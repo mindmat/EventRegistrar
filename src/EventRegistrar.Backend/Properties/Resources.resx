@@ -1132,6 +1132,9 @@
   <data name="Processed" xml:space="preserve">
     <value>Verarbeitet</value>
   </data>
+  <data name="QrCodeGenerateError" xml:space="preserve">
+    <value>QR-Code konnte nicht erstellt werden</value>
+  </data>
   <data name="Question" xml:space="preserve">
     <value>Frage</value>
   </data>

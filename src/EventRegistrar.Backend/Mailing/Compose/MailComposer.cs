@@ -87,11 +87,12 @@ public class MailComposer(
             var parts = GetPrefix(key);
 
             var registrationForPrefix = parts.prefix switch
-            {
-                PrefixLeader   => leaderRegistration,
-                PrefixFollower => followerRegistration,
-                _              => registration
-            } ?? registration;
+                                        {
+                                            PrefixLeader   => leaderRegistration,
+                                            PrefixFollower => followerRegistration,
+                                            _              => registration
+                                        }
+                                     ?? registration;
 
             if (Enum.TryParse<MailPlaceholder>(parts.key, true, out var placeholderKey)
              || parts.key?.ToUpperInvariant() == "SEATLIST"
@@ -261,6 +262,7 @@ public class MailComposer(
             price += partnerRegistration.Price_AdmittedAndReduced;
             paid += await paidAmountSummarizer.GetPaidAmount(partnerRegistration.Id);
         }
+
         var difference = price - paid;
         return difference;
     }
@@ -319,7 +321,8 @@ public class MailComposer(
         }
         catch (Exception ex)
         {
-            return $"Fehler beim Erstellen des QR-Codes: {ex.Message}";
+            log.LogError(ex, "Error generating QR code");
+            return Resources.QrCodeGenerateError;
         }
     }
 

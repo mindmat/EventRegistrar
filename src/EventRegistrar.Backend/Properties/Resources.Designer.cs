@@ -3119,6 +3119,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to QR-Code konnte nicht erstellt werden.
+        /// </summary>
+        internal static string QrCodeGenerateError {
+            get {
+                return ResourceManager.GetString("QrCodeGenerateError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Frage.
         /// </summary>
         internal static string Question {
