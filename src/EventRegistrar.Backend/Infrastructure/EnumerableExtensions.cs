@@ -51,4 +51,10 @@ public static class EnumerableExtensions
     {
         return condition ? source.Where(predicate) : source;
     }
+
+    public static IEnumerable<TSource> WhereNotNull<TSource>(this IEnumerable<TSource?> source)
+        where TSource : struct
+    {
+        return source.Where(x => x != null).Select(x => x!.Value);
+    }
 }

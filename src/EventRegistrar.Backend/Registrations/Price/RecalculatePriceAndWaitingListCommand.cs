@@ -27,7 +27,7 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
 {
     public async Task Handle(RecalculatePriceAndWaitingListCommand command, CancellationToken cancellationToken)
     {
-        var isDirty =  await dirtyTagger.RemoveDirtyTags<RegistrationPriceAndWaitingListSegment>(command.RegistrationId);
+        await dirtyTagger.RemoveDirtyTags<RegistrationPriceAndWaitingListSegment>(command.RegistrationId);
         var registration = await registrations.AsTracking()
                                               .Include(reg => reg.Seats_AsLeader!)
                                               .ThenInclude(spt => spt.Registrable)
@@ -40,10 +40,12 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
 
         var (newOriginal, newAdmitted, newAdmittedAndReduced, _, packagesAdmitted, isOnWaitingList, _) = await priceCalculator.CalculatePrice(registration.Id, cancellationToken);
         var packageIds_admitted = packagesAdmitted.Select(pkg => pkg.Id)
-                                                  .Where(id => id != null)
-                                                  .Select(id => id!.Value)
+                                                  .WhereNotNull()
                                                   .OrderBy(id => id)
                                                   .ToList();
+
+        var anythingChanged = false;
+
         // update price
         if (oldOriginal != newOriginal
          || oldAdmitted != newAdmitted
@@ -60,10 +62,11 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
                                  OldPrice = oldAdmittedAndReduced,
                                  NewPrice = newAdmittedAndReduced
                              });
+            anythingChanged = true;
         }
 
         // update admitted package(s)
-        if (registration.PricePackageIds_Admitted?.SequenceEqual(packageIds_admitted) != true)
+        if (registration.PricePackageIds_Admitted?.OrderBy(id => id)?.SequenceEqual(packageIds_admitted) != true)
         {
             registration.PricePackageIds_Admitted = packageIds_admitted;
 
@@ -72,6 +75,7 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
                                  EventId = registration.EventId,
                                  QueryName = nameof(PricePackageOverview)
                              });
+            anythingChanged = true;
         }
 
         // update waiting list
@@ -81,8 +85,12 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
             registration.AdmittedAt ??= dateTimeProvider.Now;
 
             eventBus.Publish(new RegistrationMovedUpFromWaitingList { RegistrationId = registration.Id });
+            anythingChanged = true;
+        }
 
-            // registration is now accepted, send Mail
+        if (anythingChanged && registration.IsOnWaitingList == false)
+        {
+            // registration is now accepted (or changed), send mail
             var sendMailCommand = new ComposeAndSendAutoMailCommand
                                   {
                                       EventId = registration.EventId,
