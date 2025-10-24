@@ -30,7 +30,7 @@ public static class EnumExtensions
         where TEnum : struct, Enum
     {
         return value == null
-                   ? Enumerable.Empty<TEnum>()
+                   ? []
                    : GetFlags(value.Value);
     }
 
@@ -50,5 +50,12 @@ public static class EnumExtensions
         }
 
         return (TEnum)result;
+    }
+
+
+    public static bool HasAnyFlags<TEnum>(this TEnum? value)
+        where TEnum : struct, Enum
+    {
+        return GetFlags(value).Any();
     }
 }

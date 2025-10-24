@@ -29,7 +29,8 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
     public async Task Handle(CreateBulkMailsCommand command, CancellationToken cancellationToken)
     {
         var templates = await mailTemplates.Where(mtp => mtp.EventId == command.EventId
-                                                      && mtp.BulkMailKey == command.BulkMailKey)
+                                                      && mtp.BulkMailKey == command.BulkMailKey
+                                                      && !mtp.Discarded)
                                            .ToListAsync(cancellationToken);
 
         var registrationsOfEvent = await registrations.Where(reg => reg.EventId == command.EventId
@@ -42,7 +43,7 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
         var remainingChunkSize = ChunkSize;
         foreach (var mailTemplate in templates)
         {
-            if (remainingChunkSize <= 0 || mailTemplate.Discarded)
+            if (remainingChunkSize <= 0)
             {
                 break;
             }
@@ -56,49 +57,40 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
                                                                      .Take(ChunkSize)
                                                                      .ToList();
             var receivers = new List<Registration>();
-            if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.Paid) == true)
+            if (mailTemplate.MailingAudience.HasAnyFlags())
             {
-                receivers.AddRange(registrationsForTemplate.Where(reg => reg.State == RegistrationState.Paid
-                                                                      && (reg.Language == mailTemplate.Language || reg.Language == null)));
+                // no audience set -> no filtering
+                receivers.AddRange(registrationsForTemplate.Where(reg => reg.Language == mailTemplate.Language || reg.Language == null));
             }
-
-            if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.Unpaid) == true)
+            else
             {
-                receivers.AddRange(registrationsForTemplate.Where(reg => reg.State == RegistrationState.Received
-                                                                      && (reg.Language == mailTemplate.Language || reg.Language == null)
-                                                                      && reg.IsOnWaitingList != true));
-            }
-
-            if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.WaitingList) == true)
-            {
-                receivers.AddRange(registrationsForTemplate.Where(reg => reg.State == RegistrationState.Received
-                                                                      && (reg.Language == mailTemplate.Language || reg.Language == null)
-                                                                      && reg.IsOnWaitingList == true));
-            }
-
-            if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.PredecessorEvent) == true)
-            {
-                var alreadyCoveredMailAddresses = await mails.Where(mail => mail.BulkMailKey == command.BulkMailKey)
-                                                             .SelectMany(mail => mail.Registrations!)
-                                                             .Select(map => map.Registration!.RespondentEmail)
-                                                             .ToListAsync(cancellationToken);
-
-                // distinct by email, not registration id
-                var predecessorReceivers = await events.Where(evt => evt.Id == command.EventId)
-                                                       .SelectMany(evt => evt.PredecessorEvent!.Registrations!)
-                                                       .Where(reg => !alreadyCoveredMailAddresses.Contains(reg.RespondentEmail))
-                                                       .Take(ChunkSize)
-                                                       .ToListAsync(cancellationToken);
-                if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.PrePredecessorEvent) == true)
+                if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.Paid) == true)
                 {
-                    predecessorReceivers.AddRange(await events.Where(evt => evt.Id == command.EventId)
-                                                              .SelectMany(evt => evt.PredecessorEvent!.PredecessorEvent!.Registrations!)
-                                                              .Where(reg => !alreadyCoveredMailAddresses.Contains(reg.RespondentEmail))
-                                                              .Take(ChunkSize)
-                                                              .ToListAsync(cancellationToken));
+                    receivers.AddRange(registrationsForTemplate.Where(reg => reg.State == RegistrationState.Paid
+                                                                          && (reg.Language == mailTemplate.Language || reg.Language == null)));
                 }
 
-                receivers.AddRange(predecessorReceivers.DistinctBy(reg => reg.RespondentEmail!.ToLower()).Take(ChunkSize));
+                if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.Unpaid) == true)
+                {
+                    receivers.AddRange(registrationsForTemplate.Where(reg => reg.State == RegistrationState.Received
+                                                                          && (reg.Language == mailTemplate.Language || reg.Language == null)
+                                                                          && reg.IsOnWaitingList != true));
+                }
+
+                if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.WaitingList) == true)
+                {
+                    receivers.AddRange(registrationsForTemplate.Where(reg => reg.State == RegistrationState.Received
+                                                                          && (reg.Language == mailTemplate.Language || reg.Language == null)
+                                                                          && reg.IsOnWaitingList == true));
+                }
+
+                if (mailTemplate.MailingAudience?.HasFlag(MailingAudience.PredecessorEvent) == true)
+                {
+                    receivers.AddRange(await GetReceiversFromPredecessorEvent(command.EventId,
+                                                                              command.BulkMailKey,
+                                                                              mailTemplate.MailingAudience?.HasFlag(MailingAudience.PrePredecessorEvent) == true,
+                                                                              cancellationToken));
+                }
             }
 
             receivers = receivers.DistinctBy(reg => reg.Id)
@@ -158,5 +150,33 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
                                                   Email = registration.RespondentEmail?.ToLowerInvariant(),
                                                   MailId = mail.Id
                                               });
+    }
+
+    private async Task<IEnumerable<Registration>> GetReceiversFromPredecessorEvent(Guid eventId,
+                                                                                   string? bulkMailKey,
+                                                                                   bool addPrePredecessorEvent,
+                                                                                   CancellationToken cancellationToken)
+    {
+        var alreadyCoveredMailAddresses = await mails.Where(mail => mail.BulkMailKey == bulkMailKey)
+                                                     .SelectMany(mail => mail.Registrations!)
+                                                     .Select(map => map.Registration!.RespondentEmail)
+                                                     .ToListAsync(cancellationToken);
+
+        // distinct by email, not registration id
+        var predecessorReceivers = await events.Where(evt => evt.Id == eventId)
+                                               .SelectMany(evt => evt.PredecessorEvent!.Registrations!)
+                                               .Where(reg => !alreadyCoveredMailAddresses.Contains(reg.RespondentEmail))
+                                               .Take(ChunkSize)
+                                               .ToListAsync(cancellationToken);
+        if (addPrePredecessorEvent)
+        {
+            predecessorReceivers.AddRange(await events.Where(evt => evt.Id == eventId)
+                                                      .SelectMany(evt => evt.PredecessorEvent!.PredecessorEvent!.Registrations!)
+                                                      .Where(reg => !alreadyCoveredMailAddresses.Contains(reg.RespondentEmail))
+                                                      .Take(ChunkSize)
+                                                      .ToListAsync(cancellationToken));
+        }
+
+        return predecessorReceivers.DistinctBy(reg => reg.RespondentEmail!.ToLower()).Take(ChunkSize);
     }
 }
