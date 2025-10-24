@@ -12,6 +12,7 @@ Sentry.init({
     sendDefaultPii: true,
     integrations: [
         Sentry.feedbackIntegration({
+            autoInject: false,
             showBranding: false,
             colorScheme: 'light',
             showName: false,
