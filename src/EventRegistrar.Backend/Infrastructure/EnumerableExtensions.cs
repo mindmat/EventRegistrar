@@ -57,4 +57,10 @@ public static class EnumerableExtensions
     {
         return source.Where(x => x != null).Select(x => x!.Value);
     }
+
+    public static IEnumerable<TSource> WhereNotNull<TSource>(this IEnumerable<TSource?> source)
+        where TSource : class
+    {
+        return source.Where(x => x != null).Select(x => x!);
+    }
 }

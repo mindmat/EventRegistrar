@@ -10,13 +10,13 @@ export class IndividualReductionService
   constructor(private api: Api,
     private eventService: EventService) { }
 
-  addReduction(command: AddIndividualReductionCommand)
+  addReduction(command: AddIndividualReductionCommand): void
   {
     this.api.addIndividualReduction_Command(command)
       .subscribe();
   }
 
-  removeReduction(reductionId: string)
+  removeReduction(reductionId: string): void
   {
     this.api.removeIndividualReduction_Command({ eventId: this.eventService.selectedId, reductionId })
       .subscribe();

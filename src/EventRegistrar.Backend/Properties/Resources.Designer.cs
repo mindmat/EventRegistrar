@@ -1661,6 +1661,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Prozentual.
+        /// </summary>
+        internal static string IndividualReductionType_Percentage {
+            get {
+                return ResourceManager.GetString("IndividualReductionType_Percentage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Reduktion.
         /// </summary>
         internal static string IndividualReductionType_Reduction {
@@ -2962,6 +2971,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string PendingPayouts {
             get {
                 return ResourceManager.GetString("PendingPayouts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Prozent.
+        /// </summary>
+        internal static string Percent {
+            get {
+                return ResourceManager.GetString("Percent", resourceCulture);
             }
         }
         

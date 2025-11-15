@@ -136,10 +136,27 @@ public class PriceCalculator(IQueryable<Seat> _spots,
         }
 
         // adjust price
-        var totalReduction = individualReductions.Select(ird => ird.Amount)
-                                                 .Sum();
-        var clampedReduction = Math.Clamp(totalReduction, 0, priceNotReduced);
-        var priceAdmittedAndReduced = priceNotReduced - clampedReduction;
+        var price = priceNotReduced;
+        var totalReductionFactor = individualReductions.Where(ird => ird.Type == IndividualReductionType.Percentage)
+                                                       .Select(ird => (decimal?)ird.Amount)
+                                                       .DefaultIfEmpty()
+                                                       .Sum();
+        if (totalReductionFactor != null)
+        {
+            totalReductionFactor = Math.Clamp(totalReductionFactor.Value, 0, 1);
+            price *= 1 - totalReductionFactor.Value;
+        }
+
+        var totalReductionAmount = individualReductions.Where(ird => ird.Type == IndividualReductionType.Reduction)
+                                                       .Select(ird => (decimal?)ird.Amount)
+                                                       .DefaultIfEmpty()
+                                                       .Sum();
+        if (totalReductionAmount != null)
+        {
+            var clampedReduction = Math.Clamp(totalReductionAmount.Value, 0, price);
+            price -= clampedReduction;
+        }
+
         var reductionText = Resources.Reduction;
         var reductionReasons = individualReductions.Select(red => red.Reason).StringJoinNullable();
         if (reductionReasons != null)
@@ -147,15 +164,33 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             reductionText = $"{Resources.Reduction}: {reductionReasons}";
         }
 
-        return (priceAdmittedAndReduced, new MatchingPackageResult(null,
-                                                                   reductionText,
-                                                                   -clampedReduction,
-                                                                   0m,
-                                                                   false,
-                                                                   false,
-                                                                   false,
-                                                                   individualReductions.Select(ird => new MatchingPackageSpot(ird.Reason ?? Resources.Reduction, -ird.Amount)),
-                                                                   true));
+        var totalReduction = priceNotReduced - price;
+        return (price, new MatchingPackageResult(null,
+                                                 reductionText,
+                                                 -totalReduction,
+                                                 0m,
+                                                 false,
+                                                 false,
+                                                 false,
+                                                 individualReductions.Select(reduction => GetReductionLine(reduction, priceNotReduced))
+                                                                     .WhereNotNull(),
+                                                 true));
+    }
+
+    private static MatchingPackageSpot? GetReductionLine(IndividualReduction reduction, decimal originalPrice)
+    {
+        switch (reduction.Type)
+        {
+            case IndividualReductionType.Reduction:
+                return new MatchingPackageSpot(reduction.Reason ?? Resources.Reduction, -reduction.Amount);
+            case IndividualReductionType.Percentage:
+                {
+                    var factor = Math.Clamp(reduction.Amount, 0, 1);
+                    return new MatchingPackageSpot($"{reduction.Reason ?? Resources.Reduction} {factor * 100m}%", -originalPrice * factor);
+                }
+            default:
+                return null;
+        }
     }
 
     public (decimal Price, IReadOnlyCollection<MatchingPackageResult> matchingPackages, bool allSpotsCovered) CalculatePriceOfSpots(Guid registrationId,

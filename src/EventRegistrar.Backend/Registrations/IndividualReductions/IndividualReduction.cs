@@ -18,7 +18,8 @@ public class IndividualReduction : Entity
 public enum IndividualReductionType
 {
     Reduction = 1,
-    OverwritePrice = 2
+    OverwritePrice = 2,
+    Percentage = 3
 }
 
 public class IndividualReductionMap : EntityMap<IndividualReduction>

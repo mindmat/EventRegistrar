@@ -8829,6 +8829,7 @@ export interface AddIndividualReductionCommand {
 export enum IndividualReductionType {
     Reduction = 1,
     OverwritePrice = 2,
+    Percentage = 3,
 }
 
 export interface AddSpotCommand {

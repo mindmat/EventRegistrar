@@ -46,5 +46,6 @@ public class AddIndividualReductionCommandHandler(IQueryable<Registration> regis
                          });
 
         changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
     }
 }

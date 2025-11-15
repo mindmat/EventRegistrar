@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AddIndividualReductionCommand, IndividualReductionType } from 'app/api/api';
@@ -12,10 +12,10 @@ import { IndividualReductionService } from './individual-reduction.service';
   templateUrl: './create-individual-reduction.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateIndividualReductionComponent
+export class CreateIndividualReductionComponent implements OnInit
 {
   reductionForm: FormGroup;
-  IndividualReductionType = IndividualReductionType;
+  individualReductionType = IndividualReductionType;
 
   constructor(private changeDetectorRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) private data: { registrationId: string; price?: number; },
@@ -41,7 +41,11 @@ export class CreateIndividualReductionComponent
 
   onSubmit(): void
   {
-    var command = this.reductionForm.value as AddIndividualReductionCommand;
+    const command = this.reductionForm.value as AddIndividualReductionCommand;
+    if (command.type === IndividualReductionType.Percentage)
+    {
+      command.amount = Math.min(Math.max(command.amount / 100.0, 0), 1);
+    }
     this.reductionService.addReduction(command);
   }
 }

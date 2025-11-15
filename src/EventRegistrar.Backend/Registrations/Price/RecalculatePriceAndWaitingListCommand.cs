@@ -88,21 +88,24 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
             anythingChanged = true;
         }
 
-        if (anythingChanged && registration.IsOnWaitingList == false)
+        if (anythingChanged)
         {
-            // registration is now accepted (or changed), send mail
-            var sendMailCommand = new ComposeAndSendAutoMailCommand
-                                  {
-                                      EventId = registration.EventId,
-                                      MailType = registration.RegistrationId_Partner != null
-                                                     ? MailType.PartnerRegistrationMatchedAndAccepted
-                                                     : MailType.SingleRegistrationAccepted,
-                                      RegistrationId = registration.Id
-                                  };
-            commandQueue.EnqueueCommand(sendMailCommand);
-
-            changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, registration.EventId);
             changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+            if (registration.IsOnWaitingList == false)
+            {
+                // registration is now accepted (or changed), send mail
+                var sendMailCommand = new ComposeAndSendAutoMailCommand
+                                      {
+                                          EventId = registration.EventId,
+                                          MailType = registration.RegistrationId_Partner != null
+                                                         ? MailType.PartnerRegistrationMatchedAndAccepted
+                                                         : MailType.SingleRegistrationAccepted,
+                                          RegistrationId = registration.Id
+                                      };
+                commandQueue.EnqueueCommand(sendMailCommand);
+
+                changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, registration.EventId);
+            }
         }
     }
 }

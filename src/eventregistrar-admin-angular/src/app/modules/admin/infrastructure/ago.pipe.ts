@@ -39,7 +39,7 @@ export class AgoPipe extends AsyncPipe
 
   private mapLang(currentLang: string): Locale
   {
-    if (currentLang == 'de')
+    if (currentLang === 'de')
     {
       return de;
     }

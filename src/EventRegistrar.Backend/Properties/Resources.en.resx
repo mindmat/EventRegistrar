@@ -549,6 +549,9 @@
   <data name="IndividualReductionType_OverwritePrice" xml:space="preserve">
     <value>Overwrite price</value>
   </data>
+  <data name="IndividualReductionType_Percentage" xml:space="preserve">
+    <value>Percentage</value>
+  </data>
   <data name="IndividualReductionType_Reduction" xml:space="preserve">
     <value>Reduction</value>
   </data>
@@ -971,6 +974,9 @@
   </data>
   <data name="PendingPayouts" xml:space="preserve">
     <value>Pending repayments</value>
+  </data>
+  <data name="Percent" xml:space="preserve">
+    <value>Percent</value>
   </data>
   <data name="Phone" xml:space="preserve">
     <value>Phone</value>

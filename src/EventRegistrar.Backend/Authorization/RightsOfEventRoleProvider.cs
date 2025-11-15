@@ -4,6 +4,7 @@ using EventRegistrar.Backend.Events.UsersInEvents;
 using EventRegistrar.Backend.Events.UsersInEvents.AccessRequests;
 using EventRegistrar.Backend.Hosting;
 using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Infrastructure.MenuNodes;
 using EventRegistrar.Backend.Mailing;
@@ -134,6 +135,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(DownloadMailAttachmentQuery);
             yield return nameof(DownloadIcsPreviewQuery);
             yield return nameof(ValidateAutoMailTemplatesCommand);
+            yield return nameof(UpdateReadModelCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
