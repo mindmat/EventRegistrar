@@ -8848,6 +8848,7 @@ export interface AssignedPaymentDisplayItem {
     bookingDate?: Date;
     currency?: string | null;
     paymentAssignmentId?: string;
+    debitorIban?: string | null;
     debitorName?: string | null;
     debitorAdressLine1?: string | null;
     debitorAdressLine2?: string | null;

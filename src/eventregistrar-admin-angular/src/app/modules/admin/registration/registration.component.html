@@ -181,6 +181,7 @@
                                 <div *ngIf="payment.debitorName">{{ 'PaymentFrom' | translate : {debitor: payment.debitorName??'?'} }}</div>
                                 <div *ngIf="payment.debitorAdressLine1">{{ payment.debitorAdressLine1 }}</div>
                                 <div *ngIf="payment.debitorAdressLine2">{{ payment.debitorAdressLine2 }}</div>
+                                <div *ngIf="payment.debitorIban">{{ payment.debitorIban }}</div>
                                 <div *ngIf="payment.creditorName">{{ 'PaymentTo' | translate : {creditor: payment.creditorName??'?'} }}</div>
                             </div>
                         </div>

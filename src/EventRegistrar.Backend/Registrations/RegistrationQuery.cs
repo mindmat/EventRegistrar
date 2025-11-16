@@ -196,6 +196,7 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                             Amount = ass.Amount,
                                                                             Currency = ass.Incoming!.Currency,
                                                                             BookingDate = ass.Incoming!.BookingDate,
+                                                                            DebitorIban = ass.Incoming.DebitorIban,
                                                                             DebitorName = ass.Incoming.DebitorName,
                                                                             DebitorAdressLine1 = ass.Incoming.DebitorStreet != null
                                                                                                      ? $"{ass.Incoming.DebitorStreet} {ass.Incoming.DebitorBuildingNr}"

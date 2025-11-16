@@ -5354,6 +5354,10 @@
                         "type": "string",
                         "format": "guid"
                     },
+                    "debitorIban": {
+                        "type": "string",
+                        "nullable": true
+                    },
                     "debitorName": {
                         "type": "string",
                         "nullable": true
