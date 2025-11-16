@@ -21,4 +21,5 @@ public class CamtEntry
     public string? DebitorZip { get; set; }
     public string? DebitorTown { get; set; }
     public string? DebitorCountry { get; set; }
+    public string? DebitorAdressLine { get; set; }
 }

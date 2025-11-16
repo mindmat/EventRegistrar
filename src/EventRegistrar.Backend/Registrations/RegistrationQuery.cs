@@ -174,7 +174,8 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                                     ass.IncomingPayment.DebitorBuildingNr,
                                                                                     ass.IncomingPayment.DebitorZip,
                                                                                     ass.IncomingPayment.DebitorTown,
-                                                                                    ass.IncomingPayment.DebitorCountry
+                                                                                    ass.IncomingPayment.DebitorCountry,
+                                                                                    ass.IncomingPayment.DebitorAdressLine
                                                                                 },
                                                                ass.OutgoingPaymentId,
                                                                Outgoing = ass.OutgoingPayment == null
@@ -196,7 +197,9 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                             Currency = ass.Incoming!.Currency,
                                                                             BookingDate = ass.Incoming!.BookingDate,
                                                                             DebitorName = ass.Incoming.DebitorName,
-                                                                            DebitorAdressLine1 = $"{ass.Incoming.DebitorStreet} {ass.Incoming.DebitorBuildingNr}",
+                                                                            DebitorAdressLine1 = ass.Incoming.DebitorStreet != null
+                                                                                                     ? $"{ass.Incoming.DebitorStreet} {ass.Incoming.DebitorBuildingNr}"
+                                                                                                     : ass.Incoming.DebitorAdressLine,
                                                                             DebitorAdressLine2 = $"{ass.Incoming.DebitorZip} {ass.Incoming.DebitorTown}"
                                                                                                + (ass.Incoming.DebitorCountry != null
                                                                                                       ? $" ({ass.Incoming.DebitorCountry})"

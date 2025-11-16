@@ -104,6 +104,7 @@ public class IncomingPayment : Entity
     public string? DebitorZip { get; set; }
     public string? DebitorTown { get; set; }
     public string? DebitorCountry { get; set; }
+    public string? DebitorAdressLine { get; set; }
     public Guid? PaymentSlipId { get; set; }
     public PaymentSlip? PaymentSlip { get; set; }
     public ICollection<PaymentAssignment>? Assignments { get; set; }
@@ -135,6 +136,8 @@ public class IncomingPaymentMap : EntityMap<IncomingPayment>
                .HasMaxLength(200);
         builder.Property(pmi => pmi.DebitorCountry)
                .HasMaxLength(10);
+        builder.Property(pmi => pmi.DebitorAdressLine)
+               .HasMaxLength(500);
 
         builder.Property(pmi => pmi.DebitorIban)
                .HasMaxLength(50);

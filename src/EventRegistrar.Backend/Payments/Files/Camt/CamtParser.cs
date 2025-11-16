@@ -102,6 +102,11 @@ public class CamtParser
                                                                                      .Descendants(ns + "Ctry")
                                                                                      .FirstOrDefault()
                                                                                      ?.Value,
+                                                             DebitorAdressLine = parties?.Descendants(ns + "Dbtr")
+                                                                                        .Descendants(ns + "PstlAdr")
+                                                                                        .Descendants(ns + "AdrLine")
+                                                                                        .FirstOrDefault()
+                                                                                        ?.Value,
                                                              DebitorIban = parties?.Descendants(ns + "DbtrAcct")
                                                                                   .Descendants(ns + "Id")
                                                                                   .Descendants(ns + "IBAN")
