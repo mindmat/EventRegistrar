@@ -197,7 +197,10 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                             BookingDate = ass.Incoming!.BookingDate,
                                                                             DebitorName = ass.Incoming.DebitorName,
                                                                             DebitorAdressLine1 = $"{ass.Incoming.DebitorStreet} {ass.Incoming.DebitorBuildingNr}",
-                                                                            DebitorAdressLine2 = $"{ass.Incoming.DebitorZip} {ass.Incoming.DebitorTown} ({ass.Incoming.DebitorCountry})",
+                                                                            DebitorAdressLine2 = $"{ass.Incoming.DebitorZip} {ass.Incoming.DebitorTown}"
+                                                                                               + (ass.Incoming.DebitorCountry != null
+                                                                                                      ? $" ({ass.Incoming.DebitorCountry})"
+                                                                                                      : string.Empty)
                                                                         }),
                                              paymentsData.Where(ass => ass.Outgoing != null)
                                                          .Select(ass => new AssignedPaymentDisplayItem

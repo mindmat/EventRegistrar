@@ -5358,6 +5358,14 @@
                         "type": "string",
                         "nullable": true
                     },
+                    "debitorAdressLine1": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "debitorAdressLine2": {
+                        "type": "string",
+                        "nullable": true
+                    },
                     "creditorName": {
                         "type": "string",
                         "nullable": true

@@ -8849,6 +8849,8 @@ export interface AssignedPaymentDisplayItem {
     currency?: string | null;
     paymentAssignmentId?: string;
     debitorName?: string | null;
+    debitorAdressLine1?: string | null;
+    debitorAdressLine2?: string | null;
     creditorName?: string | null;
 }
 
