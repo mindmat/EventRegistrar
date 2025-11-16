@@ -77,6 +77,31 @@ public class CamtParser
                                                                                   .Descendants(ns + "Nm")
                                                                                   .FirstOrDefault()
                                                                                   ?.Value,
+                                                             DebitorStreet = parties?.Descendants(ns + "Dbtr")
+                                                                                    .Descendants(ns + "PstlAdr")
+                                                                                    .Descendants(ns + "StrtNm")
+                                                                                    .FirstOrDefault()
+                                                                                    ?.Value,
+                                                             DebitorBuildingNr = parties?.Descendants(ns + "Dbtr")
+                                                                                        .Descendants(ns + "PstlAdr")
+                                                                                        .Descendants(ns + "BldgNb")
+                                                                                        .FirstOrDefault()
+                                                                                        ?.Value,
+                                                             DebitorZip = parties?.Descendants(ns + "Dbtr")
+                                                                                 .Descendants(ns + "PstlAdr")
+                                                                                 .Descendants(ns + "PstCd")
+                                                                                 .FirstOrDefault()
+                                                                                 ?.Value,
+                                                             DebitorTown = parties?.Descendants(ns + "Dbtr")
+                                                                                  .Descendants(ns + "PstlAdr")
+                                                                                  .Descendants(ns + "TwnNm")
+                                                                                  .FirstOrDefault()
+                                                                                  ?.Value,
+                                                             DebitorCountry = parties?.Descendants(ns + "Dbtr")
+                                                                                     .Descendants(ns + "PstlAdr")
+                                                                                     .Descendants(ns + "Ctry")
+                                                                                     .FirstOrDefault()
+                                                                                     ?.Value,
                                                              DebitorIban = parties?.Descendants(ns + "DbtrAcct")
                                                                                   .Descendants(ns + "Id")
                                                                                   .Descendants(ns + "IBAN")

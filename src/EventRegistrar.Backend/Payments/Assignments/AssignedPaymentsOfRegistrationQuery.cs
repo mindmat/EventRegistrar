@@ -53,5 +53,7 @@ public class AssignedPaymentDisplayItem
     public string? Currency { get; set; }
     public Guid PaymentAssignmentId { get; set; }
     public string? DebitorName { get; set; }
+    public string? DebitorAdressLine1 { get; set; }
+    public string? DebitorAdressLine2 { get; set; }
     public string? CreditorName { get; set; }
 }

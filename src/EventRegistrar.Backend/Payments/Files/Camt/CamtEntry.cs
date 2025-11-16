@@ -16,4 +16,9 @@ public class CamtEntry
     public string? Xml { get; set; }
     public string? CreditorName { get; set; }
     public string? CreditorIban { get; set; }
+    public string? DebitorStreet { get; set; }
+    public string? DebitorBuildingNr { get; set; }
+    public string? DebitorZip { get; set; }
+    public string? DebitorTown { get; set; }
+    public string? DebitorCountry { get; set; }
 }

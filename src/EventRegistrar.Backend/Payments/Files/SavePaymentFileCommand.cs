@@ -164,8 +164,13 @@ public class SavePaymentFileCommandHandler(IRepository<PaymentsFile> paymentFile
                                        RawXml = camtEntry.Xml,
                                        Incoming = new IncomingPayment
                                                   {
+                                                      DebitorIban = camtEntry.DebitorIban,
                                                       DebitorName = camtEntry.DebitorName,
-                                                      DebitorIban = camtEntry.DebitorIban
+                                                      DebitorStreet = camtEntry.DebitorStreet,
+                                                      DebitorBuildingNr = camtEntry.DebitorBuildingNr,
+                                                      DebitorZip = camtEntry.DebitorZip,
+                                                      DebitorTown = camtEntry.DebitorTown,
+                                                      DebitorCountry = camtEntry.DebitorCountry,
                                                   }
                                    };
             payments.InsertObjectTree(newPayment);

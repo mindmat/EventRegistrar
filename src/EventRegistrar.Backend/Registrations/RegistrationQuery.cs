@@ -154,43 +154,61 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                    })
                                    .ToListAsync(cancellationToken);
 
-        var dataAssignments = await assignments.Where(ass => ass.Registration!.EventId == eventId
-                                                          && ass.RegistrationId == registrationId
-                                                          && ass.PaymentAssignmentId_Counter == null)
-                                               .Select(ass => new
-                                                              {
-                                                                  ass.Id,
-                                                                  ass.Amount,
-                                                                  ass.IncomingPaymentId,
-                                                                  ass.OutgoingPaymentId,
-                                                                  Currency_Incoming = ass.IncomingPayment!.Payment!.Currency,
-                                                                  BookingDate_Incoming = (DateTime?)ass.IncomingPayment.Payment.BookingDate,
-                                                                  Currency_Outgoing = ass.OutgoingPayment!.Payment!.Currency,
-                                                                  BookingDate_Outgoing = (DateTime?)ass.OutgoingPayment.Payment.BookingDate,
-                                                                  ass.IncomingPayment.DebitorName,
-                                                                  ass.OutgoingPayment.CreditorName
-                                                              })
-                                               .ToListAsync(cancellationToken);
-
-        content.Payments = dataAssignments.Where(ass => ass.IncomingPaymentId != null)
-                                          .Select(ass => new AssignedPaymentDisplayItem
-                                                         {
-                                                             PaymentAssignmentId = ass.Id,
-                                                             Amount = ass.Amount,
-                                                             Currency = ass.Currency_Incoming,
-                                                             BookingDate = ass.BookingDate_Incoming!.Value,
-                                                             DebitorName = ass.DebitorName
-                                                         })
-                                          .Concat(dataAssignments.Where(ass => ass.OutgoingPaymentId != null)
-                                                                 .Select(ass => new AssignedPaymentDisplayItem
+        var paymentsData = await assignments.Where(ass => ass.Registration!.EventId == eventId
+                                                       && ass.RegistrationId == registrationId
+                                                       && ass.PaymentAssignmentId_Counter == null)
+                                            .Select(ass => new
+                                                           {
+                                                               ass.Id,
+                                                               ass.Amount,
+                                                               ass.IncomingPaymentId,
+                                                               Incoming = ass.IncomingPayment == null
+                                                                              ? null
+                                                                              : new
                                                                                 {
-                                                                                    PaymentAssignmentId = ass.Id,
-                                                                                    Amount = -ass.Amount,
-                                                                                    Currency = ass.Currency_Outgoing,
-                                                                                    BookingDate = ass.BookingDate_Outgoing!.Value,
-                                                                                    CreditorName = ass.CreditorName
-                                                                                }))
-                                          .ToList();
+                                                                                    ass.IncomingPayment!.Payment!.Currency,
+                                                                                    ass.IncomingPayment.Payment.BookingDate,
+                                                                                    ass.IncomingPayment.DebitorName,
+                                                                                    ass.IncomingPayment.DebitorIban,
+                                                                                    ass.IncomingPayment.DebitorStreet,
+                                                                                    ass.IncomingPayment.DebitorBuildingNr,
+                                                                                    ass.IncomingPayment.DebitorZip,
+                                                                                    ass.IncomingPayment.DebitorTown,
+                                                                                    ass.IncomingPayment.DebitorCountry
+                                                                                },
+                                                               ass.OutgoingPaymentId,
+                                                               Outgoing = ass.OutgoingPayment == null
+                                                                              ? null
+                                                                              : new
+                                                                                {
+                                                                                    ass.OutgoingPayment!.Payment!.Currency,
+                                                                                    ass.OutgoingPayment.Payment.BookingDate,
+                                                                                    ass.OutgoingPayment.CreditorName
+                                                                                }
+                                                           })
+                                            .ToListAsync(cancellationToken);
+
+        content.Payments = Enumerable.Concat(paymentsData.Where(ass => ass.Incoming != null)
+                                                         .Select(ass => new AssignedPaymentDisplayItem
+                                                                        {
+                                                                            PaymentAssignmentId = ass.Id,
+                                                                            Amount = ass.Amount,
+                                                                            Currency = ass.Incoming!.Currency,
+                                                                            BookingDate = ass.Incoming!.BookingDate,
+                                                                            DebitorName = ass.Incoming.DebitorName,
+                                                                            DebitorAdressLine1 = $"{ass.Incoming.DebitorStreet} {ass.Incoming.DebitorBuildingNr}",
+                                                                            DebitorAdressLine2 = $"{ass.Incoming.DebitorZip} {ass.Incoming.DebitorTown} ({ass.Incoming.DebitorCountry})",
+                                                                        }),
+                                             paymentsData.Where(ass => ass.Outgoing != null)
+                                                         .Select(ass => new AssignedPaymentDisplayItem
+                                                                        {
+                                                                            PaymentAssignmentId = ass.Id,
+                                                                            Amount = -ass.Amount,
+                                                                            Currency = ass.Outgoing!.Currency,
+                                                                            BookingDate = ass.Outgoing.BookingDate,
+                                                                            CreditorName = ass.Outgoing.CreditorName
+                                                                        }))
+                                     .ToList();
         return (content, null);
     }
 

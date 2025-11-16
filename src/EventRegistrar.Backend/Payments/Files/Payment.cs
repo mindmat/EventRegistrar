@@ -99,6 +99,11 @@ public class IncomingPayment : Entity
     public Payment? Payment { get; set; }
     public string? DebitorIban { get; set; }
     public string? DebitorName { get; set; }
+    public string? DebitorStreet { get; set; }
+    public string? DebitorBuildingNr { get; set; }
+    public string? DebitorZip { get; set; }
+    public string? DebitorTown { get; set; }
+    public string? DebitorCountry { get; set; }
     public Guid? PaymentSlipId { get; set; }
     public PaymentSlip? PaymentSlip { get; set; }
     public ICollection<PaymentAssignment>? Assignments { get; set; }
@@ -120,6 +125,16 @@ public class IncomingPaymentMap : EntityMap<IncomingPayment>
 
         builder.Property(pmi => pmi.DebitorName)
                .HasMaxLength(500);
+        builder.Property(pmi => pmi.DebitorStreet)
+               .HasMaxLength(200);
+        builder.Property(pmi => pmi.DebitorBuildingNr)
+               .HasMaxLength(10);
+        builder.Property(pmi => pmi.DebitorZip)
+               .HasMaxLength(10);
+        builder.Property(pmi => pmi.DebitorTown)
+               .HasMaxLength(200);
+        builder.Property(pmi => pmi.DebitorCountry)
+               .HasMaxLength(10);
 
         builder.Property(pmi => pmi.DebitorIban)
                .HasMaxLength(50);
