@@ -20,16 +20,15 @@ public class Registrable : Entity
     public bool HasWaitingList { get; set; }
     public bool AutomaticPromotionFromWaitingList { get; set; }
     public bool IsCore { get; set; }
+
+    /// <summary>
+    /// a reduction is reusable, but an optional track is not
+    /// </summary>
+    public bool IsReusableInPricePackages { get; set; }
+
     public int? MaximumAllowedImbalance { get; set; }
     public int? MaximumDoubleSeats { get; set; }
     public int? MaximumSingleSeats { get; set; }
-
-    [Obsolete("Use PricePackage instead")]
-    public decimal? Price { get; set; }
-
-    [Obsolete("Use PricePackage instead")]
-    public decimal? ReducedPrice { get; set; }
-
     public int? ShowInMailListOrder { get; set; }
     public string? CheckinListColumn { get; set; }
     public string? Tag { get; set; }

@@ -1,6 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Payments.Files;
-using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Payments;
@@ -12,7 +11,6 @@ public class PaymentOverviewQuery : IRequest<PaymentOverview>, IEventBoundReques
 
 public class PaymentOverviewQueryHandler(IQueryable<PaymentsFile> paymentFiles,
                                          IQueryable<Registration> registrations,
-                                         IQueryable<Registrable> _registrables,
                                          IDateTimeProvider dateTimeProvider)
     : IRequestHandler<PaymentOverviewQuery, PaymentOverview>
 {
@@ -47,25 +45,6 @@ public class PaymentOverviewQueryHandler(IQueryable<PaymentsFile> paymentFiles,
                                                                     })
                                                      .ToListAsync(cancellationToken);
 
-        var registrables = await _registrables.Where(rbl => rbl.EventId == query.EventId
-                                                         && (rbl.MaximumDoubleSeats != null || rbl.MaximumSingleSeats != null)
-                                                         && rbl.Price != null)
-                                              .OrderBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
-                                              .Select(rbl => new
-                                                             {
-                                                                 RegistrableId = rbl.Id,
-                                                                 rbl.DisplayName,
-                                                                 Price = rbl.Price!.Value,
-                                                                 SpotsAvailable = rbl.MaximumSingleSeats ?? rbl.MaximumDoubleSeats!.Value * 2,
-                                                                 LeaderCount = rbl.Spots!
-                                                                                  .Where(spot => !spot.IsCancelled && !spot.IsWaitingList)
-                                                                                  .Count(spot => spot.RegistrationId != null),
-                                                                 FollowerCount = rbl.Spots!
-                                                                                    .Where(spot => !spot.IsCancelled && !spot.IsWaitingList)
-                                                                                    .Count(spot => spot.RegistrationId_Follower != null)
-                                                             })
-                                              .ToListAsync(cancellationToken);
-
         return new PaymentOverview
                {
                    Balance = latestBalance == null
@@ -88,15 +67,7 @@ public class PaymentOverviewQueryHandler(IQueryable<PaymentsFile> paymentFiles,
                                                                AccountIban = blc.AccountIban,
                                                                Date = blc.Date
                                                            }),
-                   NotFullyPaidRegistrations = activeRegistrations.Count(reg => reg.State == RegistrationState.Received),
-                   PotentialOfOpenSpots = registrables.Select(rbl => new OpenSpotsPotential
-                                                                     {
-                                                                         RegistrableId = rbl.RegistrableId,
-                                                                         Name = rbl.DisplayName,
-                                                                         SpotsAvailable = Math.Max(0, rbl.SpotsAvailable - rbl.LeaderCount - rbl.FollowerCount),
-                                                                         PotentialIncome = Math.Max(0, rbl.SpotsAvailable - rbl.LeaderCount - rbl.FollowerCount)
-                                                                                         * rbl.Price
-                                                                     })
+                   NotFullyPaidRegistrations = activeRegistrations.Count(reg => reg.State == RegistrationState.Received)
                };
     }
 }

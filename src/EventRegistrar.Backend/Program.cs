@@ -135,7 +135,7 @@ container.Register<DbContext, EventRegistratorDbContext>();
 
 var optionsBuilderAuditLog = new DbContextOptionsBuilder<AuditLogDbContext>();
 SetDbOptions(optionsBuilderAuditLog);
-container.Register(()=>new AuditLogDbContext(optionsBuilderAuditLog.Options));
+container.Register(() => new AuditLogDbContext(optionsBuilderAuditLog.Options));
 
 
 container.Register<IIdentityProvider, Auth0IdentityProvider>();

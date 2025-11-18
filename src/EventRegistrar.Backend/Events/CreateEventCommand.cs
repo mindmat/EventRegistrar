@@ -126,7 +126,7 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                                                                            ContentHtml = amt.ContentHtml,
                                                                            ReleaseImmediately = amt.ReleaseImmediately,
                                                                            AddIcs = amt.AddIcs
-                                                        })
+                                                                       })
                                                         .ToList();
             }
 
@@ -146,7 +146,7 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                                                                            AddIcs = bmt.AddIcs,
                                                                            SenderMail = bmt.SenderMail,
                                                                            SenderName = bmt.SenderName
-                                                        })
+                                                                       })
                                                         .ToList();
             }
 
@@ -161,7 +161,6 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                                                {
                                                    Id = newRegistrableId,
                                                    EventId = newEventId,
-                                                   Price = sourceRegistrable.Price,
                                                    MaximumDoubleSeats = sourceRegistrable.MaximumDoubleSeats,
                                                    MaximumSingleSeats = sourceRegistrable.MaximumSingleSeats,
                                                    MaximumAllowedImbalance = sourceRegistrable.MaximumAllowedImbalance,
@@ -180,7 +179,7 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                     registrableMap.Add(sourceRegistrable.Id, newRegistrableId);
                 }
 
-                if(command.CopyPricing)
+                if (command.CopyPricing)
                 {
                     newEvent.PricePackages = sourceEvent.PricePackages!
                                                         .Select(ppk => new PricePackage

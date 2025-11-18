@@ -169,7 +169,6 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(WillPayAtCheckinCommand);
             yield return nameof(DeleteRegistrableCommand);
             yield return nameof(DeleteBulkMailTemplateCommand);
-            yield return nameof(SetRegistrablesPricesCommand);
             yield return nameof(ActivateAutomaticPromotionCommand);
             yield return nameof(DeactivateAutomaticPromotionCommand);
             yield return nameof(IgnorePaymentCommand);

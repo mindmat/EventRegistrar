@@ -80,7 +80,6 @@ public class TestScenario : IDisposable
                                                  IsCore = true,
                                                  MaximumAllowedImbalance = 3,
                                                  MaximumDoubleSeats = 30,
-                                                 Price = 100,
                                                  ShowInMailListOrder = 1
                                              };
 
@@ -93,7 +92,6 @@ public class TestScenario : IDisposable
                                                  IsCore = true,
                                                  MaximumAllowedImbalance = 3,
                                                  MaximumDoubleSeats = 30,
-                                                 Price = 100,
                                                  ShowInMailListOrder = 2
                                              };
 
@@ -106,7 +104,6 @@ public class TestScenario : IDisposable
                                                  IsCore = true,
                                                  MaximumAllowedImbalance = 3,
                                                  MaximumDoubleSeats = 25,
-                                                 Price = 100,
                                                  ShowInMailListOrder = 3
                                              };
 
@@ -118,7 +115,6 @@ public class TestScenario : IDisposable
                                                  HasWaitingList = true,
                                                  IsCore = true,
                                                  MaximumSingleSeats = 40,
-                                                 Price = 80,
                                                  ShowInMailListOrder = 4
                                              };
 
@@ -130,7 +126,6 @@ public class TestScenario : IDisposable
                                                  HasWaitingList = true,
                                                  IsCore = true,
                                                  MaximumSingleSeats = 35,
-                                                 Price = 80,
                                                  ShowInMailListOrder = 5
                                              };
 
