@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Infrastructure.ServiceBus;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Registrations.Price;
 
@@ -8,7 +9,7 @@ public class RecalculateAllPriceAndWaitingListCommand : IRequest, IEventBoundReq
 }
 
 public class RecalculateAllPriceAndWaitingListCommandHandler(IQueryable<Registration> registrations,
-                                                             CommandQueue commandQueue)
+                                                             ChangeTrigger changeTrigger)
     : IRequestHandler<RecalculateAllPriceAndWaitingListCommand>
 {
     public async Task Handle(RecalculateAllPriceAndWaitingListCommand command, CancellationToken cancellationToken)
@@ -19,10 +20,10 @@ public class RecalculateAllPriceAndWaitingListCommandHandler(IQueryable<Registra
                                                  .ToListAsync(cancellationToken);
         foreach (var registrationId in registrationIds)
         {
-            commandQueue.EnqueueCommand(new RecalculatePriceAndWaitingListCommand
-                                        {
-                                            RegistrationId = registrationId
-                                        });
+            changeTrigger.EnqueueCommand(new RecalculatePriceAndWaitingListCommand
+                                         {
+                                             RegistrationId = registrationId
+                                         });
         }
     }
 }

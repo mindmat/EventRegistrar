@@ -567,6 +567,12 @@
   <data name="IsCorePackage" xml:space="preserve">
     <value>Core package</value>
   </data>
+  <data name="IsReusableInPricePackages" xml:space="preserve">
+    <value>Can be used in several price packages</value>
+  </data>
+  <data name="IsReusableInPricePackagesExplanation" xml:space="preserve">
+    <value>Reductions can be used in several price packages, optional classes not</value>
+  </data>
   <data name="Key" xml:space="preserve">
     <value>Key</value>
   </data>

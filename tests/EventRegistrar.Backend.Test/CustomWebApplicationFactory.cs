@@ -1,5 +1,7 @@
 ﻿using System;
+
 using EventRegistrar.Backend.Infrastructure.DataAccess;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +18,8 @@ namespace EventRegistrar.Backend.Test
             {
                 // Create a new service provider.
                 var serviceProvider = new ServiceCollection()
-                    .AddEntityFrameworkInMemoryDatabase()
-                    .BuildServiceProvider();
+                                      .AddEntityFrameworkInMemoryDatabase()
+                                      .BuildServiceProvider();
 
                 // Add a database context (ApplicationDbContext) using an in-memory
                 // database for testing.
@@ -49,8 +51,7 @@ namespace EventRegistrar.Backend.Test
                     }
                     catch (Exception ex)
                     {
-                        logger.LogError(ex, $"An error occurred seeding the " +
-                                            "database with test messages. Error: {ex.Message}");
+                        logger.LogError(ex, $"An error occurred seeding the " + "database with test messages. Error: {ex.Message}");
                     }
                 }
             });

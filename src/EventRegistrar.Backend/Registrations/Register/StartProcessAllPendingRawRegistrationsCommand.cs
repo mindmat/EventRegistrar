@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Registrations.Raw;
 
@@ -13,7 +14,7 @@ public class StartProcessAllPendingRawRegistrationsCommand : IRequest, IEventBou
 public class StartProcessAllPendingRawRegistrationsCommandHandler(IQueryable<RawRegistration> rawRegistrations,
                                                                   IQueryable<Event> events,
                                                                   IDateTimeProvider dateTimeProvider,
-                                                                  CommandQueue commandQueue)
+                                                                  ChangeTrigger changeTrigger)
     : IRequestHandler<StartProcessAllPendingRawRegistrationsCommand>
 {
     public async Task Handle(StartProcessAllPendingRawRegistrationsCommand command, CancellationToken cancellationToken)
@@ -29,7 +30,7 @@ public class StartProcessAllPendingRawRegistrationsCommandHandler(IQueryable<Raw
                                         .ToListAsync(cancellationToken);
         foreach (var id in ids)
         {
-            commandQueue.EnqueueCommand(new ProcessRawRegistrationCommand { RawRegistrationId = id });
+            changeTrigger.EnqueueCommand(new ProcessRawRegistrationCommand { RawRegistrationId = id });
         }
     }
 }

@@ -1,7 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
 
 namespace EventRegistrar.Backend.Mailing.Bulk;
@@ -13,7 +12,7 @@ public class ReleaseBulkMailsCommand : IRequest, IEventBoundRequest
 }
 
 public class ReleaseBulkMailsCommandHandler(IRepository<Mail> mails,
-                                            CommandQueue commandQueue,
+                                            ChangeTrigger changeTrigger,
                                             IEventBus eventBus,
                                             IDateTimeProvider dateTimeProvider)
     : IRequestHandler<ReleaseBulkMailsCommand>
@@ -43,7 +42,7 @@ public class ReleaseBulkMailsCommandHandler(IRepository<Mail> mails,
             withheldMail.Withhold = false;
             withheldMail.Sent = dateTimeProvider.Now;
 
-            commandQueue.EnqueueCommand(sendMailCommand);
+            changeTrigger.EnqueueCommand(sendMailCommand);
         }
 
         eventBus.Publish(new QueryChanged
@@ -54,11 +53,11 @@ public class ReleaseBulkMailsCommandHandler(IRepository<Mail> mails,
         if (withheldMails.Count >= ChunkSize)
         {
             // enqueue next chunk
-            commandQueue.EnqueueCommand(new ReleaseBulkMailsCommand
-                                        {
-                                            EventId = command.EventId,
-                                            BulkMailKey = command.BulkMailKey
-                                        });
+            changeTrigger.EnqueueCommand(new ReleaseBulkMailsCommand
+                                         {
+                                             EventId = command.EventId,
+                                             BulkMailKey = command.BulkMailKey
+                                         });
         }
     }
 }

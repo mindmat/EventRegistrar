@@ -19,6 +19,7 @@ public class SaveRegistrableCommand : IRequest, IEventBoundRequest
     public bool HasWaitingList { get; set; }
     public string? Tag { get; set; }
     public bool IsCore { get; set; }
+    public bool IsReusableInPricePackages { get; set; }
     public string? CheckinListColumn { get; set; }
 }
 
@@ -82,11 +83,12 @@ public class SaveRegistrableCommandHandler(IRepository<Registrable> registrables
 
         registrable.Name = command.Name;
         registrable.NameSecondary = command.NameSecondary;
-        registrable.DisplayName = Enumerable.Empty<string?>()
+        registrable.DisplayName = Enumerable.Empty<string>()
                                             .Append(registrable.Name)
-                                            .Append(registrable.NameSecondary)
-                                            .StringJoinNullable(" - ");
+                                            .AppendIfNotNull(registrable.NameSecondary)
+                                            .StringJoin(" - ");
         registrable.IsCore = command.IsCore;
+        registrable.IsReusableInPricePackages = command.IsReusableInPricePackages;
         registrable.CheckinListColumn = command.CheckinListColumn;
 
         if (registrable.Tag != command.Tag)

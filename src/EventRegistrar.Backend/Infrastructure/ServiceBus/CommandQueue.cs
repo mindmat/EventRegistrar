@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 
 namespace EventRegistrar.Backend.Infrastructure.ServiceBus;
 
-public class CommandQueue(ServiceBusSender sender, IDateTimeProvider dateTimeProvider)
+public class CommandQueue(ServiceBusSender sender, IDateTimeProvider dateTimeProvider) : ICommandQueue
 {
     public const string CommandQueueName = "CommandQueue";
     private readonly List<EnqueuedCommand> _messages = [];

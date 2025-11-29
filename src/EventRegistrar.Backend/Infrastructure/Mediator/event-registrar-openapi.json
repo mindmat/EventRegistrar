@@ -4263,31 +4263,6 @@
                 }
             }
         },
-        "/api/SetRegistrablesPricesCommand": {
-            "post": {
-                "tags": [
-                    "SetRegistrablesPrices"
-                ],
-                "operationId": "SetRegistrablesPrices_Command",
-                "requestBody": {
-                    "x-name": "SetRegistrablesPricesCommand",
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/SetRegistrablesPricesCommand"
-                            }
-                        }
-                    },
-                    "x-position": 1
-                },
-                "responses": {
-                    "204": {
-                        "description": ""
-                    }
-                }
-            }
-        },
         "/api/SetReleaseMailCommand": {
             "post": {
                 "tags": [
@@ -9770,7 +9745,8 @@
                     "AnyFour",
                     "AnyFive",
                     "All",
-                    "Optional"
+                    "OptionalReusable",
+                    "OptionalCoversTrack"
                 ],
                 "enum": [
                     1,
@@ -9779,7 +9755,8 @@
                     4,
                     5,
                     10,
-                    11
+                    11,
+                    12
                 ]
             },
             "PricePackagePartSelectionTypeQuery": {
@@ -10193,6 +10170,9 @@
                         "type": "boolean"
                     },
                     "isCore": {
+                        "type": "boolean"
+                    },
+                    "isReusableInPricePackages": {
                         "type": "boolean"
                     },
                     "checkinListColumn": {
@@ -11400,6 +11380,9 @@
                     "isCore": {
                         "type": "boolean"
                     },
+                    "isReusableInPricePackages": {
+                        "type": "boolean"
+                    },
                     "checkinListColumn": {
                         "type": "string",
                         "nullable": true
@@ -11677,30 +11660,6 @@
                     "registrationId": {
                         "type": "string",
                         "format": "guid"
-                    }
-                }
-            },
-            "SetRegistrablesPricesCommand": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                    "eventId": {
-                        "type": "string",
-                        "format": "guid"
-                    },
-                    "registrableId": {
-                        "type": "string",
-                        "format": "guid"
-                    },
-                    "price": {
-                        "type": "number",
-                        "format": "decimal",
-                        "nullable": true
-                    },
-                    "reducedPrice": {
-                        "type": "number",
-                        "format": "decimal",
-                        "nullable": true
                     }
                 }
             },

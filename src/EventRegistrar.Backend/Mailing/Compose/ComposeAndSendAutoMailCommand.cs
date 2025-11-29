@@ -1,8 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.DirtyTags;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Send;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments.Due;
@@ -23,18 +21,16 @@ public class ComposeAndSendAutoMailCommand : IRequest, IEventBoundRequest
     public object? Data { get; set; }
 }
 
-public class ComposeAndSendAutoMailCommandHandler(
-    IQueryable<AutoMailTemplate> templates,
-    IQueryable<Registration> registrations,
-    IRepository<Mail> mails,
-    IRepository<MailToRegistration> mailsToRegistrations,
-    MailConfiguration configuration,
-    MailComposer mailComposer,
-    CommandQueue commandQueue,
-    IDateTimeProvider dateTimeProvider,
-    ILogger log,
-    ChangeTrigger changeTrigger,
-    DirtyTagger dirtyTagger)
+public class ComposeAndSendAutoMailCommandHandler(IQueryable<AutoMailTemplate> templates,
+                                                  IQueryable<Registration> registrations,
+                                                  IRepository<Mail> mails,
+                                                  IRepository<MailToRegistration> mailsToRegistrations,
+                                                  MailConfiguration configuration,
+                                                  MailComposer mailComposer,
+                                                  IDateTimeProvider dateTimeProvider,
+                                                  ILogger log,
+                                                  ChangeTrigger changeTrigger,
+                                                  DirtyTagger dirtyTagger)
     : IRequestHandler<ComposeAndSendAutoMailCommand>
 {
     private const string FallbackLanguage = Language.English;
@@ -147,7 +143,7 @@ public class ComposeAndSendAutoMailCommandHandler(
                                       EventId = mail.EventId!.Value,
                                       MailId = mail.Id
                                   };
-            commandQueue.EnqueueCommand(sendMailCommand);
+            changeTrigger.EnqueueCommand(sendMailCommand);
         }
 
         registrations_Recipients.ForEach(reg => changeTrigger.TriggerUpdate<RegistrationCalculator>(reg.Id, reg.EventId));

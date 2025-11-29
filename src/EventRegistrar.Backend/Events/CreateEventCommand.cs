@@ -201,14 +201,15 @@ public class CreateEventCommandHandler(IRepository<Event> events,
                                                                                                                  PriceAdjustment = part.PriceAdjustment,
                                                                                                                  SortKey = part.SortKey,
                                                                                                                  ShowInMailSpotList = part.ShowInMailSpotList,
-                                                                                                                 Registrables = part.Registrables!.Select(rip => new RegistrableInPricePackagePart
-                                                                                                                                                                 {
-                                                                                                                                                                     Id = Guid.NewGuid(),
-                                                                                                                                                                     RegistrableId = registrableMap[rip.RegistrableId]
-                                                                                                                                                                 })
-                                                                                                                                                  .ToList()
+                                                                                                                 Registrables = part.Registrables!.Select(rip =>
+                                                                                                                                            new RegistrableInPricePackagePart
+                                                                                                                                            {
+                                                                                                                                                Id = Guid.NewGuid(),
+                                                                                                                                                RegistrableId = registrableMap[rip.RegistrableId]
+                                                                                                                                            })
+                                                                                                                                    .ToList()
                                                                                                              })
-                                                                                                .ToList()
+                                                                                      .ToList()
                                                                        })
                                                         .ToList();
                 }

@@ -1,6 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.ReadableIds;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrables;
@@ -16,11 +16,11 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                          SpotManager spotManager,
                                          PriceCalculator priceCalculator,
                                          IRepository<Registration> registrations,
-                                         CommandQueue commandQueue,
                                          IQueryable<RegistrationForm> forms,
                                          IQueryable<Registrable> registrables,
                                          IDateTimeProvider dateTimeProvider,
-                                         ReadableIdProvider readableIdProvider)
+                                         ReadableIdProvider readableIdProvider,
+                                         ChangeTrigger changeTrigger)
 {
     public async Task<IEnumerable<Seat>> Process(Registration registration, Role? roleFallback = null)
     {
@@ -282,13 +282,13 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
             }
         }
 
-        commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
-                                    {
-                                        EventId = registration.EventId,
-                                        MailType = mailToSend,
-                                        RegistrationId = registration.Id,
-                                        AllowDuplicate = false
-                                    });
+        changeTrigger.EnqueueCommand(new ComposeAndSendAutoMailCommand
+                                     {
+                                         EventId = registration.EventId,
+                                         MailType = mailToSend,
+                                         RegistrationId = registration.Id,
+                                         AllowDuplicate = false
+                                     });
 
         return spots;
     }

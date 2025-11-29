@@ -14,7 +14,6 @@ public class ReleaseMailsCommand : IRequest, IEventBoundRequest
 }
 
 public class ReleaseMailsCommandHandler(IRepository<Mail> mails,
-                                        CommandQueue commandQueue,
                                         IEventBus eventBus,
                                         IDateTimeProvider dateTimeProvider,
                                         ChangeTrigger changeTrigger)
@@ -39,7 +38,7 @@ public class ReleaseMailsCommandHandler(IRepository<Mail> mails,
             withheldMail.Withhold = false;
             withheldMail.Sent = dateTimeProvider.Now;
 
-            commandQueue.EnqueueCommand(sendMailCommand);
+            changeTrigger.EnqueueCommand(sendMailCommand);
 
             eventBus.Publish(new MailReleased
                              {

@@ -1,7 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.DirtyTags;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrables;
@@ -19,10 +17,8 @@ public class MatchPartnerRegistrationsCommand : IEventBoundRequest, IRequest
 
 public class MatchPartnerRegistrationsCommandHandler(IRepository<Registration> registrations,
                                                      IRepository<Seat> seats,
-                                                     CommandQueue commandQueue,
                                                      ChangeTrigger changeTrigger,
-                                                     DirtyTagger dirtyTagger,
-                                                     IEventBus eventBus)
+                                                     DirtyTagger dirtyTagger)
     : IRequestHandler<MatchPartnerRegistrationsCommand>
 {
     public async Task Handle(MatchPartnerRegistrationsCommand command, CancellationToken cancellationToken)
@@ -94,7 +90,7 @@ public class MatchPartnerRegistrationsCommandHandler(IRepository<Registration> r
         registrationLeader.RegistrationId_Partner = registrationFollower.Id;
         registrationFollower.RegistrationId_Partner = registrationLeader.Id;
 
-        var registrableIdsToMerge = Enumerable.Intersect(partnerSpotsOfLeader.Select(spt => spt.RegistrableId), 
+        var registrableIdsToMerge = Enumerable.Intersect(partnerSpotsOfLeader.Select(spt => spt.RegistrableId),
                                                          partnerSpotsOfFollower.Select(spt => spt.RegistrableId))
                                               .Distinct()
                                               .ToList();
@@ -109,6 +105,7 @@ public class MatchPartnerRegistrationsCommandHandler(IRepository<Registration> r
                 // already merged
                 continue;
             }
+
             Seat mergedSpot;
             Seat spotToCancel;
             if (leaderSpot.FirstPartnerJoined < followerSpot.FirstPartnerJoined || (!leaderSpot.IsWaitingList && followerSpot.IsWaitingList))
@@ -139,12 +136,12 @@ public class MatchPartnerRegistrationsCommandHandler(IRepository<Registration> r
         var mailType = isWaitingList
                            ? MailType.PartnerRegistrationMatchedOnWaitingList
                            : MailType.PartnerRegistrationMatchedAndAccepted;
-        commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
-                                    {
-                                        EventId = command.EventId,
-                                        RegistrationId = registrationLeader.Id,
-                                        MailType = mailType
-                                    });
+        changeTrigger.EnqueueCommand(new ComposeAndSendAutoMailCommand
+                                     {
+                                         EventId = command.EventId,
+                                         RegistrationId = registrationLeader.Id,
+                                         MailType = mailType
+                                     });
 
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registration1.Id, command.EventId);
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registration2.Id, command.EventId);

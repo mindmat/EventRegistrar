@@ -16,7 +16,7 @@ public class RequestAccessCommandHandler(IRepository<AccessToEventRequest> acces
                                          AuthenticatedUserId _user,
                                          IAuthenticatedUserProvider authenticatedUserProvider,
                                          IEventBus eventBus,
-                                         CommandQueue commandQueue,
+                                         ChangeTrigger changeTrigger,
                                          IDateTimeProvider dateTimeProvider)
     : IRequestHandler<RequestAccessCommand, Guid>
 {
@@ -76,11 +76,11 @@ public class RequestAccessCommandHandler(IRepository<AccessToEventRequest> acces
              || string.IsNullOrEmpty(user.LastName)
              || string.IsNullOrEmpty(user.Email))
             {
-                commandQueue.EnqueueCommand(new UpdateUserInfoCommand
-                                            {
-                                                Provider = request.IdentityProvider,
-                                                Identifier = request.Identifier
-                                            });
+                changeTrigger.EnqueueCommand(new UpdateUserInfoCommand
+                                             {
+                                                 Provider = request.IdentityProvider,
+                                                 Identifier = request.Identifier
+                                             });
             }
         }
 

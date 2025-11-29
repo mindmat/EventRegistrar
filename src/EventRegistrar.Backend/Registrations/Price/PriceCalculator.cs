@@ -58,15 +58,15 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                                           .ThenInclude(rip => rip.Registrable)
                                           .OrderBy(ppg => ppg.SortKey)
                                           .ToListAsync();
-        var (priceOriginal, packagesOriginal, allCoveredOriginal) = CalculatePriceOfSpots(registration.Id, notCancelledSpots, packages, coreTracks);
+        var bookedCalculation = CalculatePriceOfSpots(registration.Id, notCancelledSpots, packages, coreTracks);
 
         var hasSpotsOnWaitingList = notCancelledSpots.Exists(spot => spot.IsWaitingList);
-        var priceAdmitted = priceOriginal;
-        var packagesAdmitted = packagesOriginal;
-        var originalPackageIds = packagesOriginal.Select(pkg => pkg.Id).ToList();
+        var priceAdmitted = bookedCalculation.Price;
+        var packagesAdmitted = bookedCalculation.MatchingPackages;
+        var originalPackageIds = bookedCalculation.MatchingPackages.Select(pkg => pkg.Id).ToList();
         var possibleFallbackPackages = Enumerable.Empty<MatchingPackageResult>();
 
-        if (hasSpotsOnWaitingList || !allCoveredOriginal)
+        if (hasSpotsOnWaitingList || !bookedCalculation.AllSpotsCovered)
         {
             var admittedSpots = notCancelledSpots.Where(spot => !spot.IsWaitingList)
                                                  .ToList();
@@ -108,7 +108,7 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             packagesAdmitted = packagesAdmitted.Append(reductionPackage.Value).ToList();
         }
 
-        return (priceOriginal, priceAdmitted, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, isOnWaitingList, possibleFallbackPackages);
+        return (bookedCalculation.Price, priceAdmitted, priceAdmittedAndReduced, bookedCalculation.MatchingPackages, packagesAdmitted, isOnWaitingList, possibleFallbackPackages);
     }
 
     private static (decimal Price, MatchingPackageResult? ReductionPackage) GetReducedPrice(decimal priceNotReduced, ICollection<IndividualReduction>? individualReductions)
@@ -193,41 +193,87 @@ public class PriceCalculator(IQueryable<Seat> _spots,
         }
     }
 
-    public (decimal Price, IReadOnlyCollection<MatchingPackageResult> matchingPackages, bool allSpotsCovered) CalculatePriceOfSpots(Guid registrationId,
-                                                                                                                                    IReadOnlyCollection<Seat> spots,
-                                                                                                                                    IEnumerable<PricePackage> packages,
-                                                                                                                                    IReadOnlyCollection<Registrable> coreTracks)
+    public record PriceCalculation(decimal Price, IReadOnlyCollection<MatchingPackageResult> MatchingPackages, bool AllSpotsCovered);
+
+    public PriceCalculation CalculatePriceOfSpots(Guid registrationId,
+                                                  IReadOnlyCollection<Seat> spots,
+                                                  IReadOnlyCollection<PricePackage> allPackages,
+                                                  IReadOnlyCollection<Registrable> allCoreTracks)
     {
         var bookedRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId));
-        var bookedCoreRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId).Where(rid => coreTracks.Select(trk => trk.Id).Contains(rid)));
+        var bookedCoreRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId)
+                                                              .Where(rid => allCoreTracks.Select(trk => trk.Id)
+                                                                                         .Contains(rid)));
+        var matchingPackages = GetMatchingPackages(registrationId, spots, allPackages, false);
+        var notCoveredRegistrableIds = bookedRegistrableIds.Except(matchingPackages.SelectMany(pkg => pkg.MatchingRegistrableIds))
+                                                           .ToList();
+
+        // next loop with uncovered core tracks
+        // allows multiple matches for the same packages
+        if (notCoveredRegistrableIds.Any() && matchingPackages.Count > 0)
+        {
+            var notCoveredSpots = spots.Where(spot => notCoveredRegistrableIds.Contains(spot.RegistrableId))
+                                       .ToList();
+            var matchingPackagesInner = GetMatchingPackages(registrationId, notCoveredSpots, allPackages, true);
+            if (matchingPackagesInner.Any())
+            {
+                matchingPackages.AddRange(matchingPackagesInner);
+            }
+        }
+
+        var price = matchingPackages.Sum(ppk => ppk.Price);
+        var notCoveredCoreRegistrableIds = bookedCoreRegistrableIds.Except(matchingPackages.SelectMany(pkg => pkg.CoveredRegistrableIds))
+                                                                   .ToList();
+        return new PriceCalculation(price,
+                                    matchingPackages.Select(pkg => new MatchingPackageResult
+                                                            (
+                                                                pkg.Package.Id,
+                                                                pkg.Package.Name,
+                                                                pkg.Price,
+                                                                pkg.OriginalPrice,
+                                                                pkg.Package.AllowAsAutomaticFallback,
+                                                                pkg.Package.AllowAsManualFallback,
+                                                                pkg.Package.IsCorePackage,
+                                                                pkg.Spots
+                                                            ))
+                                                    .ToList(),
+                                    notCoveredCoreRegistrableIds.Count == 0);
+    }
+
+    private List<MatchingPackage> GetMatchingPackages(Guid registrationId,
+                                                      IReadOnlyCollection<Seat> spots,
+                                                      IReadOnlyCollection<PricePackage> allPackages,
+                                                      bool allowPartialMatches)
+    {
+        var bookedRegistrableIds = new HashSet<Guid>(spots.Select(spot => spot.RegistrableId));
         var matchingPackages = new List<MatchingPackage>();
-        foreach (var package in packages)
+        foreach (var package in allPackages)
         {
             var packageMatches = true;
             var packagePrice = package.Price;
-            var matchingRequiredRegistrableIds = new HashSet<Guid>();
-            var matchingOptionalRegistrableIds = new HashSet<Guid>();
+            var coveredRequiredRegistrableIds = new HashSet<Guid>();
+            var coveredOptionalRegistrableIds = new HashSet<Guid>();
             var matchingSpots = new List<MatchingPackageSpot>();
             foreach (var part in package.Parts!)
             {
                 var partMatches = PartMatches(part.SelectionType,
                                               part.Registrables!.Select(rip => rip.RegistrableId)
                                                   .ToList(),
-                                              bookedRegistrableIds);
+                                              bookedRegistrableIds,
+                                              allowPartialMatches);
                 if (partMatches.Match)
                 {
-                    matchingRequiredRegistrableIds.AddRange(partMatches.MatchingRequiredRegistrableIds);
-                    matchingOptionalRegistrableIds.AddRange(partMatches.MatchingOptionalRegistrableIds);
-                    var matchingSpotsOfPart = partMatches.MatchingRequiredRegistrableIds.Select(mtc =>
+                    coveredRequiredRegistrableIds.AddRange(partMatches.RequiredRegistrableIds);
+                    coveredOptionalRegistrableIds.AddRange(partMatches.OptionalRegistrableIds);
+                    var matchingSpotsOfPart = partMatches.RegistrableIds
+                                                         .Select(mtc =>
                                                          {
                                                              var (name, sortKey) = GetRegistrable(registrationId, mtc, part.Registrables!, spots);
-                                                             return new MatchingPackageSpot(name, null, part.ShowInMailSpotList ? sortKey : null, part.ShowInMailSpotList);
+                                                             return new MatchingPackageSpot(name,
+                                                                                            null,
+                                                                                            part.ShowInMailSpotList ? sortKey : null,
+                                                                                            part.ShowInMailSpotList);
                                                          })
-                                                         .Concat(partMatches.MatchingOptionalRegistrableIds.Select(mtc =>
-                                                         {
-                                                             var (name, sortKey) = GetRegistrable(registrationId, mtc, part.Registrables!, spots);
-                                                             return new MatchingPackageSpot(name, null, part.ShowInMailSpotList ? sortKey : null, part.ShowInMailSpotList);
-                                                         }))
                                                          .ToList();
                     if (part is { PriceAdjustment: not null, SelectionType: PricePackagePartSelectionType.Optional })
                     {
@@ -246,18 +292,18 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                 }
             }
 
-            if (packageMatches && (matchingRequiredRegistrableIds.Any() || matchingOptionalRegistrableIds.Any()))
+            if (packageMatches && (coveredRequiredRegistrableIds.Any() || coveredOptionalRegistrableIds.Any()))
             {
                 matchingPackages.Add(new MatchingPackage(package,
-                                                         matchingRequiredRegistrableIds,
-                                                         matchingOptionalRegistrableIds,
+                                                         coveredRequiredRegistrableIds,
+                                                         coveredOptionalRegistrableIds,
                                                          packagePrice,
                                                          package.Price,
                                                          matchingSpots));
             }
         }
 
-        var overlappingRegistrableIds = matchingPackages.SelectMany(ppk => ppk.MatchingRequiredRegistrableId.Concat(ppk.MatchingOptionalRegistrableId))
+        var overlappingRegistrableIds = matchingPackages.SelectMany(ppk => ppk.CoveredRegistrableIds)
                                                         .GroupBy(ppk => ppk)
                                                         .Where(rid => rid.Count() > 1)
                                                         .ToDictionary(ppk => ppk.Key, ppk => ppk.Count());
@@ -267,35 +313,19 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             foreach (var matchingPackage in matchingPackages.OrderBy(ppk => ppk.Package.FallbackPriority)
                                                             .ToList())
             {
-                if (matchingPackage.MatchingRequiredRegistrableId.All(coveredRegistrableIds.Contains))
+                if (matchingPackage.CoveredRegistrableIds.All(coveredRegistrableIds.Contains))
                 {
                     // all tracks are covered by other packages
                     matchingPackages.Remove(matchingPackage);
                 }
                 else
                 {
-                    coveredRegistrableIds.AddRange(matchingPackage.MatchingRequiredRegistrableId);
-                    coveredRegistrableIds.AddRange(matchingPackage.MatchingOptionalRegistrableId);
+                    coveredRegistrableIds.AddRange(matchingPackage.MatchingRegistrableIds);
                 }
             }
         }
 
-        var notCoveredRegistrableIds = bookedCoreRegistrableIds.Except(matchingPackages.SelectMany(pkg => pkg.MatchingRequiredRegistrableId.Concat(pkg.MatchingOptionalRegistrableId)));
-        var price = matchingPackages.Sum(ppk => ppk.Price);
-        return (price,
-                   matchingPackages.Select(pkg => new MatchingPackageResult
-                                           (
-                                               pkg.Package.Id,
-                                               pkg.Package.Name,
-                                               pkg.Price,
-                                               pkg.OriginalPrice,
-                                               pkg.Package.AllowAsAutomaticFallback,
-                                               pkg.Package.AllowAsManualFallback,
-                                               pkg.Package.IsCorePackage,
-                                               pkg.Spots
-                                           ))
-                                   .ToList(),
-                   !notCoveredRegistrableIds.Any());
+        return matchingPackages;
     }
 
     private (string Name, int? SortKey) GetRegistrable(Guid registrationId,
@@ -346,38 +376,89 @@ public class PriceCalculator(IQueryable<Seat> _spots,
         return (registrable.Registrable.DisplayName, registrable.Registrable.ShowInMailListOrder);
     }
 
-    private static (bool Match,
-        IEnumerable<Guid> MatchingRequiredRegistrableIds,
-        IEnumerable<Guid> MatchingOptionalRegistrableIds)
-        PartMatches(PricePackagePartSelectionType selectionType,
-                    IReadOnlyCollection<Guid> partRegistrableIds,
-                    IEnumerable<Guid> bookedRegistrableIds)
+    private record PartMatch(bool Match,
+                             IEnumerable<Guid> RequiredRegistrableIds,
+                             IEnumerable<Guid> OptionalRegistrableIds)
+    {
+        public IEnumerable<Guid> RegistrableIds => RequiredRegistrableIds.Concat(OptionalRegistrableIds);
+    };
+
+    private static PartMatch PartMatches(PricePackagePartSelectionType selectionType,
+                                         IReadOnlyCollection<Guid> partRegistrableIds,
+                                         IEnumerable<Guid> bookedRegistrableIds,
+                                         bool allowPartialMatch)
     {
         var matchingRegistrableIds = bookedRegistrableIds.Where(partRegistrableIds.Contains)
                                                          .ToList();
-        var match = selectionType switch
+        bool match;
+        if (!allowPartialMatch)
         {
-            PricePackagePartSelectionType.All      => matchingRegistrableIds.Count == partRegistrableIds.Count,
-            PricePackagePartSelectionType.AnyOne   => matchingRegistrableIds.Count == 1,
-            PricePackagePartSelectionType.AnyTwo   => matchingRegistrableIds.Count == 2,
-            PricePackagePartSelectionType.AnyThree => matchingRegistrableIds.Count == 3,
-            PricePackagePartSelectionType.AnyFour  => matchingRegistrableIds.Count == 4,
-            PricePackagePartSelectionType.AnyFive  => matchingRegistrableIds.Count == 5,
-            PricePackagePartSelectionType.Optional => matchingRegistrableIds.Count > 0,
-            _                                      => false
-        };
-        return (match,
-                   selectionType != PricePackagePartSelectionType.Optional ? matchingRegistrableIds : Enumerable.Empty<Guid>(),
-                   selectionType == PricePackagePartSelectionType.Optional ? matchingRegistrableIds : Enumerable.Empty<Guid>());
+            match = selectionType switch
+            {
+                PricePackagePartSelectionType.All      => matchingRegistrableIds.Count == partRegistrableIds.Count,
+                PricePackagePartSelectionType.AnyOne   => matchingRegistrableIds.Count == 1,
+                PricePackagePartSelectionType.AnyTwo   => matchingRegistrableIds.Count == 2,
+                PricePackagePartSelectionType.AnyThree => matchingRegistrableIds.Count == 3,
+                PricePackagePartSelectionType.AnyFour  => matchingRegistrableIds.Count == 4,
+                PricePackagePartSelectionType.AnyFive  => matchingRegistrableIds.Count == 5,
+                PricePackagePartSelectionType.Optional => matchingRegistrableIds.Count == partRegistrableIds.Count,
+                _                                      => false
+            };
+        }
+        else
+        {
+            match = selectionType switch
+            {
+                PricePackagePartSelectionType.All      => matchingRegistrableIds.Count == partRegistrableIds.Count,
+                PricePackagePartSelectionType.AnyOne   => matchingRegistrableIds.Count >= 1,
+                PricePackagePartSelectionType.AnyTwo   => matchingRegistrableIds.Count >= 2,
+                PricePackagePartSelectionType.AnyThree => matchingRegistrableIds.Count >= 3,
+                PricePackagePartSelectionType.AnyFour  => matchingRegistrableIds.Count >= 4,
+                PricePackagePartSelectionType.AnyFive  => matchingRegistrableIds.Count >= 5,
+                PricePackagePartSelectionType.Optional => matchingRegistrableIds.Count == partRegistrableIds.Count,
+                _                                      => false
+            };
+            if (selectionType == PricePackagePartSelectionType.AnyOne)
+            {
+                matchingRegistrableIds = matchingRegistrableIds.Take(1).ToList();
+            }
+
+            if (selectionType == PricePackagePartSelectionType.AnyTwo)
+            {
+                matchingRegistrableIds = matchingRegistrableIds.Take(2).ToList();
+            }
+
+            if (selectionType == PricePackagePartSelectionType.AnyThree)
+            {
+                matchingRegistrableIds = matchingRegistrableIds.Take(3).ToList();
+            }
+
+            if (selectionType == PricePackagePartSelectionType.AnyFour)
+            {
+                matchingRegistrableIds = matchingRegistrableIds.Take(4).ToList();
+            }
+
+            if (selectionType == PricePackagePartSelectionType.AnyFive)
+            {
+                matchingRegistrableIds = matchingRegistrableIds.Take(5).ToList();
+            }
+        }
+
+        return new PartMatch(match,
+                             selectionType != PricePackagePartSelectionType.Optional ? matchingRegistrableIds : [],
+                             selectionType == PricePackagePartSelectionType.Optional ? matchingRegistrableIds : []);
     }
 }
 
 public record struct MatchingPackage(PricePackage Package,
-                                     IReadOnlyCollection<Guid> MatchingRequiredRegistrableId,
-                                     IReadOnlyCollection<Guid> MatchingOptionalRegistrableId,
+                                     IReadOnlyCollection<Guid> CoveredRegistrableIds,
+                                     IReadOnlyCollection<Guid> CoveredReusableRegistrableIds,
                                      decimal Price,
                                      decimal OriginalPrice,
-                                     IEnumerable<MatchingPackageSpot> Spots);
+                                     IEnumerable<MatchingPackageSpot> Spots)
+{
+    public IEnumerable<Guid> MatchingRegistrableIds => CoveredRegistrableIds.Concat(CoveredReusableRegistrableIds);
+};
 
 public record struct MatchingPackageResult(Guid? Id,
                                            string Name,

@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Infrastructure.ServiceBus;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrations;
@@ -16,7 +17,7 @@ public class SendReminderMailCommandHandler(ILogger logger,
                                             IRepository<Registration> registrations,
                                             IQueryable<MailToRegistration> mailsToRegistrations,
                                             DuePaymentConfiguration paymentConfiguration,
-                                            CommandQueue commandQueue)
+                                            ChangeTrigger changeTrigger)
     : IRequestHandler<SendReminderMailCommand>
 {
     public async Task Handle(SendReminderMailCommand command, CancellationToken cancellationToken)
@@ -101,13 +102,13 @@ public class SendReminderMailCommandHandler(ILogger logger,
 
                 if (mailType != null)
                 {
-                    commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
-                                                {
-                                                    EventId = command.EventId,
-                                                    MailType = mailType.Value,
-                                                    RegistrationId = registration.Id,
-                                                    AllowDuplicate = false
-                                                });
+                    changeTrigger.EnqueueCommand(new ComposeAndSendAutoMailCommand
+                                                 {
+                                                     EventId = command.EventId,
+                                                     MailType = mailType.Value,
+                                                     RegistrationId = registration.Id,
+                                                     AllowDuplicate = false
+                                                 });
                 }
             }
         }

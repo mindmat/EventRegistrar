@@ -12,7 +12,7 @@ using SimpleInjector;
 namespace EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 public class EventBus(Container container,
-                      CommandQueue commandQueue,
+                      ICommandQueue commandQueue,
                       EventContext eventContext,
                       AuthenticatedUserId user,
                       IHubContext<NotificationHub, INotificationConsumer> hub)

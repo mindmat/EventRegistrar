@@ -1,4 +1,4 @@
-﻿using EventRegistrar.Backend.Infrastructure.ServiceBus;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Registrations;
@@ -11,7 +11,7 @@ public class SendPaymentDueMailCommand : IRequest, IEventBoundRequest
     public Guid EventId { get; set; }
 }
 
-public class SendPaymentDueMailCommandHandler(CommandQueue commandQueue,
+public class SendPaymentDueMailCommandHandler(ChangeTrigger changeTrigger,
                                               IQueryable<Registration> registrations)
     : IRequestHandler<SendPaymentDueMailCommand>
 {
@@ -37,7 +37,7 @@ public class SendPaymentDueMailCommandHandler(CommandQueue commandQueue,
                                   RegistrationId = command.RegistrationId,
                                   Data = data
                               };
-        commandQueue.EnqueueCommand(sendMailCommand);
+        changeTrigger.EnqueueCommand(sendMailCommand);
     }
 }
 

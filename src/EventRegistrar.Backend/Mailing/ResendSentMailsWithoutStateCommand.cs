@@ -1,5 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Mailing;
@@ -11,7 +11,7 @@ public class ResendSentMailsWithoutStateCommand : IRequest, IEventBoundRequest
 
 public class ResendSentMailsWithoutStateCommandHandler(IQueryable<Mail> mails,
                                                        IDateTimeProvider dateTimeProvider,
-                                                       CommandQueue commandQueue)
+                                                       ChangeTrigger changeTrigger)
     : IRequestHandler<ResendSentMailsWithoutStateCommand>
 {
     public async Task Handle(ResendSentMailsWithoutStateCommand command, CancellationToken cancellationToken)
@@ -29,10 +29,10 @@ public class ResendSentMailsWithoutStateCommandHandler(IQueryable<Mail> mails,
                                        .Select(mail => mail.Id)
                                        .ToListAsync(cancellationToken);
 
-        commandQueue.EnqueueCommand(new ReleaseMailsCommand
-                                    {
-                                        EventId = command.EventId,
-                                        MailIds = failedMailIds
-                                    });
+        changeTrigger.EnqueueCommand(new ReleaseMailsCommand
+                                     {
+                                         EventId = command.EventId,
+                                         MailIds = failedMailIds
+                                     });
     }
 }

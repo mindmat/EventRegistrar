@@ -21,8 +21,7 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
                                                           PriceCalculator priceCalculator,
                                                           DirtyTagger dirtyTagger,
                                                           IDateTimeProvider dateTimeProvider,
-                                                          ChangeTrigger changeTrigger,
-                                                          CommandQueue commandQueue)
+                                                          ChangeTrigger changeTrigger)
     : IRequestHandler<RecalculatePriceAndWaitingListCommand>
 {
     public async Task Handle(RecalculatePriceAndWaitingListCommand command, CancellationToken cancellationToken)
@@ -102,7 +101,7 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
                                                          : MailType.SingleRegistrationAccepted,
                                           RegistrationId = registration.Id
                                       };
-                commandQueue.EnqueueCommand(sendMailCommand);
+                changeTrigger.EnqueueCommand(sendMailCommand);
 
                 changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, registration.EventId);
             }

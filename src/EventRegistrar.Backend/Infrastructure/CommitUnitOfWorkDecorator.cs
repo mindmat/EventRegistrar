@@ -4,7 +4,7 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 namespace EventRegistrar.Backend.Infrastructure;
 
 public class CommitUnitOfWorkDecorator<TRequest, TResponse>(DbContext dbContext,
-                                                            CommandQueue commandQueue,
+                                                            ICommandQueue commandQueue,
                                                             EventBus eventBus)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull

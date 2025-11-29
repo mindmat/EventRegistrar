@@ -37,6 +37,7 @@ export class RegistrableDetailComponent implements OnInit
         hasWaitingList: this.data.singleRegistrable.hasWaitingList,
         type: RegistrableType.Single,
         isCore: this.data.singleRegistrable.isCore,
+        isReusableInPricePackages: this.data.singleRegistrable.isReusableInPricePackages,
         checkinListColumn: this.data.singleRegistrable.checkinListColumn,
 
         hasSingleMax: this.data.singleRegistrable.spotsAvailable != null,
@@ -88,6 +89,7 @@ export class RegistrableDetailComponent implements OnInit
         maximumAllowedImbalance: null,
 
         isCore: false,
+        isReusableInPricePackages: false,
         checkinListColumn: null
       });
     }

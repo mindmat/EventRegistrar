@@ -4,7 +4,7 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.DirtyTags;
 
-public class DirtyTagger(CommandQueue commandQueue,
+public class DirtyTagger(ICommandQueue commandQueue,
                          IEnumerable<IDirtySegment> dirtySegments,
                          DbContext dbContext,
                          IDateTimeProvider dateTimeProvider)
@@ -85,7 +85,7 @@ public class DirtyTagger(CommandQueue commandQueue,
 
 public interface IDirtySegment
 {
-    public void EnqueueCommand(CommandQueue commandQueue, Guid entityId);
+    public void EnqueueCommand(ICommandQueue commandQueue, Guid entityId);
     public string Entity { get; }
     public string Name { get; }
 }

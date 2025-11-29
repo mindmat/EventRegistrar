@@ -1,7 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.DomainEvents;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.Payments.Refunds;
@@ -16,7 +15,7 @@ public class RefundDifferenceCommand : IRequest, IEventBoundRequest
     public string? Reason { get; set; }
 }
 
-public class RefundDifferenceCommandHandler(CommandQueue commandQueue,
+public class RefundDifferenceCommandHandler(ChangeTrigger changeTrigger,
                                             IQueryable<Registration> registrations,
                                             IRepository<PayoutRequest> payoutRequests,
                                             IDateTimeProvider dateTimeProvider,
@@ -62,7 +61,7 @@ public class RefundDifferenceCommandHandler(CommandQueue commandQueue,
                                   RegistrationId = command.RegistrationId,
                                   Data = data
                               };
-        commandQueue.EnqueueCommand(sendMailCommand);
+        changeTrigger.EnqueueCommand(sendMailCommand);
 
         eventBus.Publish(new QueryChanged
                          {

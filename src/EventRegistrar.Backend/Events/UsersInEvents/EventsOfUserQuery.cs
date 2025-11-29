@@ -4,7 +4,7 @@ using EventRegistrar.Backend.RegistrationForms;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents;
 
-public class EventsOfUserQuery : IRequest<EventsOfUser> { }
+public class EventsOfUserQuery : IRequest<EventsOfUser>;
 
 public class EventsOfUserQueryHandler(IQueryable<UserInEvent> usersInEvents,
                                       AuthenticatedUserId authenticatedUserId,
@@ -20,8 +20,8 @@ public class EventsOfUserQueryHandler(IQueryable<UserInEvent> usersInEvents,
         {
             return new EventsOfUser
                    {
-                       AuthorizedEvents = Enumerable.Empty<EventOfUser>(),
-                       Requests = Enumerable.Empty<AccessRequest>()
+                       AuthorizedEvents = [],
+                       Requests = []
                    };
         }
 
@@ -61,7 +61,7 @@ public class EventsOfUserQueryHandler(IQueryable<UserInEvent> usersInEvents,
     }
 }
 
-public class EventsOfUser
+public record EventsOfUser
 {
     public IEnumerable<EventOfUser> AuthorizedEvents { get; set; } = null!;
     public IEnumerable<AccessRequest> Requests { get; set; } = null!;

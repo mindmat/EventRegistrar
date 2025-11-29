@@ -5,7 +5,7 @@ namespace EventRegistrar.Backend.Registrations.Price;
 
 public class RegistrationPriceAndWaitingListSegment : IDirtySegment
 {
-    public void EnqueueCommand(CommandQueue commandQueue, Guid entityId)
+    public void EnqueueCommand(ICommandQueue commandQueue, Guid entityId)
     {
         commandQueue.EnqueueCommand(new RecalculatePriceAndWaitingListCommand { RegistrationId = entityId });
     }

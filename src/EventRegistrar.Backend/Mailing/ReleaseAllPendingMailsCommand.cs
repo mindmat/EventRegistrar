@@ -1,4 +1,5 @@
-﻿using EventRegistrar.Backend.Infrastructure.ServiceBus;
+﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Mailing;
 
@@ -8,7 +9,7 @@ public class ReleaseAllPendingMailsCommand : IRequest, IEventBoundRequest
 }
 
 public class ReleaseAllPendingMailsCommandHandler(IRepository<Mail> mails,
-                                                  CommandQueue commandQueue)
+                                                  ChangeTrigger changeTrigger)
     : IRequestHandler<ReleaseAllPendingMailsCommand>
 {
     public async Task Handle(ReleaseAllPendingMailsCommand command, CancellationToken cancellationToken)
@@ -23,11 +24,11 @@ public class ReleaseAllPendingMailsCommandHandler(IRepository<Mail> mails,
                                        .ToListAsync(cancellationToken);
         foreach (var withheldMail in withheldMails)
         {
-            commandQueue.EnqueueCommand(new ReleaseMailsCommand
-                                        {
-                                            EventId = command.EventId,
-                                            MailIds = new[] { withheldMail.Id }
-                                        });
+            changeTrigger.EnqueueCommand(new ReleaseMailsCommand
+                                         {
+                                             EventId = command.EventId,
+                                             MailIds = new[] { withheldMail.Id }
+                                         });
         }
     }
 }

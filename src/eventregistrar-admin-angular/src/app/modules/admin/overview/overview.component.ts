@@ -188,7 +188,7 @@ export class OverviewComponent implements OnInit, OnDestroy
         this.filters.hideCompleted$.next(change.checked);
     }
 
-    changeDoubleRegistrable(doubleRegistrable: DoubleRegistrableDisplayItem)
+    changeDoubleRegistrable(doubleRegistrable: DoubleRegistrableDisplayItem): void
     {
         this.matDialog.open(RegistrableDetailComponent, {
             autoFocus: true,
@@ -196,7 +196,7 @@ export class OverviewComponent implements OnInit, OnDestroy
         });
     }
 
-    changeSingleRegistrable(singleRegistrable: SingleRegistrableDisplayItem)
+    changeSingleRegistrable(singleRegistrable: SingleRegistrableDisplayItem): void
     {
         this.matDialog.open(RegistrableDetailComponent, {
             autoFocus: true,
@@ -204,7 +204,7 @@ export class OverviewComponent implements OnInit, OnDestroy
         });
     }
 
-    changeRegistrableIcs(icsId: string, registrableId: string, name: string)
+    changeRegistrableIcs(icsId: string, registrableId: string, name: string): void
     {
         this.matDialog.open(RegistrableIcsComponent, {
             autoFocus: true,
@@ -212,7 +212,7 @@ export class OverviewComponent implements OnInit, OnDestroy
         });
     }
 
-    addRegistrableIcs(registrableId: string, name: string)
+    addRegistrableIcs(registrableId: string, name: string): void
     {
         this.matDialog.open(RegistrableIcsComponent, {
             autoFocus: true,
@@ -220,22 +220,22 @@ export class OverviewComponent implements OnInit, OnDestroy
         });
     }
 
-    openRegistration()
+    openRegistration(): void
     {
         this.overviewService.openRegistration(true);
     }
 
-    deleteTestData()
+    deleteTestData(): void
     {
         this.overviewService.deleteTestData();
     }
 
-    deleteRegistrable(registrableId: string)
+    deleteRegistrable(registrableId: string): void
     {
         this.registrableService.deleteRegistrable(registrableId);
     }
 
-    updateView()
+    updateView(): void
     {
         this.overviewService.triggerUpdate();
     }

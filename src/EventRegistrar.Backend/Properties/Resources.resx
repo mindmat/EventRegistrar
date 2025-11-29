@@ -670,6 +670,12 @@
   <data name="IsCorePackageExplanation" xml:space="preserve">
     <value>Wenn ein:e Teilnehmer:in bei mindestens einem Kern-Paket zugelassen ist, ist er/sie nicht mehr auf der Warteliste.</value>
   </data>
+  <data name="IsReusableInPricePackages" xml:space="preserve">
+    <value>Kann auf mehrere Preispakete angewendet werden</value>
+  </data>
+  <data name="IsReusableInPricePackagesExplanation" xml:space="preserve">
+    <value>Reduktionen können bei mehreren Preispaketen verwendet werden, optionale Klassen nicht</value>
+  </data>
   <data name="Key" xml:space="preserve">
     <value>Schlüssel</value>
   </data>

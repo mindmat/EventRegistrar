@@ -5,7 +5,7 @@ using EventRegistrar.Backend.Infrastructure.ServiceBus;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 
-public class ChangeTrigger(CommandQueue commandQueue,
+public class ChangeTrigger(ICommandQueue commandQueue,
                            IDateTimeProvider dateTimeProvider,
                            EventContext eventContext,
                            IEnumerable<IReadModelCalculator> calculators,
@@ -33,7 +33,7 @@ public class ChangeTrigger(CommandQueue commandQueue,
                                     publishEvenWhenDbCommitFails,
                                     delay);
     }
-    
+
     public void QueryChanged<TQuery>(Guid eventId, Guid? rowId = null, bool publishEvenWhenDbCommitFails = false)
         where TQuery : IEventBoundRequest
     {
@@ -74,7 +74,7 @@ public class ChangeTrigger(CommandQueue commandQueue,
     }
 
     public void UpdateMenuNode(MenuNodeKey key,
-                               Guid? eventId=null)
+                               Guid? eventId = null)
     {
         eventId ??= eventContext.EventId
                  ?? throw new ArgumentNullException(nameof(eventId));

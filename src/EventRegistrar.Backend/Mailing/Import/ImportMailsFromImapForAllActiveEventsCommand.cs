@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.Configuration;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.RegistrationForms;
 
@@ -7,7 +8,7 @@ namespace EventRegistrar.Backend.Mailing.Import;
 public class ImportMailsFromImapForAllActiveEventsCommand : IRequest;
 
 public class ImportMailsFromImapForAllActiveEventsCommandHandler(IQueryable<EventConfiguration> configurations,
-                                                                 CommandQueue serviceBus)
+                                                                 ChangeTrigger changeTrigger)
     : IRequestHandler<ImportMailsFromImapForAllActiveEventsCommand>
 {
     public async Task Handle(ImportMailsFromImapForAllActiveEventsCommand command,
@@ -18,7 +19,7 @@ public class ImportMailsFromImapForAllActiveEventsCommandHandler(IQueryable<Even
                                                              .ToListAsync(cancellationToken);
         foreach (var activeImportConfiguration in activeImportConfigurations)
         {
-            serviceBus.EnqueueCommand(new ImportMailsFromImapCommand { EventId = activeImportConfiguration.EventId });
+            changeTrigger.EnqueueCommand(new ImportMailsFromImapCommand { EventId = activeImportConfiguration.EventId });
         }
     }
 }

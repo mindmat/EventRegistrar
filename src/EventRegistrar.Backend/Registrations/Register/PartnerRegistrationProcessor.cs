@@ -1,5 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Mailing;
 using EventRegistrar.Backend.Mailing.Compose;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
@@ -13,7 +13,7 @@ public class PartnerRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                           SpotManager spotManager,
                                           IRepository<Registration> registrations,
                                           PriceCalculator priceCalculator,
-                                          CommandQueue commandQueue,
+                                          ChangeTrigger changeTrigger,
                                           IDateTimeProvider dateTimeProvider)
 {
     public async Task<IEnumerable<Seat>> Process(Registration registration,
@@ -173,13 +173,13 @@ public class PartnerRegistrationProcessor(PhoneNormalizer phoneNormalizer,
         var mailType = isOnWaitingList
                            ? MailType.PartnerRegistrationMatchedOnWaitingList
                            : MailType.PartnerRegistrationMatchedAndAccepted;
-        commandQueue.EnqueueCommand(new ComposeAndSendAutoMailCommand
-                                    {
-                                        EventId = registration.EventId,
-                                        MailType = mailType,
-                                        RegistrationId = registration.Id,
-                                        AllowDuplicate = false
-                                    });
+        changeTrigger.EnqueueCommand(new ComposeAndSendAutoMailCommand
+                                     {
+                                         EventId = registration.EventId,
+                                         MailType = mailType,
+                                         RegistrationId = registration.Id,
+                                         AllowDuplicate = false
+                                     });
 
         return spots;
     }
