@@ -29,6 +29,13 @@ public static class EnumerableExtensions
                    : source;
     }
 
+    public static IEnumerable<TSource> AppendIfNotNull<TSource>(this IEnumerable<TSource> source, TSource? element)
+    {
+        return element != null
+                   ? source.Append(element)
+                   : source;
+    }
+
     public static async Task ForEach<T>(this IEnumerable<T> source, Func<T, Task> action)
     {
         foreach (var obj in source)

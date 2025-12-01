@@ -5,8 +5,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { BulkMailTemplateService } from './bulk-mail-template.service';
 
-import Tribute, { TributeItem } from "tributejs";
-import FroalaEditor from "froala-editor";
+import Tribute, { TributeItem } from 'tributejs';
+import FroalaEditor from 'froala-editor';
 import { RegistrablesService } from '../../pricing/registrables.service';
 import { GeneratedBulkMailsService } from './generated-bulk-mails.service';
 
@@ -17,12 +17,12 @@ import { GeneratedBulkMailsService } from './generated-bulk-mails.service';
 })
 export class BulkMailTemplateComponent implements OnInit
 {
-  editorRef: FroalaEditor;
   @ViewChild('editor', { static: false }) editor: ElementRef<HTMLElement>;
+  editorRef: FroalaEditor;
 
   possibleAudiences: PossibleAudience[];
-  selectedAudiences: MailingAudience[];
-  registrableId: string | null;
+  selectedAudiences: MailingAudience[] | null;
+  registrableIds: string[] | null;
   mailsProgress: GeneratedBulkMails;
 
   templateForm = this.fb.group({
@@ -42,20 +42,14 @@ export class BulkMailTemplateComponent implements OnInit
 
   private tribute = new Tribute(
     {
-      values: (text, cb) => { cb(this.placeholders.filter(plh => plh.description.toLowerCase().includes(text.toLowerCase()))); },
+      values: (text, cb): void => { cb(this.placeholders.filter(plh => plh.description.toLowerCase().includes(text.toLowerCase()))); },
       lookup: 'description',
 
       // function called on select that returns the content to insert
-      selectTemplate: (item: TributeItem<PlaceholderDescription>) =>
-      {
-        return item.original.placeholder;
-      },
+      selectTemplate: (item: TributeItem<PlaceholderDescription>): string => item.original.placeholder,
 
       // template for displaying item in menu
-      menuItemTemplate: (item: TributeItem<PlaceholderDescription>) =>
-      {
-        return item.original.description;
-      },
+      menuItemTemplate: (item: TributeItem<PlaceholderDescription>): string => item.original.description,
     });
 
   constructor(private service: BulkMailTemplateService,
@@ -74,7 +68,7 @@ export class BulkMailTemplateComponent implements OnInit
       {
         this.templateForm.patchValue(template);
         this.selectedAudiences = template.audiences;
-        this.registrableId = template.registrableId;
+        this.registrableIds = template.registrableIds ?? [];
         if (this.bulkMailKey !== template.bulkMailKey)
         {
           this.bulkMailKey = template.bulkMailKey;
@@ -106,7 +100,7 @@ export class BulkMailTemplateComponent implements OnInit
         htmlRemoveTags: [],
         key: key,
         events: {
-          initialized: (e) =>
+          initialized: (e): void =>
           {
             this.editorRef = e.getEditor();
             this.tribute.attach(this.editor.nativeElement);
@@ -115,10 +109,10 @@ export class BulkMailTemplateComponent implements OnInit
               this.editorRef.html.set(this.initialHtml);
               this.changeDetectorRef.markForCheck();
             }
-            // pick mention with Enter, don't propagate to the html editor 
-            this.editor.nativeElement.addEventListener('keydown', e =>
+            // pick mention with Enter, don't propagate to the html editor
+            this.editor.nativeElement.addEventListener('keydown', (eventKeydown): boolean =>
             {
-              if (e.key === FroalaEditor.KEYCODE.ENTER && this.tribute.isActive)
+              if (eventKeydown.key === FroalaEditor.KEYCODE.ENTER && this.tribute.isActive)
               {
                 return false;
               }
@@ -153,7 +147,7 @@ export class BulkMailTemplateComponent implements OnInit
       subject: this.templateForm.value.subject,
       contentHtml: html,
       audiences: this.selectedAudiences,
-      registrableId: this.registrableId,
+      registrableIds: this.registrableIds,
       addIcs: this.templateForm.value.addIcs
     })
       .subscribe();

@@ -4263,31 +4263,6 @@
                 }
             }
         },
-        "/api/SetRegistrablesPricesCommand": {
-            "post": {
-                "tags": [
-                    "SetRegistrablesPrices"
-                ],
-                "operationId": "SetRegistrablesPrices_Command",
-                "requestBody": {
-                    "x-name": "SetRegistrablesPricesCommand",
-                    "description": "",
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/SetRegistrablesPricesCommand"
-                            }
-                        }
-                    },
-                    "x-position": 1
-                },
-                "responses": {
-                    "204": {
-                        "description": ""
-                    }
-                }
-            }
-        },
         "/api/SetReleaseMailCommand": {
             "post": {
                 "tags": [
@@ -6120,10 +6095,13 @@
                             "$ref": "#/components/schemas/MailingAudience"
                         }
                     },
-                    "registrableId": {
-                        "type": "string",
-                        "format": "guid",
-                        "nullable": true
+                    "registrableIds": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                            "type": "string",
+                            "format": "guid"
+                        }
                     },
                     "discarded": {
                         "type": "boolean"
@@ -11680,30 +11658,6 @@
                     }
                 }
             },
-            "SetRegistrablesPricesCommand": {
-                "type": "object",
-                "additionalProperties": false,
-                "properties": {
-                    "eventId": {
-                        "type": "string",
-                        "format": "guid"
-                    },
-                    "registrableId": {
-                        "type": "string",
-                        "format": "guid"
-                    },
-                    "price": {
-                        "type": "number",
-                        "format": "decimal",
-                        "nullable": true
-                    },
-                    "reducedPrice": {
-                        "type": "number",
-                        "format": "decimal",
-                        "nullable": true
-                    }
-                }
-            },
             "SetReleaseMailCommand": {
                 "type": "object",
                 "additionalProperties": false,
@@ -12295,10 +12249,13 @@
                             "$ref": "#/components/schemas/MailingAudience"
                         }
                     },
-                    "registrableId": {
-                        "type": "string",
-                        "format": "guid",
-                        "nullable": true
+                    "registrableIds": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                            "type": "string",
+                            "format": "guid"
+                        }
                     },
                     "addIcs": {
                         "type": "boolean"

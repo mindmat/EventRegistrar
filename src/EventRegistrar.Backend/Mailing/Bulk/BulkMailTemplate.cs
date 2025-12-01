@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Registrables;
+using EventRegistrar.Backend.RegistrationForms.FormPaths;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,8 +11,14 @@ public class BulkMailTemplate : Entity
 {
     public Guid EventId { get; set; }
     public Event? Event { get; set; }
+
+    [Obsolete("Use RegistrableIds")]
     public Guid? RegistrableId { get; set; }
+
+    [Obsolete("Use RegistrableIds")]
     public Registrable? Registrable { get; set; }
+
+    public ICollection<Guid>? RegistrableIds { get; set; }
 
     public string BulkMailKey { get; set; } = null!;
     public string? Language { get; set; }
@@ -39,6 +46,9 @@ public class BulkMailTemplateMap : EntityMap<BulkMailTemplate>
         builder.HasOne(mtp => mtp.Registrable)
                .WithMany()
                .HasForeignKey(mtp => mtp.RegistrableId);
+
+        builder.Property(mtp => mtp.RegistrableIds)
+               .IsKeysColumn();
 
         builder.Property(mtp => mtp.BulkMailKey)
                .HasMaxLength(200);

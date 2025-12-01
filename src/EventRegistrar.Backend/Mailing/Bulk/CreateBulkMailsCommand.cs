@@ -48,12 +48,15 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
                 break;
             }
 
-            var registrationsForTemplate = mailTemplate.RegistrableId == null
+            var targetRegistrableIds = mailTemplate.RegistrableIds
+                                                   ?.AppendIfNotNull(mailTemplate.RegistrableId.Value)
+                                                   .ToList();
+            var registrationsForTemplate = targetRegistrableIds == null || targetRegistrableIds.Count == 0
                                                ? registrationsOfEvent
                                                : registrationsOfEvent.Where(reg => reg.Seats_AsLeader!.Any(spt => !spt.IsCancelled
-                                                                                                               && spt.RegistrableId == mailTemplate.RegistrableId)
+                                                                                                               && targetRegistrableIds.Contains(spt.RegistrableId))
                                                                                 || reg.Seats_AsFollower!.Any(spt => !spt.IsCancelled
-                                                                                                                 && spt.RegistrableId == mailTemplate.RegistrableId))
+                                                                                                                 && targetRegistrableIds.Contains(spt.RegistrableId)))
                                                                      .Take(ChunkSize)
                                                                      .ToList();
             var receivers = new List<Registration>();

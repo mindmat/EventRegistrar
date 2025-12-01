@@ -24,7 +24,7 @@ public class BulkMailTemplateQueryHandler(IQueryable<BulkMailTemplate> mailTempl
                                                      Subject = mtp.Subject,
                                                      ContentHtml = mtp.ContentHtml,
                                                      Audiences = mtp.MailingAudience.GetFlags(),
-                                                     RegistrableId = mtp.RegistrableId,
+                                                     RegistrableIds = mtp.RegistrableIds,
                                                      Discarded = mtp.Discarded,
                                                      AddIcs = mtp.AddIcs
                                                  })
@@ -41,7 +41,7 @@ public class BulkMailTemplateDisplayItem
     public string? Subject { get; set; }
     public string? ContentHtml { get; set; }
     public IEnumerable<MailingAudience>? Audiences { get; set; }
-    public Guid? RegistrableId { get; set; }
+    public IEnumerable<Guid>? RegistrableIds { get; set; }
     public bool Discarded { get; set; }
     public bool AddIcs { get; set; }
 }
