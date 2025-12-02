@@ -236,12 +236,12 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
             }
         }
 
-        var (original, admitted, admittedAndReduced, _, _, isOnWaitingList, _) = await priceCalculator.CalculatePrice(registration, spots);
-        registration.Price_Original = original;
-        registration.Price_Admitted = admitted;
-        registration.Price_AdmittedAndReduced = admittedAndReduced;
+        var priceCalculation = await priceCalculator.CalculatePrice(registration, spots);
+        registration.Price_Original = priceCalculation.PriceOriginal;
+        registration.Price_Admitted = priceCalculation.PriceAdmitted;
+        registration.Price_AdmittedAndReduced = priceCalculation.PriceAdmittedAndReduced;
 
-        registration.IsOnWaitingList = isOnWaitingList;
+        registration.IsOnWaitingList = priceCalculation.IsOnWaitingList;
         if (registration is { IsOnWaitingList: false, AdmittedAt: null })
         {
             registration.AdmittedAt = dateTimeProvider.Now;
@@ -264,19 +264,19 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
         {
             if (!isPartnerRegistration)
             {
-                mailToSend = isOnWaitingList
+                mailToSend = priceCalculation.IsOnWaitingList
                                  ? MailType.SingleRegistrationOnWaitingList
                                  : MailType.SingleRegistrationAccepted;
             }
             else if (isUnmatchedPartnerRegistration)
             {
-                mailToSend = isOnWaitingList
+                mailToSend = priceCalculation.IsOnWaitingList
                                  ? MailType.PartnerRegistrationFirstPartnerOnWaitingList
                                  : MailType.PartnerRegistrationFirstPartnerAccepted;
             }
             else
             {
-                mailToSend = isOnWaitingList
+                mailToSend = priceCalculation.IsOnWaitingList
                                  ? MailType.PartnerRegistrationMatchedOnWaitingList
                                  : MailType.PartnerRegistrationMatchedAndAccepted;
             }

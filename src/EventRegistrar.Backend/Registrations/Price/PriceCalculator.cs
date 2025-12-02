@@ -7,20 +7,22 @@ using EventRegistrar.Backend.Spots;
 
 namespace EventRegistrar.Backend.Registrations.Price;
 
+public record CalculatedPrice(decimal PriceOriginal,
+                              decimal PriceAdmitted,
+                              decimal PriceAdmittedAndReduced,
+                              IReadOnlyCollection<MatchingPackageResult> PackagesRequested,
+                              IReadOnlyCollection<MatchingPackageResult> PackagesAdmitted,
+                              bool IsOnWaitingList,
+                              IEnumerable<MatchingPackageResult> PossibleFallbackPackages,
+                              IDictionary<Guid, string> SpotsOnWaitingList);
+
 public class PriceCalculator(IQueryable<Seat> _spots,
                              IQueryable<PricePackage> pricePackages,
                              IQueryable<Registration> registrations,
                              IQueryable<Registrable> tracks,
                              EnumTranslator enumTranslator)
 {
-    public async Task<(decimal priceOriginal,
-            decimal priceAdmitted,
-            decimal priceAdmittedAndReduced,
-            IReadOnlyCollection<MatchingPackageResult> packagesRequested,
-            IReadOnlyCollection<MatchingPackageResult> packagesAdmitted,
-            bool isOnWaitingList,
-            IEnumerable<MatchingPackageResult> possibleFallbackPackages)>
-        CalculatePrice(Guid registrationId, CancellationToken cancellationToken = default)
+    public async Task<CalculatedPrice> CalculatePrice(Guid registrationId, CancellationToken cancellationToken = default)
     {
         var registration = await registrations.Where(reg => reg.Id == registrationId)
                                               .Include(reg => reg.IndividualReductions)
@@ -34,15 +36,8 @@ public class PriceCalculator(IQueryable<Seat> _spots,
         return await CalculatePrice(registration, spots);
     }
 
-    public async Task<(decimal priceOriginal,
-            decimal priceAdmitted,
-            decimal priceAdmittedAndReduced,
-            IReadOnlyCollection<MatchingPackageResult> packagesRequested,
-            IReadOnlyCollection<MatchingPackageResult> packagesAdmitted,
-            bool isOnWaitingList,
-            IEnumerable<MatchingPackageResult> possibleFallbackPackages)>
-        CalculatePrice(Registration registration,
-                       IEnumerable<Seat> spots)
+    public async Task<CalculatedPrice> CalculatePrice(Registration registration,
+                                                      IEnumerable<Seat> spots)
     {
         var coreTracks = await tracks.Where(trk => trk.EventId == registration.EventId && trk.IsCore)
                                      .ToListAsync();
@@ -60,13 +55,14 @@ public class PriceCalculator(IQueryable<Seat> _spots,
                                           .ToListAsync();
         var (priceOriginal, packagesOriginal, allCoveredOriginal) = CalculatePriceOfSpots(registration.Id, notCancelledSpots, packages, coreTracks);
 
-        var hasSpotsOnWaitingList = notCancelledSpots.Exists(spot => spot.IsWaitingList);
+        var spotsOnWaitingList = notCancelledSpots.Where(spot => spot.IsWaitingList)
+                                                  .ToList();
         var priceAdmitted = priceOriginal;
         var packagesAdmitted = packagesOriginal;
         var originalPackageIds = packagesOriginal.Select(pkg => pkg.Id).ToList();
         var possibleFallbackPackages = Enumerable.Empty<MatchingPackageResult>();
 
-        if (hasSpotsOnWaitingList || !allCoveredOriginal)
+        if (spotsOnWaitingList.Any() || !allCoveredOriginal)
         {
             var admittedSpots = notCancelledSpots.Where(spot => !spot.IsWaitingList)
                                                  .ToList();
@@ -108,7 +104,15 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             packagesAdmitted = packagesAdmitted.Append(reductionPackage.Value).ToList();
         }
 
-        return (priceOriginal, priceAdmitted, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, isOnWaitingList, possibleFallbackPackages);
+        return new CalculatedPrice(priceOriginal,
+                                   priceAdmitted,
+                                   priceAdmittedAndReduced,
+                                   packagesOriginal,
+                                   packagesAdmitted,
+                                   isOnWaitingList,
+                                   possibleFallbackPackages,
+                                   spotsOnWaitingList.ToDictionary(spt => spt.RegistrableId,
+                                                                   spt => spt.Registrable?.DisplayName ?? spt.RegistrableId.ToString()));
     }
 
     private static (decimal Price, MatchingPackageResult? ReductionPackage) GetReducedPrice(decimal priceNotReduced, ICollection<IndividualReduction>? individualReductions)

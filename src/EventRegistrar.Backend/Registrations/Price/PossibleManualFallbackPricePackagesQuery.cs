@@ -12,9 +12,10 @@ public class PossibleManualFallbackPricePackagesQueryHandler(PriceCalculator pri
 {
     public async Task<IEnumerable<FallbackPricePackage>> Handle(PossibleManualFallbackPricePackagesQuery query, CancellationToken cancellationToken)
     {
-        var (_, _, _, _, _, _, possibleFallbackPackages) = await priceCalculator.CalculatePrice(query.RegistrationId, cancellationToken);
+        var calculatedPrice = await priceCalculator.CalculatePrice(query.RegistrationId, cancellationToken);
 
-        return possibleFallbackPackages.Where(ppk => ppk.Id != null)
-                                       .Select(ppk => new FallbackPricePackage(ppk.Id!.Value, ppk.Name));
+        return calculatedPrice.PossibleFallbackPackages
+                              .Where(ppk => ppk.Id != null)
+                              .Select(ppk => new FallbackPricePackage(ppk.Id!.Value, ppk.Name));
     }
 }

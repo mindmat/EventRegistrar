@@ -143,29 +143,29 @@ public class PartnerRegistrationProcessor(PhoneNormalizer phoneNormalizer,
 
         // finalize follower registration
         followerRegistration.IsOnWaitingList = isOnWaitingList;
-        if (followerRegistration.IsOnWaitingList == false && followerRegistration.AdmittedAt == null)
+        if (followerRegistration is { IsOnWaitingList: false, AdmittedAt: null })
         {
             followerRegistration.AdmittedAt = dateTimeProvider.Now;
         }
 
-        var (totalFollower, admittedFollower, admittedAndReducedFollower, _, _, _, _) = await priceCalculator.CalculatePrice(followerRegistration, spots);
-        followerRegistration.Price_Original = totalFollower;
-        followerRegistration.Price_Admitted = admittedFollower;
-        followerRegistration.Price_AdmittedAndReduced = admittedAndReducedFollower;
+        var priceFollower = await priceCalculator.CalculatePrice(followerRegistration, spots);
+        followerRegistration.Price_Original = priceFollower.PriceOriginal;
+        followerRegistration.Price_Admitted = priceFollower.PriceAdmitted;
+        followerRegistration.Price_AdmittedAndReduced = priceFollower.PriceAdmittedAndReduced;
 
         await registrations.InsertOrUpdateEntity(followerRegistration);
 
         // finalize leader registration
         registration.IsOnWaitingList = isOnWaitingList;
-        if (registration.IsOnWaitingList == false && registration.AdmittedAt == null)
+        if (registration is { IsOnWaitingList: false, AdmittedAt: null })
         {
             registration.AdmittedAt = dateTimeProvider.Now;
         }
 
-        var (total, admitted, admittedAndReduced, _, _, _, _) = await priceCalculator.CalculatePrice(registration, spots);
-        registration.Price_Original = total;
-        registration.Price_Admitted = admitted;
-        registration.Price_AdmittedAndReduced = admittedAndReduced;
+        var priceLeader = await priceCalculator.CalculatePrice(registration, spots);
+        registration.Price_Original = priceLeader.PriceOriginal;
+        registration.Price_Admitted = priceLeader.PriceAdmitted;
+        registration.Price_AdmittedAndReduced = priceLeader.PriceAdmittedAndReduced;
 
         await registrations.InsertOrUpdateEntity(registration);
 

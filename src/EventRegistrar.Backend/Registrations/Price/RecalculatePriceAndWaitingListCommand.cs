@@ -38,29 +38,30 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
         var oldAdmitted = registration.Price_Admitted;
         var oldAdmittedAndReduced = registration.Price_AdmittedAndReduced;
 
-        var (newOriginal, newAdmitted, newAdmittedAndReduced, _, packagesAdmitted, isOnWaitingList, _) = await priceCalculator.CalculatePrice(registration.Id, cancellationToken);
-        var packageIds_admitted = packagesAdmitted.Select(pkg => pkg.Id)
-                                                  .WhereNotNull()
-                                                  .OrderBy(id => id)
-                                                  .ToList();
+        var calculatedPrice = await priceCalculator.CalculatePrice(registration.Id, cancellationToken);
+        var packageIds_admitted = calculatedPrice.PackagesAdmitted
+                                                 .Select(pkg => pkg.Id)
+                                                 .WhereNotNull()
+                                                 .OrderBy(id => id)
+                                                 .ToList();
 
         var anythingChanged = false;
 
         // update price
-        if (oldOriginal != newOriginal
-         || oldAdmitted != newAdmitted
-         || oldAdmittedAndReduced != newAdmittedAndReduced)
+        if (oldOriginal != calculatedPrice.PriceOriginal
+         || oldAdmitted != calculatedPrice.PriceAdmitted
+         || oldAdmittedAndReduced != calculatedPrice.PriceAdmittedAndReduced)
         {
-            registration.Price_Original = newOriginal;
-            registration.Price_Admitted = newAdmitted;
-            registration.Price_AdmittedAndReduced = newAdmittedAndReduced;
+            registration.Price_Original = calculatedPrice.PriceOriginal;
+            registration.Price_Admitted = calculatedPrice.PriceAdmitted;
+            registration.Price_AdmittedAndReduced = calculatedPrice.PriceAdmittedAndReduced;
 
             eventBus.Publish(new PriceChanged
                              {
                                  EventId = registration.EventId,
                                  RegistrationId = registration.Id,
                                  OldPrice = oldAdmittedAndReduced,
-                                 NewPrice = newAdmittedAndReduced
+                                 NewPrice = calculatedPrice.PriceAdmittedAndReduced
                              });
             anythingChanged = true;
         }
@@ -79,9 +80,9 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
         }
 
         // update waiting list
-        if (registration.IsOnWaitingList != isOnWaitingList)
+        if (registration.IsOnWaitingList != calculatedPrice.IsOnWaitingList)
         {
-            registration.IsOnWaitingList = isOnWaitingList;
+            registration.IsOnWaitingList = calculatedPrice.IsOnWaitingList;
             registration.AdmittedAt ??= dateTimeProvider.Now;
 
             eventBus.Publish(new RegistrationMovedUpFromWaitingList { RegistrationId = registration.Id });

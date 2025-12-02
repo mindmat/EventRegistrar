@@ -336,23 +336,23 @@ public class MailComposer(
 
     private async Task<string> GetSpotList(Guid registrationId, string? soldOutMessage)
     {
-        var (_, _, priceAdmittedAndReduced, packagesOriginal, packagesAdmitted, _, _) = await priceCalculator.CalculatePrice(registrationId);
+        var calculatedPrice = await priceCalculator.CalculatePrice(registrationId);
         var result = new StringBuilder();
 
         // Label
         result.AppendLine($"<p>{Resources.SpotListLabelAccepted}</p>");
 
         // Admitted
-        if (packagesAdmitted.Any())
+        if (calculatedPrice.PackagesAdmitted.Any())
         {
             result.AppendLine("<table>");
             result.AppendLine("<tbody>");
-            AddPackageLines(packagesAdmitted, result);
+            AddPackageLines(calculatedPrice.PackagesAdmitted, result);
 
             // Total
             result.AppendLine("<tr>");
             result.AppendLine($"<td><strong>{Resources.Total}</strong></td>");
-            result.AppendLine($"<td style=\"text-align: right;\"><strong>{priceAdmittedAndReduced.ToString("F2")}</strong></td>");
+            result.AppendLine($"<td style=\"text-align: right;\"><strong>{calculatedPrice.PriceAdmittedAndReduced.ToString("F2")}</strong></td>");
             result.AppendLine("<td></td>");
             result.AppendLine("</tr>");
 
@@ -367,12 +367,12 @@ public class MailComposer(
                 result.AppendLine("</tr>");
             }
 
-            if (paid < priceAdmittedAndReduced)
+            if (paid < calculatedPrice.PriceAdmittedAndReduced)
             {
                 // remaining amount
                 result.AppendLine("<tr>");
                 result.AppendLine($"<td>{Resources.MissingAmount}</td>");
-                result.AppendLine($"<td style=\"text-align: right;\">{(priceAdmittedAndReduced - paid).ToString("F2")}</td>");
+                result.AppendLine($"<td style=\"text-align: right;\">{(calculatedPrice.PriceAdmittedAndReduced - paid).ToString("F2")}</td>");
                 result.AppendLine("</tr>");
             }
 
@@ -386,9 +386,7 @@ public class MailComposer(
 
 
         // Waiting list
-        var packagesOnWaitingList = packagesOriginal.ExceptBy(packagesAdmitted.Select(pkg => pkg.Id), pkg => pkg.Id)
-                                                    .ToList();
-        if (packagesOnWaitingList.Any())
+        if (calculatedPrice.SpotsOnWaitingList.Any())
         {
             // Label
             result.AppendLine("<br/>");
@@ -397,7 +395,15 @@ public class MailComposer(
             // Table
             result.AppendLine("<table>");
             result.AppendLine("<tbody>");
-            AddPackageLines(packagesOnWaitingList, result);
+            foreach (var spotOnWaitingList in calculatedPrice.SpotsOnWaitingList)
+            {
+                result.AppendLine("<tr>");
+                result.AppendLine("<td>");
+                result.AppendLine(spotOnWaitingList.Value);
+                result.AppendLine("</td>");
+                result.AppendLine("</tr>");
+            }
+
             result.AppendLine("</tbody>");
             result.AppendLine("</table>");
         }
