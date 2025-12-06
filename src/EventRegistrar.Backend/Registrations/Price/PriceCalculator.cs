@@ -269,6 +269,8 @@ public class PriceCalculator(IQueryable<Seat> _spots,
         {
             var coveredRegistrableIds = new HashSet<Guid>();
             foreach (var matchingPackage in matchingPackages.OrderBy(ppk => ppk.Package.FallbackPriority)
+                                                            .ThenByDescending(ppk => ppk.Spots?.Count() ?? 0)
+                                                            .ThenByDescending(ppk => ppk.OriginalPrice)
                                                             .ToList())
             {
                 if (matchingPackage.MatchingRequiredRegistrableId.All(coveredRegistrableIds.Contains))

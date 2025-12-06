@@ -4,7 +4,7 @@ using EventRegistrar.Backend.RegistrationForms;
 
 namespace EventRegistrar.Backend.Events.UsersInEvents;
 
-public class EventsOfUserQuery : IRequest<EventsOfUser> { }
+public class EventsOfUserQuery : IRequest<EventsOfUser>;
 
 public class EventsOfUserQueryHandler(IQueryable<UserInEvent> usersInEvents,
                                       AuthenticatedUserId authenticatedUserId,
