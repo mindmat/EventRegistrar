@@ -9584,6 +9584,7 @@ export interface HostingRequest {
     email?: string | null;
     language?: string | null;
     phone?: string | null;
+    location?: string | null;
     state?: RegistrationState;
     isOnWaitingList?: boolean;
     admittedAt?: Date | null;

@@ -25,10 +25,10 @@ public class HostingQueryHandler(HostingMappingReader hostingMappingReader,
 
         var registrations = await _registrations.Where(reg => reg.EventId == query.EventId
                                                            && reg.State != RegistrationState.Cancelled
-                                                           && reg.Seats_AsLeader!.Any(
-                                                                  spt => !spt.IsCancelled
-                                                                      && (hostingMappings.RegistrableId_Offer != null && spt.RegistrableId == hostingMappings.RegistrableId_Offer)
-                                                                      || (hostingMappings.RegistrableId_Request != null && spt.RegistrableId == hostingMappings.RegistrableId_Request)))
+                                                           && reg.Seats_AsLeader!.Any(spt => !spt.IsCancelled
+                                                                                          && (hostingMappings.RegistrableId_Offer != null && spt.RegistrableId == hostingMappings.RegistrableId_Offer)
+                                                                                          || (hostingMappings.RegistrableId_Request != null
+                                                                                           && spt.RegistrableId == hostingMappings.RegistrableId_Request)))
                                                 .Include(reg => reg.Responses)
                                                 .Include(reg => reg.Seats_AsLeader)
                                                 .OrderBy(reg => reg.IsOnWaitingList)
@@ -65,6 +65,7 @@ public class HostingQueryHandler(HostingMappingReader hostingMappingReader,
                                                               Email = reg.RespondentEmail,
                                                               Phone = reg.Phone,
                                                               Language = reg.Language,
+                                                              Location = reg.Location,
                                                               State = reg.State,
                                                               IsOnWaitingList = reg.IsOnWaitingList ?? false,
                                                               AdmittedAt = reg.AdmittedAt,
@@ -127,6 +128,7 @@ public class HostingRequest
     public string? Email { get; set; }
     public string? Language { get; set; }
     public string? Phone { get; set; }
+    public string? Location { get; set; }
     public RegistrationState State { get; set; }
     public bool IsOnWaitingList { get; set; }
     public DateTimeOffset? AdmittedAt { get; set; }

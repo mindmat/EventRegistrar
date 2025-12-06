@@ -48,7 +48,7 @@
                 <div class="flex items-center mt-6">
                     <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:users'" [matTooltip]="'CountTotalShared' | translate"></mat-icon>
                     <span class="leading-none">{{ offer.countTotal }}&nbsp;</span>
-                    <span *ngIf="offer.countTotal != '1'" class="leading-none"> / {{ offer.countShared }}</span>
+                    <span *ngIf="offer.countTotal !== '1'" class="leading-none"> / {{ offer.countShared }}</span>
                 </div>
 
                 <div class="flex items-center">
@@ -97,6 +97,11 @@
                     <mat-icon class="icon-size-5 mr-3" [svgIcon]="'heroicons_solid:user'"></mat-icon>
                     <span class="leading-none">{{ request.hostingPartner }}</span>
                     <mat-icon *ngIf="request.shareOkWithPartner" class="none icon-size-5 justify-middle ml-2" [svgIcon]="'mat_solid:bed'" [matTooltip]="'ShareOkWithPartner' | translate"></mat-icon>
+                </div>
+
+                <div class="flex items-center">
+                    <mat-icon class="icon-size-5 mr-3" [svgIcon]="'mat_solid:location_on'"></mat-icon>
+                    <span class="max-w-none prose prose-sm whitespace-pre-line">{{ request.location }}</span>
                 </div>
 
                 <div *ngIf="!!request.comment" class="flex items-center">
