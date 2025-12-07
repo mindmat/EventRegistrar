@@ -87,7 +87,7 @@
                 </div>
 
 
-                <!-- top right corner -->
+                <!-- top right corner: filters & actions -->
                 <div class="flex flex-col ml-auto self-start mt-1">
                     <div class="flex flex-row items-baseline">
                         <!-- Filter -->
@@ -131,8 +131,7 @@
                     </div>
 
                     <mat-form-field class="fuse-mat-no-subscript w-full sm:w-72 sm:mt-0 sm:ml-4 ml-auto">
-                        <mat-select [value]="'all'" (selectionChange)="filterByCategory($event)">
-                            <mat-option [value]="'all'">{{ 'All' | translate }}</mat-option>
+                        <mat-select [value]="filters.categoryTags$.value" (selectionChange)="filterByCategory($event)" multiple>
                             <ng-container *ngFor="let tag of tags; trackBy: trackByFn">
                                 <mat-option [value]="tag.tag">
                                     <div class="py-0.5 px-3 rounded-full text-sm font-semibold"

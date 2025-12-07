@@ -38,11 +38,11 @@ export class OverviewComponent implements OnInit, OnDestroy
     pricePackageOverview: PricePackageOverview;
 
     filters: {
-        categoryTag$: BehaviorSubject<string>;
+        categoryTags$: BehaviorSubject<string[]>;
         query$: BehaviorSubject<string>;
         hideCompleted$: BehaviorSubject<boolean>;
     } = {
-            categoryTag$: new BehaviorSubject('all'),
+            categoryTags$: new BehaviorSubject([]),
             query$: new BehaviorSubject(''),
             hideCompleted$: new BehaviorSubject(false)
         };
@@ -80,8 +80,11 @@ export class OverviewComponent implements OnInit, OnDestroy
             .pipe(takeUntil(this.unsubscribeAll))
             .subscribe((registrables: RegistrablesOverview) =>
             {
-                this.singleRegistrables = this.filteredSingleRegistrables = registrables.singleRegistrables;
-                this.doubleRegistrables = this.filteredDoubleRegistrables = registrables.doubleRegistrables;
+                this.singleRegistrables = registrables.singleRegistrables;
+                this.doubleRegistrables = registrables.doubleRegistrables;
+
+                // Trigger filtering with current filter values
+                this.applyFilters();
 
                 // Mark for check
                 this.changeDetectorRef.markForCheck();
@@ -111,7 +114,7 @@ export class OverviewComponent implements OnInit, OnDestroy
                         y: blc.countActive + blc.countCancelled
                     }))
                 }];
-                console.log(this.accountBalanceOptions.series);
+
                 // Mark for check
                 this.changeDetectorRef.markForCheck();
             });
@@ -125,36 +128,13 @@ export class OverviewComponent implements OnInit, OnDestroy
             });
 
         // Filter the courses
-        combineLatest([this.filters.categoryTag$, this.filters.query$, this.filters.hideCompleted$])
-            .subscribe(([categoryTag, query, hideCompleted]) =>
+        combineLatest([this.filters.categoryTags$, this.filters.query$, this.filters.hideCompleted$])
+            .subscribe(([categoryTags, query, hideCompleted]) =>
             {
-                // Reset the filtered courses
-                this.filteredSingleRegistrables = this.singleRegistrables;
-                this.filteredDoubleRegistrables = this.doubleRegistrables;
+                this.applyFilters();
 
-                // Filter by category
-                if (categoryTag !== 'all')
-                {
-                    this.filteredSingleRegistrables = this.filteredSingleRegistrables.filter(course => course.tag === categoryTag);
-                    this.filteredDoubleRegistrables = this.filteredDoubleRegistrables.filter(course => course.tag === categoryTag);
-                }
-
-                // Filter by search query
-                if (query !== '')
-                {
-                    this.filteredSingleRegistrables = this.filteredSingleRegistrables.filter(
-                        rbl => rbl.name.toLowerCase().includes(query.toLowerCase())
-                            || rbl.nameSecondary?.toLowerCase().includes(query.toLowerCase()));
-                    this.filteredDoubleRegistrables = this.filteredDoubleRegistrables.filter(
-                        rbl => rbl.name.toLowerCase().includes(query.toLowerCase())
-                            || rbl.nameSecondary?.toLowerCase().includes(query.toLowerCase()));
-                }
-
-                // Filter by completed
-                if (hideCompleted)
-                {
-                    // this.filteredCourses = this.filteredCourses.filter(course => course.progress.completed === 0);
-                }
+                // Mark for check
+                this.changeDetectorRef.markForCheck();
             });
     }
 
@@ -180,7 +160,8 @@ export class OverviewComponent implements OnInit, OnDestroy
 
     filterByCategory(change: MatSelectChange): void
     {
-        this.filters.categoryTag$.next(change.value);
+        const selectedTags = change.value as string[];
+        this.filters.categoryTags$.next(selectedTags || []);
     }
 
     toggleCompleted(change: MatSlideToggleChange): void
@@ -188,7 +169,7 @@ export class OverviewComponent implements OnInit, OnDestroy
         this.filters.hideCompleted$.next(change.checked);
     }
 
-    changeDoubleRegistrable(doubleRegistrable: DoubleRegistrableDisplayItem)
+    changeDoubleRegistrable(doubleRegistrable: DoubleRegistrableDisplayItem): void
     {
         this.matDialog.open(RegistrableDetailComponent, {
             autoFocus: true,
@@ -196,7 +177,7 @@ export class OverviewComponent implements OnInit, OnDestroy
         });
     }
 
-    changeSingleRegistrable(singleRegistrable: SingleRegistrableDisplayItem)
+    changeSingleRegistrable(singleRegistrable: SingleRegistrableDisplayItem): void
     {
         this.matDialog.open(RegistrableDetailComponent, {
             autoFocus: true,
@@ -204,7 +185,7 @@ export class OverviewComponent implements OnInit, OnDestroy
         });
     }
 
-    changeRegistrableIcs(icsId: string, registrableId: string, name: string)
+    changeRegistrableIcs(icsId: string, registrableId: string, name: string): void
     {
         this.matDialog.open(RegistrableIcsComponent, {
             autoFocus: true,
@@ -212,7 +193,7 @@ export class OverviewComponent implements OnInit, OnDestroy
         });
     }
 
-    addRegistrableIcs(registrableId: string, name: string)
+    addRegistrableIcs(registrableId: string, name: string): void
     {
         this.matDialog.open(RegistrableIcsComponent, {
             autoFocus: true,
@@ -220,22 +201,22 @@ export class OverviewComponent implements OnInit, OnDestroy
         });
     }
 
-    openRegistration()
+    openRegistration(): void
     {
         this.overviewService.openRegistration(true);
     }
 
-    deleteTestData()
+    deleteTestData(): void
     {
         this.overviewService.deleteTestData();
     }
 
-    deleteRegistrable(registrableId: string)
+    deleteRegistrable(registrableId: string): void
     {
         this.registrableService.deleteRegistrable(registrableId);
     }
 
-    updateView()
+    updateView(): void
     {
         this.overviewService.triggerUpdate();
     }
@@ -243,6 +224,48 @@ export class OverviewComponent implements OnInit, OnDestroy
     trackByFn(index: number, item: any): any
     {
         return item.id || index;
+    }
+
+    private applyFilters(): void
+    {
+        // Don't filter if source data is not loaded yet
+        if (!this.singleRegistrables || !this.doubleRegistrables)
+        {
+            return;
+        }
+
+        const categoryTags = this.filters.categoryTags$.value;
+        const query = this.filters.query$.value;
+        const hideCompleted = this.filters.hideCompleted$.value;
+
+        // Reset the filtered courses
+        this.filteredSingleRegistrables = [...this.singleRegistrables];
+        this.filteredDoubleRegistrables = [...this.doubleRegistrables];
+
+        // Filter by category - only show items that match selected tags
+        if (categoryTags.length > 0)
+        {
+            this.filteredSingleRegistrables = this.filteredSingleRegistrables.filter(rbl => categoryTags.includes(rbl.tag));
+            this.filteredDoubleRegistrables = this.filteredDoubleRegistrables.filter(rbl => categoryTags.includes(rbl.tag));
+        }
+        // If no tags selected, show all
+
+        // Filter by search query
+        if (query !== '')
+        {
+            this.filteredSingleRegistrables = this.filteredSingleRegistrables.filter(
+                rbl => rbl.name.toLowerCase().includes(query.toLowerCase())
+                    || rbl.nameSecondary?.toLowerCase().includes(query.toLowerCase()));
+            this.filteredDoubleRegistrables = this.filteredDoubleRegistrables.filter(
+                rbl => rbl.name.toLowerCase().includes(query.toLowerCase())
+                    || rbl.nameSecondary?.toLowerCase().includes(query.toLowerCase()));
+        }
+
+        // Filter by completed
+        if (hideCompleted)
+        {
+            // this.filteredCourses = this.filteredCourses.filter(course => course.progress.completed === 0);
+        }
     }
 
     private prepareChartData(): void
