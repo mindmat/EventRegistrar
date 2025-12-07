@@ -10,6 +10,7 @@ public class RegistrableTag : Entity
     public Event? Event { get; set; }
     public string Tag { get; set; } = null!;
     public string FallbackText { get; set; } = null!;
+    public string? Color { get; set; } // tailwind color like "amber"
     public int SortKey { get; set; }
 }
 
@@ -27,5 +28,7 @@ public class RegistrableTagMap : EntityMap<RegistrableTag>
                .HasMaxLength(200);
         builder.Property(rbt => rbt.FallbackText)
                .HasMaxLength(200);
+        builder.Property(rbt => rbt.Color)
+               .HasMaxLength(50);
     }
 }

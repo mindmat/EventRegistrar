@@ -10419,6 +10419,10 @@
                     "tag": {
                         "type": "string"
                     },
+                    "color": {
+                        "type": "string",
+                        "nullable": true
+                    },
                     "sortKey": {
                         "type": "integer",
                         "format": "int32"

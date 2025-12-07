@@ -92,7 +92,7 @@ public class SaveRegistrableCommandHandler(IRepository<Registrable> registrables
         if (registrable.Tag != command.Tag)
         {
             registrable.Tag = command.Tag;
-            await CreateTagIfNecessary(@event.Id, command.Tag);
+            await CreateTagIfNecessary(@event.Id, command.Tag, cancellationToken);
             changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
         }
 
@@ -116,20 +116,25 @@ public class SaveRegistrableCommandHandler(IRepository<Registrable> registrables
         changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, command.EventId);
     }
 
-    private async Task CreateTagIfNecessary(Guid eventId, string? tag)
+    private async Task CreateTagIfNecessary(Guid eventId, string? tag, CancellationToken cancellationToken)
     {
         if (tag == null)
         {
             return;
         }
 
-        if (!await tags.AnyAsync(tg => tg.EventId == eventId
-                                    && tg.Tag == tag))
+        var eventTags = await tags.Where(tg => tg.EventId == eventId)
+                                  .Select(tg => new { tg.Tag, tg.SortKey })
+                                  .ToListAsync(cancellationToken);
+
+        if (!eventTags.Any(t => t.Tag == tag))
         {
-            var maxSortKey = await tags.Where(tg => tg.EventId == eventId)
-                                       .Select(tg => tg.SortKey)
-                                       .DefaultIfEmpty()
-                                       .MaxAsync();
+            var maxSortKey = eventTags.Select(t => t.SortKey)
+                                      .DefaultIfEmpty()
+                                      .Max();
+
+            var existingCount = eventTags.Count;
+            var color = existingCount < RegistrableTagDefaults.Colors.Length ? RegistrableTagDefaults.Colors[existingCount] : null;
 
             tags.InsertObjectTree(new RegistrableTag
                                   {
@@ -137,6 +142,7 @@ public class SaveRegistrableCommandHandler(IRepository<Registrable> registrables
                                       EventId = eventId,
                                       Tag = tag,
                                       FallbackText = tag,
+                                      Color = color,
                                       SortKey = maxSortKey + 1
                                   });
 

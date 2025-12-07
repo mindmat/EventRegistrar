@@ -134,7 +134,12 @@
                         <mat-select [value]="'all'" (selectionChange)="filterByCategory($event)">
                             <mat-option [value]="'all'">{{ 'All' | translate }}</mat-option>
                             <ng-container *ngFor="let tag of tags; trackBy: trackByFn">
-                                <mat-option [value]="tag.tag">{{tag.text}}</mat-option>
+                                <mat-option [value]="tag.tag">
+                                    <div class="py-0.5 px-3 rounded-full text-sm font-semibold"
+                                        [ngClass]="'text-' + (tag.color || 'blue') + '-800 bg-' + (tag.color || 'blue') + '-100 dark:text-' + (tag.color || 'blue') + '-50 dark:bg-' + (tag.color || 'blue') + '-500'">
+                                        {{tag.text}}
+                                    </div>
+                                </mat-option>
                             </ng-container>
                         </mat-select>
                     </mat-form-field>
@@ -153,19 +158,15 @@
                                 <div class="flex items-center justify-between">
                                     <!-- Registrable tags -->
                                     <ng-container *ngIf="(doubleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
-                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
-                                                        'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.sortKey === 2,
-                                                        'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.sortKey === 3,
-                                                        'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.sortKey === 4,
-                                                        'text-fuchsia-800 bg-fuchsia-100 dark:text-fuchsia-50 dark:bg-fuchsia-500': category.sortKey === 5}">
+                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold"
+                                            [ngClass]="'text-' + (category.color || 'blue') + '-800 bg-' + (category.color || 'blue') + '-100 dark:text-' + (category.color || 'blue') + '-50 dark:bg-' + (category.color || 'blue') + '-500'">
                                             {{category.text}}
                                         </div>
                                     </ng-container>
                                     <!-- context menu -->
                                     <div class="flex items-center ml-auto">
                                         <button *ngFor="let ics of doubleRegistrable.ics" class="-mr-2" mat-icon-button
-                                            (click)="changeRegistrableIcs(ics.id, doubleRegistrable.id, doubleRegistrable.name)"
-                                            matTooltip="{{ics.title}} - {{ics.start| date: 'EEEEEE HH:mm' }}">
+                                            (click)="changeRegistrableIcs(ics.id, doubleRegistrable.id, doubleRegistrable.name)" matTooltip="{{ics.title}} - {{ics.start| date: 'EEEEEE HH:mm' }}">
                                             <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
                                         </button>
                                         <button mat-icon-button [matMenuTriggerFor]="registrableMenu">
@@ -331,10 +332,8 @@
                                 <div class="flex items-center justify-between">
                                     <!-- Registrable tags -->
                                     <ng-container *ngIf="(singleRegistrable.tag | fuseFindByKey:'tag':tags) as category">
-                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold" [ngClass]="{'text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500': category.sortKey === 1,
-                                                                                        'text-green-800 bg-green-100 dark:text-green-50 dark:bg-green-500': category.sortKey === 2,
-                                                                                        'text-pink-800 bg-pink-100 dark:text-pink-50 dark:bg-pink-500': category.sortKey === 3,
-                                                                                        'text-amber-800 bg-amber-100 dark:text-amber-50 dark:bg-amber-500': category.sortKey === 4}">
+                                        <div class="py-0.5 px-3 rounded-full text-sm font-semibold"
+                                            [ngClass]="'text-' + (category.color || 'blue') + '-800 bg-' + (category.color || 'blue') + '-100 dark:text-' + (category.color || 'blue') + '-50 dark:bg-' + (category.color || 'blue') + '-500'">
                                             {{category.text}}
                                         </div>
                                     </ng-container>

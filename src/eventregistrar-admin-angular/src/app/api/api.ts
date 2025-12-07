@@ -10444,6 +10444,7 @@ export interface RegistrableTagDisplayItem {
     tagId?: string;
     text?: string;
     tag?: string;
+    color?: string | null;
     sortKey?: number;
 }
 
