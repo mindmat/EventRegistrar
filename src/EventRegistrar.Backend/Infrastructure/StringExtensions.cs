@@ -24,6 +24,14 @@ public static class StringExtensions
                    : null;
     }
 
+    public static TEnum? TryToEnum<TEnum>(this string? enumText)
+        where TEnum : struct
+    {
+        return Enum.TryParse<TEnum>(enumText, true, out var parsed)
+                   ? parsed
+                   : null;
+    }
+
     /// <summary>
     /// [a,b,c] -> "a{us}b{us}c"
     /// </summary>

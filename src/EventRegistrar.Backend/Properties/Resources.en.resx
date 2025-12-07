@@ -1317,6 +1317,9 @@
   <data name="SpotListLabelAccepted" xml:space="preserve">
     <value>You have been accepted for:</value>
   </data>
+  <data name="SpotListLabelAcceptedWithName" xml:space="preserve">
+    <value>{0} has been accepted for:</value>
+  </data>
   <data name="SpotListLabelWaitingList" xml:space="preserve">
     <value>You are on the waiting list for:</value>
   </data>

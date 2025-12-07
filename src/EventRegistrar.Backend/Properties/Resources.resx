@@ -1436,6 +1436,9 @@
   <data name="SpotListLabelAccepted" xml:space="preserve">
     <value>Du bist dabei bei:</value>
   </data>
+  <data name="SpotListLabelAcceptedWithName" xml:space="preserve">
+    <value>{0} ist dabei bei:</value>
+  </data>
   <data name="SpotListLabelWaitingList" xml:space="preserve">
     <value>Du bist auf der Warteliste von:</value>
   </data>

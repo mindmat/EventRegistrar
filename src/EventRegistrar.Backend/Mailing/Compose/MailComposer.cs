@@ -3,6 +3,7 @@ using System.Text;
 
 using Codecrete.SwissQRBill.Generator;
 
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Mailing.Templates;
 using EventRegistrar.Backend.Payments.Account;
 using EventRegistrar.Backend.Payments.Due;
@@ -23,8 +24,6 @@ public class MailComposer(
     IcsCreator icsCreator)
 {
     private const string DateFormat = "dd.MM.yy";
-    private const string PrefixFollower = "FOLLOWER";
-    private const string PrefixLeader = "LEADER";
 
     public async Task<ComposedMail> Compose(Guid registrationId,
                                             string template,
@@ -86,18 +85,18 @@ public class MailComposer(
         {
             var parts = GetPrefix(key);
 
-            var registrationForPrefix = parts.prefix switch
+            var registrationForPrefix = parts.Role switch
                                         {
-                                            PrefixLeader   => leaderRegistration,
-                                            PrefixFollower => followerRegistration,
-                                            _              => registration
+                                            Role.Leader   => leaderRegistration,
+                                            Role.Follower => followerRegistration,
+                                            _             => registration
                                         }
                                      ?? registration;
 
-            if (Enum.TryParse<MailPlaceholder>(parts.key, true, out var placeholderKey)
-             || parts.key?.ToUpperInvariant() == "SEATLIST"
-             || parts.key?.ToUpperInvariant() == "PARTNER"
-             || parts.key?.ToUpperInvariant() == "CITY")
+            if (Enum.TryParse<MailPlaceholder>(parts.Key, true, out var placeholderKey)
+             || parts.Key?.ToUpperInvariant() == "SEATLIST"
+             || parts.Key?.ToUpperInvariant() == "PARTNER"
+             || parts.Key?.ToUpperInvariant() == "CITY")
             {
                 if (placeholderKey == MailPlaceholder.FirstName)
                 {
@@ -112,17 +111,20 @@ public class MailComposer(
                     templateFiller[key] = registrationForPrefix.Phone;
                 }
                 else if (placeholderKey == MailPlaceholder.Location
-                      || parts.key.ToUpperInvariant() == "CITY")
+                      || parts.Key.ToUpperInvariant() == "CITY")
                 {
                     templateFiller[key] = registrationForPrefix.Location;
                 }
                 else if ((placeholderKey == MailPlaceholder.SpotList
-                       || parts.key.ToUpperInvariant() == "SEATLIST"))
+                       || parts.Key.ToUpperInvariant() == "SEATLIST"))
                 {
-                    templateFiller[key] = await GetSpotList(registrationForPrefix.Id, registrationForPrefix.SoldOutMessage);
+                    templateFiller[key] = await GetSpotList(registrationForPrefix.Id,
+                                                            registrationForPrefix.RespondentFirstName,
+                                                            parts.Role,
+                                                            registrationForPrefix.SoldOutMessage);
                 }
                 else if (placeholderKey == MailPlaceholder.PartnerName
-                      || parts.key?.ToUpperInvariant() == "PARTNER")
+                      || parts.Key?.ToUpperInvariant() == "PARTNER")
                 {
                     templateFiller[key] = registrationForPrefix.PartnerOriginal;
                 }
@@ -132,7 +134,7 @@ public class MailComposer(
                 }
                 else if (placeholderKey == MailPlaceholder.Price)
                 {
-                    var price = parts.prefix == null
+                    var price = parts.Role == null
                                     ? registration.Price_AdmittedAndReduced + (partnerRegistration?.Price_AdmittedAndReduced ?? 0m)
                                     : registrationForPrefix.Price_AdmittedAndReduced;
 
@@ -146,7 +148,7 @@ public class MailComposer(
                 else if (placeholderKey is MailPlaceholder.DueAmount or MailPlaceholder.OverpaidAmount)
                 {
                     decimal difference;
-                    if (parts.prefix == null)
+                    if (parts.Role == null)
                     {
                         // sum of both registrations
                         difference = await GetUnpaidAmount(registration, partnerRegistration);
@@ -220,10 +222,10 @@ public class MailComposer(
                     templateFiller[key] = await GenerateQrCode(registrationForPrefix);
                 }
             }
-            else if (parts.key != null && key != null && registrationForPrefix?.Responses != null)
+            else if (parts.Key != null && key != null && registrationForPrefix?.Responses != null)
             {
                 // check responses with Question.TemplateKey
-                templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp => string.Equals(rsp.Question?.TemplateKey, parts.key,
+                templateFiller[key] = registrationForPrefix.Responses.FirstOrDefault(rsp => string.Equals(rsp.Question?.TemplateKey, parts.Key,
                                                                                                           StringComparison.InvariantCultureIgnoreCase))
                                                            ?.ResponseString;
             }
@@ -306,7 +308,7 @@ public class MailComposer(
                            // output format
                            Format = new BillFormat
                                     {
-                                        Language = Language.DE,
+                                        Language = Codecrete.SwissQRBill.Generator.Language.DE,
                                         GraphicsFormat = GraphicsFormat.PNG,
                                         OutputSize = OutputSize.QrCodeOnly
                                     }
@@ -326,21 +328,24 @@ public class MailComposer(
         }
     }
 
-    private static (string? prefix, string? key) GetPrefix(string key)
+    private static (Role? Role, string? Key) GetPrefix(string key)
     {
         var parts = key?.Split('.');
         return parts?.Length > 1
-                   ? (parts[0], parts[1])
+                   ? (parts[0].TryToEnum<Role>(), parts[1])
                    : (null, key);
     }
 
-    private async Task<string> GetSpotList(Guid registrationId, string? soldOutMessage)
+    private async Task<string> GetSpotList(Guid registrationId,
+                                           string? firstName,
+                                           Role? role,
+                                           string? soldOutMessage)
     {
         var calculatedPrice = await priceCalculator.CalculatePrice(registrationId);
         var result = new StringBuilder();
 
         // Label
-        result.AppendLine($"<p>{Resources.SpotListLabelAccepted}</p>");
+        result.AppendLine($"<p>{GetAcceptedLine(role, firstName)}</p>");
 
         // Admitted
         if (calculatedPrice.PackagesAdmitted.Any())
@@ -419,6 +424,13 @@ public class MailComposer(
         }
 
         return result.ToString();
+    }
+
+    private static string GetAcceptedLine(Role? role, string? firstName)
+    {
+        return role == null
+                   ? Resources.SpotListLabelAccepted
+                   : string.Format(Resources.SpotListLabelAcceptedWithName, firstName);
     }
 
     private static void AddPackageLines(IReadOnlyCollection<MatchingPackageResult> packages, StringBuilder result)
