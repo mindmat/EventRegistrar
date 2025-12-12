@@ -80,7 +80,8 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
         }
 
         // update waiting list
-        if (registration.IsOnWaitingList != calculatedPrice.IsOnWaitingList)
+        var waitingListChanged = registration.IsOnWaitingList != calculatedPrice.IsOnWaitingList;
+        if (waitingListChanged)
         {
             registration.IsOnWaitingList = calculatedPrice.IsOnWaitingList;
             registration.AdmittedAt ??= dateTimeProvider.Now;
@@ -92,7 +93,8 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
         if (anythingChanged)
         {
             changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
-            if (registration.IsOnWaitingList == false)
+            if (waitingListChanged
+             && registration.IsOnWaitingList == false)
             {
                 // registration is now accepted (or changed), send mail
                 var sendMailCommand = new ComposeAndSendAutoMailCommand
