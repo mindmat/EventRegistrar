@@ -100,7 +100,7 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
                 var sendMailCommand = new ComposeAndSendAutoMailCommand
                                       {
                                           EventId = registration.EventId,
-                                          MailType = registration.RegistrationId_Partner != null
+                                          MailType = registration.RegistrationId_Partner != null || registration.PartnerNormalized != null
                                                          ? MailType.PartnerRegistrationMatchedAndAccepted
                                                          : MailType.SingleRegistrationAccepted,
                                           RegistrationId = registration.Id
