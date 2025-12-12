@@ -13,16 +13,16 @@
                     <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
                 </a>
 
-                <!-- Subject -->
-                <div class="flex flex-auto my-1 mr-4 text-2xl">{{ mail.subject }}</div>
-
                 <!-- Release -->
                 <button class="m-2 ml-auto" mat-stroked-button [color]="'primary'" [matTooltip]="'Release' | translate" (click)="releaseMail(mail.id)">
                     <mat-icon class="icon-size-5" [svgIcon]="'mat_solid:send'"></mat-icon>
                 </button>
 
+                <!-- Subject -->
+                <div class="flex flex-auto my-1 mr-4 text-2xl">{{ mail.subject }}</div>
+
                 <!-- Other actions button & menu -->
-                <button class="ml-2" mat-icon-button [matMenuTriggerFor]="mailMenu">
+                <button class="ml-2 ml-auto" mat-icon-button [matMenuTriggerFor]="mailMenu">
                     <mat-icon [svgIcon]="'heroicons_solid:ellipsis-vertical'"></mat-icon>
                 </button>
                 <mat-menu #mailMenu="matMenu">
