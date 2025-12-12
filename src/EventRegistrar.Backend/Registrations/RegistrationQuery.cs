@@ -121,6 +121,8 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                || (spot.Registration_Follower!.EventId == eventId
                                                 && spot.RegistrationId_Follower == registrationId))
                                    .Where(spot => !spot.IsCancelled)
+                                   .Include(spot => spot.Registration)
+                                   .Include(spot => spot.Registration_Follower)
                                    .OrderByDescending(spot => spot.Registrable!.IsCore)
                                    .ThenBy(spot => spot.Registrable!.ShowInMailListOrder)
                                    .Select(spot => new SpotDisplayItem
