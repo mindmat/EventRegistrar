@@ -22,18 +22,18 @@ export class ReleaseMailsService extends FetchService<PendingMailListItem[]>
     return this.result$;
   }
 
-  fetchPendingMails()
+  fetchPendingMails(): Observable<PendingMailListItem[]>
   {
     return this.fetchItems(this.api.pendingMails_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
 
-  releaseMails(mailIds: string[])
+  releaseMails(mailIds: string[]): void
   {
     this.api.releaseMails_Command({ eventId: this.eventService.selectedId, mailIds })
       .subscribe();
   }
 
-  deleteMails(mailIds: string[])
+  deleteMails(mailIds: string[]): void
   {
     this.api.deleteMails_Command({ eventId: this.eventService.selectedId, mailIds })
       .subscribe();

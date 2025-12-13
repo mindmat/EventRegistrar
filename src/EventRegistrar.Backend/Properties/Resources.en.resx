@@ -720,6 +720,9 @@
   <data name="MailTemplate" xml:space="preserve">
     <value>Template</value>
   </data>
+  <data name="MailType" xml:space="preserve">
+    <value>Type</value>
+  </data>
   <data name="MailTypeGroup_Confirmation" xml:space="preserve">
     <value>Confirmation</value>
   </data>

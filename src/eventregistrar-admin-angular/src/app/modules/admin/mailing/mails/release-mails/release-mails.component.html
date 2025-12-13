@@ -23,7 +23,7 @@
                         <div class="relative flex flex-auto flex-col w-full min-w-0 lg:min-w-100 lg:max-w-100 bg-card dark:bg-transparent">
 
                             <!-- Header -->
-                            <div class="flex flex-col flex-0 py-4 px-8 border-b bg-gray-50 dark:bg-transparent">
+                            <div class="flex flex-col flex-0 py-2 px-4 border-b bg-gray-50 dark:bg-transparent">
                                 <div class="flex items-center">
                                     <div class="flex items-center mr-1 cursor-pointer">
                                         <div class="ml-2 font-semibold uppercase">{{ 'PendingMails' | translate }}</div>
@@ -42,11 +42,23 @@
                                         </mat-menu>
                                     </button>
                                 </div>
-                                <!-- Search -->
-                                <div class="mt-4">
+                                <!-- Search and Filters -->
+                                <div class="mt-2">
                                     <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full" [floatLabel]="'always'">
                                         <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
                                         <input matInput [autocomplete]="'off'" placeholder="{{ 'Search' | translate }}" (input)="filterChats(searchField.value)" #searchField>
+                                    </mat-form-field>
+
+                                    <!-- Mail Type Filter -->
+                                    <mat-form-field class="fuse-mat-no-subscript fuse-mat-rounded fuse-mat-dense w-full" [floatLabel]="'always'">
+                                        <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:funnel'"></mat-icon>
+                                        <mat-label>{{ 'MailType' | translate }}</mat-label>
+                                        <mat-select (selectionChange)="onMailTypeFilterChange($event.value)" [value]="selectedMailType">
+                                            <mat-option [value]="null">{{ 'All' | translate }}</mat-option>
+                                            <mat-option *ngFor="let mailType of availableMailTypes" [value]="mailType.type">
+                                                {{ mailType.userText }}
+                                            </mat-option>
+                                        </mat-select>
                                     </mat-form-field>
                                 </div>
                             </div>

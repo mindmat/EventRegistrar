@@ -2192,6 +2192,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Typ.
+        /// </summary>
+        internal static string MailType {
+            get {
+                return ResourceManager.GetString("MailType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zu wenig bezahlt.
         /// </summary>
         internal static string MailType_MoneyOwed {

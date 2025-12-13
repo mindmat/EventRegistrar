@@ -30,6 +30,7 @@ public class PendingMailsCalculator(IQueryable<Mail> _mails) : ReadModelCalculat
                                                                           .StringJoin(", "),
                                                     Subject = mail.Subject,
                                                     Created = mail.Created,
+                                                    Type = mail.Type,
                                                     ContentStart = GetContentStart(mail.ContentHtml)
                                                 })
                                 .ToListAsync(cancellationToken);
@@ -87,4 +88,5 @@ public class PendingMailListItem
     public string? Subject { get; set; }
     public string? ContentStart { get; set; }
     public DateTimeOffset Created { get; set; }
+    public MailType? Type { get; set; }
 }

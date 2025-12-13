@@ -823,6 +823,9 @@
   <data name="MailTemplate" xml:space="preserve">
     <value>Vorlage</value>
   </data>
+  <data name="MailType" xml:space="preserve">
+    <value>Typ</value>
+  </data>
   <data name="MailTypeGroup_Confirmation" xml:space="preserve">
     <value>Teilnahmebestätigung</value>
   </data>

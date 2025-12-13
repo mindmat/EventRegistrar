@@ -10111,6 +10111,7 @@ export interface PendingMailListItem {
     subject?: string | null;
     contentStart?: string | null;
     created?: Date;
+    type?: MailType | null;
 }
 
 export interface PendingMailsQuery {

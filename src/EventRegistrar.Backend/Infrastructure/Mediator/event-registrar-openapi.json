@@ -9388,6 +9388,14 @@
                     "created": {
                         "type": "string",
                         "format": "date-time"
+                    },
+                    "type": {
+                        "nullable": true,
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/MailType"
+                            }
+                        ]
                     }
                 }
             },
