@@ -33,7 +33,7 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
                                         .FirstOrDefaultAsync(cancellationToken);
         if (readModel?.LastUpdate >= command.DirtyMoment)
         {
-            // Not perfect (time vs row version), but still servers as debouncing
+            // Not perfect (time vs row version), but still does some debouncing
             return;
         }
 
@@ -80,6 +80,7 @@ public class UpdateReadModelCommandHandler(IEnumerable<IReadModelCalculator> cal
                                            command.EventId,
                                            command.RowId);
             }
+
             existing.LastUpdate = dateTimeProvider.RequestNow;
         }
     }
@@ -139,4 +140,3 @@ public abstract class ReadModelCalculator<T> : IReadModelCalculator
 
     protected abstract Task<(T ReadModel, MenuNodeCalculation? MenuNode)> CalculateTyped(Guid eventId, Guid? rowId, CancellationToken cancellationToken);
 }
-

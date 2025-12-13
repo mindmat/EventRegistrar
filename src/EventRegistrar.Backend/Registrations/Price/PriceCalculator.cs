@@ -39,8 +39,10 @@ public class PriceCalculator(IQueryable<Seat> _spots,
     public async Task<CalculatedPrice> CalculatePrice(Registration registration,
                                                       IEnumerable<Seat> spots)
     {
-        var coreTracks = await tracks.Where(trk => trk.EventId == registration.EventId && trk.IsCore)
-                                     .ToListAsync();
+        var allTracks = await tracks.Where(trk => trk.EventId == registration.EventId)
+                                    .ToListAsync();
+        var coreTracks = allTracks.Where(trk => trk.IsCore)
+                                  .ToList();
         var isOnWaitingList = false;
         var notCancelledSpots = spots.Where(spot => !spot.IsCancelled
                                                  && (spot.RegistrationId == registration.Id
@@ -98,10 +100,23 @@ public class PriceCalculator(IQueryable<Seat> _spots,
             }
         }
 
-        var (priceAdmittedAndReduced, reductionPackage) = GetReducedPrice(priceAdmitted, registration.IndividualReductions);
-        if (reductionPackage != null)
+        decimal priceAdmittedAndReduced;
+        if (isOnWaitingList)
         {
-            packagesAdmitted = packagesAdmitted.Append(reductionPackage.Value).ToList();
+            priceAdmitted = 0m;
+            priceAdmittedAndReduced = 0m;
+            packagesAdmitted = [];
+            spotsOnWaitingList = notCancelledSpots.Where(spot => allTracks.Any(trk => trk.Id == spot.RegistrableId
+                                                                                   && trk.HasWaitingList))
+                                                  .ToList();
+        }
+        else
+        {
+            (priceAdmittedAndReduced, var reductionPackage) = GetReducedPrice(priceAdmitted, registration.IndividualReductions);
+            if (reductionPackage != null)
+            {
+                packagesAdmitted = packagesAdmitted.Append(reductionPackage.Value).ToList();
+            }
         }
 
         return new CalculatedPrice(priceOriginal,

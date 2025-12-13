@@ -1,4 +1,6 @@
-﻿using EventRegistrar.Backend.Events;
+﻿using System.Diagnostics;
+
+using EventRegistrar.Backend.Events;
 using EventRegistrar.Backend.Registrables.Calendar;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 using EventRegistrar.Backend.Spots;
@@ -7,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EventRegistrar.Backend.Registrables;
 
+[DebuggerDisplay("{Name,nq} {NameSecondary,nq}")]
 public class Registrable : Entity
 {
     public Guid EventId { get; set; }
