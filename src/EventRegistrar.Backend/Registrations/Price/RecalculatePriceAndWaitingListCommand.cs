@@ -100,15 +100,31 @@ public class RecalculatePriceAndWaitingListCommandHandler(IRepository<Registrati
                 var sendMailCommand = new ComposeAndSendAutoMailCommand
                                       {
                                           EventId = registration.EventId,
-                                          MailType = registration.RegistrationId_Partner != null || registration.PartnerNormalized != null
-                                                         ? MailType.PartnerRegistrationMatchedAndAccepted
-                                                         : MailType.SingleRegistrationAccepted,
+                                          MailType = GetMailType(registration),
                                           RegistrationId = registration.Id
                                       };
                 commandQueue.EnqueueCommand(sendMailCommand);
 
                 changeTrigger.TriggerUpdate<RegistrablesOverviewCalculator>(null, registration.EventId);
             }
+        }
+    }
+
+    private static MailType GetMailType(Registration registration)
+    {
+        if (registration.RegistrationId_Partner == null && registration.PartnerNormalized == null)
+        {
+            return MailType.SingleRegistrationAccepted;
+        }
+
+        if (registration.RegistrationId_Partner != null)
+        {
+            return MailType.PartnerRegistrationMatchedAndAccepted;
+        }
+
+        //if (registration.PartnerNormalized != null)
+        {
+            return MailType.PartnerRegistrationFirstPartnerAccepted;
         }
     }
 }
