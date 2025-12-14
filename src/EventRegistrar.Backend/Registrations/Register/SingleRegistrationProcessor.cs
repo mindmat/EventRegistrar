@@ -175,8 +175,8 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                     var trackNames = await registrables.Where(rbl => requestsWithoutRole.Select(rwr => rwr.RegistrableId).Contains(rbl.Id))
                                                        .Select(rbl => rbl.DisplayName)
                                                        .ToListAsync();
-                    throw new RoleMissingException(
-                        $"Registration for partner tracks {trackNames.StringJoin()} but no role defined");
+                    var partners = partnerRegistrableRequests.Select(prr => prr.PartnerForThisSpot).StringJoinNullable();
+                    throw new RoleMissingException($"Registration for partner tracks {trackNames.StringJoin()} but no role defined. Partner: {partners}");
                 }
             }
 
