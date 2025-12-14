@@ -1,6 +1,7 @@
 ﻿using Dapper;
 
 using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Events.Context;
 using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Payments;
@@ -34,7 +35,8 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
                                                   RegistrationProcessorDelegator registrationProcessorDelegator,
                                                   IDateTimeProvider dateTimeProvider,
                                                   ChangeTrigger changeTrigger,
-                                                  SqlConnection dbConnection)
+                                                  SqlConnection dbConnection,
+                                                  EventContext eventContext)
     : IRequestHandler<ProcessRawRegistrationCommand>
 {
     public async Task Handle(ProcessRawRegistrationCommand command, CancellationToken cancellationToken)
@@ -66,6 +68,7 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
             }
 
             eventId = form.EventId;
+            eventContext.EventId ??= eventId;
             logger.LogInformation($"Questions: {form.Questions.Count}, Options: {form.Questions.Sum(qst => qst.QuestionOptions?.Count)}");
 
             // check form state
