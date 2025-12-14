@@ -46,8 +46,12 @@
                 [ngClass]="{'bg-primary-600': dragOverParticipants}" cdkDropList (cdkDropListDropped)="dragOverParticipants=false;drop($event.item.data)" cdkDropListConnectedTo="waitingList"
                 [cdkDropListData]="registrable.participants" (cdkDropListEntered)="dragOverParticipants=true" (cdkDropListExited)="dragOverParticipants=false">
                 <!-- Spot -->
-                <ng-container *ngFor="let spot of registrable.participants; trackBy: trackByFn">
+                <ng-container *ngFor="let spot of registrable.participants; let i = index; trackBy: trackByFn">
                     <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner"></app-participant>
+                    <!-- Maximum single seats indicator -->
+                    <div *ngIf="registrable.maximumSingleSeats && registrable.maximumSingleSeats === i + 1" class="mb-3 mx-1 h-0.5 bg-gray-600 rounded overflow-hidden"
+                        [matTooltip]="'max: ' + registrable.maximumSingleSeats" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
+                    </div>
                 </ng-container>
             </div>
         </div>

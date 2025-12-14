@@ -73,7 +73,7 @@
                                 </div>
                             </div>
                             <!-- Spot -->
-                            <ng-container *ngFor="let spot of registrable.participants; trackBy: trackByFn">
+                            <ng-container *ngFor="let spot of registrable.participants; let i = index; trackBy: trackByFn">
                                 <div class="flex flex-row items-center">
                                     <app-participant [registration]="spot.leader" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Leader" [isPartnerSpot]="spot.isPartnerRegistration"
                                         (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
@@ -81,6 +81,10 @@
                                     <div *ngIf="!spot.isPartnerRegistration" class="w-4"></div>
                                     <app-participant [registration]="spot.follower" [placeholderPartner]="spot.placeholderPartner" [role]="Role.Follower" [isPartnerSpot]="spot.isPartnerRegistration"
                                         (switchRoleEvent)="switchRole($event.registrationId, $event.toRole)"></app-participant>
+                                </div>
+                                <!-- Maximum double seats indicator -->
+                                <div *ngIf="registrable.maximumDoubleSeats && registrable.maximumDoubleSeats === i + 1" class="mb-3 mx-1 h-0.5 bg-gray-600 rounded overflow-hidden"
+                                    [matTooltip]="'max: ' + registrable.maximumDoubleSeats" [matTooltipPosition]="'above'" [matTooltipClass]="'mb-1'">
                                 </div>
                             </ng-container>
                         </div>
