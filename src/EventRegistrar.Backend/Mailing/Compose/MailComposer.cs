@@ -440,7 +440,7 @@ public class MailComposer(
             // Package header
             result.AppendLine("<tr>");
             result.AppendLine($"<td><strong>{package.Name}</strong></td>");
-            result.AppendLine($"<td style=\"text-align: right;\">{package.Price}</td>");
+            result.AppendLine($"<td style=\"text-align: right;\">{package.Price:F2}</td>");
 
             if (package.OriginalPrice > package.Price && !package.IsReductionsPackage)
             {
