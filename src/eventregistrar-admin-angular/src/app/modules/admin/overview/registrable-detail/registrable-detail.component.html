@@ -1,4 +1,4 @@
-<div class="flex flex-col flex-auto md:w-160 md:min-w-160 max-h-3/4 -m-6 overflow-y-auto">
+<div class="flex flex-col md:w-160 md:min-w-160 max-h-screen -m-6">
 
     <!-- Header -->
     <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
@@ -9,7 +9,7 @@
     </div>
 
     <!-- Form -->
-    <form [formGroup]="registrableForm" (ngSubmit)="onSubmit()" class="flex flex-col flex-0 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto">
+    <form [formGroup]="registrableForm" (ngSubmit)="onSubmit()" class="flex flex-col flex-1 items-start w-full p-6 sm:p-8 space-y-6 overflow-y-auto">
 
         <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
             <!-- Name -->
