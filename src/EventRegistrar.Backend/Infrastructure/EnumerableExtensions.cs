@@ -1,4 +1,6 @@
-﻿namespace EventRegistrar.Backend.Infrastructure;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace EventRegistrar.Backend.Infrastructure;
 
 public static class EnumerableExtensions
 {
@@ -71,8 +73,18 @@ public static class EnumerableExtensions
         return source.Where(x => x != null).Select(x => x!);
     }
 
-    public static bool HasElements<TSource>(this IEnumerable<TSource>? source)
+    public static bool HasElements<TSource>([NotNullWhen(true)] this IEnumerable<TSource>? source)
     {
         return source?.Any() == true;
+    }
+
+    public static IReadOnlyCollection<T> AsCollection<T>(this IEnumerable<T>? source)
+    {
+        return source switch
+        {
+            null                        => null!,
+            IReadOnlyCollection<T> list => list,
+            _                           => source.ToList(),
+        };
     }
 }

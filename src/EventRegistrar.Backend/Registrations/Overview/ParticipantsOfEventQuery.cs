@@ -46,16 +46,6 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
 {
     public async Task<IEnumerable<Participant>> Handle(ParticipantsOfEventQuery query, CancellationToken cancellationToken)
     {
-        var dynamicColumns = query.AddDetails
-                                 ? (await _registrables.Where(rbl => rbl.EventId == query.EventId
-                                                                  && rbl.CheckinListColumn != null)
-                                                       .Select(rbl => new { rbl.Id, rbl.DisplayName, rbl.CheckinListColumn })
-                                                       .ToListAsync(cancellationToken))
-                                   .GroupBy(rbl => rbl.CheckinListColumn!)
-                                   .ToDictionary(grp => grp.Key,
-                                                 grp => grp.Select(rbl => (rbl.Id, rbl.DisplayName)))
-                                 : null;
-
         var allowedStates = query.States?.Any() == true
                                 ? query.States
                                 : [RegistrationState.Received, RegistrationState.Paid];
@@ -64,7 +54,7 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                           .ToDictionaryAsync(pkg => pkg.Id, pkg => pkg.Name, cancellationToken);
 
         var queryable = _registrations.Where(reg => reg.EventId == query.EventId);
-        if (searchParts?.Any() == true)
+        if (searchParts.HasElements())
         {
             foreach (var searchPart in searchParts)
             {
@@ -82,7 +72,11 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                              .Select(reg => new { reg.Id, reg.PricePackageIds_Admitted })
                                              .ToListAsync(cancellationToken);
 
-        var registrations = await readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery), query.EventId, registrationIds.Select(reg => reg.Id), cancellationToken);
+        var registrations = (await readModelReader.GetDeserialized<RegistrationDisplayItem>(nameof(RegistrationQuery),
+                                                                                            query.EventId,
+                                                                                            registrationIds.Select(reg => reg.Id),
+                                                                                            cancellationToken))
+            .AsCollection();
         var registrables = await tracks.Where(trk => trk.EventId == query.EventId)
                                        .Select(trk => new
                                                       {
@@ -94,6 +88,13 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
         var registrableIds = registrables.Where(trk => trk.IsCoreTrack)
                                          .Select(trk => trk.Id)
                                          .ToList();
+
+        // Build dynamic columns lists separately and then merge for rendering
+        var remarkColumns = GetRemarkDynamicColumnsWithContent(registrations);
+        var trackColumns = query.AddDetails
+                               ? await GetTrackDynamicColumns(query.EventId, cancellationToken)
+                               : [];
+
         return registrations.Select(reg => new Participant
                                            {
                                                RegistrationId = reg.Id,
@@ -114,35 +115,55 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                                InternalNotes = query.AddDetails
                                                                    ? reg.InternalNotes
                                                                    : null,
-                                               DynamicColumns = GetDynamicColumns(reg, dynamicColumns, query.AddDetails
-                                                                                                           ? reg.Remarks
-                                                                                                           : null)
+                                               DynamicColumns = GetDynamicColumns(reg, trackColumns, remarkColumns)
                                            })
                             .OrderBy(reg => reg.FirstName)
                             .ThenBy(reg => reg.LastName)
                             .ToList();
     }
 
-    private static Dictionary<string, string> GetDynamicColumns(RegistrationDisplayItem reg,
-                                                                Dictionary<string, IEnumerable<(Guid Id, string DisplayName)>>? dynamicColumns,
-                                                                IEnumerable<RemarkItem>? remarks)
+    // Returns only remark-based dynamic columns with their content
+    private static Dictionary<string, IEnumerable<(Guid RegistrationId, string Text)>> GetRemarkDynamicColumnsWithContent(IReadOnlyCollection<RegistrationDisplayItem> registrations)
     {
-        IEnumerable<KeyValuePair<string, string>> columns =
-            dynamicColumns?.ToDictionary(col => col.Key,
-                                         col => col.Value.Where(rbl => reg.Spots!.Any(spt => spt.RegistrableId == rbl.Id))
-                                                   .Select(rbl => rbl.DisplayName)
-                                                   .StringJoin())
-         ?? [];
+        var remarkTypesWithContent = registrations.SelectMany(reg => reg.Remarks?.Select(rmk => (RegistrationId: reg.Id, Section: rmk.Section ?? string.Empty, rmk.Text)) ?? [])
+                                                  .GroupBy(reg => reg.Section)
+                                                  .ToDictionary(grp => $"{Resources.Remarks}: {grp.Key}",
+                                                                grp => grp.Select(rmk => (rmk.RegistrationId, rmk.Text)));
+        return remarkTypesWithContent;
+    }
 
-        foreach (var remark in remarks ?? [])
+    // Returns only track-based dynamic columns with their content
+    private async Task<Dictionary<string, IEnumerable<(Guid Id, string Text)>>> GetTrackDynamicColumns(Guid eventId,
+                                                                                                       CancellationToken cancellationToken)
+    {
+        var dynamicColumns = new Dictionary<string, IEnumerable<(Guid Id, string Text)>>();
+        var tracksWithContent = await _registrables.Where(rbl => rbl.EventId == eventId
+                                                              && rbl.CheckinListColumn != null)
+                                                   .Select(rbl => new { rbl.Id, rbl.DisplayName, rbl.CheckinListColumn })
+                                                   .ToListAsync(cancellationToken);
+        foreach (var trackWithContent in tracksWithContent.GroupBy(rbl => rbl.CheckinListColumn!))
         {
-            var key = string.IsNullOrWhiteSpace(remark.Section)
-                          ? Resources.Remarks
-                          : $"{Resources.Remarks}: {remark.Section}";
-            columns = columns.Append(new KeyValuePair<string, string>(key, remark.Text));
+            dynamicColumns.Add(trackWithContent.Key, trackWithContent.Select(rbl => (rbl.Id, Text: rbl.DisplayName)));
         }
 
-        return columns.ToDictionary(col => col.Key, col => col.Value);
+        return dynamicColumns;
+    }
+
+    private static Dictionary<string, string> GetDynamicColumns(RegistrationDisplayItem reg,
+                                                                Dictionary<string, IEnumerable<(Guid Id, string DisplayName)>>? trackColumns,
+                                                                Dictionary<string, IEnumerable<(Guid RegistrationId, string Text)>> remarkColumns)
+    {
+        var dynamicColumns = trackColumns?.ToDictionary(col => col.Key,
+                                                        col => col.Value.Where(rbl => reg.Spots!.Any(spt => spt.RegistrableId == rbl.Id))
+                                                                  .Select(rbl => rbl.DisplayName)
+                                                                  .StringJoin())
+                          ?? [];
+        foreach (var remark in remarkColumns.Select(col => new { Column = col.Key, Text = col.Value.FirstOrDefault(rmk => rmk.RegistrationId == reg.Id).Text }))
+        {
+            dynamicColumns.Add(remark.Column, remark.Text);
+        }
+
+        return dynamicColumns;
     }
 
     private static string GetSpotText(string registrableName, string? registrableNameSecondary, string? roleText)
