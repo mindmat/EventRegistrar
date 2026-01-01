@@ -232,7 +232,7 @@ export class RegistrationComponent implements OnInit
     this.registrationService.unbindPartnerRegistrations(this.registration.id);
   }
 
-  matchSpotWithPartner(spot: SpotDisplayItem)
+  matchSpotWithPartner(spot: SpotDisplayItem): void
   {
     if (!!spot.partnerRegistrationId
       || !spot.registrableId
@@ -240,14 +240,14 @@ export class RegistrationComponent implements OnInit
     {
       return;
     }
-    var role = spot.role === Role.Leader ? 'Follower' : 'Leader';
+    const role = spot.role === Role.Leader ? 'Follower' : 'Leader';
     this.matDialog.open(MatchSingleSpotsComponent, {
       autoFocus: true,
       data: { context: { registrableId: spot.registrableId, role }, spotId: spot.id, partnerName: spot.partnerName }
     });
   }
 
-  unbindPartnerSpot(spot: SpotDisplayItem)
+  unbindPartnerSpot(spot: SpotDisplayItem): void
   {
     if (spot.partnerRegistrationId || !!spot.partnerName)
     {
@@ -288,7 +288,7 @@ export class RegistrationComponent implements OnInit
     this.registrationService.recalculateReadModel(this.registration.id);
   }
 
-  downloadIcs()
+  downloadIcs(): void
   {
     this.registrationService.downloadIcs(this.registration.id);
   }

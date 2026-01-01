@@ -37,8 +37,8 @@ export class RemarksOverviewComponent implements OnInit
       });
   }
 
-  processedChanged(registrationId: string, processed: boolean)
+  processedChanged(remarkId: string, processed: boolean): void
   {
-    this.remarksService.setProcessedState(registrationId, processed);
+    this.remarksService.setProcessedState(remarkId, processed);
   }
 }

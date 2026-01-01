@@ -44,6 +44,8 @@ public class MailComposer(
                                               .Include(reg => reg.Mails!)
                                               .ThenInclude(map => map.Mail)
                                               .Include(reg => reg.Event)
+                                              .Include(reg => reg.RemarksList!)
+                                              .ThenInclude(rmk => rmk.Question)
                                               .FirstAsync(cancellationToken);
 
         var mainRegistrationRole = registration.Seats_AsFollower!.Any(spt => !spt.IsCancelled)
@@ -68,6 +70,8 @@ public class MailComposer(
                                                      .Include(reg => reg.Cancellations)
                                                      .Include(reg => reg.Mails!)
                                                      .ThenInclude(map => map.Mail)
+                                                     .Include(reg => reg.RemarksList!)
+                                                     .ThenInclude(rmk => rmk.Question)
                                                      .FirstOrDefaultAsync(cancellationToken);
             if (mainRegistrationRole == Role.Leader)
             {
@@ -130,7 +134,10 @@ public class MailComposer(
                 }
                 else if (placeholderKey == MailPlaceholder.Comments)
                 {
-                    templateFiller[key] = registrationForPrefix.Remarks?.ReplaceLineEndings("<br/>") ?? string.Empty;
+                    templateFiller[key] = registrationForPrefix.RemarksList
+                                                               ?.Select(rmk => $"<b>{rmk.Question?.Section}</b>: {rmk.Text?.ReplaceLineEndings("<br/>")}")
+                                                               .StringJoin("<br/>")
+                                       ?? string.Empty;
                 }
                 else if (placeholderKey == MailPlaceholder.Price)
                 {

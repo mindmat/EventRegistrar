@@ -1,28 +1,31 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
 
 namespace EventRegistrar.Backend.Registrations.Remarks;
 
 public class SetRemarksProcessedStateCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
-    public Guid RegistrationId { get; set; }
+    public Guid RemarkId { get; set; }
     public bool NewProcessedState { get; set; }
 }
 
-public class SetRemarksProcessedStateCommandHandler(IRepository<Registration> registrations,
-                                                    IEventBus eventBus,
+public class SetRemarksProcessedStateCommandHandler(IRepository<RegistrationRemark> remarks,
                                                     ChangeTrigger changeTrigger)
     : IRequestHandler<SetRemarksProcessedStateCommand>
 {
     public async Task Handle(SetRemarksProcessedStateCommand command, CancellationToken cancellationToken)
     {
-        var registration = await registrations.AsTracking()
-                                              .FirstAsync(reg => reg.Id == command.RegistrationId
-                                                              && reg.EventId == command.EventId, cancellationToken);
-        registration.RemarksProcessed = command.NewProcessedState;
+        var remark = await remarks.AsTracking()
+                                  .FirstAsync(rmk => rmk.Id == command.RemarkId
+                                                  && rmk.Registration!.EventId == command.EventId,
+                                              cancellationToken);
 
-        changeTrigger.TriggerUpdate<RemarksOverviewCalculator>(null, registration.EventId);
-        changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+        if (remark.Processed != command.NewProcessedState)
+        {
+            remark.Processed = command.NewProcessedState;
+
+            changeTrigger.TriggerUpdate<RemarksOverviewCalculator>(null, command.EventId);
+            changeTrigger.TriggerUpdate<RegistrationCalculator>(remark.RegistrationId, command.EventId);
+        }
     }
 }

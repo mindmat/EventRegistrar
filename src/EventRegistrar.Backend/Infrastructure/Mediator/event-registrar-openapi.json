@@ -10674,11 +10674,11 @@
                         "format": "date-time"
                     },
                     "remarks": {
-                        "type": "string",
-                        "nullable": true
-                    },
-                    "remarksProcessed": {
-                        "type": "boolean"
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                            "$ref": "#/components/schemas/RemarkItem"
+                        }
                     },
                     "reminderLevel": {
                         "type": "integer",
@@ -10758,6 +10758,26 @@
                         "items": {
                             "$ref": "#/components/schemas/IndividualReductionDisplayItem"
                         }
+                    }
+                }
+            },
+            "RemarkItem": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "section": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "text": {
+                        "type": "string"
+                    },
+                    "processed": {
+                        "type": "boolean"
                     }
                 }
             },
@@ -10984,6 +11004,10 @@
                 "type": "object",
                 "additionalProperties": false,
                 "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "guid"
+                    },
                     "registrationId": {
                         "type": "string",
                         "format": "guid"
@@ -10993,6 +11017,10 @@
                         "nullable": true
                     },
                     "email": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "section": {
                         "type": "string",
                         "nullable": true
                     },
@@ -11698,7 +11726,7 @@
                         "type": "string",
                         "format": "guid"
                     },
-                    "registrationId": {
+                    "remarkId": {
                         "type": "string",
                         "format": "guid"
                     },

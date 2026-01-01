@@ -1,6 +1,7 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Infrastructure.Mediator;
+using EventRegistrar.Backend.Properties;
 using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrables.Pricing;
 
@@ -52,7 +53,7 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                                        .ToListAsync(cancellationToken))
                                    .GroupBy(rbl => rbl.CheckinListColumn!)
                                    .ToDictionary(grp => grp.Key,
-                                                 grp => grp.Select(rbl => new { rbl.Id, rbl.DisplayName }))
+                                                 grp => grp.Select(rbl => (rbl.Id, rbl.DisplayName)))
                                  : null;
 
         var allowedStates = query.States?.Any() == true
@@ -113,17 +114,35 @@ public class ParticipantsOfEventQueryHandler(IQueryable<Registration> _registrat
                                                InternalNotes = query.AddDetails
                                                                    ? reg.InternalNotes
                                                                    : null,
-                                               Remarks = query.AddDetails
-                                                             ? reg.Remarks
-                                                             : null,
-                                               DynamicColumns = dynamicColumns?.ToDictionary(col => col.Key,
-                                                                                             col => col.Value.Where(rbl => reg.Spots!.Any(spt => spt.RegistrableId == rbl.Id))
-                                                                                                       .Select(rbl => rbl.DisplayName)
-                                                                                                       .StringJoin())
+                                               DynamicColumns = GetDynamicColumns(reg, dynamicColumns, query.AddDetails
+                                                                                                           ? reg.Remarks
+                                                                                                           : null)
                                            })
                             .OrderBy(reg => reg.FirstName)
                             .ThenBy(reg => reg.LastName)
                             .ToList();
+    }
+
+    private static Dictionary<string, string> GetDynamicColumns(RegistrationDisplayItem reg,
+                                                                Dictionary<string, IEnumerable<(Guid Id, string DisplayName)>>? dynamicColumns,
+                                                                IEnumerable<RemarkItem>? remarks)
+    {
+        IEnumerable<KeyValuePair<string, string>> columns =
+            dynamicColumns?.ToDictionary(col => col.Key,
+                                         col => col.Value.Where(rbl => reg.Spots!.Any(spt => spt.RegistrableId == rbl.Id))
+                                                   .Select(rbl => rbl.DisplayName)
+                                                   .StringJoin())
+         ?? [];
+
+        foreach (var remark in remarks ?? [])
+        {
+            var key = string.IsNullOrWhiteSpace(remark.Section)
+                          ? Resources.Remarks
+                          : $"{Resources.Remarks}: {remark.Section}";
+            columns = columns.Append(new KeyValuePair<string, string>(key, remark.Text));
+        }
+
+        return columns.ToDictionary(col => col.Key, col => col.Value);
     }
 
     private static string GetSpotText(string registrableName, string? registrableNameSecondary, string? roleText)

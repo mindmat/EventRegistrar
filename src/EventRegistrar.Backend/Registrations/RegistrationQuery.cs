@@ -58,8 +58,13 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                             Language = reg.Language,
                                                             ReceivedAt = reg.ReceivedAt,
                                                             ReminderLevel = reg.ReminderLevel,
-                                                            Remarks = reg.Remarks,
-                                                            RemarksProcessed = reg.RemarksProcessed,
+                                                            Remarks = reg.RemarksList!.Select(rmk => new RemarkItem
+                                                                                                     {
+                                                                                                         Id = rmk.Id,
+                                                                                                         Section = rmk.Question!.Section,
+                                                                                                         Text = rmk.Text,
+                                                                                                         Processed = rmk.Processed
+                                                                                                     }),
                                                             Email = reg.RespondentEmail,
                                                             FirstName = reg.RespondentFirstName,
                                                             LastName = reg.RespondentLastName,
@@ -238,6 +243,14 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                        : spot.PartnerEmail;
         }
     }
+}
+
+public record RemarkItem
+{
+    public Guid Id { get; set; }
+    public string? Section { get; set; }
+    public string Text { get; set; } = null!;
+    public bool Processed { get; set; }
 }
 
 public class UpdateRegistrationWhenOutgoingPaymentAssigned(IDateTimeProvider dateTimeProvider) :

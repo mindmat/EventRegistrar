@@ -25,8 +25,7 @@ public class RegistrationDisplayItem
     public string? PhoneFormatted { get; internal set; }
     public decimal? Price { get; set; }
     public DateTimeOffset ReceivedAt { get; set; }
-    public string? Remarks { get; set; }
-    public bool RemarksProcessed { get; set; }
+    public IEnumerable<RemarkItem>? Remarks { get; set; }
     public int ReminderLevel { get; set; }
     public int SmsCount { get; set; }
     public string? SoldOutMessage { get; set; }

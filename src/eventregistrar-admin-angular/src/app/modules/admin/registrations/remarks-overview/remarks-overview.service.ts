@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Api, RemarksDisplayItem } from 'app/api/api';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { FetchService } from '../../infrastructure/fetchService';
 import { NotificationService } from '../../infrastructure/notification.service';
@@ -25,9 +25,9 @@ export class RemarksOverviewService extends FetchService<RemarksDisplayItem[] | 
     return this.fetchItems(this.api.remarksOverview_Query({ eventId: this.eventService.selectedId }), null, this.eventService.selectedId);
   }
 
-  setProcessedState(registrationId: string, processed: boolean)
+  setProcessedState(remarkId: string, processed: boolean): Subscription
   {
-    return this.api.setRemarksProcessedState_Command({ eventId: this.eventService.selectedId, registrationId, newProcessedState: processed })
+    return this.api.setRemarksProcessedState_Command({ eventId: this.eventService.selectedId, remarkId, newProcessedState: processed })
       .subscribe();
   }
 }

@@ -9,6 +9,7 @@ using EventRegistrar.Backend.RegistrationForms.Questions;
 using EventRegistrar.Backend.RegistrationForms.Questions.Mappings;
 using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Spots;
+using EventRegistrar.Backend.Registrations.Remarks;
 
 namespace EventRegistrar.Backend.Registrations.Register;
 
@@ -16,6 +17,7 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                          SpotManager spotManager,
                                          PriceCalculator priceCalculator,
                                          IRepository<Registration> registrations,
+                                         IRepository<RegistrationRemark> registrationRemarks,
                                          CommandQueue commandQueue,
                                          IQueryable<RegistrationForm> forms,
                                          IQueryable<Registrable> registrables,
@@ -81,7 +83,21 @@ public class SingleRegistrationProcessor(PhoneNormalizer phoneNormalizer,
                                     break;
                                 }
 
-                                var text = $"{question.Section}: {response.ResponseString}";
+                                // Insert per-remark entity
+                                var remark = new RegistrationRemark
+                                             {
+                                                 Id = Guid.NewGuid(),
+                                                 RegistrationId = registration.Id,
+                                                 QuestionId = question.Id,
+                                                 Text = response.ResponseString.Trim()
+                                             };
+                                registrationRemarks.InsertObjectTree(remark);
+
+                                // keep legacy merged remarks field
+                                var text = string.IsNullOrWhiteSpace(question.Section)
+                                               ? response.ResponseString
+                                               : $"{question.Section}: {response.ResponseString}";
+
                                 if (string.IsNullOrEmpty(registration.Remarks))
                                 {
                                     registration.Remarks = text;

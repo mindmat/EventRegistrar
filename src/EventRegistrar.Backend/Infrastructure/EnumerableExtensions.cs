@@ -70,4 +70,9 @@ public static class EnumerableExtensions
     {
         return source.Where(x => x != null).Select(x => x!);
     }
+
+    public static bool HasElements<TSource>(this IEnumerable<TSource>? source)
+    {
+        return source?.Any() == true;
+    }
 }

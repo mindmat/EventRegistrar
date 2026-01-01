@@ -8,6 +8,7 @@ using EventRegistrar.Backend.RegistrationForms;
 using EventRegistrar.Backend.RegistrationForms.FormPaths;
 using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.IndividualReductions;
+using EventRegistrar.Backend.Registrations.Remarks;
 using EventRegistrar.Backend.Registrations.Responses;
 using EventRegistrar.Backend.Spots;
 
@@ -55,9 +56,16 @@ public class Registration : Entity
     public string? PartnerOriginal { get; set; }
     public string? Phone { get; set; }
     public string? PhoneNormalized { get; set; }
+
     public DateTimeOffset ReceivedAt { get; set; }
+
+    [Obsolete("Use RegistrationRemarks (1:n) instead")]
     public string? Remarks { get; set; }
+
     public bool RemarksProcessed { get; set; }
+
+    public ICollection<RegistrationRemark>? RemarksList { get; set; }
+
     public int ReminderLevel { get; set; }
     public string? RespondentEmail { get; set; }
     public string? RespondentFirstName { get; set; }

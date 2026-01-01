@@ -10523,8 +10523,7 @@ export interface RegistrationDisplayItem {
     phoneFormatted?: string | null;
     price?: number | null;
     receivedAt?: Date;
-    remarks?: string | null;
-    remarksProcessed?: boolean;
+    remarks?: RemarkItem[] | null;
     reminderLevel?: number;
     smsCount?: number;
     soldOutMessage?: string | null;
@@ -10540,6 +10539,13 @@ export interface RegistrationDisplayItem {
     mails?: MailMetadata[] | null;
     importedMails?: MailMetadata[] | null;
     reductions?: IndividualReductionDisplayItem[] | null;
+}
+
+export interface RemarkItem {
+    id?: string;
+    section?: string | null;
+    text?: string;
+    processed?: boolean;
 }
 
 export interface SpotDisplayItem {
@@ -10614,9 +10620,11 @@ export interface ReleaseMailsCommand {
 }
 
 export interface RemarksDisplayItem {
+    id?: string;
     registrationId?: string;
     displayName?: string | null;
     email?: string | null;
+    section?: string | null;
     remarks?: string;
     processed?: boolean;
 }
@@ -10842,7 +10850,7 @@ export interface SetReleaseMailCommand {
 
 export interface SetRemarksProcessedStateCommand {
     eventId?: string;
-    registrationId?: string;
+    remarkId?: string;
     newProcessedState?: boolean;
 }
 

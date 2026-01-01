@@ -197,7 +197,7 @@ public class ProcessRawRegistrationCommandHandler(ILogger logger,
                 changeTrigger.TriggerUpdate<RegistrationsWithUnmatchedPartnerCalculator>(null, form.EventId);
             }
 
-            if (!string.IsNullOrWhiteSpace(registration.Remarks))
+            if (registration.RemarksList.HasElements())
             {
                 changeTrigger.TriggerUpdate<RemarksOverviewCalculator>(null, registration.EventId);
             }
