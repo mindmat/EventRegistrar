@@ -9357,6 +9357,7 @@ export interface DuePaymentItem {
     daysSinceLastNotification?: number | null;
     lastNotificationType?: string | null;
     willPayAtCheckin?: boolean;
+    internalNotes?: string | null;
 }
 
 export interface SentMailDto {

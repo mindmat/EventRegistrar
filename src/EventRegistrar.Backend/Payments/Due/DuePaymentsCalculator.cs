@@ -45,6 +45,7 @@ public class DuePaymentsCalculator(IQueryable<Registration> registrations,
                                                          reg.ReceivedAt,
                                                          reg.PhoneNormalized,
                                                          reg.ReminderLevel,
+                                                         reg.InternalNotes,
                                                          Paid = (decimal?)reg.PaymentAssignments!.Sum(asn => asn.OutgoingPayment == null
                                                                                                                  ? asn.Amount
                                                                                                                  : -asn.Amount),
@@ -71,6 +72,7 @@ public class DuePaymentsCalculator(IQueryable<Registration> registrations,
                                             tmp.ReceivedAt,
                                             tmp.PhoneNormalized,
                                             tmp.ReminderLevel,
+                                            tmp.InternalNotes,
                                             tmp.Paid,
                                             tmp.WillPayAtCheckin,
                                             AcceptedMail = tmp.Mails.Where(mail => !mail.Withhold
@@ -133,7 +135,8 @@ public class DuePaymentsCalculator(IQueryable<Registration> registrations,
                                                                && reg.AcceptedMail != null
                                                                && reg.AcceptedMail.Sent < reminderDueFrom
                                                                && reg.PhoneNormalized != null,
-                                            WillPayAtCheckin = reg.WillPayAtCheckin
+                                            WillPayAtCheckin = reg.WillPayAtCheckin,
+                                            InternalNotes = reg.InternalNotes
                                         })
                          .ToList();
 
@@ -212,6 +215,7 @@ public class DuePaymentItem
     public int? DaysSinceLastNotification { get; set; }
     public string? LastNotificationType { get; set; }
     public bool WillPayAtCheckin { get; internal set; }
+    public string? InternalNotes { get; set; }
 }
 
 public class SentMailDto

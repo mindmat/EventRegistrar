@@ -7014,6 +7014,10 @@
                     },
                     "willPayAtCheckin": {
                         "type": "boolean"
+                    },
+                    "internalNotes": {
+                        "type": "string",
+                        "nullable": true
                     }
                 }
             },

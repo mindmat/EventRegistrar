@@ -8,7 +8,8 @@ import { NotificationService } from '../../infrastructure/notification.service';
 @Injectable({
   providedIn: 'root'
 })
-export class DuePaymentsService extends FetchService<DuePaymentItem[]> {
+export class DuePaymentsService extends FetchService<DuePaymentItem[]>
+{
 
   constructor(private api: Api,
     private eventService: EventService,

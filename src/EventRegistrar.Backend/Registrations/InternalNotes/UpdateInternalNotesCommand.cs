@@ -1,5 +1,6 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
+using EventRegistrar.Backend.Payments.Differences;
+using EventRegistrar.Backend.Payments.Due;
 
 namespace EventRegistrar.Backend.Registrations.InternalNotes;
 
@@ -10,7 +11,9 @@ public class UpdateInternalNotesCommand : IRequest<string?>, IEventBoundRequest
     public string? Notes { get; set; }
 }
 
-public class UpdateInternalNotesCommandHandler(IRepository<Registration> registrations, IEventBus eventBus, ChangeTrigger changeTrigger) : IRequestHandler<UpdateInternalNotesCommand, string?>
+public class UpdateInternalNotesCommandHandler(IRepository<Registration> registrations,
+                                               ChangeTrigger changeTrigger)
+    : IRequestHandler<UpdateInternalNotesCommand, string?>
 {
     public async Task<string?> Handle(UpdateInternalNotesCommand command, CancellationToken cancellationToken)
     {
@@ -21,12 +24,10 @@ public class UpdateInternalNotesCommandHandler(IRepository<Registration> registr
                                          ? null
                                          : command.Notes;
 
-        eventBus.Publish(new QueryChanged
-                         {
-                             EventId = command.EventId,
-                             QueryName = nameof(InternalNotesQuery)
-                         });
+        changeTrigger.QueryChanged<InternalNotesQuery>(command.EventId);
+        changeTrigger.QueryChanged<DifferencesQuery>(registration.EventId);
         changeTrigger.TriggerUpdate<RegistrationCalculator>(registration.Id, registration.EventId);
+        changeTrigger.TriggerUpdate<DuePaymentsCalculator>(null, registration.EventId);
 
         return command.Notes;
     }
