@@ -122,7 +122,7 @@ public class NotReceivedMailsCalculator(IQueryable<MailToRegistration> mails,
                        Style = MenuNodeStyle.None,
                        Content = $"{noneSucceededCount} | {someSucceededCount}",
                        Hidden = !hasFeedback
-                   }; 
+                   };
         if (noneSucceededCount > 0)
         {
             node.Style = MenuNodeStyle.Important;

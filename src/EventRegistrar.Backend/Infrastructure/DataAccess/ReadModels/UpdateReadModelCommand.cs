@@ -4,7 +4,7 @@ using EventRegistrar.Backend.Infrastructure.MenuNodes;
 
 namespace EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 
-public class UpdateReadModelCommand : IRequest
+public class UpdateReadModelCommand : IRequest, IEventBoundRequest
 {
     public Guid EventId { get; set; }
     public string QueryName { get; set; } = null!;
