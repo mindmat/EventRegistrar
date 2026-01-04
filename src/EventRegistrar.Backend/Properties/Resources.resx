@@ -163,6 +163,9 @@
   <data name="AddLink" xml:space="preserve">
     <value>Neue Zuordnung</value>
   </data>
+  <data name="AddNewShift" xml:space="preserve">
+    <value>Schicht hinzufügen</value>
+  </data>
   <data name="AddPricePackage" xml:space="preserve">
     <value>Neues Paket erstellen</value>
   </data>
@@ -1537,6 +1540,9 @@
   </data>
   <data name="Valuta" xml:space="preserve">
     <value>Valuta</value>
+  </data>
+  <data name="VolunteerPlanning" xml:space="preserve">
+    <value>Helfer-Planung</value>
   </data>
   <data name="WaitingList" xml:space="preserve">
     <value>Warteliste</value>

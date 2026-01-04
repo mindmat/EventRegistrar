@@ -7,9 +7,9 @@ public class TryMoveUpFromWaitingListWhenSpotRemoved : IEventToCommandTranslatio
 {
     public IEnumerable<IRequest> Translate(SpotRemoved e)
     {
-        if (e.SpotWasOnWaitingList && e.Reason == RemoveSpotReason.Modification)
+        if (e is { SpotWasOnWaitingList: true, Reason: RemoveSpotReason.Modification, EventId: not null })
         {
-            yield return new TriggerMoveUpFromWaitingListCommand { RegistrableId = e.RegistrableId };
+            yield return new TriggerMoveUpFromWaitingListCommand { EventId = e.EventId.Value, RegistrableId = e.RegistrableId };
         }
     }
 }

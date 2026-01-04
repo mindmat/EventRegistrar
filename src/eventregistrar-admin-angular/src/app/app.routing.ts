@@ -70,6 +70,10 @@ import { SetupEventResolver } from './modules/admin/setup-event/setup-event.reso
 import { EventSettingsComponent } from './modules/admin/event-settings/event-settings.component';
 import { FixRawProcessingComponent } from './modules/admin/registration/fix-raw-processing/fix-raw-processing.component';
 import { FixRawProcessingResolver } from './modules/admin/registration/fix-raw-processing/fix-raw-processing.resolver';
+import { ShiftsOverviewComponent } from './modules/admin/volunteer-planning/shifts-overview/shifts-overview.component';
+import { ShiftEditComponent } from './modules/admin/volunteer-planning/shift-edit/shift-edit.component';
+import { ShiftsOverviewResolver } from './modules/admin/volunteer-planning/shifts-overview/shifts-overview.resolver';
+import { ShiftEditResolver } from './modules/admin/volunteer-planning/shift-edit/shift-edit.resolver';
 
 // @formatter:off
 /* eslint-disable max-len */
@@ -367,6 +371,33 @@ export const appRoutes: Route[] =
                             component: HostingOverviewComponent,
                             resolve: { initialData: HostingOverviewResolver }
                         },
+                    ]
+                },
+                {
+                    path: 'volunteer-planning',
+                    canActivate: [AuthGuard],
+                    canActivateChild: [AuthGuard],
+                    component: LayoutComponent,
+                    resolve: { initialData: InitialDataResolver },
+                    children: [
+                        {
+                            path: '',
+                            canActivate: [AuthGuard],
+                            component: ShiftsOverviewComponent,
+                            resolve: { initialData: ShiftsOverviewResolver }
+                        },
+                        {
+                            path: 'new',
+                            canActivate: [AuthGuard],
+                            component: ShiftEditComponent,
+                            resolve: { initialData: ShiftEditResolver }
+                        },
+                        {
+                            path: ':id/edit',
+                            canActivate: [AuthGuard],
+                            component: ShiftEditComponent,
+                            resolve: { initialData: ShiftEditResolver }
+                        }
                     ]
                 },
                 {

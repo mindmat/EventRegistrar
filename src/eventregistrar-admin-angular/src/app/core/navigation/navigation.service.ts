@@ -21,7 +21,7 @@ export class NavigationService
                 title: 'Event auswählen',
                 type: 'basic',
                 icon: 'heroicons_outline:arrow-path',
-                link: `/select-event`,
+                link: '/select-event',
             }
         ]);
 
@@ -45,7 +45,7 @@ export class NavigationService
                             title: e.name, // translateService.instant('SelectEvent'),
                             type: 'basic',
                             icon: 'heroicons_outline:arrow-path',
-                            link: `/select-event`
+                            link: '/select-event'
                         },
                         {
                             id: 'registrations',
@@ -136,6 +136,13 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'mat_outline:list',
                                     link: `/${e.acronym}/registrations/all-participants`,
+                                },
+                                {
+                                    id: 'volunteer-planning',
+                                    title: translateService.instant('VolunteerPlanning'),
+                                    type: 'basic',
+                                    icon: 'mat_outline:list',
+                                    link: `/${e.acronym}/volunteer-planning`,
                                 },
                             ]
                         },
@@ -238,9 +245,9 @@ export class NavigationService
             .subscribe();
     }
 
-    private getBadge(contents: MenuNodeContent[] | null, key: MenuNodeKey): { title: string, classes: string; } | null
+    private getBadge(contents: MenuNodeContent[] | null, key: MenuNodeKey): { title: string; classes: string; } | null
     {
-        var content = contents?.find(nct => nct.key === key);
+        const content = contents?.find(nct => nct.key === key);
         if (!content)
         {
             return null;
@@ -251,9 +258,9 @@ export class NavigationService
         };
     }
 
-    private isHidden(contents: MenuNodeContent[] | null, key: MenuNodeKey): boolean 
+    private isHidden(contents: MenuNodeContent[] | null, key: MenuNodeKey): boolean
     {
-        var content = contents?.find(nct => nct.key === key);
+        const content = contents?.find(nct => nct.key === key);
         if (!content)
         {
             return false;
@@ -261,7 +268,7 @@ export class NavigationService
         return content.hidden === true;
     }
 
-    getBadgeStyle(content: MenuNodeContent): string | null
+    private getBadgeStyle(content: MenuNodeContent): string | null
     {
         if (!content.content)
         {
@@ -288,14 +295,12 @@ export class NavigationService
     {
         return this.menu.pipe(
             map(menu =>
-            {
-                return {
-                    default: menu,
-                    compact: menu,
-                    horizontal: menu,
-                    futuristic: menu
-                } as Navigation;
-            })
+            ({
+                default: menu,
+                compact: menu,
+                horizontal: menu,
+                futuristic: menu
+            } as Navigation))
         );
         // return of({
         //     default: this.menu,

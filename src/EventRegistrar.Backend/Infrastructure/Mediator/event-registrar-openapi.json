@@ -71,6 +71,31 @@
                 }
             }
         },
+        "/api/AddHelperSlotCommand": {
+            "post": {
+                "tags": [
+                    "AddHelperSlot"
+                ],
+                "operationId": "AddHelperSlot_Command",
+                "requestBody": {
+                    "x-name": "AddHelperSlotCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AddHelperSlotCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/AddIcsToMailCommand": {
             "post": {
                 "tags": [
@@ -291,6 +316,31 @@
                 }
             }
         },
+        "/api/AssignToShiftCommand": {
+            "post": {
+                "tags": [
+                    "AssignToShift"
+                ],
+                "operationId": "AssignToShift_Command",
+                "requestBody": {
+                    "x-name": "AssignToShiftCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AssignToShiftCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/AutoMailPlaceholderQuery": {
             "post": {
                 "tags": [
@@ -417,6 +467,41 @@
                                     "type": "array",
                                     "items": {
                                         "$ref": "#/components/schemas/MailSender"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/AvailableParticipantsQuery": {
+            "post": {
+                "tags": [
+                    "AvailableParticipants"
+                ],
+                "operationId": "AvailableParticipants_Query",
+                "requestBody": {
+                    "x-name": "AvailableParticipantsQuery",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/AvailableParticipantsQuery"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ParticipantDisplayItem"
                                     }
                                 }
                             }
@@ -1168,6 +1253,31 @@
                 }
             }
         },
+        "/api/CreateShiftCommand": {
+            "post": {
+                "tags": [
+                    "CreateShift"
+                ],
+                "operationId": "CreateShift_Command",
+                "requestBody": {
+                    "x-name": "CreateShiftCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateShiftCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/DeactivateAutomaticPromotionCommand": {
             "post": {
                 "tags": [
@@ -1306,6 +1416,31 @@
                         "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/DeleteRegistrationFormCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/DeleteShiftCommand": {
+            "post": {
+                "tags": [
+                    "DeleteShift"
+                ],
+                "operationId": "DeleteShift_Command",
+                "requestBody": {
+                    "x-name": "DeleteShiftCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DeleteShiftCommand"
                             }
                         }
                     },
@@ -3625,6 +3760,31 @@
                 }
             }
         },
+        "/api/RemoveHelperSlotCommand": {
+            "post": {
+                "tags": [
+                    "RemoveHelperSlot"
+                ],
+                "operationId": "RemoveHelperSlot_Command",
+                "requestBody": {
+                    "x-name": "RemoveHelperSlotCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RemoveHelperSlotCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/RemoveIndividualReductionCommand": {
             "post": {
                 "tags": [
@@ -4338,6 +4498,41 @@
                 }
             }
         },
+        "/api/ShiftsOverviewQuery": {
+            "post": {
+                "tags": [
+                    "ShiftsOverview"
+                ],
+                "operationId": "ShiftsOverview_Query",
+                "requestBody": {
+                    "x-name": "ShiftsOverviewQuery",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/ShiftsOverviewQuery"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ShiftDisplayItem"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/SmsConversationQuery": {
             "post": {
                 "tags": [
@@ -4745,6 +4940,31 @@
                 }
             }
         },
+        "/api/UnassignFromShiftCommand": {
+            "post": {
+                "tags": [
+                    "UnassignFromShift"
+                ],
+                "operationId": "UnassignFromShift_Command",
+                "requestBody": {
+                    "x-name": "UnassignFromShiftCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UnassignFromShiftCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/UnassignPaymentCommand": {
             "post": {
                 "tags": [
@@ -5009,6 +5229,31 @@
                 }
             }
         },
+        "/api/UpdateShiftCommand": {
+            "post": {
+                "tags": [
+                    "UpdateShift"
+                ],
+                "operationId": "UpdateShift_Command",
+                "requestBody": {
+                    "x-name": "UpdateShiftCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateShiftCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/UpdateUserInfoCommand": {
             "post": {
                 "tags": [
@@ -5216,6 +5461,20 @@
                         "type": "boolean"
                     },
                     "registrableId": {
+                        "type": "string",
+                        "format": "guid"
+                    }
+                }
+            },
+            "AddHelperSlotCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "shiftId": {
                         "type": "string",
                         "format": "guid"
                     }
@@ -5448,6 +5707,31 @@
                     "outgoingPaymentId": {
                         "type": "string",
                         "format": "guid"
+                    }
+                }
+            },
+            "AssignToShiftCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "shiftId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "registrationId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "notes": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "asResponsible": {
+                        "type": "boolean"
                     }
                 }
             },
@@ -5738,6 +6022,48 @@
                     "eventId": {
                         "type": "string",
                         "format": "guid"
+                    }
+                }
+            },
+            "ParticipantDisplayItem": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "registrationId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "firstName": {
+                        "type": "string"
+                    },
+                    "lastName": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "isAlreadyAssigned": {
+                        "type": "boolean"
+                    },
+                    "preferredTimes": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "AvailableParticipantsQuery": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "shiftId": {
+                        "type": "string",
+                        "format": "guid",
+                        "nullable": true
                     }
                 }
             },
@@ -6666,6 +6992,32 @@
                     }
                 }
             },
+            "CreateShiftCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "shiftId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "location": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
             "DeactivateAutomaticPromotionCommand": {
                 "type": "object",
                 "additionalProperties": false,
@@ -6748,6 +7100,20 @@
                         "format": "guid"
                     },
                     "registrationFormId": {
+                        "type": "string",
+                        "format": "guid"
+                    }
+                }
+            },
+            "DeleteShiftCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "shiftId": {
                         "type": "string",
                         "format": "guid"
                     }
@@ -11046,6 +11412,20 @@
                     }
                 }
             },
+            "RemoveHelperSlotCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "shiftId": {
+                        "type": "string",
+                        "format": "guid"
+                    }
+                }
+            },
             "RemoveIndividualReductionCommand": {
                 "type": "object",
                 "additionalProperties": false,
@@ -11756,6 +12136,95 @@
                     }
                 }
             },
+            "ShiftDisplayItem": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "location": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "helpersNeeded": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "helpersAssigned": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "responsibleRegistrationId": {
+                        "type": "string",
+                        "format": "guid",
+                        "nullable": true
+                    },
+                    "participantResponsible": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "responsibleEmail": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "assignments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ShiftAssignmentDisplayItem"
+                        }
+                    }
+                }
+            },
+            "ShiftAssignmentDisplayItem": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "registrationId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "participant": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "ShiftsOverviewQuery": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    }
+                }
+            },
             "SmsDisplayItem": {
                 "type": "object",
                 "additionalProperties": false,
@@ -12079,6 +12548,27 @@
                     }
                 }
             },
+            "UnassignFromShiftCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "shiftId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "registrationId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "fromResponsible": {
+                        "type": "boolean"
+                    }
+                }
+            },
             "UnassignPaymentCommand": {
                 "type": "object",
                 "additionalProperties": false,
@@ -12361,6 +12851,43 @@
                         "type": "string",
                         "format": "date-time",
                         "nullable": true
+                    }
+                }
+            },
+            "UpdateShiftCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "shiftId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "location": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "helpersNeeded": {
+                        "type": "integer",
+                        "format": "int32"
                     }
                 }
             },

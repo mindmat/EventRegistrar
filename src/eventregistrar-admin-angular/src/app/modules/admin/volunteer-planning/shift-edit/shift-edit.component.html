@@ -1,0 +1,84 @@
+<div class="flex flex-col w-full">
+
+    <!-- Header -->
+    <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
+        <div class="text-lg font-medium">{{isNew ? 'Add Shift' : 'Edit Shift'}}</div>
+        <button mat-icon-button (click)="closeDialog()" [tabIndex]="-1">
+            <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+        </button>
+    </div>
+
+    <!-- Compose form -->
+    <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="shiftForm">
+
+        <!-- Description -->
+        <mat-form-field class="w-full">
+            <mat-label>Description</mat-label>
+            <input matInput [formControlName]="'description'" [spellcheck]="false">
+            <mat-error *ngIf="shiftForm.get('description').hasError('required')">
+                Description is required
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Location -->
+        <mat-form-field class="w-full mt-4">
+            <mat-label>Location</mat-label>
+            <input matInput [formControlName]="'location'" [spellcheck]="false">
+            <mat-error *ngIf="shiftForm.get('location').hasError('required')">
+                Location is required
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Date and time fields -->
+        <div class="flex mt-4 space-x-4">
+            <mat-form-field class="flex-auto">
+                <mat-label>Start Date & Time</mat-label>
+                <input matInput type="datetime-local" [formControlName]="'startDate'">
+                <mat-error *ngIf="shiftForm.get('startDate').hasError('required')">
+                    Start date is required
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="flex-auto">
+                <mat-label>End Date & Time</mat-label>
+                <input matInput type="datetime-local" [formControlName]="'endDate'">
+                <mat-error *ngIf="shiftForm.get('endDate').hasError('required')">
+                    End date is required
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <!-- Required helpers -->
+        <mat-form-field class="w-full mt-4">
+            <mat-label>Required Helpers</mat-label>
+            <input matInput type="number" min="1" [formControlName]="'requiredHelpers'">
+            <mat-error *ngIf="shiftForm.get('requiredHelpers').hasError('required')">
+                Number of helpers is required
+            </mat-error>
+            <mat-error *ngIf="shiftForm.get('requiredHelpers').hasError('min')">
+                At least 1 helper is required
+            </mat-error>
+        </mat-form-field>
+
+        <!-- Actions -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-4 sm:mt-6">
+            <div class="flex items-center">
+                <!-- Save button -->
+                <button mat-flat-button [color]="'primary'" [disabled]="shiftForm.invalid || isLoading" (click)="save()">
+                    <span *ngIf="!isLoading">
+                        {{isNew ? 'Create' : 'Save'}}
+                    </span>
+                    <mat-progress-spinner *ngIf="isLoading" [diameter]="20" [mode]="'indeterminate'"></mat-progress-spinner>
+                </button>
+            </div>
+            <div class="flex items-center mt-4 sm:mt-0">
+                <!-- Cancel -->
+                <button mat-button [color]="'accent'" (click)="closeDialog()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+    </form>
+
+</div>

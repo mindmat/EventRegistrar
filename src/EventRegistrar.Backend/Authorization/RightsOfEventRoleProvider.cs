@@ -50,6 +50,7 @@ using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Registrations.Remarks;
 using EventRegistrar.Backend.Registrations.Search;
 using EventRegistrar.Backend.Spots;
+using EventRegistrar.Backend.VolunteerPlanning;
 
 namespace EventRegistrar.Backend.Authorization;
 
@@ -136,6 +137,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(DownloadIcsPreviewQuery);
             yield return nameof(ValidateAutoMailTemplatesCommand);
             yield return nameof(UpdateReadModelCommand);
+            yield return nameof(ShiftsOverviewQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
@@ -199,6 +201,14 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(CheckIfRegistrationHasMultiplePartnersCommand);
             yield return nameof(SaveRegistrableIcsCommand);
             yield return nameof(AddIcsToMailCommand);
+            yield return nameof(AssignToShiftCommand);
+            yield return nameof(UnassignFromShiftCommand);
+            yield return nameof(AvailableParticipantsQuery);
+            yield return nameof(CreateShiftCommand);
+            yield return nameof(UpdateShiftCommand);
+            yield return nameof(DeleteShiftCommand);
+            yield return nameof(AddHelperSlotCommand);
+            yield return nameof(RemoveHelperSlotCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

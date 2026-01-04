@@ -8,7 +8,7 @@ export class NotificationService
 {
     private serverEvents$ = new Subject<QueryChanged>();
     private hubConnection: HubConnection;
-    private connectionEstablished$ = new Subject<Boolean>();
+    private connectionEstablished$ = new Subject<boolean>();
     private subscription$ = new ReplaySubject<string>();
     private subscribedEventId: string;
     private zone = new NgZone({ enableLongStackTrace: false });
@@ -81,7 +81,7 @@ export class NotificationService
         );
     }
 
-    public reconnect()
+    public reconnect(): void
     {
         if (this.hubConnection.state === HubConnectionState.Disconnected)
         {
@@ -89,7 +89,7 @@ export class NotificationService
         }
     }
 
-    private startConnection()
+    private startConnection(): void
     {
         this.hubConnection
             .start()
@@ -105,7 +105,7 @@ export class NotificationService
             });
     }
 
-    private initializeSubscriptions()
+    private initializeSubscriptions(): void
     {
         this.connectionEstablished$.pipe(
             filter(c => !!c),

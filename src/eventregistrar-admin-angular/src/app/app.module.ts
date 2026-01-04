@@ -119,6 +119,7 @@ import { AccountConfigComponent } from './modules/admin/event-settings/account-c
 import { FixRawProcessingComponent } from './modules/admin/registration/fix-raw-processing/fix-raw-processing.component';
 import { MatchSingleSpotsComponent } from './modules/admin/registration/match-single-spots/match-single-spots.component';
 import { RegistrableIcsComponent } from './modules/admin/registrables/registrable-ics/registrable-ics.component';
+import { VolunteerPlanningModule } from './modules/admin/volunteer-planning/volunteer-planning.module';
 import { NGX_MAT_DATE_FORMATS, NgxMatDateAdapter, NgxMatDatetimePickerModule, NgxMatTimepickerModule } from '@angular-material-components/datetime-picker';
 import { NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS, NgxMatMomentModule } from '@angular-material-components/moment-adapter';
 import { MAT_MOMENT_DATE_ADAPTER_OPTIONS, MomentDateAdapter } from '@angular/material-moment-adapter';
@@ -127,6 +128,7 @@ import localeDeExtra from '@angular/common/locales/extra/de-CH';
 import { ErrorHandlingInterceptor } from './api/errorhandling.interceptor';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import * as Sentry from "@sentry/angular";
+import { ShiftsOverviewComponent } from './modules/admin/volunteer-planning/shifts-overview/shifts-overview.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -210,7 +212,8 @@ export const DE_FORMATS_TIME = {
         AccountConfigComponent,
         FixRawProcessingComponent,
         MatchSingleSpotsComponent,
-        RegistrableIcsComponent
+        RegistrableIcsComponent,
+        ShiftsOverviewComponent
     ],
     providers: [
         AuthServiceFuse,
@@ -265,6 +268,7 @@ export const DE_FORMATS_TIME = {
         // Layout module of your application
         LayoutModule,
         SharedModule,
+        VolunteerPlanningModule,
 
         // 3rd party modules that require global configuration via forRoot
         MarkdownModule.forRoot({}),
