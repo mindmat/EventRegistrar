@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Api, CreateShiftCommand, UpdateShiftCommand, DeleteShiftCommand, AssignToShiftCommand, UnassignFromShiftCommand, AddHelperSlotCommand, RemoveHelperSlotCommand, AvailableParticipantsQuery, ShiftsOverviewQuery, ShiftDisplayItem, ParticipantDisplayItem } from 'app/api/api';
+import { Api, CreateShiftCommand, UpdateShiftCommand, DeleteShiftCommand, AssignToShiftCommand, UnassignFromShiftCommand, AddHelperSlotCommand, RemoveHelperSlotCommand, AvailableParticipantsQuery, ShiftsOverviewQuery, ShiftDisplayItem, ParticipantDisplayItem, VolunteerAdminConfigurationQuery, VolunteerAdminConfigurationDto, UpdateVolunteerAdminConfigurationCommand } from 'app/api/api';
 import { FetchService } from '../infrastructure/fetchService';
 import { NotificationService } from '../infrastructure/notification.service';
 import { EventService } from '../events/event.service';
@@ -152,5 +152,29 @@ export class VolunteerPlanningService extends FetchService<ShiftDisplayItem[]>
             registrationId: participantId
         };
         return this._api.unassignFromShift_Command(command);
+    }
+
+    /**
+     * Get volunteer admin configuration
+     */
+    getVolunteerAdminConfiguration(): Observable<VolunteerAdminConfigurationDto>
+    {
+        const query: VolunteerAdminConfigurationQuery = {
+            eventId: this._eventService.selectedId
+        };
+        return this._api.volunteerAdminConfiguration_Query(query);
+    }
+
+    /**
+     * Update volunteer admin configuration
+     */
+    updateVolunteerAdminConfiguration(registrableIds: string[], questionOptionIds: string[]): Observable<void>
+    {
+        const command: UpdateVolunteerAdminConfigurationCommand = {
+            eventId: this._eventService.selectedId,
+            registrableIds_Volunteer: registrableIds,
+            questionOptionIds_Volunteer: questionOptionIds
+        };
+        return this._api.updateVolunteerAdminConfiguration_Command(command);
     }
 }

@@ -22,7 +22,8 @@ public class ParticipantDisplayItem
 
 public class AvailableParticipantsQueryHandler(IQueryable<Registration> registrations,
                                                IQueryable<Shift> shifts,
-                                               IQueryable<ShiftAssignment> assignments)
+                                               IQueryable<ShiftAssignment> assignments,
+                                               VolunteerAdminConfiguration config)
     : IRequestHandler<AvailableParticipantsQuery, IEnumerable<ParticipantDisplayItem>>
 {
     public async Task<IEnumerable<ParticipantDisplayItem>> Handle(AvailableParticipantsQuery query, CancellationToken cancellationToken)
@@ -30,7 +31,10 @@ public class AvailableParticipantsQueryHandler(IQueryable<Registration> registra
         // Get all registrations for the event that are admitted
         var queryable = registrations.Where(reg => reg.EventId == query.EventId
                                                 && reg.State != RegistrationState.Cancelled
-                                                && reg.IsOnWaitingList == false);
+                                                && reg.IsOnWaitingList == false)
+                                     .WhereIf(config.RegistrableIds_Volunteer.HasElements(),
+                                              reg => reg.Seats_AsLeader!.Any(spot => config.RegistrableIds_Volunteer!.Contains(spot.RegistrableId))
+                                                  || reg.Seats_AsFollower!.Any(spot => config.RegistrableIds_Volunteer!.Contains(spot.RegistrableId)));
         var searchParts = query.SearchString?.Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
                        ?? [];
 

@@ -16,15 +16,16 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { RouterModule } from '@angular/router';
 import { FuseConfirmationModule } from '@fuse/services/confirmation';
+import { SharedModule } from 'app/shared/shared.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { ShiftsOverviewComponent } from './shifts-overview/shifts-overview.component';
 import { ShiftEditComponent } from './shift-edit/shift-edit.component';
 import { ShiftAssignmentsComponent } from './shift-assignments/shift-assignments.component';
-import { TranslatePipe } from '@ngx-translate/core';
 
 @NgModule({
     declarations: [
-        // ShiftsOverviewComponent,
+        ShiftsOverviewComponent,
         ShiftEditComponent,
         ShiftAssignmentsComponent
     ],
@@ -44,11 +45,9 @@ import { TranslatePipe } from '@ngx-translate/core';
         MatSelectModule,
         MatSortModule,
         MatTooltipModule,
-        FuseConfirmationModule
-    ],
-    providers: [
-        DatePipe,
-        TranslatePipe
+        FuseConfirmationModule,
+        SharedModule,
+        TranslateModule
     ]
 })
 export class VolunteerPlanningModule { }

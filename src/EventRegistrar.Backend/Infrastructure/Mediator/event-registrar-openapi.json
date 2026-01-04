@@ -5279,6 +5279,31 @@
                 }
             }
         },
+        "/api/UpdateVolunteerAdminConfigurationCommand": {
+            "post": {
+                "tags": [
+                    "UpdateVolunteerAdminConfiguration"
+                ],
+                "operationId": "UpdateVolunteerAdminConfiguration_Command",
+                "requestBody": {
+                    "x-name": "UpdateVolunteerAdminConfigurationCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateVolunteerAdminConfigurationCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/UserInEventRolesQuery": {
             "post": {
                 "tags": [
@@ -5370,6 +5395,38 @@
                 "responses": {
                     "204": {
                         "description": ""
+                    }
+                }
+            }
+        },
+        "/api/VolunteerAdminConfigurationQuery": {
+            "post": {
+                "tags": [
+                    "VolunteerAdminConfiguration"
+                ],
+                "operationId": "VolunteerAdminConfiguration_Query",
+                "requestBody": {
+                    "x-name": "VolunteerAdminConfigurationQuery",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VolunteerAdminConfigurationQuery"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VolunteerAdminConfigurationDto"
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -12921,6 +12978,32 @@
                     3
                 ]
             },
+            "UpdateVolunteerAdminConfigurationCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "registrableIds_Volunteer": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                            "type": "string",
+                            "format": "guid"
+                        }
+                    },
+                    "questionOptionIds_Volunteer": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                            "type": "string",
+                            "format": "guid"
+                        }
+                    }
+                }
+            },
             "RoleDescription": {
                 "type": "object",
                 "additionalProperties": false,
@@ -12993,6 +13076,38 @@
                         "type": "string",
                         "format": "guid",
                         "nullable": true
+                    }
+                }
+            },
+            "VolunteerAdminConfigurationDto": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "registrableIds_Volunteer": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                            "type": "string",
+                            "format": "guid"
+                        }
+                    },
+                    "questionOptionIds_Volunteer": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                            "type": "string",
+                            "format": "guid"
+                        }
+                    }
+                }
+            },
+            "VolunteerAdminConfigurationQuery": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid"
                     }
                 }
             },

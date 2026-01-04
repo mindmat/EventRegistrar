@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil, Observable } from 'rxjs';
+import { Subject, takeUntil, Observable, BehaviorSubject } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { VolunteerPlanningService } from '../volunteer-planning.service';
-import { ParticipantDisplayItem, ShiftDisplayItem } from 'app/api/api';
+import { ParticipantDisplayItem, ShiftDisplayItem, VolunteerAdminConfigurationDto, RegistrableDisplayItem, AvailableQuestionOptionMapping } from 'app/api/api';
 import { v4 as createUuid } from 'uuid';
 import { NavigatorService } from '../../navigator.service';
+import { RegistrablesService } from '../../pricing/registrables.service';
+import { QuestionOptionMappingService } from '../../registration-forms/form-mapping/question-option-mapping.service';
 
 @Component({
     selector: 'app-shifts-overview',
@@ -24,6 +26,15 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     currentAssignment: { shiftId: string, role: 'responsible' | 'helper', helperIndex?: number; } | null = null;
     maxHelpers: number = 3; // Maximum number of helper columns to show
     maxHelpersNeeded: number = 3; // Dynamic maximum based on shifts data
+
+    // Configuration properties
+    allRegistrables: RegistrableDisplayItem[] = [];
+    allQuestionOptions: AvailableQuestionOptionMapping[] = [];
+    selectedRegistrableIds: string[] = [];
+    selectedQuestionOptionIds: string[] = [];
+    configurationLoaded: boolean = false;
+    configurationCollapsed: boolean = false;
+
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -32,7 +43,9 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseConfirmationService: FuseConfirmationService,
         private _volunteerPlanningService: VolunteerPlanningService,
-        public _navigatorService: NavigatorService
+        public _navigatorService: NavigatorService,
+        private _registrablesService: RegistrablesService,
+        private _questionOptionMappingService: QuestionOptionMappingService
     ) { }
 
     /**
@@ -68,13 +81,13 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
                 this._changeDetectorRef.markForCheck();
             });
 
+        // Load configuration data
+        this.loadConfiguration();
+
         // Trigger initial data fetch
         this._volunteerPlanningService.fetchShifts()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe();
-
-        // Load available participants for dropdowns
-        this.loadAvailableParticipants();
     }
 
     ngOnDestroy(): void
@@ -256,24 +269,6 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     }
 
     /**
-     * Get participant name by ID
-     */
-    getParticipantName(participantId: string): string
-    {
-        const participant = this.availableParticipants.find(p => p.registrationId === participantId);
-        return participant ? `${participant.firstName} ${participant.lastName}` : '';
-    }
-
-    /**
-     * Get participant email by ID
-     */
-    getParticipantEmail(participantId: string): string
-    {
-        const participant = this.availableParticipants.find(p => p.registrationId === participantId);
-        return participant?.email || '';
-    }
-
-    /**
      * Unassign participant
      */
     unassignParticipant(shiftId: string, participantId: string): void
@@ -361,15 +356,64 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
         this._changeDetectorRef.markForCheck();
     }
 
-    private loadAvailableParticipants(): void
+    /**
+     * Load configuration data (registrables, question options, and current selections)
+     */
+    private loadConfiguration(): void
     {
-        // For now, we'll load all participants
-        // In a real implementation, you might want to load participants who are available for volunteer work
-        this._volunteerPlanningService.getAvailableParticipants('')
+        // Load registrables
+        this._registrablesService.fetchRegistrables()
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((participants) =>
+            .subscribe((registrables) =>
             {
-                this.availableParticipants = participants;
+                this.allRegistrables = registrables;
+                this._changeDetectorRef.markForCheck();
             });
+
+        // Load question option mappings
+        this._questionOptionMappingService.fetchMappings()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((questionOptions) =>
+            {
+                this.allQuestionOptions = questionOptions;
+                this._changeDetectorRef.markForCheck();
+            });
+
+        // Load current configuration
+        this._volunteerPlanningService.getVolunteerAdminConfiguration()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((config) =>
+            {
+                this.selectedRegistrableIds = config.registrableIds_Volunteer || [];
+                this.selectedQuestionOptionIds = config.questionOptionIds_Volunteer || [];
+                this.configurationLoaded = true;
+                this._changeDetectorRef.markForCheck();
+            });
+    }
+
+    /**
+     * Update configuration when selections change
+     */
+    updateConfiguration(): void
+    {
+        this._volunteerPlanningService.updateVolunteerAdminConfiguration(
+            this.selectedRegistrableIds,
+            this.selectedQuestionOptionIds
+        )
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe(() =>
+            {
+                // Configuration updated successfully
+                this._changeDetectorRef.markForCheck();
+            });
+    }
+
+    /**
+     * Toggle configuration panel visibility
+     */
+    toggleConfiguration(): void
+    {
+        this.configurationCollapsed = !this.configurationCollapsed;
+        this._changeDetectorRef.markForCheck();
     }
 }

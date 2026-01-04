@@ -1,17 +1,38 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatRippleModule } from '@angular/material/core';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { PortalModule } from '@angular/cdk/portal';
+import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { TagsPickerComponent } from './tags-picker/tags-picker.component';
 
 @NgModule({
+    declarations: [
+        TagsPickerComponent
+    ],
     imports: [
         CommonModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        MatIconModule,
+        MatTooltipModule,
+        MatRippleModule,
+        OverlayModule,
+        PortalModule,
+        TranslateModule
     ],
     exports: [
         CommonModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
+        TagsPickerComponent
+    ],
+    providers: [
+        DatePipe,
+        TranslatePipe
     ]
 })
 export class SharedModule

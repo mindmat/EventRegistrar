@@ -68,7 +68,6 @@ import { UserAccessComponent } from './modules/admin/event-settings/user-access/
 import { SelectEventComponent } from './modules/admin/events/select-event/select-event.component';
 import { CreateEventComponent } from './modules/admin/events/select-event/create-event/create-event.component';
 import { FormMappingComponent } from './modules/admin/registration-forms/form-mapping/form-mapping.component';
-import { TagsPickerComponent } from './shared/tags-picker/tags-picker.component';
 import { PricingComponent } from './modules/admin/pricing/pricing.component';
 import { RegistrableDetailComponent } from './modules/admin/overview/registrable-detail/registrable-detail.component';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -128,7 +127,7 @@ import localeDeExtra from '@angular/common/locales/extra/de-CH';
 import { ErrorHandlingInterceptor } from './api/errorhandling.interceptor';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import * as Sentry from "@sentry/angular";
-import { ShiftsOverviewComponent } from './modules/admin/volunteer-planning/shifts-overview/shifts-overview.component';
+// import { ShiftsOverviewComponent } from './modules/admin/volunteer-planning/shifts-overview/shifts-overview.component';
 
 const routerConfig: ExtraOptions = {
     preloadingStrategy: PreloadAllModules,
@@ -180,7 +179,6 @@ export const DE_FORMATS_TIME = {
         SelectEventComponent,
         CreateEventComponent,
         FormMappingComponent,
-        TagsPickerComponent,
         PricingComponent,
         RegistrableDetailComponent,
         FileUploadComponent,
@@ -213,7 +211,7 @@ export const DE_FORMATS_TIME = {
         FixRawProcessingComponent,
         MatchSingleSpotsComponent,
         RegistrableIcsComponent,
-        ShiftsOverviewComponent
+        // ShiftsOverviewComponent
     ],
     providers: [
         AuthServiceFuse,

@@ -138,6 +138,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(ValidateAutoMailTemplatesCommand);
             yield return nameof(UpdateReadModelCommand);
             yield return nameof(ShiftsOverviewQuery);
+            yield return nameof(VolunteerAdminConfigurationQuery);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Writer)
@@ -209,6 +210,7 @@ internal class RightsOfEventRoleProvider : IRightsOfEventRoleProvider
             yield return nameof(DeleteShiftCommand);
             yield return nameof(AddHelperSlotCommand);
             yield return nameof(RemoveHelperSlotCommand);
+            yield return nameof(UpdateVolunteerAdminConfigurationCommand);
         }
 
         if (usersRolesInEvent.Contains(UserInEventRole.Admin))

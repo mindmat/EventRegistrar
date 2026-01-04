@@ -22,6 +22,45 @@
         <!-- Excel-like shifts planning table -->
         <div class="flex flex-col flex-auto w-full">
 
+            <!-- Configuration Section -->
+            <div class="mb-8 bg-card shadow rounded-2xl overflow-hidden" *ngIf="configurationLoaded">
+                <!-- Configuration Header -->
+                <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700" (click)="toggleConfiguration()">
+                    <h3 class="text-base font-medium text-gray-800 dark:text-gray-200">
+                        {{ 'VolunteerConfiguration' | translate }}
+                    </h3>
+                    <mat-icon class="transition-transform duration-200 text-gray-500 icon-size-4" [class.rotate-180]="!configurationCollapsed" [svgIcon]="'heroicons_outline:chevron-down'">
+                    </mat-icon>
+                </div>
+
+                <!-- Configuration Content -->
+                <div class="border-t border-gray-200 dark:border-gray-700" [class.hidden]="configurationCollapsed">
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <!-- Registrables Selection -->
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    {{ 'RegistrablesForVolunteers' | translate }}
+                                </label>
+                                <app-tags-picker [allTags]="allRegistrables" [(ngModel)]="selectedRegistrableIds" (ngModelChange)="updateConfiguration()" idProperty="id" textProperty="name"
+                                    class="w-full">
+                                </app-tags-picker>
+                            </div>
+
+                            <!-- Question Options Selection -->
+                            <div class="space-y-2">
+                                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    {{ 'QuestionOptionsForVolunteers' | translate }}
+                                </label>
+                                <app-tags-picker [allTags]="allQuestionOptions" [(ngModel)]="selectedQuestionOptionIds" (ngModelChange)="updateConfiguration()" idProperty="id" textProperty="name"
+                                    class="w-full">
+                                </app-tags-picker>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <ng-container *ngIf="(shifts$ | async) as shifts">
                 <ng-container *ngIf="shifts.length > 0; else noShifts">
 
