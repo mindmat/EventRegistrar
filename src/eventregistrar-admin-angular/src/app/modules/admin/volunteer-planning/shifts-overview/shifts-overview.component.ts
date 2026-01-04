@@ -1,13 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Subject, takeUntil, Observable, BehaviorSubject } from 'rxjs';
+import { Subject, takeUntil, Observable } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { VolunteerPlanningService } from '../volunteer-planning.service';
-import { ParticipantDisplayItem, ShiftDisplayItem, VolunteerAdminConfigurationDto, RegistrableDisplayItem, AvailableQuestionOptionMapping } from 'app/api/api';
-import { v4 as createUuid } from 'uuid';
+import { ParticipantDisplayItem, ShiftDisplayItem, RegistrableDisplayItem, AvailableQuestionOptionMapping } from 'app/api/api';
 import { NavigatorService } from '../../navigator.service';
 import { RegistrablesService } from '../../pricing/registrables.service';
-import { QuestionOptionMappingService } from '../../registration-forms/form-mapping/question-option-mapping.service';
 
 @Component({
     selector: 'app-shifts-overview',
@@ -31,7 +29,6 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     allRegistrables: RegistrableDisplayItem[] = [];
     allQuestionOptions: AvailableQuestionOptionMapping[] = [];
     selectedRegistrableIds: string[] = [];
-    selectedQuestionOptionIds: string[] = [];
     configurationLoaded: boolean = false;
     configurationCollapsed: boolean = false;
 
@@ -45,7 +42,6 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
         private _volunteerPlanningService: VolunteerPlanningService,
         public _navigatorService: NavigatorService,
         private _registrablesService: RegistrablesService,
-        private _questionOptionMappingService: QuestionOptionMappingService
     ) { }
 
     /**
@@ -370,22 +366,12 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
                 this._changeDetectorRef.markForCheck();
             });
 
-        // Load question option mappings
-        this._questionOptionMappingService.fetchMappings()
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((questionOptions) =>
-            {
-                this.allQuestionOptions = questionOptions;
-                this._changeDetectorRef.markForCheck();
-            });
-
         // Load current configuration
         this._volunteerPlanningService.getVolunteerAdminConfiguration()
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((config) =>
             {
                 this.selectedRegistrableIds = config.registrableIds_Volunteer || [];
-                this.selectedQuestionOptionIds = config.questionOptionIds_Volunteer || [];
                 this.configurationLoaded = true;
                 this._changeDetectorRef.markForCheck();
             });
@@ -397,8 +383,7 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     updateConfiguration(): void
     {
         this._volunteerPlanningService.updateVolunteerAdminConfiguration(
-            this.selectedRegistrableIds,
-            this.selectedQuestionOptionIds
+            this.selectedRegistrableIds
         )
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(() =>

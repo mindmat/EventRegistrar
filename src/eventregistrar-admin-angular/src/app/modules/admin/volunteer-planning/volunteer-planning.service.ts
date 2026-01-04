@@ -168,12 +168,11 @@ export class VolunteerPlanningService extends FetchService<ShiftDisplayItem[]>
     /**
      * Update volunteer admin configuration
      */
-    updateVolunteerAdminConfiguration(registrableIds: string[], questionOptionIds: string[]): Observable<void>
+    updateVolunteerAdminConfiguration(registrableIds: string[]): Observable<void>
     {
         const command: UpdateVolunteerAdminConfigurationCommand = {
             eventId: this._eventService.selectedId,
             registrableIds_Volunteer: registrableIds,
-            questionOptionIds_Volunteer: questionOptionIds
         };
         return this._api.updateVolunteerAdminConfiguration_Command(command);
     }

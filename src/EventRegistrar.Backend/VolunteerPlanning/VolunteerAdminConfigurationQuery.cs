@@ -16,8 +16,7 @@ public class VolunteerAdminConfigurationQueryHandler(ConfigurationRegistry confi
 
         var dto = new VolunteerAdminConfigurationDto
                   {
-                      RegistrableIds_Volunteer = configuration.RegistrableIds_Volunteer,
-                      QuestionOptionIds_Volunteer = configuration.QuestionOptionIds_Volunteer
+                      RegistrableIds_Volunteer = configuration.RegistrableIds_Volunteer
                   };
 
         return Task.FromResult(dto);
@@ -27,5 +26,4 @@ public class VolunteerAdminConfigurationQueryHandler(ConfigurationRegistry confi
 public class VolunteerAdminConfigurationDto
 {
     public IEnumerable<Guid>? RegistrableIds_Volunteer { get; set; }
-    public IEnumerable<Guid>? QuestionOptionIds_Volunteer { get; set; }
 }

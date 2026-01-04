@@ -34,25 +34,15 @@
                 </div>
 
                 <!-- Configuration Content -->
-                <div class="border-t border-gray-200 dark:border-gray-700" [class.hidden]="configurationCollapsed">
+                <div class="border-t border-gray-200 dark:border-gray-700" [class.hidden]="configurationCollapsed" *ngIf="configurationLoaded">
                     <div class="p-6">
-                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="grid grid-cols-1 gap-6">
                             <!-- Registrables Selection -->
                             <div class="space-y-2">
                                 <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
                                     {{ 'RegistrablesForVolunteers' | translate }}
                                 </label>
                                 <app-tags-picker [allTags]="allRegistrables" [(ngModel)]="selectedRegistrableIds" (ngModelChange)="updateConfiguration()" idProperty="id" textProperty="name"
-                                    class="w-full">
-                                </app-tags-picker>
-                            </div>
-
-                            <!-- Question Options Selection -->
-                            <div class="space-y-2">
-                                <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    {{ 'QuestionOptionsForVolunteers' | translate }}
-                                </label>
-                                <app-tags-picker [allTags]="allQuestionOptions" [(ngModel)]="selectedQuestionOptionIds" (ngModelChange)="updateConfiguration()" idProperty="id" textProperty="name"
                                     class="w-full">
                                 </app-tags-picker>
                             </div>
