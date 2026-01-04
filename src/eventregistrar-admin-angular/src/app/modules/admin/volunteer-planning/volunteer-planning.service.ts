@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Api, CreateShiftCommand, UpdateShiftCommand, DeleteShiftCommand, AssignToShiftCommand, UnassignFromShiftCommand, AddHelperSlotCommand, AvailableParticipantsQuery, ShiftsOverviewQuery, ShiftDisplayItem, ParticipantDisplayItem } from 'app/api/api';
+import { Api, CreateShiftCommand, UpdateShiftCommand, DeleteShiftCommand, AssignToShiftCommand, UnassignFromShiftCommand, AddHelperSlotCommand, RemoveHelperSlotCommand, AvailableParticipantsQuery, ShiftsOverviewQuery, ShiftDisplayItem, ParticipantDisplayItem } from 'app/api/api';
 import { FetchService } from '../infrastructure/fetchService';
 import { NotificationService } from '../infrastructure/notification.service';
 import { EventService } from '../events/event.service';
@@ -89,6 +89,18 @@ export class VolunteerPlanningService extends FetchService<ShiftDisplayItem[]>
             shiftId: shiftId
         };
         return this._api.addHelperSlot_Command(command);
+    }
+
+    /**
+     * Remove helper slot from shift
+     */
+    removeHelperSlot(shiftId: string): Observable<void>
+    {
+        const command: RemoveHelperSlotCommand = {
+            eventId: this._eventService.selectedId,
+            shiftId: shiftId
+        };
+        return this._api.removeHelperSlot_Command(command);
     }
 
     /**

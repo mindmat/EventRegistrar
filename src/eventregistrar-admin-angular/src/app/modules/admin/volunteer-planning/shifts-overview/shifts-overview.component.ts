@@ -1,12 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil, Observable } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { VolunteerPlanningService } from '../volunteer-planning.service';
-import { ShiftAssignmentsComponent } from '../shift-assignments/shift-assignments.component';
 import { ParticipantDisplayItem, ShiftDisplayItem } from 'app/api/api';
 import { v4 as createUuid } from 'uuid';
+import { NavigatorService } from '../../navigator.service';
 
 @Component({
     selector: 'app-shifts-overview',
@@ -19,6 +18,10 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     shifts$: Observable<ShiftDisplayItem[]>;
     currentShifts: ShiftDisplayItem[] = [];
     availableParticipants: ParticipantDisplayItem[] = [];
+    candidates: ParticipantDisplayItem[] = [];
+    searchString: string = '';
+    showCandidates: boolean = false;
+    currentAssignment: { shiftId: string, role: 'responsible' | 'helper', helperIndex?: number; } | null = null;
     maxHelpers: number = 3; // Maximum number of helper columns to show
     maxHelpersNeeded: number = 3; // Dynamic maximum based on shifts data
     private _unsubscribeAll: Subject<any> = new Subject<any>();
@@ -27,10 +30,28 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
         private _changeDetectorRef: ChangeDetectorRef,
-        private _dialog: MatDialog,
         private _fuseConfirmationService: FuseConfirmationService,
-        private _volunteerPlanningService: VolunteerPlanningService
+        private _volunteerPlanningService: VolunteerPlanningService,
+        public _navigatorService: NavigatorService
     ) { }
+
+    /**
+     * Get filtered candidates based on search string
+     */
+    get filteredCandidates(): ParticipantDisplayItem[]
+    {
+        if (!this.searchString.trim())
+        {
+            return this.candidates;
+        }
+
+        const searchTerm = this.searchString.toLowerCase().trim();
+        return this.candidates.filter(candidate =>
+            candidate.firstName?.toLowerCase().includes(searchTerm) ||
+            candidate.lastName?.toLowerCase().includes(searchTerm) ||
+            candidate.email?.toLowerCase().includes(searchTerm)
+        );
+    }
 
     ngOnInit(): void
     {
@@ -126,6 +147,25 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     }
 
     /**
+     * Remove helper slot from shift
+     */
+    removeHelperSlot(shift: ShiftDisplayItem): void
+    {
+        this._volunteerPlanningService.removeHelperSlot(shift.id)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe({
+                next: () =>
+                {
+                    console.log('Helper slot removed successfully');
+                },
+                error: (error) =>
+                {
+                    console.error('Error removing helper slot:', error);
+                }
+            });
+    }
+
+    /**
      * Assign participant to responsible role
      */
     assignResponsible(shiftId: string, participantId: string): void
@@ -158,27 +198,61 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     }
 
     /**
-     * Open assignment dialog
+     * Show candidates for assignment
      */
-    openAssignmentDialog(shift: any, role: 'responsible' | 'helper', helperIndex?: number): void
+    showCandidatesForAssignment(shift: any, role: 'responsible' | 'helper', helperIndex?: number): void
     {
-        const dialogRef = this._dialog.open(ShiftAssignmentsComponent, {
-            width: '600px',
-            data: {
-                shift: shift,
-                role: role,
-                helperIndex: helperIndex
-            }
-        });
+        this.currentAssignment = {
+            shiftId: shift.id,
+            role: role,
+            helperIndex: helperIndex
+        };
 
-        dialogRef.afterClosed().subscribe(result =>
+        // Fetch available participants for this shift
+        this._volunteerPlanningService.getAvailableParticipants(shift.id)
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe({
+                next: (participants) =>
+                {
+                    this.candidates = participants;
+                    this.showCandidates = true;
+                    this._changeDetectorRef.markForCheck();
+                },
+                error: (error) =>
+                {
+                    console.error('Error fetching available participants:', error);
+                }
+            });
+    }
+
+    /**
+     * Select candidate for assignment
+     */
+    selectCandidate(participant: ParticipantDisplayItem): void
+    {
+        if (!this.currentAssignment) return;
+
+        if (this.currentAssignment.role === 'responsible')
         {
-            if (result)
-            {
-                // Refresh data after assignment
-                this.loadShifts();
-            }
-        });
+            this.assignResponsible(this.currentAssignment.shiftId, participant.registrationId);
+        } else
+        {
+            this.assignHelper(this.currentAssignment.shiftId, participant.registrationId, this.currentAssignment.helperIndex || 0);
+        }
+
+        this.closeCandidateSelection();
+    }
+
+    /**
+     * Close candidate selection
+     */
+    closeCandidateSelection(): void
+    {
+        this.showCandidates = false;
+        this.candidates = [];
+        this.searchString = '';
+        this.currentAssignment = null;
+        this._changeDetectorRef.markForCheck();
     }
 
     /**

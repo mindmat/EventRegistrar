@@ -44,11 +44,11 @@
                                             class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider text-center min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-purple-100 dark:bg-purple-900/40">
                                             RESPONSIBLE
                                         </th>
-                                        <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider text-center min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-green-100 dark:bg-green-900/40"
+                                        <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-green-100 dark:bg-green-900/40"
                                             *ngFor="let helper of getHelperColumns()">
                                             HELPER {{helper}}
                                         </th>
-                                        <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider text-center min-w-[100px]">
+                                        <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[100px]">
                                             ACTIONS
                                         </th>
                                     </tr>
@@ -80,18 +80,20 @@
                                             <div class="flex items-center justify-between">
                                                 <div class="flex-1">
                                                     <ng-container *ngIf="shift.responsibleRegistrationId; else noResponsible">
-                                                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                            {{shift.participantResponsible}}
-                                                        </div>
-                                                        <div class="text-sm text-secondary" *ngIf="shift.responsibleEmail">
-                                                            {{shift.responsibleEmail}}
-                                                        </div>
+                                                        <a [routerLink]="_navigatorService.getRegistrationUrl(shift.responsibleRegistrationId)" class="hover:underline cursor-pointer block">
+                                                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                {{shift.participantResponsible}}
+                                                            </div>
+                                                            <div class="text-sm text-secondary" *ngIf="shift.responsibleEmail">
+                                                                {{shift.responsibleEmail}}
+                                                            </div>
+                                                        </a>
                                                     </ng-container>
                                                     <ng-template #noResponsible>
                                                         <span class="text-sm text-gray-400 italic">Unassigned</span>
                                                     </ng-template>
                                                 </div>
-                                                <button mat-icon-button class="ml-2 text-purple-600 hover:text-purple-700" (click)="openAssignmentDialog(shift, 'responsible')"
+                                                <button mat-icon-button class="ml-2 text-purple-600 hover:text-purple-700" (click)="showCandidatesForAssignment(shift, 'responsible')"
                                                     matTooltip="Assign responsible">
                                                     <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
                                                 </button>
@@ -102,40 +104,47 @@
                                         <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700" [ngClass]="{'bg-green-100 dark:bg-green-950/70': i < shift.helpersNeeded}"
                                             *ngFor="let helperIndex of getHelperColumns(); let i = index">
                                             <div class="flex items-center justify-between" *ngIf="i < shift.helpersNeeded; else emptyHelper">
-                                                <div class="flex-1 text-center">
+                                                <div class="flex-1">
                                                     <ng-container *ngIf="shift.assignments && shift.assignments[i] && shift.assignments[i].registrationId; else noHelper">
-                                                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                            {{ shift.assignments[i].participant }}
-                                                        </div>
-                                                        <div class="text-sm text-secondary" *ngIf="shift.assignments[i].email">
-                                                            {{shift.assignments[i].email}}
-                                                        </div>
+                                                        <a [routerLink]="_navigatorService.getRegistrationUrl(shift.assignments[i].registrationId)" class="hover:underline cursor-pointer block">
+                                                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                {{ shift.assignments[i].participant }}
+                                                            </div>
+                                                            <div class="text-sm text-secondary" *ngIf="shift.assignments[i].email">
+                                                                {{shift.assignments[i].email}}
+                                                            </div>
+                                                        </a>
                                                     </ng-container>
                                                     <ng-template #noHelper>
                                                         <span class="text-sm text-green-600">Empty</span>
                                                     </ng-template>
                                                 </div>
-                                                <button mat-icon-button class="ml-2 text-green-600 hover:text-green-700" (click)="openAssignmentDialog(shift, 'helper', i)"
+                                                <button mat-icon-button class="ml-2 text-green-600 hover:text-green-700" (click)="showCandidatesForAssignment(shift, 'helper', i)"
                                                     [matTooltip]="'Assign helper ' + (i + 1)">
                                                     <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
                                                 </button>
                                             </div>
                                             <ng-template #emptyHelper>
-                                                <div class="text-center">
+                                                <div>
                                                     <span class="text-sm text-gray-300">-</span>
                                                 </div>
                                             </ng-template>
                                         </td>
 
                                         <!-- Actions -->
-                                        <td class="px-6 py-4 whitespace-nowrap text-center">
-                                            <div class="flex flex-col space-y-1">
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <div class="flex flex-row space-x-1">
                                                 <!-- Add helper slot -->
                                                 <button mat-icon-button class="text-green-600 hover:text-green-700" (click)="addHelperSlot(shift)" matTooltip="Add helper slot">
                                                     <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                                                 </button>
+                                                <!-- Remove helper slot -->
+                                                <button mat-icon-button class="text-orange-600 hover:text-orange-700" (click)="removeHelperSlot(shift)" matTooltip="Remove helper slot"
+                                                    [disabled]="shift.helpersNeeded <= 0">
+                                                    <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:minus'"></mat-icon>
+                                                </button>
                                                 <!-- Divider -->
-                                                <div class="border-t border-gray-300 my-1"></div>
+                                                <div class="border-l border-gray-300 mx-1 h-6"></div>
                                                 <!-- Standard actions -->
                                                 <button mat-icon-button class="text-red-600 hover:text-red-700" (click)="deleteShift(shift)" matTooltip="Delete shift">
                                                     <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
@@ -181,6 +190,54 @@
 
             </ng-container>
 
+        </div>
+
+        <!-- Candidate Selection Overlay -->
+        <div *ngIf="showCandidates" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                            Select {{ currentAssignment?.role === 'responsible' ? 'Responsible' : 'Helper' }}
+                        </h3>
+                        <button mat-icon-button (click)="closeCandidateSelection()">
+                            <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
+                        <input type="text" [(ngModel)]="searchString" placeholder="Search participants..."
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
+                    </div>
+                </div>
+                <div class="max-h-96 overflow-y-auto">
+                    <div *ngIf="filteredCandidates.length === 0 && !searchString.trim()" class="p-6 text-center text-gray-500 dark:text-gray-400">
+                        No available candidates
+                    </div>
+                    <div *ngIf="filteredCandidates.length === 0 && searchString.trim()" class="p-6 text-center text-gray-500 dark:text-gray-400">
+                        No participants found matching "{{searchString}}"
+                    </div>
+                    <div *ngFor="let candidate of filteredCandidates"
+                        class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0" (click)="selectCandidate(candidate)">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                    {{candidate.firstName}} {{candidate.lastName}}
+                                </div>
+                                <div class="text-sm text-gray-500 dark:text-gray-400" *ngIf="candidate.email">
+                                    {{candidate.email}}
+                                </div>
+                            </div>
+                            <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-600">
+                    <button mat-button (click)="closeCandidateSelection()" class="w-full">
+                        Cancel
+                    </button>
+                </div>
+            </div>
         </div>
 
     </div>

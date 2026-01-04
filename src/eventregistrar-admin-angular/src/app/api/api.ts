@@ -9402,7 +9402,8 @@ export interface ParticipantDisplayItem {
 
 export interface AvailableParticipantsQuery {
     eventId?: string;
-    shiftId?: string | null;
+    shiftId?: string;
+    searchString?: string | null;
 }
 
 export interface AvailableQuestionMapping {

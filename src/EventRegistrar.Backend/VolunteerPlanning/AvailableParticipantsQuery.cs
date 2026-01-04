@@ -1,5 +1,4 @@
-using EventRegistrar.Backend.Authorization;
-using EventRegistrar.Backend.RegistrationForms.Questions;
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.VolunteerPlanning;
@@ -7,7 +6,8 @@ namespace EventRegistrar.Backend.VolunteerPlanning;
 public class AvailableParticipantsQuery : IRequest<IEnumerable<ParticipantDisplayItem>>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
-    public Guid? ShiftId { get; set; }
+    public Guid ShiftId { get; set; }
+    public string? SearchString { get; set; }
 }
 
 public class ParticipantDisplayItem
@@ -28,56 +28,71 @@ public class AvailableParticipantsQueryHandler(IQueryable<Registration> registra
     public async Task<IEnumerable<ParticipantDisplayItem>> Handle(AvailableParticipantsQuery query, CancellationToken cancellationToken)
     {
         // Get all registrations for the event that are admitted
-        var registrationData = await registrations.Where(reg => reg.EventId == query.EventId
-                                                             && reg.State != RegistrationState.Cancelled
-                                                             && reg.IsOnWaitingList == false)
-                                                  .Include(r => r.Responses!)
-                                                  .ThenInclude(resp => resp.Question)
-                                                  .ToListAsync(cancellationToken);
+        var queryable = registrations.Where(reg => reg.EventId == query.EventId
+                                                && reg.State != RegistrationState.Cancelled
+                                                && reg.IsOnWaitingList == false);
+        var searchParts = query.SearchString?.Split(" ", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+                       ?? [];
 
-        // Get existing assignments for the specific shift (if provided)
-        HashSet<Guid> assignedRegistrationIds = [];
-        HashSet<Guid> responsibleRegistrationIds = [];
-
-        if (query.ShiftId != null)
+        foreach (var searchPart in searchParts)
         {
-            var assignmentData = await assignments.Where(sas => sas.ShiftId == query.ShiftId.Value)
-                                                  .Select(sas => sas.RegistrationId)
-                                                  .ToListAsync(cancellationToken);
-
-            assignedRegistrationIds = assignmentData.ToHashSet();
-
-            var responsibleRegistrationId = await shifts.Where(sft => sft.Id == query.ShiftId.Value)
-                                                        .Select(sft => sft.RegistrationId_Responsible)
-                                                        .FirstOrDefaultAsync(cancellationToken);
-
-            if (responsibleRegistrationId.HasValue)
-            {
-                responsibleRegistrationIds.Add(responsibleRegistrationId.Value);
-            }
+            queryable = queryable.Where(mat => EF.Functions.Like(mat.RespondentFirstName!, $"%{searchPart}%")
+                                            || EF.Functions.Like(mat.RespondentLastName!, $"%{searchPart}%"));
         }
 
-        return registrationData.Select(registration =>
-                               {
-                                   // Look for volunteer time preferences in responses
-                                   var volunteerTimeResponse = registration.Responses?
-                                       .FirstOrDefault(r => r.Question != null
-                                                         && r.Question.Title != null
-                                                         && (r.Question.Title.Contains("volunteer", StringComparison.OrdinalIgnoreCase)
-                                                          || r.Question.Title.Contains("helper", StringComparison.OrdinalIgnoreCase)
-                                                          || r.Question.Title.Contains("time", StringComparison.OrdinalIgnoreCase)));
+        var registrationData = await queryable.Include(r => r.Responses!)
+                                              .ThenInclude(resp => resp.Question)
+                                              .ToListAsync(cancellationToken);
 
-                                   return new ParticipantDisplayItem
-                                          {
-                                              RegistrationId = registration.Id,
-                                              FirstName = registration.RespondentFirstName ?? "",
-                                              LastName = registration.RespondentLastName ?? "",
-                                              Email = registration.RespondentEmail,
-                                              IsAlreadyAssigned = assignedRegistrationIds.Contains(registration.Id) || responsibleRegistrationIds.Contains(registration.Id),
-                                              PreferredTimes = volunteerTimeResponse?.ResponseString
-                                          };
-                               })
-                               .OrderBy(p => p.LastName)
-                               .ThenBy(p => p.FirstName);
+        // Get existing assignments for the shift
+        var assignmentData = await assignments.Where(sas => sas.ShiftId == query.ShiftId)
+                                              .Select(sas => sas.RegistrationId)
+                                              .ToListAsync(cancellationToken);
+
+        var assignedRegistrationIds = assignmentData.ToHashSet();
+
+        var responsibleRegistrationId = await shifts.Where(sft => sft.Id == query.ShiftId)
+                                                    .Select(sft => sft.RegistrationId_Responsible)
+                                                    .FirstOrDefaultAsync(cancellationToken);
+
+        var responsibleRegistrationIds = new HashSet<Guid>();
+        if (responsibleRegistrationId.HasValue)
+        {
+            responsibleRegistrationIds.Add(responsibleRegistrationId.Value);
+        }
+
+        var participants = registrationData.Select(registration =>
+        {
+            // Look for volunteer time preferences in responses
+            var volunteerTimeResponse = registration.Responses?
+                .FirstOrDefault(r => r.Question != null
+                                  && r.Question.Title != null
+                                  && (r.Question.Title.Contains("volunteer", StringComparison.OrdinalIgnoreCase)
+                                   || r.Question.Title.Contains("helper", StringComparison.OrdinalIgnoreCase)
+                                   || r.Question.Title.Contains("time", StringComparison.OrdinalIgnoreCase)));
+
+            return new ParticipantDisplayItem
+                   {
+                       RegistrationId = registration.Id,
+                       FirstName = registration.RespondentFirstName ?? "",
+                       LastName = registration.RespondentLastName ?? "",
+                       Email = registration.RespondentEmail,
+                       IsAlreadyAssigned = assignedRegistrationIds.Contains(registration.Id) || responsibleRegistrationIds.Contains(registration.Id),
+                       PreferredTimes = volunteerTimeResponse?.ResponseString
+                   };
+        });
+
+        // Apply search filter if provided
+        if (!string.IsNullOrWhiteSpace(query.SearchString))
+        {
+            var searchTerm = query.SearchString.Trim();
+            participants = participants.Where(p =>
+                                                  (!string.IsNullOrEmpty(p.FirstName) && p.FirstName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                                               || (!string.IsNullOrEmpty(p.LastName) && p.LastName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
+                                               || (!string.IsNullOrEmpty(p.Email) && p.Email.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        return participants.OrderBy(p => p.LastName)
+                           .ThenBy(p => p.FirstName);
     }
 }

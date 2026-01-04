@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 // Material Design imports - all required modules
 import { MatButtonModule } from '@angular/material/button';
@@ -31,6 +31,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
         CommonModule,
         ReactiveFormsModule,
+        FormsModule,
         RouterModule,
         MatButtonModule,
         MatDialogModule,
