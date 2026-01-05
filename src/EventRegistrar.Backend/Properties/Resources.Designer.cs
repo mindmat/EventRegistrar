@@ -151,11 +151,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Aktionen.
+        /// </summary>
+        internal static string Actions {
+            get {
+                return ResourceManager.GetString("Actions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hinzufügen.
         /// </summary>
         internal static string Add {
             get {
                 return ResourceManager.GetString("Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Helfer erhöhen.
+        /// </summary>
+        internal static string AddHelperSlot {
+            get {
+                return ResourceManager.GetString("AddHelperSlot", resourceCulture);
             }
         }
         
@@ -192,6 +210,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string AddLink {
             get {
                 return ResourceManager.GetString("AddLink", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Schicht hinzufügen.
+        /// </summary>
+        internal static string AddNewShift {
+            get {
+                return ResourceManager.GetString("AddNewShift", resourceCulture);
             }
         }
         
@@ -349,6 +376,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Helfer zuordnen.
+        /// </summary>
+        internal static string AssignHelper {
+            get {
+                return ResourceManager.GetString("AssignHelper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zahlungseingang zuordnen.
         /// </summary>
         internal static string AssignIncoming {
@@ -363,6 +399,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string AssignOutgoing {
             get {
                 return ResourceManager.GetString("AssignOutgoing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verantwortliche:n zuordnen.
+        /// </summary>
+        internal static string AssignResponsible {
+            get {
+                return ResourceManager.GetString("AssignResponsible", resourceCulture);
             }
         }
         
@@ -772,6 +817,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Schicht löschen.
+        /// </summary>
+        internal static string DeleteShift {
+            get {
+                return ResourceManager.GetString("DeleteShift", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Testdaten löschen.
         /// </summary>
         internal static string DeleteTestData {
@@ -876,6 +930,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string EMail {
             get {
                 return ResourceManager.GetString("EMail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to (Leer).
+        /// </summary>
+        internal static string Empty {
+            get {
+                return ResourceManager.GetString("Empty", resourceCulture);
             }
         }
         
@@ -1378,6 +1441,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string HasWaitingListSecondary {
             get {
                 return ResourceManager.GetString("HasWaitingListSecondary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Helfer.
+        /// </summary>
+        internal static string Helper {
+            get {
+                return ResourceManager.GetString("Helper", resourceCulture);
             }
         }
         
@@ -3029,6 +3101,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Schicht.
+        /// </summary>
+        internal static string Post {
+            get {
+                return ResourceManager.GetString("Post", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vorschau.
         /// </summary>
         internal static string Preview {
@@ -3380,6 +3461,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Helferpool aus.
+        /// </summary>
+        internal static string RegistrablesForVolunteers {
+            get {
+                return ResourceManager.GetString("RegistrablesForVolunteers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} ist leider ausverkauft.
         /// </summary>
         internal static string RegistrableSoldOut {
@@ -3578,6 +3668,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Helfer reduzieren.
+        /// </summary>
+        internal static string RemoveHelperSlot {
+            get {
+                return ResourceManager.GetString("RemoveHelperSlot", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zuordnung aufheben.
         /// </summary>
         internal static string RemoveLink {
@@ -3637,6 +3736,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string Required {
             get {
                 return ResourceManager.GetString("Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verantwortlich.
+        /// </summary>
+        internal static string Responsible {
+            get {
+                return ResourceManager.GetString("Responsible", resourceCulture);
             }
         }
         
@@ -4208,6 +4316,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nicht zugeordnet.
+        /// </summary>
+        internal static string Unassigned {
+            get {
+                return ResourceManager.GetString("Unassigned", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Zuordnung zurücknehmen.
         /// </summary>
         internal static string UnassignPayment {
@@ -4328,6 +4445,24 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Helfer-Konfiguration.
+        /// </summary>
+        internal static string VolunteerConfiguration {
+            get {
+                return ResourceManager.GetString("VolunteerConfiguration", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Helfer-Planung.
+        /// </summary>
+        internal static string VolunteerPlanning {
+            get {
+                return ResourceManager.GetString("VolunteerPlanning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Warteliste.
         /// </summary>
         internal static string WaitingList {
@@ -4342,6 +4477,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string WaitingListLockedWhenPopulated {
             get {
                 return ResourceManager.GetString("WaitingListLockedWhenPopulated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wann.
+        /// </summary>
+        internal static string When {
+            get {
+                return ResourceManager.GetString("When", resourceCulture);
             }
         }
         

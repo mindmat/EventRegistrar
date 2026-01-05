@@ -30,7 +30,7 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     allQuestionOptions: AvailableQuestionOptionMapping[] = [];
     selectedRegistrableIds: string[] = [];
     configurationLoaded: boolean = false;
-    configurationCollapsed: boolean = false;
+    configurationCollapsed: boolean = true;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 

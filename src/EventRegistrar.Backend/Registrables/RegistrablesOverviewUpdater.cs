@@ -44,8 +44,8 @@ public class RegistrablesOverviewCalculator(IQueryable<Registration> registratio
         var readModel = new RegistrablesOverview
                         {
                             SingleRegistrables = registrables.Where(rbl => rbl.MaximumDoubleSeats == null)
-                                                             .OrderBy(rbl => rbl.Tag != null && tags.TryGetValue(rbl.Tag, out var sortKey) 
-                                                                                 ? sortKey 
+                                                             .OrderBy(rbl => rbl.Tag != null && tags.TryGetValue(rbl.Tag, out var sortKey)
+                                                                                 ? sortKey
                                                                                  : int.MaxValue)
                                                              .ThenBy(rbl => rbl.ShowInMailListOrder ?? int.MaxValue)
                                                              .ThenBy(rbl => rbl.Ics!.Select(ics => ics.Start)

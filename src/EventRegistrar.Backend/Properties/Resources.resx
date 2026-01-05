@@ -148,8 +148,14 @@
   <data name="Acronym" xml:space="preserve">
     <value>Kürzel</value>
   </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Aktionen</value>
+  </data>
   <data name="Add" xml:space="preserve">
     <value>Hinzufügen</value>
+  </data>
+  <data name="AddHelperSlot" xml:space="preserve">
+    <value>Helfer erhöhen</value>
   </data>
   <data name="AddIcs" xml:space="preserve">
     <value>ics hinzufügen</value>
@@ -217,11 +223,17 @@
   <data name="Assigned" xml:space="preserve">
     <value>Zugeordnet</value>
   </data>
+  <data name="AssignHelper" xml:space="preserve">
+    <value>Helfer zuordnen</value>
+  </data>
   <data name="AssignIncoming" xml:space="preserve">
     <value>Zahlungseingang zuordnen</value>
   </data>
   <data name="AssignOutgoing" xml:space="preserve">
     <value>Zahlungsausgang zuordnen</value>
+  </data>
+  <data name="AssignResponsible" xml:space="preserve">
+    <value>Verantwortliche:n zuordnen</value>
   </data>
   <data name="Audiences" xml:space="preserve">
     <value>Adressaten</value>
@@ -358,6 +370,9 @@
   <data name="DeleteRegistrable" xml:space="preserve">
     <value>Track löschen</value>
   </data>
+  <data name="DeleteShift" xml:space="preserve">
+    <value>Schicht löschen</value>
+  </data>
   <data name="DeleteTestData" xml:space="preserve">
     <value>Testdaten löschen</value>
   </data>
@@ -393,6 +408,9 @@
   </data>
   <data name="EMail" xml:space="preserve">
     <value>E-Mail</value>
+  </data>
+  <data name="Empty" xml:space="preserve">
+    <value>(Leer)</value>
   </data>
   <data name="English" xml:space="preserve">
     <value>Englisch</value>
@@ -555,6 +573,9 @@
   </data>
   <data name="HasWaitingListSecondary" xml:space="preserve">
     <value>Ohne Warteliste werden überzählige Anmeldungen abgelehnt</value>
+  </data>
+  <data name="Helper" xml:space="preserve">
+    <value>Helfer</value>
   </data>
   <data name="Hide" xml:space="preserve">
     <value>Ausblenden:</value>
@@ -1105,6 +1126,9 @@
   <data name="Port" xml:space="preserve">
     <value>Port</value>
   </data>
+  <data name="Post" xml:space="preserve">
+    <value>Schicht</value>
+  </data>
   <data name="Preview" xml:space="preserve">
     <value>Vorschau</value>
   </data>
@@ -1222,6 +1246,9 @@
   <data name="Registrable" xml:space="preserve">
     <value>Track</value>
   </data>
+  <data name="RegistrablesForVolunteers" xml:space="preserve">
+    <value>Helferpool aus</value>
+  </data>
   <data name="RegistrableSoldOut" xml:space="preserve">
     <value>{0} ist leider ausverkauft</value>
     <comment>{0}: Registrable name</comment>
@@ -1289,6 +1316,9 @@
   <data name="Remove" xml:space="preserve">
     <value>Entfernen</value>
   </data>
+  <data name="RemoveHelperSlot" xml:space="preserve">
+    <value>Helfer reduzieren</value>
+  </data>
   <data name="RemoveLink" xml:space="preserve">
     <value>Zuordnung aufheben</value>
   </data>
@@ -1309,6 +1339,9 @@
   </data>
   <data name="Required" xml:space="preserve">
     <value>(erforderlich)</value>
+  </data>
+  <data name="Responsible" xml:space="preserve">
+    <value>Verantwortlich</value>
   </data>
   <data name="Role" xml:space="preserve">
     <value>Rolle</value>
@@ -1499,6 +1532,9 @@
   <data name="TriggerMoveUp" xml:space="preserve">
     <value>Nachrücken auslösen</value>
   </data>
+  <data name="Unassigned" xml:space="preserve">
+    <value>Nicht zugeordnet</value>
+  </data>
   <data name="UnassignPayment" xml:space="preserve">
     <value>Zuordnung zurücknehmen</value>
   </data>
@@ -1541,6 +1577,9 @@
   <data name="Valuta" xml:space="preserve">
     <value>Valuta</value>
   </data>
+  <data name="VolunteerConfiguration" xml:space="preserve">
+    <value>Helfer-Konfiguration</value>
+  </data>
   <data name="VolunteerPlanning" xml:space="preserve">
     <value>Helfer-Planung</value>
   </data>
@@ -1549,6 +1588,9 @@
   </data>
   <data name="WaitingListLockedWhenPopulated" xml:space="preserve">
       <value>Waiting list cannot be removed because there are spots on the waiting list</value>
+  </data>
+  <data name="When" xml:space="preserve">
+    <value>Wann</value>
   </data>
   <data name="WillPayAtCheckin" xml:space="preserve">
     <value>Bezahlt am Checkin</value>

@@ -147,8 +147,14 @@
   <data name="Acronym" xml:space="preserve">
     <value>Acronym</value>
   </data>
+  <data name="Actions" xml:space="preserve">
+    <value>Actions</value>
+  </data>
   <data name="Add" xml:space="preserve">
     <value>Add</value>
+  </data>
+  <data name="AddHelperSlot" xml:space="preserve">
+    <value>Add helper slot</value>
   </data>
   <data name="AddIcs" xml:space="preserve">
     <value>Add ics</value>
@@ -210,11 +216,17 @@
   <data name="Assigned" xml:space="preserve">
     <value>Assigned</value>
   </data>
+  <data name="AssignHelper" xml:space="preserve">
+    <value>Assign helper</value>
+  </data>
   <data name="AssignIncoming" xml:space="preserve">
     <value>Assign incoming payment</value>
   </data>
   <data name="AssignOutgoing" xml:space="preserve">
     <value>Assign outgoing payment</value>
+  </data>
+  <data name="AssignResponsible" xml:space="preserve">
+    <value>Assign responsible</value>
   </data>
   <data name="Audiences" xml:space="preserve">
     <value>Audiences</value>
@@ -345,6 +357,9 @@
   <data name="DeleteRegistrable" xml:space="preserve">
     <value>Delete track</value>
   </data>
+  <data name="DeleteShift" xml:space="preserve">
+    <value>Delete shift</value>
+  </data>
   <data name="DeleteTestData" xml:space="preserve">
     <value>Delete test data</value>
   </data>
@@ -380,6 +395,9 @@
   </data>
   <data name="EMail" xml:space="preserve">
     <value>Email address</value>
+  </data>
+  <data name="Empty" xml:space="preserve">
+    <value>(Empty)</value>
   </data>
   <data name="English" xml:space="preserve">
     <value>English</value>
@@ -458,6 +476,9 @@
   </data>
   <data name="HasWaitingListSecondary" xml:space="preserve">
     <value>W/o a waiting list, surplus registrations get rejected</value>
+  </data>
+  <data name="Helper" xml:space="preserve">
+    <value>Helper</value>
   </data>
   <data name="Hide" xml:space="preserve">
     <value>Hide:</value>
@@ -996,6 +1017,9 @@
   <data name="Port" xml:space="preserve">
     <value>Port</value>
   </data>
+  <data name="Post" xml:space="preserve">
+    <value>Shift</value>
+  </data>
   <data name="Preview" xml:space="preserve">
     <value>Preview</value>
   </data>
@@ -1113,6 +1137,9 @@
   <data name="Registrable" xml:space="preserve">
     <value>Track</value>
   </data>
+  <data name="RegistrablesForVolunteers" xml:space="preserve">
+    <value>Helper pool from</value>
+  </data>
   <data name="RegistrableSoldOut" xml:space="preserve">
     <value>{0} is sold out</value>
   </data>
@@ -1170,6 +1197,9 @@
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="RemoveHelperSlot" xml:space="preserve">
+    <value>Remover helper slot</value>
+  </data>
   <data name="RemoveLink" xml:space="preserve">
     <value>Remove link</value>
   </data>
@@ -1190,6 +1220,9 @@
   </data>
   <data name="Required" xml:space="preserve">
     <value>(required)</value>
+  </data>
+  <data name="Responsible" xml:space="preserve">
+    <value>Responsible</value>
   </data>
   <data name="Role" xml:space="preserve">
     <value>Role</value>
@@ -1380,6 +1413,9 @@
   <data name="TriggerMoveUp" xml:space="preserve">
     <value>Trigger move up</value>
   </data>
+  <data name="Unassigned" xml:space="preserve">
+    <value>Unassigned</value>
+  </data>
   <data name="UnassignPayment" xml:space="preserve">
     <value>Remove assignment</value>
   </data>
@@ -1410,11 +1446,17 @@
   <data name="Valuta" xml:space="preserve">
     <value>Valuta</value>
   </data>
+  <data name="VolunteerConfiguration" xml:space="preserve">
+    <value>Volunteer configuration</value>
+  </data>
   <data name="VolunteerPlanning" xml:space="preserve">
     <value>Volunteer Planning</value>
   </data>
   <data name="WaitingList" xml:space="preserve">
     <value>Waiting list</value>
+  </data>
+  <data name="When" xml:space="preserve">
+    <value>When</value>
   </data>
   <data name="WillPayAtCheckin" xml:space="preserve">
     <value>Pays at check in</value>

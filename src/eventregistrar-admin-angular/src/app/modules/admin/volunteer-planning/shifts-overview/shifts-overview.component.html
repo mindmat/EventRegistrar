@@ -64,21 +64,21 @@
                                 <thead class="bg-gray-50 dark:bg-gray-800">
                                     <tr class="text-left border-b-2 border-gray-300 dark:border-gray-600">
                                         <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[120px] border-r border-gray-200 dark:border-gray-700">
-                                            WHEN
+                                            {{ 'When' | translate }}
                                         </th>
                                         <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[150px] border-r border-gray-200 dark:border-gray-700">
-                                            POST
+                                            {{ 'Post' | translate }}
                                         </th>
                                         <th
                                             class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider text-center min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-purple-100 dark:bg-purple-900/40">
-                                            RESPONSIBLE
+                                            {{ 'Responsible' | translate }}
                                         </th>
                                         <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-green-100 dark:bg-green-900/40"
                                             *ngFor="let helper of getHelperColumns()">
-                                            HELPER {{helper}}
+                                            {{ 'Helper' | translate }} {{helper}}
                                         </th>
                                         <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[100px]">
-                                            ACTIONS
+                                            {{ 'Actions' | translate }}
                                         </th>
                                     </tr>
                                 </thead>
@@ -111,19 +111,19 @@
                                                     <ng-container *ngIf="shift.responsibleRegistrationId; else noResponsible">
                                                         <a [routerLink]="_navigatorService.getRegistrationUrl(shift.responsibleRegistrationId)" class="hover:underline cursor-pointer block">
                                                             <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                                {{shift.participantResponsible}}
+                                                                {{ shift.participantResponsible }}
                                                             </div>
                                                             <div class="text-sm text-secondary" *ngIf="shift.responsibleEmail">
-                                                                {{shift.responsibleEmail}}
+                                                                {{ shift.responsibleEmail }}
                                                             </div>
                                                         </a>
                                                     </ng-container>
                                                     <ng-template #noResponsible>
-                                                        <span class="text-sm text-gray-400 italic">Unassigned</span>
+                                                        <span class="text-sm text-gray-400 italic">{{ 'Unassigned' | translate }}</span>
                                                     </ng-template>
                                                 </div>
                                                 <button mat-icon-button class="ml-2 text-purple-600 hover:text-purple-700" (click)="showCandidatesForAssignment(shift, 'responsible')"
-                                                    matTooltip="Assign responsible">
+                                                    [matTooltip]="'AssignResponsible' | translate">
                                                     <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
                                                 </button>
                                             </div>
@@ -145,11 +145,11 @@
                                                         </a>
                                                     </ng-container>
                                                     <ng-template #noHelper>
-                                                        <span class="text-sm text-green-600">Empty</span>
+                                                        <span class="text-sm text-green-600">{{ 'Empty' | translate }}</span>
                                                     </ng-template>
                                                 </div>
                                                 <button mat-icon-button class="ml-2 text-green-600 hover:text-green-700" (click)="showCandidatesForAssignment(shift, 'helper', i)"
-                                                    [matTooltip]="'Assign helper ' + (i + 1)">
+                                                    [matTooltip]="('AssignHelper' | translate) + ' ' + (i + 1)">
                                                     <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
                                                 </button>
                                             </div>
@@ -164,18 +164,18 @@
                                         <td class="px-6 py-4 whitespace-nowrap">
                                             <div class="flex flex-row space-x-1">
                                                 <!-- Add helper slot -->
-                                                <button mat-icon-button class="text-green-600 hover:text-green-700" (click)="addHelperSlot(shift)" matTooltip="Add helper slot">
+                                                <button mat-icon-button class="text-green-600 hover:text-green-700" (click)="addHelperSlot(shift)" [matTooltip]="'AddHelperSlot' | translate">
                                                     <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                                                 </button>
                                                 <!-- Remove helper slot -->
-                                                <button mat-icon-button class="text-orange-600 hover:text-orange-700" (click)="removeHelperSlot(shift)" matTooltip="Remove helper slot"
+                                                <button mat-icon-button class="text-orange-600 hover:text-orange-700" (click)="removeHelperSlot(shift)" [matTooltip]="'RemoveHelperSlot' | translate"
                                                     [disabled]="shift.helpersNeeded <= 0">
                                                     <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:minus'"></mat-icon>
                                                 </button>
                                                 <!-- Divider -->
                                                 <div class="border-l border-gray-300 mx-1 h-6"></div>
                                                 <!-- Standard actions -->
-                                                <button mat-icon-button class="text-red-600 hover:text-red-700" (click)="deleteShift(shift)" matTooltip="Delete shift">
+                                                <button mat-icon-button class="text-red-600 hover:text-red-700" (click)="deleteShift(shift)" [matTooltip]="'DeleteShift' | translate">
                                                     <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
                                                 </button>
                                             </div>
@@ -206,13 +206,13 @@
                         <div class="mb-8">
                             <mat-icon class="icon-size-24 text-gray-300 dark:text-gray-600" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
                         </div>
-                        <div class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">No shifts planned yet!</div>
+                        <div class="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">{{ 'NoShiftsPlannedYet' | translate }}</div>
                         <div class="text-lg text-secondary mb-8">
-                            Click "Add New Shift" to create your first volunteer shift.
+                            {{ 'NoShiftsDescription' | translate }}
                         </div>
                         <button mat-flat-button [color]="'primary'" (click)="createShift()">
                             <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                            <span class="ml-2">Add New Shift</span>
+                            <span class="ml-2">{{ 'AddNewShift' | translate }}</span>
                         </button>
                     </div>
                 </ng-template>
@@ -227,7 +227,7 @@
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-600">
                     <div class="flex items-center justify-between mb-4">
                         <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                            Select {{ currentAssignment?.role === 'responsible' ? 'Responsible' : 'Helper' }}
+                            {{ 'Select' | translate }} {{ currentAssignment?.role === 'responsible' ? ('Responsible' | translate) : ('Helper' | translate) }}
                         </h3>
                         <button mat-icon-button (click)="closeCandidateSelection()">
                             <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
@@ -235,16 +235,16 @@
                     </div>
                     <div class="relative">
                         <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
-                        <input type="text" [(ngModel)]="searchString" placeholder="Search participants..."
+                        <input type="text" [(ngModel)]="searchString" [placeholder]="'SearchParticipants' | translate"
                             class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
                     </div>
                 </div>
                 <div class="max-h-96 overflow-y-auto">
                     <div *ngIf="filteredCandidates.length === 0 && !searchString.trim()" class="p-6 text-center text-gray-500 dark:text-gray-400">
-                        No available candidates
+                        {{ 'NoAvailableCandidates' | translate }}
                     </div>
                     <div *ngIf="filteredCandidates.length === 0 && searchString.trim()" class="p-6 text-center text-gray-500 dark:text-gray-400">
-                        No participants found matching "{{searchString}}"
+                        {{ 'NoParticipantsFound' | translate }} "{{searchString}}"
                     </div>
                     <div *ngFor="let candidate of filteredCandidates"
                         class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0" (click)="selectCandidate(candidate)">
@@ -263,7 +263,7 @@
                 </div>
                 <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-600">
                     <button mat-button (click)="closeCandidateSelection()" class="w-full">
-                        Cancel
+                        {{ 'Cancel' | translate }}
                     </button>
                 </div>
             </div>
