@@ -11,7 +11,6 @@ public class UpdateShiftCommand : IRequest, IEventBoundRequest
     public string? Location { get; set; }
     public DateTimeOffset StartTime { get; set; }
     public DateTimeOffset EndTime { get; set; }
-    public int HelpersNeeded { get; set; }
 }
 
 public class UpdateShiftCommandHandler(IRepository<Shift> shifts, ChangeTrigger changeTrigger)
@@ -27,7 +26,6 @@ public class UpdateShiftCommandHandler(IRepository<Shift> shifts, ChangeTrigger 
         shift.Location = command.Location;
         shift.StartTime = command.StartTime;
         shift.EndTime = command.EndTime;
-        shift.HelpersNeeded = command.HelpersNeeded;
 
         changeTrigger.QueryChanged<ShiftsOverviewQuery>(command.EventId);
     }

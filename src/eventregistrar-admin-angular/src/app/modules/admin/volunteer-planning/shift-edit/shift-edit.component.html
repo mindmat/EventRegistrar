@@ -11,13 +11,19 @@
     <!-- Compose form -->
     <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="shiftForm">
 
-        <!-- Description -->
+        <!-- Name/Title -->
         <mat-form-field class="w-full">
-            <mat-label>Description</mat-label>
-            <input matInput [formControlName]="'description'" [spellcheck]="false">
-            <mat-error *ngIf="shiftForm.get('description').hasError('required')">
-                Description is required
+            <mat-label>Name/Title</mat-label>
+            <input matInput [formControlName]="'name'" [spellcheck]="false">
+            <mat-error *ngIf="shiftForm.get('name').hasError('required')">
+                Name is required
             </mat-error>
+        </mat-form-field>
+
+        <!-- Description -->
+        <mat-form-field class="w-full mt-4">
+            <mat-label>Description</mat-label>
+            <textarea matInput [formControlName]="'description'" [spellcheck]="false" rows="3"></textarea>
         </mat-form-field>
 
         <!-- Location -->
@@ -30,35 +36,49 @@
         </mat-form-field>
 
         <!-- Date and time fields -->
-        <div class="flex mt-4 space-x-4">
-            <mat-form-field class="flex-auto">
-                <mat-label>Start Date & Time</mat-label>
-                <input matInput type="datetime-local" [formControlName]="'startDate'">
-                <mat-error *ngIf="shiftForm.get('startDate').hasError('required')">
-                    Start date is required
-                </mat-error>
-            </mat-form-field>
+        <div class="mt-4 space-y-4">
+            <!-- Start Date and Time -->
+            <div class="flex space-x-4">
+                <mat-form-field class="flex-auto">
+                    <mat-label>Start Date</mat-label>
+                    <input matInput [matDatepicker]="startDatePicker" [formControlName]="'startDate'">
+                    <mat-datepicker-toggle matSuffix [for]="startDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #startDatePicker></mat-datepicker>
+                    <mat-error *ngIf="shiftForm.get('startDate').hasError('required')">
+                        Start date is required
+                    </mat-error>
+                </mat-form-field>
 
-            <mat-form-field class="flex-auto">
-                <mat-label>End Date & Time</mat-label>
-                <input matInput type="datetime-local" [formControlName]="'endDate'">
-                <mat-error *ngIf="shiftForm.get('endDate').hasError('required')">
-                    End date is required
-                </mat-error>
-            </mat-form-field>
+                <mat-form-field class="flex-auto">
+                    <mat-label>Start Time</mat-label>
+                    <input matInput type="time" [formControlName]="'startTime'">
+                    <mat-error *ngIf="shiftForm.get('startTime').hasError('required')">
+                        Start time is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <!-- End Date and Time -->
+            <div class="flex space-x-4">
+                <mat-form-field class="flex-auto">
+                    <mat-label>End Date</mat-label>
+                    <input matInput [matDatepicker]="endDatePicker" [formControlName]="'endDate'">
+                    <mat-datepicker-toggle matSuffix [for]="endDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #endDatePicker></mat-datepicker>
+                    <mat-error *ngIf="shiftForm.get('endDate').hasError('required')">
+                        End date is required
+                    </mat-error>
+                </mat-form-field>
+
+                <mat-form-field class="flex-auto">
+                    <mat-label>End Time</mat-label>
+                    <input matInput type="time" [formControlName]="'endTime'">
+                    <mat-error *ngIf="shiftForm.get('endTime').hasError('required')">
+                        End time is required
+                    </mat-error>
+                </mat-form-field>
+            </div>
         </div>
-
-        <!-- Required helpers -->
-        <mat-form-field class="w-full mt-4">
-            <mat-label>Required Helpers</mat-label>
-            <input matInput type="number" min="1" [formControlName]="'requiredHelpers'">
-            <mat-error *ngIf="shiftForm.get('requiredHelpers').hasError('required')">
-                Number of helpers is required
-            </mat-error>
-            <mat-error *ngIf="shiftForm.get('requiredHelpers').hasError('min')">
-                At least 1 helper is required
-            </mat-error>
-        </mat-form-field>
 
         <!-- Actions -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-4 sm:mt-6">

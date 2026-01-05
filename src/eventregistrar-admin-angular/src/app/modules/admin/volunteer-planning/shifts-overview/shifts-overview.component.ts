@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil, Observable } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { VolunteerPlanningService } from '../volunteer-planning.service';
 import { ParticipantDisplayItem, ShiftDisplayItem, RegistrableDisplayItem, AvailableQuestionOptionMapping } from 'app/api/api';
 import { NavigatorService } from '../../navigator.service';
 import { RegistrablesService } from '../../pricing/registrables.service';
+import { ShiftEditComponent } from '../shift-edit/shift-edit.component';
 
 @Component({
     selector: 'app-shifts-overview',
@@ -42,6 +44,7 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
         private _volunteerPlanningService: VolunteerPlanningService,
         public _navigatorService: NavigatorService,
         private _registrablesService: RegistrablesService,
+        private _matDialog: MatDialog
     ) { }
 
     /**
@@ -131,9 +134,24 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     /**
      * Edit shift
      */
-    editShift(shiftId: string): void
+    editShift(shift: ShiftDisplayItem): void
     {
-        this._router.navigate([`./${shiftId}/edit`], { relativeTo: this._activatedRoute });
+        // Open the dialog
+        const dialogRef = this._matDialog.open(ShiftEditComponent, {
+            width: '640px',
+            data: {
+                shift: shift
+            }
+        });
+
+        // Handle the result
+        dialogRef.afterClosed()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((result) =>
+            {
+                // Dialog closed, data will be automatically refreshed through NotificationService
+                // No additional action needed
+            });
     }
 
     /**

@@ -88,7 +88,8 @@
                                     <tr *ngFor="let shift of shifts; trackBy: trackByFn" class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150">
 
                                         <!-- When (Time) -->
-                                        <td class="px-6 py-4 whitespace-nowrap border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-950/70">
+                                        <td class="px-6 py-4 whitespace-nowrap border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-950/70 cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-900/80"
+                                            (click)="editShift(shift)">
                                             <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
                                                 {{shift.startTime | date:'HH:mm'}} - {{shift.endTime | date:'HH:mm'}}
                                             </div>
@@ -98,7 +99,8 @@
                                         </td>
 
                                         <!-- Post (Task/Location) -->
-                                        <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/70">
+                                        <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/70 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700/80"
+                                            (click)="editShift(shift)">
                                             <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{shift.name}}</div>
                                             <div class="text-sm text-secondary">{{shift.location}}</div>
                                             <div class="text-sm text-secondary" *ngIf="shift.description">{{shift.description}}</div>

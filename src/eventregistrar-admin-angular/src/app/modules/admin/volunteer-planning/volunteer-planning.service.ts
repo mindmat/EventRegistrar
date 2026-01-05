@@ -65,16 +65,16 @@ export class VolunteerPlanningService extends FetchService<ShiftDisplayItem[]>
     /**
      * Update shift
      */
-    updateShift(shiftId: string, shiftData: any): Observable<void>
+    updateShift(shiftId: string, shiftData: ShiftDisplayItem): Observable<void>
     {
         const command: UpdateShiftCommand = {
             eventId: this._eventService.selectedId,
             shiftId: shiftId,
+            name: shiftData.name,
             description: shiftData.description,
             location: shiftData.location,
             startTime: shiftData.startTime,
-            endTime: shiftData.endTime,
-            helpersNeeded: shiftData.helpersNeeded
+            endTime: shiftData.endTime
         };
         return this._api.updateShift_Command(command);
     }
