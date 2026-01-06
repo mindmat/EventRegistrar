@@ -592,6 +592,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bevorzugte Zeit ändern.
+        /// </summary>
+        internal static string ChangeTimePreference {
+            get {
+                return ResourceManager.GetString("ChangeTimePreference", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Spalte in Checkin-Liste.
         /// </summary>
         internal static string CheckinListColumn {
@@ -867,6 +876,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string DistributionByPricePackage {
             get {
                 return ResourceManager.GetString("DistributionByPricePackage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bevorzugt diese Zeit nicht.
+        /// </summary>
+        internal static string DoesNotPreferThisTime {
+            get {
+                return ResourceManager.GetString("DoesNotPreferThisTime", resourceCulture);
             }
         }
         
@@ -3110,6 +3128,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bevorzugt diese Zeit.
+        /// </summary>
+        internal static string PrefersThisTime {
+            get {
+                return ResourceManager.GetString("PrefersThisTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Vorschau.
         /// </summary>
         internal static string Preview {
@@ -3830,6 +3857,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Teilnehmer:in suchen.
+        /// </summary>
+        internal static string SearchParticipants {
+            get {
+                return ResourceManager.GetString("SearchParticipants", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Suche....
         /// </summary>
         internal static string SearchPlaceholder {
@@ -4231,6 +4267,15 @@ namespace EventRegistrar.Backend.Properties {
         internal static string TeamMembers {
             get {
                 return ResourceManager.GetString("TeamMembers", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bevorzugte Zeit.
+        /// </summary>
+        internal static string TimePreference {
+            get {
+                return ResourceManager.GetString("TimePreference", resourceCulture);
             }
         }
         

@@ -23,10 +23,13 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     candidates: ParticipantDisplayItem[] = [];
     searchString: string = '';
     showCandidates: boolean = false;
-    currentAssignment: { shiftId: string; role: 'responsible' | 'helper'; helperIndex?: number } | null = null;
+    currentAssignment: { shiftId: string; role: 'responsible' | 'helper'; helperIndex?: number; } | null = null;
     maxHelpers: number = 3; // Maximum number of helper columns to show
     maxHelpersNeeded: number = 3; // Dynamic maximum based on shifts data
-
+    // Preference selection properties
+    showPreferenceSelection: boolean = false;
+    currentShiftForPreference: ShiftDisplayItem | null = null;
+    preferenceSearchString: string = '';
     // Configuration properties
     allRegistrables: RegistrableDisplayItem[] = [];
     allQuestionOptions: AvailableQuestionOptionMapping[] = [];
@@ -37,8 +40,6 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
-        private _activatedRoute: ActivatedRoute,
-        private _router: Router,
         private _changeDetectorRef: ChangeDetectorRef,
         private _fuseConfirmationService: FuseConfirmationService,
         private _volunteerPlanningService: VolunteerPlanningService,
@@ -63,6 +64,41 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
             candidate.lastName?.toLowerCase().includes(searchTerm) ||
             candidate.email?.toLowerCase().includes(searchTerm)
         );
+    }
+
+    /**
+     * Get filtered registrables based on search string
+     */
+    get filteredRegistrables(): RegistrableDisplayItem[]
+    {
+        if (!this.preferenceSearchString.trim())
+        {
+            return this.allRegistrables;
+        }
+
+        const searchTerm = this.preferenceSearchString.toLowerCase().trim();
+        return this.allRegistrables.filter(registrable =>
+            registrable.name?.toLowerCase().includes(searchTerm) ||
+            registrable.nameSecondary?.toLowerCase().includes(searchTerm)
+        );
+    }
+
+    /**
+     * Get candidates who prefer this time
+     */
+    get candidatesWhoPreferTime(): ParticipantDisplayItem[]
+    {
+        const filtered = this.filteredCandidates.filter(candidate => candidate.prefersTime === true);
+        return filtered;
+    }
+
+    /**
+     * Get candidates who don't prefer this time
+     */
+    get candidatesWhoDoNotPreferTime(): ParticipantDisplayItem[]
+    {
+        const filtered = this.filteredCandidates.filter(candidate => candidate.prefersTime === false);
+        return filtered;
     }
 
     ngOnInit(): void
@@ -257,7 +293,8 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
      */
     selectCandidate(participant: ParticipantDisplayItem): void
     {
-        if (!this.currentAssignment) {
+        if (!this.currentAssignment)
+        {
             return;
         }
 
@@ -373,31 +410,6 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     }
 
     /**
-     * Load configuration data (registrables, question options, and current selections)
-     */
-    private loadConfiguration(): void
-    {
-        // Load registrables
-        this._registrablesService.fetchRegistrables()
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((registrables) =>
-            {
-                this.allRegistrables = registrables;
-                this._changeDetectorRef.markForCheck();
-            });
-
-        // Load current configuration
-        this._volunteerPlanningService.getVolunteerAdminConfiguration()
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((config) =>
-            {
-                this.selectedRegistrableIds = config.registrableIds_Volunteer || [];
-                this.configurationLoaded = true;
-                this._changeDetectorRef.markForCheck();
-            });
-    }
-
-    /**
      * Update configuration when selections change
      */
     updateConfiguration(): void
@@ -420,5 +432,73 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     {
         this.configurationCollapsed = !this.configurationCollapsed;
         this._changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Show preference selector overlay
+     */
+    showPreferenceSelector(shift: ShiftDisplayItem): void
+    {
+        this.currentShiftForPreference = shift;
+        this.showPreferenceSelection = true;
+        this._changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Close preference selection overlay
+     */
+    closePreferenceSelection(): void
+    {
+        this.showPreferenceSelection = false;
+        this.currentShiftForPreference = null;
+        this.preferenceSearchString = '';
+        this._changeDetectorRef.markForCheck();
+    }
+
+    /**
+     * Select preference registrable
+     */
+    selectPreference(registrableId: string | null): void
+    {
+        if (this.currentShiftForPreference)
+        {
+            // Update shift
+            this.currentShiftForPreference.shiftPreferenceRegistrableId = registrableId;
+            this._volunteerPlanningService.updateShift(this.currentShiftForPreference.id, this.currentShiftForPreference)
+                .pipe(takeUntil(this._unsubscribeAll))
+                .subscribe({
+                    next: (_) =>
+                    {
+                        // Data will be automatically refreshed through NotificationService
+                        this.closePreferenceSelection();
+                    }
+                });
+        }
+        this.closePreferenceSelection();
+    }
+
+    /**
+     * Load configuration data (registrables, question options, and current selections)
+     */
+    private loadConfiguration(): void
+    {
+        // Load registrables
+        this._registrablesService.fetchRegistrables()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((registrables) =>
+            {
+                this.allRegistrables = registrables;
+                this._changeDetectorRef.markForCheck();
+            });
+
+        // Load current configuration
+        this._volunteerPlanningService.getVolunteerAdminConfiguration()
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((config) =>
+            {
+                this.selectedRegistrableIds = config.registrableIds_Volunteer || [];
+                this.configurationLoaded = true;
+                this._changeDetectorRef.markForCheck();
+            });
     }
 }

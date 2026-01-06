@@ -71,6 +71,7 @@ export class VolunteerPlanningService extends FetchService<ShiftDisplayItem[]>
             eventId: this._eventService.selectedId,
             shiftId: shiftId,
             name: shiftData.name,
+            registrableId_ShiftPreference: shiftData.shiftPreferenceRegistrableId,
             description: shiftData.description,
             location: shiftData.location,
             startTime: shiftData.startTime,

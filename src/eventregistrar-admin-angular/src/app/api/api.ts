@@ -9492,11 +9492,11 @@ export interface AvailableMailersQuery {
 
 export interface ParticipantDisplayItem {
     registrationId?: string;
-    firstName?: string;
-    lastName?: string;
+    firstName?: string | null;
+    lastName?: string | null;
     email?: string | null;
     isAlreadyAssigned?: boolean;
-    preferredTimes?: string | null;
+    prefersTime?: boolean;
 }
 
 export interface AvailableParticipantsQuery {
@@ -11456,6 +11456,9 @@ export interface ShiftDisplayItem {
     responsibleRegistrationId?: string | null;
     participantResponsible?: string | null;
     responsibleEmail?: string | null;
+    shiftPreferenceRegistrableId?: string | null;
+    shiftPreferenceRegistrableName?: string | null;
+    shiftPreferenceRegistrableNameSecondary?: string | null;
     assignments?: ShiftAssignmentDisplayItem[];
 }
 
@@ -11671,12 +11674,13 @@ export interface UpdateReadModelCommand {
 export interface UpdateShiftCommand {
     eventId?: string;
     shiftId?: string;
-    name?: string;
+    name?: string | null;
     description?: string | null;
     location?: string | null;
     startTime?: Date;
     endTime?: Date;
-    helpersNeeded?: number;
+    registrableId_ShiftPreference?: string | null;
+    registrationId_Responsible?: string | null;
 }
 
 export interface UpdateUserInfoCommand {
@@ -11693,7 +11697,6 @@ export enum IdentityProvider {
 export interface UpdateVolunteerAdminConfigurationCommand {
     eventId?: string;
     registrableIds_Volunteer?: string[] | null;
-    questionOptionIds_Volunteer?: string[] | null;
 }
 
 export interface RoleDescription {
@@ -11726,7 +11729,6 @@ export interface ValidateAutoMailTemplatesCommand {
 
 export interface VolunteerAdminConfigurationDto {
     registrableIds_Volunteer?: string[] | null;
-    questionOptionIds_Volunteer?: string[] | null;
 }
 
 export interface VolunteerAdminConfigurationQuery {

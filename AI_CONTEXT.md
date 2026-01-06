@@ -66,7 +66,8 @@ src/EventRegistrar.Backend/
 ### API Endpoints
 - Pattern: `api/events/{eventAcronym}/{domain}/{id?}`
 - Event-scoped operations require `eventAcronym` parameter
-- HTTP request are mediated to request handlers. there is no need for ASP.NET Controllers
+- **HTTP requests are mediated to request handlers. There is NO need for ASP.NET Controllers**
+- **DO NOT create Controller classes - the system uses direct request mediation**
 
 ## Key Interfaces & Base Classes
 

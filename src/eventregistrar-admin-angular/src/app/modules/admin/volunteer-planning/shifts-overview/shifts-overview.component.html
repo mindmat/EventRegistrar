@@ -23,7 +23,7 @@
         <div class="flex flex-col flex-auto w-full">
 
             <!-- Configuration Section -->
-            <div class="mb-8 bg-card shadow rounded-2xl overflow-hidden" *ngIf="configurationLoaded">
+            <div class="mb-8 bg-card shadow rounded-2xl overflow-hidden" *ngIf="allRegistrables?.length > 0">
                 <!-- Configuration Header -->
                 <div class="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700" (click)="toggleConfiguration()">
                     <h3 class="text-base font-medium text-gray-800 dark:text-gray-200">
@@ -70,6 +70,10 @@
                                             {{ 'Post' | translate }}
                                         </th>
                                         <th
+                                            class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-900/40">
+                                            {{ 'TimePreference' | translate }}
+                                        </th>
+                                        <th
                                             class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider text-center min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-purple-100 dark:bg-purple-900/40">
                                             {{ 'Responsible' | translate }}
                                         </th>
@@ -91,10 +95,10 @@
                                         <td class="px-6 py-4 whitespace-nowrap border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-950/70 cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-900/80"
                                             (click)="editShift(shift)">
                                             <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                {{shift.startTime | date:'HH:mm'}} - {{shift.endTime | date:'HH:mm'}}
+                                                {{ shift.startTime | date:'HH:mm' }} - {{ shift.endTime | date:'HH:mm' }}
                                             </div>
                                             <div class="text-sm text-secondary">
-                                                {{shift.startTime | date:'EEEE'}}
+                                                {{ shift.startTime | date:'EEEE' }}
                                             </div>
                                         </td>
 
@@ -104,6 +108,30 @@
                                             <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{shift.name}}</div>
                                             <div class="text-sm text-secondary">{{shift.location}}</div>
                                             <div class="text-sm text-secondary" *ngIf="shift.description">{{shift.description}}</div>
+                                        </td>
+
+                                        <!-- Time Preference (Registrable) -->
+                                        <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-950/70">
+                                            <div class="flex items-center justify-between">
+                                                <div class="flex-1">
+                                                    <ng-container *ngIf="shift.shiftPreferenceRegistrableId; else noPreferenceSelected">
+                                                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                            {{ shift.shiftPreferenceRegistrableName }}
+                                                        </div>
+                                                        <div class="text-sm text-secondary">
+                                                            {{ shift.shiftPreferenceRegistrableNameSecondary }}
+                                                        </div>
+
+                                                    </ng-container>
+                                                    <ng-template #noPreferenceSelected>
+                                                        <span class="text-sm text-gray-400 italic">{{ 'NoPreference' | translate }}</span>
+                                                    </ng-template>
+                                                </div>
+                                                <button mat-icon-button class="ml-2 text-blue-600 hover:text-blue-700" (click)="showPreferenceSelector(shift)"
+                                                    [matTooltip]="'ChangeTimePreference' | translate">
+                                                    <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+                                                </button>
+                                            </div>
                                         </td>
 
                                         <!-- Responsible -->
@@ -188,7 +216,7 @@
                                 <!-- Add new shift row -->
                                 <tbody>
                                     <tr class="bg-gray-50 dark:bg-gray-800/50">
-                                        <td [attr.colspan]="4 + maxHelpersNeeded + 1" class="px-6 py-3">
+                                        <td [attr.colspan]="5 + maxHelpersNeeded + 1" class="px-6 py-3">
                                             <button mat-stroked-button [color]="'primary'" (click)="createShift()" class="w-full">
                                                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                                                 <span class="ml-2">{{ 'AddNewShift' | translate }}</span>
@@ -248,23 +276,113 @@
                     <div *ngIf="filteredCandidates.length === 0 && searchString.trim()" class="p-6 text-center text-gray-500 dark:text-gray-400">
                         {{ 'NoParticipantsFound' | translate }} "{{searchString}}"
                     </div>
-                    <div *ngFor="let candidate of filteredCandidates"
-                        class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0" (click)="selectCandidate(candidate)">
+                    
+                    <!-- Candidates who prefer this time -->
+                    <div *ngIf="candidatesWhoPreferTime.length > 0">
+                        <div class="px-6 py-3 bg-green-50 dark:bg-green-900/20 border-b border-green-200 dark:border-green-800">
+                            <div class="text-sm font-semibold text-green-800 dark:text-green-200 flex items-center">
+                                <mat-icon class="icon-size-4 mr-2 text-green-600" [svgIcon]="'heroicons_outline:check-circle'"></mat-icon>
+                                {{ 'PrefersThisTime' | translate }} ({{candidatesWhoPreferTime.length}})
+                            </div>
+                        </div>
+                        <div *ngFor="let candidate of candidatesWhoPreferTime"
+                            class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600" 
+                            (click)="selectCandidate(candidate)">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div>
+                                        <div class="text-lg font-medium ">{{candidate.firstName}} {{candidate.lastName}}</div>
+                                        <div class="mt-0.5 line-clamp-2 text-secondary" *ngIf="candidate.email">{{candidate.email}}</div>
+                                    </div>
+                                </div>
+                                <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Candidates who don't prefer this time -->
+                    <div *ngIf="candidatesWhoDoNotPreferTime.length > 0">
+                        <div class="px-6 py-3 bg-orange-50 dark:bg-orange-900/20 border-b border-orange-200 dark:border-orange-800">
+                            <div class="text-sm font-semibold text-orange-800 dark:text-orange-200 flex items-center">
+                                <mat-icon class="icon-size-4 mr-2 text-orange-600" [svgIcon]="'heroicons_outline:exclamation-triangle'"></mat-icon>
+                                {{ 'DoesNotPreferThisTime' | translate }} ({{candidatesWhoDoNotPreferTime.length}})
+                            </div>
+                        </div>
+                        <div *ngFor="let candidate of candidatesWhoDoNotPreferTime"
+                            class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0" 
+                            (click)="selectCandidate(candidate)">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <div>
+                                        <div class="text-lg font-medium ">{{candidate.firstName}} {{candidate.lastName}}</div>
+                                        <div class="mt-0.5 line-clamp-2 text-secondary" *ngIf="candidate.email">{{candidate.email}}</div>
+                                    </div>
+                                </div>
+                                <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-600">
+                    <button mat-button (click)="closeCandidateSelection()" class="w-full">
+                        {{ 'Cancel' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preference Selection Overlay -->
+        <div *ngIf="showPreferenceSelection" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4">
+                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                            {{ 'SelectTimePreference' | translate }}
+                        </h3>
+                        <button mat-icon-button (click)="closePreferenceSelection()">
+                            <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <mat-icon class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
+                        <input type="text" [(ngModel)]="preferenceSearchString" [placeholder]="'SearchPreferences' | translate"
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400">
+                    </div>
+                </div>
+                <div class="max-h-96 overflow-y-auto">
+                    <!-- No Preference Option -->
+                    <div class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600" (click)="selectPreference(null)">
                         <div class="flex items-center justify-between">
                             <div>
-                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                    {{candidate.firstName}} {{candidate.lastName}}
+                                <div class="text-sm font-medium text-gray-400 italic">
+                                    {{ 'NoPreference' | translate }}
                                 </div>
-                                <div class="text-sm text-gray-500 dark:text-gray-400" *ngIf="candidate.email">
-                                    {{candidate.email}}
-                                </div>
+                            </div>
+                            <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
+                        </div>
+                    </div>
+                    <!-- Empty state messages -->
+                    <div *ngIf="filteredRegistrables.length === 0 && !preferenceSearchString.trim()" class="p-6 text-center text-gray-500 dark:text-gray-400">
+                        {{ 'NoAvailablePreferences' | translate }}
+                    </div>
+                    <div *ngIf="filteredRegistrables.length === 0 && preferenceSearchString.trim()" class="p-6 text-center text-gray-500 dark:text-gray-400">
+                        {{ 'NoPreferencesFound' | translate }} "{{preferenceSearchString}}"
+                    </div>
+                    <!-- Registrable Options -->
+                    <div *ngFor="let registrable of filteredRegistrables"
+                        class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0"
+                        (click)="selectPreference(registrable.id)">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-lg font-medium ">{{ registrable.name }}</div>
+                                <div class="mt-0.5 line-clamp-2 text-secondary">{{ registrable.nameSecondary }}</div>
                             </div>
                             <mat-icon class="text-gray-400" [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
                         </div>
                     </div>
                 </div>
                 <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-600">
-                    <button mat-button (click)="closeCandidateSelection()" class="w-full">
+                    <button mat-button (click)="closePreferenceSelection()" class="w-full">
                         {{ 'Cancel' | translate }}
                     </button>
                 </div>

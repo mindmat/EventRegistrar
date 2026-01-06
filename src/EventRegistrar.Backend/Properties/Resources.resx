@@ -295,6 +295,9 @@
   <data name="ChangeSpots" xml:space="preserve">
     <value>Plätze ändern</value>
   </data>
+  <data name="ChangeTimePreference" xml:space="preserve">
+    <value>Bevorzugte Zeit ändern</value>
+  </data>
   <data name="CheckinListColumn" xml:space="preserve">
     <value>Spalte in Checkin-Liste</value>
   </data>
@@ -387,6 +390,9 @@
   </data>
   <data name="DistributionByPricePackage" xml:space="preserve">
     <value>Verteilung auf Preispakete</value>
+  </data>
+  <data name="DoesNotPreferThisTime" xml:space="preserve">
+    <value>Bevorzugt diese Zeit nicht</value>
   </data>
   <data name="DontSendReceivedMail" xml:space="preserve">
     <value>"Anmeldung erhalten" nicht senden</value>
@@ -1129,6 +1135,9 @@
   <data name="Post" xml:space="preserve">
     <value>Schicht</value>
   </data>
+  <data name="PrefersThisTime" xml:space="preserve">
+    <value>Bevorzugt diese Zeit</value>
+  </data>
   <data name="Preview" xml:space="preserve">
     <value>Vorschau</value>
   </data>
@@ -1370,6 +1379,9 @@
   <data name="SearchByNameMailPhone" xml:space="preserve">
     <value>Suche nach Name, Mail, Phone</value>
   </data>
+  <data name="SearchParticipants" xml:space="preserve">
+    <value>Teilnehmer:in suchen</value>
+  </data>
   <data name="SearchPlaceholder" xml:space="preserve">
     <value>Suche...</value>
   </data>
@@ -1504,6 +1516,9 @@
   </data>
   <data name="TeamMembers" xml:space="preserve">
     <value>Teammitglieder</value>
+  </data>
+  <data name="TimePreference" xml:space="preserve">
+    <value>Bevorzugte Zeit</value>
   </data>
   <data name="to" xml:space="preserve">
     <value>an</value>

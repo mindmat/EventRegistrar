@@ -6091,10 +6091,12 @@
                         "format": "guid"
                     },
                     "firstName": {
-                        "type": "string"
+                        "type": "string",
+                        "nullable": true
                     },
                     "lastName": {
-                        "type": "string"
+                        "type": "string",
+                        "nullable": true
                     },
                     "email": {
                         "type": "string",
@@ -6103,9 +6105,8 @@
                     "isAlreadyAssigned": {
                         "type": "boolean"
                     },
-                    "preferredTimes": {
-                        "type": "string",
-                        "nullable": true
+                    "prefersTime": {
+                        "type": "boolean"
                     }
                 }
             },
@@ -12245,6 +12246,19 @@
                         "type": "string",
                         "nullable": true
                     },
+                    "shiftPreferenceRegistrableId": {
+                        "type": "string",
+                        "format": "guid",
+                        "nullable": true
+                    },
+                    "shiftPreferenceRegistrableName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "shiftPreferenceRegistrableNameSecondary": {
+                        "type": "string",
+                        "nullable": true
+                    },
                     "assignments": {
                         "type": "array",
                         "items": {
@@ -12927,7 +12941,8 @@
                         "format": "guid"
                     },
                     "name": {
-                        "type": "string"
+                        "type": "string",
+                        "nullable": true
                     },
                     "description": {
                         "type": "string",
@@ -12945,9 +12960,15 @@
                         "type": "string",
                         "format": "date-time"
                     },
-                    "helpersNeeded": {
-                        "type": "integer",
-                        "format": "int32"
+                    "registrableId_ShiftPreference": {
+                        "type": "string",
+                        "format": "guid",
+                        "nullable": true
+                    },
+                    "registrationId_Responsible": {
+                        "type": "string",
+                        "format": "guid",
+                        "nullable": true
                     }
                 }
             },
@@ -12987,14 +13008,6 @@
                         "format": "guid"
                     },
                     "registrableIds_Volunteer": {
-                        "type": "array",
-                        "nullable": true,
-                        "items": {
-                            "type": "string",
-                            "format": "guid"
-                        }
-                    },
-                    "questionOptionIds_Volunteer": {
                         "type": "array",
                         "nullable": true,
                         "items": {
@@ -13084,14 +13097,6 @@
                 "additionalProperties": false,
                 "properties": {
                     "registrableIds_Volunteer": {
-                        "type": "array",
-                        "nullable": true,
-                        "items": {
-                            "type": "string",
-                            "format": "guid"
-                        }
-                    },
-                    "questionOptionIds_Volunteer": {
                         "type": "array",
                         "nullable": true,
                         "items": {

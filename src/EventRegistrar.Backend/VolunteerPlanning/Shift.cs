@@ -1,4 +1,5 @@
 using EventRegistrar.Backend.Events;
+using EventRegistrar.Backend.Registrables;
 using EventRegistrar.Backend.Registrations;
 
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -9,6 +10,8 @@ public class Shift : Entity
 {
     public Guid EventId { get; set; }
     public Event? Event { get; set; }
+    public Guid? RegistrableId_ShiftPreference { get; set; }
+    public Registrable? Registrable_ShiftPreference { get; set; }
 
     public string? Name { get; set; }
     public string? Description { get; set; }
@@ -44,6 +47,11 @@ public class ShiftMap : EntityMap<Shift>
                .WithMany()
                .HasForeignKey(sft => sft.EventId)
                .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(sft => sft.Registrable_ShiftPreference)
+               .WithMany()
+               .HasForeignKey(sft => sft.RegistrableId_ShiftPreference)
+               .OnDelete(DeleteBehavior.SetNull);
 
         builder.HasOne(sft => sft.Registration_Responsible)
                .WithMany()

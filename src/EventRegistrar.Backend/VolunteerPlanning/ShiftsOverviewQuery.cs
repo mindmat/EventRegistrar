@@ -10,7 +10,8 @@ public class ShiftsOverviewQueryHandler(IQueryable<Shift> shifts)
 {
     public async Task<IEnumerable<ShiftDisplayItem>> Handle(ShiftsOverviewQuery query, CancellationToken cancellationToken)
     {
-        return await shifts.Select(shift => new ShiftDisplayItem
+        return await shifts.Where(shift => shift.EventId == query.EventId)
+                           .Select(shift => new ShiftDisplayItem
                                             {
                                                 Id = shift.Id,
                                                 Name = shift.Name,
@@ -23,6 +24,9 @@ public class ShiftsOverviewQueryHandler(IQueryable<Shift> shifts)
                                                 ResponsibleRegistrationId = shift.RegistrationId_Responsible,
                                                 ParticipantResponsible = $"{shift.Registration_Responsible!.RespondentFirstName} {shift.Registration_Responsible!.RespondentLastName}",
                                                 ResponsibleEmail = shift.Registration_Responsible!.RespondentEmail,
+                                                ShiftPreferenceRegistrableId = shift.RegistrableId_ShiftPreference,
+                                                ShiftPreferenceRegistrableName = shift.Registrable_ShiftPreference!.Name,
+                                                ShiftPreferenceRegistrableNameSecondary = shift.Registrable_ShiftPreference!.NameSecondary,
                                                 Assignments = shift.Assignments!.Select(a => new ShiftAssignmentDisplayItem
                                                                                              {
                                                                                                  Id = a.Id,
@@ -40,7 +44,7 @@ public class ShiftsOverviewQueryHandler(IQueryable<Shift> shifts)
 public class ShiftDisplayItem
 {
     public Guid Id { get; set; }
-    public string? Name { get; set; } = null!;
+    public string? Name { get; set; }
     public string? Description { get; set; }
     public string? Location { get; set; }
     public DateTimeOffset StartTime { get; set; }
@@ -52,6 +56,11 @@ public class ShiftDisplayItem
     public Guid? ResponsibleRegistrationId { get; set; }
     public string? ParticipantResponsible { get; set; }
     public string? ResponsibleEmail { get; set; }
+
+    // Shift preference info
+    public Guid? ShiftPreferenceRegistrableId { get; set; }
+    public string? ShiftPreferenceRegistrableName { get; set; }
+    public string? ShiftPreferenceRegistrableNameSecondary { get; set; }
 
     // Assignment info
     public ICollection<ShiftAssignmentDisplayItem> Assignments { get; set; } = [];

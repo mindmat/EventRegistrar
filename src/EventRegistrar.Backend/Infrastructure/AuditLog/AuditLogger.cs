@@ -1,4 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure.ErrorHandling;
+
 using System.Diagnostics;
 
 using EventRegistrar.Backend.Events.Context;
@@ -36,7 +37,7 @@ public class AuditLogger<TRequest, TResponse>(RequestDateTimeProvider dateTimePr
         {
             var result = await next().ConfigureAwait(false);
             stopwatch.Stop();
-            operation.Telemetry.Success=true;
+            operation.Telemetry.Success = true;
             return result;
         }
         catch (Exception ex)
@@ -60,6 +61,7 @@ public class AuditLogger<TRequest, TResponse>(RequestDateTimeProvider dateTimePr
                 {
                     operation.Telemetry.Properties.Add("Request", requestJson);
                 }
+
                 operation.Telemetry.Properties.Add("EventId", eventId?.ToString());
                 operation.Telemetry.Properties.Add("UserId", userId.UserId?.ToString());
                 operation.Telemetry.Properties.Add("Username", userDisplayText);

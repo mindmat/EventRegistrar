@@ -37,18 +37,15 @@
                             <div class="flex flex-col ml-8 md:ml-16">
                                 <div class="font-semibold text-3xl md:text-5xl tracking-tighter">{{
                                     paymentOverview.outstandingAmount | number: '1.2-2' }}</div>
-                                <a class="font-medium text-sm text-secondary leading-none hover:underline"
-                                    [routerLink]="navigator.getDuePaymentUrl()">{{ 'OutstandingPayments' | translate: {
+                                <a class="font-medium text-sm text-secondary leading-none hover:underline" [routerLink]="navigator.getDuePaymentUrl()">{{ 'OutstandingPayments' | translate: {
                                     dueRegistrationCount: paymentOverview.notFullyPaidRegistrations } }}
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="flex flex-col flex-auto">
-                        <apx-chart class="flex-auto w-full max-h-24" [chart]="accountBalanceOptions.chart"
-                            [colors]="accountBalanceOptions.colors" [fill]="accountBalanceOptions.fill"
-                            [dataLabels]="accountBalanceOptions.dataLabels" [series]="accountBalanceOptions.series"
-                            [stroke]="accountBalanceOptions.stroke" [tooltip]="accountBalanceOptions.tooltip"
+                        <apx-chart class="flex-auto w-full max-h-24" [chart]="accountBalanceOptions.chart" [colors]="accountBalanceOptions.colors" [fill]="accountBalanceOptions.fill"
+                            [dataLabels]="accountBalanceOptions.dataLabels" [series]="accountBalanceOptions.series" [stroke]="accountBalanceOptions.stroke" [tooltip]="accountBalanceOptions.tooltip"
                             [xaxis]="accountBalanceOptions.xaxis" [yaxis]="accountBalanceOptions.yaxis"></apx-chart>
                     </div>
                 </div>
@@ -197,8 +194,7 @@
                                 <!-- Registrable title & description -->
                                 <a class="mt-2 hover:underline" [routerLink]="[doubleRegistrable.id, 'double', 'participants']">
                                     <div class="text-lg font-medium ">{{ doubleRegistrable.name }}</div>
-                                    <div class="mt-0.5 line-clamp-2 text-secondary">{{ doubleRegistrable.nameSecondary
-                                        }}</div>
+                                    <div class="mt-0.5 line-clamp-2 text-secondary">{{ doubleRegistrable.nameSecondary }}</div>
                                 </a>
                                 <div class="w-12 h-1 my-2 border-t-2"></div>
 
@@ -460,8 +456,7 @@
                 </ng-container>
 
                 <!-- Add track -->
-                <button *ngIf="(eventService.selected$ | async).state === EventState.Setup"
-                    class="flex flex-col h-96 shadow rounded-2xl overflow-hidden bg-card items-center justify-center"
+                <button *ngIf="(eventService.selected$ | async).state === EventState.Setup" class="flex flex-col h-96 shadow rounded-2xl overflow-hidden bg-card items-center justify-center"
                     (click)="addRegistrable()">
                     <mat-icon class="icon-size-16" [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
                 </button>
