@@ -23,7 +23,7 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     candidates: ParticipantDisplayItem[] = [];
     searchString: string = '';
     showCandidates: boolean = false;
-    currentAssignment: { shiftId: string, role: 'responsible' | 'helper', helperIndex?: number; } | null = null;
+    currentAssignment: { shiftId: string; role: 'responsible' | 'helper'; helperIndex?: number } | null = null;
     maxHelpers: number = 3; // Maximum number of helper columns to show
     maxHelpersNeeded: number = 3; // Dynamic maximum based on shifts data
 
@@ -257,7 +257,9 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
      */
     selectCandidate(participant: ParticipantDisplayItem): void
     {
-        if (!this.currentAssignment) return;
+        if (!this.currentAssignment) {
+            return;
+        }
 
         if (this.currentAssignment.role === 'responsible')
         {

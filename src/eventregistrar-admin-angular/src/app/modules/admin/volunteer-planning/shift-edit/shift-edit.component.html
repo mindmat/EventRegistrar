@@ -2,7 +2,7 @@
 
     <!-- Header -->
     <div class="flex flex-0 items-center justify-between h-16 pr-3 sm:pr-5 pl-6 sm:pl-8 bg-primary text-on-primary">
-        <div class="text-lg font-medium">{{isNew ? 'Add Shift' : 'Edit Shift'}}</div>
+        <div class="text-lg font-medium">{{ 'EditShift' | translate }}</div>
         <button mat-icon-button (click)="closeDialog()" [tabIndex]="-1">
             <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
         </button>
@@ -86,7 +86,7 @@
                 <!-- Save button -->
                 <button mat-flat-button [color]="'primary'" [disabled]="shiftForm.invalid || isLoading" (click)="save()">
                     <span *ngIf="!isLoading">
-                        {{isNew ? 'Create' : 'Save'}}
+                        {{ 'Save' | translate }}
                     </span>
                     <mat-progress-spinner *ngIf="isLoading" [diameter]="20" [mode]="'indeterminate'"></mat-progress-spinner>
                 </button>

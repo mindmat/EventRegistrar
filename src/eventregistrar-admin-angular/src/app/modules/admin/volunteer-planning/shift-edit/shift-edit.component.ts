@@ -4,23 +4,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject, takeUntil } from 'rxjs';
 import { VolunteerPlanningService } from '../volunteer-planning.service';
 import { ShiftDisplayItem } from 'app/api/api';
-import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
-import * as moment from 'moment';
-
-// See the Moment.js docs for the meaning of these formats:
-// https://momentjs.com/docs/#/displaying/format/
-export const DE_FORMATS = {
-    parse: {
-        dateInput: 'DD.MM.YYYY',
-    },
-    display: {
-        dateInput: 'DD.MM.YYYY',
-        monthYearLabel: 'DD.MM.YYYY',
-        dateA11yLabel: 'DD.MM.YYYY',
-        monthYearA11yLabel: 'DD.MM.YYYY',
-    },
-};
+import moment from 'moment';
 
 @Component({
     selector: 'app-shift-edit',
@@ -28,26 +12,11 @@ export const DE_FORMATS = {
     styleUrls: ['./shift-edit.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
-        // application's root module. We provide it at the component level here, due to limitations of
-        // our example generation script.
-        {
-            provide: DateAdapter,
-            useClass: MomentDateAdapter,
-            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-        },
-        { provide: MAT_DATE_FORMATS, useValue: DE_FORMATS }
-    ]
 })
 export class ShiftEditComponent implements OnDestroy
 {
     shiftForm: FormGroup;
-    // shift: any = null;
-    shiftId: string = null;
-    isNew: boolean = true;
     isLoading: boolean = false;
-
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
     constructor(
@@ -139,12 +108,12 @@ export class ShiftEditComponent implements OnDestroy
 
         // Combine date and time components back into datetime objects using Moment
         const startMoment = moment(formValue.startDate).set({
-            hour: parseInt(formValue.startTime.split(':')[0]),
-            minute: parseInt(formValue.startTime.split(':')[1])
+            hour: parseInt(formValue.startTime.split(':')[0], 10),
+            minute: parseInt(formValue.startTime.split(':')[1], 10)
         });
         const endMoment = moment(formValue.endDate).set({
-            hour: parseInt(formValue.endTime.split(':')[0]),
-            minute: parseInt(formValue.endTime.split(':')[1])
+            hour: parseInt(formValue.endTime.split(':')[0], 10),
+            minute: parseInt(formValue.endTime.split(':')[1], 10)
         });
 
         const shiftData = {
@@ -181,37 +150,4 @@ export class ShiftEditComponent implements OnDestroy
     {
         this._matDialogRef.close();
     }
-
-    // private initForm(): void
-    // {
-    //     this.shiftForm = this._formBuilder.group({
-    //         id: [''], // Add ID field for new shifts
-    //         name: ['', [Validators.required]],
-    //         description: [''],
-    //         location: ['', [Validators.required]],
-    //         startTime: ['', [Validators.required]],
-    //         endTime: ['', [Validators.required]],
-    //         helpersNeeded: [1, [Validators.required, Validators.min(1)]]
-    //     });
-    // }
-
-    // private populateForm(): void
-    // {
-    //     if (this.shift)
-    //     {
-    //         // Convert Date objects to datetime-local format for inputs
-    //         const startTime = this.shift.startTime ? new Date(this.shift.startTime).toISOString().slice(0, 16) : '';
-    //         const endTime = this.shift.endTime ? new Date(this.shift.endTime).toISOString().slice(0, 16) : '';
-
-    //         this.shiftForm.patchValue({
-    //             id: this.shift.id,
-    //             name: this.shift.name || '',
-    //             description: this.shift.description || '',
-    //             location: this.shift.location || '',
-    //             startTime: startTime,
-    //             endTime: endTime,
-    //             helpersNeeded: this.shift.helpersNeeded || 1
-    //         });
-    //     }
-    // }
 }
