@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -20,13 +20,12 @@ import { ClassicLayoutComponent } from 'app/layout/layouts/vertical/classic/clas
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 
-@NgModule({
-    declarations: [
+@NgModule({ declarations: [
         ClassicLayoutComponent
     ],
-    imports: [
-        HttpClientModule,
-        RouterModule,
+    exports: [
+        ClassicLayoutComponent
+    ], imports: [RouterModule,
         MatButtonModule,
         MatDividerModule,
         MatIconModule,
@@ -43,12 +42,7 @@ import { TranslateModule } from '@ngx-translate/core';
         UserModule,
         SharedModule,
         MatTooltipModule,
-        TranslateModule
-    ],
-    exports: [
-        ClassicLayoutComponent
-    ]
-})
+        TranslateModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
 export class ClassicLayoutModule
 {
 }
