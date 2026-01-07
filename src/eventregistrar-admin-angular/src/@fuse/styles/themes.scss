@@ -87,21 +87,21 @@ $dark-base: (
 @include mat.all-component-themes((
     color: null,
     density: 0,
-    typography: mat.define-typography-config(
+    typography: mat.m2-define-typography-config(
         $font-family: theme('fontFamily.sans'),
-        $headline-1: mat.define-typography-level(1.875rem, 2.25rem, 800, theme('fontFamily.sans')),
-        $headline-2: mat.define-typography-level(1.25rem, 1.75rem, 700, theme('fontFamily.sans')),
-        $headline-3: mat.define-typography-level(1.125rem, 1.75rem, 600, theme('fontFamily.sans')),
-        $headline-4: mat.define-typography-level(0.875rem, 1.25rem, 600, theme('fontFamily.sans')),
-        $headline-5: mat.define-typography-level(0.875rem, 1.5rem, 400, theme('fontFamily.sans')),
-        $headline-6: mat.define-typography-level(0.875rem, 1.5rem, 400, theme('fontFamily.sans')),
-        $subtitle-1: mat.define-typography-level(1rem, 1.75rem, 400, theme('fontFamily.sans')),
-        $subtitle-2: mat.define-typography-level(0.875rem, 1.25rem, 600, theme('fontFamily.sans')),
-        $body-1: mat.define-typography-level(0.875rem, 1.5rem, 400, theme('fontFamily.sans')),
-        $body-2: mat.define-typography-level(0.875rem, 1.5rem, 400, theme('fontFamily.sans')),
-        $caption: mat.define-typography-level(0.75rem, 1rem, 400, theme('fontFamily.sans')),
-        $button: mat.define-typography-level(0.875rem, 0.875rem, 500, theme('fontFamily.sans')),
-        $overline: mat.define-typography-level(0.75rem, 2rem, 500, theme('fontFamily.sans'))
+        $headline-1: mat.m2-define-typography-level(1.875rem, 2.25rem, 800, theme('fontFamily.sans')),
+        $headline-2: mat.m2-define-typography-level(1.25rem, 1.75rem, 700, theme('fontFamily.sans')),
+        $headline-3: mat.m2-define-typography-level(1.125rem, 1.75rem, 600, theme('fontFamily.sans')),
+        $headline-4: mat.m2-define-typography-level(0.875rem, 1.25rem, 600, theme('fontFamily.sans')),
+        $headline-5: mat.m2-define-typography-level(0.875rem, 1.5rem, 400, theme('fontFamily.sans')),
+        $headline-6: mat.m2-define-typography-level(0.875rem, 1.5rem, 400, theme('fontFamily.sans')),
+        $subtitle-1: mat.m2-define-typography-level(1rem, 1.75rem, 400, theme('fontFamily.sans')),
+        $subtitle-2: mat.m2-define-typography-level(0.875rem, 1.25rem, 600, theme('fontFamily.sans')),
+        $body-1: mat.m2-define-typography-level(0.875rem, 1.5rem, 400, theme('fontFamily.sans')),
+        $body-2: mat.m2-define-typography-level(0.875rem, 1.5rem, 400, theme('fontFamily.sans')),
+        $caption: mat.m2-define-typography-level(0.75rem, 1rem, 400, theme('fontFamily.sans')),
+        $button: mat.m2-define-typography-level(0.875rem, 0.875rem, 500, theme('fontFamily.sans')),
+        $overline: mat.m2-define-typography-level(0.75rem, 2rem, 500, theme('fontFamily.sans'))
     )
 ));
 
@@ -113,7 +113,7 @@ $dark-base: (
     @each $name in (primary, accent, warn) {
 
         /* Define the Angular Material theme */
-        $palette: mat.define-palette(map.get($theme, $name));
+        $palette: mat.m2-define-palette(map.get($theme, $name));
 
         /* Replace the default colors on the defined Material palette */
         $palette: map.merge($palette, (
@@ -130,11 +130,11 @@ $dark-base: (
     }
 
     /* Define a light & dark Angular Material theme with the generated palettes */
-    $light-theme: mat.define-light-theme((
+    $light-theme: mat.m2-define-light-theme((
         color: ($palettes)
     ));
 
-    $dark-theme: mat.define-dark-theme((
+    $dark-theme: mat.m2-define-dark-theme((
         color: ($palettes)
     ));
 
