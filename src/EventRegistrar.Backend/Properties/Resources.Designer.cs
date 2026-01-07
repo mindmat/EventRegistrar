@@ -763,6 +763,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Aktuelle Zuordnung.
+        /// </summary>
+        internal static string CurrentAssignment {
+            get {
+                return ResourceManager.GetString("CurrentAssignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Datum.
         /// </summary>
         internal static string date {
@@ -2687,11 +2696,29 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Keine Teilnehmer gefunden.
+        /// </summary>
+        internal static string NoParticipantsFound {
+            get {
+                return ResourceManager.GetString("NoParticipantsFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Keine freizugebende Mails.
         /// </summary>
         internal static string NoPendingMails {
             get {
                 return ResourceManager.GetString("NoPendingMails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Keine bevorzugte Zeit.
+        /// </summary>
+        internal static string NoPreference {
+            get {
+                return ResourceManager.GetString("NoPreference", resourceCulture);
             }
         }
         
@@ -3695,6 +3722,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Zuordnung entfernen.
+        /// </summary>
+        internal static string RemoveAssignment {
+            get {
+                return ResourceManager.GetString("RemoveAssignment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Helfer reduzieren.
         /// </summary>
         internal static string RemoveHelperSlot {
@@ -4517,7 +4553,7 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Waiting list cannot be removed because there are spots on the waiting list.
+        ///   Looks up a localized string similar to Warteliste kann nicht entfernt werden, weil bereits Teilnehmer darauf sind..
         /// </summary>
         internal static string WaitingListLockedWhenPopulated {
             get {

@@ -339,6 +339,9 @@
   <data name="CreateSuccessorEventOf" xml:space="preserve">
     <value>Create successor event of {event}</value>
   </data>
+  <data name="CurrentAssignment" xml:space="preserve">
+    <value>Current assignment</value>
+  </data>
   <data name="date" xml:space="preserve">
     <value>date</value>
   </data>
@@ -885,8 +888,14 @@
   <data name="NewEvent" xml:space="preserve">
     <value>Create new event</value>
   </data>
+  <data name="NoParticipantsFound" xml:space="preserve">
+    <value>No participants found</value>
+  </data>
   <data name="NoPendingMails" xml:space="preserve">
     <value>No pending mails</value>
+  </data>
+  <data name="NoPreference" xml:space="preserve">
+    <value>No preference</value>
   </data>
   <data name="NoSearchResults" xml:space="preserve">
     <value>No results found</value>
@@ -1206,6 +1215,9 @@
   <data name="Remove" xml:space="preserve">
     <value>Remove</value>
   </data>
+  <data name="RemoveAssignment" xml:space="preserve">
+    <value>Remove assignment</value>
+  </data>
   <data name="RemoveHelperSlot" xml:space="preserve">
     <value>Remover helper slot</value>
   </data>
@@ -1469,6 +1481,9 @@
   </data>
   <data name="WaitingList" xml:space="preserve">
     <value>Waiting list</value>
+  </data>
+  <data name="WaitingListLockedWhenPopulated" xml:space="preserve">
+    <value>Waiting list cannot be removed because there are spots on the waiting list</value>
   </data>
   <data name="When" xml:space="preserve">
     <value>When</value>

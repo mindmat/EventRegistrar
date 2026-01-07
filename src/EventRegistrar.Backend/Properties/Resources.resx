@@ -352,6 +352,9 @@
   <data name="CreateSuccessorEventOf" xml:space="preserve">
     <value>Nachfolge-Event von {event} erstellen</value>
   </data>
+  <data name="CurrentAssignment" xml:space="preserve">
+    <value>Aktuelle Zuordnung</value>
+  </data>
   <data name="date" xml:space="preserve">
     <value>Datum</value>
   </data>
@@ -988,8 +991,14 @@
   <data name="NewEvent" xml:space="preserve">
     <value>Neuen Event erstellen</value>
   </data>
+  <data name="NoParticipantsFound" xml:space="preserve">
+    <value>Keine Teilnehmer gefunden</value>
+  </data>
   <data name="NoPendingMails" xml:space="preserve">
     <value>Keine freizugebende Mails</value>
+  </data>
+  <data name="NoPreference" xml:space="preserve">
+    <value>Keine bevorzugte Zeit</value>
   </data>
   <data name="NoSearchResults" xml:space="preserve">
     <value>Keine Treffer gefunden</value>
@@ -1325,6 +1334,9 @@
   <data name="Remove" xml:space="preserve">
     <value>Entfernen</value>
   </data>
+  <data name="RemoveAssignment" xml:space="preserve">
+    <value>Zuordnung entfernen</value>
+  </data>
   <data name="RemoveHelperSlot" xml:space="preserve">
     <value>Helfer reduzieren</value>
   </data>
@@ -1602,7 +1614,7 @@
     <value>Warteliste</value>
   </data>
   <data name="WaitingListLockedWhenPopulated" xml:space="preserve">
-      <value>Waiting list cannot be removed because there are spots on the waiting list</value>
+      <value>Warteliste kann nicht entfernt werden, weil bereits Teilnehmer darauf sind.</value>
   </data>
   <data name="When" xml:space="preserve">
     <value>Wann</value>
