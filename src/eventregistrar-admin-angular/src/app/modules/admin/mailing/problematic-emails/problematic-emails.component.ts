@@ -8,9 +8,10 @@ import { MailDeliverySuccessService } from './mail-delivery-success.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-problematic-emails',
-  templateUrl: './problematic-emails.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-problematic-emails',
+    templateUrl: './problematic-emails.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ProblematicEmailsComponent implements OnInit
 {

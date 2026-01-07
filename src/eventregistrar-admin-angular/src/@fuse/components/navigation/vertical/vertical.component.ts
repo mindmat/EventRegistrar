@@ -12,13 +12,14 @@ import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Component({
-    selector       : 'fuse-vertical-navigation',
-    templateUrl    : './vertical.component.html',
-    styleUrls      : ['./vertical.component.scss'],
-    animations     : fuseAnimations,
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'fuse-vertical-navigation',
+    templateUrl: './vertical.component.html',
+    styleUrls: ['./vertical.component.scss'],
+    animations: fuseAnimations,
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'fuseVerticalNavigation'
+    exportAs: 'fuseVerticalNavigation',
+    standalone: false
 })
 export class FuseVerticalNavigationComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy
 {

@@ -7,9 +7,10 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 
 @Component({
-    selector     : 'centered-layout',
-    templateUrl  : './centered.component.html',
-    encapsulation: ViewEncapsulation.None
+    selector: 'centered-layout',
+    templateUrl: './centered.component.html',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class CenteredLayoutComponent implements OnInit, OnDestroy
 {

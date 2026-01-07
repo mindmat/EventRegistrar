@@ -5,8 +5,9 @@ import { EventService } from '../../events/event.service';
 import { ParticipantsService } from '../participants.service';
 
 @Component({
-  selector: 'app-participants-single',
-  templateUrl: './participants-single.component.html'
+    selector: 'app-participants-single',
+    templateUrl: './participants-single.component.html',
+    standalone: false
 })
 export class ParticipantsSingleComponent implements OnInit
 {

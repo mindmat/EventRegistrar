@@ -8,11 +8,12 @@ import { Shortcut } from 'app/layout/common/shortcuts/shortcuts.types';
 import { ShortcutsService } from 'app/layout/common/shortcuts/shortcuts.service';
 
 @Component({
-    selector       : 'shortcuts',
-    templateUrl    : './shortcuts.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'shortcuts',
+    templateUrl: './shortcuts.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'shortcuts'
+    exportAs: 'shortcuts',
+    standalone: false
 })
 export class ShortcutsComponent implements OnInit, OnDestroy
 {

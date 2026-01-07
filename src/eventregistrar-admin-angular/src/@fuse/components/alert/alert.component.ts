@@ -7,13 +7,14 @@ import { FuseAlertService } from '@fuse/components/alert/alert.service';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 
 @Component({
-    selector       : 'fuse-alert',
-    templateUrl    : './alert.component.html',
-    styleUrls      : ['./alert.component.scss'],
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'fuse-alert',
+    templateUrl: './alert.component.html',
+    styleUrls: ['./alert.component.scss'],
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    animations     : fuseAnimations,
-    exportAs       : 'fuseAlert'
+    animations: fuseAnimations,
+    exportAs: 'fuseAlert',
+    standalone: false
 })
 export class FuseAlertComponent implements OnChanges, OnInit, OnDestroy
 {

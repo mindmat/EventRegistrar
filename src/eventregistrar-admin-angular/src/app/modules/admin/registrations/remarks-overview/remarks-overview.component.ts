@@ -6,9 +6,10 @@ import { NavigatorService } from '../../navigator.service';
 import { RemarksOverviewService } from './remarks-overview.service';
 
 @Component({
-  selector: 'app-remarks-overview',
-  templateUrl: './remarks-overview.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-remarks-overview',
+    templateUrl: './remarks-overview.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class RemarksOverviewComponent implements OnInit
 {

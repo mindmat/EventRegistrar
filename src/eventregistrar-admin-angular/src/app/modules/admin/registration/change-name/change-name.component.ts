@@ -3,9 +3,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ChangeNameService } from './change-name.service';
 
 @Component({
-  selector: 'app-change-name',
-  templateUrl: './change-name.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-change-name',
+    templateUrl: './change-name.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ChangeNameComponent
 {

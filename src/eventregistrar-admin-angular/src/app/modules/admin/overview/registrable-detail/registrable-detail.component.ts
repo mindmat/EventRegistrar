@@ -7,9 +7,10 @@ import { RegistrablesService } from '../../pricing/registrables.service';
 import { v4 as createUuid } from 'uuid';
 
 @Component({
-  selector: 'app-registrable-detail',
-  templateUrl: './registrable-detail.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-registrable-detail',
+    templateUrl: './registrable-detail.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class RegistrableDetailComponent implements OnInit
 {

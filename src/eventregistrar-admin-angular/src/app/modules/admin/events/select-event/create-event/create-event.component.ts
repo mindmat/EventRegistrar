@@ -7,9 +7,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-create-event',
-  templateUrl: './create-event.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-create-event',
+    templateUrl: './create-event.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CreateEventComponent implements OnInit
 {

@@ -1,7 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
-@Pipe({ name: 'translateEnum' })
+@Pipe({
+    name: 'translateEnum',
+    standalone: false
+})
 export class TranslateEnumPipe implements PipeTransform
 {
   constructor(private translateService: TranslateService) { }

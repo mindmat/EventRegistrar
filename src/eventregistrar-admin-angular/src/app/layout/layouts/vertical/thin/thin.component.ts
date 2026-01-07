@@ -7,9 +7,10 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 
 @Component({
-    selector     : 'thin-layout',
-    templateUrl  : './thin.component.html',
-    encapsulation: ViewEncapsulation.None
+    selector: 'thin-layout',
+    templateUrl: './thin.component.html',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ThinLayoutComponent implements OnInit, OnDestroy
 {

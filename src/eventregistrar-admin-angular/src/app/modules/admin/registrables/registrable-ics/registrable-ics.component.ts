@@ -10,9 +10,10 @@ import FroalaEditor from "froala-editor";
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-registrable-ics',
-  templateUrl: './registrable-ics.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-registrable-ics',
+    templateUrl: './registrable-ics.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class RegistrableIcsComponent implements OnInit
 {

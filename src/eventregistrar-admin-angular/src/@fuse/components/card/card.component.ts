@@ -4,12 +4,13 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseCardFace } from '@fuse/components/card/card.types';
 
 @Component({
-    selector     : 'fuse-card',
-    templateUrl  : './card.component.html',
-    styleUrls    : ['./card.component.scss'],
+    selector: 'fuse-card',
+    templateUrl: './card.component.html',
+    styleUrls: ['./card.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations,
-    exportAs     : 'fuseCard'
+    animations: fuseAnimations,
+    exportAs: 'fuseCard',
+    standalone: false
 })
 export class FuseCardComponent implements OnChanges
 {

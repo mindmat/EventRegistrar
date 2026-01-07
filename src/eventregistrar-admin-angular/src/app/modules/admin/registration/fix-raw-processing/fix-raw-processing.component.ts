@@ -4,9 +4,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { ProcessingError, Role } from 'app/api/api';
 
 @Component({
-  selector: 'app-fix-raw-processing',
-  templateUrl: './fix-raw-processing.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-fix-raw-processing',
+    templateUrl: './fix-raw-processing.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FixRawProcessingComponent implements OnInit, OnDestroy
 {

@@ -7,9 +7,10 @@ import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 
 @Component({
-    selector       : 'fuse-horizontal-navigation-basic-item',
-    templateUrl    : './basic.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'fuse-horizontal-navigation-basic-item',
+    templateUrl: './basic.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FuseHorizontalNavigationBasicItemComponent implements OnInit, OnDestroy
 {

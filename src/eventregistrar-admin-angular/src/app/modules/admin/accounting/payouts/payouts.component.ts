@@ -5,9 +5,10 @@ import { NavigatorService } from '../../navigator.service';
 import { PayoutsService } from './payouts.service';
 
 @Component({
-  selector: 'app-payouts',
-  templateUrl: './payouts.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-payouts',
+    templateUrl: './payouts.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PayoutsComponent implements OnInit
 {

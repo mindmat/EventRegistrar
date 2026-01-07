@@ -4,8 +4,9 @@ import { NavigatorService } from '../../navigator.service';
 import { ParticipantsService } from '../participants.service';
 
 @Component({
-  selector: 'app-participant',
-  templateUrl: './participant.component.html'
+    selector: 'app-participant',
+    templateUrl: './participant.component.html',
+    standalone: false
 })
 export class ParticipantComponent implements OnInit
 {

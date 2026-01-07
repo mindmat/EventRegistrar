@@ -5,9 +5,10 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 
 @Component({
-    selector       : 'fuse-vertical-navigation-divider-item',
-    templateUrl    : './divider.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'fuse-vertical-navigation-divider-item',
+    templateUrl: './divider.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FuseVerticalNavigationDividerItemComponent implements OnInit, OnDestroy
 {

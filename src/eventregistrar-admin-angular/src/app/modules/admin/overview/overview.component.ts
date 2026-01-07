@@ -22,7 +22,8 @@ import { RegistrableIcsComponent } from '../registrables/registrable-ics/registr
     selector: 'app-overview',
     templateUrl: './overview.component.html',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class OverviewComponent implements OnInit, OnDestroy
 {

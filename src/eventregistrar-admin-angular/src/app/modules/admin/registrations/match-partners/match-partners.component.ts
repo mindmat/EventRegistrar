@@ -6,9 +6,10 @@ import { NavigatorService } from '../../navigator.service';
 import { MatchPartnersService } from './match-partners.service';
 
 @Component({
-  selector: 'app-match-partners',
-  templateUrl: './match-partners.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-match-partners',
+    templateUrl: './match-partners.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MatchPartnersComponent implements OnInit
 {

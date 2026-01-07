@@ -5,9 +5,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { AutoMailPreviewService } from './auto-mail-preview.service';
 
 @Component({
-  selector: 'app-auto-mail-preview',
-  templateUrl: './auto-mail-preview.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-auto-mail-preview',
+    templateUrl: './auto-mail-preview.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AutoMailPreviewComponent implements OnInit
 {

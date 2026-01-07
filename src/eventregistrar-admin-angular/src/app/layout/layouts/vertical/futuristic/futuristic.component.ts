@@ -9,9 +9,10 @@ import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 
 @Component({
-    selector     : 'futuristic-layout',
-    templateUrl  : './futuristic.component.html',
-    encapsulation: ViewEncapsulation.None
+    selector: 'futuristic-layout',
+    templateUrl: './futuristic.component.html',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class FuturisticLayoutComponent implements OnInit, OnDestroy
 {

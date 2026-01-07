@@ -10,10 +10,11 @@ import { Layout } from 'app/layout/layout.types';
 import { AppConfig } from 'app/core/config/app.config';
 
 @Component({
-    selector     : 'layout',
-    templateUrl  : './layout.component.html',
-    styleUrls    : ['./layout.component.scss'],
-    encapsulation: ViewEncapsulation.None
+    selector: 'layout',
+    templateUrl: './layout.component.html',
+    styleUrls: ['./layout.component.scss'],
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class LayoutComponent implements OnInit, OnDestroy
 {

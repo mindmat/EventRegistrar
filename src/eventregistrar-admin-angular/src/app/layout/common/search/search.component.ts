@@ -13,7 +13,8 @@ import { TranslateService } from '@ngx-translate/core';
     templateUrl: './search.component.html',
     encapsulation: ViewEncapsulation.None,
     exportAs: 'fuseSearch',
-    animations: fuseAnimations
+    animations: fuseAnimations,
+    standalone: false
 })
 export class SearchComponent implements OnChanges, OnInit, OnDestroy
 {

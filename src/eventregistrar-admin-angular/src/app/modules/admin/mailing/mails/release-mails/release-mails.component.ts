@@ -5,9 +5,10 @@ import { ReleaseMailsService } from './release-mails.service';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-release-mails',
-  templateUrl: './release-mails.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-release-mails',
+    templateUrl: './release-mails.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ReleaseMailsComponent implements OnInit
 {

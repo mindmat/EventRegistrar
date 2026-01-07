@@ -18,7 +18,7 @@ import 'froala-editor/js/plugins/code_beautifier.min.js';
 import 'froala-editor/js/plugins/help.min.js';
 import 'froala-editor/js/languages/de.js';
 
-import { APP_INITIALIZER, ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
+import { ErrorHandler, LOCALE_ID, NgModule, inject, provideAppInitializer } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CommonModule, registerLocaleData } from '@angular/common';
@@ -236,12 +236,10 @@ export const DE_FORMATS_TIME = {
             useValue: Sentry.createErrorHandler()
         },
         { provide: Sentry.TraceService, deps: [Router] },
-        {
-            provide: APP_INITIALIZER,
-            useFactory: () => () => { },
-            deps: [Sentry.TraceService],
-            multi: true
-        },
+        provideAppInitializer(() => {
+        const initializerFn = (() => () => { })(inject(Sentry.TraceService));
+        return initializerFn();
+      }),
         { provide: MAT_DATE_LOCALE, useValue: 'de-CH' },
         { provide: NGX_MAT_DATE_FORMATS, useValue: DE_FORMATS_TIME },
         { provide: NGX_MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { strict: true } }

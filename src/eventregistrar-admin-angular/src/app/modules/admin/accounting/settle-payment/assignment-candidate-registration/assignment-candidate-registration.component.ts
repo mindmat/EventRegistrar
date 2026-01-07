@@ -5,8 +5,9 @@ import { NavigatorService } from 'app/modules/admin/navigator.service';
 import { AssignmentCandidateRegistrationEditItem } from '../settle-payment.component';
 
 @Component({
-  selector: 'app-assignment-candidate-registration',
-  templateUrl: './assignment-candidate-registration.component.html'
+    selector: 'app-assignment-candidate-registration',
+    templateUrl: './assignment-candidate-registration.component.html',
+    standalone: false
 })
 export class AssignmentCandidateRegistrationComponent implements OnInit, OnChanges
 {

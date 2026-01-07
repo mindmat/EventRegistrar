@@ -13,7 +13,8 @@ import { ShiftEditComponent } from '../shift-edit/shift-edit.component';
     selector: 'app-shifts-overview',
     templateUrl: './shifts-overview.component.html',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ShiftsOverviewComponent implements OnInit, OnDestroy
 {

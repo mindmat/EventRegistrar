@@ -7,9 +7,10 @@ import { UserAccessService } from './user-access.service';
 import { UserRolesService } from './user-roles.service';
 
 @Component({
-  selector: 'app-user-access',
-  templateUrl: './user-access.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-user-access',
+    templateUrl: './user-access.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UserAccessComponent implements OnInit
 {

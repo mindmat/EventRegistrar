@@ -22,20 +22,21 @@ export const DE_FORMATS = {
 };
 
 @Component({
-  selector: 'app-mail-config',
-  templateUrl: './mail-config.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [
-    // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
-    // application's root module. We provide it at the component level here, due to limitations of
-    // our example generation script.
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-    { provide: MAT_DATE_FORMATS, useValue: DE_FORMATS }
-  ]
+    selector: 'app-mail-config',
+    templateUrl: './mail-config.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [
+        // `MomentDateAdapter` can be automatically provided by importing `MomentDateModule` in your
+        // application's root module. We provide it at the component level here, due to limitations of
+        // our example generation script.
+        {
+            provide: DateAdapter,
+            useClass: MomentDateAdapter,
+            deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
+        },
+        { provide: MAT_DATE_FORMATS, useValue: DE_FORMATS }
+    ],
+    standalone: false
 })
 export class MailConfigComponent implements OnInit
 {

@@ -5,8 +5,9 @@ import { Subject, takeUntil, merge } from 'rxjs';
 import { AccountConfigService } from './account-config.service';
 
 @Component({
-  selector: 'app-account-config',
-  templateUrl: './account-config.component.html'
+    selector: 'app-account-config',
+    templateUrl: './account-config.component.html',
+    standalone: false
 })
 export class AccountConfigComponent implements OnInit
 {

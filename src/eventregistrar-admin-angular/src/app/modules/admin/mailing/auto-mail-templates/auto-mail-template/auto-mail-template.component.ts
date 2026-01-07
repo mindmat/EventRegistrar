@@ -11,9 +11,10 @@ import FroalaEditor from "froala-editor";
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
-  selector: 'app-auto-mail-template',
-  templateUrl: './auto-mail-template.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-auto-mail-template',
+    templateUrl: './auto-mail-template.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AutoMailTemplateComponent implements OnInit
 {

@@ -7,7 +7,8 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
     selector: 'event-settings',
     templateUrl: './event-settings.component.html',
     // encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class EventSettingsComponent implements OnInit, OnDestroy
 {

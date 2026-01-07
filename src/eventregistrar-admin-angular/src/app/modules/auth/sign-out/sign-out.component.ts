@@ -5,7 +5,8 @@ import { Subject } from 'rxjs';
 @Component({
     selector: 'auth-sign-out',
     templateUrl: './sign-out.component.html',
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class AuthSignOutComponent implements OnInit, OnDestroy
 {

@@ -6,8 +6,9 @@ import { SettlePaymentsService } from './settle-payments.service';
 import { NavigatorService } from '../../navigator.service';
 
 @Component({
-  selector: 'app-settle-payments',
-  templateUrl: './settle-payments.component.html'
+    selector: 'app-settle-payments',
+    templateUrl: './settle-payments.component.html',
+    standalone: false
 })
 export class SettlePaymentsComponent implements OnInit
 {

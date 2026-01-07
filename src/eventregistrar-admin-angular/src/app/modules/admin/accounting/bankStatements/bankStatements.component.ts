@@ -5,8 +5,9 @@ import { EventService } from '../../events/event.service';
 import { BankStatementsService } from './bankStatements.service';
 
 @Component({
-  selector: 'app-bankStatements',
-  templateUrl: './bankStatements.component.html'
+    selector: 'app-bankStatements',
+    templateUrl: './bankStatements.component.html',
+    standalone: false
 })
 export class BankStatementsComponent implements OnInit
 {

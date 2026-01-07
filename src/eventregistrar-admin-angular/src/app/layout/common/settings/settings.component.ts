@@ -6,9 +6,9 @@ import { AppConfig, Scheme, Theme, Themes } from 'app/core/config/app.config';
 import { Layout } from 'app/layout/layout.types';
 
 @Component({
-    selector     : 'settings',
-    templateUrl  : './settings.component.html',
-    styles       : [
+    selector: 'settings',
+    templateUrl: './settings.component.html',
+    styles: [
         `
             settings {
                 position: static;
@@ -25,7 +25,8 @@ import { Layout } from 'app/layout/layout.types';
             }
         `
     ],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class SettingsComponent implements OnInit, OnDestroy
 {

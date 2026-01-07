@@ -14,7 +14,8 @@ import { TranslateService } from '@ngx-translate/core';
     selector: 'classic-layout',
     templateUrl: './classic.component.html',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ClassicLayoutComponent implements OnInit, OnDestroy
 {

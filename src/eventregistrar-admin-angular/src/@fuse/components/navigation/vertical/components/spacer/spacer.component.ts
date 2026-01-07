@@ -5,9 +5,10 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 
 @Component({
-    selector       : 'fuse-vertical-navigation-spacer-item',
-    templateUrl    : './spacer.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'fuse-vertical-navigation-spacer-item',
+    templateUrl: './spacer.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FuseVerticalNavigationSpacerItemComponent implements OnInit, OnDestroy
 {

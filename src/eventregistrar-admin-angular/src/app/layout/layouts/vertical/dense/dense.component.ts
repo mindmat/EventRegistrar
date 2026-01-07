@@ -7,9 +7,10 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 
 @Component({
-    selector     : 'dense-layout',
-    templateUrl  : './dense.component.html',
-    encapsulation: ViewEncapsulation.None
+    selector: 'dense-layout',
+    templateUrl: './dense.component.html',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class DenseLayoutComponent implements OnInit, OnDestroy
 {

@@ -6,9 +6,10 @@ import { NavigatorService } from '../../navigator.service';
 import { AllParticipantsService } from './all-participants.service';
 
 @Component({
-  selector: 'app-all-participants',
-  templateUrl: './all-participants.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-all-participants',
+    templateUrl: './all-participants.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AllParticipantsComponent implements OnInit
 {

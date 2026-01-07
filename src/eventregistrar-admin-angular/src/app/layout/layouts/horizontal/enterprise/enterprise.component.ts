@@ -7,9 +7,10 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 
 @Component({
-    selector     : 'enterprise-layout',
-    templateUrl  : './enterprise.component.html',
-    encapsulation: ViewEncapsulation.None
+    selector: 'enterprise-layout',
+    templateUrl: './enterprise.component.html',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class EnterpriseLayoutComponent implements OnInit, OnDestroy
 {

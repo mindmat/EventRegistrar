@@ -3,8 +3,9 @@ import { BehaviorSubject, Subscription, combineLatest, map, tap } from 'rxjs';
 import { RightsService } from './rights.service';
 
 @Directive({
-  selector: '[appUserHasRight]',
-  exportAs: 'authorization'
+    selector: '[appUserHasRight]',
+    exportAs: 'authorization',
+    standalone: false
 })
 export class UserHasRightDirective implements OnDestroy
 {

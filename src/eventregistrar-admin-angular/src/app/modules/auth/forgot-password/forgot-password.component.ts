@@ -6,10 +6,11 @@ import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 
 @Component({
-    selector     : 'auth-forgot-password',
-    templateUrl  : './forgot-password.component.html',
+    selector: 'auth-forgot-password',
+    templateUrl: './forgot-password.component.html',
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations,
+    standalone: false
 })
 export class AuthForgotPasswordComponent implements OnInit
 {

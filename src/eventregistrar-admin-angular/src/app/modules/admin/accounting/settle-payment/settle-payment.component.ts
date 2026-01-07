@@ -7,8 +7,9 @@ import { AssignmentRequest, Payment, SettlementCandidate } from './assignment-ca
 import { SettlePaymentService } from './settle-payment.service';
 
 @Component({
-  selector: 'app-settle-payment',
-  templateUrl: './settle-payment.component.html'
+    selector: 'app-settle-payment',
+    templateUrl: './settle-payment.component.html',
+    standalone: false
 })
 export class SettlePaymentComponent implements OnInit
 {

@@ -5,9 +5,10 @@ import { RegistrablesService } from '../../pricing/registrables.service';
 import { SpotsService } from '../spots/spots.service';
 
 @Component({
-  selector: 'app-change-spots',
-  templateUrl: './change-spots.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-change-spots',
+    templateUrl: './change-spots.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ChangeSpotsComponent implements OnInit
 {

@@ -3,11 +3,12 @@ import { DOCUMENT } from '@angular/common';
 import { FSDocument, FSDocumentElement } from '@fuse/components/fullscreen/fullscreen.types';
 
 @Component({
-    selector       : 'fuse-fullscreen',
-    templateUrl    : './fullscreen.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'fuse-fullscreen',
+    templateUrl: './fullscreen.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'fuseFullscreen'
+    exportAs: 'fuseFullscreen',
+    standalone: false
 })
 export class FuseFullscreenComponent implements OnInit
 {

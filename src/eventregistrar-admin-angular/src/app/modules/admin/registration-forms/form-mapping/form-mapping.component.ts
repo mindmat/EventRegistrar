@@ -7,9 +7,10 @@ import { QuestionOptionMappingService } from './question-option-mapping.service'
 import { v4 as createUuid } from 'uuid';
 
 @Component({
-  selector: 'app-form-mapping',
-  templateUrl: './form-mapping.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-form-mapping',
+    templateUrl: './form-mapping.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FormMappingComponent implements OnInit
 {

@@ -11,9 +11,10 @@ import { RegistrablesService } from '../../pricing/registrables.service';
 import { GeneratedBulkMailsService } from './generated-bulk-mails.service';
 
 @Component({
-  selector: 'app-bulk-mail-template',
-  templateUrl: './bulk-mail-template.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-bulk-mail-template',
+    templateUrl: './bulk-mail-template.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class BulkMailTemplateComponent implements OnInit
 {

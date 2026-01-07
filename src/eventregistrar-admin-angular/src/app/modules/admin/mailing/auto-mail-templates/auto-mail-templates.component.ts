@@ -6,9 +6,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { AutoMailTemplatesService } from './auto-mail-templates.service';
 
 @Component({
-  selector: 'app-auto-mail-templates',
-  templateUrl: './auto-mail-templates.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-auto-mail-templates',
+    templateUrl: './auto-mail-templates.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class AutoMailTemplatesComponent implements OnInit
 {

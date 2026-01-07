@@ -12,6 +12,7 @@ import moment from 'moment';
     styleUrls: ['./shift-edit.component.scss'],
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class ShiftEditComponent implements OnDestroy
 {

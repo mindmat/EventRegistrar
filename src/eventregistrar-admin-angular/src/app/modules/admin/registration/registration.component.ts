@@ -19,8 +19,9 @@ import { MatchPartnerService } from '../registrations/match-partner/match-partne
 import { MatchSingleSpotsComponent } from './match-single-spots/match-single-spots.component';
 
 @Component({
-  selector: 'app-registration',
-  templateUrl: './registration.component.html'
+    selector: 'app-registration',
+    templateUrl: './registration.component.html',
+    standalone: false
 })
 export class RegistrationComponent implements OnInit
 {

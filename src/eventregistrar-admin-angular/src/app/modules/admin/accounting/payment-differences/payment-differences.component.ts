@@ -5,9 +5,10 @@ import { DifferencesDisplayItem } from 'app/api/api';
 import { NavigatorService } from '../../navigator.service';
 
 @Component({
-  selector: 'app-payment-differences',
-  templateUrl: './payment-differences.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-payment-differences',
+    templateUrl: './payment-differences.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class PaymentDifferencesComponent implements OnInit
 {

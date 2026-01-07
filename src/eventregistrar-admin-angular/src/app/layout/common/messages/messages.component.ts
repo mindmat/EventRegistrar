@@ -7,11 +7,12 @@ import { Message } from 'app/layout/common/messages/messages.types';
 import { MessagesService } from 'app/layout/common/messages/messages.service';
 
 @Component({
-    selector       : 'messages',
-    templateUrl    : './messages.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'messages',
+    templateUrl: './messages.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'messages'
+    exportAs: 'messages',
+    standalone: false
 })
 export class MessagesComponent implements OnInit, OnDestroy
 {

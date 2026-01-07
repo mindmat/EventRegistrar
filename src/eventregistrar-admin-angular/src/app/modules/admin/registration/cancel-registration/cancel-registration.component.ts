@@ -7,9 +7,10 @@ import { RegistrableDetailComponent } from '../../overview/registrable-detail/re
 import { CancelRegistrationService } from './cancel-registration.service';
 
 @Component({
-  selector: 'app-cancel-registration',
-  templateUrl: './cancel-registration.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-cancel-registration',
+    templateUrl: './cancel-registration.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class CancelRegistrationComponent
 {

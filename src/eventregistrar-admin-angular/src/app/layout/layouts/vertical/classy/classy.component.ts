@@ -9,9 +9,10 @@ import { User } from 'app/core/user/user.types';
 import { UserService } from 'app/core/user/user.service';
 
 @Component({
-    selector     : 'classy-layout',
-    templateUrl  : './classy.component.html',
-    encapsulation: ViewEncapsulation.None
+    selector: 'classy-layout',
+    templateUrl: './classy.component.html',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class ClassyLayoutComponent implements OnInit, OnDestroy
 {

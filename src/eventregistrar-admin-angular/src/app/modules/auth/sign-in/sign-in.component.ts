@@ -9,7 +9,8 @@ import { AuthService } from '@auth0/auth0-angular';
     selector: 'auth-sign-in',
     templateUrl: './sign-in.component.html',
     encapsulation: ViewEncapsulation.None,
-    animations: fuseAnimations
+    animations: fuseAnimations,
+    standalone: false
 })
 export class AuthSignInComponent implements OnInit
 {

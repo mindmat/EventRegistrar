@@ -3,9 +3,10 @@ import { MailView } from 'app/api/api';
 import { MailViewerService } from './mail-viewer.service';
 
 @Component({
-  selector: 'app-mail-viewer',
-  templateUrl: './mail-viewer.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-mail-viewer',
+    templateUrl: './mail-viewer.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class MailViewerComponent implements OnInit
 {

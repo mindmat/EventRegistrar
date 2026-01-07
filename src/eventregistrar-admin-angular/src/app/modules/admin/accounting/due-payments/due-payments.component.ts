@@ -5,8 +5,9 @@ import { NavigatorService } from '../../navigator.service';
 import { DuePaymentsService } from './due-payments.service';
 
 @Component({
-  selector: 'app-due-payments',
-  templateUrl: './due-payments.component.html'
+    selector: 'app-due-payments',
+    templateUrl: './due-payments.component.html',
+    standalone: false
 })
 export class DuePaymentsComponent implements OnInit
 {

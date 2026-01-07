@@ -5,9 +5,10 @@ import { NavigatorService } from '../../navigator.service';
 import { NotesOverviewService } from './notes-overview.service';
 
 @Component({
-  selector: 'app-notes-overview',
-  templateUrl: './notes-overview.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-notes-overview',
+    templateUrl: './notes-overview.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class NotesOverviewComponent implements OnInit, OnDestroy
 {

@@ -6,9 +6,10 @@ import { API_BASE_URL } from 'app/api/api';
 import { catchError, delay, tap, throwError } from 'rxjs';
 
 @Component({
-  selector: 'app-file-upload',
-  templateUrl: './file-upload.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-file-upload',
+    templateUrl: './file-upload.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FileUploadComponent
 {

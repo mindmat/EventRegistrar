@@ -7,9 +7,10 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 
 @Component({
-    selector     : 'material-layout',
-    templateUrl  : './material.component.html',
-    encapsulation: ViewEncapsulation.None
+    selector: 'material-layout',
+    templateUrl: './material.component.html',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class MaterialLayoutComponent implements OnInit, OnDestroy
 {

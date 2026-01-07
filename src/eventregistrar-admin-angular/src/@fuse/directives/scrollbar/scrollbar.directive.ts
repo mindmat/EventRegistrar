@@ -12,7 +12,8 @@ import { ScrollbarGeometry, ScrollbarPosition } from '@fuse/directives/scrollbar
  */
 @Directive({
     selector: '[fuseScrollbar]',
-    exportAs: 'fuseScrollbar'
+    exportAs: 'fuseScrollbar',
+    standalone: false
 })
 export class FuseScrollbarDirective implements OnChanges, OnInit, OnDestroy
 {

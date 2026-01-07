@@ -5,9 +5,10 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 
 @Component({
-    selector       : 'fuse-horizontal-navigation-spacer-item',
-    templateUrl    : './spacer.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'fuse-horizontal-navigation-spacer-item',
+    templateUrl: './spacer.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FuseHorizontalNavigationSpacerItemComponent implements OnInit, OnDestroy
 {

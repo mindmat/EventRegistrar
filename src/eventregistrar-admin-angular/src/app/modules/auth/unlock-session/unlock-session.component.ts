@@ -7,10 +7,11 @@ import { UserService } from 'app/core/user/user.service';
 import { FuseAlertType } from '@fuse/components/alert';
 
 @Component({
-    selector     : 'auth-unlock-session',
-    templateUrl  : './unlock-session.component.html',
+    selector: 'auth-unlock-session',
+    templateUrl: './unlock-session.component.html',
     encapsulation: ViewEncapsulation.None,
-    animations   : fuseAnimations
+    animations: fuseAnimations,
+    standalone: false
 })
 export class AuthUnlockSessionComponent implements OnInit
 {

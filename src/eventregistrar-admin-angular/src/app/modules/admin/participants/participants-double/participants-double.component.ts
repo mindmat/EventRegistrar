@@ -5,8 +5,9 @@ import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
 import { RegistrableDisplayInfo, RegistrationDisplayInfo, Role, SpotDisplayInfo } from 'app/api/api';
 
 @Component({
-  selector: 'app-participants-double',
-  templateUrl: './participants-double.component.html'
+    selector: 'app-participants-double',
+    templateUrl: './participants-double.component.html',
+    standalone: false
 })
 export class ParticipantsDoubleComponent implements OnInit
 {

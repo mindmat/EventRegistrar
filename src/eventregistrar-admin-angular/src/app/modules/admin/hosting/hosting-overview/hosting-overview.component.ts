@@ -5,9 +5,10 @@ import { NavigatorService } from '../../navigator.service';
 import { HostingOverviewService } from './hosting-overview.service';
 
 @Component({
-  selector: 'app-hosting-overview',
-  templateUrl: './hosting-overview.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-hosting-overview',
+    templateUrl: './hosting-overview.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class HostingOverviewComponent implements OnInit
 {

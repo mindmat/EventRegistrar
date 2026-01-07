@@ -7,9 +7,10 @@ import { Navigation } from 'app/core/navigation/navigation.types';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 
 @Component({
-    selector     : 'compact-layout',
-    templateUrl  : './compact.component.html',
-    encapsulation: ViewEncapsulation.None
+    selector: 'compact-layout',
+    templateUrl: './compact.component.html',
+    encapsulation: ViewEncapsulation.None,
+    standalone: false
 })
 export class CompactLayoutComponent implements OnInit, OnDestroy
 {

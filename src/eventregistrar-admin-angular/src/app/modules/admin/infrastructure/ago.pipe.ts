@@ -6,8 +6,9 @@ import { filter, combineLatest, distinctUntilChanged, map, Observable, ReplaySub
 import { de, enUS } from 'date-fns/locale';
 
 @Pipe({
-  name: 'ago',
-  pure: false
+    name: 'ago',
+    pure: false,
+    standalone: false
 })
 export class AgoPipe extends AsyncPipe
 {

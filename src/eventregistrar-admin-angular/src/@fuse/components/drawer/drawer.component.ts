@@ -6,11 +6,12 @@ import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 import { BooleanInput, coerceBooleanProperty } from '@angular/cdk/coercion';
 
 @Component({
-    selector     : 'fuse-drawer',
-    templateUrl  : './drawer.component.html',
-    styleUrls    : ['./drawer.component.scss'],
+    selector: 'fuse-drawer',
+    templateUrl: './drawer.component.html',
+    styleUrls: ['./drawer.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    exportAs     : 'fuseDrawer'
+    exportAs: 'fuseDrawer',
+    standalone: false
 })
 export class FuseDrawerComponent implements OnChanges, OnInit, OnDestroy
 {

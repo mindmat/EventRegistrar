@@ -5,9 +5,10 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 
 @Component({
-    selector       : 'fuse-horizontal-navigation-divider-item',
-    templateUrl    : './divider.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'fuse-horizontal-navigation-divider-item',
+    templateUrl: './divider.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FuseHorizontalNavigationDividerItemComponent implements OnInit, OnDestroy
 {

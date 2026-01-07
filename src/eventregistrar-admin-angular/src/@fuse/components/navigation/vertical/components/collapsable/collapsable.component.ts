@@ -8,10 +8,11 @@ import { FuseNavigationService } from '@fuse/components/navigation/navigation.se
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 
 @Component({
-    selector       : 'fuse-vertical-navigation-collapsable-item',
-    templateUrl    : './collapsable.component.html',
-    animations     : fuseAnimations,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'fuse-vertical-navigation-collapsable-item',
+    templateUrl: './collapsable.component.html',
+    animations: fuseAnimations,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class FuseVerticalNavigationCollapsableItemComponent implements OnInit, OnDestroy
 {

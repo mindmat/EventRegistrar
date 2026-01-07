@@ -8,7 +8,8 @@ import { TranslateService } from '@ngx-translate/core';
     templateUrl: './languages.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs: 'languages'
+    exportAs: 'languages',
+    standalone: false
 })
 export class LanguagesComponent implements OnInit, OnDestroy
 {
