@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { FixRawProcessingService } from './fix-raw-processing.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FixRawProcessingResolver implements Resolve<boolean> 
+export class FixRawProcessingResolver  
 {
   constructor(private fixService: FixRawProcessingService) { }
 

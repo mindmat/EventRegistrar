@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Router, Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { Router, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { catchError, Observable, of, throwError } from 'rxjs';
 import { AutoMailPreviewService } from './auto-mail-preview.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AutoMailPreviewResolver implements Resolve<boolean>
+export class AutoMailPreviewResolver 
 {
   constructor(private router: Router, private service: AutoMailPreviewService) { }
 

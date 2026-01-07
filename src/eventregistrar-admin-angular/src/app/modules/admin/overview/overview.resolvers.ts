@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable, zip } from 'rxjs';
 import { OverviewService } from './overview.service';
 import { PaymentOverviewService } from './payment-overview.service';
@@ -9,7 +9,7 @@ import { RegistrationsPerDayService } from './registrations-per-day.service';
 @Injectable({
     providedIn: 'root'
 })
-export class OverviewResolver implements Resolve<any>
+export class OverviewResolver 
 {
     constructor(private overviewService: OverviewService,
         private paymentOverviewService: PaymentOverviewService,

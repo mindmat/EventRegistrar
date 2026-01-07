@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { EventService } from './event.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class EventAcronymResolver implements Resolve<boolean>
+export class EventAcronymResolver 
 {
   constructor(private eventService: EventService) { }
 

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { PaymentDifferencesService } from './payment-differences.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PaymentDifferencesResolver implements Resolve<any>
+export class PaymentDifferencesResolver 
 {
   constructor(private service: PaymentDifferencesService) { }
 

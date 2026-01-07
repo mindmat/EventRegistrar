@@ -1,17 +1,13 @@
 import { Injectable } from '@angular/core';
 import
-{
-  Router, Resolve,
-  RouterStateSnapshot,
-  ActivatedRouteSnapshot
-} from '@angular/router';
+{ Router, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { catchError, Observable, of, throwError } from 'rxjs';
 import { ReleaseMailsService } from './release-mails.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ReleaseMailsResolver implements Resolve<boolean>
+export class ReleaseMailsResolver 
 {
   constructor(private router: Router, private service: ReleaseMailsService)
   {

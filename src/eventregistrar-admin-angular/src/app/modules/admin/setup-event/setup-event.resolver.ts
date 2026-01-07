@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { SetupEventService } from './setup-event.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class SetupEventResolver implements Resolve<boolean>
+export class SetupEventResolver 
 {
   constructor(private service: SetupEventService) { }
 

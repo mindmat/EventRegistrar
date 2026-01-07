@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Router, Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { Router, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { MatchPartnersService } from './match-partners.service';
 
 @Injectable({ providedIn: 'root' })
-export class MatchPartnersResolver implements Resolve<boolean>
+export class MatchPartnersResolver 
 {
   constructor(private router: Router, private service: MatchPartnersService) { }
 

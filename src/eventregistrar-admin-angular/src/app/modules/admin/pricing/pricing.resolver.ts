@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, zip } from 'rxjs';
 import { PricePackagePartSelectionTypeService } from './pricing-selection-type.service';
 import { PricingService } from './pricing.service';
 import { RegistrablesService } from './registrables.service';
 
 @Injectable({ providedIn: 'root' })
-export class PricingResolver implements Resolve<boolean>
+export class PricingResolver 
 {
   constructor(private pricingService: PricingService,
     private registrablesService: RegistrablesService,

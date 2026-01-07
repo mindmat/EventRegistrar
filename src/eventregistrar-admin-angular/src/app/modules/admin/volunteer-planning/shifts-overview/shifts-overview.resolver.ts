@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { VolunteerPlanningService } from '../volunteer-planning.service';
@@ -7,7 +7,7 @@ import { VolunteerPlanningService } from '../volunteer-planning.service';
 @Injectable({
     providedIn: 'root'
 })
-export class ShiftsOverviewResolver implements Resolve<any>
+export class ShiftsOverviewResolver 
 {
 
     constructor(private _volunteerPlanningService: VolunteerPlanningService) { }

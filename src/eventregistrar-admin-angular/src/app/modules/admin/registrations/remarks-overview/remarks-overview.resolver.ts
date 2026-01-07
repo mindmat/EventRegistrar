@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 import { RemarksOverviewService } from './remarks-overview.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class RemarksOverviewResolver implements Resolve<boolean>
+export class RemarksOverviewResolver 
 {
   constructor(private remarksOverviewService: RemarksOverviewService) { }
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, of, zip } from 'rxjs';
 import { ProblematicEmailsService } from './problematic-emails.service';
 import { MailDeliverySuccessService } from './mail-delivery-success.service';
@@ -7,7 +7,7 @@ import { MailDeliverySuccessService } from './mail-delivery-success.service';
 @Injectable({
   providedIn: 'root'
 })
-export class ProblematicEmailsResolver implements Resolve<any>
+export class ProblematicEmailsResolver 
 {
   constructor(private service: ProblematicEmailsService,
     private deliveryService: MailDeliverySuccessService) { }

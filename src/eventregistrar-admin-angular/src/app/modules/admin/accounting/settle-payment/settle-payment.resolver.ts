@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, Resolve, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { catchError, Observable, throwError } from 'rxjs';
 import { SettlePaymentService } from './settle-payment.service';
 
@@ -7,7 +7,7 @@ import { SettlePaymentService } from './settle-payment.service';
 @Injectable({
     providedIn: 'root'
 })
-export class SettlePaymentResolver implements Resolve<any>
+export class SettlePaymentResolver 
 {
     constructor(private router: Router, private service: SettlePaymentService)
     {

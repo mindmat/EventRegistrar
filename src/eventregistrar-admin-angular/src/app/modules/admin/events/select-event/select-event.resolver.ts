@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, zip } from 'rxjs';
 import { EventsOfUserService } from './events-of-user.service';
 import { SearchEventsService } from './search-events.service';
@@ -7,7 +7,7 @@ import { SearchEventsService } from './search-events.service';
 @Injectable({
   providedIn: 'root'
 })
-export class SelectEventResolver implements Resolve<boolean>
+export class SelectEventResolver 
 {
   constructor(private eventsOfUserService: EventsOfUserService,
     private searchEventsService: SearchEventsService) { }

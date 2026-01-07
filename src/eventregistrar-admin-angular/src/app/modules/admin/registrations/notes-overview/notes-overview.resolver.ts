@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Resolve, RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
+import { RouterStateSnapshot, ActivatedRouteSnapshot } from '@angular/router';
 import { Observable, of } from 'rxjs';
 import { NotesOverviewService } from './notes-overview.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class NotesOverviewResolver implements Resolve<boolean>
+export class NotesOverviewResolver 
 {
   constructor(private notesService: NotesOverviewService) { }
 
