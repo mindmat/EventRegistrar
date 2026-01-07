@@ -50,7 +50,7 @@ export class ShiftEditComponent implements OnDestroy
         this.shiftForm = this._formBuilder.group({
             id: [shift?.id || ''],
             name: [shift?.name || '', [Validators.required]],
-            shiftPreferenceRegistrableId: [shift?.shiftPreferenceRegistrableId || ''],
+            shiftPreferenceRegistrableId: [shift?.shiftPreferenceRegistrableId],
             description: [shift?.description || ''],
             location: [shift?.location || '', [Validators.required]],
             startDate: [startDate, [Validators.required]],

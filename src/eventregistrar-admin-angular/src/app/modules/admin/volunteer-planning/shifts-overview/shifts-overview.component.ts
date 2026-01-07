@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil, Observable } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
 import { VolunteerPlanningService } from '../volunteer-planning.service';
-import { ParticipantDisplayItem, ShiftDisplayItem, RegistrableDisplayItem, AvailableQuestionOptionMapping } from 'app/api/api';
+import { ParticipantDisplayItem, ShiftDisplayItem, ShiftGroup, RegistrableDisplayItem, AvailableQuestionOptionMapping } from 'app/api/api';
 import { NavigatorService } from '../../navigator.service';
 import { RegistrablesService } from '../../pricing/registrables.service';
 import { ShiftEditComponent } from '../shift-edit/shift-edit.component';
@@ -17,8 +17,8 @@ import { ShiftEditComponent } from '../shift-edit/shift-edit.component';
 })
 export class ShiftsOverviewComponent implements OnInit, OnDestroy
 {
-    shifts$: Observable<ShiftDisplayItem[]>;
-    currentShifts: ShiftDisplayItem[] = [];
+    shiftGroups$: Observable<ShiftGroup[]>;
+    currentShiftGroups: ShiftGroup[] = [];
     availableParticipants: ParticipantDisplayItem[] = [];
     candidates: ParticipantDisplayItem[] = [];
     searchString: string = '';
@@ -103,16 +103,18 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
 
     ngOnInit(): void
     {
-        // Subscribe to shifts$ observable for reactive updates
-        this.shifts$ = this._volunteerPlanningService.shifts$;
+        // Subscribe to shiftGroups$ observable for reactive updates
+        this.shiftGroups$ = this._volunteerPlanningService.shiftGroups$;
 
-        // Subscribe to shifts to keep currentShifts updated
-        this.shifts$
+        // Subscribe to shift groups to keep currentShiftGroups updated
+        this.shiftGroups$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((shifts) =>
+            .subscribe((shiftGroups) =>
             {
-                this.currentShifts = shifts || [];
-                this.maxHelpersNeeded = Math.max(...this.currentShifts.map(s => s.helpersNeeded || 0), 0);
+                this.currentShiftGroups = shiftGroups || [];
+                // Calculate max helpers needed across all shifts in all groups
+                const allShifts = this.currentShiftGroups.flatMap(group => group.shifts || []);
+                this.maxHelpersNeeded = Math.max(...allShifts.map(s => s.helpersNeeded || 0), 0);
                 this._changeDetectorRef.markForCheck();
             });
 
@@ -143,24 +145,19 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     /**
      * Create new shift automatically using the last shift's end time
      */
-    createShift(): void
+    createShift(shiftGroup: ShiftGroup | null = null): void
     {
-        let lastShift: ShiftDisplayItem;
+        const lastShift = shiftGroup?.shifts.reduce((latest, current) =>
+            new Date(current.endTime || 0) > new Date(latest.endTime || 0) ? current : latest);
 
-        if (this.currentShifts && this.currentShifts.length > 0)
-        {
-            // Use the last shift's end time as start time for new shift
-            lastShift = this.currentShifts[this.currentShifts.length - 1];
-        }
-
-        const startTime = lastShift?.endTime ?? new Date();
+        const startTime = lastShift?.endTime ?? shiftGroup?.day ?? new Date();
         // Calculate end time (1 hour after start time by default)
         const endTime = new Date(startTime);
         endTime.setHours(endTime.getHours() + 1);
 
         // Call the service to create the shift
         this._volunteerPlanningService.createShift(
-            lastShift?.location,
+            shiftGroup.location,
             startTime,
             endTime);
     }
@@ -291,19 +288,32 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     /**
      * Select candidate for assignment
      */
-    selectCandidate(participant: ParticipantDisplayItem): void
+    selectCandidate(participant: ParticipantDisplayItem | null): void
     {
         if (!this.currentAssignment)
         {
             return;
         }
 
-        if (this.currentAssignment.role === 'responsible')
+        if (participant === null)
         {
-            this.assignResponsible(this.currentAssignment.shiftId, participant.registrationId);
-        } else
+            // Unassign current participant
+            const currentAssigned = this.getCurrentAssignedParticipant();
+            if (currentAssigned)
+            {
+                this.unassignParticipant(this.currentAssignment.shiftId, currentAssigned.registrationId);
+            }
+        }
+        else
         {
-            this.assignHelper(this.currentAssignment.shiftId, participant.registrationId, this.currentAssignment.helperIndex || 0);
+            // Assign new participant
+            if (this.currentAssignment.role === 'responsible')
+            {
+                this.assignResponsible(this.currentAssignment.shiftId, participant.registrationId);
+            } else
+            {
+                this.assignHelper(this.currentAssignment.shiftId, participant.registrationId, this.currentAssignment.helperIndex || 0);
+            }
         }
 
         this.closeCandidateSelection();
@@ -332,6 +342,56 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
             {
                 // Data will be automatically refreshed through NotificationService
             });
+    }
+
+    /**
+     * Get current assigned participant for the role being edited
+     */
+    getCurrentAssignedParticipant(): { registrationId: string; participant: string; email?: string; } | null
+    {
+        if (!this.currentAssignment || !this.currentShiftGroups)
+        {
+            return null;
+        }
+
+        // Find the shift across all groups
+        let shift: ShiftDisplayItem | undefined;
+        for (const group of this.currentShiftGroups)
+        {
+            shift = group.shifts?.find(s => s.id === this.currentAssignment!.shiftId);
+            if (shift) break;
+        }
+
+        if (!shift)
+        {
+            return null;
+        }
+
+        if (this.currentAssignment.role === 'responsible')
+        {
+            if (shift.responsibleRegistrationId)
+            {
+                return {
+                    registrationId: shift.responsibleRegistrationId,
+                    participant: shift.participantResponsible || '',
+                    email: shift.responsibleEmail
+                };
+            }
+        }
+        else if (this.currentAssignment.role === 'helper' && this.currentAssignment.helperIndex !== undefined)
+        {
+            const assignment = shift.assignments?.[this.currentAssignment.helperIndex];
+            if (assignment?.registrationId)
+            {
+                return {
+                    registrationId: assignment.registrationId,
+                    participant: assignment.participant || '',
+                    email: assignment.email
+                };
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -399,13 +459,21 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     }
 
     /**
+     * Track by function for group ngFor loops
+     */
+    trackByGroupFn(index: number, group: ShiftGroup): any
+    {
+        return `${group.day}-${group.location}` || index;
+    }
+
+    /**
      * Load shifts data
      */
     loadShifts(): void
     {
         // Since we're using an observable pattern, we just need to trigger a refresh
-        // The shifts$ observable will automatically update
-        this.shifts$ = this._volunteerPlanningService.fetchShifts();
+        // The shiftGroups$ observable will automatically update
+        this.shiftGroups$ = this._volunteerPlanningService.fetchShifts();
         this._changeDetectorRef.markForCheck();
     }
 

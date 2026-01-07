@@ -51,181 +51,196 @@
                 </div>
             </div>
 
-            <ng-container *ngIf="(shifts$ | async) as shifts">
-                <ng-container *ngIf="shifts.length > 0; else noShifts">
+            <ng-container *ngIf="(shiftGroups$ | async) as shiftGroups">
+                <ng-container *ngIf="shiftGroups.length > 0; else noShifts">
 
-                    <!-- Table card -->
-                    <div class="bg-card shadow rounded-2xl overflow-hidden">
-                        <!-- Scrollable table container -->
-                        <div class="overflow-auto">
-                            <table class="w-full">
+                    <!-- Shift Groups -->
+                    <div *ngFor="let shiftGroup of shiftGroups; trackBy: trackByGroupFn" class="mb-8">
 
-                                <!-- Table Header -->
-                                <thead class="bg-gray-50 dark:bg-gray-800">
-                                    <tr class="text-left border-b-2 border-gray-300 dark:border-gray-600">
-                                        <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[120px] border-r border-gray-200 dark:border-gray-700">
-                                            {{ 'When' | translate }}
-                                        </th>
-                                        <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[150px] border-r border-gray-200 dark:border-gray-700">
-                                            {{ 'Post' | translate }}
-                                        </th>
-                                        <th
-                                            class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-900/40">
-                                            {{ 'TimePreference' | translate }}
-                                        </th>
-                                        <th
-                                            class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider text-center min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-purple-100 dark:bg-purple-900/40">
-                                            {{ 'Responsible' | translate }}
-                                        </th>
-                                        <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-green-100 dark:bg-green-900/40"
-                                            *ngFor="let helper of getHelperColumns()">
-                                            {{ 'Helper' | translate }} {{helper}}
-                                        </th>
-                                        <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[100px]">
-                                            {{ 'Actions' | translate }}
-                                        </th>
-                                    </tr>
-                                </thead>
-
-                                <!-- Table Body -->
-                                <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
-                                    <tr *ngFor="let shift of shifts; trackBy: trackByFn" class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150">
-
-                                        <!-- When (Time) -->
-                                        <td class="px-6 py-4 whitespace-nowrap border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-950/70 cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-900/80"
-                                            (click)="editShift(shift)">
-                                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                {{ shift.startTime | date:'HH:mm' }} - {{ shift.endTime | date:'HH:mm' }}
-                                            </div>
-                                            <div class="text-sm text-secondary">
-                                                {{ shift.startTime | date:'EEEE' }}
-                                            </div>
-                                        </td>
-
-                                        <!-- Post (Task/Location) -->
-                                        <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/70 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700/80"
-                                            (click)="editShift(shift)">
-                                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{shift.name}}</div>
-                                            <div class="text-sm text-secondary">{{shift.location}}</div>
-                                            <div class="text-sm text-secondary" *ngIf="shift.description">{{shift.description}}</div>
-                                        </td>
-
-                                        <!-- Time Preference (Registrable) -->
-                                        <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-950/70">
-                                            <div class="flex items-center justify-between">
-                                                <div class="flex-1">
-                                                    <ng-container *ngIf="shift.shiftPreferenceRegistrableId; else noPreferenceSelected">
-                                                        <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                            {{ shift.shiftPreferenceRegistrableName }}
-                                                        </div>
-                                                        <div class="text-sm text-secondary">
-                                                            {{ shift.shiftPreferenceRegistrableNameSecondary }}
-                                                        </div>
-
-                                                    </ng-container>
-                                                    <ng-template #noPreferenceSelected>
-                                                        <span class="text-sm text-gray-400 italic">{{ 'NoPreference' | translate }}</span>
-                                                    </ng-template>
-                                                </div>
-                                                <button mat-icon-button class="ml-2 text-blue-600 hover:text-blue-700" (click)="showPreferenceSelector(shift)"
-                                                    [matTooltip]="'ChangeTimePreference' | translate">
-                                                    <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
-                                                </button>
-                                            </div>
-                                        </td>
-
-                                        <!-- Responsible -->
-                                        <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700 bg-purple-100 dark:bg-purple-950/70">
-                                            <div class="flex items-center justify-between">
-                                                <div class="flex-1">
-                                                    <ng-container *ngIf="shift.responsibleRegistrationId; else noResponsible">
-                                                        <a [routerLink]="_navigatorService.getRegistrationUrl(shift.responsibleRegistrationId)" class="hover:underline cursor-pointer block">
-                                                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                                {{ shift.participantResponsible }}
-                                                            </div>
-                                                            <div class="text-sm text-secondary" *ngIf="shift.responsibleEmail">
-                                                                {{ shift.responsibleEmail }}
-                                                            </div>
-                                                        </a>
-                                                    </ng-container>
-                                                    <ng-template #noResponsible>
-                                                        <span class="text-sm text-gray-400 italic">{{ 'Unassigned' | translate }}</span>
-                                                    </ng-template>
-                                                </div>
-                                                <button mat-icon-button class="ml-2 text-purple-600 hover:text-purple-700" (click)="showCandidatesForAssignment(shift, 'responsible')"
-                                                    [matTooltip]="'AssignResponsible' | translate">
-                                                    <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
-                                                </button>
-                                            </div>
-                                        </td>
-
-                                        <!-- Helpers -->
-                                        <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700" [ngClass]="{'bg-green-100 dark:bg-green-950/70': i < shift.helpersNeeded}"
-                                            *ngFor="let helperIndex of getHelperColumns(); let i = index">
-                                            <div class="flex items-center justify-between" *ngIf="i < shift.helpersNeeded; else emptyHelper">
-                                                <div class="flex-1">
-                                                    <ng-container *ngIf="shift.assignments && shift.assignments[i] && shift.assignments[i].registrationId; else noHelper">
-                                                        <a [routerLink]="_navigatorService.getRegistrationUrl(shift.assignments[i].registrationId)" class="hover:underline cursor-pointer block">
-                                                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
-                                                                {{ shift.assignments[i].participant }}
-                                                            </div>
-                                                            <div class="text-sm text-secondary" *ngIf="shift.assignments[i].email">
-                                                                {{shift.assignments[i].email}}
-                                                            </div>
-                                                        </a>
-                                                    </ng-container>
-                                                    <ng-template #noHelper>
-                                                        <span class="text-sm text-green-600">{{ 'Unassigned' | translate }}</span>
-                                                    </ng-template>
-                                                </div>
-                                                <button mat-icon-button class="ml-2 text-green-600 hover:text-green-700" (click)="showCandidatesForAssignment(shift, 'helper', i)"
-                                                    [matTooltip]="('AssignHelper' | translate) + ' ' + (i + 1)">
-                                                    <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
-                                                </button>
-                                            </div>
-                                            <ng-template #emptyHelper>
-                                                <div>
-                                                    <span class="text-sm text-gray-300">-</span>
-                                                </div>
-                                            </ng-template>
-                                        </td>
-
-                                        <!-- Actions -->
-                                        <td class="px-6 py-4 whitespace-nowrap">
-                                            <div class="flex flex-row space-x-1">
-                                                <!-- Add helper slot -->
-                                                <button mat-icon-button class="text-green-600 hover:text-green-700" (click)="addHelperSlot(shift)" [matTooltip]="'AddHelperSlot' | translate">
-                                                    <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                                                </button>
-                                                <!-- Remove helper slot -->
-                                                <button mat-icon-button class="text-orange-600 hover:text-orange-700" (click)="removeHelperSlot(shift)" [matTooltip]="'RemoveHelperSlot' | translate"
-                                                    [disabled]="shift.helpersNeeded <= 0">
-                                                    <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:minus'"></mat-icon>
-                                                </button>
-                                                <!-- Divider -->
-                                                <div class="border-l border-gray-300 mx-1 h-6"></div>
-                                                <!-- Standard actions -->
-                                                <button mat-icon-button class="text-red-600 hover:text-red-700" (click)="deleteShift(shift)" [matTooltip]="'DeleteShift' | translate">
-                                                    <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
-                                                </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                </tbody>
-
-                                <!-- Add new shift row -->
-                                <tbody>
-                                    <tr class="bg-gray-50 dark:bg-gray-800/50">
-                                        <td [attr.colspan]="5 + maxHelpersNeeded + 1" class="px-6 py-3">
-                                            <button mat-stroked-button [color]="'primary'" (click)="createShift()" class="w-full">
-                                                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                                                <span class="ml-2">{{ 'AddNewShift' | translate }}</span>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <!-- Group Title -->
+                        <div class="mb-4">
+                            <h3 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                                {{ shiftGroup.day | date:'EEEE, dd.MM.yyyy' }}
+                                <span *ngIf="shiftGroup.location" class="text-lg font-medium text-gray-600 dark:text-gray-400 ml-2">
+                                    - {{ shiftGroup.location }}
+                                </span>
+                            </h3>
                         </div>
+
+                        <!-- Table card for this group -->
+                        <div class="bg-card shadow rounded-2xl overflow-hidden">
+                            <!-- Scrollable table container -->
+                            <div class="overflow-auto">
+                                <table class="w-full">
+
+                                    <!-- Table Header -->
+                                    <thead class="bg-gray-50 dark:bg-gray-800">
+                                        <tr class="text-left border-b-2 border-gray-300 dark:border-gray-600">
+                                            <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[120px] border-r border-gray-200 dark:border-gray-700">
+                                                {{ 'When' | translate }}
+                                            </th>
+                                            <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[150px] border-r border-gray-200 dark:border-gray-700">
+                                                {{ 'Post' | translate }}
+                                            </th>
+                                            <th
+                                                class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-900/40">
+                                                {{ 'TimePreference' | translate }}
+                                            </th>
+                                            <th
+                                                class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider text-center min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-purple-100 dark:bg-purple-900/40">
+                                                {{ 'Responsible' | translate }}
+                                            </th>
+                                            <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-green-100 dark:bg-green-900/40"
+                                                *ngFor="let helper of getHelperColumns()">
+                                                {{ 'Helper' | translate }} {{helper}}
+                                            </th>
+                                            <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[100px]">
+                                                {{ 'Actions' | translate }}
+                                            </th>
+                                        </tr>
+                                    </thead>
+
+                                    <!-- Table Body -->
+                                    <tbody class="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+                                        <tr *ngFor="let shift of shiftGroup.shifts; trackBy: trackByFn" class="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors duration-150">
+
+                                            <!-- When (Time) -->
+                                            <td class="px-6 py-4 whitespace-nowrap border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-950/70 cursor-pointer hover:bg-blue-200 dark:hover:bg-blue-900/80"
+                                                (click)="editShift(shift)">
+                                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                    {{ shift.startTime | date:'HH:mm' }} - {{ shift.endTime | date:'HH:mm' }}
+                                                </div>
+                                                <div class="text-sm text-secondary">
+                                                    {{ shift.startTime | date:'EEEE' }}
+                                                </div>
+                                            </td>
+
+                                            <!-- Post (Task/Location) -->
+                                            <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800/70 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-700/80"
+                                                (click)="editShift(shift)">
+                                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{shift.name}}</div>
+                                                <div class="text-sm text-secondary">{{shift.location}}</div>
+                                                <div class="text-sm text-secondary" *ngIf="shift.description">{{shift.description}}</div>
+                                            </td>
+
+                                            <!-- Time Preference (Registrable) -->
+                                            <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700 bg-blue-100 dark:bg-blue-950/70">
+                                                <div class="flex items-center justify-between">
+                                                    <div class="flex-1">
+                                                        <ng-container *ngIf="shift.shiftPreferenceRegistrableId; else noPreferenceSelected">
+                                                            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                {{ shift.shiftPreferenceRegistrableName }}
+                                                            </div>
+                                                            <div class="text-sm text-secondary">
+                                                                {{ shift.shiftPreferenceRegistrableNameSecondary }}
+                                                            </div>
+
+                                                        </ng-container>
+                                                        <ng-template #noPreferenceSelected>
+                                                            <span class="text-sm text-gray-400 italic">{{ 'NoPreference' | translate }}</span>
+                                                        </ng-template>
+                                                    </div>
+                                                    <button mat-icon-button class="ml-2 text-blue-600 hover:text-blue-700" (click)="showPreferenceSelector(shift)"
+                                                        [matTooltip]="'ChangeTimePreference' | translate">
+                                                        <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+                                                    </button>
+                                                </div>
+                                            </td>
+
+                                            <!-- Responsible -->
+                                            <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700 bg-purple-100 dark:bg-purple-950/70">
+                                                <div class="flex items-center justify-between">
+                                                    <div class="flex-1">
+                                                        <ng-container *ngIf="shift.responsibleRegistrationId; else noResponsible">
+                                                            <a [routerLink]="_navigatorService.getRegistrationUrl(shift.responsibleRegistrationId)" class="hover:underline cursor-pointer block">
+                                                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                    {{ shift.participantResponsible }}
+                                                                </div>
+                                                                <div class="text-sm text-secondary" *ngIf="shift.responsibleEmail">
+                                                                    {{ shift.responsibleEmail }}
+                                                                </div>
+                                                            </a>
+                                                        </ng-container>
+                                                        <ng-template #noResponsible>
+                                                            <span class="text-sm text-gray-400 italic">{{ 'Unassigned' | translate }}</span>
+                                                        </ng-template>
+                                                    </div>
+                                                    <button mat-icon-button class="ml-2 text-purple-600 hover:text-purple-700" (click)="showCandidatesForAssignment(shift, 'responsible')"
+                                                        [matTooltip]="'AssignResponsible' | translate">
+                                                        <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
+                                                    </button>
+                                                </div>
+                                            </td>
+
+                                            <!-- Helpers -->
+                                            <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700" [ngClass]="{'bg-green-100 dark:bg-green-950/70': i < shift.helpersNeeded}"
+                                                *ngFor="let helperIndex of getHelperColumns(); let i = index">
+                                                <div class="flex items-center justify-between" *ngIf="i < shift.helpersNeeded; else emptyHelper">
+                                                    <div class="flex-1">
+                                                        <ng-container *ngIf="shift.assignments && shift.assignments[i] && shift.assignments[i].registrationId; else noHelper">
+                                                            <a [routerLink]="_navigatorService.getRegistrationUrl(shift.assignments[i].registrationId)" class="hover:underline cursor-pointer block">
+                                                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                    {{ shift.assignments[i].participant }}
+                                                                </div>
+                                                                <div class="text-sm text-secondary" *ngIf="shift.assignments[i].email">
+                                                                    {{shift.assignments[i].email}}
+                                                                </div>
+                                                            </a>
+                                                        </ng-container>
+                                                        <ng-template #noHelper>
+                                                            <span class="text-sm text-green-600">{{ 'Unassigned' | translate }}</span>
+                                                        </ng-template>
+                                                    </div>
+                                                    <button mat-icon-button class="ml-2 text-green-600 hover:text-green-700" (click)="showCandidatesForAssignment(shift, 'helper', i)"
+                                                        [matTooltip]="('AssignHelper' | translate) + ' ' + (i + 1)">
+                                                        <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:user-plus'"></mat-icon>
+                                                    </button>
+                                                </div>
+                                                <ng-template #emptyHelper>
+                                                    <div>
+                                                        <span class="text-sm text-gray-300">-</span>
+                                                    </div>
+                                                </ng-template>
+                                            </td>
+
+                                            <!-- Actions -->
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="flex flex-row space-x-1">
+                                                    <!-- Add helper slot -->
+                                                    <button mat-icon-button class="text-green-600 hover:text-green-700" (click)="addHelperSlot(shift)" [matTooltip]="'AddHelperSlot' | translate">
+                                                        <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                                                    </button>
+                                                    <!-- Remove helper slot -->
+                                                    <button mat-icon-button class="text-orange-600 hover:text-orange-700" (click)="removeHelperSlot(shift)"
+                                                        [matTooltip]="'RemoveHelperSlot' | translate" [disabled]="shift.helpersNeeded <= 0">
+                                                        <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:minus'"></mat-icon>
+                                                    </button>
+                                                    <!-- Divider -->
+                                                    <div class="border-l border-gray-300 mx-1 h-6"></div>
+                                                    <!-- Standard actions -->
+                                                    <button mat-icon-button class="text-red-600 hover:text-red-700" (click)="deleteShift(shift)" [matTooltip]="'DeleteShift' | translate">
+                                                        <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+
+                                    <!-- Add new shift row -->
+                                    <tbody>
+                                        <tr class="bg-gray-50 dark:bg-gray-800/50">
+                                            <td [attr.colspan]="5 + maxHelpersNeeded + 1" class="px-6 py-3">
+                                                <button mat-stroked-button [color]="'primary'" (click)="createShift(shiftGroup)" class="w-full">
+                                                    <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                                                    <span class="ml-2">{{ 'AddNewShift' | translate }}</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
 
                 </ng-container>
@@ -270,13 +285,36 @@
                     </div>
                 </div>
                 <div class="max-h-96 overflow-y-auto">
+                    <!-- Remove current assignment option -->
+                    <div *ngIf="getCurrentAssignedParticipant() as currentAssigned" class="border-b-2 border-gray-300 dark:border-gray-600">
+                        <div class="px-6 py-3 bg-red-50 dark:bg-red-900/20 border-b border-red-200 dark:border-red-800">
+                            <div class="text-sm font-semibold text-red-800 dark:text-red-200 flex items-center">
+                                <mat-icon class="icon-size-4 mr-2 text-red-600" [svgIcon]="'heroicons_outline:user-minus'"></mat-icon>
+                                {{ 'CurrentAssignment' | translate }}
+                            </div>
+                        </div>
+                        <div class="px-6 py-3 hover:bg-red-50 dark:hover:bg-red-900/20 cursor-pointer border-b border-gray-100 dark:border-gray-600" (click)="selectCandidate(null)">
+                            <div class="flex items-center justify-between">
+                                <div class="flex-1">
+                                    <div class="text-lg font-medium text-red-600 dark:text-red-400">
+                                        {{ 'RemoveAssignment' | translate }}: {{currentAssigned.participant}}
+                                    </div>
+                                    <div class="mt-0.5 text-sm text-red-500 dark:text-red-400" *ngIf="currentAssigned.email">
+                                        {{currentAssigned.email}}
+                                    </div>
+                                </div>
+                                <mat-icon class="text-red-400" [svgIcon]="'heroicons_outline:trash'"></mat-icon>
+                            </div>
+                        </div>
+                    </div>
+
                     <div *ngIf="filteredCandidates.length === 0 && !searchString.trim()" class="p-6 text-center text-gray-500 dark:text-gray-400">
                         {{ 'NoAvailableCandidates' | translate }}
                     </div>
                     <div *ngIf="filteredCandidates.length === 0 && searchString.trim()" class="p-6 text-center text-gray-500 dark:text-gray-400">
                         {{ 'NoParticipantsFound' | translate }} "{{searchString}}"
                     </div>
-                    
+
                     <!-- Candidates who prefer this time -->
                     <div *ngIf="candidatesWhoPreferTime.length > 0">
                         <div class="px-6 py-3 bg-green-50 dark:bg-green-900/20 border-b border-green-200 dark:border-green-800">
@@ -285,8 +323,7 @@
                                 {{ 'PrefersThisTime' | translate }} ({{candidatesWhoPreferTime.length}})
                             </div>
                         </div>
-                        <div *ngFor="let candidate of candidatesWhoPreferTime"
-                            class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600" 
+                        <div *ngFor="let candidate of candidatesWhoPreferTime" class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600"
                             (click)="selectCandidate(candidate)">
                             <div class="flex items-center justify-between">
                                 <div>
@@ -309,8 +346,7 @@
                             </div>
                         </div>
                         <div *ngFor="let candidate of candidatesWhoDoNotPreferTime"
-                            class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0" 
-                            (click)="selectCandidate(candidate)">
+                            class="px-6 py-3 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer border-b border-gray-100 dark:border-gray-600 last:border-b-0" (click)="selectCandidate(candidate)">
                             <div class="flex items-center justify-between">
                                 <div>
                                     <div>

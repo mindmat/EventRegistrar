@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Api, CreateShiftCommand, UpdateShiftCommand, DeleteShiftCommand, AssignToShiftCommand, UnassignFromShiftCommand, AddHelperSlotCommand, RemoveHelperSlotCommand, AvailableParticipantsQuery, ShiftsOverviewQuery, ShiftDisplayItem, ParticipantDisplayItem, VolunteerAdminConfigurationQuery, VolunteerAdminConfigurationDto, UpdateVolunteerAdminConfigurationCommand } from 'app/api/api';
+import { Api, CreateShiftCommand, UpdateShiftCommand, DeleteShiftCommand, AssignToShiftCommand, UnassignFromShiftCommand, AddHelperSlotCommand, RemoveHelperSlotCommand, AvailableParticipantsQuery, ShiftsOverviewQuery, ShiftGroup, ShiftDisplayItem, ParticipantDisplayItem, VolunteerAdminConfigurationQuery, VolunteerAdminConfigurationDto, UpdateVolunteerAdminConfigurationCommand } from 'app/api/api';
 import { FetchService } from '../infrastructure/fetchService';
 import { NotificationService } from '../infrastructure/notification.service';
 import { EventService } from '../events/event.service';
@@ -9,7 +9,7 @@ import { v4 as createUuid } from 'uuid';
 @Injectable({
     providedIn: 'root'
 })
-export class VolunteerPlanningService extends FetchService<ShiftDisplayItem[]>
+export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
 {
     constructor(
         private _api: Api,
@@ -20,17 +20,17 @@ export class VolunteerPlanningService extends FetchService<ShiftDisplayItem[]>
     }
 
     /**
-     * Get all shifts with automatic updates via NotificationService
+     * Get all shift groups with automatic updates via NotificationService
      */
-    get shifts$(): Observable<ShiftDisplayItem[]>
+    get shiftGroups$(): Observable<ShiftGroup[]>
     {
         return this.result$;
     }
 
     /**
-     * Fetch shifts from API
+     * Fetch shift groups from API
      */
-    fetchShifts(): Observable<ShiftDisplayItem[]>
+    fetchShifts(): Observable<ShiftGroup[]>
     {
         const query: ShiftsOverviewQuery = {
             eventId: this._eventService.selectedId

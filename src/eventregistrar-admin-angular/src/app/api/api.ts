@@ -7611,7 +7611,7 @@ export class Api {
         return _observableOf(null as any);
     }
 
-    shiftsOverview_Query(shiftsOverviewQuery: ShiftsOverviewQuery | undefined): Observable<ShiftDisplayItem[]> {
+    shiftsOverview_Query(shiftsOverviewQuery: ShiftsOverviewQuery | undefined): Observable<ShiftGroup[]> {
         let url_ = this.baseUrl + "/api/ShiftsOverviewQuery";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -7634,14 +7634,14 @@ export class Api {
                 try {
                     return this.processShiftsOverview_Query(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ShiftDisplayItem[]>;
+                    return _observableThrow(e) as any as Observable<ShiftGroup[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ShiftDisplayItem[]>;
+                return _observableThrow(response_) as any as Observable<ShiftGroup[]>;
         }));
     }
 
-    protected processShiftsOverview_Query(response: HttpResponseBase): Observable<ShiftDisplayItem[]> {
+    protected processShiftsOverview_Query(response: HttpResponseBase): Observable<ShiftGroup[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -7651,7 +7651,7 @@ export class Api {
         if (status === 200) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ShiftDisplayItem[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ShiftGroup[];
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -11442,6 +11442,12 @@ export interface SetRoleOfUserInEventCommand {
     eventId?: string;
     userId?: string;
     role?: UserInEventRole;
+}
+
+export interface ShiftGroup {
+    day?: Date;
+    location?: string | null;
+    shifts?: ShiftDisplayItem[];
 }
 
 export interface ShiftDisplayItem {

@@ -4524,7 +4524,7 @@
                                 "schema": {
                                     "type": "array",
                                     "items": {
-                                        "$ref": "#/components/schemas/ShiftDisplayItem"
+                                        "$ref": "#/components/schemas/ShiftGroup"
                                     }
                                 }
                             }
@@ -12194,6 +12194,26 @@
                     },
                     "role": {
                         "$ref": "#/components/schemas/UserInEventRole"
+                    }
+                }
+            },
+            "ShiftGroup": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "day": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "location": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "shifts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/ShiftDisplayItem"
+                        }
                     }
                 }
             },

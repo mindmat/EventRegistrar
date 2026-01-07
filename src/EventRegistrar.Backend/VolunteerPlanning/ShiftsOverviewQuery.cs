@@ -1,45 +1,55 @@
 namespace EventRegistrar.Backend.VolunteerPlanning;
 
-public class ShiftsOverviewQuery : IRequest<IEnumerable<ShiftDisplayItem>>, IEventBoundRequest
+public class ShiftsOverviewQuery : IRequest<IEnumerable<ShiftGroup>>, IEventBoundRequest
 {
     public Guid EventId { get; set; }
 }
 
 public class ShiftsOverviewQueryHandler(IQueryable<Shift> shifts)
-    : IRequestHandler<ShiftsOverviewQuery, IEnumerable<ShiftDisplayItem>>
+    : IRequestHandler<ShiftsOverviewQuery, IEnumerable<ShiftGroup>>
 {
-    public async Task<IEnumerable<ShiftDisplayItem>> Handle(ShiftsOverviewQuery query, CancellationToken cancellationToken)
+    private static readonly TimeSpan GroupByDaySkew = new(5, 0, 0);
+
+    public async Task<IEnumerable<ShiftGroup>> Handle(ShiftsOverviewQuery query, CancellationToken cancellationToken)
     {
-        return await shifts.Where(shift => shift.EventId == query.EventId)
-                           .Select(shift => new ShiftDisplayItem
-                                            {
-                                                Id = shift.Id,
-                                                Name = shift.Name,
-                                                Description = shift.Description,
-                                                Location = shift.Location,
-                                                StartTime = shift.StartTime,
-                                                EndTime = shift.EndTime,
-                                                HelpersNeeded = shift.HelpersNeeded,
-                                                HelpersAssigned = shift.Assignments!.Count,
-                                                ResponsibleRegistrationId = shift.RegistrationId_Responsible,
-                                                ParticipantResponsible = $"{shift.Registration_Responsible!.RespondentFirstName} {shift.Registration_Responsible!.RespondentLastName}",
-                                                ResponsibleEmail = shift.Registration_Responsible!.RespondentEmail,
-                                                ShiftPreferenceRegistrableId = shift.RegistrableId_ShiftPreference,
-                                                ShiftPreferenceRegistrableName = shift.Registrable_ShiftPreference!.Name,
-                                                ShiftPreferenceRegistrableNameSecondary = shift.Registrable_ShiftPreference!.NameSecondary,
-                                                Assignments = shift.Assignments!.Select(a => new ShiftAssignmentDisplayItem
-                                                                                             {
-                                                                                                 Id = a.Id,
-                                                                                                 RegistrationId = a.RegistrationId,
-                                                                                                 Participant = $"{a.Registration!.RespondentFirstName} {a.Registration!.RespondentLastName}",
-                                                                                                 Email = a.Registration!.RespondentEmail,
-                                                                                             })
-                                                                   .ToList()
-                                            })
-                           .OrderBy(sft => sft.StartTime)
-                           .ToListAsync(cancellationToken);
+        var data = await shifts.Where(shift => shift.EventId == query.EventId)
+                               .Select(shift => new ShiftDisplayItem
+                                                {
+                                                    Id = shift.Id,
+                                                    Name = shift.Name,
+                                                    Description = shift.Description,
+                                                    Location = shift.Location,
+                                                    StartTime = shift.StartTime,
+                                                    EndTime = shift.EndTime,
+                                                    HelpersNeeded = shift.HelpersNeeded,
+                                                    HelpersAssigned = shift.Assignments!.Count,
+                                                    ResponsibleRegistrationId = shift.RegistrationId_Responsible,
+                                                    ParticipantResponsible = $"{shift.Registration_Responsible!.RespondentFirstName} {shift.Registration_Responsible!.RespondentLastName}",
+                                                    ResponsibleEmail = shift.Registration_Responsible!.RespondentEmail,
+                                                    ShiftPreferenceRegistrableId = shift.RegistrableId_ShiftPreference,
+                                                    ShiftPreferenceRegistrableName = shift.Registrable_ShiftPreference!.Name,
+                                                    ShiftPreferenceRegistrableNameSecondary = shift.Registrable_ShiftPreference!.NameSecondary,
+                                                    Assignments = shift.Assignments!.Select(a => new ShiftAssignmentDisplayItem
+                                                                                                 {
+                                                                                                     Id = a.Id,
+                                                                                                     RegistrationId = a.RegistrationId,
+                                                                                                     Participant = $"{a.Registration!.RespondentFirstName} {a.Registration!.RespondentLastName}",
+                                                                                                     Email = a.Registration!.RespondentEmail,
+                                                                                                 })
+                                                                       .ToList()
+                                                })
+                               .OrderBy(sft => sft.StartTime)
+                               .ToListAsync(cancellationToken);
+        return data.GroupBy(sft => new
+                                   {
+                                       Day = (sft.StartTime - GroupByDaySkew).Date,
+                                       sft.Location
+                                   })
+                   .Select(grp => new ShiftGroup(grp.Key.Day, grp.Key.Location, grp.ToList()));
     }
 }
+
+public record ShiftGroup(DateTime Day, string? Location, IEnumerable<ShiftDisplayItem> Shifts);
 
 public class ShiftDisplayItem
 {
