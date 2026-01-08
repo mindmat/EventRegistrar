@@ -1,21 +1,34 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnInit, Renderer2, SimpleChanges, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatRippleModule } from '@angular/material/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
-    selector: 'app-tags-picker',
-    templateUrl: './tags-picker.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            multi: true,
-            useExisting: TagsPickerComponent
-        }
-    ],
-    standalone: false
+  selector: 'app-tags-picker',
+  templateUrl: './tags-picker.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: TagsPickerComponent
+    }
+  ],
+  standalone: true,
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatRippleModule,
+    FormsModule
+  ]
 })
 export class TagsPickerComponent implements OnInit, OnChanges, ControlValueAccessor 
 {

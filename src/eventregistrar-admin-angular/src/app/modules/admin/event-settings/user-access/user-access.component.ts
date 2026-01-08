@@ -1,5 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatSelectChange } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { TranslateModule } from '@ngx-translate/core';
 import { AccessRequestOfEvent, RoleDescription, UserInEventDisplayItem, UserInEventRole } from 'app/api/api';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { UserAccessRequestsService } from './user-access-requests.service';
@@ -7,10 +11,17 @@ import { UserAccessService } from './user-access.service';
 import { UserRolesService } from './user-roles.service';
 
 @Component({
-    selector: 'app-user-access',
-    templateUrl: './user-access.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-user-access',
+  templateUrl: './user-access.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSelectModule
+  ]
 })
 export class UserAccessComponent implements OnInit
 {

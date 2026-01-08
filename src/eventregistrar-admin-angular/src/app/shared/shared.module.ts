@@ -6,12 +6,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatRippleModule } from '@angular/material/core';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
-import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { TagsPickerComponent } from './tags-picker/tags-picker.component';
 
 @NgModule({
     declarations: [
-        TagsPickerComponent
+
     ],
     imports: [
         CommonModule,
@@ -22,7 +22,8 @@ import { TagsPickerComponent } from './tags-picker/tags-picker.component';
         MatRippleModule,
         OverlayModule,
         PortalModule,
-        TranslateModule
+        TranslateModule,
+        TagsPickerComponent
     ],
     exports: [
         CommonModule,
@@ -31,8 +32,7 @@ import { TagsPickerComponent } from './tags-picker/tags-picker.component';
         TagsPickerComponent
     ],
     providers: [
-        DatePipe,
-        TranslatePipe
+        DatePipe
     ]
 })
 export class SharedModule

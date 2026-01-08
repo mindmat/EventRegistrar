@@ -1,14 +1,29 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
-import { MatDrawer } from '@angular/material/sidenav';
-import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
+import { Subject, takeUntil } from 'rxjs';
+import { AccountConfigComponent } from './account-config/account-config.component';
+import { MailConfigComponent } from './mail-config/mail-config.component';
+import { UserAccessComponent } from './user-access/user-access.component';
 
 @Component({
     selector: 'event-settings',
     templateUrl: './event-settings.component.html',
     // encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    standalone: true,
+    imports: [
+        CommonModule,
+        MatSidenavModule,
+        MatButtonModule,
+        MatIconModule,
+        MailConfigComponent,
+        AccountConfigComponent,
+        UserAccessComponent
+    ]
 })
 export class EventSettingsComponent implements OnInit, OnDestroy
 {

@@ -2,12 +2,20 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { FixRawProcessingService } from './fix-raw-processing.service';
 import { Subject, takeUntil } from 'rxjs';
 import { ProcessingError, Role } from 'app/api/api';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { TranslateModule } from '@ngx-translate/core';
+import { TranslateEnumPipe } from '../../infrastructure/translate-enum.pipe';
 
 @Component({
-    selector: 'app-fix-raw-processing',
-    templateUrl: './fix-raw-processing.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-fix-raw-processing',
+  templateUrl: './fix-raw-processing.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatSelectModule, TranslateModule, TranslateEnumPipe]
 })
 export class FixRawProcessingComponent implements OnInit, OnDestroy
 {

@@ -1,20 +1,36 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Api, AutoMailTemplateDisplayItem, MailType, PlaceholderDescription } from 'app/api/api';
 import { EventService } from 'app/modules/admin/events/event.service';
-import { Subject, takeUntil } from 'rxjs';
-import { AutoMailTemplateService } from './auto-mail-template.service';
-import { TributeItem } from 'tributejs';
-
-import Tribute from "tributejs";
+import { FuseAlertModule } from '@fuse/components/alert';
 import FroalaEditor from "froala-editor";
-import { TranslateService } from '@ngx-translate/core';
+import { FroalaEditorModule } from 'angular-froala-wysiwyg';
+import { Subject, takeUntil } from 'rxjs';
+import Tribute, { TributeItem } from "tributejs";
+import { AutoMailTemplateService } from './auto-mail-template.service';
 
 @Component({
-    selector: 'app-auto-mail-template',
-    templateUrl: './auto-mail-template.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-auto-mail-template',
+  templateUrl: './auto-mail-template.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatButtonModule,
+    FuseAlertModule,
+    FroalaEditorModule
+  ]
 })
 export class AutoMailTemplateComponent implements OnInit
 {

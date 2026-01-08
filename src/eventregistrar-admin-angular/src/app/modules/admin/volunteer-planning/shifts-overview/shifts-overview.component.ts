@@ -1,20 +1,50 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { Subject, takeUntil, Observable } from 'rxjs';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
-import { VolunteerPlanningService } from '../volunteer-planning.service';
-import { ParticipantDisplayItem, ShiftDisplayItem, ShiftGroup, RegistrableDisplayItem, AvailableQuestionOptionMapping } from 'app/api/api';
+import { TranslateModule } from '@ngx-translate/core';
+import { AvailableQuestionOptionMapping, ParticipantDisplayItem, RegistrableDisplayItem, ShiftDisplayItem, ShiftGroup } from 'app/api/api';
+import { TagsPickerComponent } from 'app/shared/tags-picker/tags-picker.component';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { RegistrablesService } from '../../pricing/registrables.service';
 import { ShiftEditComponent } from '../shift-edit/shift-edit.component';
+import { VolunteerPlanningService } from '../volunteer-planning.service';
 
 @Component({
     selector: 'app-shifts-overview',
     templateUrl: './shifts-overview.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        TagsPickerComponent,
+        MatButtonModule,
+        MatIconModule,
+        MatMenuModule,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatCheckboxModule,
+        MatRadioModule,
+        MatSlideToggleModule,
+        MatTooltipModule,
+        TranslateModule
+    ]
 })
 export class ShiftsOverviewComponent implements OnInit, OnDestroy
 {

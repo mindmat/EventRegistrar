@@ -3,15 +3,23 @@ import { MailDeliverySeverity, ProblematicEmail, RegistrationMatch } from 'app/a
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { ProblematicEmailsService } from './problematic-emails.service';
-import { ChartType } from 'angular-google-charts';
+import { ChartType, GoogleChartsModule } from 'angular-google-charts';
 import { MailDeliverySuccessService } from './mail-delivery-success.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
-    selector: 'app-problematic-emails',
-    templateUrl: './problematic-emails.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-problematic-emails',
+  templateUrl: './problematic-emails.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatTooltipModule, GoogleChartsModule, TranslateModule]
 })
 export class ProblematicEmailsComponent implements OnInit
 {

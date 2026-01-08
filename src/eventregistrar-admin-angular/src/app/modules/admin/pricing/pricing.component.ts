@@ -4,14 +4,25 @@ import { Subject, takeUntil } from 'rxjs';
 import { PricingService } from './pricing.service';
 import { RegistrablesService } from './registrables.service';
 import { v4 as createUuid } from 'uuid';
-import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PricePackagePartSelectionTypeService } from './pricing-selection-type.service';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { TranslateModule } from '@ngx-translate/core';
+import { TagsPickerComponent } from 'app/shared/tags-picker/tags-picker.component';
 
 @Component({
-    selector: 'app-pricing',
-    templateUrl: './pricing.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-pricing',
+  templateUrl: './pricing.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatIconModule, MatMenuModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatSlideToggleModule, TranslateModule, TagsPickerComponent]
 })
 export class PricingComponent implements OnInit
 {

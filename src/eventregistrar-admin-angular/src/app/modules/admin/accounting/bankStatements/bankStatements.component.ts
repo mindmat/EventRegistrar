@@ -1,13 +1,29 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { BookingsOfDay, CreditDebit } from 'app/api/api';
+import { FileUploadComponent } from 'app/modules/admin/infrastructure/file-upload/file-upload.component';
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
 import { EventService } from '../../events/event.service';
 import { BankStatementsService } from './bankStatements.service';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { TranslateModule } from '@ngx-translate/core';
+import { FuseCardModule } from '@fuse/components/card';
 
 @Component({
-    selector: 'app-bankStatements',
-    templateUrl: './bankStatements.component.html',
-    standalone: false
+  selector: 'app-bankStatements',
+  templateUrl: './bankStatements.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FileUploadComponent,
+    FuseCardModule
+  ]
 })
 export class BankStatementsComponent implements OnInit
 {

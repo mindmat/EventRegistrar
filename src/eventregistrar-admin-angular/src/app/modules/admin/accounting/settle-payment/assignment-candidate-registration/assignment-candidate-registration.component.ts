@@ -1,13 +1,34 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { PaymentType } from 'app/api/api';
+import { FuseCardModule } from '@fuse/components/card';
 import { NavigatorService } from 'app/modules/admin/navigator.service';
 import { AssignmentCandidateRegistrationEditItem } from '../settle-payment.component';
 
 @Component({
-    selector: 'app-assignment-candidate-registration',
-    templateUrl: './assignment-candidate-registration.component.html',
-    standalone: false
+  selector: 'app-assignment-candidate-registration',
+  templateUrl: './assignment-candidate-registration.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    FuseCardModule
+  ]
 })
 export class AssignmentCandidateRegistrationComponent implements OnInit, OnChanges
 {

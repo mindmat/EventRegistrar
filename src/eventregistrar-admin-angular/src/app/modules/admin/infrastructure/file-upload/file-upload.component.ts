@@ -1,15 +1,21 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { HttpClient, HttpErrorResponse, HttpEventType } from '@angular/common/http';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { API_BASE_URL } from 'app/api/api';
 import { catchError, delay, tap, throwError } from 'rxjs';
 
 @Component({
-    selector: 'app-file-upload',
-    templateUrl: './file-upload.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-file-upload',
+  templateUrl: './file-upload.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatIconModule,
+    TranslateModule
+  ]
 })
 export class FileUploadComponent
 {
@@ -29,7 +35,7 @@ export class FileUploadComponent
   info?: string = null;
   file: File;
 
-  constructor(@Inject(HttpClient) private http: HttpClient,
+  constructor(private http: HttpClient,
     private changeDetector: ChangeDetectorRef,
     private translationService: TranslateService,
     @Inject(API_BASE_URL) private baseUrl?: string) { }

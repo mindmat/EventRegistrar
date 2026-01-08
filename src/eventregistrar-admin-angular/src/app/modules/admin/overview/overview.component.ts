@@ -3,27 +3,39 @@ import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { OverviewService } from './overview.service';
 import { RegistrableTagDisplayItem } from '../registrables/tags/registrableTagDisplayItem';
 import { DoubleRegistrableDisplayItem, EventState, PaymentOverview, PricePackageOverview, RegistrablesOverview, RegistrationsPerDay, SingleRegistrableDisplayItem } from 'app/api/api';
-import { MatSelectChange } from '@angular/material/select';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { MatDialog } from '@angular/material/dialog';
+import { MatSelectChange, MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleChange, MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { RegistrableDetailComponent } from './registrable-detail/registrable-detail.component';
 import { RegistrablesService } from '../pricing/registrables.service';
 import { PaymentOverviewService } from './payment-overview.service';
-import { ApexOptions } from 'ng-apexcharts';
+import { ApexOptions, NgApexchartsModule } from 'ng-apexcharts';
 import { DateTime } from 'luxon';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NavigatorService } from '../navigator.service';
 import { PricePackagesOverviewService } from './price-packages-overview.service';
 import { EventService } from '../events/event.service';
 import { RegistrationsPerDayService } from './registrations-per-day.service';
+import { FuseFindByKeyPipe } from '@fuse/pipes/find-by-key/find-by-key.pipe';
 import { RegistrableIcsComponent } from '../registrables/registrable-ics/registrable-ics.component';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { CdkScrollableModule } from '@angular/cdk/scrolling';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
     selector: 'app-overview',
     templateUrl: './overview.component.html',
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    standalone: true,
+    imports: [CommonModule, RouterModule, CdkScrollableModule, MatButtonModule, MatIconModule, MatMenuModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatSlideToggleModule, MatDialogModule, MatProgressBarModule, MatTooltipModule, NgApexchartsModule, TranslateModule, RegistrableDetailComponent, RegistrableIcsComponent, FuseFindByKeyPipe]
 })
 export class OverviewComponent implements OnInit, OnDestroy
 {

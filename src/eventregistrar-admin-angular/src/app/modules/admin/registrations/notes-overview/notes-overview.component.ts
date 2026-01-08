@@ -1,14 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { NotesDisplayItem } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { NotesOverviewService } from './notes-overview.service';
 
 @Component({
-    selector: 'app-notes-overview',
-    templateUrl: './notes-overview.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-notes-overview',
+  templateUrl: './notes-overview.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslateModule
+  ]
 })
 export class NotesOverviewComponent implements OnInit, OnDestroy
 {

@@ -1,19 +1,39 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { AccessRequest, CreateEventCommand, EventOfUser, EventSearchResult, EventState, RoleDescription, UserInEventRole } from 'app/api/api';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { AccessRequest, CreateEventCommand, EventOfUser, EventSearchResult, EventState } from 'app/api/api';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
+import { v4 as createUuid } from 'uuid';
 import { CreateEventComponent } from './create-event/create-event.component';
+import { CreateEventService } from './create-event/create-event.service';
 import { EventsOfUserService } from './events-of-user.service';
 import { SearchEventsService } from './search-events.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { v4 as createUuid } from 'uuid';
-import { CreateEventService } from './create-event/create-event.service';
 
 @Component({
-    selector: 'app-select-event',
-    templateUrl: './select-event.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-select-event',
+  templateUrl: './select-event.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatDialogModule
+  ]
 })
 export class SelectEventComponent implements OnInit
 {

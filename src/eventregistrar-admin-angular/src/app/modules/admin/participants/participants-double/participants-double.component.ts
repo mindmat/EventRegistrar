@@ -1,13 +1,23 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ParticipantsService } from '../participants.service';
-import { CdkDrag, CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { RegistrableDisplayInfo, RegistrationDisplayInfo, Role, SpotDisplayInfo } from 'app/api/api';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { CdkScrollableModule } from '@angular/cdk/scrolling';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
+import { ParticipantComponent } from '../participant/participant.component';
 
 @Component({
-    selector: 'app-participants-double',
-    templateUrl: './participants-double.component.html',
-    standalone: false
+  selector: 'app-participants-double',
+  templateUrl: './participants-double.component.html',
+  standalone: true,
+  imports: [CommonModule, RouterModule, CdkScrollableModule, DragDropModule, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, TranslateModule, ParticipantComponent]
 })
 export class ParticipantsDoubleComponent implements OnInit
 {

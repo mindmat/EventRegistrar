@@ -20,7 +20,8 @@ import { ClassicLayoutComponent } from 'app/layout/layouts/vertical/classic/clas
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 
-@NgModule({ declarations: [
+@NgModule({
+    declarations: [
         ClassicLayoutComponent
     ],
     exports: [
@@ -42,7 +43,10 @@ import { TranslateModule } from '@ngx-translate/core';
         UserModule,
         SharedModule,
         MatTooltipModule,
-        TranslateModule], providers: [provideHttpClient(withInterceptorsFromDi())] })
+        TranslateModule,
+        SearchModule],
+    providers: [provideHttpClient(withInterceptorsFromDi())]
+})
 export class ClassicLayoutModule
 {
 }

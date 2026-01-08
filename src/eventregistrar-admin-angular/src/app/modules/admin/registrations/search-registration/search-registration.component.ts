@@ -1,5 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { FuseAlertModule } from '@fuse/components/alert';
+import { TranslateModule } from '@ngx-translate/core';
 import { RegistrationMatch, UnprocessedRawRegistrationsInfo } from 'app/api/api';
 import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
@@ -7,9 +16,21 @@ import { UnprocessedRawRegistrationsService } from '../unprocessed-raw-registrat
 import { SearchRegistrationService } from './search-registration.service';
 
 @Component({
-    selector: 'app-search-registration',
-    templateUrl: './search-registration.component.html',
-    standalone: false
+  selector: 'app-search-registration',
+  templateUrl: './search-registration.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslateModule,
+    FuseAlertModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressBarModule
+  ]
 })
 export class SearchRegistrationComponent implements OnInit
 {

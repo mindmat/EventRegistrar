@@ -1,15 +1,34 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { Participant } from 'app/api/api';
-import { Subject, BehaviorSubject, takeUntil, combineLatest, debounceTime } from 'rxjs';
+import { BehaviorSubject, combineLatest, debounceTime, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { AllParticipantsService } from './all-participants.service';
 
 @Component({
-    selector: 'app-all-participants',
-    templateUrl: './all-participants.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-all-participants',
+  templateUrl: './all-participants.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslateModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule
+  ]
 })
 export class AllParticipantsComponent implements OnInit
 {

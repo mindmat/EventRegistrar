@@ -1,17 +1,25 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, TemplateRef, ViewChild, ViewContainerRef } from '@angular/core';
-import { MatButton } from '@angular/material/button';
+import { MatButton, MatButtonModule } from '@angular/material/button';
 import { MailAttachmentMetadata, MailView } from 'app/api/api';
 import { NavigatorService } from 'app/modules/admin/navigator.service';
 import { Subject, takeUntil } from 'rxjs';
 import { MailService } from './mail.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { TranslateModule } from '@ngx-translate/core';
+import { FuseScrollResetModule } from '@fuse/directives/scroll-reset';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
-    selector: 'app-mail-view',
-    templateUrl: './mail-view.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-mail-view',
+  templateUrl: './mail-view.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatMenuModule, TranslateModule, FuseScrollResetModule, MatTooltipModule]
 })
 export class MailViewComponent implements OnInit
 {

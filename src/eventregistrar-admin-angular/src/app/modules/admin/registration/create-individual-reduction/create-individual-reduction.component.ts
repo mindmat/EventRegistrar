@@ -1,17 +1,25 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { AddIndividualReductionCommand, IndividualReductionType } from 'app/api/api';
 import { EventService } from '../../events/event.service';
 import { RegistrableDetailComponent } from '../../overview/registrable-detail/registrable-detail.component';
 import { v4 as createUuid } from 'uuid';
 import { IndividualReductionService } from './individual-reduction.service';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-create-individual-reduction',
-    templateUrl: './create-individual-reduction.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-create-individual-reduction',
+  templateUrl: './create-individual-reduction.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, MatButtonModule, MatIconModule, MatFormFieldModule, MatInputModule, MatSelectModule, MatDialogModule, TranslateModule]
 })
 export class CreateIndividualReductionComponent implements OnInit
 {

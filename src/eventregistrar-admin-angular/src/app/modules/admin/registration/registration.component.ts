@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { FallbackPricePackage, IndividualReductionType, MailDisplayType, MailMetadata, MailState, MailTypeItem, RegistrableType, RegistrationDisplayItem, RegistrationState, Role, SpotDisplayItem } from 'app/api/api';
 import { BehaviorSubject, debounceTime, filter, Subject, switchMap, takeUntil, tap } from 'rxjs';
 import { EventService } from '../events/event.service';
@@ -17,11 +17,47 @@ import { CreateAssignPaymentComponent } from './create-assign-payment/create-ass
 import { ChangeNameComponent } from './change-name/change-name.component';
 import { MatchPartnerService } from '../registrations/match-partner/match-partner.service';
 import { MatchSingleSpotsComponent } from './match-single-spots/match-single-spots.component';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FuseCardModule } from '@fuse/components/card';
+import { TranslateModule } from '@ngx-translate/core';
+import { TranslateEnumPipe } from '../infrastructure/translate-enum.pipe';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @Component({
-    selector: 'app-registration',
-    templateUrl: './registration.component.html',
-    standalone: false
+  selector: 'app-registration',
+  templateUrl: './registration.component.html',
+  standalone: true,
+  imports: [CommonModule,
+    RouterModule,
+    FormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatMenuModule,
+    MatTooltipModule,
+    MatDialogModule,
+    FuseCardModule,
+    TranslateModule,
+    TranslateEnumPipe,
+    CancelRegistrationComponent,
+    ChangeEmailComponent,
+    ChangeNameComponent,
+    ChangeSpotsComponent,
+    CreateAssignPaymentComponent,
+    CreateIndividualReductionComponent,
+    MatchSingleSpotsComponent,
+    MatSlideToggleModule,
+    MatProgressBarModule,
+    MatFormFieldModule,
+    MatInputModule]
 })
 export class RegistrationComponent implements OnInit
 {

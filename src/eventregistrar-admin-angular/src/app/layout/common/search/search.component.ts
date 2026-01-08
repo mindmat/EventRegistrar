@@ -1,12 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, Renderer2, SimpleChanges, ViewChild, ViewEncapsulation } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { debounceTime, filter, map, Subject, takeUntil } from 'rxjs';
+import { ReactiveFormsModule, UntypedFormControl } from '@angular/forms';
+import { MatAutocomplete, MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { RouterModule } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations/public-api';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Api, RegistrationMatch, RegistrationState } from 'app/api/api';
 import { EventService } from 'app/modules/admin/events/event.service';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { NavigatorService } from 'app/modules/admin/navigator.service';
-import { TranslateService } from '@ngx-translate/core';
+import { debounceTime, filter, map, Subject, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'search',
@@ -14,7 +20,18 @@ import { TranslateService } from '@ngx-translate/core';
     encapsulation: ViewEncapsulation.None,
     exportAs: 'fuseSearch',
     animations: fuseAnimations,
-    standalone: false
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatIconModule,
+        MatInputModule,
+        TranslateModule
+    ]
 })
 export class SearchComponent implements OnChanges, OnInit, OnDestroy
 {

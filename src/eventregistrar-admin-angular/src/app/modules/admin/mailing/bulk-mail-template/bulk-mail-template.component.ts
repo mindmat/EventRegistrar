@@ -1,20 +1,38 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { TranslateModule } from '@ngx-translate/core';
 import { Api, BulkMailTemplateDisplayItem, GeneratedBulkMails, MailingAudience, PlaceholderDescription, PossibleAudience } from 'app/api/api';
-import { Subject, takeUntil } from 'rxjs';
-import { EventService } from '../../events/event.service';
-import { BulkMailTemplateService } from './bulk-mail-template.service';
-
-import Tribute, { TributeItem } from 'tributejs';
+import { FroalaEditorModule } from 'angular-froala-wysiwyg';
 import FroalaEditor from 'froala-editor';
+import { Subject, takeUntil } from 'rxjs';
+import Tribute, { TributeItem } from 'tributejs';
+import { EventService } from '../../events/event.service';
 import { RegistrablesService } from '../../pricing/registrables.service';
+import { BulkMailTemplateService } from './bulk-mail-template.service';
 import { GeneratedBulkMailsService } from './generated-bulk-mails.service';
+import { TagsPickerComponent } from 'app/shared/tags-picker/tags-picker.component';
 
 @Component({
-    selector: 'app-bulk-mail-template',
-    templateUrl: './bulk-mail-template.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-bulk-mail-template',
+  templateUrl: './bulk-mail-template.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatButtonModule,
+    TagsPickerComponent,
+    FroalaEditorModule
+  ]
 })
 export class BulkMailTemplateComponent implements OnInit
 {

@@ -1,14 +1,34 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 import { PayoutDisplayItem, PayoutState } from 'app/api/api';
 import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { PayoutsService } from './payouts.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
-    selector: 'app-payouts',
-    templateUrl: './payouts.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-payouts',
+  templateUrl: './payouts.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatTooltipModule,
+    RouterModule
+  ]
 })
 export class PayoutsComponent implements OnInit
 {

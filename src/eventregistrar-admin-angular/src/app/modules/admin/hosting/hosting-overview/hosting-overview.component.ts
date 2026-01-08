@@ -1,14 +1,32 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { HostingOffer, HostingRequest } from 'app/api/api';
 import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { HostingOverviewService } from './hosting-overview.service';
 
 @Component({
-    selector: 'app-hosting-overview',
-    templateUrl: './hosting-overview.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-hosting-overview',
+  templateUrl: './hosting-overview.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslateModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule
+  ]
 })
 export class HostingOverviewComponent implements OnInit
 {

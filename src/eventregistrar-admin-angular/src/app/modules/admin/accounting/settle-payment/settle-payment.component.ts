@@ -1,15 +1,35 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { AssignedPayoutRequest, AssignedRepayment, AssignmentCandidateRegistration, ExistingAssignment, PaymentAssignments, PaymentType, PayoutRequestCandidate, RegistrationState, RepaymentCandidate } from 'app/api/api';
+import { FuseCardModule } from '@fuse/components/card';
 import { BehaviorSubject, debounceTime, filter, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
-import { AssignmentRequest, Payment, SettlementCandidate } from './assignment-candidate-registration/assignment-candidate-registration.component';
+import { AssignmentCandidateRegistrationComponent, AssignmentRequest, Payment, SettlementCandidate } from './assignment-candidate-registration/assignment-candidate-registration.component';
 import { SettlePaymentService } from './settle-payment.service';
 
 @Component({
-    selector: 'app-settle-payment',
-    templateUrl: './settle-payment.component.html',
-    standalone: false
+  selector: 'app-settle-payment',
+  templateUrl: './settle-payment.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslateModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FuseCardModule,
+    AssignmentCandidateRegistrationComponent
+  ]
 })
 export class SettlePaymentComponent implements OnInit
 {

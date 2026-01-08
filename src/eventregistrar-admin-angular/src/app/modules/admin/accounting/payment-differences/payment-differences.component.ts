@@ -1,14 +1,38 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
-import { PaymentDifferencesService } from './payment-differences.service';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 import { DifferencesDisplayItem } from 'app/api/api';
+import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
+import { PaymentDifferencesService } from './payment-differences.service';
+import { RouterModule } from '@angular/router';
+import { UserHasRightDirective } from 'app/core/auth/user-has-right.directive';
 
 @Component({
-    selector: 'app-payment-differences',
-    templateUrl: './payment-differences.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-payment-differences',
+  templateUrl: './payment-differences.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatTooltipModule,
+    RouterModule,
+    UserHasRightDirective,
+    MatProgressBarModule
+  ]
 })
 export class PaymentDifferencesComponent implements OnInit
 {

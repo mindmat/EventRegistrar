@@ -3,12 +3,22 @@ import { CancellationDisplayItem } from 'app/api/api';
 import { BehaviorSubject, Subject, combineLatest, takeUntil } from 'rxjs';
 import { CancellationsService } from './cancellations.service';
 import { NavigatorService } from '../../navigator.service';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { CdkScrollableModule } from '@angular/cdk/scrolling';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
+import { AgoPipe } from '../../infrastructure/ago.pipe';
 
 @Component({
-    selector: 'app-cancellations',
-    templateUrl: './cancellations.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-cancellations',
+  templateUrl: './cancellations.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CommonModule, RouterModule, CdkScrollableModule, MatFormFieldModule, MatInputModule, MatIconModule, MatTooltipModule, TranslateModule, AgoPipe]
 })
 export class CancellationsComponent implements OnInit
 {

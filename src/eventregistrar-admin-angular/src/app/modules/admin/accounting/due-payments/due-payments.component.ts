@@ -1,13 +1,39 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 import { DuePaymentItem } from 'app/api/api';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { DuePaymentsService } from './due-payments.service';
+import { AgoPipe } from '../../infrastructure/ago.pipe';
+import { RouterLink } from '@angular/router';
+import { MatProgressBar } from '@angular/material/progress-bar';
+import { UserHasRightDirective } from 'app/core/auth/user-has-right.directive';
 
 @Component({
-    selector: 'app-due-payments',
-    templateUrl: './due-payments.component.html',
-    standalone: false
+  selector: 'app-due-payments',
+  templateUrl: './due-payments.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatTooltipModule,
+    AgoPipe,
+    RouterLink,
+    MatProgressBar,
+    UserHasRightDirective
+  ],
 })
 export class DuePaymentsComponent implements OnInit
 {

@@ -2,13 +2,24 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@
 import { MailTypeItem, PendingMailListItem, MailType } from 'app/api/api';
 import { BehaviorSubject, combineLatest, Subject, takeUntil } from 'rxjs';
 import { ReleaseMailsService } from './release-mails.service';
-import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { AgoPipe } from 'app/modules/admin/infrastructure/ago.pipe';
+import { MatSidenavModule } from "@angular/material/sidenav";
 
 @Component({
-    selector: 'app-release-mails',
-    templateUrl: './release-mails.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-release-mails',
+  templateUrl: './release-mails.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatMenuModule, MatFormFieldModule, MatInputModule, MatSelectModule, TranslateModule, AgoPipe, MatSidenavModule]
 })
 export class ReleaseMailsComponent implements OnInit
 {

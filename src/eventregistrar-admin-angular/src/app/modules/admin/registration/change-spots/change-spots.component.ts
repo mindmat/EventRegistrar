@@ -1,14 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { IndividualReductionType, SpotDisplayItem, RegistrableDisplayItem } from 'app/api/api';
 import { RegistrablesService } from '../../pricing/registrables.service';
 import { SpotsService } from '../spots/spots.service';
+import { CommonModule } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
-    selector: 'app-change-spots',
-    templateUrl: './change-spots.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-change-spots',
+  templateUrl: './change-spots.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatDialogModule, TranslateModule]
 })
 export class ChangeSpotsComponent implements OnInit
 {

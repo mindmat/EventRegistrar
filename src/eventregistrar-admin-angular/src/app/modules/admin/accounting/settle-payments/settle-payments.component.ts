@@ -1,14 +1,33 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
+import { MatCheckboxChange, MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatDrawerContainer, MatDrawer, MatDrawerContent } from '@angular/material/sidenav';
+import { TranslateModule } from '@ngx-translate/core';
 import { PaymentDisplayItem2, BookingsOfDay, CreditDebit } from 'app/api/api';
 import { BehaviorSubject, combineLatest, debounceTime, distinctUntilChanged, Subject, switchMap, takeUntil } from 'rxjs';
 import { SettlePaymentsService } from './settle-payments.service';
 import { NavigatorService } from '../../navigator.service';
+import { RouterOutlet } from "@angular/router";
 
 @Component({
-    selector: 'app-settle-payments',
-    templateUrl: './settle-payments.component.html',
-    standalone: false
+  selector: 'app-settle-payments',
+  templateUrl: './settle-payments.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    TranslateModule,
+    MatDrawerContainer,
+    MatDrawer,
+    MatDrawerContent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatCheckboxModule,
+    RouterOutlet
+  ]
 })
 export class SettlePaymentsComponent implements OnInit
 {

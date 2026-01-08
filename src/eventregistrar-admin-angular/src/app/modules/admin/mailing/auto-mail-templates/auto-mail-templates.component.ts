@@ -1,15 +1,45 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-import { AutoMailTemplates, AutoMailTemplateMetadataLanguage, AutoMailTemplateMetadataType, MailSender, MailSenderTokenKey } from 'app/api/api';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatAccordion, MatExpansionModule } from '@angular/material/expansion';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDrawer, MatDrawerContainer, MatSidenavModule } from '@angular/material/sidenav';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { AutoMailTemplates, AutoMailTemplateMetadataLanguage, MailSender, MailSenderTokenKey, AutoMailTemplateMetadataType } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
+import { AutoMailTemplateComponent } from './auto-mail-template/auto-mail-template.component';
 import { AutoMailTemplatesService } from './auto-mail-templates.service';
+import { TranslateEnumPipe } from '../../infrastructure/translate-enum.pipe';
 
 @Component({
-    selector: 'app-auto-mail-templates',
-    templateUrl: './auto-mail-templates.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-auto-mail-templates',
+  templateUrl: './auto-mail-templates.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    MatSidenavModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatChipsModule,
+    MatCheckboxModule,
+    TranslateEnumPipe,
+    AutoMailTemplateComponent
+  ]
 })
 export class AutoMailTemplatesComponent implements OnInit
 {

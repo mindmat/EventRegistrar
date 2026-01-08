@@ -1,13 +1,26 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { BankAccountConfiguration, ExternalMailConfigurationDisplayItem, ExternalMailConfigurationUpdateItem } from 'app/api/api';
-import { Subject, takeUntil, merge } from 'rxjs';
+import { FormGroup, FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { TranslateModule } from '@ngx-translate/core';
+import { BankAccountConfiguration } from 'app/api/api';
+import { Subject, takeUntil } from 'rxjs';
 import { AccountConfigService } from './account-config.service';
 
 @Component({
-    selector: 'app-account-config',
-    templateUrl: './account-config.component.html',
-    standalone: false
+  selector: 'app-account-config',
+  templateUrl: './account-config.component.html',
+  standalone: true,
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    TranslateModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule
+  ]
 })
 export class AccountConfigComponent implements OnInit
 {

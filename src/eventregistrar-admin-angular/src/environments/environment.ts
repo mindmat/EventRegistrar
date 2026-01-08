@@ -5,6 +5,11 @@
 export const environment = {
     production: false,
     API_BASE_URL: 'https://localhost:5001',
+    auth: {
+        domain: 'eventregistrar.eu.auth0.com',
+        clientId: 'd1tT0a2b3c4d5e6f7g8h9i0j1k2l3m4n',
+        audience: 'https://eventregistrar.azurewebsites.net/api'
+    }
     // API_BASE_URL: 'https://event-admin-backend.azurewebsites.net',
 };
 

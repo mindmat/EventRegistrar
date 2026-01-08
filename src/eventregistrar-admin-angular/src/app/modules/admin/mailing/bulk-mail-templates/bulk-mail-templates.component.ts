@@ -1,14 +1,33 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { BulkMailTemplateMetadataLanguage, BulkMailTemplates, BulkMailTemplateKey } from 'app/api/api';
 import { Subject, takeUntil } from 'rxjs';
 import { BulkMailTemplatesService } from './bulk-mail-templates.service';
 
 @Component({
-    selector: 'app-bulk-mail-templates',
-    templateUrl: './bulk-mail-templates.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-bulk-mail-templates',
+  templateUrl: './bulk-mail-templates.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslateModule,
+    MatSidenavModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatButtonModule,
+    MatMenuModule
+  ]
 })
 export class BulkMailTemplatesComponent implements OnInit
 {

@@ -1,16 +1,45 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 import { AvailableQuestionMapping, AvailableQuestionOptionMapping, FormSection, MappingType, MultiMapping, QuestionMappingDisplayItem, QuestionType, RegistrationFormItem } from 'app/api/api';
+import { AgoPipe } from 'app/modules/admin/infrastructure/ago.pipe';
+import { TagsPickerComponent } from 'app/shared/tags-picker/tags-picker.component';
 import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { v4 as createUuid } from 'uuid';
 import { FormsService } from './forms.service';
 import { QuestionMappingService } from './question-mapping.service';
 import { QuestionOptionMappingService } from './question-option-mapping.service';
-import { v4 as createUuid } from 'uuid';
 
 @Component({
-    selector: 'app-form-mapping',
-    templateUrl: './form-mapping.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-form-mapping',
+  templateUrl: './form-mapping.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTooltipModule,
+    MatMenuModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatSlideToggleModule,
+    TranslateModule,
+    TagsPickerComponent,
+    AgoPipe
+  ]
 })
 export class FormMappingComponent implements OnInit
 {

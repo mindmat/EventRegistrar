@@ -5,18 +5,11 @@ import { Api } from 'app/api/api';
 @Injectable({
     providedIn: 'root'
 })
-export class TranslationLoaderService
+export class TranslationLoaderService implements TranslateLoader
 {
     constructor(private api: Api) { }
 
-    createLoader(): TranslateLoader
-    {
-        return {
-            getTranslation: (lang) => this.loadTranslation(lang)
-        };
-    }
-
-    loadTranslation(lang: string)
+    getTranslation(lang: string)
     {
         return this.api.translation_Query({ language: lang });
     }

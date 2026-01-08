@@ -1,14 +1,21 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MailTemplatePreview } from 'app/api/api';
-import { SearchResult } from 'app/layout/common/search/search.component';
+import { SearchComponent, SearchResult } from 'app/layout/common/search/search.component';
+import { FroalaViewModule } from 'angular-froala-wysiwyg';
 import { Subject, takeUntil } from 'rxjs';
 import { AutoMailPreviewService } from './auto-mail-preview.service';
 
 @Component({
-    selector: 'app-auto-mail-preview',
-    templateUrl: './auto-mail-preview.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-auto-mail-preview',
+  templateUrl: './auto-mail-preview.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    SearchComponent,
+    FroalaViewModule
+  ]
 })
 export class AutoMailPreviewComponent implements OnInit
 {

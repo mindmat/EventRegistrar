@@ -1,15 +1,32 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { FuseCardModule } from '@fuse/components/card';
+import { TranslateModule } from '@ngx-translate/core';
 import { PotentialPartnerMatch, PotentialPartners } from 'app/api/api';
 import { BehaviorSubject, combineLatest, debounce, interval, Subject, takeUntil } from 'rxjs';
 import { NavigatorService } from '../../navigator.service';
 import { MatchPartnerService } from './match-partner.service';
 
 @Component({
-    selector: 'app-match-partner',
-    templateUrl: './match-partner.component.html',
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+  selector: 'app-match-partner',
+  templateUrl: './match-partner.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    TranslateModule,
+    FuseCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule
+  ]
 })
 export class MatchPartnerComponent implements OnInit
 {

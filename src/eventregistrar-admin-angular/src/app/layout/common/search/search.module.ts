@@ -11,9 +11,6 @@ import { SearchComponent } from 'app/layout/common/search/search.component';
 import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
-    declarations: [
-        SearchComponent
-    ],
     imports: [
         RouterModule.forChild([]),
         MatAutocompleteModule,
@@ -23,9 +20,6 @@ import { TranslateModule } from '@ngx-translate/core';
         MatInputModule,
         SharedModule,
         TranslateModule
-    ],
-    exports: [
-        SearchComponent
     ],
     providers: [
         {
