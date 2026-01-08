@@ -1,5 +1,4 @@
-export interface Message
-{
+export interface Message {
     id: string;
     icon?: string;
     image?: string;

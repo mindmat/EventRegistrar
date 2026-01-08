@@ -4,10 +4,15 @@ import { Subject, takeUntil } from 'rxjs';
 import { EventSetupState } from 'app/api/api';
 import { NavigatorService } from '../navigator.service';
 import { UnprocessedRawRegistrationsService } from '../registrations/unprocessed-raw-registrations.service';
+import { MatIcon } from '@angular/material/icon';
+import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-setup-event',
-  templateUrl: './setup-event.component.html'
+  templateUrl: './setup-event.component.html',
+  standalone: true,
+  imports: [MatIcon, RouterLink, TranslateModule],
 })
 export class SetupEventComponent implements OnInit
 {

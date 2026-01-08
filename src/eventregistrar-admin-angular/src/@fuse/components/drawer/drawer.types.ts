@@ -1,7 +1,3 @@
-export type FuseDrawerMode =
-    | 'over'
-    | 'side';
+export type FuseDrawerMode = 'over' | 'side';
 
-export type FuseDrawerPosition =
-    | 'left'
-    | 'right';
+export type FuseDrawerPosition = 'left' | 'right';

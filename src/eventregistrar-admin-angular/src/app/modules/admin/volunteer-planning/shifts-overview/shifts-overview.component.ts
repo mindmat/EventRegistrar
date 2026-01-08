@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, NgModule, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { Subject, takeUntil, Observable } from 'rxjs';
 import { FuseConfirmationService } from '@fuse/services/confirmation';
@@ -8,12 +8,22 @@ import { ParticipantDisplayItem, ShiftDisplayItem, ShiftGroup, RegistrableDispla
 import { NavigatorService } from '../../navigator.service';
 import { RegistrablesService } from '../../pricing/registrables.service';
 import { ShiftEditComponent } from '../shift-edit/shift-edit.component';
+import { MatIcon } from "@angular/material/icon";
+import { MatTooltip } from '@angular/material/tooltip';
+import { TranslateModule, TranslatePipe } from '@ngx-translate/core';
+import { DatePipe, NgClass } from '@angular/common';
+import { TagsPickerComponent } from 'app/shared/tags-picker/tags-picker.component';
+import { MatButton } from '@angular/material/button';
+import { MatInput, MatInputModule } from '@angular/material/input';
+import { NgModel } from '@angular/forms';
 
 @Component({
     selector: 'app-shifts-overview',
     templateUrl: './shifts-overview.component.html',
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: true,
+    imports: [MatIcon, MatTooltip, TranslateModule, RouterLink, DatePipe, TagsPickerComponent, NgClass, MatButton, MatInputModule, NgModel]
 })
 export class ShiftsOverviewComponent implements OnInit, OnDestroy
 {

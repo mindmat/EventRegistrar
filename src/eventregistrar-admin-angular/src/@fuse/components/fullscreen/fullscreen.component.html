@@ -1,5 +1,9 @@
 <!-- Button -->
-<button mat-icon-button [matTooltip]="tooltip || 'Toggle Fullscreen'" (click)="toggleFullscreen()">
+<button
+    mat-icon-button
+    [matTooltip]="tooltip || 'Toggle Fullscreen'"
+    (click)="toggleFullscreen()"
+>
     <ng-container [ngTemplateOutlet]="iconTpl || defaultIconTpl"></ng-container>
 </button>
 

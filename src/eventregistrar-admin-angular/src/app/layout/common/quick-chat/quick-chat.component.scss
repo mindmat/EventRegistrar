@@ -6,14 +6,12 @@ quick-chat {
     }
 
     &.quick-chat-opened {
-
         > div {
             overflow: visible;
         }
     }
 
     &:not(.quick-chat-opened) {
-
         > div {
             overflow: visible;
             animation: addOverflowHidden 1ms linear 400ms;
@@ -32,7 +30,6 @@ quick-chat {
     }
 }
 
-
 /* Overlay */
 .quick-chat-overlay {
     position: fixed;
@@ -47,7 +44,7 @@ quick-chat {
 
 @keyframes addOverflowHidden {
     0% {
-        overflow: visible
+        overflow: visible;
     }
     99% {
         overflow: visible;

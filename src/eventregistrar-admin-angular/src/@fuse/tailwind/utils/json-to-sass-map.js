@@ -1,62 +1,44 @@
 const _ = require('lodash');
 
-module.exports = (data) =>
-{
-    if ( !data )
-    {
+module.exports = (data) => {
+    if (!data) {
         return;
     }
 
     data = JSON.parse(data);
 
-    const getSCSS = (chunk) =>
-    {
+    const getSCSS = (chunk) => {
         let scss = '';
 
-        if ( typeof chunk === "object" && !Array.isArray(chunk) )
-        {
-            _.mapKeys(chunk, (value, key) =>
-            {
+        if (typeof chunk === 'object' && !Array.isArray(chunk)) {
+            _.mapKeys(chunk, (value, key) => {
                 scss += key + ': ';
 
-                if ( typeof value === "object" )
-                {
-                    if ( Array.isArray(value) )
-                    {
+                if (typeof value === 'object') {
+                    if (Array.isArray(value)) {
                         scss += '(';
-                        _.each(value, (val1) =>
-                        {
-                            if ( Array.isArray(val1) )
-                            {
-                                _.each(val1, (val2) =>
-                                {
+                        _.each(value, (val1) => {
+                            if (Array.isArray(val1)) {
+                                _.each(val1, (val2) => {
                                     scss += val2 + ' ';
                                 });
                                 scss = scss.slice(0, -1) + ', ';
-                            }
-                            else
-                            {
+                            } else {
                                 scss += val1 + ', ';
                             }
                         });
                         scss = scss.slice(0, -2);
                         scss += ')';
-                    }
-                    else
-                    {
+                    } else {
                         scss += '(' + getSCSS(value) + ')';
                     }
-                }
-                else
-                {
+                } else {
                     scss += getSCSS(value);
                 }
                 scss += ', ';
             });
             scss = scss.slice(0, -2);
-        }
-        else
-        {
+        } else {
             scss += chunk;
         }
 

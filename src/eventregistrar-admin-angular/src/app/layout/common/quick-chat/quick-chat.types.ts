@@ -1,5 +1,4 @@
-export interface Chat
-{
+export interface Chat {
     id?: string;
     contactId?: string;
     contact?: Contact;
@@ -17,8 +16,7 @@ export interface Chat
     }[];
 }
 
-export interface Contact
-{
+export interface Contact {
     id?: string;
     avatar?: string;
     name?: string;

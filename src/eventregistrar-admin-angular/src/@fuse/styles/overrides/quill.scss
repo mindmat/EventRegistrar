@@ -17,9 +17,7 @@
     }
 
     .ql-picker {
-
         &.ql-expanded {
-
             .ql-picker-label {
                 @apply border-gray-300;
 
@@ -30,7 +28,7 @@
 
             .ql-picker-options {
                 z-index: 10 !important;
-                @apply border-gray-300 bg-card;
+                @apply bg-card border-gray-300;
 
                 .dark & {
                     @apply border-gray-500;
@@ -43,7 +41,6 @@
         }
 
         .ql-picker-options {
-
             .ql-picker-item {
                 @apply text-default;
             }
@@ -103,10 +100,10 @@
     }
 
     .ql-tooltip {
-        @apply px-3 py-1 shadow-sm rounded-md bg-gray-100 border-gray-300;
+        @apply rounded-md border-gray-300 bg-gray-100 px-3 py-1 shadow-sm;
 
         .dark & {
-            @apply shadow-lg bg-gray-700 border-gray-700 #{'!important'};
+            @apply border-gray-700 bg-gray-700 shadow-lg #{'!important'};
         }
 
         // Label
@@ -116,10 +113,10 @@
 
         .ql-action,
         .ql-remove {
-            @apply text-primary border-gray-300;
+            @apply border-gray-300 text-primary;
 
             .dark & {
-                @apply text-primary-400 border-gray-300;
+                @apply border-gray-300 text-primary-400;
             }
         }
 
@@ -132,10 +129,10 @@
         }
 
         input {
-            @apply rounded-sm text-default bg-white border-gray-300 #{'!important'};
+            @apply text-default rounded-sm border-gray-300 bg-white #{'!important'};
 
             .dark & {
-                @apply bg-gray-700 border-gray-500 #{'!important'};
+                @apply border-gray-500 bg-gray-700 #{'!important'};
             }
         }
     }

@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
-import { assign, cloneDeep } from 'lodash-es';
 import { FuseMockApiService, FuseMockApiUtils } from '@fuse/lib/mock-api';
-import { brands as brandsData, categories as categoriesData, products as productsData, tags as tagsData, vendors as vendorsData } from 'app/mock-api/apps/ecommerce/inventory/data';
+import {
+    brands as brandsData,
+    categories as categoriesData,
+    products as productsData,
+    tags as tagsData,
+    vendors as vendorsData,
+} from 'app/mock-api/apps/ecommerce/inventory/data';
+import { assign, cloneDeep } from 'lodash-es';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class ECommerceInventoryMockApi
-{
+@Injectable({ providedIn: 'root' })
+export class ECommerceInventoryMockApi {
     private _categories: any[] = categoriesData;
     private _brands: any[] = brandsData;
     private _products: any[] = productsData;
@@ -17,8 +20,7 @@ export class ECommerceInventoryMockApi
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService)
-    {
+    constructor(private _fuseMockApiService: FuseMockApiService) {
         // Register Mock API handlers
         this.registerHandlers();
     }
@@ -30,8 +32,7 @@ export class ECommerceInventoryMockApi
     /**
      * Register Mock API handlers
      */
-    registerHandlers(): void
-    {
+    registerHandlers(): void {
         // -----------------------------------------------------------------------------------------------------
         // @ Categories - GET
         // -----------------------------------------------------------------------------------------------------
@@ -51,8 +52,7 @@ export class ECommerceInventoryMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onGet('api/apps/ecommerce/inventory/products', 300)
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get available queries
                 const search = request.params.get('search');
                 const sort = request.params.get('sort') || 'name';
@@ -64,24 +64,30 @@ export class ECommerceInventoryMockApi
                 let products: any[] | null = cloneDeep(this._products);
 
                 // Sort the products
-                if ( sort === 'sku' || sort === 'name' || sort === 'active' )
-                {
+                if (sort === 'sku' || sort === 'name' || sort === 'active') {
                     products.sort((a, b) => {
                         const fieldA = a[sort].toString().toUpperCase();
                         const fieldB = b[sort].toString().toUpperCase();
-                        return order === 'asc' ? fieldA.localeCompare(fieldB) : fieldB.localeCompare(fieldA);
+                        return order === 'asc'
+                            ? fieldA.localeCompare(fieldB)
+                            : fieldB.localeCompare(fieldA);
                     });
-                }
-                else
-                {
-                    products.sort((a, b) => order === 'asc' ? a[sort] - b[sort] : b[sort] - a[sort]);
+                } else {
+                    products.sort((a, b) =>
+                        order === 'asc' ? a[sort] - b[sort] : b[sort] - a[sort]
+                    );
                 }
 
                 // If search exists...
-                if ( search )
-                {
+                if (search) {
                     // Filter the products
-                    products = products.filter(contact => contact.name && contact.name.toLowerCase().includes(search.toLowerCase()));
+                    products = products.filter(
+                        (contact) =>
+                            contact.name &&
+                            contact.name
+                                .toLowerCase()
+                                .includes(search.toLowerCase())
+                    );
                 }
 
                 // Paginate - Start
@@ -89,7 +95,7 @@ export class ECommerceInventoryMockApi
 
                 // Calculate pagination details
                 const begin = page * size;
-                const end = Math.min((size * (page + 1)), productsLength);
+                const end = Math.min(size * (page + 1), productsLength);
                 const lastPage = Math.max(Math.ceil(productsLength / size), 1);
 
                 // Prepare the pagination object
@@ -99,26 +105,23 @@ export class ECommerceInventoryMockApi
                 // the last possible page number, return null for
                 // products but also send the last possible page so
                 // the app can navigate to there
-                if ( page > lastPage )
-                {
+                if (page > lastPage) {
                     products = null;
                     pagination = {
-                        lastPage
+                        lastPage,
                     };
-                }
-                else
-                {
+                } else {
                     // Paginate the results by size
                     products = products.slice(begin, end);
 
                     // Prepare the pagination mock-api
                     pagination = {
-                        length    : productsLength,
-                        size      : size,
-                        page      : page,
-                        lastPage  : lastPage,
+                        length: productsLength,
+                        size: size,
+                        page: page,
+                        lastPage: lastPage,
                         startIndex: begin,
-                        endIndex  : end - 1
+                        endIndex: end - 1,
                     };
                 }
 
@@ -127,8 +130,8 @@ export class ECommerceInventoryMockApi
                     200,
                     {
                         products,
-                        pagination
-                    }
+                        pagination,
+                    },
                 ];
             });
 
@@ -137,8 +140,7 @@ export class ECommerceInventoryMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onGet('api/apps/ecommerce/inventory/product')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the id from the params
                 const id = request.params.get('id');
 
@@ -146,7 +148,7 @@ export class ECommerceInventoryMockApi
                 const products = cloneDeep(this._products);
 
                 // Find the product
-                const product = products.find(item => item.id === id);
+                const product = products.find((item) => item.id === id);
 
                 // Return the response
                 return [200, product];
@@ -158,28 +160,27 @@ export class ECommerceInventoryMockApi
         this._fuseMockApiService
             .onPost('api/apps/ecommerce/inventory/product')
             .reply(() => {
-
                 // Generate a new product
                 const newProduct = {
-                    id         : FuseMockApiUtils.guid(),
-                    category   : '',
-                    name       : 'A New Product',
+                    id: FuseMockApiUtils.guid(),
+                    category: '',
+                    name: 'A New Product',
                     description: '',
-                    tags       : [],
-                    sku        : '',
-                    barcode    : '',
-                    brand      : '',
-                    vendor     : '',
-                    stock      : '',
-                    reserved   : '',
-                    cost       : '',
-                    basePrice  : '',
-                    taxPercent : '',
-                    price      : '',
-                    weight     : '',
-                    thumbnail  : '',
-                    images     : [],
-                    active     : false
+                    tags: [],
+                    sku: '',
+                    barcode: '',
+                    brand: '',
+                    vendor: '',
+                    stock: '',
+                    reserved: '',
+                    cost: '',
+                    basePrice: '',
+                    taxPercent: '',
+                    price: '',
+                    weight: '',
+                    thumbnail: '',
+                    images: [],
+                    active: false,
                 };
 
                 // Unshift the new product
@@ -194,8 +195,7 @@ export class ECommerceInventoryMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPatch('api/apps/ecommerce/inventory/product')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the id and product
                 const id = request.body.id;
                 const product = cloneDeep(request.body.product);
@@ -205,9 +205,7 @@ export class ECommerceInventoryMockApi
 
                 // Find the product and update it
                 this._products.forEach((item, index, products) => {
-
-                    if ( item.id === id )
-                    {
+                    if (item.id === id) {
                         // Update the product
                         products[index] = assign({}, products[index], product);
 
@@ -225,16 +223,13 @@ export class ECommerceInventoryMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onDelete('api/apps/ecommerce/inventory/product')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the id
                 const id = request.params.get('id');
 
                 // Find the product and delete it
                 this._products.forEach((item, index) => {
-
-                    if ( item.id === id )
-                    {
+                    if (item.id === id) {
                         this._products.splice(index, 1);
                     }
                 });
@@ -255,8 +250,7 @@ export class ECommerceInventoryMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPost('api/apps/ecommerce/inventory/tag')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the tag
                 const newTag = cloneDeep(request.body.tag);
 
@@ -275,8 +269,7 @@ export class ECommerceInventoryMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPatch('api/apps/ecommerce/inventory/tag')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the id and tag
                 const id = request.body.id;
                 const tag = cloneDeep(request.body.tag);
@@ -286,9 +279,7 @@ export class ECommerceInventoryMockApi
 
                 // Find the tag and update it
                 this._tags.forEach((item, index, tags) => {
-
-                    if ( item.id === id )
-                    {
+                    if (item.id === id) {
                         // Update the tag
                         tags[index] = assign({}, tags[index], tag);
 
@@ -306,22 +297,21 @@ export class ECommerceInventoryMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onDelete('api/apps/ecommerce/inventory/tag')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the id
                 const id = request.params.get('id');
 
                 // Find the tag and delete it
                 this._tags.forEach((item, index) => {
-
-                    if ( item.id === id )
-                    {
+                    if (item.id === id) {
                         this._tags.splice(index, 1);
                     }
                 });
 
                 // Get the products that have the tag
-                const productsWithTag = this._products.filter(product => product.tags.indexOf(id) > -1);
+                const productsWithTag = this._products.filter(
+                    (product) => product.tags.indexOf(id) > -1
+                );
 
                 // Iterate through them and delete the tag
                 productsWithTag.forEach((product) => {

@@ -33,7 +33,6 @@ fuse-alert {
             }
 
             .fuse-alert-default-icon {
-
                 .mat-icon {
                     @apply icon-size-5;
                 }
@@ -70,7 +69,6 @@ fuse-alert {
 
                     /* Alert that comes after the title */
                     + .fuse-alert-message {
-
                         &:not(:empty) {
                             margin-top: 4px;
                         }
@@ -108,9 +106,7 @@ fuse-alert {
 
     /* Dismissible */
     &.fuse-alert-dismissible {
-
         .fuse-alert-container {
-
             .fuse-alert-content {
                 margin-right: 32px;
             }
@@ -118,9 +114,7 @@ fuse-alert {
     }
 
     &:not(.fuse-alert-dismissible) {
-
         .fuse-alert-container {
-
             .fuse-alert-dismiss-button {
                 display: none !important;
             }
@@ -129,12 +123,11 @@ fuse-alert {
 
     /* Border */
     &.fuse-alert-appearance-border {
-
         .fuse-alert-container {
             position: relative;
             overflow: hidden;
             border-radius: 6px;
-            @apply shadow-md bg-card;
+            @apply bg-card shadow-md;
 
             .fuse-alert-border {
                 position: absolute;
@@ -151,9 +144,7 @@ fuse-alert {
 
         /* Primary */
         &.fuse-alert-type-primary {
-
             .fuse-alert-container {
-
                 .fuse-alert-border {
                     @apply bg-primary;
                 }
@@ -188,9 +179,7 @@ fuse-alert {
 
         /* Accent */
         &.fuse-alert-type-accent {
-
             .fuse-alert-container {
-
                 .fuse-alert-border {
                     @apply bg-accent;
                 }
@@ -225,9 +214,7 @@ fuse-alert {
 
         /* Warn */
         &.fuse-alert-type-warn {
-
             .fuse-alert-container {
-
                 .fuse-alert-border {
                     @apply bg-warn;
                 }
@@ -262,9 +249,7 @@ fuse-alert {
 
         /* Basic */
         &.fuse-alert-type-basic {
-
             .fuse-alert-container {
-
                 .fuse-alert-border {
                     @apply bg-gray-600;
                 }
@@ -299,9 +284,7 @@ fuse-alert {
 
         /* Info */
         &.fuse-alert-type-info {
-
             .fuse-alert-container {
-
                 .fuse-alert-border {
                     @apply bg-blue-600;
                 }
@@ -336,9 +319,7 @@ fuse-alert {
 
         /* Success */
         &.fuse-alert-type-success {
-
             .fuse-alert-container {
-
                 .fuse-alert-border {
                     @apply bg-green-500;
                 }
@@ -373,9 +354,7 @@ fuse-alert {
 
         /* Warning */
         &.fuse-alert-type-warning {
-
             .fuse-alert-container {
-
                 .fuse-alert-border {
                     @apply bg-amber-500;
                 }
@@ -410,9 +389,7 @@ fuse-alert {
 
         /* Error */
         &.fuse-alert-type-error {
-
             .fuse-alert-container {
-
                 .fuse-alert-border {
                     @apply bg-red-600;
                 }
@@ -448,7 +425,6 @@ fuse-alert {
 
     /* Fill */
     &.fuse-alert-appearance-fill {
-
         .fuse-alert-container {
             border-radius: 6px;
 
@@ -459,7 +435,6 @@ fuse-alert {
 
         /* Primary */
         &.fuse-alert-type-primary {
-
             .fuse-alert-container {
                 @apply bg-primary-600;
 
@@ -476,14 +451,13 @@ fuse-alert {
                 }
 
                 code {
-                    @apply text-primary-800 bg-primary-200;
+                    @apply bg-primary-200 text-primary-800;
                 }
             }
         }
 
         /* Accent */
         &.fuse-alert-type-accent {
-
             .fuse-alert-container {
                 @apply bg-accent-600;
 
@@ -500,14 +474,13 @@ fuse-alert {
                 }
 
                 code {
-                    @apply text-accent-800 bg-accent-200;
+                    @apply bg-accent-200 text-accent-800;
                 }
             }
         }
 
         /* Warn */
         &.fuse-alert-type-warn {
-
             .fuse-alert-container {
                 @apply bg-warn-600;
 
@@ -524,14 +497,13 @@ fuse-alert {
                 }
 
                 code {
-                    @apply text-warn-800 bg-warn-200;
+                    @apply bg-warn-200 text-warn-800;
                 }
             }
         }
 
         /* Basic */
         &.fuse-alert-type-basic {
-
             .fuse-alert-container {
                 @apply bg-gray-600;
 
@@ -555,7 +527,6 @@ fuse-alert {
 
         /* Info */
         &.fuse-alert-type-info {
-
             .fuse-alert-container {
                 @apply bg-blue-600;
 
@@ -579,7 +550,6 @@ fuse-alert {
 
         /* Success */
         &.fuse-alert-type-success {
-
             .fuse-alert-container {
                 @apply bg-green-600;
 
@@ -603,7 +573,6 @@ fuse-alert {
 
         /* Warning */
         &.fuse-alert-type-warning {
-
             .fuse-alert-container {
                 @apply bg-amber-500;
 
@@ -627,7 +596,6 @@ fuse-alert {
 
         /* Error */
         &.fuse-alert-type-error {
-
             .fuse-alert-container {
                 @apply bg-red-600;
 
@@ -652,16 +620,14 @@ fuse-alert {
 
     /* Outline */
     &.fuse-alert-appearance-outline {
-
         .fuse-alert-container {
             border-radius: 6px;
         }
 
         /* Primary */
         &.fuse-alert-type-primary {
-
             .fuse-alert-container {
-                @apply bg-primary-50 ring-1 ring-primary-400 ring-inset;
+                @apply bg-primary-50 ring-1 ring-inset ring-primary-400;
 
                 .fuse-alert-icon {
                     @apply text-primary-600;
@@ -677,7 +643,7 @@ fuse-alert {
                 }
 
                 code {
-                    @apply text-primary-800 bg-primary-200;
+                    @apply bg-primary-200 text-primary-800;
                 }
 
                 .dark & {
@@ -701,9 +667,8 @@ fuse-alert {
 
         /* Accent */
         &.fuse-alert-type-accent {
-
             .fuse-alert-container {
-                @apply bg-accent-100 ring-1 ring-accent-400 ring-inset;
+                @apply bg-accent-100 ring-1 ring-inset ring-accent-400;
 
                 .fuse-alert-icon {
                     @apply text-accent-600;
@@ -719,7 +684,7 @@ fuse-alert {
                 }
 
                 code {
-                    @apply text-accent-800 bg-accent-200;
+                    @apply bg-accent-200 text-accent-800;
                 }
 
                 .dark & {
@@ -743,9 +708,8 @@ fuse-alert {
 
         /* Warn */
         &.fuse-alert-type-warn {
-
             .fuse-alert-container {
-                @apply bg-warn-50 ring-1 ring-warn-400 ring-inset;
+                @apply bg-warn-50 ring-1 ring-inset ring-warn-400;
 
                 .fuse-alert-icon {
                     @apply text-warn-600;
@@ -761,7 +725,7 @@ fuse-alert {
                 }
 
                 code {
-                    @apply text-warn-800 bg-warn-200;
+                    @apply bg-warn-200 text-warn-800;
                 }
 
                 .dark & {
@@ -785,9 +749,8 @@ fuse-alert {
 
         /* Basic */
         &.fuse-alert-type-basic {
-
             .fuse-alert-container {
-                @apply bg-gray-100 ring-1 ring-gray-400 ring-inset;
+                @apply bg-gray-100 ring-1 ring-inset ring-gray-400;
 
                 .fuse-alert-icon {
                     @apply text-gray-600;
@@ -827,9 +790,8 @@ fuse-alert {
 
         /* Info */
         &.fuse-alert-type-info {
-
             .fuse-alert-container {
-                @apply bg-blue-50 ring-1 ring-blue-400 ring-inset;
+                @apply bg-blue-50 ring-1 ring-inset ring-blue-400;
 
                 .fuse-alert-icon {
                     @apply text-blue-600;
@@ -869,9 +831,8 @@ fuse-alert {
 
         /* Success */
         &.fuse-alert-type-success {
-
             .fuse-alert-container {
-                @apply bg-green-50 ring-1 ring-green-400 ring-inset;
+                @apply bg-green-50 ring-1 ring-inset ring-green-400;
 
                 .fuse-alert-icon {
                     @apply text-green-600;
@@ -911,9 +872,8 @@ fuse-alert {
 
         /* Warning */
         &.fuse-alert-type-warning {
-
             .fuse-alert-container {
-                @apply bg-amber-50 ring-1 ring-amber-400 ring-inset;
+                @apply bg-amber-50 ring-1 ring-inset ring-amber-400;
 
                 .fuse-alert-icon {
                     @apply text-amber-600;
@@ -953,9 +913,8 @@ fuse-alert {
 
         /* Error */
         &.fuse-alert-type-error {
-
             .fuse-alert-container {
-                @apply bg-red-50 ring-1 ring-red-400 ring-inset;
+                @apply bg-red-50 ring-1 ring-inset ring-red-400;
 
                 .fuse-alert-icon {
                     @apply text-red-600;
@@ -996,14 +955,12 @@ fuse-alert {
 
     /* Soft */
     &.fuse-alert-appearance-soft {
-
         .fuse-alert-container {
             border-radius: 6px;
         }
 
         /* Primary */
         &.fuse-alert-type-primary {
-
             .fuse-alert-container {
                 @apply bg-primary-50;
 
@@ -1021,7 +978,7 @@ fuse-alert {
                 }
 
                 code {
-                    @apply text-primary-800 bg-primary-200;
+                    @apply bg-primary-200 text-primary-800;
                 }
 
                 .dark & {
@@ -1045,7 +1002,6 @@ fuse-alert {
 
         /* Accent */
         &.fuse-alert-type-accent {
-
             .fuse-alert-container {
                 @apply bg-accent-100;
 
@@ -1063,7 +1019,7 @@ fuse-alert {
                 }
 
                 code {
-                    @apply text-accent-800 bg-accent-200;
+                    @apply bg-accent-200 text-accent-800;
                 }
 
                 .dark & {
@@ -1087,7 +1043,6 @@ fuse-alert {
 
         /* Warn */
         &.fuse-alert-type-warn {
-
             .fuse-alert-container {
                 @apply bg-warn-50;
 
@@ -1105,7 +1060,7 @@ fuse-alert {
                 }
 
                 code {
-                    @apply text-warn-800 bg-warn-200;
+                    @apply bg-warn-200 text-warn-800;
                 }
 
                 .dark & {
@@ -1129,7 +1084,6 @@ fuse-alert {
 
         /* Basic */
         &.fuse-alert-type-basic {
-
             .fuse-alert-container {
                 @apply bg-gray-100;
 
@@ -1171,7 +1125,6 @@ fuse-alert {
 
         /* Info */
         &.fuse-alert-type-info {
-
             .fuse-alert-container {
                 @apply bg-blue-50;
 
@@ -1213,7 +1166,6 @@ fuse-alert {
 
         /* Success */
         &.fuse-alert-type-success {
-
             .fuse-alert-container {
                 @apply bg-green-50;
 
@@ -1255,7 +1207,6 @@ fuse-alert {
 
         /* Warning */
         &.fuse-alert-type-warning {
-
             .fuse-alert-container {
                 @apply bg-amber-50;
 
@@ -1297,7 +1248,6 @@ fuse-alert {
 
         /* Error */
         &.fuse-alert-type-error {
-
             .fuse-alert-container {
                 @apply bg-red-50;
 

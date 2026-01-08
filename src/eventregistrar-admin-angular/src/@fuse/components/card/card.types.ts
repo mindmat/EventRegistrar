@@ -1,3 +1,1 @@
-export type FuseCardFace =
-    | 'front'
-    | 'back';
+export type FuseCardFace = 'front' | 'back';

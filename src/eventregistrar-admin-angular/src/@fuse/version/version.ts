@@ -1,8 +1,7 @@
 /**
  * Derived from Angular's version class
  */
-export class Version
-{
+export class Version {
     public readonly full: string;
     public readonly major: string;
     public readonly minor: string;
@@ -11,8 +10,7 @@ export class Version
     /**
      * Constructor
      */
-    constructor(public version: string)
-    {
+    constructor(public version: string) {
         this.full = version;
         this.major = version.split('.')[0];
         this.minor = version.split('.')[1];

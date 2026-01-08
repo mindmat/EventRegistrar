@@ -1,1 +1,1 @@
-export * from './fuse.module';
+export * from './fuse.provider';

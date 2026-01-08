@@ -1,11 +1,18 @@
-export interface FuseConfirmationConfig
-{
+export interface FuseConfirmationConfig {
     title?: string;
     message?: string;
     icon?: {
         show?: boolean;
         name?: string;
-        color?: 'primary' | 'accent' | 'warn' | 'basic' | 'info' | 'success' | 'warning' | 'error';
+        color?:
+            | 'primary'
+            | 'accent'
+            | 'warn'
+            | 'basic'
+            | 'info'
+            | 'success'
+            | 'warning'
+            | 'error';
     };
     actions?: {
         confirm?: {

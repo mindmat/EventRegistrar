@@ -8,8 +8,8 @@
 /* -------------------------------------------------------------------------- */
 /*  @ Font smoothing
 /* -------------------------------------------------------------------------- */
-*[class*=mat-],
-*[class*=mat-mdc-] {
+*[class*='mat-'],
+*[class*='mat-mdc-'] {
     -webkit-font-smoothing: auto !important;
     -moz-osx-font-smoothing: auto !important;
 
@@ -23,11 +23,10 @@
 /*  @ Accordion
 /* -------------------------------------------------------------------------- */
 .mat-accordion {
-
     .mat-expansion-panel {
         margin-bottom: 24px;
         border-radius: 8px !important;
-        transition: box-shadow 225ms cubic-bezier(0.4, 0.0, 0.2, 1);
+        transition: box-shadow 225ms cubic-bezier(0.4, 0, 0.2, 1);
         @apply shadow #{'!important'};
 
         &:last-child {
@@ -40,11 +39,8 @@
         }
 
         &:not(.mat-expanded) {
-
             .mat-expansion-panel-header {
-
-                &:not([aria-disabled=true]) {
-
+                &:not([aria-disabled='true']) {
                     &.cdk-keyboard-focused,
                     &.cdk-program-focused,
                     &:hover {
@@ -57,8 +53,7 @@
         .mat-expansion-panel-header {
             font-size: 14px;
 
-            &[aria-disabled=true] {
-
+            &[aria-disabled='true'] {
                 .mat-expansion-panel-header-description {
                     margin-right: 28px;
                 }
@@ -107,8 +102,7 @@
     }
 
     /* Lower the icon opacity on disabled buttons */
-    &[disabled=true] {
-
+    &[disabled='true'] {
         .mat-icon {
             opacity: 0.38 !important;
         }
@@ -157,13 +151,11 @@
     border-radius: 9999px !important;
 }
 
-
 /* Fix the alignment of icons when used within buttons */
 .mat-mdc-button,
 .mat-mdc-raised-button,
 .mat-mdc-outlined-button,
 .mat-mdc-unelevated-button {
-
     & > .mat-icon {
         margin-left: 0 !important;
         margin-right: 0 !important;
@@ -178,11 +170,8 @@
 .mat-mdc-icon-button,
 .mat-mdc-fab,
 .mat-mdc-mini-fab {
-
     .mat-mdc-progress-spinner {
-
         .mdc-circular-progress__indeterminate-container {
-
             circle {
                 stroke: currentColor !important;
                 animation-duration: 6000ms;
@@ -196,12 +185,15 @@
 .mat-mdc-unelevated-button,
 .mat-mdc-fab,
 .mat-mdc-mini-fab {
-
-    --mat-mdc-button-persistent-ripple-color: theme('colors.gray[400]') !important;
+    --mat-mdc-button-persistent-ripple-color: theme(
+        'colors.gray[400]'
+    ) !important;
     --mat-mdc-button-ripple-color: rgba(0, 0, 0, 0.1) !important;
 
     .dark & {
-        --mat-mdc-button-persistent-ripple-color: theme('colors.black') !important;
+        --mat-mdc-button-persistent-ripple-color: theme(
+            'colors.black'
+        ) !important;
         --mat-mdc-button-ripple-color: rgba(0, 0, 0, 0.1) !important;
     }
 
@@ -218,12 +210,9 @@
 .mat-mdc-button,
 .mat-mdc-icon-button,
 .mat-mdc-outlined-button {
-
-    &:not([disabled=true]) {
-
+    &:not([disabled='true']) {
         /* Apply primary color */
         &.mat-primary {
-
             .mat-icon {
                 @apply text-primary #{'!important'};
             }
@@ -231,7 +220,6 @@
 
         /* Apply accent color */
         &.mat-accent {
-
             .mat-icon {
                 @apply text-accent #{'!important'};
             }
@@ -239,7 +227,6 @@
 
         /* Apply warn color */
         &.mat-warn {
-
             .mat-icon {
                 @apply text-warn #{'!important'};
             }
@@ -249,21 +236,19 @@
 
 /* Adjust the border color of outlined buttons */
 .mat-mdc-outlined-button {
-
     /* Not disabled */
-    &:not([disabled=true]) {
+    &:not([disabled='true']) {
         @apply border-gray-300 dark:border-gray-500 #{'!important'};
     }
 
     /* Disabled */
-    &[disabled=true] {
+    &[disabled='true'] {
         @apply border-gray-300/70 dark:border-gray-600 #{'!important'};
     }
 }
 
 /* Don't wrap the button label text */
 .mdc-button {
-
     .mdc-button__label {
         white-space: nowrap;
     }
@@ -277,7 +262,6 @@
     @apply space-x-1;
 
     &.mat-button-toggle-group-appearance-standard {
-
         .mat-button-toggle + .mat-button-toggle {
             background-clip: padding-box;
         }
@@ -290,7 +274,6 @@
         font-weight: 500;
 
         &.mat-button-toggle-checked {
-
             .mat-button-toggle-label-content {
                 @apply text-default #{'!important'};
             }
@@ -315,6 +298,10 @@
     }
 }
 
+.mdc-checkbox__native-control {
+    opacity: 0 !important;
+}
+
 /* -------------------------------------------------------------------------- */
 /*  @ Chip
 /* -------------------------------------------------------------------------- */
@@ -326,7 +313,6 @@
 /*  @ Dialog
 /* -------------------------------------------------------------------------- */
 .mat-mdc-dialog-container {
-
     .mdc-dialog__surface {
         border-radius: 16px !important;
         padding: 24px;
@@ -346,7 +332,6 @@
 
 /* "fill" appearance */
 .mat-mdc-form-field.mat-form-field-appearance-fill {
-
     /* Disabled */
     &.mat-form-field-disabled {
         opacity: 0.7 !important;
@@ -354,7 +339,6 @@
 
     /* Invalid */
     &.mat-form-field-invalid {
-
         /* Border color */
         .mat-mdc-text-field-wrapper {
             @apply border-warn dark:border-warn #{'!important'};
@@ -362,7 +346,6 @@
 
         /* Select */
         .mat-mdc-select {
-
             /* Placeholder color */
             .mat-mdc-select-placeholder {
                 @apply text-warn #{'!important'};
@@ -372,7 +355,6 @@
 
     /* Hover */
     &:hover {
-
         .mat-mdc-form-field-focus-overlay {
             opacity: 0 !important;
         }
@@ -380,7 +362,6 @@
 
     /* Focused */
     &.mat-focused {
-
         .mat-mdc-form-field-focus-overlay {
             opacity: 0 !important;
         }
@@ -388,7 +369,6 @@
 
     /* Focused and valid fields */
     &.mat-focused:not(.mat-form-field-invalid) {
-
         /* Border color */
         .mat-mdc-text-field-wrapper {
             @apply border-primary dark:border-primary #{'!important'};
@@ -397,9 +377,7 @@
 
     /* Remove the default arrow for native select */
     &.mat-mdc-form-field-type-mat-native-select {
-
         .mat-mdc-form-field-infix {
-
             select {
                 top: auto;
                 margin-top: 0;
@@ -428,7 +406,7 @@
         border-radius: 6px;
         border-width: 1px;
         border-style: solid;
-        @apply shadow-sm bg-white border-gray-300 dark:bg-black dark:bg-opacity-5 dark:border-gray-500 #{'!important'};
+        @apply border-gray-300 bg-white shadow-sm dark:border-gray-500 dark:bg-black dark:bg-opacity-5 #{'!important'};
 
         /* Adjust the top spacing and overflow when mat-label present */
         &:not(.mdc-text-field--no-label) {
@@ -525,17 +503,16 @@
                     align-items: center;
 
                     &:focus {
-
                         .mat-mdc-select-trigger {
-
                             .mat-mdc-select-value {
                                 @apply text-primary #{'!important'};
                             }
 
                             .mat-mdc-select-arrow-wrapper {
-
                                 .mat-mdc-select-arrow {
-                                    border-top-color: var(--fuse-primary) !important;
+                                    border-top-color: var(
+                                        --fuse-primary
+                                    ) !important;
                                 }
                             }
                         }
@@ -550,7 +527,6 @@
                             max-width: none;
 
                             mat-mdc-select-trigger {
-
                                 .mat-icon {
                                     margin: 0 !important;
                                 }
@@ -630,11 +606,8 @@
 
     /* Adds better alignment for textarea inputs */
     &:has(textarea.mat-mdc-input-element) {
-
         .mat-mdc-text-field-wrapper {
-
             .mat-mdc-form-field-flex {
-
                 .mat-mdc-form-field-icon-prefix,
                 .mat-mdc-form-field-text-prefix,
                 .mat-mdc-form-field-icon-suffix,
@@ -648,18 +621,14 @@
 
     /* Rounded */
     &.fuse-mat-rounded {
-
         .mat-mdc-text-field-wrapper {
             border-radius: 24px;
         }
 
         /* Emphasized affix */
         &.fuse-mat-emphasized-affix {
-
             .mat-mdc-text-field-wrapper {
-
                 .mat-mdc-form-field-flex {
-
                     .mat-mdc-form-field-icon-prefix,
                     .mat-mdc-form-field-text-prefix {
                         border-radius: 24px 0 0 24px;
@@ -680,7 +649,9 @@
                             margin-right: 4px;
                         }
 
-                        > *:not(.mat-icon):not(.mat-mdc-icon-button):not(.mat-mdc-select):not(.mat-datepicker-toggle) {
+                        > *:not(.mat-icon):not(.mat-mdc-icon-button):not(
+                                .mat-mdc-select
+                            ):not(.mat-datepicker-toggle) {
                             margin-right: 12px;
                         }
                     }
@@ -705,7 +676,9 @@
                             margin-left: 4px !important;
                         }
 
-                        > *:not(.mat-icon):not(.mat-mdc-icon-button):not(.mat-mdc-select):not(.mat-datepicker-toggle) {
+                        > *:not(.mat-icon):not(.mat-mdc-icon-button):not(
+                                .mat-mdc-select
+                            ):not(.mat-datepicker-toggle) {
                             margin-left: 12px !important;
                         }
                     }
@@ -716,16 +689,12 @@
 
     /* Dense */
     &.fuse-mat-dense {
-
         .mat-mdc-text-field-wrapper {
-
             .mat-mdc-form-field-flex {
-
                 .mat-mdc-form-field-icon-prefix,
                 .mat-mdc-form-field-text-prefix,
                 .mat-mdc-form-field-icon-suffix,
                 .mat-mdc-form-field-text-suffix {
-
                     .mat-mdc-icon-button {
                         width: 32px !important;
                         min-width: 32px;
@@ -736,7 +705,6 @@
 
                 .mat-mdc-form-field-icon-prefix,
                 .mat-mdc-form-field-text-prefix {
-
                     > .mat-mdc-icon-button {
                         margin-left: -6px;
                         margin-right: 12px;
@@ -745,7 +713,6 @@
 
                 .mat-mdc-form-field-icon-suffix,
                 .mat-mdc-form-field-text-suffix {
-
                     > .mat-mdc-icon-button {
                         margin-left: 12px;
                         margin-right: -6px;
@@ -765,11 +732,8 @@
 
         /* Adds better alignment for textarea inputs */
         &:has(textarea.mat-mdc-input-element) {
-
             .mat-mdc-text-field-wrapper {
-
                 .mat-mdc-form-field-flex {
-
                     .mat-mdc-form-field-icon-prefix,
                     .mat-mdc-form-field-text-prefix,
                     .mat-mdc-form-field-icon-suffix,
@@ -782,18 +746,14 @@
 
         /* Rounded */
         &.fuse-mat-rounded {
-
             .mat-mdc-text-field-wrapper {
                 border-radius: 20px;
             }
 
             /* Emphasized affix */
             &.fuse-mat-emphasized-affix {
-
                 .mat-mdc-text-field-wrapper {
-
                     .mat-mdc-form-field-flex {
-
                         .mat-mdc-form-field-icon-prefix,
                         .mat-mdc-form-field-text-prefix {
                             border-radius: 20px 0 0 20px !important;
@@ -811,11 +771,8 @@
 
     /* Emphasized affix */
     &.fuse-mat-emphasized-affix {
-
         .mat-mdc-text-field-wrapper {
-
             .mat-mdc-form-field-flex {
-
                 .mat-mdc-form-field-icon-prefix,
                 .mat-mdc-form-field-text-prefix {
                     align-self: stretch !important;
@@ -841,7 +798,9 @@
                         margin-right: 8px;
                     }
 
-                    > *:not(.mat-icon):not(.mat-mdc-icon-button):not(.mat-mdc-select):not(.mat-datepicker-toggle) {
+                    > *:not(.mat-icon):not(.mat-mdc-icon-button):not(
+                            .mat-mdc-select
+                        ):not(.mat-datepicker-toggle) {
                         margin-right: 16px;
                     }
                 }
@@ -871,7 +830,9 @@
                         margin-left: 8px;
                     }
 
-                    > *:not(.mat-icon):not(.mat-mdc-icon-button):not(.mat-mdc-select):not(.mat-datepicker-toggle) {
+                    > *:not(.mat-icon):not(.mat-mdc-icon-button):not(
+                            .mat-mdc-select
+                        ):not(.mat-datepicker-toggle) {
                         margin-left: 16px;
                     }
                 }
@@ -887,11 +848,8 @@
 
         /* with Textarea */
         &:has(textarea.mat-mdc-input-element) {
-
             .mat-mdc-text-field-wrapper {
-
                 .mat-mdc-form-field-flex {
-
                     .mat-mdc-form-field-icon-prefix,
                     .mat-mdc-form-field-text-prefix,
                     .mat-mdc-form-field-icon-suffix,
@@ -905,7 +863,6 @@
 
     /* Bolder border width */
     &.fuse-mat-bold {
-
         .mat-mdc-text-field-wrapper {
             border-width: 2px !important;
         }
@@ -914,10 +871,8 @@
 
 /* "outline" appearance */
 .mat-mdc-form-field.mat-form-field-appearance-outline {
-
     /* Invalid */
     &.mat-form-field-invalid {
-
         .mdc-notched-outline__leading,
         .mdc-notched-outline__notch,
         .mdc-notched-outline__trailing {
@@ -927,10 +882,8 @@
 
     /* Focused */
     &.mat-focused:not(.mat-form-field-invalid) {
-
         /* Primary */
         &.mat-primary {
-
             .mdc-notched-outline__leading,
             .mdc-notched-outline__notch,
             .mdc-notched-outline__trailing {
@@ -940,7 +893,6 @@
 
         /* Accent */
         &.mat-accent {
-
             .mdc-notched-outline__leading,
             .mdc-notched-outline__notch,
             .mdc-notched-outline__trailing {
@@ -950,13 +902,9 @@
     }
 
     &:not(.mat-focused):not(.mat-form-field-invalid) {
-
         .mat-mdc-text-field-wrapper {
-
             .mat-mdc-form-field-flex {
-
                 .mdc-notched-outline {
-
                     .mdc-notched-outline__leading,
                     .mdc-notched-outline__notch,
                     .mdc-notched-outline__trailing {
@@ -970,11 +918,8 @@
     /* Remove the extra border on the right side of the notch */
     /* Tailwind's global border setter causes this issue */
     .mat-mdc-text-field-wrapper {
-
         .mat-mdc-form-field-flex {
-
             .mdc-notched-outline {
-
                 .mdc-notched-outline__notch {
                     border-right-style: none !important;
                 }
@@ -986,7 +931,6 @@
 /* -------------------------------------------------------------------------- */
 /*  @ Datepicker
 /* -------------------------------------------------------------------------- */
-
 
 /* -------------------------------------------------------------------------- */
 /*  @ Icon
@@ -1008,7 +952,6 @@
 /*  @ Inputs
 /* -------------------------------------------------------------------------- */
 .mat-mdc-input-element {
-
     &::placeholder {
         transition: none !important;
         @apply text-hint #{'!important'};
@@ -1032,9 +975,7 @@
 
 /* Invalid */
 .mat-form-field-invalid {
-
     .mat-mdc-input-element {
-
         /* Placeholder color */
         &::placeholder {
             @apply text-warn #{'!important'};
@@ -1061,22 +1002,11 @@
     min-width: 144px !important;
 
     .mat-mdc-menu-content {
-
         .mat-mdc-menu-item {
-            display: flex;
-            align-items: center;
-
-            > span {
-                display: inline-flex;
+            .mat-mdc-menu-item-text {
+                display: flex;
                 align-items: center;
-            }
-
-            &.mat-mdc-menu-item-submenu-trigger {
-                padding-right: 40px;
-            }
-
-            .mat-icon {
-                margin-right: 12px;
+                padding-right: 16px;
             }
 
             .mat-icon-no-color {
@@ -1096,7 +1026,6 @@
 /*  @ Paginator
 /* -------------------------------------------------------------------------- */
 .mat-mdc-paginator {
-
     .mat-mdc-paginator-container {
         padding: 8px 16px;
         justify-content: space-between;
@@ -1156,7 +1085,6 @@
     }
 
     .mat-mdc-select-trigger {
-
         .mat-mdc-select-value {
             position: relative;
             display: flex;
@@ -1179,6 +1107,7 @@
 
         .mat-mdc-select-arrow {
             margin: 0 0 0 8px;
+            @apply text-secondary #{!important};
         }
     }
 }
@@ -1187,12 +1116,23 @@
 /*  @ Slide Toggle
 /* -------------------------------------------------------------------------- */
 
+/* -------------------------------------------------------------------------- */
+/*  @ Snack bar
+/* -------------------------------------------------------------------------- */
+.mat-mdc-snack-bar-container {
+    .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+        color: #ffffff !important;
+
+        .dark & {
+            color: #000000 !important;
+        }
+    }
+}
 
 /* -------------------------------------------------------------------------- */
 /*  @ Stepper
 /* -------------------------------------------------------------------------- */
 .mat-step-icon {
-
     /* Do not override the mat-icon color */
     .mat-icon {
         color: currentColor !important;
@@ -1208,7 +1148,6 @@
 /*  @ Table
 /* -------------------------------------------------------------------------- */
 .mat-mdc-table {
-
     .mdc-data-table__row:not(.mdc-data-table__row--selected):hover {
         background: none !important;
     }
@@ -1218,10 +1157,8 @@
 /*  @ Tabs
 /* -------------------------------------------------------------------------- */
 .mat-mdc-tab-group {
-
     /* No header */
     &.fuse-mat-no-header {
-
         .mat-mdc-tab-header {
             height: 0 !important;
             max-height: 0 !important;
@@ -1232,9 +1169,7 @@
     }
 
     &:not(.mat-background-primary):not(.mat-background-accent) {
-
         .mat-mdc-tab-header {
-
             .mat-mdc-tab-label-container {
                 box-shadow: inset 0 -1px var(--fuse-border);
             }
@@ -1242,7 +1177,6 @@
     }
 
     .mat-mdc-tab-header {
-
         .mat-mdc-tab-label-container {
             margin: 0 24px;
         }
@@ -1264,10 +1198,8 @@ textarea.mat-mdc-input-element {
 /*  @ Toolbar
 /* -------------------------------------------------------------------------- */
 .mat-toolbar {
-
     /* Apply primary contrast color */
     &.mat-primary {
-
         .mat-icon {
             @apply text-on-primary #{'!important'};
         }
@@ -1291,7 +1223,6 @@ textarea.mat-mdc-input-element {
 
     /* Apply accent contrast color */
     &.mat-accent {
-
         .mat-icon {
             @apply text-on-accent #{'!important'};
         }
@@ -1315,7 +1246,6 @@ textarea.mat-mdc-input-element {
 
     /* Apply warn contrast color */
     &.mat-warn {
-
         .mat-icon {
             @apply text-on-warn #{'!important'};
         }
@@ -1335,5 +1265,19 @@ textarea.mat-mdc-input-element {
         .divider {
             @apply text-on-warn text-opacity-12 #{'!important'};
         }
+    }
+}
+
+/* -------------------------------------------------------------------------- */
+/*  @ Tooltip
+/* -------------------------------------------------------------------------- */
+
+.mat-mdc-tooltip .mdc-tooltip__surface {
+    background-color: var(--fuse-text-default) !important;
+    color: white;
+
+    .dark & {
+        background-color: var(--fuse-text-secondary) !important;
+        color: var(--fuse-bg-default) !important;
     }
 }

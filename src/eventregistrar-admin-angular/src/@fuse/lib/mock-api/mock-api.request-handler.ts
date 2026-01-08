@@ -1,9 +1,8 @@
 import { HttpRequest } from '@angular/common/http';
-import { Observable, of, take, throwError } from 'rxjs';
 import { FuseMockApiReplyCallback } from '@fuse/lib/mock-api/mock-api.types';
+import { Observable, of, take, throwError } from 'rxjs';
 
-export class FuseMockApiHandler
-{
+export class FuseMockApiHandler {
     request!: HttpRequest<any>;
     urlParams!: { [key: string]: string };
 
@@ -18,9 +17,7 @@ export class FuseMockApiHandler
     constructor(
         public url: string,
         public delay?: number
-    )
-    {
-    }
+    ) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -29,23 +26,19 @@ export class FuseMockApiHandler
     /**
      * Getter for response callback
      */
-    get response(): Observable<any>
-    {
+    get response(): Observable<any> {
         // If the execution limit has been reached, throw an error
-        if ( this._replyCount > 0 && this._replyCount <= this._replied )
-        {
+        if (this._replyCount > 0 && this._replyCount <= this._replied) {
             return throwError('Execution limit has been reached!');
         }
 
         // If the response callback has not been set, throw an error
-        if ( !this._reply )
-        {
+        if (!this._reply) {
             return throwError('Response callback function does not exist!');
         }
 
         // If the request has not been set, throw an error
-        if ( !this.request )
-        {
+        if (!this.request) {
             return throwError('Request does not exist!');
         }
 
@@ -54,13 +47,12 @@ export class FuseMockApiHandler
 
         // Execute the reply callback
         const replyResult = this._reply({
-            request  : this.request,
-            urlParams: this.urlParams
+            request: this.request,
+            urlParams: this.urlParams,
         });
 
         // If the result of the reply callback is an observable...
-        if ( replyResult instanceof Observable )
-        {
+        if (replyResult instanceof Observable) {
             // Return the result as it is
             return replyResult.pipe(take(1));
         }
@@ -78,8 +70,7 @@ export class FuseMockApiHandler
      *
      * @param callback
      */
-    reply(callback: FuseMockApiReplyCallback): void
-    {
+    reply(callback: FuseMockApiReplyCallback): void {
         // Store the reply
         this._reply = callback;
     }
@@ -89,11 +80,8 @@ export class FuseMockApiHandler
      *
      * @param count
      */
-    replyCount(count: number): void
-    {
+    replyCount(count: number): void {
         // Store the reply count
         this._replyCount = count;
     }
 }
-
-

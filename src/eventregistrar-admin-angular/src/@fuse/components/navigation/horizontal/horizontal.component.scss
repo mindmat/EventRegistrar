@@ -1,6 +1,5 @@
 /* Root navigation specific */
 fuse-horizontal-navigation {
-
     .fuse-horizontal-navigation-wrapper {
         display: flex;
         align-items: center;
@@ -8,11 +7,8 @@ fuse-horizontal-navigation {
         /* Basic, Branch */
         fuse-horizontal-navigation-basic-item,
         fuse-horizontal-navigation-branch-item {
-
             @screen sm {
-
                 &:hover {
-
                     .fuse-horizontal-navigation-item-wrapper {
                         @apply bg-hover;
                     }
@@ -37,10 +33,8 @@ fuse-horizontal-navigation {
 
         /* Basic - When item active (current link) */
         fuse-horizontal-navigation-basic-item {
-
             .fuse-horizontal-navigation-item-active,
             .fuse-horizontal-navigation-item-active-forced {
-
                 .fuse-horizontal-navigation-item-title {
                     @apply text-primary #{'!important'};
                 }
@@ -61,10 +55,8 @@ fuse-horizontal-navigation {
 
         /* Branch - When menu open */
         fuse-horizontal-navigation-branch-item {
-
             .fuse-horizontal-navigation-menu-active,
             .fuse-horizontal-navigation-menu-active-forced {
-
                 .fuse-horizontal-navigation-item-wrapper {
                     @apply bg-hover;
                 }
@@ -80,7 +72,6 @@ fuse-horizontal-navigation {
 
 /* Menu panel specific */
 .fuse-horizontal-navigation-menu-panel {
-
     .fuse-horizontal-navigation-menu-item {
         height: auto;
         min-height: 0;
@@ -109,13 +100,10 @@ fuse-horizontal-navigation {
 
 /* Navigation menu item common */
 .fuse-horizontal-navigation-menu-item {
-
     /* Basic - When item active (current link) */
     fuse-horizontal-navigation-basic-item {
-
         .fuse-horizontal-navigation-item-active,
         .fuse-horizontal-navigation-item-active-forced {
-
             .fuse-horizontal-navigation-item-title {
                 @apply text-primary #{'!important'};
             }
@@ -138,7 +126,6 @@ fuse-horizontal-navigation {
         width: 100%;
 
         &.fuse-horizontal-navigation-item-has-subtitle {
-
             .fuse-horizontal-navigation-item {
                 min-height: 56px;
             }
@@ -156,7 +143,6 @@ fuse-horizontal-navigation {
             text-decoration: none;
 
             .fuse-horizontal-navigation-item-title-wrapper {
-
                 .fuse-horizontal-navigation-item-subtitle {
                     font-size: 12px;
                 }

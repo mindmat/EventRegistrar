@@ -1,8 +1,4 @@
-export type FuseAlertAppearance =
-    | 'border'
-    | 'fill'
-    | 'outline'
-    | 'soft';
+export type FuseAlertAppearance = 'border' | 'fill' | 'outline' | 'soft';
 
 export type FuseAlertType =
     | 'primary'

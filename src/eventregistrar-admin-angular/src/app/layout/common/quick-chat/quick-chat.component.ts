@@ -1,26 +1,56 @@
-import { AfterViewInit, Component, ElementRef, HostBinding, HostListener, Inject, NgZone, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
 import { ScrollStrategy, ScrollStrategyOptions } from '@angular/cdk/overlay';
-import { Subject, takeUntil } from 'rxjs';
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { DOCUMENT, DatePipe, NgClass, NgTemplateOutlet } from '@angular/common';
+import {
+    AfterViewInit,
+    Component,
+    ElementRef,
+    HostBinding,
+    HostListener,
+    Inject,
+    NgZone,
+    OnDestroy,
+    OnInit,
+    Renderer2,
+    ViewChild,
+    ViewEncapsulation,
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { FuseScrollbarDirective } from '@fuse/directives/scrollbar';
 import { QuickChatService } from 'app/layout/common/quick-chat/quick-chat.service';
 import { Chat } from 'app/layout/common/quick-chat/quick-chat.types';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector     : 'quick-chat',
-    templateUrl  : './quick-chat.component.html',
-    styleUrls    : ['./quick-chat.component.scss'],
+    selector: 'quick-chat',
+    templateUrl: './quick-chat.component.html',
+    styleUrls: ['./quick-chat.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    exportAs     : 'quickChat'
+    exportAs: 'quickChat',
+    imports: [
+        NgClass,
+        MatIconModule,
+        MatButtonModule,
+        FuseScrollbarDirective,
+        NgTemplateOutlet,
+        MatFormFieldModule,
+        MatInputModule,
+        TextFieldModule,
+        DatePipe,
+    ],
 })
-export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
-{
+export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
     @ViewChild('messageInput') messageInput: ElementRef;
     chat: Chat;
     chats: Chat[];
     opened: boolean = false;
     selectedChat: Chat;
     private _mutationObserver: MutationObserver;
-    private _scrollStrategy: ScrollStrategy = this._scrollStrategyOptions.block();
+    private _scrollStrategy: ScrollStrategy =
+        this._scrollStrategyOptions.block();
     private _overlay: HTMLElement;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -34,9 +64,7 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
         private _ngZone: NgZone,
         private _quickChatService: QuickChatService,
         private _scrollStrategyOptions: ScrollStrategyOptions
-    )
-    {
-    }
+    ) {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Decorated methods
@@ -45,10 +73,9 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * Host binding for component classes
      */
-    @HostBinding('class') get classList(): any
-    {
+    @HostBinding('class') get classList(): any {
         return {
-            'quick-chat-opened': this.opened
+            'quick-chat-opened': this.opened,
         };
     }
 
@@ -59,13 +86,10 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
      */
     @HostListener('input')
     @HostListener('ngModelChange')
-    private _resizeMessageInput(): void
-    {
+    private _resizeMessageInput(): void {
         // This doesn't need to trigger Angular's change detection by itself
         this._ngZone.runOutsideAngular(() => {
-
             setTimeout(() => {
-
                 // Set the height to 'auto' so we can correctly read the scrollHeight
                 this.messageInput.nativeElement.style.height = 'auto';
 
@@ -82,8 +106,7 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
+    ngOnInit(): void {
         // Chat
         this._quickChatService.chat$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -109,8 +132,7 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * After view init
      */
-    ngAfterViewInit(): void
-    {
+    ngAfterViewInit(): void {
         // Fix for Firefox.
         //
         // Because 'position: sticky' doesn't work correctly inside a 'position: fixed' parent,
@@ -120,31 +142,38 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
         this._mutationObserver = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
                 const mutationTarget = mutation.target as HTMLElement;
-                if ( mutation.attributeName === 'class' )
-                {
-                    if ( mutationTarget.classList.contains('cdk-global-scrollblock') )
-                    {
+                if (mutation.attributeName === 'class') {
+                    if (
+                        mutationTarget.classList.contains(
+                            'cdk-global-scrollblock'
+                        )
+                    ) {
                         const top = parseInt(mutationTarget.style.top, 10);
-                        this._renderer2.setStyle(this._elementRef.nativeElement, 'margin-top', `${Math.abs(top)}px`);
-                    }
-                    else
-                    {
-                        this._renderer2.setStyle(this._elementRef.nativeElement, 'margin-top', null);
+                        this._renderer2.setStyle(
+                            this._elementRef.nativeElement,
+                            'margin-top',
+                            `${Math.abs(top)}px`
+                        );
+                    } else {
+                        this._renderer2.setStyle(
+                            this._elementRef.nativeElement,
+                            'margin-top',
+                            null
+                        );
                     }
                 }
             });
         });
         this._mutationObserver.observe(this._document.documentElement, {
-            attributes     : true,
-            attributeFilter: ['class']
+            attributes: true,
+            attributeFilter: ['class'],
         });
     }
 
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
+    ngOnDestroy(): void {
         // Disconnect the mutation observer
         this._mutationObserver.disconnect();
 
@@ -160,11 +189,9 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * Open the panel
      */
-    open(): void
-    {
+    open(): void {
         // Return if the panel has already opened
-        if ( this.opened )
-        {
+        if (this.opened) {
             return;
         }
 
@@ -175,11 +202,9 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * Close the panel
      */
-    close(): void
-    {
+    close(): void {
         // Return if the panel has already closed
-        if ( !this.opened )
-        {
+        if (!this.opened) {
             return;
         }
 
@@ -190,14 +215,10 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
     /**
      * Toggle the panel
      */
-    toggle(): void
-    {
-        if ( this.opened )
-        {
+    toggle(): void {
+        if (this.opened) {
             this.close();
-        }
-        else
-        {
+        } else {
             this.open();
         }
     }
@@ -207,8 +228,7 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
      *
      * @param id
      */
-    selectChat(id: string): void
-    {
+    selectChat(id: string): void {
         // Open the panel
         this._toggleOpened(true);
 
@@ -222,8 +242,7 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
      * @param index
      * @param item
      */
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 
@@ -236,8 +255,7 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
      *
      * @private
      */
-    private _showOverlay(): void
-    {
+    private _showOverlay(): void {
         // Try hiding the overlay in case there is one already opened
         this._hideOverlay();
 
@@ -245,8 +263,7 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
         this._overlay = this._renderer2.createElement('div');
 
         // Return if overlay couldn't be create for some reason
-        if ( !this._overlay )
-        {
+        if (!this._overlay) {
             return;
         }
 
@@ -254,7 +271,10 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
         this._overlay.classList.add('quick-chat-overlay');
 
         // Append the backdrop to the parent of the panel
-        this._renderer2.appendChild(this._elementRef.nativeElement.parentElement, this._overlay);
+        this._renderer2.appendChild(
+            this._elementRef.nativeElement.parentElement,
+            this._overlay
+        );
 
         // Enable block scroll strategy
         this._scrollStrategy.enable();
@@ -270,16 +290,13 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
      *
      * @private
      */
-    private _hideOverlay(): void
-    {
-        if ( !this._overlay )
-        {
+    private _hideOverlay(): void {
+        if (!this._overlay) {
             return;
         }
 
         // If the backdrop still exists...
-        if ( this._overlay )
-        {
+        if (this._overlay) {
             // Remove the backdrop
             this._overlay.parentNode.removeChild(this._overlay);
             this._overlay = null;
@@ -295,19 +312,16 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
      * @param open
      * @private
      */
-    private _toggleOpened(open: boolean): void
-    {
+    private _toggleOpened(open: boolean): void {
         // Set the opened
         this.opened = open;
 
         // If the panel opens, show the overlay
-        if ( open )
-        {
+        if (open) {
             this._showOverlay();
         }
         // Otherwise, hide the overlay
-        else
-        {
+        else {
             this._hideOverlay();
         }
     }

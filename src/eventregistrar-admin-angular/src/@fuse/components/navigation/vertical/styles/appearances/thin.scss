@@ -4,7 +4,6 @@
 }
 
 fuse-vertical-navigation {
-
     /* Thin appearance overrides */
     &.fuse-vertical-navigation-appearance-thin {
         width: var(--fuse-vertical-navigation-thin-width);
@@ -13,9 +12,10 @@ fuse-vertical-navigation {
 
         /* Left positioned */
         &.fuse-vertical-navigation-position-left {
-
             &.fuse-vertical-navigation-mode-side {
-                margin-left: calc(var(--fuse-vertical-navigation-thin-width) * -1);
+                margin-left: calc(
+                    var(--fuse-vertical-navigation-thin-width) * -1
+                );
             }
 
             &.fuse-vertical-navigation-opened {
@@ -25,9 +25,10 @@ fuse-vertical-navigation {
 
         /* Right positioned */
         &.fuse-vertical-navigation-position-right {
-
             &.fuse-vertical-navigation-mode-side {
-                margin-right: calc(var(--fuse-vertical-navigation-thin-width) * -1);
+                margin-right: calc(
+                    var(--fuse-vertical-navigation-thin-width) * -1
+                );
             }
 
             &.fuse-vertical-navigation-opened {
@@ -42,10 +43,8 @@ fuse-vertical-navigation {
 
         /* Wrapper */
         .fuse-vertical-navigation-wrapper {
-
             /* Content */
             .fuse-vertical-navigation-content {
-
                 > fuse-vertical-navigation-aside-item,
                 > fuse-vertical-navigation-basic-item {
                     flex-direction: column;
@@ -79,13 +78,12 @@ fuse-vertical-navigation {
                 }
 
                 > fuse-vertical-navigation-collapsable-item {
-                    display: none
+                    display: none;
                 }
 
                 > fuse-vertical-navigation-group-item {
-
                     > .fuse-vertical-navigation-item-wrapper {
-                        display: none
+                        display: none;
                     }
                 }
             }

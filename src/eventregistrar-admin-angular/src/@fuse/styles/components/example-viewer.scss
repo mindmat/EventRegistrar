@@ -6,7 +6,7 @@
     flex-direction: column;
     margin: 32px 0;
     overflow: hidden;
-    @apply rounded-2xl shadow bg-card;
+    @apply bg-card rounded-2xl shadow;
 
     .title {
         display: flex;
@@ -32,11 +32,8 @@
     }
 
     mat-tab-group {
-
         .mat-tab-body-content {
-
             .fuse-highlight {
-
                 pre {
                     margin: 0;
                     border-radius: 0;

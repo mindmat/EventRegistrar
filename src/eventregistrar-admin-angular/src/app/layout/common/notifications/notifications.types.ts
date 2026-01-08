@@ -1,5 +1,4 @@
-export interface Notification
-{
+export interface Notification {
     id: string;
     icon?: string;
     image?: string;

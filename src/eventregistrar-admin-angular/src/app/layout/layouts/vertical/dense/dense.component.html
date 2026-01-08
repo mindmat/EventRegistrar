@@ -8,39 +8,44 @@
     [mode]="isScreenSmall ? 'over' : 'side'"
     [name]="'mainNavigation'"
     [navigation]="navigation.default"
-    [opened]="!isScreenSmall">
+    [opened]="!isScreenSmall"
+>
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>
         <!-- Logo -->
-        <div class="flex items-center justify-center h-20">
-            <img
-                class="w-8"
-                src="assets/images/logo/logo.svg"
-                alt="Logo image">
+        <div class="flex h-20 items-center justify-center">
+            <img class="w-8" src="images/logo/logo.svg" alt="Logo image" />
         </div>
     </ng-container>
 </fuse-vertical-navigation>
 
 <!-- Wrapper -->
-<div class="flex flex-col flex-auto w-full min-w-0">
-
+<div class="flex w-full min-w-0 flex-auto flex-col">
     <!-- Header -->
-    <div class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
-        <div class="flex items-center pr-2 space-x-2">
+    <div
+        class="bg-card relative z-49 flex h-16 w-full flex-0 items-center px-4 shadow dark:border-b dark:bg-transparent dark:shadow-none md:px-6 print:hidden"
+    >
+        <div class="flex items-center space-x-2 pr-2">
             <!-- Navigation toggle button -->
-            <button mat-icon-button (click)="toggleNavigation('mainNavigation')">
-                <mat-icon [svgIcon]="'mat_outline:menu'"></mat-icon>
+            <button
+                mat-icon-button
+                (click)="toggleNavigation('mainNavigation')"
+            >
+                <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
             </button>
             <!-- Navigation appearance toggle button -->
             <button
                 class="hidden md:inline-flex"
                 mat-icon-button
-                (click)="toggleNavigationAppearance()">
-                <mat-icon [svgIcon]="'heroicons_outline:switch-horizontal'"></mat-icon>
+                (click)="toggleNavigationAppearance()"
+            >
+                <mat-icon
+                    [svgIcon]="'heroicons_outline:arrows-right-left'"
+                ></mat-icon>
             </button>
         </div>
         <!-- Components -->
-        <div class="flex items-center pl-2 ml-auto space-x-0.5 sm:space-x-2">
+        <div class="ml-auto flex items-center space-x-0.5 pl-2 sm:space-x-2">
             <languages></languages>
             <fuse-fullscreen class="hidden md:block"></fuse-fullscreen>
             <search [appearance]="'bar'"></search>
@@ -50,25 +55,33 @@
             <button
                 class="lg:hidden"
                 mat-icon-button
-                (click)="quickChat.toggle()">
-                <mat-icon [svgIcon]="'heroicons_outline:chat-alt-2'"></mat-icon>
+                (click)="quickChat.toggle()"
+            >
+                <mat-icon
+                    [svgIcon]="'heroicons_outline:chat-bubble-left-right'"
+                ></mat-icon>
             </button>
             <user></user>
         </div>
     </div>
 
     <!-- Content -->
-    <div class="flex flex-col flex-auto">
+    <div class="flex flex-auto flex-col">
         <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
              Otherwise, layout changes won't be registered and the view won't be updated! -->
-        <router-outlet *ngIf="true"></router-outlet>
+        @if (true) {
+            <router-outlet></router-outlet>
+        }
     </div>
 
     <!-- Footer -->
-    <div class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
-        <span class="font-medium text-secondary">Fuse &copy; {{currentYear}}</span>
+    <div
+        class="bg-card relative z-49 flex h-14 w-full flex-0 items-center justify-start border-t px-4 dark:bg-transparent md:px-6 print:hidden"
+    >
+        <span class="text-secondary font-medium"
+            >Fuse &copy; {{ currentYear }}</span
+        >
     </div>
-
 </div>
 
 <!-- Quick chat -->

@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
-import { assign, cloneDeep } from 'lodash-es';
 import { FuseMockApiService, FuseMockApiUtils } from '@fuse/lib/mock-api';
-import { boards as boardsData, cards as cardsData, labels as labelsData, lists as listsData, members as membersData } from 'app/mock-api/apps/scrumboard/data';
+import {
+    boards as boardsData,
+    cards as cardsData,
+    labels as labelsData,
+    lists as listsData,
+    members as membersData,
+} from 'app/mock-api/apps/scrumboard/data';
+import { assign, cloneDeep } from 'lodash-es';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class ScrumboardMockApi
-{
+@Injectable({ providedIn: 'root' })
+export class ScrumboardMockApi {
     // Private
     private _boards: any[] = boardsData;
     private _cards: any[] = cardsData;
@@ -18,8 +21,7 @@ export class ScrumboardMockApi
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService)
-    {
+    constructor(private _fuseMockApiService: FuseMockApiService) {
         // Register Mock API handlers
         this.registerHandlers();
     }
@@ -31,28 +33,27 @@ export class ScrumboardMockApi
     /**
      * Register Mock API handlers
      */
-    registerHandlers(): void
-    {
+    registerHandlers(): void {
         // -----------------------------------------------------------------------------------------------------
         // @ Boards - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onGet('api/apps/scrumboard/boards')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Clone the boards
                 let boards = cloneDeep(this._boards);
 
                 // Go through the boards and inject the members
-                boards = boards.map(board => ({
+                boards = boards.map((board) => ({
                     ...board,
-                    members: board.members.map(boardMember => this._members.find(member => boardMember === member.id))
+                    members: board.members.map((boardMember) =>
+                        this._members.find(
+                            (member) => boardMember === member.id
+                        )
+                    ),
                 }));
 
-                return [
-                    200,
-                    boards
-                ];
+                return [200, boards];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -60,38 +61,43 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onGet('api/apps/scrumboard/board')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the id
                 const id = request.params.get('id');
 
                 // Find the board
-                const board = this._boards.find(item => item.id === id);
+                const board = this._boards.find((item) => item.id === id);
 
                 // Attach the board lists
-                board.lists = this._lists.filter(item => item.boardId === id).sort((a, b) => a.position - b.position);
+                board.lists = this._lists
+                    .filter((item) => item.boardId === id)
+                    .sort((a, b) => a.position - b.position);
 
                 // Grab all cards that belong to this board and attach labels to them
-                let cards = this._cards.filter(item => item.boardId === id);
-                cards = cards.map(card => (
-                    {
-                        ...card,
-                        labels: card.labels.map(cardLabelId => this._labels.find(label => label.id === cardLabelId))
-                    }
-                ));
+                let cards = this._cards.filter((item) => item.boardId === id);
+                cards = cards.map((card) => ({
+                    ...card,
+                    labels: card.labels.map((cardLabelId) =>
+                        this._labels.find((label) => label.id === cardLabelId)
+                    ),
+                }));
 
                 // Attach the board cards into corresponding lists
                 board.lists.forEach((list, index, array) => {
-                    array[index].cards = cards.filter(item => item.boardId === id && item.listId === list.id).sort((a, b) => a.position - b.position);
+                    array[index].cards = cards
+                        .filter(
+                            (item) =>
+                                item.boardId === id && item.listId === list.id
+                        )
+                        .sort((a, b) => a.position - b.position);
                 });
 
                 // Attach the board labels
-                board.labels = this._labels.filter(item => item.boardId === id);
+                board.labels = this._labels.filter(
+                    (item) => item.boardId === id
+                );
 
-                return [
-                    200,
-                    cloneDeep(board)
-                ];
+                return [200, cloneDeep(board)];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -99,8 +105,7 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPost('api/apps/scrumboard/board/list')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the list
                 const newList = cloneDeep(request.body.list);
 
@@ -110,10 +115,7 @@ export class ScrumboardMockApi
                 // Store the new list
                 this._lists.push(newList);
 
-                return [
-                    200,
-                    newList
-                ];
+                return [200, newList];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -121,8 +123,7 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPatch('api/apps/scrumboard/board/list')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the list
                 const list = cloneDeep(request.body.list);
 
@@ -131,9 +132,7 @@ export class ScrumboardMockApi
 
                 // Find the list and update it
                 this._lists.forEach((item, index, lists) => {
-
-                    if ( item.id === list.id )
-                    {
+                    if (item.id === list.id) {
                         // Update the list
                         lists[index] = assign({}, lists[index], list);
 
@@ -142,10 +141,7 @@ export class ScrumboardMockApi
                     }
                 });
 
-                return [
-                    200,
-                    updatedList
-                ];
+                return [200, updatedList];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -153,8 +149,7 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPatch('api/apps/scrumboard/board/lists')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the lists
                 const lists = cloneDeep(request.body.lists);
 
@@ -163,9 +158,10 @@ export class ScrumboardMockApi
 
                 // Go through the lists
                 lists.forEach((item) => {
-
                     // Find the list
-                    const index = this._lists.findIndex(list => item.id === list.id);
+                    const index = this._lists.findIndex(
+                        (list) => item.id === list.id
+                    );
 
                     // Update the list
                     this._lists[index] = assign({}, this._lists[index], item);
@@ -174,10 +170,7 @@ export class ScrumboardMockApi
                     updatedLists.push(item);
                 });
 
-                return [
-                    200,
-                    updatedLists
-                ];
+                return [200, updatedLists];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -185,22 +178,18 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onDelete('api/apps/scrumboard/board/list')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the id
                 const id = request.params.get('id');
 
                 // Find the list and delete it
-                const index = this._lists.findIndex(item => item.id === id);
+                const index = this._lists.findIndex((item) => item.id === id);
                 this._lists.splice(index, 1);
 
                 // Filter out the cards that belonged to the list to delete them
-                this._cards = this._cards.filter(card => card.listId !== id);
+                this._cards = this._cards.filter((card) => card.listId !== id);
 
-                return [
-                    200,
-                    true
-                ];
+                return [200, true];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -208,8 +197,7 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPut('api/apps/scrumboard/board/card')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the card
                 const newCard = cloneDeep(request.body.card);
 
@@ -219,10 +207,7 @@ export class ScrumboardMockApi
                 // Unshift the new card
                 this._cards.push(newCard);
 
-                return [
-                    200,
-                    newCard
-                ];
+                return [200, newCard];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -230,8 +215,7 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPatch('api/apps/scrumboard/board/card')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the id and card
                 const id = request.body.id;
                 const card = cloneDeep(request.body.card);
@@ -240,13 +224,11 @@ export class ScrumboardMockApi
                 let updatedCard = null;
 
                 // Go through the labels and leave only ids of them
-                card.labels = card.labels.map(itemLabel => itemLabel.id);
+                card.labels = card.labels.map((itemLabel) => itemLabel.id);
 
                 // Find the card and update it
                 this._cards.forEach((item, index, cards) => {
-
-                    if ( item.id === id )
-                    {
+                    if (item.id === id) {
                         // Update the card
                         cards[index] = assign({}, cards[index], card);
 
@@ -256,12 +238,11 @@ export class ScrumboardMockApi
                 });
 
                 // Attach the labels of the card
-                updatedCard.labels = updatedCard.labels.map(cardLabelId => this._labels.find(label => label.id === cardLabelId));
+                updatedCard.labels = updatedCard.labels.map((cardLabelId) =>
+                    this._labels.find((label) => label.id === cardLabelId)
+                );
 
-                return [
-                    200,
-                    updatedCard
-                ];
+                return [200, updatedCard];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -269,8 +250,7 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPatch('api/apps/scrumboard/board/cards')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the cards
                 const cards = cloneDeep(request.body.cards);
 
@@ -279,27 +259,27 @@ export class ScrumboardMockApi
 
                 // Go through the cards
                 cards.forEach((item) => {
-
                     // Find the card
-                    const index = this._cards.findIndex(card => item.id === card.id);
+                    const index = this._cards.findIndex(
+                        (card) => item.id === card.id
+                    );
 
                     // Go through the labels and leave only ids of them
-                    item.labels = item.labels.map(itemLabel => itemLabel.id);
+                    item.labels = item.labels.map((itemLabel) => itemLabel.id);
 
                     // Update the card
                     this._cards[index] = assign({}, this._cards[index], item);
 
                     // Attach the labels of the card
-                    item.labels = item.labels.map(cardLabelId => this._labels.find(label => label.id === cardLabelId));
+                    item.labels = item.labels.map((cardLabelId) =>
+                        this._labels.find((label) => label.id === cardLabelId)
+                    );
 
                     // Store in the updated cards
                     updatedCards.push(item);
                 });
 
-                return [
-                    200,
-                    updatedCards
-                ];
+                return [200, updatedCards];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -307,19 +287,15 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onDelete('api/apps/scrumboard/board/card')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the id
                 const id = request.params.get('id');
 
                 // Find the card and delete it
-                const index = this._cards.findIndex(item => item.id === id);
+                const index = this._cards.findIndex((item) => item.id === id);
                 this._cards.splice(index, 1);
 
-                return [
-                    200,
-                    true
-                ];
+                return [200, true];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -327,26 +303,26 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPatch('api/apps/scrumboard/board/card/positions')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the cards
                 const cards = request.body.cards;
 
                 // Go through the cards
                 this._cards.forEach((card) => {
-
                     // Find this card's index within the cards array that comes with the request
                     // and assign that index as the new position number for the card
-                    card.position = cards.findIndex(item => item.id === card.id && item.listId === card.listId && item.boardId === card.boardId);
+                    card.position = cards.findIndex(
+                        (item) =>
+                            item.id === card.id &&
+                            item.listId === card.listId &&
+                            item.boardId === card.boardId
+                    );
                 });
 
                 // Clone the cards
                 const updatedCards = cloneDeep(this._cards);
 
-                return [
-                    200,
-                    updatedCards
-                ];
+                return [200, updatedCards];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -354,18 +330,16 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onGet('api/apps/scrumboard/board/labels')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the board id
                 const boardId = request.params.get('boardId');
 
                 // Filter the labels
-                const labels = this._labels.filter(item => item.boardId === boardId);
+                const labels = this._labels.filter(
+                    (item) => item.boardId === boardId
+                );
 
-                return [
-                    200,
-                    cloneDeep(labels)
-                ];
+                return [200, cloneDeep(labels)];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -373,8 +347,7 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPut('api/apps/scrumboard/board/label')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the label
                 const newLabel = cloneDeep(request.body.label);
 
@@ -384,10 +357,7 @@ export class ScrumboardMockApi
                 // Unshift the new label
                 this._labels.unshift(newLabel);
 
-                return [
-                    200,
-                    newLabel
-                ];
+                return [200, newLabel];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -395,8 +365,7 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPatch('api/apps/scrumboard/board/label')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the id and label
                 const id = request.body.id;
                 const label = cloneDeep(request.body.label);
@@ -406,9 +375,7 @@ export class ScrumboardMockApi
 
                 // Find the label and update it
                 this._labels.forEach((item, index, labels) => {
-
-                    if ( item.id === id )
-                    {
+                    if (item.id === id) {
                         // Update the label
                         labels[index] = assign({}, labels[index], label);
 
@@ -417,10 +384,7 @@ export class ScrumboardMockApi
                     }
                 });
 
-                return [
-                    200,
-                    updatedLabel
-                ];
+                return [200, updatedLabel];
             });
 
         // -----------------------------------------------------------------------------------------------------
@@ -428,27 +392,25 @@ export class ScrumboardMockApi
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onDelete('api/apps/scrumboard/board/label')
-            .reply(({request}) => {
-
+            .reply(({ request }) => {
                 // Get the id
                 const id = request.params.get('id');
 
                 // Find the label and delete it
-                const index = this._labels.findIndex(item => item.id === id);
+                const index = this._labels.findIndex((item) => item.id === id);
                 this._labels.splice(index, 1);
 
                 // Get the cards that have the label
-                const cardsWithLabel = this._cards.filter(card => card.labels.indexOf(id) > -1);
+                const cardsWithLabel = this._cards.filter(
+                    (card) => card.labels.indexOf(id) > -1
+                );
 
                 // Iterate through them and remove the label
                 cardsWithLabel.forEach((card) => {
                     card.tags.splice(card.tags.indexOf(id), 1);
                 });
 
-                return [
-                    200,
-                    true
-                ];
+                return [200, true];
             });
     }
 }

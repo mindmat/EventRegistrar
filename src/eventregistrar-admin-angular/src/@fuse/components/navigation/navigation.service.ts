@@ -1,20 +1,13 @@
 import { Injectable } from '@angular/core';
 import { FuseNavigationItem } from '@fuse/components/navigation/navigation.types';
 
-@Injectable({
-    providedIn: 'root'
-})
-export class FuseNavigationService
-{
+@Injectable({ providedIn: 'root' })
+export class FuseNavigationService {
     private _componentRegistry: Map<string, any> = new Map<string, any>();
-    private _navigationStore: Map<string, FuseNavigationItem[]> = new Map<string, any>();
-
-    /**
-     * Constructor
-     */
-    constructor()
-    {
-    }
+    private _navigationStore: Map<string, FuseNavigationItem[]> = new Map<
+        string,
+        any
+    >();
 
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
@@ -26,8 +19,7 @@ export class FuseNavigationService
      * @param name
      * @param component
      */
-    registerComponent(name: string, component: any): void
-    {
+    registerComponent(name: string, component: any): void {
         this._componentRegistry.set(name, component);
     }
 
@@ -36,8 +28,7 @@ export class FuseNavigationService
      *
      * @param name
      */
-    deregisterComponent(name: string): void
-    {
+    deregisterComponent(name: string): void {
         this._componentRegistry.delete(name);
     }
 
@@ -46,8 +37,7 @@ export class FuseNavigationService
      *
      * @param name
      */
-    getComponent<T>(name: string): T
-    {
+    getComponent<T>(name: string): T {
         return this._componentRegistry.get(name);
     }
 
@@ -57,8 +47,7 @@ export class FuseNavigationService
      * @param key
      * @param navigation
      */
-    storeNavigation(key: string, navigation: FuseNavigationItem[]): void
-    {
+    storeNavigation(key: string, navigation: FuseNavigationItem[]): void {
         // Add to the store
         this._navigationStore.set(key, navigation);
     }
@@ -68,8 +57,7 @@ export class FuseNavigationService
      *
      * @param key
      */
-    getNavigation(key: string): FuseNavigationItem[]
-    {
+    getNavigation(key: string): FuseNavigationItem[] {
         return this._navigationStore.get(key) ?? [];
     }
 
@@ -78,12 +66,12 @@ export class FuseNavigationService
      *
      * @param key
      */
-    deleteNavigation(key: string): void
-    {
+    deleteNavigation(key: string): void {
         // Check if the navigation exists
-        if ( !this._navigationStore.has(key) )
-        {
-            console.warn(`Navigation with the key '${key}' does not exist in the store.`);
+        if (!this._navigationStore.has(key)) {
+            console.warn(
+                `Navigation with the key '${key}' does not exist in the store.`
+            );
         }
 
         // Delete from the storage
@@ -97,20 +85,22 @@ export class FuseNavigationService
      * @param navigation
      * @param flatNavigation
      */
-    getFlatNavigation(navigation: FuseNavigationItem[], flatNavigation: FuseNavigationItem[] = []): FuseNavigationItem[]
-    {
-        for ( const item of navigation )
-        {
-            if ( item.type === 'basic' )
-            {
+    getFlatNavigation(
+        navigation: FuseNavigationItem[],
+        flatNavigation: FuseNavigationItem[] = []
+    ): FuseNavigationItem[] {
+        for (const item of navigation) {
+            if (item.type === 'basic') {
                 flatNavigation.push(item);
                 continue;
             }
 
-            if ( item.type === 'aside' || item.type === 'collapsable' || item.type === 'group' )
-            {
-                if ( item.children )
-                {
+            if (
+                item.type === 'aside' ||
+                item.type === 'collapsable' ||
+                item.type === 'group'
+            ) {
+                if (item.children) {
                     this.getFlatNavigation(item.children, flatNavigation);
                 }
             }
@@ -126,21 +116,19 @@ export class FuseNavigationService
      * @param id
      * @param navigation
      */
-    getItem(id: string, navigation: FuseNavigationItem[]): FuseNavigationItem | null
-    {
-        for ( const item of navigation )
-        {
-            if ( item.id === id )
-            {
+    getItem(
+        id: string,
+        navigation: FuseNavigationItem[]
+    ): FuseNavigationItem | null {
+        for (const item of navigation) {
+            if (item.id === id) {
                 return item;
             }
 
-            if ( item.children )
-            {
+            if (item.children) {
                 const childItem = this.getItem(id, item.children);
 
-                if ( childItem )
-                {
+                if (childItem) {
                     return childItem;
                 }
             }
@@ -161,21 +149,16 @@ export class FuseNavigationService
         id: string,
         navigation: FuseNavigationItem[],
         parent: FuseNavigationItem[] | FuseNavigationItem
-    ): FuseNavigationItem[] | FuseNavigationItem | null
-    {
-        for ( const item of navigation )
-        {
-            if ( item.id === id )
-            {
+    ): FuseNavigationItem[] | FuseNavigationItem | null {
+        for (const item of navigation) {
+            if (item.id === id) {
                 return parent;
             }
 
-            if ( item.children )
-            {
+            if (item.children) {
                 const childItem = this.getItemParent(id, item.children, item);
 
-                if ( childItem )
-                {
+                if (childItem) {
                     return childItem;
                 }
             }

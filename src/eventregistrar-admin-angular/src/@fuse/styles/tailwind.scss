@@ -3,7 +3,6 @@
 
 /* This injects additional styles into Tailwind's base styles layer. */
 @layer base {
-
     * {
         /* Text rendering */
         text-rendering: optimizeLegibility;
@@ -64,7 +63,9 @@
     }
 
     /* Set the background and foreground colors */
-    body, .dark, .light {
+    body,
+    .dark,
+    .light {
         @apply text-default bg-default #{'!important'};
     }
 
@@ -82,9 +83,7 @@
 
     /* Style scrollbars on platforms other than MacOS and iOS */
     @media only screen and (min-width: 960px) {
-
         body:not(.os-mac) {
-
             ::-webkit-scrollbar {
                 width: 8px;
                 height: 8px;
@@ -121,19 +120,20 @@
     }
 
     /* Set the foreground color for disabled elements */
-    [disabled] * {
+    [disabled] {
         @apply text-disabled #{'!important'};
     }
 
     /* Print styles */
     @media print {
-
         /* Make the base font size smaller for print so everything is scaled nicely */
         html {
             font-size: 12px !important;
         }
 
-        body, .dark, .light {
+        body,
+        .dark,
+        .light {
             background: none !important;
         }
     }
