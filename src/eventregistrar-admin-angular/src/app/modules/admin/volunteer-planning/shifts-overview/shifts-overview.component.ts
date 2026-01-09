@@ -137,9 +137,9 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     /**
      * Get array for helper column iteration
      */
-    getHelperColumns(): number[]
+    getHelperColumns(shiftGroup: ShiftGroup): number[]
     {
-        return Array.from({ length: this.maxHelpersNeeded }, (_, i) => i + 1);
+        return Array.from({ length: Math.max(...shiftGroup.shifts.map(s => s.helpersNeeded || 0), 0) }, (_, i) => i + 1);
     }
 
     /**

@@ -91,7 +91,7 @@
                                                 {{ 'Responsible' | translate }}
                                             </th>
                                             <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[180px] border-r border-gray-200 dark:border-gray-700 bg-green-100 dark:bg-green-900/40"
-                                                *ngFor="let helper of getHelperColumns()">
+                                                *ngFor="let helper of getHelperColumns(shiftGroup)">
                                                 {{ 'Helper' | translate }} {{helper}}
                                             </th>
                                             <th class="px-6 py-4 text-sm font-semibold text-secondary uppercase tracking-wider min-w-[100px]">
@@ -174,7 +174,7 @@
 
                                             <!-- Helpers -->
                                             <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700" [ngClass]="{'bg-green-100 dark:bg-green-950/70': i < shift.helpersNeeded}"
-                                                *ngFor="let helperIndex of getHelperColumns(); let i = index">
+                                                *ngFor="let helperIndex of getHelperColumns(shiftGroup); let i = index">
                                                 <div class="flex items-center justify-between" *ngIf="i < shift.helpersNeeded; else emptyHelper">
                                                     <div class="flex-1">
                                                         <ng-container *ngIf="shift.assignments && shift.assignments[i] && shift.assignments[i].registrationId; else noHelper">
