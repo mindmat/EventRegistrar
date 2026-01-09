@@ -301,7 +301,7 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
             const currentAssigned = this.getCurrentAssignedParticipant();
             if (currentAssigned)
             {
-                this.unassignParticipant(this.currentAssignment.shiftId, currentAssigned.registrationId);
+                this.unassignParticipant(this.currentAssignment.shiftId, currentAssigned.registrationId, this.currentAssignment.role === 'responsible');
             }
         }
         else
@@ -334,9 +334,9 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
     /**
      * Unassign participant
      */
-    unassignParticipant(shiftId: string, participantId: string): void
+    unassignParticipant(shiftId: string, participantId: string, fromResponsible: boolean = false): void
     {
-        this._volunteerPlanningService.unassignFromShift(shiftId, participantId)
+        this._volunteerPlanningService.unassignFromShift(shiftId, participantId, fromResponsible)
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(() =>
             {
@@ -380,7 +380,9 @@ export class ShiftsOverviewComponent implements OnInit, OnDestroy
         }
         else if (this.currentAssignment.role === 'helper' && this.currentAssignment.helperIndex !== undefined)
         {
-            const assignment = shift.assignments?.[this.currentAssignment.helperIndex];
+            // Get helper assignments (excluding responsible) to match what's displayed in the UI
+            const helperAssignments = shift.assignments?.filter(a => a.registrationId !== shift.responsibleRegistrationId) || [];
+            const assignment = helperAssignments[this.currentAssignment.helperIndex];
             if (assignment?.registrationId)
             {
                 return {

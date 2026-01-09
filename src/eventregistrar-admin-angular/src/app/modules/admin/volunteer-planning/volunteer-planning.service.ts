@@ -145,12 +145,13 @@ export class VolunteerPlanningService extends FetchService<ShiftGroup[]>
     /**
      * Unassign participant from shift
      */
-    unassignFromShift(shiftId: string, participantId: string): Observable<void>
+    unassignFromShift(shiftId: string, participantId: string, fromResponsible: boolean = false): Observable<void>
     {
         const command: UnassignFromShiftCommand = {
             eventId: this._eventService.selectedId,
             shiftId: shiftId,
-            registrationId: participantId
+            registrationId: participantId,
+            fromResponsible: fromResponsible
         };
         return this._api.unassignFromShift_Command(command);
     }
