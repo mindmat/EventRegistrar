@@ -32,7 +32,7 @@ export class AssignmentCandidateRegistrationComponent implements OnInit, OnChang
     // Active item id
     if ('candidate' in changes)
     {
-      this.openRegistrationAmount = this.payment.type == PaymentType.Incoming
+      this.openRegistrationAmount = this.payment.type === PaymentType.Incoming
         ? Math.max(0, this.candidate.price - this.candidate.amountPaid)
         : Math.max(0, this.candidate.amountPaid);
       this.maxAmountToAssign = Math.min(Math.max(0, this.payment.openAmount), this.openRegistrationAmount);
