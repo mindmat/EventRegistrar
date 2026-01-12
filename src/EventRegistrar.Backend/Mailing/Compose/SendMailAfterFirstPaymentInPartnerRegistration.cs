@@ -14,7 +14,8 @@ public class
                          {
                              EventId = e.EventId.Value,
                              MailType = MailType.PartnerRegistrationFirstPaid,
-                             RegistrationId = e.RegistrationId1
+                             RegistrationId = e.RegistrationId1,
+                             AllowDuplicate = true // still send mail if second registration is only partially paid
                          };
         }
     }
