@@ -87,36 +87,35 @@ public class StatisticsQueryHandler(IQueryable<StatisticSnapshot> statisticSnaps
             queryable = queryable.Where(ss => ss.CreatedAt <= query.ToDate.Value);
         }
 
-        var snapshots = await queryable
-                              .OrderByDescending(ss => ss.CreatedAt)
-                              .Take(query.MaxResults)
-                              .Select(ss => new
-                                            {
-                                                ss.Id,
-                                                StatisticName = ss.Key,
-                                                ss.EventId,
-                                                EventName = ss.Event != null ? ss.Event.Name : null,
-                                                ss.CreatedAt,
-                                                ss.Value
-                                            })
-                              .ToListAsync(cancellationToken);
+        var snapshots = await queryable.OrderByDescending(ss => ss.CreatedAt)
+                                       .Take(query.MaxResults)
+                                       .Select(sts => new
+                                                      {
+                                                          sts.Id,
+                                                          StatisticName = sts.Key,
+                                                          sts.EventId,
+                                                          EventName = sts.Event != null ? sts.Event.Name : null,
+                                                          sts.CreatedAt,
+                                                          sts.Value
+                                                      })
+                                       .ToListAsync(cancellationToken);
 
-        var results = snapshots.Select(ss =>
+        var results = snapshots.Select(sts =>
                                {
                                    // Get metadata from calculator
-                                   calculatorLookup.TryGetValue(ss.StatisticName, out var calculator);
+                                   calculatorLookup.TryGetValue(sts.StatisticName, out var calculator);
 
                                    return new StatisticSnapshotDisplayItem
                                           {
-                                              Id = ss.Id,
-                                              StatisticName = ss.StatisticName,
-                                              DisplayName = calculator?.DisplayName ?? ss.StatisticName,
+                                              Id = sts.Id,
+                                              StatisticName = sts.StatisticName,
+                                              DisplayName = calculator?.DisplayName ?? sts.StatisticName,
                                               Category = calculator?.Category ?? "Unknown",
-                                              EventId = ss.EventId,
-                                              EventName = ss.EventName,
-                                              CreatedAt = ss.CreatedAt,
-                                              Value = ss.Value,
-                                              Unit = calculator?.GetUnit()
+                                              EventId = sts.EventId,
+                                              EventName = sts.EventName,
+                                              CreatedAt = sts.CreatedAt,
+                                              Value = sts.Value,
+                                              Unit = calculator?.Unit
                                           };
                                })
                                .ToList();
