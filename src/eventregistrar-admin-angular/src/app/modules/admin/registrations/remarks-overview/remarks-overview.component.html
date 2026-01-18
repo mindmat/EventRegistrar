@@ -18,12 +18,25 @@
     <!-- Unprocessed -->
     <div class="flex min-w-0 flex-row items-baseline gap-2 m-4">
         <div class="text-xl font-bold tracking-tight leading-none">{{ 'RemarksUnprocessed' | translate }}</div>
-        <div class="mt-1.5 text-lg text-secondary">({{ remarksUnprocessed.length }})</div>
+        <div class="mt-1.5 text-lg text-secondary">({{ filteredRemarksUnprocessed.length }} / {{ remarksUnprocessed.length }})</div>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-10">
+    <!-- Section Filter -->
+    <div class="mx-4 mb-2" *ngIf="sectionTags.length > 0">
+        <div class="text-sm font-medium text-secondary mb-2">{{ 'FilterBySection' | translate }}:</div>
+        <mat-chip-listbox [multiple]="true" [(ngModel)]="selectedSectionIds" (ngModelChange)="onTagsSelectionChange($event)">
+            <mat-chip-option [value]="''" [selected]="selectedSectionIds.length === 0" (click)="clearSectionFilter()" class="text-sm">
+                {{ 'All' | translate }} ({{ remarksUnprocessed.length }})
+            </mat-chip-option>
+            <mat-chip-option *ngFor="let tag of sectionTags" [value]="tag.id" class="text-sm">
+                {{ tag.name }} ({{ tag.count }})
+            </mat-chip-option>
+        </mat-chip-listbox>
+    </div>
 
-        <ng-container *ngFor="let remark of remarksUnprocessed">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 m-4 sm:mt-4">
+
+        <ng-container *ngFor="let remark of filteredRemarksUnprocessed">
             <!-- Match -->
             <ng-container *ngTemplateOutlet="remarktemplate; context: {$implicit: remark}"></ng-container>
         </ng-container>

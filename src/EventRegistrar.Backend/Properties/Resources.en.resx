@@ -441,6 +441,9 @@
   <data name="FeedbackTitle" xml:space="preserve">
     <value>Send feedback</value>
   </data>
+  <data name="FilterBySection" xml:space="preserve">
+    <value>Filter by area</value>
+  </data>
   <data name="FindPartnerOf" xml:space="preserve">
     <value>Find partner of {{name}}</value>
   </data>

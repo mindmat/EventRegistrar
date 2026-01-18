@@ -1308,6 +1308,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Nach Bereich filtern.
+        /// </summary>
+        internal static string FilterBySection {
+            get {
+                return ResourceManager.GetString("FilterBySection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Partner für {{name}} finden.
         /// </summary>
         internal static string FindPartnerOf {

@@ -52,7 +52,7 @@ import { SearchRegistrationComponent } from './modules/admin/registrations/searc
 import { SettlePaymentsComponent } from './modules/admin/accounting/settle-payments/settle-payments.component';
 import { SettlePaymentComponent } from './modules/admin/accounting/settle-payment/settle-payment.component';
 import { AssignmentCandidateRegistrationComponent } from './modules/admin/accounting/settle-payment/assignment-candidate-registration/assignment-candidate-registration.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslationLoaderService } from './core/i18n/translation-loader.service';
 import { MissingTranslationService } from './core/i18n/missing-translation.service';
@@ -82,6 +82,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, MatOptionModule } from '@angular/material/core';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SharedModule } from './shared/shared.module';
@@ -279,6 +280,7 @@ export const DE_FORMATS_TIME = {
         }),
 
         CommonModule,
+        FormsModule,
         ReactiveFormsModule,
 
         DragDropModule,
@@ -287,6 +289,7 @@ export const DE_FORMATS_TIME = {
         MatIconModule,
         MatCheckboxModule,
         MatButtonModule,
+        MatChipsModule,
         MatSlideToggleModule,
         MatInputModule,
         MatLuxonDateModule,
