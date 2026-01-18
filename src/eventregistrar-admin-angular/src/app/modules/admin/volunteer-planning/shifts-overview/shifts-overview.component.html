@@ -154,13 +154,21 @@
                                             </td>
 
                                             <!-- Responsible -->
-                                            <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700 bg-purple-100 dark:bg-purple-950/70">
+                                            <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700" [ngClass]="{
+                                                    'bg-purple-100 dark:bg-purple-950/70': !shift.isParticipantResponsibleCancelled,
+                                                    'bg-red-100 dark:bg-red-950/70 border-2 border-red-400 dark:border-red-600': shift.isParticipantResponsibleCancelled
+                                                }">
                                                 <div class="flex items-center justify-between">
                                                     <div class="flex-1">
                                                         <ng-container *ngIf="shift.responsibleRegistrationId; else noResponsible">
                                                             <a [routerLink]="_navigatorService.getRegistrationUrl(shift.responsibleRegistrationId)" class="hover:underline cursor-pointer block">
-                                                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                <div class="text-sm font-medium" [ngClass]="{
+                                                                        'text-gray-900 dark:text-gray-100': !shift.isParticipantResponsibleCancelled,
+                                                                        'text-red-800 dark:text-red-200 line-through': shift.isParticipantResponsibleCancelled
+                                                                    }">
                                                                     {{ shift.participantResponsible }}
+                                                                    <span *ngIf="shift.isParticipantResponsibleCancelled"
+                                                                        class="text-xs font-bold text-red-600 dark:text-red-400 ml-2">(CANCELLED)</span>
                                                                 </div>
                                                                 <div class="text-sm text-secondary" *ngIf="shift.responsibleEmail">
                                                                     {{ shift.responsibleEmail }}
@@ -179,14 +187,21 @@
                                             </td>
 
                                             <!-- Helpers -->
-                                            <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700" [ngClass]="{'bg-green-100 dark:bg-green-950/70': i < shift.helpersNeeded}"
-                                                *ngFor="let helperIndex of getHelperColumns(shiftGroup); let i = index">
+                                            <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700" [ngClass]="{
+                                                    'bg-green-100 dark:bg-green-950/70': i < shift.helpersNeeded && (!shift.assignments || !shift.assignments[i] || !shift.assignments[i].isRegistrationCancelled),
+                                                    'bg-red-100 dark:bg-red-950/70 border-2 border-red-400 dark:border-red-600': i < shift.helpersNeeded && shift.assignments && shift.assignments[i] && shift.assignments[i].isRegistrationCancelled
+                                                }" *ngFor="let helperIndex of getHelperColumns(shiftGroup); let i = index">
                                                 <div class="flex items-center justify-between" *ngIf="i < shift.helpersNeeded; else emptyHelper">
                                                     <div class="flex-1">
                                                         <ng-container *ngIf="shift.assignments && shift.assignments[i] && shift.assignments[i].registrationId; else noHelper">
                                                             <a [routerLink]="_navigatorService.getRegistrationUrl(shift.assignments[i].registrationId)" class="hover:underline cursor-pointer block">
-                                                                <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
+                                                                <div class="text-sm font-medium" [ngClass]="{
+                                                                        'text-gray-900 dark:text-gray-100': !shift.assignments[i].isRegistrationCancelled,
+                                                                        'text-red-800 dark:text-red-200 line-through': shift.assignments[i].isRegistrationCancelled
+                                                                    }">
                                                                     {{ shift.assignments[i].participant }}
+                                                                    <span *ngIf="shift.assignments[i].isRegistrationCancelled"
+                                                                        class="text-xs font-bold text-red-600 dark:text-red-400 ml-2">(CANCELLED)</span>
                                                                 </div>
                                                                 <div class="text-sm text-secondary" *ngIf="shift.assignments[i].email">
                                                                     {{shift.assignments[i].email}}
