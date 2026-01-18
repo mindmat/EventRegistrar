@@ -161,7 +161,7 @@
                                     </ng-container>
                                     <!-- context menu -->
                                     <div class="flex items-center ml-auto">
-                                        <div class="flex flex-wrap max-w-[140px] -my-2">
+                                        <div class="flex flex-wrap max-w-[140px]">
                                             <button *ngFor="let ics of doubleRegistrable.ics" class="-mr-2" mat-icon-button
                                                 (click)="changeRegistrableIcs(ics.id, doubleRegistrable.id, doubleRegistrable.name)" matTooltip="{{ics.title}} - {{ics.start| date: 'EEEEEE HH:mm' }}">
                                                 <mat-icon class="icon-size-5" [svgIcon]="'heroicons_outline:calendar'"></mat-icon>

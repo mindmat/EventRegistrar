@@ -131,6 +131,11 @@ export class RegistrationComponent implements OnInit
       this.registrationService.createAutoMail(this.registration.id, mailTypeItem.type)
         .subscribe();
     }
+    else if (mailTypeItem.bulkMailKey)
+    {
+      this.registrationService.createBulkMail(this.registration.id, mailTypeItem.bulkMailKey)
+        .subscribe();
+    }
   }
 
   viewMail(mailId: string): void
