@@ -20,6 +20,7 @@ using EventRegistrar.Backend.Infrastructure.ReadableIds;
 using EventRegistrar.Backend.Infrastructure.ServiceBus;
 using EventRegistrar.Backend.Mailing.Templates.Validation;
 using EventRegistrar.Backend.Payments.Files;
+using EventRegistrar.Backend.Statistics;
 
 using Microsoft.ApplicationInsights.DependencyCollector;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -147,6 +148,7 @@ container.Register(() => container.GetInstance<IAuthenticatedUserProvider>()
                                   .GetAuthenticatedUser());
 container.Collection.Register(typeof(IReadModelCalculator), assemblies);
 container.Collection.Register(typeof(IMenuNodeCalculator), assemblies);
+container.Collection.Register(typeof(IStatisticCalculator), assemblies);
 container.Register<ChangeTrigger>();
 
 container.Register<IEventAcronymResolver, EventAcronymResolver>();
