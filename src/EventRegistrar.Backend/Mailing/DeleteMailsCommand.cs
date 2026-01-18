@@ -1,5 +1,4 @@
 ﻿using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
-using EventRegistrar.Backend.Infrastructure.DomainEvents;
 using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.Mailing;
@@ -11,8 +10,7 @@ public class DeleteMailsCommand : IRequest, IEventBoundRequest
 }
 
 public class DeleteMailsCommandHandler(IRepository<Mail> mails,
-                                       ChangeTrigger changeTrigger,
-                                       IEventBus eventBus)
+                                       ChangeTrigger changeTrigger)
     : IRequestHandler<DeleteMailsCommand>
 {
     public async Task Handle(DeleteMailsCommand command, CancellationToken cancellationToken)

@@ -13,6 +13,7 @@ public class UpdateAutoMailConfigurationCommand : IRequest, IEventBoundRequest
     public bool PartnerRegistrationPossible { get; set; }
     public bool SendRegistrationReceivedMail { get; set; }
     public IEnumerable<string>? AvailableLanguages { get; set; }
+    public string? FallbackLanguage { get; set; }
     public MailSender? MailSender { get; set; }
     public MailSenderTokenKey? MailSenderTokenKey { get; set; }
 
@@ -41,7 +42,12 @@ public class UpdateAutoMailConfigurationCommandHandler(ConfigurationRegistry con
 
         if (command.AvailableLanguages?.Any() == true)
         {
-            config.AvailableLanguages = command.AvailableLanguages.OrderBy(lng => lng);
+            config.AvailableLanguages = command.AvailableLanguages.OrderBy(lng => lng).ToList();
+            config.FallbackLanguage = command.FallbackLanguage ?? config.FallbackLanguage;
+            if (config.FallbackLanguage != null && !config.AvailableLanguages.Contains(config.FallbackLanguage))
+            {
+                config.FallbackLanguage = config.AvailableLanguages.FirstOrDefault();
+            }
         }
 
         if (command.MailSender != null)
