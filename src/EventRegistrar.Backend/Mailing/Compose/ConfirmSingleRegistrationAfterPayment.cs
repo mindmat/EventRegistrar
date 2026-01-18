@@ -14,7 +14,8 @@ public class ConfirmSingleRegistrationAfterPayment : IEventToCommandTranslation<
                              EventId = e.EventId.Value,
                              MailType = MailType.SingleRegistrationFullyPaid,
                              RegistrationId = e.RegistrationId,
-                             Withhold = e.WillPayAtCheckin
+                             Withhold = e.WillPayAtCheckin,
+                             AllowDuplicate = true
                          };
         }
     }

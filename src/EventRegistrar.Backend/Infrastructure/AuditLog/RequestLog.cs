@@ -15,7 +15,8 @@ public class RequestLog
     public long ExecutionTimeInMilliseconds { get; set; }
 }
 
-public class RequestLogMap : IEntityTypeConfiguration<RequestLog> {
+public class RequestLogMap : IEntityTypeConfiguration<RequestLog>
+{
     public void Configure(EntityTypeBuilder<RequestLog> builder)
     {
         builder.ToTable(nameof(RequestLog));
@@ -41,5 +42,7 @@ public class RequestLogMap : IEntityTypeConfiguration<RequestLog> {
 
         builder.Property(req => req.RequestType)
                .HasMaxLength(500);
+
+        builder.HasIndex(req => new { req.EventId, req.RequestType });
     }
 }
