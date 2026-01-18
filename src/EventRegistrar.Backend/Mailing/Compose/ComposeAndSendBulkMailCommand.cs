@@ -1,5 +1,5 @@
 ﻿using EventRegistrar.Backend.Infrastructure;
-using EventRegistrar.Backend.Infrastructure.ServiceBus;
+using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
 using EventRegistrar.Backend.Mailing.Bulk;
 using EventRegistrar.Backend.Mailing.Send;
 using EventRegistrar.Backend.Registrations;
@@ -25,7 +25,7 @@ public class ComposeAndSendBulkMailCommandHandler(IQueryable<BulkMailTemplate> t
                                                   IRepository<MailToRegistration> mailsToRegistrations,
                                                   MailComposer mailComposer,
                                                   MailConfiguration configuration,
-                                                  CommandQueue commandQueue,
+                                                  ChangeTrigger changeTrigger,
                                                   ILogger log,
                                                   IDateTimeProvider dateTimeProvider)
     : IRequestHandler<ComposeAndSendBulkMailCommand>
@@ -150,7 +150,10 @@ public class ComposeAndSendBulkMailCommandHandler(IQueryable<BulkMailTemplate> t
         if (!command.Withhold)
         {
             mail.Sent = dateTimeProvider.Now;
-            commandQueue.EnqueueCommand(sendMailCommand);
+            changeTrigger.EnqueueCommand(sendMailCommand);
         }
+
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(command.RegistrationId, command.EventId);
+        changeTrigger.TriggerUpdate<PendingMailsCalculator>(null, command.EventId);
     }
 }
