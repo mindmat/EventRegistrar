@@ -1809,6 +1809,102 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    collectStatistics_Command(collectStatisticsCommand: CollectStatisticsCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/CollectStatisticsCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(collectStatisticsCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCollectStatistics_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCollectStatistics_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processCollectStatistics_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    collectStatisticsForCalculator_Command(collectStatisticsForCalculatorCommand: CollectStatisticsForCalculatorCommand | undefined): Observable<void> {
+        let url_ = this.baseUrl + "/api/CollectStatisticsForCalculatorCommand";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(collectStatisticsForCalculatorCommand);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processCollectStatisticsForCalculator_Command(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processCollectStatisticsForCalculator_Command(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<void>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<void>;
+        }));
+    }
+
+    protected processCollectStatisticsForCalculator_Command(response: HttpResponseBase): Observable<void> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return _observableOf(null as any);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     composeAndSendAutoMail_Command(composeAndSendAutoMailCommand: ComposeAndSendAutoMailCommand | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/ComposeAndSendAutoMailCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -7911,6 +8007,57 @@ export class Api {
         return _observableOf(null as any);
     }
 
+    statistics_Query(statisticsQuery: StatisticsQuery | undefined): Observable<StatisticSnapshotDisplayItem[]> {
+        let url_ = this.baseUrl + "/api/StatisticsQuery";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(statisticsQuery);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processStatistics_Query(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processStatistics_Query(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<StatisticSnapshotDisplayItem[]>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<StatisticSnapshotDisplayItem[]>;
+        }));
+    }
+
+    protected processStatistics_Query(response: HttpResponseBase): Observable<StatisticSnapshotDisplayItem[]> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as StatisticSnapshotDisplayItem[];
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     swapFirstLastName_Command(swapFirstLastNameCommand: SwapFirstLastNameCommand | undefined): Observable<void> {
         let url_ = this.baseUrl + "/api/SwapFirstLastNameCommand";
         url_ = url_.replace(/[?&]$/, "");
@@ -9754,6 +9901,14 @@ export interface CheckRegistrationAfterPaymentCommand {
     registrationId?: string;
 }
 
+export interface CollectStatisticsCommand {
+}
+
+export interface CollectStatisticsForCalculatorCommand {
+    calculatorKey?: string;
+    eventIds?: string[];
+}
+
 export interface ComposeAndSendAutoMailCommand {
     eventId?: string;
     allowDuplicate?: boolean;
@@ -10361,6 +10516,7 @@ export enum MenuNodeKey {
     BulkMailTemplates = 24,
     Forms = 25,
     Pricing = 26,
+    ShiftsOverview = 27,
 }
 
 export enum MenuNodeStyle {
@@ -11462,6 +11618,7 @@ export interface ShiftDisplayItem {
     responsibleRegistrationId?: string | null;
     participantResponsible?: string | null;
     responsibleEmail?: string | null;
+    isParticipantResponsibleCancelled?: boolean;
     shiftPreferenceRegistrableId?: string | null;
     shiftPreferenceRegistrableName?: string | null;
     shiftPreferenceRegistrableNameSecondary?: string | null;
@@ -11473,6 +11630,7 @@ export interface ShiftAssignmentDisplayItem {
     registrationId?: string;
     participant?: string | null;
     email?: string | null;
+    isRegistrationCancelled?: boolean;
 }
 
 export interface ShiftsOverviewQuery {
@@ -11522,6 +11680,28 @@ export interface StartProcessAllPendingRawRegistrationsCommand {
 export interface StartUpdateReadModelsOfEventCommand {
     eventId?: string | null;
     queryNames?: string[] | null;
+}
+
+export interface StatisticSnapshotDisplayItem {
+    id?: string;
+    statisticName?: string;
+    displayName?: string;
+    category?: string;
+    eventId?: string | null;
+    eventName?: string | null;
+    createdAt?: Date;
+    value?: number;
+    unit?: string | null;
+}
+
+export interface StatisticsQuery {
+    eventId?: string | null;
+    category?: string | null;
+    statisticName?: string | null;
+    fromDate?: Date | null;
+    toDate?: Date | null;
+    includeGlobal?: boolean;
+    maxResults?: number;
 }
 
 export interface SwapFirstLastNameCommand {
@@ -11631,6 +11811,7 @@ export interface UpdateAutoMailConfigurationCommand {
     partnerRegistrationPossible?: boolean;
     sendRegistrationReceivedMail?: boolean;
     availableLanguages?: string[] | null;
+    fallbackLanguage?: string | null;
     mailSender?: MailSender | null;
     mailSenderTokenKey?: MailSenderTokenKey | null;
     smtpHost?: string | null;

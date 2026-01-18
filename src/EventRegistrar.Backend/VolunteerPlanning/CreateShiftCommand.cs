@@ -26,6 +26,6 @@ public class CreateShiftCommandHandler(IRepository<Shift> shifts, ChangeTrigger 
                                               HelpersNeeded = 1
                                           }, cancellationToken);
 
-        changeTrigger.QueryChanged<ShiftsOverviewQuery>(command.EventId);
+        changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
     }
 }

@@ -44,6 +44,6 @@ public class AssignToShiftCommandHandler(IRepository<Shift> shifts,
                                          });
         }
 
-        changeTrigger.QueryChanged<ShiftsOverviewQuery>(command.EventId);
+        changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
     }
 }

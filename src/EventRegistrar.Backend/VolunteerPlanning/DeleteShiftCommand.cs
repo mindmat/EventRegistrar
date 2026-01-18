@@ -18,6 +18,6 @@ public class DeleteShiftCommandHandler(IRepository<Shift> shifts, ChangeTrigger 
                                             cancellationToken);
 
         shifts.Remove(shift);
-        changeTrigger.QueryChanged<ShiftsOverviewQuery>(command.EventId);
+        changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
     }
 }

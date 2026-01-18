@@ -40,6 +40,7 @@ public enum MenuNodeKey
     BulkMailTemplates = 24,
     Forms = 25,
     Pricing = 26,
+    ShiftsOverview = 27,
 }
 
 public enum MenuNodeStyle

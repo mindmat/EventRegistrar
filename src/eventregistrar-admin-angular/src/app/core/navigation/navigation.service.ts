@@ -143,6 +143,7 @@ export class NavigationService
                                     type: 'basic',
                                     icon: 'mat_outline:list',
                                     link: `/${e.acronym}/volunteer-planning`,
+                                    badge: this.getBadge(nodes, MenuNodeKey.ShiftsOverview)
                                 },
                             ]
                         },

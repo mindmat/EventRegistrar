@@ -31,6 +31,6 @@ public class UpdateShiftCommandHandler(IRepository<Shift> shifts, ChangeTrigger 
         shift.RegistrableId_ShiftPreference = command.RegistrableId_ShiftPreference;
         shift.RegistrationId_Responsible = command.RegistrationId_Responsible;
 
-        changeTrigger.QueryChanged<ShiftsOverviewQuery>(command.EventId);
+        changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
     }
 }

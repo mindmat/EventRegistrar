@@ -1070,6 +1070,56 @@
                 }
             }
         },
+        "/api/CollectStatisticsCommand": {
+            "post": {
+                "tags": [
+                    "CollectStatistics"
+                ],
+                "operationId": "CollectStatistics_Command",
+                "requestBody": {
+                    "x-name": "CollectStatisticsCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CollectStatisticsCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/CollectStatisticsForCalculatorCommand": {
+            "post": {
+                "tags": [
+                    "CollectStatisticsForCalculator"
+                ],
+                "operationId": "CollectStatisticsForCalculator_Command",
+                "requestBody": {
+                    "x-name": "CollectStatisticsForCalculatorCommand",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CollectStatisticsForCalculatorCommand"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "204": {
+                        "description": ""
+                    }
+                }
+            }
+        },
         "/api/ComposeAndSendAutoMailCommand": {
             "post": {
                 "tags": [
@@ -4685,6 +4735,41 @@
                 }
             }
         },
+        "/api/StatisticsQuery": {
+            "post": {
+                "tags": [
+                    "Statistics"
+                ],
+                "operationId": "Statistics_Query",
+                "requestBody": {
+                    "x-name": "StatisticsQuery",
+                    "description": "",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/StatisticsQuery"
+                            }
+                        }
+                    },
+                    "x-position": 1
+                },
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/StatisticSnapshotDisplayItem"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/SwapFirstLastNameCommand": {
             "post": {
                 "tags": [
@@ -6870,6 +6955,26 @@
                     }
                 }
             },
+            "CollectStatisticsCommand": {
+                "type": "object",
+                "additionalProperties": false
+            },
+            "CollectStatisticsForCalculatorCommand": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "calculatorKey": {
+                        "type": "string"
+                    },
+                    "eventIds": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "guid"
+                        }
+                    }
+                }
+            },
             "ComposeAndSendAutoMailCommand": {
                 "type": "object",
                 "additionalProperties": false,
@@ -8668,7 +8773,8 @@
                     "MailTemplates",
                     "BulkMailTemplates",
                     "Forms",
-                    "Pricing"
+                    "Pricing",
+                    "ShiftsOverview"
                 ],
                 "enum": [
                     1,
@@ -8691,7 +8797,8 @@
                     23,
                     24,
                     25,
-                    26
+                    26,
+                    27
                 ]
             },
             "MenuNodeStyle": {
@@ -12266,6 +12373,9 @@
                         "type": "string",
                         "nullable": true
                     },
+                    "isParticipantResponsibleCancelled": {
+                        "type": "boolean"
+                    },
                     "shiftPreferenceRegistrableId": {
                         "type": "string",
                         "format": "guid",
@@ -12306,6 +12416,9 @@
                     "email": {
                         "type": "string",
                         "nullable": true
+                    },
+                    "isRegistrationCancelled": {
+                        "type": "boolean"
                     }
                 }
             },
@@ -12449,6 +12562,82 @@
                         "items": {
                             "type": "string"
                         }
+                    }
+                }
+            },
+            "StatisticSnapshotDisplayItem": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "statisticName": {
+                        "type": "string"
+                    },
+                    "displayName": {
+                        "type": "string"
+                    },
+                    "category": {
+                        "type": "string"
+                    },
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid",
+                        "nullable": true
+                    },
+                    "eventName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "value": {
+                        "type": "number",
+                        "format": "decimal"
+                    },
+                    "unit": {
+                        "type": "string",
+                        "nullable": true
+                    }
+                }
+            },
+            "StatisticsQuery": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "eventId": {
+                        "type": "string",
+                        "format": "guid",
+                        "nullable": true
+                    },
+                    "category": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "statisticName": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "fromDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "toDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "includeGlobal": {
+                        "type": "boolean"
+                    },
+                    "maxResults": {
+                        "type": "integer",
+                        "format": "int32"
                     }
                 }
             },
@@ -12785,6 +12974,10 @@
                         "items": {
                             "type": "string"
                         }
+                    },
+                    "fallbackLanguage": {
+                        "type": "string",
+                        "nullable": true
                     },
                     "mailSender": {
                         "nullable": true,

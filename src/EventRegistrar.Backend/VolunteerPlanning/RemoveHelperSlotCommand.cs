@@ -34,6 +34,6 @@ public class RemoveHelperSlotCommandHandler(IRepository<Shift> shifts,
 
         shift.HelpersNeeded--;
 
-        changeTrigger.QueryChanged<ShiftsOverviewQuery>(command.EventId);
+        changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
     }
 }

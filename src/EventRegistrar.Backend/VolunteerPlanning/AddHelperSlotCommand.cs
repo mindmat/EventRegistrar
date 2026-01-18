@@ -19,6 +19,6 @@ public class AddHelperSlotCommandHandler(IRepository<Shift> shifts,
                                 .FirstAsync(cancellationToken);
 
         shift.HelpersNeeded++;
-        changeTrigger.QueryChanged<ShiftsOverviewQuery>(command.EventId);
+        changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
     }
 }

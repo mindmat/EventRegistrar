@@ -26,7 +26,7 @@ public class UnassignFromShiftCommandHandler(IRepository<Shift> shifts,
         {
             // Remove as responsible person
             shift.RegistrationId_Responsible = null;
-            changeTrigger.QueryChanged<ShiftsOverviewQuery>(command.EventId);
+            changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
         }
         else
         {
@@ -35,7 +35,7 @@ public class UnassignFromShiftCommandHandler(IRepository<Shift> shifts,
             if (assignment != null)
             {
                 assignments.Remove(assignment);
-                changeTrigger.QueryChanged<ShiftsOverviewQuery>(command.EventId);
+                changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
             }
         }
     }
