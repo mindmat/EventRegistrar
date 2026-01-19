@@ -1613,6 +1613,9 @@
   <data name="VolunteerPlanning" xml:space="preserve">
     <value>Helfer-Planung</value>
   </data>
+  <data name="VolunteerShifts" xml:space="preserve">
+    <value>Helferschichten</value>
+  </data>
   <data name="WaitingList" xml:space="preserve">
     <value>Warteliste</value>
   </data>

@@ -1,4 +1,5 @@
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.VolunteerPlanning;
 
@@ -23,6 +24,11 @@ public class UpdateShiftCommandHandler(IRepository<Shift> shifts, ChangeTrigger 
         var shift = await shifts.FirstAsync(sft => sft.Id == command.ShiftId
                                                 && sft.EventId == command.EventId, cancellationToken);
 
+        if (shift.RegistrationId_Responsible != null)
+        {
+            changeTrigger.TriggerUpdate<RegistrationCalculator>(shift.EventId, shift.RegistrationId_Responsible);
+        }
+
         shift.Name = command.Name;
         shift.Description = command.Description;
         shift.Location = command.Location;
@@ -32,5 +38,9 @@ public class UpdateShiftCommandHandler(IRepository<Shift> shifts, ChangeTrigger 
         shift.RegistrationId_Responsible = command.RegistrationId_Responsible;
 
         changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
+        if (shift.RegistrationId_Responsible != null)
+        {
+            changeTrigger.TriggerUpdate<RegistrationCalculator>(shift.EventId, shift.RegistrationId_Responsible);
+        }
     }
 }

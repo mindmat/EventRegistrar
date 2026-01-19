@@ -4553,6 +4553,15 @@ namespace EventRegistrar.Backend.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Helferschichten.
+        /// </summary>
+        internal static string VolunteerShifts {
+            get {
+                return ResourceManager.GetString("VolunteerShifts", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Warteliste.
         /// </summary>
         internal static string WaitingList {

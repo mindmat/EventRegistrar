@@ -11274,6 +11274,7 @@ export interface RegistrationDisplayItem {
     mails?: MailMetadata[] | null;
     importedMails?: MailMetadata[] | null;
     reductions?: IndividualReductionDisplayItem[] | null;
+    volunteerShifts?: VolunteerShiftDisplayItem[] | null;
 }
 
 export interface RemarkItem {
@@ -11319,6 +11320,16 @@ export interface IndividualReductionDisplayItem {
     type?: IndividualReductionType;
     amount?: number;
     reason?: string | null;
+}
+
+export interface VolunteerShiftDisplayItem {
+    shiftId?: string;
+    name?: string | null;
+    description?: string | null;
+    location?: string | null;
+    startTime?: Date;
+    endTime?: Date;
+    isResponsible?: boolean;
 }
 
 export interface RegistrationQuery {

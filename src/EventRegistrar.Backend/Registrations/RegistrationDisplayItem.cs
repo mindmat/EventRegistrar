@@ -43,6 +43,7 @@ public class RegistrationDisplayItem
     public IEnumerable<MailMetadata>? Mails { get; set; }
     public IEnumerable<MailMetadata>? ImportedMails { get; set; }
     public IEnumerable<IndividualReductionDisplayItem>? Reductions { get; set; }
+    public IEnumerable<VolunteerShiftDisplayItem>? VolunteerShifts { get; set; }
 }
 
 public class MailMetadata
@@ -69,4 +70,15 @@ public class IndividualReductionDisplayItem
     public IndividualReductionType Type { get; set; }
     public decimal Amount { get; set; }
     public string? Reason { get; set; }
+}
+
+public class VolunteerShiftDisplayItem
+{
+    public Guid ShiftId { get; set; }
+    public string? Name { get; set; }
+    public string? Description { get; set; }
+    public string? Location { get; set; }
+    public DateTimeOffset StartTime { get; set; }
+    public DateTimeOffset EndTime { get; set; }
+    public bool IsResponsible { get; set; }
 }

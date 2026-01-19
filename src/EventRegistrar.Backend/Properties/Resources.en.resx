@@ -1482,11 +1482,14 @@
   <data name="VolunteerPlanning" xml:space="preserve">
     <value>Volunteer Planning</value>
   </data>
+  <data name="VolunteerShifts" xml:space="preserve">
+    <value>Volunteer shifts</value>
+  </data>
   <data name="WaitingList" xml:space="preserve">
     <value>Waiting list</value>
   </data>
   <data name="WaitingListLockedWhenPopulated" xml:space="preserve">
-    <value>Waiting list cannot be removed because there are spots on the waiting list</value>
+    <value>Waiting list cannot be removed because there are spots on the waiting list.</value>
   </data>
   <data name="When" xml:space="preserve">
     <value>When</value>

@@ -278,6 +278,42 @@
                 </div>
             </fuse-card>
 
+            <!-- Volunteer Shifts -->
+            <fuse-card *ngIf="registration.volunteerShifts && registration.volunteerShifts.length > 0" class="flex flex-col w-80 px-8 pt-6 pb-4 rounded-2xl">
+                <div class="flex items-center justify-between">
+                    <div class="text-2xl font-semibold leading-tight">{{ 'VolunteerShifts' | translate }}</div>
+                </div>
+                <hr class="w-full border-t my-6">
+                <div class="flex flex-col space-y-4 mb-4">
+                    <ng-container *ngFor="let shift of registration.volunteerShifts">
+                        <div class="flex flex-col rounded-xl bg-default shadow p-3">
+                            <div class="flex items-center">
+                                <div class="flex flex-col flex-1">
+                                    <div class="flex items-baseline">
+                                        <div class="font-medium">{{ shift.name }}</div>
+                                        <mat-icon *ngIf="shift.isResponsible" class="icon-size-4 ml-2 text-primary" [svgIcon]="'heroicons_solid:star'" matTooltip="Responsible"></mat-icon>
+                                    </div>
+                                    <div *ngIf="shift.description" class="text-sm text-secondary mt-1">{{ shift.description }}</div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col mt-2 space-y-1">
+                                <div *ngIf="shift.location" class="flex items-center text-sm text-secondary">
+                                    <mat-icon class="icon-size-4 mr-2" [svgIcon]="'heroicons_solid:map-pin'"></mat-icon>
+                                    <span>{{ shift.location }}</span>
+                                </div>
+                                <div *ngIf="shift.startTime || shift.endTime" class="flex items-center text-sm text-secondary">
+                                    <mat-icon class="icon-size-4 mr-2" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                                    <span>
+                                        <span *ngIf="shift.startTime">{{ shift.startTime | date: 'dd.MM.yy HH:mm' }}</span>
+                                        <span *ngIf="shift.startTime && shift.endTime"> - </span>
+                                        <span *ngIf="shift.endTime">{{ shift.endTime | date: 'HH:mm' }}</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-container>
+                </div>
+            </fuse-card>
         </div>
 
         <!-- Column -->

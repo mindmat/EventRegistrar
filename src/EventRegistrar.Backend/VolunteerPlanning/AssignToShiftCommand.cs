@@ -1,4 +1,6 @@
+using EventRegistrar.Backend.Infrastructure;
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.VolunteerPlanning;
 
@@ -23,8 +25,12 @@ public class AssignToShiftCommandHandler(IRepository<Shift> shifts,
                                 .Include(sft => sft.Assignments)
                                 .FirstAsync(cancellationToken);
 
+        var registrationIdsToUpdate = Enumerable.Empty<Guid>()
+                                                .Append(command.RegistrationId);
         if (command.AsResponsible)
         {
+            registrationIdsToUpdate = registrationIdsToUpdate.AppendIfNotNull(shift.RegistrationId_Responsible);
+
             // Assign as responsible person
             shift.RegistrationId_Responsible = command.RegistrationId;
         }
@@ -42,6 +48,11 @@ public class AssignToShiftCommandHandler(IRepository<Shift> shifts,
                                              ShiftId = command.ShiftId,
                                              RegistrationId = command.RegistrationId
                                          });
+        }
+
+        foreach (var registrationId in registrationIdsToUpdate.Distinct())
+        {
+            changeTrigger.TriggerUpdate<RegistrationCalculator>(command.EventId, registrationId);
         }
 
         changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);

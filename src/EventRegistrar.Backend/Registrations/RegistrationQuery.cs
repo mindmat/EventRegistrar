@@ -11,6 +11,7 @@ using EventRegistrar.Backend.Registrations.Cancel;
 using EventRegistrar.Backend.Registrations.Price;
 using EventRegistrar.Backend.Registrations.Register;
 using EventRegistrar.Backend.Spots;
+using EventRegistrar.Backend.VolunteerPlanning;
 
 namespace EventRegistrar.Backend.Registrations;
 
@@ -34,7 +35,8 @@ public class RegistrationQueryHandler(ReadModelReader readModelReader) : IReques
 public class RegistrationCalculator(IQueryable<Registration> registrations,
                                     IQueryable<Seat> spots,
                                     EnumTranslator enumTranslator,
-                                    IQueryable<PaymentAssignment> assignments)
+                                    IQueryable<PaymentAssignment> assignments,
+                                    IQueryable<Shift> shifts)
     : ReadModelCalculator<RegistrationDisplayItem>
 {
     public override string QueryName => nameof(RegistrationQuery);
@@ -223,6 +225,24 @@ public class RegistrationCalculator(IQueryable<Registration> registrations,
                                                                             CreditorName = ass.Outgoing.CreditorName
                                                                         }))
                                      .ToList();
+
+        // Get volunteer shifts for this registration
+        content.VolunteerShifts = await shifts.Where(shift => shift.EventId == eventId
+                                                           && (shift.RegistrationId_Responsible == registrationId
+                                                            || shift.Assignments!.Any(assignment => assignment.RegistrationId == registrationId)))
+                                              .Select(shift => new VolunteerShiftDisplayItem
+                                                               {
+                                                                   ShiftId = shift.Id,
+                                                                   Name = shift.Name,
+                                                                   Description = shift.Description,
+                                                                   Location = shift.Location,
+                                                                   StartTime = shift.StartTime,
+                                                                   EndTime = shift.EndTime,
+                                                                   IsResponsible = shift.RegistrationId_Responsible == registrationId
+                                                               })
+                                              .OrderBy(shift => shift.StartTime)
+                                              .ToListAsync(cancellationToken);
+
         return (content, null);
     }
 

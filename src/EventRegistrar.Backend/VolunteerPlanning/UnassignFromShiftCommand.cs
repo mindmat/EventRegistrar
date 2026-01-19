@@ -1,4 +1,5 @@
 using EventRegistrar.Backend.Infrastructure.DataAccess.ReadModels;
+using EventRegistrar.Backend.Registrations;
 
 namespace EventRegistrar.Backend.VolunteerPlanning;
 
@@ -26,7 +27,6 @@ public class UnassignFromShiftCommandHandler(IRepository<Shift> shifts,
         {
             // Remove as responsible person
             shift.RegistrationId_Responsible = null;
-            changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
         }
         else
         {
@@ -35,8 +35,12 @@ public class UnassignFromShiftCommandHandler(IRepository<Shift> shifts,
             if (assignment != null)
             {
                 assignments.Remove(assignment);
-                changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
             }
         }
+
+
+        // Trigger update for the registration that was unassigned
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(command.EventId, command.RegistrationId);
+        changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(command.EventId);
     }
 }

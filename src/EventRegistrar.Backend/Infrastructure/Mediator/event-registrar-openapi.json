@@ -11296,6 +11296,13 @@
                         "items": {
                             "$ref": "#/components/schemas/IndividualReductionDisplayItem"
                         }
+                    },
+                    "volunteerShifts": {
+                        "type": "array",
+                        "nullable": true,
+                        "items": {
+                            "$ref": "#/components/schemas/VolunteerShiftDisplayItem"
+                        }
                     }
                 }
             },
@@ -11443,6 +11450,39 @@
                     "reason": {
                         "type": "string",
                         "nullable": true
+                    }
+                }
+            },
+            "VolunteerShiftDisplayItem": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                    "shiftId": {
+                        "type": "string",
+                        "format": "guid"
+                    },
+                    "name": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "location": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "startTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "endTime": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "isResponsible": {
+                        "type": "boolean"
                     }
                 }
             },

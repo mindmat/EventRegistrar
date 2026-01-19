@@ -49,7 +49,7 @@ public class CreateBulkMailsCommandHandler(IQueryable<BulkMailTemplate> mailTemp
             }
 
             var targetRegistrableIds = mailTemplate.RegistrableIds
-                                                   ?.AppendIfNotNull(mailTemplate.RegistrableId.Value)
+                                                   ?.AppendIfNotNull(mailTemplate.RegistrableId)
                                                    .ToList();
             var registrationsForTemplate = targetRegistrableIds == null || targetRegistrableIds.Count == 0
                                                ? registrationsOfEvent

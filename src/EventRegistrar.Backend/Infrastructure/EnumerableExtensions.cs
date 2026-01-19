@@ -32,9 +32,10 @@ public static class EnumerableExtensions
     }
 
     public static IEnumerable<TSource> AppendIfNotNull<TSource>(this IEnumerable<TSource> source, TSource? element)
+        where TSource : struct
     {
         return element != null
-                   ? source.Append(element)
+                   ? source.Append(element.Value)
                    : source;
     }
 
