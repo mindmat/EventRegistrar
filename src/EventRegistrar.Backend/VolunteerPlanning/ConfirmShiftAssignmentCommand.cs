@@ -22,9 +22,9 @@ public class ConfirmShiftAssignmentCommandHandler(IRepository<ShiftAssignment> a
         assignment.IsConfirmed = true;
 
         // Trigger update for the registration that was confirmed
-        changeTrigger.TriggerUpdate<RegistrationCalculator>(command.EventId, assignment.RegistrationId);
-        
+        changeTrigger.TriggerUpdate<RegistrationCalculator>(eventId: command.EventId, rowId: assignment.RegistrationId);
+
         // Trigger update for the shifts overview
-        changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(command.EventId);
+        changeTrigger.TriggerUpdate<ShiftsOverviewCalculator>(eventId: command.EventId);
     }
 }
