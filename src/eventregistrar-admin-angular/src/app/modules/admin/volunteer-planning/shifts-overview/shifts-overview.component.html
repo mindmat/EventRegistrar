@@ -207,7 +207,9 @@
 
                                             <!-- Helpers -->
                                             <td class="px-6 py-4 border-r border-gray-200 dark:border-gray-700" [ngClass]="{
-                                                    'bg-green-100 dark:bg-green-950/70': i < shift.helpersNeeded && (!shift.assignments || !shift.assignments[i] || !shift.assignments[i].isRegistrationCancelled),
+                                                    'bg-green-50 dark:bg-green-950/30': i < shift.helpersNeeded && (!shift.assignments || !shift.assignments[i] || !shift.assignments[i].registrationId),
+                                                    'bg-green-100 dark:bg-green-900/50': i < shift.helpersNeeded && shift.assignments && shift.assignments[i] && shift.assignments[i].registrationId && !shift.assignments[i].isRegistrationCancelled && !shift.assignments[i].isConfirmed,
+                                                    'bg-green-200 dark:bg-green-800': i < shift.helpersNeeded && shift.assignments && shift.assignments[i] && shift.assignments[i].registrationId && !shift.assignments[i].isRegistrationCancelled && shift.assignments[i].isConfirmed,
                                                     'bg-red-100 dark:bg-red-950/70 border-2 border-red-400 dark:border-red-600': i < shift.helpersNeeded && shift.assignments && shift.assignments[i] && shift.assignments[i].isRegistrationCancelled
                                                 }" *ngFor="let helperIndex of getHelperColumns(shiftGroup); let i = index">
                                                 <div class="flex items-center justify-between" *ngIf="i < shift.helpersNeeded; else emptyHelper">
